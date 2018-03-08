@@ -1550,6 +1550,10 @@ public final class UtilPlume {
    * fail, because otherwise they would return the same Iterator instance, which may have been
    * exhausted, or otherwise be in some indeterminate state. Calling iteratorToIterable twice on the
    * same argument can have similar problems, so don't do that.
+   *
+   * @param source the Iterator to be converted to Iterable
+   * @param <T> the element type
+   * @return source, converted to Iterable
    */
   public static <T> Iterable<T> iteratorToIterable(final Iterator<T> source) {
     if (source == null) {
