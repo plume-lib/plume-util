@@ -23,6 +23,6 @@ targetCompatibility = 1.7
 
 task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
-  destinationDir = file("/cse/web/research/plumelib/util/api")
+  destinationDir = file("/cse/web/research/plumelib/plume-util/api")
   classpath = project.sourceSets.main.compileClasspath
 }

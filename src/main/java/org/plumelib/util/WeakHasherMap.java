@@ -40,7 +40,7 @@ import org.checkerframework.dataflow.qual.*;
  * accidentally. It is slightly less efficient, in the absence of a Hasher, and has not been as
  * extensively tested.
  *
- * <p><hr>
+ * <hr>
  *
  * <p>A hashtable-based <code>Map</code> implementation with <em>weak keys</em>. An entry in a
  * <code>WeakHashMap</code> will automatically be removed when its key is no longer in ordinary use.
