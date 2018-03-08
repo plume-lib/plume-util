@@ -54,6 +54,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -1542,6 +1543,30 @@ public final class UtilPlume {
   ///////////////////////////////////////////////////////////////////////////
   /// Iterator
   ///
+
+  /**
+   * Converts an Iterator to an Iterable. The resulting Iterable can be used to produce a single,
+   * working Iterator (the one that was passed in). Subsequent calls to its iterator() method will
+   * fail, because otherwise they would return the same Iterator instance, which may have been
+   * exhausted, or otherwise be in some indeterminate state. Calling iteratorToIterable twice on the
+   * same argument can have similar problems, so don't do that.
+   */
+  public static <T> Iterable<T> iteratorToIterable(final Iterator<T> source) {
+    if (source == null) {
+      throw new NullPointerException();
+    }
+    return new Iterable<T>() {
+      private AtomicBoolean used = new AtomicBoolean();
+
+      @Override
+      public Iterator<T> iterator() {
+        if (used.getAndSet(true)) {
+          throw new Error("Call iterator() just once");
+        }
+        return source;
+      }
+    };
+  }
 
   // Making these classes into functions didn't work because I couldn't get
   // their arguments into a scope that Java was happy with.
