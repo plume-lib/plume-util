@@ -1,5 +1,5 @@
 // To make build/libs/options-all.jar, run: gradle shadowJar
-plugins { id 'com.github.johnrengelman.shadow' version '2.0.2' }
+// plugins { id 'com.github.johnrengelman.shadow' version '2.0.2' }
 
 // Not "plugins { ... }" because this file is included in other build files.
 apply plugin: 'java'
