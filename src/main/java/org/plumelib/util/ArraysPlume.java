@@ -4,6 +4,7 @@
 package org.plumelib.util;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1594,8 +1595,90 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Avoids code duplication for arrays and lists, at the cost of object construction and method
+   * calls.
+   */
+  private static class ListOrArray<T> {
+    // At most one field is non-null.
+    T /*@Nullable*/ [] theArray = null;
+    /*@Nullable*/ List<T> theList = null;
+
+    ListOrArray(T /*@Nullable*/ [] theArray) {
+      this.theArray = theArray;
+    }
+
+    ListOrArray(/*@Nullable*/ List<T> theList) {
+      this.theList = theList;
+    }
+
+    boolean isNull() {
+      return theArray == null && theList == null;
+    }
+
+    /*@NonNegative*/ int size() {
+      if (theArray != null) {
+        return theArray.length;
+      } else if (theList != null) {
+        return theList.size();
+      } else {
+        throw new Error("both fields are null");
+      }
+    }
+
+    boolean isEmpty() {
+      if (theArray != null) {
+        return theArray.length == 0;
+      } else if (theList != null) {
+        return theList.isEmpty();
+      } else {
+        throw new Error("both fields are null");
+      }
+    }
+
+    T[] toArray() {
+      if (theArray != null) {
+        return theArray;
+      } else if (theList != null) {
+        return toTArray(theList);
+      } else {
+        throw new Error("both fields are null");
+      }
+    }
+
+    @SuppressWarnings("index") // TODO: annotate for Index Checker
+    void copyInto(T[] dest, int destPos) {
+      if (theArray != null) {
+        System.arraycopy(theArray, 0, dest, destPos, theArray.length);
+      } else if (theList != null) {
+        for (int i = destPos; i < theList.size(); i++) {
+          @SuppressWarnings("index") // index checker has no list support
+          /*@IndexFor("result")*/ int index = i + theList.size();
+          dest[index] = theList.get(i);
+        }
+      } else {
+        throw new Error("both fields are null");
+      }
+    }
+
+    /**
+     * Returns the least upper bound of the classes of the elements of this.
+     *
+     * @return the least upper bound of the classes of the elements of this
+     */
+    /*@Nullable*/ Class<?> leastUpperBound() {
+      if (theArray != null) {
+        return UtilPlume.leastUpperBound(theArray);
+      } else if (theList != null) {
+        return UtilPlume.leastUpperBound(theList);
+      } else {
+        throw new Error("both fields are null");
+      }
+    }
+  }
+
+  /**
+   * Return an array that contains all the elements of both arguments, in order. Returns an existing
+   * array if possible (when one argument is null or empty).
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1603,31 +1686,12 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T> T[] concat(T /*@Nullable*/ [] a, T /*@Nullable*/ [] b) {
-    if (a == null) {
-      if (b != null) {
-        return b;
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[0];
-        return result;
-      }
-    } else {
-      if (b == null) {
-        return a;
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new /*@MonotonicNonNull*/ Object[a.length + b.length];
-
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-        return result;
-      }
-    }
+    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both arguments, in order. Returns an existing
+   * array if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1635,36 +1699,12 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T> T[] concat(T /*@Nullable*/ [] a, /*@Nullable*/ List<T> b) {
-    if (a == null) {
-      if (b != null) {
-        return toTArray(b);
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[0];
-        return result;
-      }
-    } else {
-      if (b == null) {
-        return a;
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new /*@MonotonicNonNull*/ Object[a.length + b.size()];
-
-        System.arraycopy(a, 0, result, 0, a.length);
-        // System.arraycopy(b, 0, result, a.length, b.size());
-        for (int i = 0; i < b.size(); i++) {
-          @SuppressWarnings("index") // index checker has no list support
-          /*@IndexFor("result")*/ int index = i + a.length;
-          result[index] = b.get(i);
-        }
-        return result;
-      }
-    }
+    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both arguments, in order. Returns an existing
+   * array if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1672,36 +1712,11 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T> T[] concat(/*@Nullable*/ List<T> a, T /*@Nullable*/ [] b) {
-    if (a == null) {
-      if (b != null) {
-        return b;
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[0];
-        return result;
-      }
-    } else {
-      if (b == null) {
-        return toTArray(a);
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new /*@MonotonicNonNull*/ Object[a.size() + b.length];
-
-        // System.arraycopy(a, 0, result, 0, a.size());
-        for (int i = 0; i < a.size(); i++) {
-          @SuppressWarnings("index") // index checker has no list support
-          /*@IndexFor("result")*/ int index = i;
-          result[index] = a.get(i);
-        }
-        System.arraycopy(b, 0, result, a.size(), b.length);
-        return result;
-      }
-    }
+    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Return an array that contains all the elements of both arguments, in order.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1709,35 +1724,50 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T> T[] concat(/*@Nullable*/ List<T> a, /*@Nullable*/ List<T> b) {
-    if (a == null) {
-      if (b != null) {
-        return toTArray(b);
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new Object[0];
-        return result;
-      }
-    } else {
-      if (b == null) {
-        return toTArray(a);
-      } else {
-        @SuppressWarnings("unchecked")
-        T[] result = (T[]) new /*@MonotonicNonNull*/ Object[a.size() + b.size()];
+    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
+  }
 
-        // System.arraycopy(a, 0, result, 0, a.length);
-        for (int i = 0; i < a.size(); i++) {
-          @SuppressWarnings("index") // index checker has no list support
-          /*@IndexFor("result")*/ int index = i;
-          result[index] = a.get(i);
-        }
-        // System.arraycopy(b, 0, result, a.length, b.length);
-        for (int i = 0; i < b.size(); i++) {
-          @SuppressWarnings("index") // index checker has no list support
-          /*@IndexFor("result")*/ int index = i + a.size();
-          result[index] = b.get(i);
-        }
-        return result;
+  /**
+   * Return an array that contains all the elements of both arguments, in order.
+   *
+   * @param <T> the type of the sequence elements
+   * @param a the first sequence to concatenate
+   * @param b the second sequence to concatenate
+   * @return an array that concatenates the arguments
+   */
+  private static <T> T[] concat(ListOrArray<T> a, ListOrArray<T> b) {
+    if (a.isNull() && b.isNull()) {
+      @SuppressWarnings("unchecked")
+      T[] result = (T[]) new Object[0];
+      return result;
+    } else if (a.isNull()) {
+      return b.toArray();
+    } else if (b.isNull()) {
+      return a.toArray();
+    }
+    // Both a and b are non-null.
+    else if (a.isEmpty()) {
+      return b.toArray();
+    } else if (b.isEmpty()) {
+      return a.toArray();
+    }
+    // Both a and b are non-empty.
+    else {
+      int size = a.size() + b.size();
+      // Heuristic and perhaps often wrong.  TODO: Fix.
+      Class<T> resultType =
+          UtilPlume.leastUpperBound((Class<T>) a.leastUpperBound(), (Class<T>) b.leastUpperBound());
+
+      if (resultType == null) {
+        throw new Error("All values are null, don't know how to create result array");
       }
+
+      @SuppressWarnings("unchecked")
+      T[] result = (T[]) Array.newInstance(resultType, size);
+
+      a.copyInto(result, 0);
+      b.copyInto(result, a.size());
+      return result;
     }
   }
 

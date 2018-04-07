@@ -10,6 +10,7 @@ import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -988,6 +989,14 @@ public final class TestPlume {
             "[[a, d], [b, c, e]]",
             "[[a, c], [b, d, e]]",
             "[[a], [b, c, d, e]]"));
+  }
+
+  @Test
+  public void testArraysPlume_concat() {
+    Date[] da1 = new Date[] {new Date()};
+    Date[] da2 = new Date[] {new Date()};
+    System.out.println("concat result: " + ArraysPlume.concat(da1, da2));
+    Date[] da3 = ArraysPlume.concat(da1, da2);
   }
 
   // This cannot be static because it instantiates an inner class.

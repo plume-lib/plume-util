@@ -2155,12 +2155,11 @@ public final class UtilPlume {
   /// Reflection
   ///
 
-  // TODO: make these leave the access the same as it was before?
-
   // TODO: add method invokeMethod; see
   // java/Translation/src/graph/tests/Reflect.java (but handle returning a
   // value).
 
+  // TODO: make this restore the access to its original value, such as private?
   /**
    * Sets the given field, which may be final and/or private. Leaves the field accessible. Intended
    * for use in readObject and nowhere else!
@@ -2193,7 +2192,7 @@ public final class UtilPlume {
     throw new NoSuchFieldException(fieldName);
   }
 
-  // TODO: set the field back to private after is is accessed.
+  // TODO: make this restore the access to its original value, such as private?
   /**
    * Reads the given field, which may be private. Leaves the field accessible. Use with care!
    *
@@ -2224,6 +2223,85 @@ public final class UtilPlume {
       assert c != null : "@AssumeAssertion(nullness): c was not Object, so is not null now";
     }
     throw new NoSuchFieldException(fieldName);
+  }
+
+  /**
+   * Returns the least upper bound of the given classes.
+   *
+   * @param a a class
+   * @param b a class
+   * @return the least upper bound of the two classes, or null if both are null
+   */
+  public static <T> /*@Nullable*/ Class<T> leastUpperBound(
+      /*@Nullable*/ Class<T> a, /*@Nullable*/ Class<T> b) {
+    if (a == b) {
+      return a;
+    } else if (a == null) {
+      return b;
+    } else if (b == null) {
+      return a;
+    } else if (a == Void.TYPE) {
+      return b;
+    } else if (b == Void.TYPE) {
+      return a;
+    } else if (a.isAssignableFrom(b)) {
+      return a;
+    } else if (b.isAssignableFrom(a)) {
+      return b;
+    } else {
+      // There may not be a unique least upper bound.
+      // Probably return some specific class rather than a wildcard.
+      throw new Error("Not yet implemented");
+    }
+  }
+
+  /**
+   * Returns the least upper bound of all the given classes.
+   *
+   * @param classes a non-empty list of classes
+   * @return the least upper bound of all the given classes
+   */
+  public static <T> /*@Nullable*/ Class<T> leastUpperBound(/*@Nullable*/ Class<T>[] classes) {
+    Class<T> result = null;
+    for (Class<T> clazz : classes) {
+      result = leastUpperBound(result, clazz);
+    }
+    return result;
+  }
+
+  /**
+   * Returns the least upper bound of the classes of the given objects.
+   *
+   * @param objects a list of objects
+   * @return the least upper bound of the classes of the given objects, or null if all arguments are
+   *     null
+   */
+  public static <T> /*@Nullable*/ Class<T> leastUpperBound(/*@PolyNull*/ Object[] objects) {
+    Class<T> result = null;
+    for (Object obj : objects) {
+      if (obj != null) {
+        result = leastUpperBound(result, (Class<T>) obj.getClass());
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Returns the least upper bound of the classes of the given objects.
+   *
+   * @param objects a non-empty list of objects
+   * @return the least upper bound of the classes of the given objects, or null if all arguments are
+   *     null
+   */
+  public static <T> /*@Nullable*/ Class<T> leastUpperBound(
+      List<? extends /*@Nullable*/ Object> objects) {
+    Class<T> result = null;
+    for (Object obj : objects) {
+      if (obj != null) {
+        result = leastUpperBound(result, (Class<T>) obj.getClass());
+      }
+    }
+    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
