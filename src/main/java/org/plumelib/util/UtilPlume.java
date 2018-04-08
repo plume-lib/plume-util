@@ -3231,18 +3231,44 @@ public final class UtilPlume {
   // Rather than writing something like ArrayListToStringArray, use
   //   v.toArray(new String[0])
 
+  // Helper method
+  /**
+   * Compute (n choose k), which is (n! / (k!(n-k)!)).
+   *
+   * @param n number of elements from which to choose
+   * @param k number of elements to choose
+   * @return n choose k, or Long.MAX_VALUE if the value would overflow
+   */
+  private static long choose(int n, int k) {
+    // From https://stackoverflow.com/questions/2201113/combinatoric-n-choose-r-in-java-math
+    if (n < k) {
+      return 0;
+    }
+    if (k == 0 || k == n) {
+      return 1;
+    }
+    long a = choose(n - 1, k - 1);
+    long b = choose(n - 1, k);
+    if (a < 0 || a == Long.MAX_VALUE || b < 0 || b == Long.MAX_VALUE || a + b < 0) {
+      return Long.MAX_VALUE;
+    } else {
+      return a + b;
+    }
+  }
+
   /**
    * Returns a list of lists of each combination (with repetition, but not permutations) of the
    * specified objects starting at index {@code start} over {@code dims} dimensions, for {@code dims
    * > 0}.
    *
-   * <p>For example, create_combinations (1, 0, {a, b, c}) returns:
+   * <p>For example, create_combinations(1, 0, {a, b, c}) returns a 3-element list of singleton
+   * lists:
    *
    * <pre>
    *    {a}, {b}, {c}
    * </pre>
    *
-   * And create_combinations (2, 0, {a, b, c}) returns:
+   * And create_combinations(2, 0, {a, b, c}) returns a 6-element list of 2-element lists:
    *
    * <pre>
    *    {a, a}, {a, b}, {a, c}
@@ -3288,19 +3314,19 @@ public final class UtilPlume {
    * Returns a list of lists of each combination (with repetition, but not permutations) of integers
    * from start to cnt (inclusive) over arity dimensions.
    *
-   * <p>For example, create_combinations (1, 0, 2) returns:
+   * <p>For example, create_combinations(1, 0, 2) returns a 3-element list of singleton lists:
    *
    * <pre>
    *    {0}, {1}, {2}
    * </pre>
    *
-   * And create_combinations (2, 10, 2) returns:
+   * And create_combinations(2, 10, 2) returns a 6-element list of 2-element lists:
    *
    * <pre>
-   *    {10, 10}, {10, 11}, {10, 12}
-   *    {11, 11}  {11, 12},
-   *    {12, 12}
+   *    {10, 10}, {10, 11}, {10, 12}, {11, 11}, {11, 12}, {12, 12}
    * </pre>
+   *
+   * The length of the list is (cnt multichoose arity), which is ((cnt + arity - 1) choose arity).
    *
    * @param arity size of each innermost list
    * @param start initial value
@@ -3309,6 +3335,11 @@ public final class UtilPlume {
    */
   public static ArrayList<ArrayList<Integer>> create_combinations(
       int arity, /*@NonNegative*/ int start, int cnt) {
+
+    long numResults = choose(cnt + arity - 1, arity);
+    if (numResults > 100000000) {
+      throw new Error("Do you really want to create more than 100 million lists?");
+    }
 
     ArrayList<ArrayList<Integer>> results = new ArrayList<ArrayList<Integer>>();
 
