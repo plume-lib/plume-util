@@ -3004,10 +3004,13 @@ public final class UtilPlume {
    * Return the number of times the second string appears in the first.
    *
    * @param s string to search in
-   * @param sub string to search for
+   * @param sub non-empty string to search for
    * @return number of times the substring appears in the string
    */
   public static int count(String s, String sub) {
+    if (sub.equals("")) {
+      throw new IllegalArgumentException("second argument must not be empty");
+    }
     int result = 0;
     int pos = s.indexOf(sub);
     while (pos > -1) {
