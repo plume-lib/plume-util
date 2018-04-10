@@ -3283,7 +3283,7 @@ public final class UtilPlume {
    * @return list of lists of length dims, each of which combines elements from objs
    */
   public static <T> List<List<T>> create_combinations(
-      int dims, /*@NonNegative*/ int start, List<T> objs) {
+      /*@Positive*/ int dims, /*@NonNegative*/ int start, List<T> objs) {
 
     if (dims < 1) {
       throw new IllegalArgumentException();
