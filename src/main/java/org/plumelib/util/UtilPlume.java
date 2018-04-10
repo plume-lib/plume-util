@@ -3289,6 +3289,11 @@ public final class UtilPlume {
       throw new IllegalArgumentException();
     }
 
+    long numResults = choose(objs.size() + dims - 1, dims);
+    if (numResults > 100000000) {
+      throw new Error("Do you really want to create more than 100 million lists?");
+    }
+
     List<List<T>> results = new ArrayList<List<T>>();
 
     for (int i = start; i < objs.size(); i++) {
