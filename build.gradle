@@ -1,14 +1,15 @@
-// To make build/libs/options-all.jar, run: gradle shadowJar
-// plugins { id 'com.github.johnrengelman.shadow' version '2.0.2' }
+plugins {
+  // To make build/libs/options-all.jar, run: gradle shadowJar
+  id 'com.github.johnrengelman.shadow' version '2.0.2'
+  // Code formatting with Google Java Format
+  // id "com.github.sherter.google-java-format" version "0.6"
+}
 
-// Not "plugins { ... }" because this file is included in other build files.
 apply plugin: 'java'
 
 // Checker Framework pluggable type-checking
 apply from: 'gradle/checkerframework-annos-in-comments.gradle'
-
-// Code formatting with Google Java Format
-// apply from: 'gradle/codeformatting.gradle'
+apply from: 'gradle/mavencentral.gradle'
 
 dependencies {
   testImplementation 'junit:junit:4.12'
