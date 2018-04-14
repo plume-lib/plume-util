@@ -12,7 +12,7 @@ apply plugin: 'signing'
 
 group = "org.plumelib"
 archivesBaseName = "plume-util"
-version = "0.0.1"
+version = "0.0.2"
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -50,7 +50,7 @@ uploadArchives {
         pom.project {
           name 'Plume-lib Util'
           packaging 'jar'
-          description 'Command-line option processing for Java.'
+          description 'Utility libraries for Java.'
           url 'https://github.com/plume-lib/plume-util'
 
           scm {
