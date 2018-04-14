@@ -1400,8 +1400,8 @@ public final class MathPlume {
     // Must not use regular modulus:  that can produce errors, eg
     // nonmodulus_strict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
     // modulus_strict.
-    UtilPlume.RemoveFirstAndLastIterator<Integer> missing_nums =
-        new UtilPlume.RemoveFirstAndLastIterator<Integer>(missing);
+    CollectionsPlume.RemoveFirstAndLastIterator<Integer> missing_nums =
+        new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(missing);
     int[] result = modulus_strict_int(missing_nums, false);
     if (result == null) {
       return result;
@@ -1415,7 +1415,7 @@ public final class MathPlume {
 
   /** The first argument is an array containing two elements. */
   private static boolean check_first_and_last_nonmodulus(
-      int /*@ArrayLen(2)*/[] rm, UtilPlume.RemoveFirstAndLastIterator<Integer> rfali) {
+      int /*@ArrayLen(2)*/[] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
     int m = rm[1];
     int first = rfali.getFirst().intValue();
@@ -1698,8 +1698,8 @@ public final class MathPlume {
     // Must not use regular modulus:  that can produce errors, eg
     // nonmodulus_strict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
     // modulus_strict.
-    UtilPlume.RemoveFirstAndLastIterator<Long> missing_nums =
-        new UtilPlume.RemoveFirstAndLastIterator<Long>(missing);
+    CollectionsPlume.RemoveFirstAndLastIterator<Long> missing_nums =
+        new CollectionsPlume.RemoveFirstAndLastIterator<Long>(missing);
     long[] result = modulus_strict_long(missing_nums, false);
     if (result == null) {
       return result;
@@ -1713,7 +1713,7 @@ public final class MathPlume {
 
   /** The first argument is an array containing two elements. */
   private static boolean check_first_and_last_nonmodulus(
-      long /*@ArrayLen(2)*/[] rm, UtilPlume.RemoveFirstAndLastIterator<Long> rfali) {
+      long /*@ArrayLen(2)*/[] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];
     long m = rm[1];
     long first = rfali.getFirst().longValue();

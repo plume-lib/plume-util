@@ -1667,9 +1667,9 @@ public final class ArraysPlume {
      */
     /*@Nullable*/ Class<?> leastUpperBound() {
       if (theArray != null) {
-        return UtilPlume.leastUpperBound(theArray);
+        return ReflectionPlume.leastUpperBound(theArray);
       } else if (theList != null) {
-        return UtilPlume.leastUpperBound(theList);
+        return ReflectionPlume.leastUpperBound(theList);
       } else {
         throw new Error("both fields are null");
       }
@@ -1756,7 +1756,8 @@ public final class ArraysPlume {
       int size = a.size() + b.size();
       // Heuristic and perhaps often wrong.  TODO: Fix.
       Class<T> resultType =
-          UtilPlume.leastUpperBound((Class<T>) a.leastUpperBound(), (Class<T>) b.leastUpperBound());
+          ReflectionPlume.leastUpperBound(
+              (Class<T>) a.leastUpperBound(), (Class<T>) b.leastUpperBound());
 
       if (resultType == null) {
         throw new Error("All values are null, don't know how to create result array");

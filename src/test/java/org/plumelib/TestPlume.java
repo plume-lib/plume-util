@@ -1776,24 +1776,24 @@ public final class TestPlume {
     // public static Class classForName(String className)
 
     // private boolean isSubtype(Class<?> sub, Class<?> sup) {
-    assert UtilPlume.isSubtype(Integer.class, Integer.class);
-    assert UtilPlume.isSubtype(Cloneable.class, Cloneable.class);
-    assert UtilPlume.isSubtype(Object.class, Object.class);
-    assert UtilPlume.isSubtype(Integer.class, Number.class);
-    assert !UtilPlume.isSubtype(Number.class, Integer.class);
-    assert UtilPlume.isSubtype(Integer.class, Comparable.class);
-    assert !UtilPlume.isSubtype(Comparable.class, Integer.class);
-    assert UtilPlume.isSubtype(Integer.class, Object.class);
-    assert !UtilPlume.isSubtype(Object.class, Integer.class);
-    assert !UtilPlume.isSubtype(Integer.class, Float.class);
-    assert UtilPlume.isSubtype(Collection.class, Iterable.class);
-    assert !UtilPlume.isSubtype(Iterable.class, Collection.class);
-    assert UtilPlume.isSubtype(ArrayList.class, Iterable.class);
-    assert !UtilPlume.isSubtype(Iterable.class, ArrayList.class);
-    assert UtilPlume.isSubtype(ArrayList.class, Cloneable.class);
-    assert !UtilPlume.isSubtype(Cloneable.class, ArrayList.class);
-    assert UtilPlume.isSubtype(ArrayList.class, List.class);
-    assert !UtilPlume.isSubtype(List.class, ArrayList.class);
+    assert ReflectionPlume.isSubtype(Integer.class, Integer.class);
+    assert ReflectionPlume.isSubtype(Cloneable.class, Cloneable.class);
+    assert ReflectionPlume.isSubtype(Object.class, Object.class);
+    assert ReflectionPlume.isSubtype(Integer.class, Number.class);
+    assert !ReflectionPlume.isSubtype(Number.class, Integer.class);
+    assert ReflectionPlume.isSubtype(Integer.class, Comparable.class);
+    assert !ReflectionPlume.isSubtype(Comparable.class, Integer.class);
+    assert ReflectionPlume.isSubtype(Integer.class, Object.class);
+    assert !ReflectionPlume.isSubtype(Object.class, Integer.class);
+    assert !ReflectionPlume.isSubtype(Integer.class, Float.class);
+    assert ReflectionPlume.isSubtype(Collection.class, Iterable.class);
+    assert !ReflectionPlume.isSubtype(Iterable.class, Collection.class);
+    assert ReflectionPlume.isSubtype(ArrayList.class, Iterable.class);
+    assert !ReflectionPlume.isSubtype(Iterable.class, ArrayList.class);
+    assert ReflectionPlume.isSubtype(ArrayList.class, Cloneable.class);
+    assert !ReflectionPlume.isSubtype(Cloneable.class, ArrayList.class);
+    assert ReflectionPlume.isSubtype(ArrayList.class, List.class);
+    assert !ReflectionPlume.isSubtype(List.class, ArrayList.class);
 
     // public static void addToClasspath(String dir)
     // public static final class WildcardFilter implements FilenameFilter
@@ -1847,19 +1847,21 @@ public final class TestPlume {
 
       assert iota0.equals(toArrayList(iota0.iterator()));
       assert iota0.equals(
-          toArrayList(new UtilPlume.IteratorEnumeration<Integer>(iota0.iterator())));
+          toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota0.iterator())));
       assert iota10.equals(toArrayList(iota10.iterator()));
       assert iota10.equals(
-          toArrayList(new UtilPlume.IteratorEnumeration<Integer>(iota10.iterator())));
+          toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
 
       // public static class MergedIterator2 implements Iterator {
       assert iota10_twice.equals(
           toArrayList(
-              new UtilPlume.MergedIterator2<Integer>(iota10.iterator(), iota10.iterator())));
+              new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota10.iterator())));
       assert iota10.equals(
-          toArrayList(new UtilPlume.MergedIterator2<Integer>(iota0.iterator(), iota10.iterator())));
+          toArrayList(
+              new CollectionsPlume.MergedIterator2<Integer>(iota0.iterator(), iota10.iterator())));
       assert iota10.equals(
-          toArrayList(new UtilPlume.MergedIterator2<Integer>(iota10.iterator(), iota0.iterator())));
+          toArrayList(
+              new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota0.iterator())));
 
       // public static class MergedIterator implements Iterator {
       ArrayList<Iterator<Integer>> iota10_iterator_thrice = new ArrayList<Iterator<Integer>>();
@@ -1867,7 +1869,8 @@ public final class TestPlume {
       iota10_iterator_thrice.add(iota10.iterator());
       iota10_iterator_thrice.add(iota10.iterator());
       assert iota10_thrice.equals(
-          toArrayList(new UtilPlume.MergedIterator<Integer>(iota10_iterator_thrice.iterator())));
+          toArrayList(
+              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_thrice.iterator())));
       ArrayList<Iterator<Integer>> iota10_iterator_twice_1 = new ArrayList<Iterator<Integer>>();
       iota10_iterator_twice_1.add(iota0.iterator());
       iota10_iterator_twice_1.add(iota10.iterator());
@@ -1881,11 +1884,14 @@ public final class TestPlume {
       iota10_iterator_twice_3.add(iota10.iterator());
       iota10_iterator_twice_3.add(iota0.iterator());
       assert iota10_twice.equals(
-          toArrayList(new UtilPlume.MergedIterator<Integer>(iota10_iterator_twice_1.iterator())));
+          toArrayList(
+              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_twice_1.iterator())));
       assert iota10_twice.equals(
-          toArrayList(new UtilPlume.MergedIterator<Integer>(iota10_iterator_twice_2.iterator())));
+          toArrayList(
+              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_twice_2.iterator())));
       assert iota10_twice.equals(
-          toArrayList(new UtilPlume.MergedIterator<Integer>(iota10_iterator_twice_3.iterator())));
+          toArrayList(
+              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_twice_3.iterator())));
 
       class OddFilter implements Filter<Integer> {
         public OddFilter() {}
@@ -1905,7 +1911,8 @@ public final class TestPlume {
         }
       }
       assert iota10_odd.equals(
-          toArrayList(new UtilPlume.FilteredIterator<Integer>(iota10.iterator(), new OddFilter())));
+          toArrayList(
+              new CollectionsPlume.FilteredIterator<Integer>(iota10.iterator(), new OddFilter())));
     }
 
     // public static final class RemoveFirstAndLastIterator implements Iterator
@@ -1918,8 +1925,8 @@ public final class TestPlume {
       for (int i = 1; i < 4; i++) {
         iota5middle.add(i);
       }
-      UtilPlume.RemoveFirstAndLastIterator<Integer> rfali =
-          new UtilPlume.RemoveFirstAndLastIterator<Integer>(iota5.iterator());
+      CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali =
+          new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(iota5.iterator());
       ArrayList<Integer> rfali_vector = toArrayList(rfali);
       assert iota5middle.equals(rfali_vector);
       assert rfali.getFirst().equals(0);
@@ -1987,7 +1994,7 @@ public final class TestPlume {
             "index", "value"
           }) // The IotaIterator only contains indexes for totals.length, and since chosen's elements are selected randomly from the IotaIterator, all of its elements are @IndexFor
           List</*@IndexFor("totals")*/ Integer> chosen =
-              UtilPlume.randomElements(new IotaIterator(itor_size), i, r);
+              CollectionsPlume.randomElements(new IotaIterator(itor_size), i, r);
           for (int m = 0; m < chosen.size(); m++) {
             for (int n = m + 1; n < chosen.size(); n++) {
               if (chosen.get(m).intValue() == chosen.get(n).intValue()) {
@@ -2028,19 +2035,19 @@ public final class TestPlume {
     // essentially I am just testing whether the return is erroneous
     try {
       assert null
-          != UtilPlume.methodForName(
-              "org.plumelib.util.UtilPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])");
+          != ReflectionPlume.methodForName(
+              "org.plumelib.util.ReflectionPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])");
       assert null
-          != UtilPlume.methodForName(
-              "org.plumelib.util.UtilPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])");
-      assert null != UtilPlume.methodForName("java.lang.Math.min(int,int)");
+          != ReflectionPlume.methodForName(
+              "org.plumelib.util.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])");
+      assert null != ReflectionPlume.methodForName("java.lang.Math.min(int,int)");
     } catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
     }
     try {
       java.lang.reflect.Method m =
-          UtilPlume.methodForName("org.plumelib.util.UtilPlume.methodForName()");
+          ReflectionPlume.methodForName("org.plumelib.util.ReflectionPlume.methodForName()");
       throw new Error("Didn't throw NoSuchMethodException");
     } catch (NoSuchMethodException e) {
       // nothing to do; this is the expected case
@@ -2287,11 +2294,11 @@ public final class TestPlume {
     l1233.add(2);
     l1233.add(3);
 
-    assert UtilPlume.removeDuplicates(l123).equals(l123);
-    assert UtilPlume.removeDuplicates(l123123).equals(l123);
-    assert UtilPlume.removeDuplicates(l12223).equals(l123);
-    assert UtilPlume.removeDuplicates(l1123).equals(l123);
-    assert UtilPlume.removeDuplicates(l1233).equals(l123);
+    assert CollectionsPlume.removeDuplicates(l123).equals(l123);
+    assert CollectionsPlume.removeDuplicates(l123123).equals(l123);
+    assert CollectionsPlume.removeDuplicates(l12223).equals(l123);
+    assert CollectionsPlume.removeDuplicates(l1123).equals(l123);
+    assert CollectionsPlume.removeDuplicates(l1233).equals(l123);
 
     // public boolean deepEquals(Object o1, Object o2)
 
@@ -2299,9 +2306,9 @@ public final class TestPlume {
     boolean[] zatft2 = new boolean[] {true, false, true};
     boolean[] zatff = new boolean[] {true, false, false};
     assert !zatft1.equals(zatft2);
-    assert UtilPlume.deepEquals(zatft1, zatft2);
+    assert CollectionsPlume.deepEquals(zatft1, zatft2);
     assert !zatft1.equals(zatff);
-    assert !UtilPlume.deepEquals(zatft1, zatff);
+    assert !CollectionsPlume.deepEquals(zatft1, zatff);
 
     List<Object> l1 = new ArrayList<Object>();
     List<Object> l2 = new ArrayList<Object>();
@@ -2316,9 +2323,9 @@ public final class TestPlume {
     // assert ! l1.equals(l2);
     // assert ! l1.equals(l3);
     // assert ! l2.equals(l3);
-    assert UtilPlume.deepEquals(l1, l2);
-    assert !UtilPlume.deepEquals(l1, l3);
-    assert !UtilPlume.deepEquals(l2, l3);
+    assert CollectionsPlume.deepEquals(l1, l2);
+    assert !CollectionsPlume.deepEquals(l1, l3);
+    assert !CollectionsPlume.deepEquals(l2, l3);
 
     // This is tested by the tokens methods.
     // public static ArrayList makeArrayList(Enumeration e)
@@ -2759,13 +2766,13 @@ public final class TestPlume {
     List<Object> bc = Arrays.<Object>asList(new Object[] {b, c});
 
     List<Object> abc = Arrays.asList(a, b, c);
-    List<List<Object>> combo1 = UtilPlume.create_combinations(1, 0, abc);
+    List<List<Object>> combo1 = CollectionsPlume.create_combinations(1, 0, abc);
     assert combo1.size() == 3;
     assert combo1.contains(a_list);
     assert combo1.contains(b_list);
     assert combo1.contains(c_list);
 
-    List<List<Object>> combo2 = UtilPlume.create_combinations(2, 0, abc);
+    List<List<Object>> combo2 = CollectionsPlume.create_combinations(2, 0, abc);
     assert combo2.size() == 6;
     assert combo2.contains(aa);
     assert combo2.contains(ab);
@@ -2782,13 +2789,13 @@ public final class TestPlume {
     Integer i11 = 11;
     Integer i12 = 12;
 
-    List<ArrayList<Integer>> combo3 = UtilPlume.create_combinations(1, 0, 2);
+    List<ArrayList<Integer>> combo3 = CollectionsPlume.create_combinations(1, 0, 2);
     assert combo3.size() == 3;
     assert combo3.contains(Arrays.asList(new Integer[] {i0}));
     assert combo3.contains(Arrays.asList(new Integer[] {i1}));
     assert combo3.contains(Arrays.asList(new Integer[] {i2}));
 
-    List<ArrayList<Integer>> combo4 = UtilPlume.create_combinations(2, 0, 2);
+    List<ArrayList<Integer>> combo4 = CollectionsPlume.create_combinations(2, 0, 2);
     assert combo4.size() == 6;
     assert combo4.contains(Arrays.asList(new Integer[] {i0, i0}));
     assert combo4.contains(Arrays.asList(new Integer[] {i0, i1}));
@@ -2797,7 +2804,7 @@ public final class TestPlume {
     assert combo4.contains(Arrays.asList(new Integer[] {i1, i2}));
     assert combo4.contains(Arrays.asList(new Integer[] {i2, i2}));
 
-    List<ArrayList<Integer>> combo5 = UtilPlume.create_combinations(2, 10, 12);
+    List<ArrayList<Integer>> combo5 = CollectionsPlume.create_combinations(2, 10, 12);
     assert combo5.size() == 6;
     assert combo5.contains(Arrays.asList(new Integer[] {i10, i10}));
     assert combo5.contains(Arrays.asList(new Integer[] {i10, i11}));
@@ -2810,8 +2817,8 @@ public final class TestPlume {
   @Test
   public void test_fullyQualifiedNameToSimpleName() {
 
-    assert UtilPlume.fullyQualifiedNameToSimpleName("java.lang.String").equals("String");
-    assert UtilPlume.fullyQualifiedNameToSimpleName("String").equals("String");
+    assert ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String").equals("String");
+    assert ReflectionPlume.fullyQualifiedNameToSimpleName("String").equals("String");
   }
 
   @Test
