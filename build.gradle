@@ -6,10 +6,11 @@ plugins {
   // id "com.github.sherter.google-java-format" version "0.6"
 }
 
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 // Checker Framework pluggable type-checking
 apply from: 'gradle/checkerframework-annos-in-comments.gradle'
+// To upload to Maven Central, run:  ./gradlew uploadArchives
 apply from: 'gradle/mavencentral.gradle'
 
 dependencies {
