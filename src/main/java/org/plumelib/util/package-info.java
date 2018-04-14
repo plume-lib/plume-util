@@ -9,6 +9,8 @@
  *   <dt>{@link org.plumelib.util.ArraysPlume ArraysPlume}
  *   <dd>Utilities for manipulating arrays and collections. This complements java.util.Arrays and
  *       java.util.Collections.
+ *   <dt>{@link org.plumelib.util.CollectionsPlume CollectionsPlume}
+ *   <dd>Utilities for manipulating collections, iterators, lists, maps, and sets.
  *   <dt>{@link org.plumelib.util.LimitedSizeSet LimitedSizeSet}
  *   <dd>LimitedSizeSet stores up to some maximum number of unique values, at which point its rep is
  *       nulled, in order to save space. <br>
@@ -24,6 +26,8 @@
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
  *       their respective sort orders. (This opertation is sometimes called "zipping".)
+ *   <dt>{@link org.plumelib.util.ReflectionPlume ReflectionPlume}
+ *   <dd>Utilities for manipulating reflection, class loaders, etc.
  * </dl>
  *
  * <h3 id="Text_processing">Text processing</h3>
