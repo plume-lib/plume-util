@@ -29,3 +29,9 @@ task javadocWeb(type: Javadoc) {
   destinationDir = file("/cse/web/research/plumelib/plume-util/api")
   classpath = project.sourceSets.main.compileClasspath
 }
+
+/* Make Emacs TAGS table */
+task tags(type: Exec) {
+  description "Run etags to create an Emacs TAGS table"
+  commandLine "bash", "-c", "find src/ -name '*.java' | sort | xargs etags"
+}
