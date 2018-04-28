@@ -654,6 +654,7 @@ public final class ReflectionPlume {
    *
    * @param a a class
    * @param b a class
+   * @param <T> the (inferred) least upper bound of the two arguments
    * @return the least upper bound of the two classes, or null if both are null
    */
   public static <T> /*@Nullable*/ Class<T> leastUpperBound(
@@ -683,6 +684,7 @@ public final class ReflectionPlume {
    * Returns the least upper bound of all the given classes.
    *
    * @param classes a non-empty list of classes
+   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of all the given classes
    */
   public static <T> /*@Nullable*/ Class<T> leastUpperBound(/*@Nullable*/ Class<T>[] classes) {
@@ -697,6 +699,7 @@ public final class ReflectionPlume {
    * Returns the least upper bound of the classes of the given objects.
    *
    * @param objects a list of objects
+   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
@@ -714,6 +717,7 @@ public final class ReflectionPlume {
    * Returns the least upper bound of the classes of the given objects.
    *
    * @param objects a non-empty list of objects
+   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
