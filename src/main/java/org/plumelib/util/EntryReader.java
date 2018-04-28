@@ -11,6 +11,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.CharBuffer;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -376,7 +377,50 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(reader, reader.toString(), null, null);
   }
 
-  /// File Constructors
+  /// Path constructors
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param path initial file to read
+   * @param comment_re regular expression that matches comments. Any text that matches comment_re is
+   *     removed. A line that is entirely a comment is ignored.
+   * @param include_re regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   */
+  public EntryReader(
+      Path path,
+      /*@Nullable*/ /*@Regex*/ String comment_re,
+      /*@Nullable*/ /*@Regex(1)*/ String include_re)
+      throws IOException {
+    this(UtilPlume.fileReader(path), path.toString(), comment_re, include_re);
+  }
+
+  /**
+   * Create a EntryReader that does not support comments or include directives.
+   *
+   * @param path the file to read
+   * @throws IOException if there is a problem reading the file
+   * @see #EntryReader(File,String,String)
+   */
+  public EntryReader(Path path) throws IOException {
+    this(path, null, null);
+  }
+
+  /**
+   * Create a EntryReader that does not support comments or include directives.
+   *
+   * @param path the file to read
+   * @param charsetName the character set to use
+   * @throws IOException if there is a problem reading the file
+   * @see #EntryReader(Path,String,String)
+   */
+  public EntryReader(Path path, String charsetName) throws IOException {
+    this(UtilPlume.fileInputStream(path), charsetName, path.toString(), null, null);
+  }
+
+  /// File constructors
 
   /**
    * Create an EntryReader.

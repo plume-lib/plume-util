@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -181,6 +182,32 @@ public final class UtilPlume {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
+   * @param path the possibly-compressed file to read
+   * @return an InputStream for file
+   * @throws IOException if there is trouble reading the file
+   */
+  public static InputStream fileInputStream(Path path) throws IOException {
+    InputStream in;
+    if (path.endsWith(".gz")) {
+      try {
+        in = new GZIPInputStream(new FileInputStream(path.toFile()));
+      } catch (IOException e) {
+        throw new IOException("Problem while reading " + path, e);
+      }
+    } else {
+      in = new FileInputStream(path.toFile());
+    }
+    return in;
+  }
+
+  /**
+   * Returns an InputStream for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
    * @param file the possibly-compressed file to read
    * @return an InputStream for file
    * @throws IOException if there is trouble reading the file
@@ -216,6 +243,49 @@ public final class UtilPlume {
       throws FileNotFoundException, IOException {
     // return fileReader(filename, "ISO-8859-1");
     return fileReader(new File(filename), null);
+  }
+
+  /**
+   * Returns a Reader for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @return an InputStreamReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  public static InputStreamReader fileReader(Path path) throws FileNotFoundException, IOException {
+    return fileReader(path.toFile(), null);
+  }
+
+  /**
+   * Returns a Reader for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param charsetName null, or the name of a Charset to use when reading the file
+   * @return an InputStreamReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  public static InputStreamReader fileReader(Path path, /*@Nullable*/ String charsetName)
+      throws FileNotFoundException, IOException {
+    InputStream in = new FileInputStream(path.toFile());
+    InputStreamReader file_reader;
+    if (charsetName == null) {
+      file_reader = new InputStreamReader(in, UTF_8);
+    } else {
+      file_reader = new InputStreamReader(in, charsetName);
+    }
+    return file_reader;
   }
 
   /**
