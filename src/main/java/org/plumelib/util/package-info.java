@@ -82,11 +82,9 @@
  * <h3 id="java-miscellaneous">Miscellaneous</h3>
  *
  * <dl>
- *   <!--
- *   <dt>{link org.plumelib.util.DeterministicObject DeterministicObject}
+ *   <dt>{@link org.plumelib.util.DeterministicObject DeterministicObject}
  *   <dd>A version of <tt>Object</tt> with a deterministic <tt>hashCode()</tt> method. Instantiate
  *       this instead of <tt>Object</tt> to remove a source of nondeterminism from your programs.
- * -->
  *   <dt>{@link org.plumelib.util.GraphPlume GraphPlume}
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
