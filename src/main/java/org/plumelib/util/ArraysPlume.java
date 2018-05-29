@@ -3418,7 +3418,6 @@ public final class ArraysPlume {
    *     member so far
    * @return a list of partitionings, where each contains exactly k subsets
    */
-  @SuppressWarnings("index") // https://github.com/kelloggm/checker-framework/issues/152
   // "p.addToPart(i, ...)" is OK: i is < numNonemptyParts
   //  and p.size() = numNonemptyParts + numEmptyParts, both of which are non-negative.
   public static <T extends /*@NonNull*/ Object> List<Partitioning<T>> partitionIntoHelper(

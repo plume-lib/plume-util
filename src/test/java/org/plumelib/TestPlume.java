@@ -2732,7 +2732,6 @@ public final class TestPlume {
   }
 
   /** Initialize f2 to be the same as two copies of f1 */
-  @SuppressWarnings("index") // https://github.com/kelloggm/checker-framework/issues/147
   void initialize_f1_and_f2(int j, double /*@ArrayLen(10)*/[] f1, double /*@ArrayLen(20)*/[] f2) {
 
     // start two arrays out exactly equal

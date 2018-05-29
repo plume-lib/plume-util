@@ -785,8 +785,6 @@ public final class Intern {
   /*@Pure*/
   public static /*@PolyNull*/ /*@Interned*/ Object /*@Interned*/ /*@PolyValue*/ /*@SameLen("#1")*/[]
       intern(/*@PolyNull*/ /*@Interned*/ /*@PolyValue*/ Object[] a) {
-    @SuppressWarnings(
-        "nullness") // Polynull:  value = parameter a, so same type & nullness as for parameter a
     WeakReference</*@Nullable*/ /*@Interned*/ Object /*@Interned*/ []> lookup =
         internedObjectArrays.get(a);
     /*@Nullable*/ /*@Interned*/ Object /*@Interned*/ [] result = (lookup != null) ? lookup.get() : null;
@@ -820,7 +818,6 @@ public final class Intern {
     } else if (a instanceof String) {
       return intern((String) a);
     } else if (a instanceof String[]) {
-      @SuppressWarnings("interning")
       /*@Interned*/ String[] asArray = (/*@Interned*/ String[]) a;
       return intern(asArray);
     } else if (a instanceof Integer) {
@@ -836,7 +833,6 @@ public final class Intern {
     } else if (a instanceof double[]) {
       return intern((double[]) a);
     } else if (a instanceof Object[]) {
-      @SuppressWarnings("interning")
       /*@Interned*/ Object[] asArray = (/*@Interned*/ Object[]) a;
       return intern(asArray);
     } else {
