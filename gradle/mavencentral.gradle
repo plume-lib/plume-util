@@ -12,7 +12,7 @@ apply plugin: 'signing'
 
 group = "org.plumelib"
 archivesBaseName = "plume-util"
-version = "0.0.2"
+version = "0.0.3"
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
