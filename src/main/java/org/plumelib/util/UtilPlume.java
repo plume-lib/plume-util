@@ -1435,7 +1435,6 @@ public final class UtilPlume {
    *
    * <p>If you are using Java 8 or later, then use the {@code String.join()} method instead.
    *
-   * @see org.plumelib.util.ArraysPlume#toString(int[])
    * @param a array of values to concatenate
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
@@ -1459,7 +1458,6 @@ public final class UtilPlume {
    * Concatenate the string representations of the objects, placing the system-specific line
    * separator between them.
    *
-   * @see org.plumelib.util.ArraysPlume#toString(int[])
    * @param a array of values to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
    */
