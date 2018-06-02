@@ -2030,9 +2030,82 @@ public final class ArraysPlume {
   /// Printing
   ///
 
-  // This should be extended to all types, when I get around to it.  The
-  // methods are patterned after that of java.util.ArrayList (and use its
-  // output format).
+  /**
+   * Returns a string representation of the contents of the specified array. The argument must be an
+   * array or null. This just dispatches one of the 9 overloaded versions of {@code
+   * java.util.Arrays.toString()}.
+   *
+   * @param a an array
+   * @return a string representation of the array
+   * @throws IllegalArgumentException if a is not an array
+   */
+  @SuppressWarnings("purity") // defensive coding: throw exception when argument is invalid
+  /*@SideEffectFree*/
+  public static String toString(Object a) {
+    if (a == null) {
+      return "null";
+    } else if (a instanceof boolean[]) {
+      return Arrays.toString((boolean[]) a);
+    } else if (a instanceof byte[]) {
+      return Arrays.toString((byte[]) a);
+    } else if (a instanceof char[]) {
+      return Arrays.toString((char[]) a);
+    } else if (a instanceof double[]) {
+      return Arrays.toString((double[]) a);
+    } else if (a instanceof float[]) {
+      return Arrays.toString((float[]) a);
+    } else if (a instanceof int[]) {
+      return Arrays.toString((int[]) a);
+    } else if (a instanceof long[]) {
+      return Arrays.toString((long[]) a);
+    } else if (a instanceof short[]) {
+      return Arrays.toString((short[]) a);
+    } else if (a instanceof Object[]) {
+      return Arrays.toString((Object[]) a);
+    } else if (a instanceof List<?>) {
+      // Handles lists, but this is not a documented feature
+      return a.toString();
+    } else {
+      throw new IllegalArgumentException(
+          "Argument is not an array, but has class " + a.getClass().getName());
+    }
+  }
+
+  /**
+   * Returns the length of the argument array.
+   *
+   * @param a an array
+   * @return the length of the array
+   * @throws IllegalArgumentException if obj is null or is not an array
+   */
+  @SuppressWarnings("purity") // defensive coding: throw exception when argument is invalid
+  /*@Pure*/
+  public static /*@NonNegative*/ int length(Object a) throws IllegalArgumentException {
+    if (a == null) {
+      throw new IllegalArgumentException("Argument is null");
+    } else if (a instanceof boolean[]) {
+      return ((boolean[]) a).length;
+    } else if (a instanceof byte[]) {
+      return ((byte[]) a).length;
+    } else if (a instanceof char[]) {
+      return ((char[]) a).length;
+    } else if (a instanceof double[]) {
+      return ((double[]) a).length;
+    } else if (a instanceof float[]) {
+      return ((float[]) a).length;
+    } else if (a instanceof int[]) {
+      return ((int[]) a).length;
+    } else if (a instanceof long[]) {
+      return ((long[]) a).length;
+    } else if (a instanceof short[]) {
+      return ((short[]) a).length;
+    } else if (a instanceof Object[]) {
+      return ((Object[]) a).length;
+    } else {
+      throw new IllegalArgumentException(
+          "Argument is not an array, but has class " + a.getClass().getName());
+    }
+  }
 
   /**
    * Return a string representation of the array. The representation is patterned after that of
@@ -2124,7 +2197,7 @@ public final class ArraysPlume {
 
   /**
    * Return a string representation of the collection. The representation is patterned after that of
-   * java.util.ArrayList.
+   * java.util.ArrayList. The representation permits quoting (or not) of strings.
    *
    * @param a a collection
    * @param quoted whether to quote the collection elements that are Java strings
@@ -2156,137 +2229,6 @@ public final class ArraysPlume {
     }
     sb.append("]");
     return sb.toString();
-  }
-
-  /**
-   * Return a string representation of the array. The representation is patterned after that of
-   * java.util.ArrayList.
-   *
-   * @param a an array
-   * @return a string representation of the array
-   * @see java.util.ArrayList#toString
-   */
-  @Deprecated
-  /*@SideEffectFree*/
-  public static String toString(int /*@Nullable*/ [] a) {
-    return Arrays.toString(a);
-  }
-
-  /**
-   * Return a string representation of the array. The representation is patterned after that of
-   * java.util.ArrayList.
-   *
-   * @param a an array
-   * @return a string representation of the array
-   * @see java.util.ArrayList#toString
-   */
-  @SuppressWarnings("purity") // side effect to local state (string creation)
-  /*@SideEffectFree*/
-  public static String toString(long /*@Nullable*/ [] a) {
-    return Arrays.toString(a);
-  }
-
-  /**
-   * Return a string representation of the array. The representation is patterned after that of
-   * java.util.ArrayList.
-   *
-   * @param a an array
-   * @return a string representation of the array
-   * @see java.util.ArrayList#toString
-   */
-  @SuppressWarnings("purity") // side effect to local state (string creation)
-  /*@SideEffectFree*/
-  public static String toString(double /*@Nullable*/ [] a) {
-    return Arrays.toString(a);
-  }
-
-  /**
-   * Return a string representation of the array. The representation is patterned after that of
-   * java.util.ArrayList.
-   *
-   * @param a an array
-   * @return a string representation of the array
-   * @see java.util.ArrayList#toString
-   */
-  @SuppressWarnings("purity") // side effect to local state (string creation)
-  /*@SideEffectFree*/
-  public static String toString(float /*@Nullable*/ [] a) {
-    return Arrays.toString(a);
-  }
-
-  /**
-   * Return a string representation of the array. The representation is patterned after that of
-   * java.util.ArrayList.
-   *
-   * @param a an array
-   * @return a string representation of the array
-   * @see java.util.ArrayList#toString
-   */
-  @SuppressWarnings("purity") // side effect to local state (string creation)
-  /*@SideEffectFree*/
-  public static String toString(boolean /*@Nullable*/ [] a) {
-    return Arrays.toString(a);
-  }
-
-  /**
-   * Casts obj down to the proper array type then calls the appropriate toString() method. Only call
-   * this method if obj is a boolean, double, int, long, or Object array.
-   *
-   * @param obj an array
-   * @return a string representation of the array
-   * @throws IllegalArgumentException if obj is null or is not one of the types mentioned above
-   */
-  @SuppressWarnings("purity") // defensive coding: throw exception when argument is invalid
-  /*@SideEffectFree*/
-  public static String toString(Object obj) throws IllegalArgumentException {
-    if (obj == null) {
-      return "null";
-    } else if (obj instanceof boolean[]) {
-      return toString((boolean[]) obj);
-    } else if (obj instanceof double[]) {
-      return toString((double[]) obj);
-    } else if (obj instanceof float[]) {
-      return toString((float[]) obj);
-    } else if (obj instanceof int[]) {
-      return toString((int[]) obj);
-    } else if (obj instanceof long[]) {
-      return toString((long[]) obj);
-    } else if (obj instanceof Object[]) {
-      return toString((Object[]) obj);
-    } else if (obj instanceof List<?>) {
-      return toString((List<?>) obj);
-    } else {
-      throw new IllegalArgumentException("Argument is of class " + obj.getClass().getName());
-    }
-  }
-
-  /**
-   * Casts obj down to the proper array type then calls .length. Only call this method if obj is a
-   * boolean, double, int, long, or Object array.
-   *
-   * @param obj a list
-   * @return a string representation of the array
-   * @throws IllegalArgumentException if obj is null or is not one of the types mentioned above
-   */
-  @SuppressWarnings("purity") // defensive coding: throw exception when argument is invalid
-  /*@Pure*/
-  public static /*@NonNegative*/ int length(Object obj) throws IllegalArgumentException {
-    if (obj instanceof boolean[]) {
-      return ((boolean[]) obj).length;
-    } else if (obj instanceof double[]) {
-      return ((double[]) obj).length;
-    } else if (obj instanceof int[]) {
-      return ((int[]) obj).length;
-    } else if (obj instanceof long[]) {
-      return ((long[]) obj).length;
-    } else if (obj instanceof Object[]) {
-      return ((Object[]) obj).length;
-    } else if (obj instanceof List<?>) {
-      return ((List<?>) obj).size();
-    } else {
-      throw new IllegalArgumentException(
-          "Argument is " + ((obj == null) ? "null" : "of class " + obj.getClass().getName()));
-    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
