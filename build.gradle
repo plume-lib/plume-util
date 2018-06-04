@@ -12,7 +12,7 @@ apply plugin: 'java-library'
 apply from: 'gradle/checkerframework-annos-in-comments.gradle'
 // To upload to Maven Central:
 //  * update version number in gradle/mavencentral.gradle
-//  * run:  ./gradlew uploadArchives
+//  * run:  ./gradlew javadocWeb uploadArchives
 //  * browse to https://oss.sonatype.org/#stagingRepositories
 apply from: 'gradle/mavencentral.gradle'
 
