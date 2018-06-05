@@ -200,8 +200,8 @@ public class ClassDeterministic {
   static MethodComparator methodComparator = new MethodComparator();
 
   /**
-   * Compares Method objects by signature: compares name, number of parameters, and parameter type
-   * names (but not return type).
+   * Compares Method objects by signature: compares name, number of parameters, parameter type
+   * names, declaring class, and return type (which is necessary to distinguish bridge methods).
    */
   private static class MethodComparator implements Comparator<Method> {
 
@@ -229,6 +229,12 @@ public class ClassDeterministic {
       // Consider the declaring class last.  This minimizes differences in order when overriding
       // relationships in a library have changed.
       result = classComparator.compare(m1.getDeclaringClass(), m2.getDeclaringClass());
+      if (result != 0) {
+        return result;
+      }
+      // Two methods in a classfile can have the same name and argument types
+      // if one is a bridge method.  Distinguish them by their return type.
+      result = classComparator.compare(m1.getReturnType(), m2.getReturnType());
       if (result != 0) {
         return result;
       }
