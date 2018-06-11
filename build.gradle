@@ -18,6 +18,7 @@ apply from: 'gradle/mavencentral.gradle'
 
 dependencies {
   testImplementation 'junit:junit:4.12'
+  implementation 'org.plumelib:bcel-util:0.0.9' # for JvmUtil.binaryNameToClassGetName(String)
 }
 
 repositories {

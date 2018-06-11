@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.plumelib.bcelutil.JvmUtil;
 
 /*>>>
 import org.checkerframework.checker.index.qual.*;
@@ -125,243 +126,6 @@ public final class ReflectionPlume {
     }
   }
 
-  @Deprecated
-  private static HashMap</*@SourceNameForNonArrayNonInner*/ String, /*@FieldDescriptor*/ String>
-      primitiveClassesJvm =
-          new HashMap</*@SourceNameForNonArrayNonInner*/ String, /*@FieldDescriptor*/ String>(8);
-
-  static {
-    primitiveClassesJvm.put("boolean", "Z");
-    primitiveClassesJvm.put("byte", "B");
-    primitiveClassesJvm.put("char", "C");
-    primitiveClassesJvm.put("double", "D");
-    primitiveClassesJvm.put("float", "F");
-    primitiveClassesJvm.put("int", "I");
-    primitiveClassesJvm.put("long", "J");
-    primitiveClassesJvm.put("short", "S");
-  }
-
-  /**
-   * Convert a binary name to a field descriptor. For example, convert "java.lang.Object[]" to
-   * "[Ljava/lang/Object;" or "int" to "I".
-   *
-   * @param classname name of the class, in binary class name format
-   * @return name of the class, in field descriptor format
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  @SuppressWarnings("signature") // conversion routine
-  public static /*@FieldDescriptor*/ String binaryNameToFieldDescriptor(
-      /*@BinaryName*/ String classname) {
-    int dims = 0;
-    String sans_array = classname;
-    while (sans_array.endsWith("[]")) {
-      dims++;
-      sans_array = sans_array.substring(0, sans_array.length() - 2);
-    }
-    String result = primitiveClassesJvm.get(sans_array);
-    if (result == null) {
-      result = "L" + sans_array + ";";
-    }
-    for (int i = 0; i < dims; i++) {
-      result = "[" + result;
-    }
-    return result.replace('.', '/');
-  }
-
-  /**
-   * Convert a primitive java type name (e.g., "int", "double", etc.) to a field descriptor (e.g.,
-   * "I", "D", etc.).
-   *
-   * @param primitive_name name of the type, in Java format
-   * @return name of the type, in field descriptor format
-   * @throws IllegalArgumentException if primitive_name is not a valid primitive type name
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  public static /*@FieldDescriptor*/ String primitiveTypeNameToFieldDescriptor(
-      String primitive_name) {
-    String result = primitiveClassesJvm.get(primitive_name);
-    if (result == null) {
-      throw new IllegalArgumentException("Not the name of a primitive type: " + primitive_name);
-    }
-    return result;
-  }
-
-  /**
-   * Convert from a BinaryName to the format of {@link Class#getName()}.
-   *
-   * @param bn the binary name to convert
-   * @return the class name, in Class.getName format
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  @SuppressWarnings("signature") // conversion routine
-  public static /*@ClassGetName*/ String binaryNameToClassGetName(/*BinaryName*/ String bn) {
-    if (bn.endsWith("[]")) {
-      return binaryNameToFieldDescriptor(bn).replace('/', '.');
-    } else {
-      return bn;
-    }
-  }
-
-  /**
-   * Convert from a FieldDescriptor to the format of {@link Class#getName()}.
-   *
-   * @param fd the class, in field descriptor format
-   * @return the class name, in Class.getName format
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  @SuppressWarnings("signature") // conversion routine
-  public static /*@ClassGetName*/ String fieldDescriptorToClassGetName(
-      /*FieldDescriptor*/ String fd) {
-    if (fd.startsWith("[")) {
-      return fd.replace('/', '.');
-    } else {
-      return fieldDescriptorToBinaryName(fd);
-    }
-  }
-
-  /**
-   * Convert a fully-qualified argument list from Java format to JVML format. For example, convert
-   * "(java.lang.Integer[], int, java.lang.Integer[][])" to
-   * "([Ljava/lang/Integer;I[[Ljava/lang/Integer;)".
-   *
-   * @param arglist an argument list, in Java format
-   * @return argument list, in JVML format
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  public static String arglistToJvm(String arglist) {
-    if (!(arglist.startsWith("(") && arglist.endsWith(")"))) {
-      throw new Error("Malformed arglist: " + arglist);
-    }
-    String result = "(";
-    String comma_sep_args = arglist.substring(1, arglist.length() - 1);
-    StringTokenizer args_tokenizer = new StringTokenizer(comma_sep_args, ",", false);
-    while (args_tokenizer.hasMoreTokens()) {
-      @SuppressWarnings("signature") // substring
-      /*@BinaryName*/ String arg = args_tokenizer.nextToken().trim();
-      result += binaryNameToFieldDescriptor(arg);
-    }
-    result += ")";
-    // System.out.println("arglistToJvm: " + arglist + " => " + result);
-    return result;
-  }
-
-  @Deprecated
-  private static HashMap<String, String> primitiveClassesFromJvm = new HashMap<String, String>(8);
-
-  static {
-    primitiveClassesFromJvm.put("Z", "boolean");
-    primitiveClassesFromJvm.put("B", "byte");
-    primitiveClassesFromJvm.put("C", "char");
-    primitiveClassesFromJvm.put("D", "double");
-    primitiveClassesFromJvm.put("F", "float");
-    primitiveClassesFromJvm.put("I", "int");
-    primitiveClassesFromJvm.put("J", "long");
-    primitiveClassesFromJvm.put("S", "short");
-  }
-
-  // does not convert "V" to "void".  Should it?
-  /**
-   * Convert a field descriptor to a binary name. For example, convert "[Ljava/lang/Object;" to
-   * "java.lang.Object[]" or "I" to "int".
-   *
-   * @param classname name of the type, in JVML format
-   * @return name of the type, in Java format
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  @SuppressWarnings("signature") // conversion routine
-  public static /*@BinaryName*/ String fieldDescriptorToBinaryName(String classname) {
-    if (classname.equals("")) {
-      throw new Error("Empty string passed to fieldDescriptorToBinaryName");
-    }
-    int dims = 0;
-    while (classname.startsWith("[")) {
-      dims++;
-      classname = classname.substring(1);
-    }
-    String result;
-    if (classname.startsWith("L") && classname.endsWith(";")) {
-      result = classname.substring(1, classname.length() - 1);
-    } else {
-      result = primitiveClassesFromJvm.get(classname);
-      if (result == null) {
-        throw new Error("Malformed base class: " + classname);
-      }
-    }
-    for (int i = 0; i < dims; i++) {
-      result += "[]";
-    }
-    return result.replace('/', '.');
-  }
-
-  /**
-   * Convert an argument list from JVML format to Java format. For example, convert
-   * "([Ljava/lang/Integer;I[[Ljava/lang/Integer;)" to "(java.lang.Integer[], int,
-   * java.lang.Integer[][])".
-   *
-   * @param arglist an argument list, in JVML format
-   * @return argument list, in Java format
-   * @deprecated use version in org.plumelib.bcelutil instead
-   */
-  @Deprecated
-  public static String arglistFromJvm(String arglist) {
-    if (!(arglist.startsWith("(") && arglist.endsWith(")"))) {
-      throw new Error("Malformed arglist: " + arglist);
-    }
-    String result = "(";
-    /*@Positive*/ int pos = 1;
-    while (pos < arglist.length() - 1) {
-      if (pos > 1) {
-        result += ", ";
-      }
-      int nonarray_pos = pos;
-      while (arglist.charAt(nonarray_pos) == '[') {
-        nonarray_pos++;
-        if (nonarray_pos >= arglist.length()) {
-          throw new Error("Malformed arglist: " + arglist);
-        }
-      }
-      char c = arglist.charAt(nonarray_pos);
-      if (c == 'L') {
-        int semi_pos = arglist.indexOf(';', nonarray_pos);
-        if (semi_pos == -1) {
-          throw new Error("Malformed arglist: " + arglist);
-        }
-        String fieldDescriptor = arglist.substring(pos, semi_pos + 1);
-        result += fieldDescriptorToBinaryName(fieldDescriptor);
-        pos = semi_pos + 1;
-      } else {
-        String maybe = fieldDescriptorToBinaryName(arglist.substring(pos, nonarray_pos + 1));
-        if (maybe == null) {
-          // return null;
-          throw new Error("Malformed arglist: " + arglist);
-        }
-        result += maybe;
-        pos = nonarray_pos + 1;
-      }
-    }
-    return result + ")";
-  }
-
-  /**
-   * Returns the simple unqualified class name that corresponds to the specified fully qualified
-   * name. For example, if qualified_name is java.lang.String, String will be returned.
-   *
-   * @deprecated use {@link #fullyQualifiedNameToSimpleName} instead.
-   * @param qualified_name the fully-qualified name of a class
-   * @return the simple unqualified name of the class
-   */
-  @Deprecated
-  public static /*@ClassGetSimpleName*/ String unqualified_name(
-      /*@FullyQualifiedName*/ String qualified_name) {
-    return fullyQualifiedNameToSimpleName(qualified_name);
-  }
-
   /**
    * Returns the simple unqualified class name that corresponds to the specified fully qualified
    * name. For example, if qualified_name is java.lang.String, String will be returned.
@@ -380,19 +144,6 @@ public final class ReflectionPlume {
       return (qualified_name);
     }
     return (qualified_name.substring(offset + 1));
-  }
-
-  /**
-   * Returns the simple unqualified class name that corresponds to the specified class. For example
-   * if qualified name of the class is java.lang.String, String will be returned.
-   *
-   * @deprecated use {@link Class#getSimpleName()} instead.
-   * @param cls a class
-   * @return the simple unqualified name of the class
-   */
-  @Deprecated
-  public static /*@ClassGetSimpleName*/ String unqualified_name(Class<?> cls) {
-    return cls.getSimpleName();
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -545,7 +296,7 @@ public final class ReflectionPlume {
       /*@MonotonicNonNull*/ Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
       for (int i = 0; i < argnames.length; i++) {
         String bnArgname = argnames[i].trim();
-        /*@ClassGetName*/ String cgnArgname = binaryNameToClassGetName(bnArgname);
+        /*@ClassGetName*/ String cgnArgname = JvmUtil.binaryNameToClassGetName(bnArgname);
         argclasses_tmp[i] = classForName(cgnArgname);
       }
       @SuppressWarnings("cast")
