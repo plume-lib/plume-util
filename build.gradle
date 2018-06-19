@@ -28,6 +28,12 @@ repositories {
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+// Turn Javadoc warnings into errors.
+javadoc {
+  options.addStringOption('Xmaxwarns', '10000')
+  options.addStringOption('Xwerror', '-quiet')
+}
+
 task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/plume-util/api")
