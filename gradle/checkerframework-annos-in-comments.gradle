@@ -7,9 +7,9 @@ repositories {
 }
 
 configurations {
-   checkerFrameworkCheckerJar {
-     description = 'the Checker Framework, including the Type Annotations compiler'
-   }
+  checkerFrameworkCheckerJar {
+    description = 'the Checker Framework, including the Type Annotations compiler'
+  }
 
   checkerFrameworkAnnotatedJDK {
     description = 'a copy of JDK classes with Checker Framework type qualifers inserted'
@@ -20,32 +20,23 @@ configurations {
   }
 }
 
-// Checker Framework from Maven Central
-// Pass -PcfLocal to use a locally built version of the Checker Framework.
+// By default, use Checker Framework from Maven Central.
+// Pass -PcfLocal to use a locally-built version of the Checker Framework.
 dependencies {
-  if (rootProject.hasProperty('cfLocal')) {
+  if (!rootProject.hasProperty('cfLocal')) {
+    ext.checkerFrameworkVersion = '2.5.2'
+    checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
+    checkerFrameworkJavac "org.checkerframework:compiler:2.4.0"
+    checkerFrameworkCheckerJar "org.checkerframework:checker:${checkerFrameworkVersion}"
+    implementation "org.checkerframework:checker-qual7:2.4.0"
+  } else {
     ext.checkerframeworkdist = "$System.env.CHECKERFRAMEWORK/checker/dist"
     checkerFrameworkAnnotatedJDK fileTree(dir: "${ext.checkerframeworkdist}", include: "jdk8.jar")
     checkerFrameworkJavac fileTree(dir: "${ext.checkerframeworkdist}", include: "javac.jar")
     checkerFrameworkCheckerJar fileTree(dir: "${ext.checkerframeworkdist}", include: 'checker.jar')
     compile fileTree(dir: "${ext.checkerframeworkdist}", include: 'checker-qual.jar')
-  } else {
-    ext.checkerFrameworkVersion = '2.5.2'
-    checkerFrameworkAnnotatedJDK "org.checkerframework:jdk8:${checkerFrameworkVersion}"
-    checkerFrameworkJavac "org.checkerframework:compiler:2.4.0"
-    checkerFrameworkCheckerJar "org.checkerframework:checker:${checkerFrameworkVersion}"
-    compile "org.checkerframework:checker-qual7:2.4.0"
   }
 }
-
-// Checker Framework from local build
-// dependencies {
-//   ext.checkerframeworkdist = "$System.env.CHECKERFRAMEWORK/checker/dist"
-//   checkerFrameworkAnnotatedJDK fileTree(dir: "${ext.checkerframeworkdist}", include: "jdk8.jar")
-//   checkerFrameworkJavac fileTree(dir: "${ext.checkerframeworkdist}", include: "javac.jar")
-//   checkerFrameworkCheckerJar fileTree(dir: "${ext.checkerframeworkdist}", include: 'checker.jar')
-//   compile fileTree(dir: "${ext.checkerframeworkdist}", include: 'checker-qual.jar')
-// }
 
 // // To type-check all projects.
 // allprojects {
