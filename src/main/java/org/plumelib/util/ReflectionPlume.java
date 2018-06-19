@@ -43,6 +43,7 @@ public final class ReflectionPlume {
    * @param sup class to test for being a supertype
    * @return true iff sub is a subtype of sup
    */
+  @SuppressWarnings("purity.not.deterministic.call") // getInterfaces() is used as a set
   /*@Pure*/
   public static boolean isSubtype(Class<?> sub, Class<?> sup) {
     if (sub == sup) {
