@@ -2,7 +2,7 @@ plugins {
   // To make build/libs/options-all.jar, run: gradle shadowJar
   id 'com.github.johnrengelman.shadow' version '2.0.2'
   // Commented out because Google Java Format mis-formats type annotations.
-  // Code formatting with Google Java Format
+  // Code formatting with Google Java Format; use targets "goJF" and "verJF".
   // id "com.github.sherter.google-java-format" version "0.7.1"
 }
 
