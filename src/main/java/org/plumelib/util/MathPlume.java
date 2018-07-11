@@ -464,7 +464,7 @@ public final class MathPlume {
   /*@Pure*/
   /*@StaticallyExecutable*/
   public static int pow(int base, int expt) throws ArithmeticException {
-    return pow_fast(base, expt);
+    return powFast(base, expt);
   }
 
   /**
@@ -478,50 +478,77 @@ public final class MathPlume {
   /*@Pure*/
   /*@StaticallyExecutable*/
   public static long pow(long base, long expt) throws ArithmeticException {
-    return pow_fast(base, expt);
+    return powFast(base, expt);
   }
 
+  /**
+   * Returns of value of the first argument raised to the power of the second argument. Uses a fast
+   * algorithm.
+   *
+   * @param base the base
+   * @param expt the exponent
+   * @return base to the expt power
+   * @see Math#pow(double, double)
+   */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  private static int pow_fast(int base, int expt) throws ArithmeticException {
+  private static int powFast(int base, int expt) throws ArithmeticException {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
 
-    int this_square_pow = base;
+    int thisSquarePow = base;
     int result = 1;
     while (expt > 0) {
       if ((expt & 1) != 0) {
-        result *= this_square_pow;
+        result *= thisSquarePow;
       }
       expt >>= 1;
-      this_square_pow *= this_square_pow;
+      thisSquarePow *= thisSquarePow;
     }
     return result;
   }
 
+  /**
+   * Returns of value of the first argument raised to the power of the second argument. Uses a fast
+   * algorithm.
+   *
+   * @param base the base
+   * @param expt the exponent
+   * @return base to the expt power
+   * @see Math#pow(double, double)
+   */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  private static long pow_fast(long base, long expt) throws ArithmeticException {
+  private static long powFast(long base, long expt) throws ArithmeticException {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
 
-    long this_square_pow = base;
+    long thisSquarePow = base;
     long result = 1;
     while (expt > 0) {
       if ((expt & 1) != 0) {
-        result *= this_square_pow;
+        result *= thisSquarePow;
       }
       expt >>= 1;
-      this_square_pow *= this_square_pow;
+      thisSquarePow *= thisSquarePow;
     }
     return result;
   }
 
+  /**
+   * Returns of value of the first argument raised to the power of the second argument. Uses a slow
+   * algorithm.
+   *
+   * @param base the base
+   * @param expt the exponent
+   * @return base to the expt power
+   * @see Math#pow(double, double)
+   */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  private static int pow_slow(int base, int expt) throws ArithmeticException {
+  private static int powSlow(int base, int expt) throws ArithmeticException {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
@@ -594,7 +621,7 @@ public final class MathPlume {
    */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static int gcd_differences(int[] a) {
+  public static int gcdDifferences(int[] a) {
     // Euclid's method
     if (a.length < 2) {
       return 0;
@@ -668,7 +695,7 @@ public final class MathPlume {
    */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static long gcd_differences(long[] a) {
+  public static long gcdDifferences(long[] a) {
     // Euclid's method
     if (a.length < 2) {
       return 0;
@@ -749,7 +776,7 @@ public final class MathPlume {
    */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static double gcd_differences(double[] a) {
+  public static double gcdDifferences(double[] a) {
     // Euclid's method
     if (a.length < 2) {
       return 0;
@@ -770,17 +797,18 @@ public final class MathPlume {
 
   /**
    * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
-   * {@code mod_nonnegative} rather than {@code mod_positive}.
+   * {@code modNonnegative} rather than {@code modPositive}.
    *
    * @param x value to be modded
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
    */
   @SuppressWarnings(
-      "index") // result is non-negative because either y is positive (-> x % y is non-negative) or |y| is added to x % y, which is also non-negative
+      "index") // result is non-negative because either y is positive (-> x % y is non-negative) or
+  // |y| is added to x % y, which is also non-negative
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static /*@NonNegative*/ /*@LessThan("#2")*/ /*@PolyUpperBound*/ int mod_positive(
+  public static /*@NonNegative*/ /*@LessThan("#2")*/ /*@PolyUpperBound*/ int modPositive(
       int x, /*@PolyUpperBound*/ int y) {
     int result = x % y;
     if (result < 0) {
@@ -806,7 +834,7 @@ public final class MathPlume {
       return null;
     }
 
-    int modulus = Math.abs(gcd_differences(nums));
+    int modulus = Math.abs(gcdDifferences(nums));
     if ((modulus == 0) || (modulus == 1)) {
       return null;
     }
@@ -829,7 +857,7 @@ public final class MathPlume {
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulus(int[])
    */
-  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] modulus_int(Iterator<Integer> itor) {
+  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] modulusInt(Iterator<Integer> itor) {
     if (!itor.hasNext()) {
       return null;
     }
@@ -856,7 +884,7 @@ public final class MathPlume {
     if (count < 3) {
       return null;
     }
-    return new int[] {MathPlume.mod_positive(avalue, modulus), modulus};
+    return new int[] {MathPlume.modPositive(avalue, modulus), modulus};
   }
 
   /**
@@ -864,9 +892,9 @@ public final class MathPlume {
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
-   * <p>This "_strict" version requires its input to be sorted, and no element may be missing.
+   * <p>This "Strict" version requires its input to be sorted, and no element may be missing.
    *
-   * <p>This "_strict" version differs from the regular modulus by requiring that the argument be
+   * <p>This "Strict" version differs from the regular modulus by requiring that the argument be
    * dense: that is, every pair of numbers in the argument array is separated by exactly the
    * modulus.
    *
@@ -874,46 +902,46 @@ public final class MathPlume {
    * input, or they can merely be checked for the condition without the strict density requirement.
    *
    * @param nums array of operands
-   * @param nonstrict_ends whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] modulus_strict(
-      int[] nums, boolean nonstrict_ends) {
+  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] modulusStrict(
+      int[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
       return null;
     }
 
-    int first_index = 0;
-    int last_index = nums.length - 1;
-    int first_nonstrict = 0; // arbitrary initial value
-    int last_nonstrict = 0; // arbitrary initial value
-    if (nonstrict_ends) {
-      first_nonstrict = nums[first_index];
-      first_index++;
-      last_nonstrict = nums[last_index];
-      last_index--;
+    int firstIndex = 0;
+    int lastIndex = nums.length - 1;
+    int firstNonstrict = 0; // arbitrary initial value
+    int lastNonstrict = 0; // arbitrary initial value
+    if (nonstrictEnds) {
+      firstNonstrict = nums[firstIndex];
+      firstIndex++;
+      lastNonstrict = nums[lastIndex];
+      lastIndex--;
     }
-    if (last_index - first_index < 2) {
+    if (lastIndex - firstIndex < 2) {
       return null;
     }
 
-    int modulus = nums[first_index + 1] - nums[first_index];
+    int modulus = nums[firstIndex + 1] - nums[firstIndex];
     if (modulus == 1) {
       return null;
     }
-    for (int i = first_index + 2; i <= last_index; i++) {
+    for (int i = firstIndex + 2; i <= lastIndex; i++) {
       if (nums[i] - nums[i - 1] != modulus) {
         return null;
       }
     }
 
-    int r = mod_positive(nums[first_index], modulus);
-    if (nonstrict_ends) {
-      if ((r != mod_positive(first_nonstrict, modulus))
-          || (r != mod_positive(last_nonstrict, modulus))) {
+    int r = modPositive(nums[firstIndex], modulus);
+    if (nonstrictEnds) {
+      if ((r != modPositive(firstNonstrict, modulus))
+          || (r != modPositive(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -926,24 +954,24 @@ public final class MathPlume {
    * int[] doesn't already exist, because this does not necessarily examine every value produced by
    * its iterator.
    *
-   * <p>For documentation, see {@link #modulus_strict(int[], boolean)}.
+   * <p>For documentation, see {@link #modulusStrict(int[], boolean)}.
    *
    * @param itor iterator of operands
-   * @param nonstrict_ends whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
-   * @see #modulus_strict(int[], boolean)
+   * @see #modulusStrict(int[], boolean)
    */
-  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] modulus_strict_int(
-      Iterator<Integer> itor, boolean nonstrict_ends) {
+  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] modulusStrictInt(
+      Iterator<Integer> itor, boolean nonstrictEnds) {
     if (!itor.hasNext()) {
       return null;
     }
 
-    int first_nonstrict = 0; // arbitrary initial value
-    int last_nonstrict = 0; // arbitrary initial value
-    if (nonstrict_ends) {
-      first_nonstrict = itor.next().intValue();
+    int firstNonstrict = 0; // arbitrary initial value
+    int lastNonstrict = 0; // arbitrary initial value
+    if (nonstrictEnds) {
+      firstNonstrict = itor.next().intValue();
     }
 
     int prev = itor.next().intValue();
@@ -959,8 +987,8 @@ public final class MathPlume {
     while (itor.hasNext()) {
       prev = next;
       next = itor.next().intValue();
-      if (nonstrict_ends && (!itor.hasNext())) {
-        last_nonstrict = next;
+      if (nonstrictEnds && (!itor.hasNext())) {
+        lastNonstrict = next;
         break;
       }
 
@@ -973,10 +1001,10 @@ public final class MathPlume {
       return null;
     }
 
-    int r = MathPlume.mod_positive(next, modulus);
-    if (nonstrict_ends) {
-      if ((r != mod_positive(first_nonstrict, modulus))
-          || (r != mod_positive(last_nonstrict, modulus))) {
+    int r = MathPlume.modPositive(next, modulus);
+    if (nonstrictEnds) {
+      if ((r != modPositive(firstNonstrict, modulus))
+          || (r != modPositive(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -988,17 +1016,18 @@ public final class MathPlume {
 
   /**
    * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
-   * {@code mod_nonnegative} rather than {@code mod_positive}.
+   * {@code modNonnegative} rather than {@code modPositive}.
    *
    * @param x value to be modded
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
    */
   @SuppressWarnings(
-      "index") // result is non-negative because either y is positive (-> x % y is non-negative) or |y| is added to x % y, which is also non-negative
+      "index") // result is non-negative because either y is positive (-> x % y is non-negative) or
+  // |y| is added to x % y, which is also non-negative
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static /*@NonNegative*/ /*@LessThan("#2")*/ /*@PolyUpperBound*/ long mod_positive(
+  public static /*@NonNegative*/ /*@LessThan("#2")*/ /*@PolyUpperBound*/ long modPositive(
       long x, /*@PolyUpperBound*/ long y) {
     long result = x % y;
     if (result < 0) {
@@ -1024,7 +1053,7 @@ public final class MathPlume {
       return null;
     }
 
-    long modulus = Math.abs(gcd_differences(nums));
+    long modulus = Math.abs(gcdDifferences(nums));
     if ((modulus == 0) || (modulus == 1)) {
       return null;
     }
@@ -1047,7 +1076,7 @@ public final class MathPlume {
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulus(long[])
    */
-  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] modulus_long(Iterator<Long> itor) {
+  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] modulusLong(Iterator<Long> itor) {
     if (!itor.hasNext()) {
       return null;
     }
@@ -1074,7 +1103,7 @@ public final class MathPlume {
     if (count < 3) {
       return null;
     }
-    return new long[] {MathPlume.mod_positive(avalue, modulus), modulus};
+    return new long[] {MathPlume.modPositive(avalue, modulus), modulus};
   }
 
   /**
@@ -1082,9 +1111,9 @@ public final class MathPlume {
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
-   * <p>This "_strict" version requires its input to be sorted, and no element may be missing.
+   * <p>This "Strict" version requires its input to be sorted, and no element may be missing.
    *
-   * <p>This "_strict" version differs from the regular modulus by requiring that the argument be
+   * <p>This "Strict" version differs from the regular modulus by requiring that the argument be
    * dense: that is, every pair of numbers in the argument array is separated by exactly the
    * modulus.
    *
@@ -1092,46 +1121,46 @@ public final class MathPlume {
    * input, or they can merely be checked for the condition without the strict density requirement.
    *
    * @param nums array of operands
-   * @param nonstrict_ends whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] modulus_strict(
-      long[] nums, boolean nonstrict_ends) {
+  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] modulusStrict(
+      long[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
       return null;
     }
 
-    int first_index = 0;
-    int last_index = nums.length - 1;
-    long first_nonstrict = 0; // arbitrary initial value
-    long last_nonstrict = 0; // arbitrary initial value
-    if (nonstrict_ends) {
-      first_nonstrict = nums[first_index];
-      first_index++;
-      last_nonstrict = nums[last_index];
-      last_index--;
+    int firstIndex = 0;
+    int lastIndex = nums.length - 1;
+    long firstNonstrict = 0; // arbitrary initial value
+    long lastNonstrict = 0; // arbitrary initial value
+    if (nonstrictEnds) {
+      firstNonstrict = nums[firstIndex];
+      firstIndex++;
+      lastNonstrict = nums[lastIndex];
+      lastIndex--;
     }
-    if (last_index - first_index < 2) {
+    if (lastIndex - firstIndex < 2) {
       return null;
     }
 
-    long modulus = nums[first_index + 1] - nums[first_index];
+    long modulus = nums[firstIndex + 1] - nums[firstIndex];
     if (modulus == 1) {
       return null;
     }
-    for (int i = first_index + 2; i <= last_index; i++) {
+    for (int i = firstIndex + 2; i <= lastIndex; i++) {
       if (nums[i] - nums[i - 1] != modulus) {
         return null;
       }
     }
 
-    long r = mod_positive(nums[first_index], modulus);
-    if (nonstrict_ends) {
-      if ((r != mod_positive(first_nonstrict, modulus))
-          || (r != mod_positive(last_nonstrict, modulus))) {
+    long r = modPositive(nums[firstIndex], modulus);
+    if (nonstrictEnds) {
+      if ((r != modPositive(firstNonstrict, modulus))
+          || (r != modPositive(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -1144,24 +1173,24 @@ public final class MathPlume {
    * long[] doesn't already exist, because this does not necessarily examine every value produced by
    * its iterator.
    *
-   * <p>For documentation, see {@link #modulus_strict(long[], boolean)}.
+   * <p>For documentation, see {@link #modulusStrict(long[], boolean)}.
    *
    * @param itor iterator of operands
-   * @param nonstrict_ends whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
-   * @see #modulus_strict(int[], boolean)
+   * @see #modulusStrict(int[], boolean)
    */
-  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] modulus_strict_long(
-      Iterator<Long> itor, boolean nonstrict_ends) {
+  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] modulusStrictLong(
+      Iterator<Long> itor, boolean nonstrictEnds) {
     if (!itor.hasNext()) {
       return null;
     }
 
-    long first_nonstrict = 0; // arbitrary initial value
-    long last_nonstrict = 0; // arbitrary initial value
-    if (nonstrict_ends) {
-      first_nonstrict = itor.next().longValue();
+    long firstNonstrict = 0; // arbitrary initial value
+    long lastNonstrict = 0; // arbitrary initial value
+    if (nonstrictEnds) {
+      firstNonstrict = itor.next().longValue();
     }
 
     long prev = itor.next().longValue();
@@ -1177,8 +1206,8 @@ public final class MathPlume {
     while (itor.hasNext()) {
       prev = next;
       next = itor.next().longValue();
-      if (nonstrict_ends && (!itor.hasNext())) {
-        last_nonstrict = next;
+      if (nonstrictEnds && (!itor.hasNext())) {
+        lastNonstrict = next;
         break;
       }
 
@@ -1191,10 +1220,10 @@ public final class MathPlume {
       return null;
     }
 
-    long r = MathPlume.mod_positive(next, modulus);
-    if (nonstrict_ends) {
-      if ((r != mod_positive(first_nonstrict, modulus))
-          || (r != mod_positive(last_nonstrict, modulus))) {
+    long r = MathPlume.modPositive(next, modulus);
+    if (nonstrictEnds) {
+      if ((r != modPositive(firstNonstrict, modulus))
+          || (r != modPositive(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -1217,7 +1246,7 @@ public final class MathPlume {
   @SuppressWarnings({"purity", "lock"})
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static int[] missing_numbers(int /*@MinLen(1)*/[] nums) {
+  public static int[] missingNumbers(int /*@MinLen(1)*/[] nums) {
     // avoid modifying parameter
     nums = nums.clone();
     Arrays.sort(nums);
@@ -1245,113 +1274,126 @@ public final class MathPlume {
   /**
    * This iterator returns all the numbers *not* in its argument array (which must be non-empty) but
    * in the argument's range; that is, bigger than its argument's minimum value and smaller than its
-   * argument's maximum value. The result contains no duplicates and is in order. If boolean
-   * add_ends is set, then the bracketing endpoints are also returned; otherwise, all returned
-   * values are between the minimum and maximum of the original values.
+   * argument's maximum value. The result contains no duplicates and is in order. If boolean addEnds
+   * is set, then the bracketing endpoints are also returned; otherwise, all returned values are
+   * between the minimum and maximum of the original values.
    */
   static final class MissingNumbersIteratorInt implements Iterator<Integer> {
-    // Exactly one of nums and nums_itor is non-null.
+    // Exactly one of nums and numsItor is non-null.
+    /** The numbers not to include in the iterator. */
     int /*@MonotonicNonNull*/ /*@MinLen(1)*/[] nums;
-    /*@MonotonicNonNull*/ Iterator<Integer> nums_itor;
-    int current_nonmissing;
-    int current_missing;
-    // Used only if nums != null, in which case it is an index into nums.
-    /*@IndexFor("nums")*/ int current_index;
-    boolean add_ends;
+    /** The numbers not to include in the iterator. */
+    /*@MonotonicNonNull*/ Iterator<Integer> numsItor;
+    /** The current element of the numbers not to include in the iterator. */
+    int currentNonmissing;
+    /** The next element to be returned by the iterator. */
+    int currentMissing;
+    /** Used only if nums != null, in which case it is an index into nums. */
+    /*@IndexFor("nums")*/ int currentIndex;
+    /**
+     * If true, include the value just before the minimum excluded element and the value just after
+     * the maximum excluded element.
+     */
+    boolean addEnds;
 
     /**
-     * An iterator over all the numbers <b>not</b> in its original argument array, but within its
-     * range.
+     * An iterator over all the numbers <b>not</b> in the argument array, but within its range.
      *
      * @param nums a non-empty array
-     * @param add_ends if true, include the bracketing endpoints
+     * @param addEnds if true, include the bracketing endpoints
      */
-    MissingNumbersIteratorInt(int /*@MinLen(1)*/[] nums, boolean add_ends) {
-      this.add_ends = add_ends;
+    MissingNumbersIteratorInt(int /*@MinLen(1)*/[] nums, boolean addEnds) {
+      this.addEnds = addEnds;
       { // avoid modifying parameter
-        int[] nums_copy = new int[nums.length];
-        System.arraycopy(nums, 0, nums_copy, 0, nums.length);
-        nums = nums_copy;
+        int[] numsCopy = new int[nums.length];
+        System.arraycopy(nums, 0, numsCopy, 0, nums.length);
+        nums = numsCopy;
       }
       Arrays.sort(nums);
       this.nums = nums;
-      current_index = 0;
-      current_nonmissing = nums[current_index];
-      if (add_ends) {
-        current_missing = current_nonmissing - 1;
+      currentIndex = 0;
+      currentNonmissing = nums[currentIndex];
+      if (addEnds) {
+        currentMissing = currentNonmissing - 1;
       } else {
-        current_missing = current_nonmissing;
+        currentMissing = currentNonmissing;
       }
     }
 
-    // The argument iterator must return the Integers in sorted order
-    MissingNumbersIteratorInt(Iterator<Integer> nums_itor, boolean add_ends) {
-      this.add_ends = add_ends;
-      if (!nums_itor.hasNext()) {
-        throw new Error("No elements in nums_itor");
+    /**
+     * An iterator over all the numbers <b>not</b> in the argument iterator, but within its range.
+     *
+     * @param numsItor a non-empty iterator; it must return integers in sorted order
+     * @param addEnds if true, include the bracketing endpoints
+     */
+    MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
+      this.addEnds = addEnds;
+      if (!numsItor.hasNext()) {
+        throw new Error("No elements in numsItor");
       }
-      current_nonmissing = nums_itor.next().intValue();
-      if (add_ends) {
-        current_missing = current_nonmissing - 1;
+      currentNonmissing = numsItor.next().intValue();
+      if (addEnds) {
+        currentMissing = currentNonmissing - 1;
       } else {
-        current_missing = current_nonmissing;
+        currentMissing = currentNonmissing;
       }
-      this.nums_itor = nums_itor;
+      this.numsItor = numsItor;
       @SuppressWarnings("index") // unused variable, so value doesn't matter
       /*@IndexFor("nums")*/ int unused = Integer.MIN_VALUE;
-      current_index = unused;
+      currentIndex = unused;
     }
 
     @Override
     public boolean hasNext(/*>>>@GuardSatisfied MissingNumbersIteratorInt this*/) {
-      if (current_missing < current_nonmissing) {
+      if (currentMissing < currentNonmissing) {
         return true;
       }
       // This loop ("while" instead of "if") permits duplicates in nums.
-      while (current_missing == current_nonmissing) {
+      while (currentMissing == currentNonmissing) {
         if (nums != null) {
           @SuppressWarnings(
-              "index") // This breaks the invariant, but it's checked right below and the function exits.
-          /*@IndexFor("nums")*/ int current_index_temp = current_index + 1;
-          current_index = current_index_temp;
-          if (current_index >= nums.length) {
-            if (add_ends) {
-              current_missing++;
+              "index") // This breaks the invariant, but it's checked right below and the function
+          // exits.
+          /*@IndexFor("nums")*/ int currentIndex_temp = currentIndex + 1;
+          currentIndex = currentIndex_temp;
+          if (currentIndex >= nums.length) {
+            if (addEnds) {
+              currentMissing++;
               return true;
             } else {
               return false;
             }
           }
-          current_nonmissing = nums[current_index];
-        } else if (nums_itor != null) {
-          if (!nums_itor.hasNext()) {
-            if (add_ends) {
-              current_missing++;
+          currentNonmissing = nums[currentIndex];
+        } else if (numsItor != null) {
+          if (!numsItor.hasNext()) {
+            if (addEnds) {
+              currentMissing++;
               return true;
             } else {
               return false;
             }
           }
-          // prev_nonmissing is for testing only
-          int prev_nonmissing = current_nonmissing;
-          current_nonmissing = nums_itor.next().intValue();
-          if (!(prev_nonmissing < current_nonmissing)) {
+          // prevNonmissing is for testing only
+          int prevNonmissing = currentNonmissing;
+          currentNonmissing = numsItor.next().intValue();
+          if (!(prevNonmissing < currentNonmissing)) {
             throw new Error(
-                "Non-sorted Iterator supplied to MissingNumbersIteratorInt: prev_nonmissing = "
-                    + prev_nonmissing
-                    + ", current_nonmissing = "
-                    + current_nonmissing);
+                "Non-sorted Iterator supplied to MissingNumbersIteratorInt: prevNonmissing = "
+                    + prevNonmissing
+                    + ", currentNonmissing = "
+                    + currentNonmissing);
           }
         } else {
           throw new Error("Can't happen");
         }
-        current_missing++;
+        currentMissing++;
         return hasNext();
       }
-      if (add_ends) {
-        return (current_missing == current_nonmissing + 1);
+      if (addEnds) {
+        return (currentMissing == currentNonmissing + 1);
       } else {
-        throw new Error("Can't happen: " + current_missing + " " + current_nonmissing);
+        throw new Error("Can't happen: " + currentMissing + " " + currentNonmissing);
       }
     }
 
@@ -1360,8 +1402,8 @@ public final class MathPlume {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
-      Integer result = current_missing;
-      current_missing++;
+      Integer result = currentMissing;
+      currentMissing++;
       return result;
     }
 
@@ -1381,46 +1423,52 @@ public final class MathPlume {
   @SuppressWarnings({"purity", "lock"})
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_strict(int[] nums) {
+  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusStrict(int[] nums) {
     // This implementation is particularly inefficient; find a better way to
     // compute this.  Perhaps obtain the new modulus numbers incrementally
     // instead of all at once.
     if (nums.length == 0) {
       return null;
     }
-    int range = ArraysPlume.element_range(nums);
+    int range = ArraysPlume.elementRange(nums);
     if (range > 65536) {
       return null;
     }
-    return nonmodulus_strict_int_internal(new MissingNumbersIteratorInt(nums, true));
+    return nonmodulusStrictIntInternal(new MissingNumbersIteratorInt(nums, true));
   }
 
-  private static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_strict_int_internal(
+  /**
+   * Helper for {@link #nonmodulusStrict(int[])}.
+   *
+   * @param missing the missing integers
+   * @return value to be returned by {@link #nonmodulusStrict(int[])}
+   */
+  private static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusStrictIntInternal(
       Iterator<Integer> missing) {
     // Must not use regular modulus:  that can produce errors, eg
-    // nonmodulus_strict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
-    // modulus_strict.
-    CollectionsPlume.RemoveFirstAndLastIterator<Integer> missing_nums =
+    // nonmodulusStrict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
+    // modulusStrict.
+    CollectionsPlume.RemoveFirstAndLastIterator<Integer> missingNums =
         new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(missing);
-    int[] result = modulus_strict_int(missing_nums, false);
+    int[] result = modulusStrictInt(missingNums, false);
     if (result == null) {
       return result;
     }
-    if (!check_first_and_last_nonmodulus(result, missing_nums)) {
+    if (!checkFirstAndLastNonmodulus(result, missingNums)) {
       return null;
     }
 
     return result;
   }
 
-  /** The first argument is an array containing two elements. */
-  private static boolean check_first_and_last_nonmodulus(
+  /** @param rm an an array containing two elements */
+  private static boolean checkFirstAndLastNonmodulus(
       int /*@ArrayLen(2)*/[] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
     int m = rm[1];
     int first = rfali.getFirst().intValue();
     int last = rfali.getLast().intValue();
-    return ((r != mod_positive(first, m)) && (r != mod_positive(last, m)));
+    return ((r != modPositive(first, m)) && (r != modPositive(last, m)));
   }
 
   /**
@@ -1430,28 +1478,28 @@ public final class MathPlume {
    * @param nums the list of operands
    * @return a (remainder, modulus) pair that fails to match elements of nums
    */
-  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_strict_int(Iterator<Integer> nums) {
-    return nonmodulus_strict_int_internal(new MissingNumbersIteratorInt(nums, true));
+  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusStrictInt(Iterator<Integer> nums) {
+    return nonmodulusStrictIntInternal(new MissingNumbersIteratorInt(nums, true));
   }
 
   // Old, slightly less efficient implementation that uses the version of
-  // missing_numbers that returns an array instead of an Iterator.
+  // missingNumbers that returns an array instead of an Iterator.
   // /**
   //  * Return a tuple of (r,m) where no number in NUMS is equal to r (mod
   //  * m) but all missing numbers in their range are.
   //  */
-  // public static int /*@Nullable*/ /*@ArrayLen(2)*/ [] nonmodulus_strict(int[] nums) {
+  // public static int /*@Nullable*/ /*@ArrayLen(2)*/ [] nonmodulusStrict(int[] nums) {
   //   // This implementation is particularly inefficient; find a better way to
   //   // compute this.  Perhaps obtain the new modulus numbers incrementally
   //   // instead of all at once.
   //   if (nums.length == 0) {
   //     return null;
   //   }
-  //   int range = ArraysPlume.element_range(nums);
+  //   int range = ArraysPlume.elementRange(nums);
   //   if (range > 65536) {
   //     return null;
   //   }
-  //   return modulus(missing_numbers(nums));
+  //   return modulus(missingNumbers(nums));
   // }
 
   /**
@@ -1463,40 +1511,42 @@ public final class MathPlume {
    * @return a (remainder, modulus) pair that fails to match elements of nums
    */
   // This seems to give too many false positives (or maybe my probability
-  // model was wrong); use nonmodulus_strict instead.
+  // model was wrong); use nonmodulusStrict instead.
   @SuppressWarnings("purity")
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_nonstrict(int[] nums) {
+  public static int /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusNonstrict(int[] nums) {
     if (nums.length < 4) {
       return null;
     }
-    int max_modulus = Math.min(nums.length / 2, ArraysPlume.element_range(nums) / 2);
+    int maxModulus = Math.min(nums.length / 2, ArraysPlume.elementRange(nums) / 2);
 
-    // System.out.println("nums.length=" + nums.length + ", range=" + ArraysPlume.element_range(nums) + ", max_modulus=" + max_modulus);
+    // System.out.println("nums.length=" + nums.length + ", range=" +
+    // ArraysPlume.elementRange(nums) + ", maxModulus=" + maxModulus);
 
-    // no real sense checking 2, as common_modulus would have found it, but
+    // no real sense checking 2, as commonModulus would have found it, but
     // include it to make this function stand on its own
-    for (int m = 2; m <= max_modulus; m++) {
+    for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      boolean[] has_modulus = new boolean[m]; // initialized to false?
-      int num_nonmodulus = m;
+      boolean[] hasModulus = new boolean[m]; // initialized to false?
+      int numNonmodulus = m;
       for (int i = 0; i < nums.length; i++) {
-        /*@IndexFor("has_modulus")*/ int rem = mod_positive(nums[i], m);
-        if (!has_modulus[rem]) {
-          has_modulus[rem] = true;
-          num_nonmodulus--;
-          // System.out.println("rem=" + rem + " for " + nums[i] + "; num_nonmodulus=" + num_nonmodulus);
-          if (num_nonmodulus == 0) {
+        /*@IndexFor("hasModulus")*/ int rem = modPositive(nums[i], m);
+        if (!hasModulus[rem]) {
+          hasModulus[rem] = true;
+          numNonmodulus--;
+          // System.out.println("rem=" + rem + " for " + nums[i] + "; numNonmodulus=" +
+          // numNonmodulus);
+          if (numNonmodulus == 0) {
             // Quit as soon as we see every remainder instead of processing
             // each element of the input list.
             break;
           }
         }
       }
-      // System.out.println("For m=" + m + ", num_nonmodulus=" + num_nonmodulus);
-      if (num_nonmodulus == 1) {
-        return new int[] {ArraysPlume.indexOf(has_modulus, false), m};
+      // System.out.println("For m=" + m + ", numNonmodulus=" + numNonmodulus);
+      if (numNonmodulus == 1) {
+        return new int[] {ArraysPlume.indexOf(hasModulus, false), m};
       }
     }
     return null;
@@ -1515,7 +1565,7 @@ public final class MathPlume {
   @SuppressWarnings({"purity", "lock"})
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static long[] missing_numbers(long /*@MinLen(1)*/[] nums) {
+  public static long[] missingNumbers(long /*@MinLen(1)*/[] nums) {
     // avoid modifying parameter
     nums = nums.clone();
     Arrays.sort(nums);
@@ -1543,113 +1593,127 @@ public final class MathPlume {
   /**
    * This iterator returns all the numbers *not* in its argument array (which must be non-empty) but
    * in the argument's range; that is, bigger than its argument's minimum value and smaller than its
-   * argument's maximum value. The result contains no duplicates and is in order. If boolean
-   * add_ends is set, then the bracketing endpoints are also returned; otherwise, all returned
-   * values are between the minimum and maximum of the original values.
+   * argument's maximum value. The result contains no duplicates and is in order. If boolean addEnds
+   * is set, then the bracketing endpoints are also returned; otherwise, all returned values are
+   * between the minimum and maximum of the original values.
    */
   static final class MissingNumbersIteratorLong implements Iterator<Long> {
-    // Exactly one of nums and nums_itor is non-null.
+    // Exactly one of nums and numsItor is non-null.
+    /** The numbers not to include in the iterator. */
     long /*@MonotonicNonNull*/ /*@MinLen(1)*/[] nums;
-    /*@MonotonicNonNull*/ Iterator<Long> nums_itor;
-    long current_nonmissing;
-    long current_missing;
-    // Used only if nums != null, in which case it is an index into nums.
-    /*@IndexFor("nums")*/ int current_index;
-    boolean add_ends;
+    /** The numbers not to include in the iterator. */
+    /*@MonotonicNonNull*/ Iterator<Long> numsItor;
+    /** The current element of the numbers not to include in the iterator. */
+    long currentNonmissing;
+    /** The next element to be returned by the iterator. */
+    long currentMissing;
+    /** Used only if nums != null, in which case it is an index into nums. */
+    /*@IndexFor("nums")*/ int currentIndex;
+    /**
+     * If true, include the value just before the minimum excluded element and the value just after
+     * the maximum excluded element.
+     */
+    boolean addEnds;
 
     /**
      * An iterator over all the numbers <b>not</b> in its original argument array, but within its
      * range.
      *
      * @param nums a non-empty array
-     * @param add_ends if true, include the bracketing endpoints
+     * @param addEnds if true, include the bracketing endpoints
      */
-    MissingNumbersIteratorLong(long /*@MinLen(1)*/[] nums, boolean add_ends) {
-      this.add_ends = add_ends;
+    MissingNumbersIteratorLong(long /*@MinLen(1)*/[] nums, boolean addEnds) {
+      this.addEnds = addEnds;
       { // avoid modifying parameter
-        long[] nums_copy = new long[nums.length];
-        System.arraycopy(nums, 0, nums_copy, 0, nums.length);
-        nums = nums_copy;
+        long[] numsCopy = new long[nums.length];
+        System.arraycopy(nums, 0, numsCopy, 0, nums.length);
+        nums = numsCopy;
       }
       Arrays.sort(nums);
       this.nums = nums;
-      current_index = 0;
-      current_nonmissing = nums[current_index];
-      if (add_ends) {
-        current_missing = current_nonmissing - 1;
+      currentIndex = 0;
+      currentNonmissing = nums[currentIndex];
+      if (addEnds) {
+        currentMissing = currentNonmissing - 1;
       } else {
-        current_missing = current_nonmissing;
+        currentMissing = currentNonmissing;
       }
     }
 
-    // The argument iterator must return the Integers in sorted order
-    MissingNumbersIteratorLong(Iterator<Long> nums_itor, boolean add_ends) {
-      this.add_ends = add_ends;
-      if (!nums_itor.hasNext()) {
-        throw new Error("No elements in nums_itor");
+    /**
+     * An iterator over all the numbers <b>not</b> in its argument iterator, but within its range.
+     *
+     * @param numsItor a non-empty array; must return longs in sorted order
+     * @param addEnds if true, include the bracketing endpoints
+     */
+    MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
+      this.addEnds = addEnds;
+      if (!numsItor.hasNext()) {
+        throw new Error("No elements in numsItor");
       }
-      current_nonmissing = nums_itor.next().longValue();
-      if (add_ends) {
-        current_missing = current_nonmissing - 1;
+      currentNonmissing = numsItor.next().longValue();
+      if (addEnds) {
+        currentMissing = currentNonmissing - 1;
       } else {
-        current_missing = current_nonmissing;
+        currentMissing = currentNonmissing;
       }
-      this.nums_itor = nums_itor;
+      this.numsItor = numsItor;
       @SuppressWarnings("index") // unused variable, so value doesn't matter
       /*@IndexFor("nums")*/ int unused = Integer.MIN_VALUE;
-      current_index = unused;
+      currentIndex = unused;
     }
 
     @Override
     public boolean hasNext(/*>>>@GuardSatisfied MissingNumbersIteratorLong this*/) {
-      if (current_missing < current_nonmissing) {
+      if (currentMissing < currentNonmissing) {
         return true;
       }
       // This loop ("while" instead of "if") permits duplicates in nums.
-      while (current_missing == current_nonmissing) {
+      while (currentMissing == currentNonmissing) {
         if (nums != null) {
           @SuppressWarnings(
-              "index") // This breaks the invariant, but it's checked right below and the function exits.
-          /*@IndexFor("nums")*/ int current_index_temp = current_index + 1;
-          current_index = current_index_temp;
-          if (current_index >= nums.length) {
-            if (add_ends) {
-              current_missing++;
+              "index") // This breaks the invariant, but it's checked right below and the function
+          // exits.
+          /*@IndexFor("nums")*/ int currentIndex_temp = currentIndex + 1;
+          currentIndex = currentIndex_temp;
+          if (currentIndex >= nums.length) {
+            if (addEnds) {
+              currentMissing++;
               return true;
             } else {
               return false;
             }
           }
-          current_nonmissing = nums[current_index];
-        } else if (nums_itor != null) {
-          if (!nums_itor.hasNext()) {
-            if (add_ends) {
-              current_missing++;
+          currentNonmissing = nums[currentIndex];
+        } else if (numsItor != null) {
+          if (!numsItor.hasNext()) {
+            if (addEnds) {
+              currentMissing++;
               return true;
             } else {
               return false;
             }
           }
-          // prev_nonmissing is for testing only
-          long prev_nonmissing = current_nonmissing;
-          current_nonmissing = nums_itor.next().longValue();
-          if (!(prev_nonmissing < current_nonmissing)) {
+          // prevNonmissing is for testing only
+          long prevNonmissing = currentNonmissing;
+          currentNonmissing = numsItor.next().longValue();
+          if (!(prevNonmissing < currentNonmissing)) {
             throw new Error(
-                "Non-sorted Iterator supplied to MissingNumbersIteratorLong: prev_nonmissing = "
-                    + prev_nonmissing
-                    + ", current_nonmissing = "
-                    + current_nonmissing);
+                "Non-sorted Iterator supplied to MissingNumbersIteratorLong: prevNonmissing = "
+                    + prevNonmissing
+                    + ", currentNonmissing = "
+                    + currentNonmissing);
           }
         } else {
           throw new Error("Can't happen");
         }
-        current_missing++;
+        currentMissing++;
         return hasNext();
       }
-      if (add_ends) {
-        return (current_missing == current_nonmissing + 1);
+      if (addEnds) {
+        return (currentMissing == currentNonmissing + 1);
       } else {
-        throw new Error("Can't happen: " + current_missing + " " + current_nonmissing);
+        throw new Error("Can't happen: " + currentMissing + " " + currentNonmissing);
       }
     }
 
@@ -1658,8 +1722,8 @@ public final class MathPlume {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
-      Long result = current_missing;
-      current_missing++;
+      Long result = currentMissing;
+      currentMissing++;
       return result;
     }
 
@@ -1679,46 +1743,52 @@ public final class MathPlume {
   @SuppressWarnings({"purity", "lock"})
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_strict(long[] nums) {
+  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusStrict(long[] nums) {
     // This implementation is particularly inefficient; find a better way to
     // compute this.  Perhaps obtain the new modulus numbers incrementally
     // instead of all at once.
     if (nums.length == 0) {
       return null;
     }
-    long range = ArraysPlume.element_range(nums);
+    long range = ArraysPlume.elementRange(nums);
     if (range > 65536) {
       return null;
     }
-    return nonmodulus_strict_long_internal(new MissingNumbersIteratorLong(nums, true));
+    return nonmodulusStrictLongInternal(new MissingNumbersIteratorLong(nums, true));
   }
 
-  private static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_strict_long_internal(
+  /**
+   * Helper for {@link #nonmodulusStrict(long[])}.
+   *
+   * @param missing the missing integers
+   * @return value to be returned by {@link #nonmodulusStrict(long[])}
+   */
+  private static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusStrictLongInternal(
       Iterator<Long> missing) {
     // Must not use regular modulus:  that can produce errors, eg
-    // nonmodulus_strict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
-    // modulus_strict.
-    CollectionsPlume.RemoveFirstAndLastIterator<Long> missing_nums =
+    // nonmodulusStrict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
+    // modulusStrict.
+    CollectionsPlume.RemoveFirstAndLastIterator<Long> missingNums =
         new CollectionsPlume.RemoveFirstAndLastIterator<Long>(missing);
-    long[] result = modulus_strict_long(missing_nums, false);
+    long[] result = modulusStrictLong(missingNums, false);
     if (result == null) {
       return result;
     }
-    if (!check_first_and_last_nonmodulus(result, missing_nums)) {
+    if (!checkFirstAndLastNonmodulus(result, missingNums)) {
       return null;
     }
 
     return result;
   }
 
-  /** The first argument is an array containing two elements. */
-  private static boolean check_first_and_last_nonmodulus(
+  /** @param rm an an array containing two elements */
+  private static boolean checkFirstAndLastNonmodulus(
       long /*@ArrayLen(2)*/[] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];
     long m = rm[1];
     long first = rfali.getFirst().longValue();
     long last = rfali.getLast().longValue();
-    return ((r != mod_positive(first, m)) && (r != mod_positive(last, m)));
+    return ((r != modPositive(first, m)) && (r != modPositive(last, m)));
   }
 
   /**
@@ -1728,28 +1798,28 @@ public final class MathPlume {
    * @param nums the list of operands
    * @return a (remainder, modulus) pair that fails to match elements of nums
    */
-  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_strict_long(Iterator<Long> nums) {
-    return nonmodulus_strict_long_internal(new MissingNumbersIteratorLong(nums, true));
+  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusStrictLong(Iterator<Long> nums) {
+    return nonmodulusStrictLongInternal(new MissingNumbersIteratorLong(nums, true));
   }
 
   // Old, slightly less efficient implementation that uses the version of
-  // missing_numbers that returns an array instead of an Iterator.
+  // missingNumbers that returns an array instead of an Iterator.
   // /**
   //  * Return a tuple of (r,m) where no number in NUMS is equal to r (mod
   //  * m) but all missing numbers in their range are.
   //  */
-  // public static long /*@Nullable*/ /*@ArrayLen(2)*/ [] nonmodulus_strict(long[] nums) {
+  // public static long /*@Nullable*/ /*@ArrayLen(2)*/ [] nonmodulusStrict(long[] nums) {
   //   // This implementation is particularly inefficient; find a better way to
   //   // compute this.  Perhaps obtain the new modulus numbers incrementally
   //   // instead of all at once.
   //   if (nums.length == 0) {
   //     return null;
   //   }
-  //   long range = ArraysPlume.element_range(nums);
+  //   long range = ArraysPlume.elementRange(nums);
   //   if (range > 65536) {
   //     return null;
   //   }
-  //   return modulus(missing_numbers(nums));
+  //   return modulus(missingNumbers(nums));
   // }
 
   /**
@@ -1761,40 +1831,42 @@ public final class MathPlume {
    * @return a (remainder, modulus) pair that fails to match elements of nums
    */
   // This seems to give too many false positives (or maybe my probability
-  // model was wrong); use nonmodulus_strict instead.
+  // model was wrong); use nonmodulusStrict instead.
   @SuppressWarnings("purity")
   /*@Pure*/
   /*@StaticallyExecutable*/
-  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulus_nonstrict(long[] nums) {
+  public static long /*@Nullable*/ /*@ArrayLen(2)*/[] nonmodulusNonstrict(long[] nums) {
     if (nums.length < 4) {
       return null;
     }
-    int max_modulus = ((int) (Math.min(nums.length / 2, ArraysPlume.element_range(nums) / 2)));
+    int maxModulus = ((int) (Math.min(nums.length / 2, ArraysPlume.elementRange(nums) / 2)));
 
-    // System.out.println("nums.length=" + nums.length + ", range=" + ArraysPlume.element_range(nums) + ", max_modulus=" + max_modulus);
+    // System.out.println("nums.length=" + nums.length + ", range=" +
+    // ArraysPlume.elementRange(nums) + ", maxModulus=" + maxModulus);
 
-    // no real sense checking 2, as common_modulus would have found it, but
+    // no real sense checking 2, as commonModulus would have found it, but
     // include it to make this function stand on its own
-    for (int m = 2; m <= max_modulus; m++) {
+    for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      boolean[] has_modulus = new boolean[m]; // initialized to false?
-      int num_nonmodulus = m;
+      boolean[] hasModulus = new boolean[m]; // initialized to false?
+      int numNonmodulus = m;
       for (int i = 0; i < nums.length; i++) {
-        /*@IndexFor("has_modulus")*/ int rem = ((int) (mod_positive(nums[i], m)));
-        if (!has_modulus[rem]) {
-          has_modulus[rem] = true;
-          num_nonmodulus--;
-          // System.out.println("rem=" + rem + " for " + nums[i] + "; num_nonmodulus=" + num_nonmodulus);
-          if (num_nonmodulus == 0) {
+        /*@IndexFor("hasModulus")*/ int rem = ((int) (modPositive(nums[i], m)));
+        if (!hasModulus[rem]) {
+          hasModulus[rem] = true;
+          numNonmodulus--;
+          // System.out.println("rem=" + rem + " for " + nums[i] + "; numNonmodulus=" +
+          // numNonmodulus);
+          if (numNonmodulus == 0) {
             // Quit as soon as we see every remainder instead of processing
             // each element of the input list.
             break;
           }
         }
       }
-      // System.out.println("For m=" + m + ", num_nonmodulus=" + num_nonmodulus);
-      if (num_nonmodulus == 1) {
-        return new long[] {ArraysPlume.indexOf(has_modulus, false), m};
+      // System.out.println("For m=" + m + ", numNonmodulus=" + numNonmodulus);
+      if (numNonmodulus == 1) {
+        return new long[] {ArraysPlume.indexOf(hasModulus, false), m};
       }
     }
     return null;

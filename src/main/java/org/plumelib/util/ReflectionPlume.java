@@ -116,10 +116,10 @@ public final class ReflectionPlume {
           throw e;
         }
         @SuppressWarnings("signature") // checked below & exception is handled
-        /*@ClassGetName*/ String inner_name =
+        /*@ClassGetName*/ String innerName =
             className.substring(0, pos) + "$" + className.substring(pos + 1);
         try {
-          return Class.forName(inner_name);
+          return Class.forName(innerName);
         } catch (ClassNotFoundException ee) {
           throw e;
         }
@@ -129,22 +129,22 @@ public final class ReflectionPlume {
 
   /**
    * Returns the simple unqualified class name that corresponds to the specified fully qualified
-   * name. For example, if qualified_name is java.lang.String, String will be returned.
+   * name. For example, if qualifiedName is java.lang.String, String will be returned.
    *
-   * @param qualified_name the fully-qualified name of a class
+   * @param qualifiedName the fully-qualified name of a class
    * @return the simple unqualified name of the class
    */
   // TODO: does not follow the specification for inner classes (where the
   // type name should be empty), but I think this is more informative anyway.
   @SuppressWarnings("signature") // string conversion
   public static /*@ClassGetSimpleName*/ String fullyQualifiedNameToSimpleName(
-      /*@FullyQualifiedName*/ String qualified_name) {
+      /*@FullyQualifiedName*/ String qualifiedName) {
 
-    int offset = qualified_name.lastIndexOf('.');
+    int offset = qualifiedName.lastIndexOf('.');
     if (offset == -1) {
-      return (qualified_name);
+      return (qualifiedName);
     }
-    return (qualified_name.substring(offset + 1));
+    return (qualifiedName.substring(offset + 1));
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -164,6 +164,8 @@ public final class ReflectionPlume {
      * @param className the expected binary name of the class to define, or null if not known
      * @param pathname the file from which to load the class
      * @return the {@code Class} object that was created
+     * @throws FileNotFoundException if the file does not exist
+     * @throws IOException if there is trouble reading the file
      */
     public Class<?> defineClassFromFile(
         /*@BinaryName*/ String className, String pathname)
@@ -184,6 +186,7 @@ public final class ReflectionPlume {
     }
   }
 
+  /** A ClassLoader that can call defineClassFromFile. */
   private static PromiscuousLoader thePromiscuousLoader = new PromiscuousLoader();
 
   /**

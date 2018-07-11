@@ -63,6 +63,7 @@ public final class UtilPlume {
     throw new Error("do not instantiate");
   }
 
+  /** The system-specific line separator string. */
   private static final String lineSep = System.getProperty("line.separator");
 
   ///////////////////////////////////////////////////////////////////////////
@@ -279,13 +280,13 @@ public final class UtilPlume {
   public static InputStreamReader fileReader(Path path, /*@Nullable*/ String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = new FileInputStream(path.toFile());
-    InputStreamReader file_reader;
+    InputStreamReader fileReader;
     if (charsetName == null) {
-      file_reader = new InputStreamReader(in, UTF_8);
+      fileReader = new InputStreamReader(in, UTF_8);
     } else {
-      file_reader = new InputStreamReader(in, charsetName);
+      fileReader = new InputStreamReader(in, charsetName);
     }
-    return file_reader;
+    return fileReader;
   }
 
   /**
@@ -322,13 +323,13 @@ public final class UtilPlume {
   public static InputStreamReader fileReader(File file, /*@Nullable*/ String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = new FileInputStream(file);
-    InputStreamReader file_reader;
+    InputStreamReader fileReader;
     if (charsetName == null) {
-      file_reader = new InputStreamReader(in, UTF_8);
+      fileReader = new InputStreamReader(in, UTF_8);
     } else {
-      file_reader = new InputStreamReader(in, charsetName);
+      fileReader = new InputStreamReader(in, charsetName);
     }
-    return file_reader;
+    return fileReader;
   }
 
   /**
@@ -402,8 +403,8 @@ public final class UtilPlume {
    */
   public static BufferedReader bufferedFileReader(File file, /*@Nullable*/ String charsetName)
       throws FileNotFoundException, IOException {
-    Reader file_reader = fileReader(file, charsetName);
-    return new BufferedReader(file_reader);
+    Reader fileReader = fileReader(file, charsetName);
+    return new BufferedReader(fileReader);
   }
 
   /**
@@ -439,18 +440,18 @@ public final class UtilPlume {
    */
   public static LineNumberReader lineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
-    Reader file_reader;
+    Reader fileReader;
     if (file.getName().endsWith(".gz")) {
       try {
-        file_reader =
+        fileReader =
             new InputStreamReader(new GZIPInputStream(new FileInputStream(file)), "ISO-8859-1");
       } catch (IOException e) {
         throw new IOException("Problem while reading " + file, e);
       }
     } else {
-      file_reader = new InputStreamReader(new FileInputStream(file), "ISO-8859-1");
+      fileReader = new InputStreamReader(new FileInputStream(file), "ISO-8859-1");
     }
-    return new LineNumberReader(file_reader);
+    return new LineNumberReader(fileReader);
   }
 
   /**
@@ -532,7 +533,7 @@ public final class UtilPlume {
    * @return number of lines in filename
    * @throws IOException if there is trouble reading the file
    */
-  public static long count_lines(String filename) throws IOException {
+  public static long countLines(String filename) throws IOException {
     long count = 0;
     try (LineNumberReader reader = UtilPlume.lineNumberFileReader(filename)) {
       while (reader.readLine() != null) {
@@ -768,33 +769,44 @@ public final class UtilPlume {
   ///
 
   // Someone must have already written this.  Right?
+  // There is Apache Commons IO WildcardFileFilter or, using standard Java utilities,
+  // https://stackoverflow.com/a/31685610/173852 .
 
   /**
    * A FilenameFilter that accepts files whose name matches the given wildcard. The wildcard must
    * contain exactly one "*".
    */
   public static final class WildcardFilter implements FilenameFilter {
+    /** The text before the wildcard. */
     String prefix;
+    /** The text after the wildcard. */
     String suffix;
 
-    public WildcardFilter(String filename) {
-      int astloc = filename.indexOf('*');
+    /**
+     * Create a filter that accepts files whose name matches the given wildcard.
+     *
+     * @param wildcard a string that must contain exactly one "*"
+     */
+    public WildcardFilter(String wildcard) {
+      int astloc = wildcard.indexOf('*');
       if (astloc == -1) {
-        throw new Error("No asterisk in wildcard argument: " + filename);
+        throw new Error("No asterisk in wildcard argument: " + wildcard);
       }
-      prefix = filename.substring(0, astloc);
-      suffix = filename.substring(astloc + 1);
-      if (filename.indexOf('*') != -1) {
-        throw new Error("Multiple asterisks in wildcard argument: " + filename);
+      prefix = wildcard.substring(0, astloc);
+      suffix = wildcard.substring(astloc + 1);
+      if (wildcard.indexOf('*') != -1) {
+        throw new Error("Multiple asterisks in wildcard argument: " + wildcard);
       }
     }
 
     @Override
     public boolean accept(File dir, String name) {
+      // TODO: This is incorrect.  For example, the wildcard "ax*xb" would match the string "axb".
       return name.startsWith(prefix) && name.endsWith(suffix);
     }
   }
 
+  /** The user's home directory. */
   static final String userHome = System.getProperty("user.home");
 
   /**
@@ -840,7 +852,7 @@ public final class UtilPlume {
    * @param name file whose name to quote
    * @return a string version of the name that can be used in Java source
    */
-  public static String java_source(File name) {
+  public static String javaSource(File name) {
 
     return name.getPath().replace("\\", "\\\\");
   }
@@ -1378,13 +1390,13 @@ public final class UtilPlume {
    * @return array of length at least 1, containing s split on delimiter
    */
   public static String[] split(String s, char delim) {
-    ArrayList<String> result_list = new ArrayList<String>();
+    ArrayList<String> resultList = new ArrayList<String>();
     for (int delimpos = s.indexOf(delim); delimpos != -1; delimpos = s.indexOf(delim)) {
-      result_list.add(s.substring(0, delimpos));
+      resultList.add(s.substring(0, delimpos));
       s = s.substring(delimpos + 1);
     }
-    result_list.add(s);
-    String[] result = result_list.toArray(new /*@NonNull*/ String[result_list.size()]);
+    resultList.add(s);
+    String[] result = resultList.toArray(new /*@NonNull*/ String[resultList.size()]);
     return result;
   }
 
@@ -1403,13 +1415,13 @@ public final class UtilPlume {
     if (delimlen == 0) {
       throw new Error("Second argument to split was empty.");
     }
-    ArrayList<String> result_list = new ArrayList<String>();
+    ArrayList<String> resultList = new ArrayList<String>();
     for (int delimpos = s.indexOf(delim); delimpos != -1; delimpos = s.indexOf(delim)) {
-      result_list.add(s.substring(0, delimpos));
+      resultList.add(s.substring(0, delimpos));
       s = s.substring(delimpos + delimlen);
     }
-    result_list.add(s);
-    String[] result = result_list.toArray(new /*@NonNull*/ String[result_list.size()]);
+    resultList.add(s);
+    String[] result = resultList.toArray(new /*@NonNull*/ String[resultList.size()]);
     return result;
   }
 
@@ -1513,32 +1525,32 @@ public final class UtilPlume {
   public static String escapeNonJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen right before this position.
-    /*@IndexOrHigh("orig")*/ int post_esc = 0;
-    int orig_len = orig.length();
-    for (int i = 0; i < orig_len; i++) {
+    /*@IndexOrHigh("orig")*/ int postEsc = 0;
+    int origLen = orig.length();
+    for (int i = 0; i < origLen; i++) {
       char c = orig.charAt(i);
       switch (c) {
         case '\"':
         case '\\':
-          if (post_esc < i) {
-            sb.append(orig.substring(post_esc, i));
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
           }
           sb.append('\\');
-          post_esc = i;
+          postEsc = i;
           break;
         case '\n': // not lineSep
-          if (post_esc < i) {
-            sb.append(orig.substring(post_esc, i));
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\n"); // not lineSep
-          post_esc = i + 1;
+          postEsc = i + 1;
           break;
         case '\r':
-          if (post_esc < i) {
-            sb.append(orig.substring(post_esc, i));
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\r");
-          post_esc = i + 1;
+          postEsc = i + 1;
           break;
         default:
           // Nothing to do: i gets incremented
@@ -1547,7 +1559,7 @@ public final class UtilPlume {
     if (sb.length() == 0) {
       return orig;
     }
-    sb.append(orig.substring(post_esc));
+    sb.append(orig.substring(postEsc));
     return sb.toString();
   }
 
@@ -1584,8 +1596,8 @@ public final class UtilPlume {
    */
   public static String escapeNonASCII(String orig) {
     StringBuilder sb = new StringBuilder();
-    int orig_len = orig.length();
-    for (int i = 0; i < orig_len; i++) {
+    int origLen = orig.length();
+    for (int i = 0; i < origLen; i++) {
       char c = orig.charAt(i);
       sb.append(escapeNonASCII(c));
     }
@@ -1641,31 +1653,31 @@ public final class UtilPlume {
   public static String unescapeNonJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen just before this position.
-    /*@LTEqLengthOf("orig")*/ int post_esc = 0;
-    int this_esc = orig.indexOf('\\');
-    while (this_esc != -1) {
-      if (this_esc == orig.length() - 1) {
-        sb.append(orig.substring(post_esc, this_esc + 1));
-        post_esc = this_esc + 1;
+    /*@LTEqLengthOf("orig")*/ int postEsc = 0;
+    int thisEsc = orig.indexOf('\\');
+    while (thisEsc != -1) {
+      if (thisEsc == orig.length() - 1) {
+        sb.append(orig.substring(postEsc, thisEsc + 1));
+        postEsc = thisEsc + 1;
         break;
       }
-      switch (orig.charAt(this_esc + 1)) {
+      switch (orig.charAt(thisEsc + 1)) {
         case 'n':
-          sb.append(orig.substring(post_esc, this_esc));
+          sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\n'); // not lineSep
-          post_esc = this_esc + 2;
+          postEsc = thisEsc + 2;
           break;
         case 'r':
-          sb.append(orig.substring(post_esc, this_esc));
+          sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\r');
-          post_esc = this_esc + 2;
+          postEsc = thisEsc + 2;
           break;
         case '\\':
           // This is not in the default case because the search would find
           // the quoted backslash.  Here we incluce the first backslash in
           // the output, but not the first.
-          sb.append(orig.substring(post_esc, this_esc + 1));
-          post_esc = this_esc + 2;
+          sb.append(orig.substring(postEsc, thisEsc + 1));
+          postEsc = thisEsc + 2;
           break;
 
         case '0':
@@ -1678,33 +1690,33 @@ public final class UtilPlume {
         case '7':
         case '8':
         case '9':
-          sb.append(orig.substring(post_esc, this_esc));
-          char octal_char = 0;
-          int ii = this_esc + 1;
+          sb.append(orig.substring(postEsc, thisEsc));
+          char octalChar = 0;
+          int ii = thisEsc + 1;
           while (ii < orig.length()) {
             char ch = orig.charAt(ii++);
             if ((ch < '0') || (ch > '8')) {
               break;
             }
-            octal_char = (char) ((octal_char * 8) + Character.digit(ch, 8));
+            octalChar = (char) ((octalChar * 8) + Character.digit(ch, 8));
           }
-          sb.append(octal_char);
-          post_esc = ii - 1;
+          sb.append(octalChar);
+          postEsc = ii - 1;
           break;
 
         default:
           // In the default case, retain the character following the backslash,
           // but discard the backslash itself.  "\*" is just a one-character string.
-          sb.append(orig.substring(post_esc, this_esc));
-          post_esc = this_esc + 1;
+          sb.append(orig.substring(postEsc, thisEsc));
+          postEsc = thisEsc + 1;
           break;
       }
-      this_esc = orig.indexOf('\\', post_esc);
+      thisEsc = orig.indexOf('\\', postEsc);
     }
-    if (post_esc == 0) {
+    if (postEsc == 0) {
       return orig;
     }
-    sb.append(orig.substring(post_esc));
+    sb.append(orig.substring(postEsc));
     return sb.toString();
   }
 
@@ -1733,23 +1745,23 @@ public final class UtilPlume {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // String orig = arg;
-    int delim_len = delimiter.length();
-    int delim_index = arg.indexOf(delimiter);
-    while (delim_index > -1) {
-      int non_ws_index = delim_index + delim_len;
-      while ((non_ws_index < arg.length()) && (Character.isWhitespace(arg.charAt(non_ws_index)))) {
-        non_ws_index++;
+    int delimLen = delimiter.length();
+    int delimIndex = arg.indexOf(delimiter);
+    while (delimIndex > -1) {
+      int nonWsIndex = delimIndex + delimLen;
+      while ((nonWsIndex < arg.length()) && (Character.isWhitespace(arg.charAt(nonWsIndex)))) {
+        nonWsIndex++;
       }
-      // if (non_ws_index == arg.length()) {
+      // if (nonWsIndex == arg.length()) {
       //   System.out.println("No nonspace character at end of: " + arg);
       // } else {
-      //   System.out.println("'" + arg.charAt(non_ws_index) + "' not a space character at " +
-      //       non_ws_index + " in: " + arg);
+      //   System.out.println("'" + arg.charAt(nonWsIndex) + "' not a space character at " +
+      //       nonWsIndex + " in: " + arg);
       // }
-      if (non_ws_index != delim_index + delim_len) {
-        arg = arg.substring(0, delim_index + delim_len) + arg.substring(non_ws_index);
+      if (nonWsIndex != delimIndex + delimLen) {
+        arg = arg.substring(0, delimIndex + delimLen) + arg.substring(nonWsIndex);
       }
-      delim_index = arg.indexOf(delimiter, delim_index + 1);
+      delimIndex = arg.indexOf(delimiter, delimIndex + 1);
     }
     return arg;
   }
@@ -1767,22 +1779,22 @@ public final class UtilPlume {
     }
     // System.out.println("removeWhitespaceBefore(\"" + arg + "\", \"" + delimiter + "\")");
     // String orig = arg;
-    int delim_index = arg.indexOf(delimiter);
-    while (delim_index > -1) {
-      int non_ws_index = delim_index - 1;
-      while ((non_ws_index >= 0) && (Character.isWhitespace(arg.charAt(non_ws_index)))) {
-        non_ws_index--;
+    int delimIndex = arg.indexOf(delimiter);
+    while (delimIndex > -1) {
+      int nonWsIndex = delimIndex - 1;
+      while ((nonWsIndex >= 0) && (Character.isWhitespace(arg.charAt(nonWsIndex)))) {
+        nonWsIndex--;
       }
-      // if (non_ws_index == -1) {
+      // if (nonWsIndex == -1) {
       //   System.out.println("No nonspace character at front of: " + arg);
       // } else {
-      //   System.out.println("'" + arg.charAt(non_ws_index) + "' not a space character at " +
-      //       non_ws_index + " in: " + arg);
+      //   System.out.println("'" + arg.charAt(nonWsIndex) + "' not a space character at " +
+      //       nonWsIndex + " in: " + arg);
       // }
-      if (non_ws_index != delim_index - 1) {
-        arg = arg.substring(0, non_ws_index + 1) + arg.substring(delim_index);
+      if (nonWsIndex != delimIndex - 1) {
+        arg = arg.substring(0, nonWsIndex + 1) + arg.substring(delimIndex);
       }
-      delim_index = arg.indexOf(delimiter, non_ws_index + 2);
+      delimIndex = arg.indexOf(delimiter, nonWsIndex + 2);
     }
     return arg;
   }

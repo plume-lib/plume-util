@@ -4,71 +4,120 @@ package org.plumelib.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
 
+// TODO: This does not use the Random value that is passed in.
+
 /**
- * Performs uniform random selection over an iterator, where the objects in the iteration may be
+ * Performs uniform random selection over an iterator, where the objects in the iterator may be
  * partitioned so that the random selection chooses the same number from each group.
  *
- * <p>For example, given data about incomes by state, it may be more useful to select 1000 people
- * from each state rather than 50,000 from the nation. As another example, for selecting invocations
- * in a Daikon trace file, it may be more useful to select an equal number of samples per program
- * point.
+ * <p>For example, given data about incomes by state, it may be desirable to select 1000 people from
+ * each state rather than 50,000 from the nation. As another example, for selecting invocations in a
+ * Daikon trace file, it may be desirable to select an equal number of samples per program point.
  *
  * <p>The performance is the same as running a set of RandomSelector Objects, one for each bucket,
  * plus some overhead for determining which bucket to assign to each Object in the iteration.
  *
- * <p>To use this class, call this.accept() on every Object in the iteration to be sampled. Then,
- * call valuesIter() to receive an iteration of all the values selected by the random selection.
+ * <p>To use this class, call {@link #accept} on every Object in the iteration to be sampled. Then,
+ * call {@link #valuesIter} to receive an iteration of all the values selected by the random
+ * selection.
  *
  * @param <T> the type of elements to be selected among
  * @see RandomSelector
  */
 public class MultiRandSelector<T> {
 
-  private int num_elts = -1;
-  private boolean coin_toss_mode;
-  private double keep_probability = -1.0;
-  private Random seed;
+  /** Whether to toss a coin or select a given number of elements. */
+  private boolean coinTossMode;
+  /** Number of elements to select. -1 if coinTossMode==true. */
+  private int numElts = -1;
+  /** Likelihood to select each element. -1.0 if coinTossMode=false. */
+  private double keepProbability = -1.0;
+  /** The Random instance to use. Is not a seed. Gets side-effected. */
+  private Random r;
+
+  /** partioner that determines how to partition the objects. */
   private Partitioner<T, T> eq;
 
-  private HashMap<T, RandomSelector<T>> map;
+  /** Maps from partition representatives to the RandomSelector to use on that partition. */
+  private HashMap<T, RandomSelector<T>> map = new HashMap<>();
 
   /**
-   * @param num_elts the number of elements to select from each bucket
-   * @param eq partioner that determines how to partition the objects from the iteration
+   * Create a MultiRandSelector that chooses {@code numElts} elements from each bucket.
+   *
+   * @param numElts the number of elements to select from each bucket
+   * @param eq partioner that determines how to partition the objects
    */
-  public MultiRandSelector(int num_elts, Partitioner<T, T> eq) {
-    this(num_elts, new Random(), eq);
+  public MultiRandSelector(int numElts, Partitioner<T, T> eq) {
+    this(numElts, new Random(), eq);
   }
 
-  public MultiRandSelector(double keep_prob, Partitioner<T, T> eq) {
-    this(keep_prob, new Random(), eq);
+  /**
+   * Create a MultiRandSelector that chooses each element with probability {@code keepProbability}.
+   *
+   * @param keepProbability the likelihood to select each element.
+   * @param eq partioner that determines how to partition the objects
+   */
+  public MultiRandSelector(double keepProbability, Partitioner<T, T> eq) {
+    this(keepProbability, new Random(), eq);
   }
 
-  public MultiRandSelector(int num_elts, Random r, Partitioner<T, T> eq) {
-    coin_toss_mode = false;
-    this.num_elts = num_elts;
-    seed = r;
+  /**
+   * Create a MultiRandSelector that chooses {@code numElts} from each partition, using the given
+   * Random.
+   *
+   * @param numElts the number of elements to select from each bucket
+   * @param r the Random instance to use for making random choices
+   * @param eq partioner that determines how to partition the objects
+   */
+  public MultiRandSelector(int numElts, Random r, Partitioner<T, T> eq) {
+    this(r, eq);
+    this.coinTossMode = false;
+    this.numElts = numElts;
+  }
+
+  /**
+   * Create a MultiRandSelector that chooses each element with probability {@code keepProbability}.,
+   * using the given Random.
+   *
+   * @param keepProbability likelihood to select each element
+   * @param r the Random instance to use for making random choices
+   * @param eq partioner that determines how to partition the objects
+   */
+  public MultiRandSelector(double keepProbability, Random r, Partitioner<T, T> eq) {
+    this(r, eq);
+    this.coinTossMode = true;
+    this.keepProbability = keepProbability;
+  }
+
+  /**
+   * Helper constructor to create a not-fully-initialized MultiRandSelector
+   *
+   * @param r the Random instance to use for making random choices
+   * @param eq partioner that determines how to partition the objects
+   */
+  private MultiRandSelector(Random r, Partitioner<T, T> eq) {
+    this.r = r;
     this.eq = eq;
-    map = new HashMap<T, RandomSelector<T>>();
   }
 
-  public MultiRandSelector(double keep_prob, Random r, Partitioner<T, T> eq) {
-    this.keep_probability = keep_prob;
-    coin_toss_mode = true;
-    seed = r;
-    this.eq = eq;
-    map = new HashMap<T, RandomSelector<T>>();
-  }
-
+  /**
+   * Use all the iterator's elements in the pool to select from.
+   *
+   * @param iter contains elements that are added to the pool to select from
+   */
   public void acceptIter(Iterator<T> iter) {
     while (iter.hasNext()) {
       accept(iter.next());
     }
   }
 
+  /**
+   * Use the given value as one of the objects in the pool to select from.
+   *
+   * @param next element that is added to the pool to select from
+   */
   public void accept(T next) {
     T equivClass = eq.assignToBucket(next);
     if (equivClass == null) {
@@ -77,19 +126,21 @@ public class MultiRandSelector<T> {
     RandomSelector<T> delegation = map.get(equivClass);
     if (delegation == null) {
       delegation =
-          ((coin_toss_mode)
-              ? new RandomSelector<T>(keep_probability, seed)
-              : new RandomSelector<T>(num_elts, seed));
+          ((coinTossMode)
+              ? new RandomSelector<T>(keepProbability, r)
+              : new RandomSelector<T>(numElts, r));
       map.put(equivClass, delegation);
     }
     delegation.accept(next);
   }
 
+  // I assume this is only for testing?  Comment it out to see whether that causes a problem for
+  // any client.
   // TODO: is there any reason not to simply return a copy?
   // NOT safe from concurrent modification.
-  public Map<T, RandomSelector<T>> values() {
-    return map;
-  }
+  // private Map<T, RandomSelector<T>> values() {
+  //   return map;
+  // }
 
   /**
    * Returns an iterator of all objects selected.

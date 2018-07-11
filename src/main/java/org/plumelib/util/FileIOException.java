@@ -295,10 +295,14 @@ public class FileIOException extends IOException {
     return result;
   }
 
-  // Infers the line number from the "reader" field.
-  // Returns -1 if "reader" is null.
-  // Not a setter method because field lineNumber is final, but
-  // still clearer to abstract out.
+  // There is no setter method because field lineNumber is final.
+
+  /**
+   * Infers the line number from the given {@code reader}. Returns -1 if {@code reader} is null.
+   *
+   * @param reader the LineNumberReader whose line to return, or null
+   * @return the line number of {@code reader}, or -1 if {@code reader} is null
+   */
   private static int getLineNumber(/*@Nullable*/ LineNumberReader reader) {
     if (reader != null) {
       return reader.getLineNumber();

@@ -16,12 +16,21 @@ import org.checkerframework.dataflow.qual.*;
  */
 public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
 
+  /** The first element of the pair. */
   private final WeakReference<T1> a;
+  /** The second element of the pair. */
   private final WeakReference<T2> b;
 
+  /** The hash code of this. */
   // Must cache the hashCode to prevent it from changing.
   private final int hashCode;
 
+  /**
+   * Creates a new weakly-held pair of {@code a} and {@code b}.
+   *
+   * @param a the first element of the pair
+   * @param b the second element of the pair
+   */
   public WeakIdentityPair(T1 a, T2 b) {
     if (a == null || b == null) {
       throw new IllegalArgumentException(

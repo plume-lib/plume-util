@@ -305,6 +305,8 @@ public final class RegexUtil {
    * Generates an error message for s when expectedGroups are needed, but s only has actualGroups.
    *
    * @param s string to check for being a regular expression
+   * @param expectedGroups the number of needed capturing groups
+   * @param actualGroups the number of groups that {@code s} has
    * @return an error message for s when expectedGroups groups are needed, but s only has
    *     actualGroups groups
    */

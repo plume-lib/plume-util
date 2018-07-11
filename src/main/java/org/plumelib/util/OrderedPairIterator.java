@@ -41,10 +41,27 @@ import org.checkerframework.checker.nullness.qual.*;
 public class OrderedPairIterator<T>
     implements java.util.Iterator<Pair</*@Nullable*/ T, /*@Nullable*/ T>> {
 
-  Iterator<T> itor1, itor2;
-  /*@Nullable*/ T next1, next2;
+  /** The iterator for first elements of pairs. */
+  Iterator<T> itor1;
+  /** The iterator for second elements of pairs. */
+  Iterator<T> itor2;
+  /** The next element to be read by itor1. */
+  /*@Nullable*/ T next1;
+  /** The next element to be read by itor2. */
+  /*@Nullable*/ T next2;
+  /**
+   * The comparator to be used to compare elements from the two iterators, to determine whether they
+   * match. Null to use the natural comparison.
+   */
   /*@Nullable*/ Comparator<? super T> comparator;
 
+  /**
+   * Create an iterator that returns pairs, where each pair contains has an alement from each
+   * iterator and the two elements are equal.
+   *
+   * @param itor1 iterator for first elements of pairs
+   * @param itor2 iterator for second elements of pairs
+   */
   // For this constructor, the arg type is actually Iterator<T extends
   // Comparable<T>>, but T is already bound above and can't be changed.
   public OrderedPairIterator(Iterator<T> itor1, Iterator<T> itor2) {
@@ -54,6 +71,14 @@ public class OrderedPairIterator<T>
     setnext2();
   }
 
+  /**
+   * Create an iterator that returns pairs, where each pair contains has an alement from each
+   * iterator and the two elements are equal according to the comparator.
+   *
+   * @param itor1 iterator for first elements of pairs
+   * @param itor2 iterator for second elements of pairs
+   * @param comparator determines whether two elements are equal and should be paired together
+   */
   public OrderedPairIterator(Iterator<T> itor1, Iterator<T> itor2, Comparator<T> comparator) {
     this(itor1, itor2);
     this.comparator = comparator;
@@ -78,7 +103,11 @@ public class OrderedPairIterator<T>
   public boolean hasNext(/*>>>@GuardSatisfied OrderedPairIterator<T> this*/) {
     return ((next1 != null) || (next2 != null));
   }
-  /** Return an element of the first iterator, paired with null. */
+  /**
+   * Return an element of the first iterator, paired with null.
+   *
+   * @return an element of the first iterator, paired with null
+   */
   private Pair</*@Nullable*/ T, /*@Nullable*/ T> return1(
       /*>>>@GuardSatisfied OrderedPairIterator<T> this*/) {
     Pair</*@Nullable*/ T, /*@Nullable*/ T> result =
@@ -86,7 +115,11 @@ public class OrderedPairIterator<T>
     setnext1();
     return result;
   }
-  /** Return a pair of null and an element of the second iterator. */
+  /**
+   * Return a pair of null and an element of the second iterator.
+   *
+   * @return a pair of null and an element of the second iterator
+   */
   private Pair</*@Nullable*/ T, /*@Nullable*/ T> return2(
       /*>>>@GuardSatisfied OrderedPairIterator<T> this*/) {
     Pair</*@Nullable*/ T, /*@Nullable*/ T> result =
@@ -94,7 +127,11 @@ public class OrderedPairIterator<T>
     setnext2();
     return result;
   }
-  /** Return a pair containing an element from each iterator. */
+  /**
+   * Return a pair containing an element from each iterator.
+   *
+   * @return a pair containing an element from each iterator
+   */
   private Pair</*@Nullable*/ T, /*@Nullable*/ T> returnboth(
       /*>>>@GuardSatisfied OrderedPairIterator<T> this*/) {
     Pair</*@Nullable*/ T, /*@Nullable*/ T> result =

@@ -32,17 +32,15 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   // remove fields, you should change this number to the current date.
   static final long serialVersionUID = 20031021L;
 
-  // public final int max_values;
-
   /**
-   * If null, then at least num_values distinct values have been seen. The size is not separately
+   * If null, then at least numValues distinct values have been seen. The size is not separately
    * stored, because that would take extra space.
    */
   protected int /*@Nullable*/ /*@MinLen(1)*/[] values;
   /** The number of active elements (equivalently, the first unused index). */
   // Not exactly @IndexOrHigh("values"), because the invariant is broken when
   // the values field is set to null. Warnings are suppressed when breaking the invariant.
-  /*@IndexOrHigh("values")*/ int num_values;
+  /*@IndexOrHigh("values")*/ int numValues;
 
   /** Whether assertions are enabled. */
   private static boolean assertsEnabled = false;
@@ -53,19 +51,24 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   }
 
   /**
-   * Create a new LimitedSizeIntSet that can hold max_values values.
+   * Create a new LimitedSizeIntSet that can hold maxValues values.
    *
-   * @param max_values the maximum number of values this set will be able to hold; must be positive
+   * @param maxValues the maximum number of values this set will be able to hold; must be positive
    */
-  public LimitedSizeIntSet(/*@Positive*/ int max_values) {
-    if (assertsEnabled && !(max_values > 0)) {
-      throw new IllegalArgumentException("max_values should be positive, is " + max_values);
+  public LimitedSizeIntSet(/*@Positive*/ int maxValues) {
+    if (assertsEnabled && !(maxValues > 0)) {
+      throw new IllegalArgumentException("maxValues should be positive, is " + maxValues);
     }
-    // this.max_values = max_values;
-    values = new int[max_values];
-    num_values = 0;
+    // this.maxValues = maxValues;
+    values = new int[maxValues];
+    numValues = 0;
   }
 
+  /**
+   * Add an element to this set.
+   *
+   * @param elt the element to add to this set
+   */
   public void add(int elt) {
     if (repNulled()) {
       return;
@@ -74,14 +77,19 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     if (contains(elt)) {
       return;
     }
-    if (num_values == values.length) {
+    if (numValues == values.length) {
       nullRep();
       return;
     }
-    values[num_values] = elt;
-    num_values++;
+    values[numValues] = elt;
+    numValues++;
   }
 
+  /**
+   * Add all elements of {@code s} to this set.
+   *
+   * @param s the elements to add to this set
+   */
   public void addAll(LimitedSizeIntSet s) {
     @SuppressWarnings("interning") // optimization; not a subclass of Collection, though
     boolean sameObject = (this == s);
@@ -117,13 +125,19 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     }
   }
 
+  /**
+   * Return true if this set contains the given element.
+   *
+   * @param elt the element whose membership to test
+   * @return true if this set contains {@code elt}
+   */
   @SuppressWarnings("deterministic") // pure wrt equals() but not ==: throws a new exception
   /*@Pure*/
   public boolean contains(int elt) {
     if (repNulled()) {
       throw new UnsupportedOperationException();
     }
-    for (int i = 0; i < num_values; i++) {
+    for (int i = 0; i < numValues; i++) {
       if (values[i] == elt) {
         return true;
       }
@@ -133,26 +147,26 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
 
   /**
    * A lower bound on the number of elements in the set. Returns either the number of elements that
-   * have been inserted in the set, or max_size(), whichever is less.
+   * have been inserted in the set, or maxSize(), whichever is less.
    *
    * @return a number that is a lower bound on the number of elements added to the set
    */
   /*@Pure*/
   public int size(/*>>>@GuardSatisfied LimitedSizeIntSet this*/) {
-    return num_values;
+    return numValues;
   }
 
   /**
    * An upper bound on how many distinct elements can be individually represented in the set.
-   * Returns max_values+1 (where max_values is the argument to the constructor).
+   * Returns maxValues+1 (where maxValues is the argument to the constructor).
    *
    * @return maximum capacity of the set representation
    */
   @SuppressWarnings(
-      "lowerbound") // https://tinyurl.com/cfissue/1606: nulling the rep leaves num_values positive
-  public /*@Positive*/ int max_size() {
+      "lowerbound") // https://tinyurl.com/cfissue/1606: nulling the rep leaves numValues positive
+  public /*@Positive*/ int maxSize() {
     if (repNulled()) {
-      return num_values;
+      return numValues;
     } else {
       return values.length + 1;
     }
@@ -180,7 +194,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     if (repNulled()) {
       return;
     }
-    num_values = values.length + 1;
+    numValues = values.length + 1;
     values = null;
   }
 
@@ -202,15 +216,15 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
 
   /**
    * Merges a list of {@code LimitedSizeIntSet} objects into a single object that represents the
-   * values seen by the entire list. Returns the new object, whose max_values is the given integer.
+   * values seen by the entire list. Returns the new object, whose maxValues is the given integer.
    *
-   * @param max_values the maximum size for the returned LimitedSizeIntSet
+   * @param maxValues the maximum size for the returned LimitedSizeIntSet
    * @param slist a list of LimitedSizeIntSet, whose elements will be merged
    * @return a LimitedSizeIntSet that merges the elements of slist
    */
   public static LimitedSizeIntSet merge(
-      /*@Positive*/ int max_values, List<LimitedSizeIntSet> slist) {
-    LimitedSizeIntSet result = new LimitedSizeIntSet(max_values);
+      /*@Positive*/ int maxValues, List<LimitedSizeIntSet> slist) {
+    LimitedSizeIntSet result = new LimitedSizeIntSet(maxValues);
     for (LimitedSizeIntSet s : slist) {
       result.addAll(s);
     }

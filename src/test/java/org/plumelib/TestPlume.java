@@ -60,7 +60,7 @@ public final class TestPlume {
   // If true, do 100 instead of 100000 iterations when testing randomElements.
   // This saves only a little time.  However, it is significant when running
   // under instrumentation such as that of Chicory.
-  static boolean short_run = false;
+  static boolean shortRun = false;
 
   //   public static void main(String[] args) {
   //     testUtilPlume();
@@ -74,7 +74,7 @@ public final class TestPlume {
   //     System.out.println("All plume tests succeeded.");
   //   }
 
-  public static void assert_arrays_equals(int /*@Nullable*/ [] a1, int /*@Nullable*/ [] a2) {
+  public static void assertArraysEquals(int /*@Nullable*/ [] a1, int /*@Nullable*/ [] a2) {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
       System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
@@ -84,7 +84,7 @@ public final class TestPlume {
     //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
   }
 
-  public static void assert_arrays_equals(double[] a1, double[] a2) {
+  public static void assertArraysEquals(double[] a1, double[] a2) {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
       System.out.println(
@@ -97,7 +97,7 @@ public final class TestPlume {
   /// Utility functions
   ///
 
-  public static Iterator<Integer> int_array_iterator(int[] nums) {
+  public static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<Integer>(nums.length);
     for (int i = 0; i < nums.length; i++) {
       asList.add(nums[i]);
@@ -105,7 +105,7 @@ public final class TestPlume {
     return asList.iterator();
   }
 
-  public static int[] int_iterator_array(Iterator<Integer> itor) {
+  public static int[] intIteratorArray(Iterator<Integer> itor) {
     ArrayList<Integer> v = new ArrayList<Integer>();
     while (itor.hasNext()) {
       v.add(itor.next());
@@ -142,7 +142,7 @@ public final class TestPlume {
   ///
 
   @Test
-  public void testArraysPlume_min_max() {
+  public void testArraysPlume_minAndMax() {
 
     // public static int min(int[] a)
     assert ArraysPlume.min(new int[] {1, 2, 3}) == 1;
@@ -156,27 +156,27 @@ public final class TestPlume {
     assert ArraysPlume.max(new int[] {3, -2, 1}) == 3;
     assert ArraysPlume.max(new int[] {3}) == 3;
 
-    // public static int[] min_max(int[] a)
-    assert_arrays_equals(ArraysPlume.min_max(new int[] {1, 2, 3}), new int[] {1, 3});
-    assert_arrays_equals(ArraysPlume.min_max(new int[] {2, 33, 1}), new int[] {1, 33});
-    assert_arrays_equals(ArraysPlume.min_max(new int[] {3, -2, 1}), new int[] {-2, 3});
-    assert_arrays_equals(ArraysPlume.min_max(new int[] {3}), new int[] {3, 3});
+    // public static int[] minAndMax(int[] a)
+    assertArraysEquals(ArraysPlume.minAndMax(new int[] {1, 2, 3}), new int[] {1, 3});
+    assertArraysEquals(ArraysPlume.minAndMax(new int[] {2, 33, 1}), new int[] {1, 33});
+    assertArraysEquals(ArraysPlume.minAndMax(new int[] {3, -2, 1}), new int[] {-2, 3});
+    assertArraysEquals(ArraysPlume.minAndMax(new int[] {3}), new int[] {3, 3});
     try {
-      ArraysPlume.min_max(new int[] {});
+      ArraysPlume.minAndMax(new int[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
     } catch (ArrayIndexOutOfBoundsException e) {
     }
     try {
-      ArraysPlume.min_max(new long[] {});
+      ArraysPlume.minAndMax(new long[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
     } catch (ArrayIndexOutOfBoundsException e) {
     }
 
-    // public static int element_range(int[] a)
-    assert ArraysPlume.element_range(new int[] {1, 2, 3}) == 2;
-    assert ArraysPlume.element_range(new int[] {2, 33, 1}) == 32;
-    assert ArraysPlume.element_range(new int[] {3, -2, 1}) == 5;
-    assert ArraysPlume.element_range(new int[] {3}) == 0;
+    // public static int elementRange(int[] a)
+    assert ArraysPlume.elementRange(new int[] {1, 2, 3}) == 2;
+    assert ArraysPlume.elementRange(new int[] {2, 33, 1}) == 32;
+    assert ArraysPlume.elementRange(new int[] {3, -2, 1}) == 5;
+    assert ArraysPlume.elementRange(new int[] {3}) == 0;
   }
 
   @Test
@@ -238,7 +238,7 @@ public final class TestPlume {
 
   @SuppressWarnings({"deprecation", "BoxedPrimitiveConstructor"}) // interning tests
   @Test
-  public void testArraysPlume_indexOf() {
+  public void testArraysPlumeIndexOf() {
 
     // public static int indexOf(Object[] a, Object elt)
     // public static int indexOfEq(Object[] a, Object elt)
@@ -420,10 +420,10 @@ public final class TestPlume {
     // public static long[] subarray(long[] a, int startindex, int length)
     // public static short[] subarray(short[] a, int startindex, int length)
 
-    // public static boolean isSubarray(Object[] a, Object[] sub, int a_offset)
-    // public static boolean isSubarrayEq(Object[] a, Object[] sub, int a_offset)
-    // public static boolean isSubarray(int[] a, int[] sub, int a_offset)
-    // public static boolean isSubarray(boolean[] a, boolean[] sub, int a_offset)
+    // public static boolean isSubarray(Object[] a, Object[] sub, int aOffset)
+    // public static boolean isSubarrayEq(Object[] a, Object[] sub, int aOffset)
+    // public static boolean isSubarray(int[] a, int[] sub, int aOffset)
+    // public static boolean isSubarray(boolean[] a, boolean[] sub, int aOffset)
     // (The subarray tests are missing; I hope that the indexOf(..., array)
     // operations above test them sufficiently.)
   }
@@ -500,70 +500,69 @@ public final class TestPlume {
     assert ArraysPlume.noDuplicates(new String[] {" ", " "}) == false;
     assert ArraysPlume.noDuplicates(new String[] {"  ", " "}) == true;
 
-    // public static boolean fn_is_permutation(int[] a)
-    assert ArraysPlume.fn_is_permutation(new int[] {0, 1, 2, 3}) == true;
-    assert ArraysPlume.fn_is_permutation(new int[] {1, 2, 3, 0}) == true;
-    assert ArraysPlume.fn_is_permutation(new int[] {3, 2, 1, 0}) == true;
-    assert ArraysPlume.fn_is_permutation(new int[] {0, 1, 2, 2}) == false;
-    assert ArraysPlume.fn_is_permutation(new int[] {0, -1, 2, 3}) == false;
-    assert ArraysPlume.fn_is_permutation(new int[] {0, 1, 2, 4}) == false;
-    assert ArraysPlume.fn_is_permutation(new int[] {0, 0, 0, 0}) == false;
+    // public static boolean fnIsPermutation(int[] a)
+    assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 3}) == true;
+    assert ArraysPlume.fnIsPermutation(new int[] {1, 2, 3, 0}) == true;
+    assert ArraysPlume.fnIsPermutation(new int[] {3, 2, 1, 0}) == true;
+    assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 2}) == false;
+    assert ArraysPlume.fnIsPermutation(new int[] {0, -1, 2, 3}) == false;
+    assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 4}) == false;
+    assert ArraysPlume.fnIsPermutation(new int[] {0, 0, 0, 0}) == false;
 
-    // public static boolean fn_is_total(int[] a)
-    assert ArraysPlume.fn_is_total(new int[] {0, 1, 2, 3}) == true;
-    assert ArraysPlume.fn_is_total(new int[] {1, 2, 3, 0}) == true;
-    assert ArraysPlume.fn_is_total(new int[] {3, 2, 1, 0}) == true;
-    assert ArraysPlume.fn_is_total(new int[] {0, 1, 2, 2}) == true;
-    assert ArraysPlume.fn_is_total(new int[] {-1, 0, 2, 3}) == false;
-    assert ArraysPlume.fn_is_total(new int[] {0, -1, 2, 3}) == false;
-    assert ArraysPlume.fn_is_total(new int[] {0, -2, 1, 3}) == true; // weird
-    assert ArraysPlume.fn_is_total(new int[] {0, 2, 3, -1}) == false;
-    assert ArraysPlume.fn_is_total(new int[] {0, 1, 2, 4}) == true;
-    assert ArraysPlume.fn_is_total(new int[] {0, 0, 0, 0}) == true;
+    // public static boolean fnIsTotal(int[] a)
+    assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}) == true;
+    assert ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}) == true;
+    assert ArraysPlume.fnIsTotal(new int[] {3, 2, 1, 0}) == true;
+    assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 2}) == true;
+    assert ArraysPlume.fnIsTotal(new int[] {-1, 0, 2, 3}) == false;
+    assert ArraysPlume.fnIsTotal(new int[] {0, -1, 2, 3}) == false;
+    assert ArraysPlume.fnIsTotal(new int[] {0, -2, 1, 3}) == true; // weird
+    assert ArraysPlume.fnIsTotal(new int[] {0, 2, 3, -1}) == false;
+    assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 4}) == true;
+    assert ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}) == true;
   }
 
   @SuppressWarnings("index") // https://github.com/kelloggm/checker-framework/issues/147
   @Test
-  public void testArraysPlume_functions() {
+  public void testArraysPlumeFunctions() {
 
-    // public static int[] fn_identity(int length)
-    assert_arrays_equals(ArraysPlume.fn_identity(0), new int[] {});
-    assert_arrays_equals(ArraysPlume.fn_identity(1), new int[] {0});
-    assert_arrays_equals(ArraysPlume.fn_identity(2), new int[] {0, 1});
-    assert_arrays_equals(ArraysPlume.fn_identity(3), new int[] {0, 1, 2});
+    // public static int[] fnIdentity(int length)
+    assertArraysEquals(ArraysPlume.fnIdentity(0), new int[] {});
+    assertArraysEquals(ArraysPlume.fnIdentity(1), new int[] {0});
+    assertArraysEquals(ArraysPlume.fnIdentity(2), new int[] {0, 1});
+    assertArraysEquals(ArraysPlume.fnIdentity(3), new int[] {0, 1, 2});
 
-    // public static int[] fn_inverse_permutation(int[] a)
-    assert_arrays_equals(
-        ArraysPlume.fn_inverse_permutation(new int[] {0, 1, 2, 3}), new int[] {0, 1, 2, 3});
-    assert_arrays_equals(
-        ArraysPlume.fn_inverse_permutation(new int[] {1, 2, 3, 0}), new int[] {3, 0, 1, 2});
-    assert_arrays_equals(
-        ArraysPlume.fn_inverse_permutation(new int[] {3, 2, 1, 0}), new int[] {3, 2, 1, 0});
+    // public static int[] fnInversePermutation(int[] a)
+    assertArraysEquals(
+        ArraysPlume.fnInversePermutation(new int[] {0, 1, 2, 3}), new int[] {0, 1, 2, 3});
+    assertArraysEquals(
+        ArraysPlume.fnInversePermutation(new int[] {1, 2, 3, 0}), new int[] {3, 0, 1, 2});
+    assertArraysEquals(
+        ArraysPlume.fnInversePermutation(new int[] {3, 2, 1, 0}), new int[] {3, 2, 1, 0});
 
-    // public static int[] fn_inverse(int[] a, int arange)
-    assert_arrays_equals(ArraysPlume.fn_inverse(new int[] {0, 1, 2, 3}, 4), new int[] {0, 1, 2, 3});
-    assert_arrays_equals(ArraysPlume.fn_inverse(new int[] {1, 2, 3, 0}, 4), new int[] {3, 0, 1, 2});
-    assert_arrays_equals(ArraysPlume.fn_inverse(new int[] {3, 2, 1, 0}, 4), new int[] {3, 2, 1, 0});
+    // public static int[] fnInverse(int[] a, int arange)
+    assertArraysEquals(ArraysPlume.fnInverse(new int[] {0, 1, 2, 3}, 4), new int[] {0, 1, 2, 3});
+    assertArraysEquals(ArraysPlume.fnInverse(new int[] {1, 2, 3, 0}, 4), new int[] {3, 0, 1, 2});
+    assertArraysEquals(ArraysPlume.fnInverse(new int[] {3, 2, 1, 0}, 4), new int[] {3, 2, 1, 0});
     try {
-      ArraysPlume.fn_inverse(new int[] {1, 0, 3, 0}, 4);
+      ArraysPlume.fnInverse(new int[] {1, 0, 3, 0}, 4);
       throw new Error();
     } catch (UnsupportedOperationException e) {
       assert e.getMessage() != null && e.getMessage().equals("Not invertible; a[1]=0 and a[3]=0");
     }
-    assert_arrays_equals(
-        ArraysPlume.fn_inverse(new int[] {5}, 6), new int[] {-1, -1, -1, -1, -1, 0});
-    assert_arrays_equals(
-        ArraysPlume.fn_inverse(new int[] {1, 2, 3, 5}, 6), new int[] {-1, 0, 1, 2, -1, 3});
+    assertArraysEquals(ArraysPlume.fnInverse(new int[] {5}, 6), new int[] {-1, -1, -1, -1, -1, 0});
+    assertArraysEquals(
+        ArraysPlume.fnInverse(new int[] {1, 2, 3, 5}, 6), new int[] {-1, 0, 1, 2, -1, 3});
 
     try {
-      assert_arrays_equals(
-          ArraysPlume.fn_inverse(new int[] {100, 101, 102, 103}, 4), new int[] {40, 41, 42, 43});
+      assertArraysEquals(
+          ArraysPlume.fnInverse(new int[] {100, 101, 102, 103}, 4), new int[] {40, 41, 42, 43});
       throw new Error();
     } catch (IllegalArgumentException e) {
       assert e.getMessage() != null && e.getMessage().equals("Bad range value: a[0]=100");
     }
 
-    // public static int[] fn_compose(int[] a, int[] b)
+    // public static int[] fnCompose(int[] a, int[] b)
     {
       int[] a1 = new int[] {0, 1, 2, 3};
       int[] a2 = new int[] {1, 2, 3, 0};
@@ -575,12 +574,12 @@ public final class TestPlume {
       int[] a9 = new int[] {1, 2, 3, 5};
       int[] a10 = new int[] {1, 2, 3, 5, -1, -1};
 
-      assert_arrays_equals(ArraysPlume.fn_compose(a1, a1), a1);
-      assert_arrays_equals(ArraysPlume.fn_compose(a2, a2), new int[] {2, 3, 0, 1});
-      assert_arrays_equals(ArraysPlume.fn_compose(a3, a3), a1);
-      assert_arrays_equals(ArraysPlume.fn_compose(a4, a5), new int[] {0, 5, 0, 1});
-      assert_arrays_equals(ArraysPlume.fn_compose(a7, a8), new int[] {5});
-      assert_arrays_equals(ArraysPlume.fn_compose(a9, a10), new int[] {2, 3, 5, -1});
+      assertArraysEquals(ArraysPlume.fnCompose(a1, a1), a1);
+      assertArraysEquals(ArraysPlume.fnCompose(a2, a2), new int[] {2, 3, 0, 1});
+      assertArraysEquals(ArraysPlume.fnCompose(a3, a3), a1);
+      assertArraysEquals(ArraysPlume.fnCompose(a4, a5), new int[] {0, 5, 0, 1});
+      assertArraysEquals(ArraysPlume.fnCompose(a7, a8), new int[] {5});
+      assertArraysEquals(ArraysPlume.fnCompose(a9, a10), new int[] {2, 3, 5, -1});
     }
   }
 
@@ -607,12 +606,12 @@ public final class TestPlume {
 
         f1[5] = f2[i];
 
-        double[] f1_copy = f1.clone();
-        double[] f2_copy = f2.clone();
+        double[] f1Copy = f1.clone();
+        double[] f2Copy = f2.clone();
 
         assert ArraysPlume.isSubset(f1, f2);
-        assert_arrays_equals(f1, f1_copy);
-        assert_arrays_equals(f2, f2_copy);
+        assertArraysEquals(f1, f1Copy);
+        assertArraysEquals(f2, f2Copy);
       }
 
       double[] a1 = new double[] {1, 5, 10};
@@ -898,47 +897,46 @@ public final class TestPlume {
   @Test
   public void testArraysPlume_nullness() {
 
-    // public static boolean any_null(Object[] a)
+    // public static boolean anyNull(Object[] a)
     {
       Object o = new Object();
-      assert ArraysPlume.any_null(new Object[] {}) == false;
-      assert ArraysPlume.any_null(new Object[] {null}) == true;
-      assert ArraysPlume.any_null(new Object[] {null, null}) == true;
-      assert ArraysPlume.any_null(new Object[] {o}) == false;
-      assert ArraysPlume.any_null(new Object[] {o, o}) == false;
-      assert ArraysPlume.any_null(new Object[] {o, null, null}) == true;
-      assert ArraysPlume.any_null(new Object[] {null, o, null}) == true;
-      assert ArraysPlume.any_null(new Object[] {o, null, o}) == true;
-      assert ArraysPlume.any_null(new Object[] {null, o, o}) == true;
-      assert ArraysPlume.any_null(new Object[][] {}) == false;
-      assert ArraysPlume.any_null(new Object[][] {null}) == true;
+      assert ArraysPlume.anyNull(new Object[] {}) == false;
+      assert ArraysPlume.anyNull(new Object[] {null}) == true;
+      assert ArraysPlume.anyNull(new Object[] {null, null}) == true;
+      assert ArraysPlume.anyNull(new Object[] {o}) == false;
+      assert ArraysPlume.anyNull(new Object[] {o, o}) == false;
+      assert ArraysPlume.anyNull(new Object[] {o, null, null}) == true;
+      assert ArraysPlume.anyNull(new Object[] {null, o, null}) == true;
+      assert ArraysPlume.anyNull(new Object[] {o, null, o}) == true;
+      assert ArraysPlume.anyNull(new Object[] {null, o, o}) == true;
+      assert ArraysPlume.anyNull(new Object[][] {}) == false;
+      assert ArraysPlume.anyNull(new Object[][] {null}) == true;
       // Extraneous @Nullable on the following lines are due to https://tinyurl.com/cfissue/599
-      assert ArraysPlume.any_null(new /*@Nullable*/ Object[][] {new Object[] {null}}) == false;
-      assert ArraysPlume.any_null(new /*@Nullable*/ Object[][] {new Object[] {null}, null}) == true;
-      assert ArraysPlume.any_null(
+      assert ArraysPlume.anyNull(new /*@Nullable*/ Object[][] {new Object[] {null}}) == false;
+      assert ArraysPlume.anyNull(new /*@Nullable*/ Object[][] {new Object[] {null}, null}) == true;
+      assert ArraysPlume.anyNull(
               new /*@Nullable*/ Object[][] {new Object[] {null}, new Object[] {o}})
           == false;
     }
 
-    // public static boolean all_null(Object[] a)
+    // public static boolean allNull(Object[] a)
     {
       Object o = new Object();
-      assert ArraysPlume.all_null(new Object[] {}) == true;
-      assert ArraysPlume.all_null(new Object[] {null}) == true;
-      assert ArraysPlume.all_null(new Object[] {null, null}) == true;
-      assert ArraysPlume.all_null(new Object[] {o}) == false;
-      assert ArraysPlume.all_null(new Object[] {o, o}) == false;
-      assert ArraysPlume.all_null(new Object[] {o, null, null}) == false;
-      assert ArraysPlume.all_null(new Object[] {null, o, null}) == false;
-      assert ArraysPlume.all_null(new Object[] {o, null, o}) == false;
-      assert ArraysPlume.all_null(new Object[] {null, o, o}) == false;
-      assert ArraysPlume.all_null(new Object[][] {}) == true;
-      assert ArraysPlume.all_null(new Object[][] {null}) == true;
-      assert ArraysPlume.all_null(new Object[][] {null, null}) == true;
-      assert ArraysPlume.all_null(new /*@Nullable*/ Object[][] {new Object[] {null}}) == false;
-      assert ArraysPlume.all_null(new /*@Nullable*/ Object[][] {new Object[] {null}, null})
-          == false;
-      assert ArraysPlume.all_null(
+      assert ArraysPlume.allNull(new Object[] {}) == true;
+      assert ArraysPlume.allNull(new Object[] {null}) == true;
+      assert ArraysPlume.allNull(new Object[] {null, null}) == true;
+      assert ArraysPlume.allNull(new Object[] {o}) == false;
+      assert ArraysPlume.allNull(new Object[] {o, o}) == false;
+      assert ArraysPlume.allNull(new Object[] {o, null, null}) == false;
+      assert ArraysPlume.allNull(new Object[] {null, o, null}) == false;
+      assert ArraysPlume.allNull(new Object[] {o, null, o}) == false;
+      assert ArraysPlume.allNull(new Object[] {null, o, o}) == false;
+      assert ArraysPlume.allNull(new Object[][] {}) == true;
+      assert ArraysPlume.allNull(new Object[][] {null}) == true;
+      assert ArraysPlume.allNull(new Object[][] {null, null}) == true;
+      assert ArraysPlume.allNull(new /*@Nullable*/ Object[][] {new Object[] {null}}) == false;
+      assert ArraysPlume.allNull(new /*@Nullable*/ Object[][] {new Object[] {null}, null}) == false;
+      assert ArraysPlume.allNull(
               new /*@Nullable*/ Object[][] {new Object[] {null}, new Object[] {o}})
           == false;
     }
@@ -1039,14 +1037,14 @@ public final class TestPlume {
         int size1 = (random ? 100 : 1);
         int size2 = (random ? 10 : 1);
 
-        Random random_gen = new Random();
+        Random randomGen = new Random();
 
         int /*@ArrayLen(100)*/[] /*@ArrayLen(10)*/[] arrays = new int[100] /*@ArrayLen(10)*/[];
         for (int i = 0; i < arrays.length; i++) {
           int[] a = new int[10];
           for (int j = 0; j < a.length; j++) {
             if (random) {
-              a[j] = random_gen.nextInt(1000);
+              a[j] = randomGen.nextInt(1000);
             } else {
               a[j] = j;
             }
@@ -1197,17 +1195,17 @@ public final class TestPlume {
     Object diOtherIntern = Intern.intern((Object) new Double(2 * Double.MAX_VALUE));
     assert diIntern == diOtherIntern;
 
-    double positive_zero = +0.0;
-    double negative_zero = -0.0;
-    assert positive_zero == negative_zero;
-    assert 1 / positive_zero == Double.POSITIVE_INFINITY;
-    assert 1 / negative_zero == Double.NEGATIVE_INFINITY;
+    double positiveZero = +0.0;
+    double negativeZero = -0.0;
+    assert positiveZero == negativeZero;
+    assert 1 / positiveZero == Double.POSITIVE_INFINITY;
+    assert 1 / negativeZero == Double.NEGATIVE_INFINITY;
 
-    Double dzOrig = new Double(positive_zero);
+    Double dzOrig = new Double(positiveZero);
     Double dzIntern = Intern.intern(dzOrig);
     Object dzObjIntern = Intern.intern((Object) dzOrig);
     assert dzIntern == dzObjIntern;
-    Object dzOtherIntern = Intern.intern((Object) new Double(negative_zero));
+    Object dzOtherIntern = Intern.intern((Object) new Double(negativeZero));
     assert dzIntern == dzOtherIntern;
 
     double[] daOrig = new double[] {3.14, 2.71};
@@ -1242,7 +1240,7 @@ public final class TestPlume {
   }
 
   // Add 100 elements randomly selected from the range 0..limit-1 to the set.
-  private static void lsis_add_elts(/*@Positive*/ int limit, LimitedSizeSet<Integer> s) {
+  private static void lsisAddElts(/*@Positive*/ int limit, LimitedSizeSet<Integer> s) {
     Random r = new Random(20140613);
     for (int i = 0; i < 100; i++) {
       s.add(r.nextInt(limit));
@@ -1250,19 +1248,19 @@ public final class TestPlume {
   }
 
   // Create a LimitedSizeSet of the given size, and add elements to it.
-  private static void lsis_test(/*@Positive*/ int max_size) {
-    LimitedSizeSet<Integer> s = new LimitedSizeSet<Integer>(max_size);
-    for (int i = 1; i < 2 * max_size; i++) {
-      lsis_add_elts(i, s);
+  private static void lsis_test(/*@Positive*/ int maxSize) {
+    LimitedSizeSet<Integer> s = new LimitedSizeSet<Integer>(maxSize);
+    for (int i = 1; i < 2 * maxSize; i++) {
+      lsisAddElts(i, s);
       int size = s.size();
-      assert ((i <= max_size) ? (size == i) : (size == max_size + 1))
+      assert ((i <= maxSize) ? (size == i) : (size == maxSize + 1))
           : String.format(
-              "(%d<=%d) ? (%d==%d) : (%d==%d+1)   size=%d, i=%d, max_size=%d, s=%s",
-              i, max_size, size, i, size, max_size, size, i, max_size, s);
+              "(%d<=%d) ? (%d==%d) : (%d==%d+1)   size=%d, i=%d, maxSize=%d, s=%s",
+              i, maxSize, size, i, size, maxSize, size, i, maxSize, s);
     }
   }
 
-  private static void lss_with_null_test() {
+  private static void lss_withNull_test() {
     LimitedSizeSet</*@Nullable*/ Integer> s = new LimitedSizeSet</*@Nullable*/ Integer>(10);
     s.add(1);
     s.add(2);
@@ -1282,7 +1280,7 @@ public final class TestPlume {
     for (int i = 1; i < 10; i++) {
       lsis_test(i);
     }
-    lss_with_null_test();
+    lss_withNull_test();
   }
 
   // This cannot be static because it instantiates an inner class.
@@ -1351,43 +1349,43 @@ public final class TestPlume {
     assert MathPlume.gcd(new int[] {2400, 48, 36}) == 12;
     assert MathPlume.gcd(new int[] {2400, 72, 36}) == 12;
 
-    // int gcd_differences(int[] a)
+    // int gcdDifferences(int[] a)
     // Weak set of tests, derived directly from those of "int gcd(int[] a)".
-    assert MathPlume.gcd_differences(new int[] {0, 2, 52}) == 2;
-    assert MathPlume.gcd_differences(new int[] {0, 12, 156}) == 12;
-    assert MathPlume.gcd_differences(new int[] {0, 96, 240}) == 48;
-    assert MathPlume.gcd_differences(new int[] {0, 10, 35}) == 5;
-    assert MathPlume.gcd_differences(new int[] {0, 100, 110, 135}) == 5;
-    assert MathPlume.gcd_differences(new int[] {0, 768, 1092}) == 12;
-    assert MathPlume.gcd_differences(new int[] {0, 2400, 2448, 2484}) == 12;
-    assert MathPlume.gcd_differences(new int[] {0, 2400, 2472, 2508}) == 12;
-    assert MathPlume.gcd_differences(new int[] {5, 5, 5, 5}) == 0;
+    assert MathPlume.gcdDifferences(new int[] {0, 2, 52}) == 2;
+    assert MathPlume.gcdDifferences(new int[] {0, 12, 156}) == 12;
+    assert MathPlume.gcdDifferences(new int[] {0, 96, 240}) == 48;
+    assert MathPlume.gcdDifferences(new int[] {0, 10, 35}) == 5;
+    assert MathPlume.gcdDifferences(new int[] {0, 100, 110, 135}) == 5;
+    assert MathPlume.gcdDifferences(new int[] {0, 768, 1092}) == 12;
+    assert MathPlume.gcdDifferences(new int[] {0, 2400, 2448, 2484}) == 12;
+    assert MathPlume.gcdDifferences(new int[] {0, 2400, 2472, 2508}) == 12;
+    assert MathPlume.gcdDifferences(new int[] {5, 5, 5, 5}) == 0;
 
-    // int mod_positive(int x, int y)
-    assert MathPlume.mod_positive(33, 5) == 3;
-    assert MathPlume.mod_positive(-33, 5) == 2;
-    assert MathPlume.mod_positive(33, -5) == 3;
-    assert MathPlume.mod_positive(-33, -5) == 2;
+    // int modPositive(int x, int y)
+    assert MathPlume.modPositive(33, 5) == 3;
+    assert MathPlume.modPositive(-33, 5) == 2;
+    assert MathPlume.modPositive(33, -5) == 3;
+    assert MathPlume.modPositive(-33, -5) == 2;
 
-    // int[] missing_numbers(int[] nums)
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 4, 5, 6, 7, 8}), new int[] {});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 4, 6, 7, 8}), new int[] {5});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 4, 8}), new int[] {5, 6, 7});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 5, 6, 8}), new int[] {4, 7});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 6, 8}), new int[] {4, 5, 7});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 4, 5, 5, 6, 7, 8}), new int[] {});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 4, 4, 6, 6, 7, 8}), new int[] {5});
-    assert_arrays_equals(MathPlume.missing_numbers(new int[] {3, 3, 3}), new int[] {});
+    // int[] missingNumbers(int[] nums)
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 5, 6, 7, 8}), new int[] {});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 6, 7, 8}), new int[] {5});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 8}), new int[] {5, 6, 7});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 5, 6, 8}), new int[] {4, 7});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 6, 8}), new int[] {4, 5, 7});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 5, 5, 6, 7, 8}), new int[] {});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 4, 6, 6, 7, 8}), new int[] {5});
+    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 3, 3}), new int[] {});
 
     // class MissingNumbersIteratorInt
     class TestMissingNumbersIteratorInt {
       // javadoc won't let this be static
-      void test(int[] orig, boolean add_ends, int[] goal_missing) {
-        Iterator<Integer> orig_iterator = int_array_iterator(orig);
+      void test(int[] orig, boolean addEnds, int[] goalMissing) {
+        Iterator<Integer> orig_iterator = intArrayIterator(orig);
         Iterator<Integer> missing_iterator =
-            new MathPlume.MissingNumbersIteratorInt(orig_iterator, add_ends);
-        int[] missing = TestPlume.int_iterator_array(missing_iterator);
-        assert_arrays_equals(missing, goal_missing);
+            new MathPlume.MissingNumbersIteratorInt(orig_iterator, addEnds);
+        int[] missing = TestPlume.intIteratorArray(missing_iterator);
+        assertArraysEquals(missing, goalMissing);
       }
     }
 
@@ -1413,39 +1411,39 @@ public final class TestPlume {
 
     class TestModulus {
       // javadoc won't let this be static
-      void check(int[] nums, int /*@Nullable*/ [] goal_rm) {
+      void check(int[] nums, int /*@Nullable*/ [] goalRm) {
         int[] rm = MathPlume.modulus(nums);
-        if (!Arrays.equals(rm, goal_rm)) {
+        if (!Arrays.equals(rm, goalRm)) {
           throw new Error(
-              "Expected (r,m)=" + Arrays.toString(goal_rm) + ", saw (r,m)=" + Arrays.toString(rm));
+              "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
         }
         if (rm == null) {
           return;
         }
-        int goal_r = rm[0];
+        int goalR = rm[0];
         int m = rm[1];
         for (int i = 0; i < nums.length; i++) {
           int r = nums[i] % m;
           if (r < 0) {
             r += m;
           }
-          if (r != goal_r) {
-            throw new Error("Expected " + nums[i] + " % " + m + " = " + goal_r + ", got " + r);
+          if (r != goalR) {
+            throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
           }
         }
       }
 
       // javadoc won't let this be static
-      void check(Iterator<Integer> itor, int /*@Nullable*/ [] goal_rm) {
+      void check(Iterator<Integer> itor, int /*@Nullable*/ [] goalRm) {
         // There would be no point to this:  it's testing
-        // int_iterator_array, not the iterator version!
-        // return check(int_iterator_array(itor), goal_rm);
-        assert_arrays_equals(MathPlume.modulus_int(itor), goal_rm);
+        // intIteratorArray, not the iterator version!
+        // return check(intIteratorArray(itor), goalRm);
+        assertArraysEquals(MathPlume.modulusInt(itor), goalRm);
       }
 
       // javadoc won't let this be static
-      void check_iterator(int[] nums, int /*@Nullable*/ [] goal_rm) {
-        check(int_array_iterator(nums), goal_rm);
+      void checkIterator(int[] nums, int /*@Nullable*/ [] goalRm) {
+        check(intArrayIterator(nums), goalRm);
       }
     }
 
@@ -1462,54 +1460,54 @@ public final class TestPlume {
     testModulus.check(new int[] {2, 19, 101}, null);
     testModulus.check(new int[] {5, 5, 5, 5, 5}, null);
 
-    testModulus.check_iterator(new int[] {}, null);
-    testModulus.check_iterator(new int[] {1}, null);
-    testModulus.check_iterator(new int[] {3, 7, 47, 51}, new int[] {3, 4});
-    testModulus.check_iterator(new int[] {3, 11, 43, 51}, new int[] {3, 8});
-    testModulus.check_iterator(new int[] {3, 11, 47, 55}, new int[] {3, 4});
-    testModulus.check_iterator(new int[] {2383, 4015, -81, 463, -689}, new int[] {15, 32});
-    testModulus.check_iterator(new int[] {5, 5, 5, 5, 5}, null);
+    testModulus.checkIterator(new int[] {}, null);
+    testModulus.checkIterator(new int[] {1}, null);
+    testModulus.checkIterator(new int[] {3, 7, 47, 51}, new int[] {3, 4});
+    testModulus.checkIterator(new int[] {3, 11, 43, 51}, new int[] {3, 8});
+    testModulus.checkIterator(new int[] {3, 11, 47, 55}, new int[] {3, 4});
+    testModulus.checkIterator(new int[] {2383, 4015, -81, 463, -689}, new int[] {15, 32});
+    testModulus.checkIterator(new int[] {5, 5, 5, 5, 5}, null);
 
-    // int[] nonmodulus_strict(int[] nums)
-    // int[] nonmodulus_nonstrict(int[] nums)
-    // int[] nonmodulus_strict(Iterator nums)
+    // int[] nonmodulusStrict(int[] nums)
+    // int[] nonmodulusNonstrict(int[] nums)
+    // int[] nonmodulusStrict(Iterator nums)
 
     class TestNonModulus {
       // javadoc won't let this be static
-      void check_strict(int[] nums, int /*@Nullable*/ [] goal_rm) {
-        check(nums, goal_rm, true);
-        Iterator<Integer> itor = int_array_iterator(nums);
-        assert_arrays_equals(MathPlume.nonmodulus_strict_int(itor), goal_rm);
+      void checkStrict(int[] nums, int /*@Nullable*/ [] goalRm) {
+        check(nums, goalRm, true);
+        Iterator<Integer> itor = intArrayIterator(nums);
+        assertArraysEquals(MathPlume.nonmodulusStrictInt(itor), goalRm);
       }
 
       // javadoc won't let this be static
-      void check_nonstrict(int[] nums, int /*@Nullable*/ [] goal_rm) {
-        check(nums, goal_rm, false);
+      void checkNonstrict(int[] nums, int /*@Nullable*/ [] goalRm) {
+        check(nums, goalRm, false);
       }
 
       // javadoc won't let this be static
-      void check(int[] nums, int /*@Nullable*/ [] goal_rm, boolean strict) {
+      void check(int[] nums, int /*@Nullable*/ [] goalRm, boolean strict) {
         int[] rm;
         if (strict) {
-          rm = MathPlume.nonmodulus_strict(nums);
+          rm = MathPlume.nonmodulusStrict(nums);
         } else {
-          rm = MathPlume.nonmodulus_nonstrict(nums);
+          rm = MathPlume.nonmodulusNonstrict(nums);
         }
-        if (!Arrays.equals(rm, goal_rm)) {
+        if (!Arrays.equals(rm, goalRm)) {
           throw new Error(
-              "Expected (r,m)=" + Arrays.toString(goal_rm) + ", saw (r,m)=" + Arrays.toString(rm));
+              "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
         }
         if (rm == null) {
           return;
         }
-        int goal_r = rm[0];
+        int goalR = rm[0];
         int m = rm[1];
         for (int i = 0; i < nums.length; i++) {
           int r = nums[i] % m;
           if (r < 0) {
             r += m;
           }
-          if (r == goal_r) {
+          if (r == goalR) {
             throw new Error("Expected inequality, saw " + nums[i] + " % " + m + " = " + r);
           }
         }
@@ -1518,20 +1516,20 @@ public final class TestPlume {
 
     TestNonModulus testNonModulus = new TestNonModulus();
 
-    testNonModulus.check_strict(new int[] {1, 2, 3, 5, 6, 7, 9}, null);
-    testNonModulus.check_strict(new int[] {-1, 1, 2, 3, 5, 6, 7, 9}, new int[] {0, 4});
-    testNonModulus.check_strict(new int[] {1, 2, 3, 5, 6, 7, 9, 11}, null);
-    testNonModulus.check_strict(new int[] {1, 2, 3, 5, 6, 7, 11}, null);
-    testNonModulus.check_strict(new int[] {1, 2, 4, 6, 8, 10}, null);
+    testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 9}, null);
+    testNonModulus.checkStrict(new int[] {-1, 1, 2, 3, 5, 6, 7, 9}, new int[] {0, 4});
+    testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11}, null);
+    testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 11}, null);
+    testNonModulus.checkStrict(new int[] {1, 2, 4, 6, 8, 10}, null);
 
     // null because only 7 elements, so don't try modulus = 4
-    testNonModulus.check_nonstrict(new int[] {1, 2, 3, 5, 6, 7, 9}, null);
-    testNonModulus.check_nonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 10}, new int[] {0, 4});
-    testNonModulus.check_nonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11}, new int[] {0, 4});
-    testNonModulus.check_nonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11, 12, 13}, null);
-    testNonModulus.check_nonstrict(
+    testNonModulus.checkNonstrict(new int[] {1, 2, 3, 5, 6, 7, 9}, null);
+    testNonModulus.checkNonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 10}, new int[] {0, 4});
+    testNonModulus.checkNonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11}, new int[] {0, 4});
+    testNonModulus.checkNonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11, 12, 13}, null);
+    testNonModulus.checkNonstrict(
         new int[] {1, 2, 3, 5, 6, 7, 9, 11, 12, 13, 14, 15}, new int[] {4, 6});
-    testNonModulus.check_nonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11, 12, 13, 14, 15, 22}, null);
+    testNonModulus.checkNonstrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11, 12, 13, 14, 15, 22}, null);
   }
 
   @Test
@@ -1834,13 +1832,13 @@ public final class TestPlume {
       for (int i = 0; i < 10; i++) {
         iota10.add(i);
       }
-      ArrayList<Integer> iota10_twice = new ArrayList<Integer>();
-      iota10_twice.addAll(iota10);
-      iota10_twice.addAll(iota10);
-      ArrayList<Integer> iota10_thrice = new ArrayList<Integer>();
-      iota10_thrice.addAll(iota10);
-      iota10_thrice.addAll(iota10);
-      iota10_thrice.addAll(iota10);
+      ArrayList<Integer> iota10Twice = new ArrayList<Integer>();
+      iota10Twice.addAll(iota10);
+      iota10Twice.addAll(iota10);
+      ArrayList<Integer> iota10Thrice = new ArrayList<Integer>();
+      iota10Thrice.addAll(iota10);
+      iota10Thrice.addAll(iota10);
+      iota10Thrice.addAll(iota10);
 
       // public static class EnumerationIterator implements Iterator
       // public static class IteratorEnumeration implements Enumeration
@@ -1853,7 +1851,7 @@ public final class TestPlume {
           toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
 
       // public static class MergedIterator2 implements Iterator {
-      assert iota10_twice.equals(
+      assert iota10Twice.equals(
           toArrayList(
               new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota10.iterator())));
       assert iota10.equals(
@@ -1864,34 +1862,34 @@ public final class TestPlume {
               new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota0.iterator())));
 
       // public static class MergedIterator implements Iterator {
-      ArrayList<Iterator<Integer>> iota10_iterator_thrice = new ArrayList<Iterator<Integer>>();
-      iota10_iterator_thrice.add(iota10.iterator());
-      iota10_iterator_thrice.add(iota10.iterator());
-      iota10_iterator_thrice.add(iota10.iterator());
-      assert iota10_thrice.equals(
+      ArrayList<Iterator<Integer>> iota10IteratorThrice = new ArrayList<Iterator<Integer>>();
+      iota10IteratorThrice.add(iota10.iterator());
+      iota10IteratorThrice.add(iota10.iterator());
+      iota10IteratorThrice.add(iota10.iterator());
+      assert iota10Thrice.equals(
           toArrayList(
-              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_thrice.iterator())));
-      ArrayList<Iterator<Integer>> iota10_iterator_twice_1 = new ArrayList<Iterator<Integer>>();
-      iota10_iterator_twice_1.add(iota0.iterator());
-      iota10_iterator_twice_1.add(iota10.iterator());
-      iota10_iterator_twice_1.add(iota10.iterator());
-      ArrayList<Iterator<Integer>> iota10_iterator_twice_2 = new ArrayList<Iterator<Integer>>();
-      iota10_iterator_twice_2.add(iota10.iterator());
-      iota10_iterator_twice_2.add(iota0.iterator());
-      iota10_iterator_twice_2.add(iota10.iterator());
-      ArrayList<Iterator<Integer>> iota10_iterator_twice_3 = new ArrayList<Iterator<Integer>>();
-      iota10_iterator_twice_3.add(iota10.iterator());
-      iota10_iterator_twice_3.add(iota10.iterator());
-      iota10_iterator_twice_3.add(iota0.iterator());
-      assert iota10_twice.equals(
+              new CollectionsPlume.MergedIterator<Integer>(iota10IteratorThrice.iterator())));
+      ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<Iterator<Integer>>();
+      iota10IteratorTwice1.add(iota0.iterator());
+      iota10IteratorTwice1.add(iota10.iterator());
+      iota10IteratorTwice1.add(iota10.iterator());
+      ArrayList<Iterator<Integer>> iota10IteratorTwice2 = new ArrayList<Iterator<Integer>>();
+      iota10IteratorTwice2.add(iota10.iterator());
+      iota10IteratorTwice2.add(iota0.iterator());
+      iota10IteratorTwice2.add(iota10.iterator());
+      ArrayList<Iterator<Integer>> iota10IteratorTwice3 = new ArrayList<Iterator<Integer>>();
+      iota10IteratorTwice3.add(iota10.iterator());
+      iota10IteratorTwice3.add(iota10.iterator());
+      iota10IteratorTwice3.add(iota0.iterator());
+      assert iota10Twice.equals(
           toArrayList(
-              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_twice_1.iterator())));
-      assert iota10_twice.equals(
+              new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice1.iterator())));
+      assert iota10Twice.equals(
           toArrayList(
-              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_twice_2.iterator())));
-      assert iota10_twice.equals(
+              new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice2.iterator())));
+      assert iota10Twice.equals(
           toArrayList(
-              new CollectionsPlume.MergedIterator<Integer>(iota10_iterator_twice_3.iterator())));
+              new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice3.iterator())));
 
       class OddFilter implements Filter<Integer> {
         public OddFilter() {}
@@ -1904,13 +1902,13 @@ public final class TestPlume {
 
       // public static final class FilteredIterator implements Iterator
 
-      ArrayList<Integer> iota10_odd = new ArrayList<Integer>();
+      ArrayList<Integer> iota10Odd = new ArrayList<Integer>();
       for (int i = 0; i < iota10.size(); i++) {
         if (i % 2 != 0) {
-          iota10_odd.add(i);
+          iota10Odd.add(i);
         }
       }
-      assert iota10_odd.equals(
+      assert iota10Odd.equals(
           toArrayList(
               new CollectionsPlume.FilteredIterator<Integer>(iota10.iterator(), new OddFilter())));
     }
@@ -1933,8 +1931,8 @@ public final class TestPlume {
       assert rfali.getLast().equals(4);
     }
 
-    // public static ArrayList randomElements(Iterator itor, int num_elts)
-    // public static ArrayList randomElements(Iterator itor, int num_elts, Random random)
+    // public static ArrayList randomElements(Iterator itor, int numElts)
+    // public static ArrayList randomElements(Iterator itor, int numElts, Random random)
 
     // Iterate through numbers from zero up to the argument (non-inclusive)
     class IotaIterator implements Iterator<Integer> {
@@ -1972,29 +1970,31 @@ public final class TestPlume {
       nextNotification.add(Calendar.MINUTE, 1);
       DateFormat df = new SimpleDateFormat();
 
-      int itor_size = 10;
-      int num_elts_limit = 12;
-      int tries = short_run ? 100 : 100000;
-      double ratio_limit = .02;
+      int itorSize = 10;
+      int numEltsLimit = 12;
+      int tries = shortRun ? 100 : 100000;
+      double ratioLimit = .02;
       Random r = new Random(20020311);
       // "i++" instead of "i+=3" here works, but is slow
-      for (int i = 1; i < num_elts_limit; i += 3) {
-        int[] totals = new int[num_elts_limit];
+      for (int i = 1; i < numEltsLimit; i += 3) {
+        int[] totals = new int[numEltsLimit];
         for (int j = 0; j < tries; j++) {
           if (j % 100 == 0) {
             Calendar now = Calendar.getInstance();
             if (now.after(nextNotification)) {
               System.out.printf(
                   "%s: iteration (%d,%d) out of (%d,%d)%n",
-                  df.format(nextNotification.getTime()), i, j, num_elts_limit, tries);
+                  df.format(nextNotification.getTime()), i, j, numEltsLimit, tries);
               nextNotification.add(Calendar.MINUTE, 1);
             }
           }
           @SuppressWarnings({
             "index", "value"
-          }) // The IotaIterator only contains indexes for totals.length, and since chosen's elements are selected randomly from the IotaIterator, all of its elements are @IndexFor
+          }) // The IotaIterator only contains indexes for totals.length, and since chosen's
+          // elements are selected randomly from the IotaIterator, all of its elements are
+          // @IndexFor
           List</*@IndexFor("totals")*/ Integer> chosen =
-              CollectionsPlume.randomElements(new IotaIterator(itor_size), i, r);
+              CollectionsPlume.randomElements(new IotaIterator(itorSize), i, r);
           for (int m = 0; m < chosen.size(); m++) {
             for (int n = m + 1; n < chosen.size(); n++) {
               if (chosen.get(m).intValue() == chosen.get(n).intValue()) {
@@ -2006,17 +2006,17 @@ public final class TestPlume {
             totals[chosen.get(k).intValue()]++;
           }
         }
-        int i_truncated = Math.min(itor_size, i);
-        int grand_total = tries * i_truncated;
-        assert ArraysPlume.sum(totals) == grand_total : "Totals = " + ArraysPlume.sum(totals);
+        int iTruncated = Math.min(itorSize, i);
+        int grandTotal = tries * iTruncated;
+        assert ArraysPlume.sum(totals) == grandTotal : "Totals = " + ArraysPlume.sum(totals);
         // System.out.print("chosen:\t");
-        for (int k = 0; k < num_elts_limit; k++) {
-          int this_total = totals[k];
-          int expected = tries * i_truncated / itor_size;
-          double ratio = (double) this_total / (double) expected;
-          // System.out.print(((k<10) ? " " : "") + k + " " + this_total + "\t");
+        for (int k = 0; k < numEltsLimit; k++) {
+          int thisTotal = totals[k];
+          int expected = tries * iTruncated / itorSize;
+          double ratio = (double) thisTotal / (double) expected;
+          // System.out.print(((k<10) ? " " : "") + k + " " + thisTotal + "\t");
           // System.out.print("\nExp=" + expected + "\tratio=" + ratio + "\t");
-          assert k >= itor_size || (ratio > ratio_limit && ratio < 1 / ratio_limit);
+          assert k >= itorSize || (ratio > ratioLimit && ratio < 1 / ratioLimit);
         }
         // System.out.println();
       }
@@ -2360,7 +2360,7 @@ public final class TestPlume {
   @Test
   public void testTestUtilPlume() {
     int[] a = new int[] {3, 4, 5};
-    assert_arrays_equals(int_iterator_array(int_array_iterator(a)), a);
+    assertArraysEquals(intIteratorArray(intArrayIterator(a)), a);
   }
 
   @Test
@@ -2507,7 +2507,7 @@ public final class TestPlume {
       for (int i = 0; i < a.length; i++) {
         a[i] = i;
       }
-      double[] a_copy = a.clone();
+      double[] aCopy = a.clone();
       assert ff.indexOf(a, -1) == -1;
       assert ff.indexOf(a, 0) == 0;
       assert ff.indexOf(a, 7) == 7;
@@ -2519,7 +2519,7 @@ public final class TestPlume {
       assert ff.indexOf(a, 9 * offlow) == 9;
       assert ff.indexOf(a, 7 * offhigh2) == -1;
       assert ff.indexOf(a, 9 * offlow2) == -1;
-      assert_arrays_equals(a, a_copy);
+      assertArraysEquals(a, aCopy);
     }
 
     // public int indexOf (double[] a, double[] sub)
@@ -2556,14 +2556,14 @@ public final class TestPlume {
       double[] f = new double[] {a[7], a[8] * offlow, a[9] * offhigh};
       double[] g = new double[] {a[7], 22, a[9]};
       double[] h = new double[] {a[7], a[8], a[9], 10};
-      double[] a_copy = a.clone();
-      double[] b_copy = b.clone();
-      double[] c_copy = c.clone();
-      double[] d_copy = d.clone();
-      double[] e_copy = e.clone();
-      double[] f_copy = f.clone();
-      double[] g_copy = g.clone();
-      double[] h_copy = h.clone();
+      double[] aCopy = a.clone();
+      double[] bCopy = b.clone();
+      double[] cCopy = c.clone();
+      double[] dCopy = d.clone();
+      double[] eCopy = e.clone();
+      double[] fCopy = f.clone();
+      double[] gCopy = g.clone();
+      double[] hCopy = h.clone();
 
       assert ff.indexOf(a, b) == 0;
       assert ff.indexOf(a, c) == 0;
@@ -2573,14 +2573,14 @@ public final class TestPlume {
       assert ff.indexOf(a, g) == -1;
       assert ff.indexOf(a, h) == -1;
 
-      assert_arrays_equals(a, a_copy);
-      assert_arrays_equals(b, b_copy);
-      assert_arrays_equals(c, c_copy);
-      assert_arrays_equals(d, d_copy);
-      assert_arrays_equals(e, e_copy);
-      assert_arrays_equals(f, f_copy);
-      assert_arrays_equals(g, g_copy);
-      assert_arrays_equals(h, h_copy);
+      assertArraysEquals(a, aCopy);
+      assertArraysEquals(b, bCopy);
+      assertArraysEquals(c, cCopy);
+      assertArraysEquals(d, dCopy);
+      assertArraysEquals(e, eCopy);
+      assertArraysEquals(f, fCopy);
+      assertArraysEquals(g, gCopy);
+      assertArraysEquals(h, hCopy);
     }
 
     // public boolean isElemMatch (double[] a1, double[] a2)
@@ -2590,7 +2590,7 @@ public final class TestPlume {
 
       for (int j = 0; j < 10; j++) {
 
-        initialize_f1_and_f2(j, f1, f2);
+        initializeF1AndF2(j, f1, f2);
 
         // make two elements off just a little
         f2[7] = f2[7] * (1 + offset);
@@ -2605,22 +2605,22 @@ public final class TestPlume {
       }
       for (int j = 0; j < 200; j++) {
 
-        initialize_f1_and_f2(j, f1, f2);
+        initializeF1AndF2(j, f1, f2);
 
         // make two elements off just a little
         f2[7] = f2[7] * (1 + 2 * offset);
         f2[8] = f2[8] * (1 - 2 * offset);
 
         // test with each array the bigger one
-        double[] f1_copy = f1.clone();
-        double[] f2_copy = f2.clone();
+        double[] f1Copy = f1.clone();
+        double[] f2Copy = f2.clone();
         if ((j % 2) == 0) {
           assert !ff.isElemMatch(f1, f2);
         } else {
           assert !ff.isElemMatch(f2, f1);
         }
-        assert_arrays_equals(f1, f1_copy);
-        assert_arrays_equals(f2, f2_copy);
+        assertArraysEquals(f1, f1Copy);
+        assertArraysEquals(f2, f2Copy);
       }
     }
     {
@@ -2647,14 +2647,14 @@ public final class TestPlume {
       double[] a5 = new double[] {0, 1, 2, 3, 4};
       double[] a6 = new double[] {0, 1, 5, 3, 4};
       double[] a7 = new double[] {1, 2, 3, 4};
-      double[] a0_copy = a0.clone();
-      double[] a1_copy = a1.clone();
-      double[] a2_copy = a2.clone();
-      double[] a3_copy = a3.clone();
-      double[] a4_copy = a4.clone();
-      double[] a5_copy = a5.clone();
-      double[] a6_copy = a6.clone();
-      double[] a7_copy = a7.clone();
+      double[] a0Copy = a0.clone();
+      double[] a1Copy = a1.clone();
+      double[] a2Copy = a2.clone();
+      double[] a3Copy = a3.clone();
+      double[] a4Copy = a4.clone();
+      double[] a5Copy = a5.clone();
+      double[] a6Copy = a6.clone();
+      double[] a7Copy = a7.clone();
 
       assert comparator.compare(a0, a1) == 0;
       assert comparator.compare(a1, a0) == 0;
@@ -2679,14 +2679,14 @@ public final class TestPlume {
       assert comparator.compare(a7, a4) > 0;
       assert comparator.compare(a4, a7) < 0;
 
-      assert_arrays_equals(a0, a0_copy);
-      assert_arrays_equals(a1, a1_copy);
-      assert_arrays_equals(a2, a2_copy);
-      assert_arrays_equals(a3, a3_copy);
-      assert_arrays_equals(a4, a4_copy);
-      assert_arrays_equals(a5, a5_copy);
-      assert_arrays_equals(a6, a6_copy);
-      assert_arrays_equals(a7, a7_copy);
+      assertArraysEquals(a0, a0Copy);
+      assertArraysEquals(a1, a1Copy);
+      assertArraysEquals(a2, a2Copy);
+      assertArraysEquals(a3, a3Copy);
+      assertArraysEquals(a4, a4Copy);
+      assertArraysEquals(a5, a5Copy);
+      assertArraysEquals(a6, a6Copy);
+      assertArraysEquals(a7, a7Copy);
     }
 
     // public boolean FuzzyFloat.isSubset (double[] a1, double[] a2)
@@ -2706,12 +2706,12 @@ public final class TestPlume {
 
         f1[5] = f2[i] * offhigh;
 
-        double[] f1_copy = f1.clone();
-        double[] f2_copy = f2.clone();
+        double[] f1Copy = f1.clone();
+        double[] f2Copy = f2.clone();
 
         assert ff.isSubset(f1, f2);
-        assert_arrays_equals(f1, f1_copy);
-        assert_arrays_equals(f2, f2_copy);
+        assertArraysEquals(f1, f1Copy);
+        assertArraysEquals(f2, f2Copy);
       }
 
       double[] a1 = new double[] {1, 5, 10};
@@ -2732,7 +2732,7 @@ public final class TestPlume {
   }
 
   /** Initialize f2 to be the same as two copies of f1 */
-  void initialize_f1_and_f2(int j, double /*@ArrayLen(10)*/[] f1, double /*@ArrayLen(20)*/[] f2) {
+  void initializeF1AndF2(int j, double /*@ArrayLen(10)*/[] f1, double /*@ArrayLen(20)*/[] f2) {
 
     // start two arrays out exactly equal
     for (int i = 0; i < f1.length; i++) {
@@ -2746,17 +2746,17 @@ public final class TestPlume {
     }
   }
 
-  /** Tests UtilPlume create_combinations routines. */
+  /** Tests UtilPlume createCombinations routines. */
   @Test
-  public void test_create_combinations() {
+  public void test_createCombinations() {
 
-    // public static List create_combinations (int dims, int start, List objs)
+    // public static List createCombinations (int dims, int start, List objs)
     Object a = new Object();
     Object b = new Object();
     Object c = new Object();
-    List<Object> a_list = Arrays.<Object>asList(new Object[] {a});
-    List<Object> b_list = Arrays.<Object>asList(new Object[] {b});
-    List<Object> c_list = Arrays.<Object>asList(new Object[] {c});
+    List<Object> aList = Arrays.<Object>asList(new Object[] {a});
+    List<Object> bList = Arrays.<Object>asList(new Object[] {b});
+    List<Object> cList = Arrays.<Object>asList(new Object[] {c});
     List<Object> aa = Arrays.<Object>asList(new Object[] {a, a});
     List<Object> bb = Arrays.<Object>asList(new Object[] {b, b});
     List<Object> cc = Arrays.<Object>asList(new Object[] {c, c});
@@ -2765,13 +2765,13 @@ public final class TestPlume {
     List<Object> bc = Arrays.<Object>asList(new Object[] {b, c});
 
     List<Object> abc = Arrays.asList(a, b, c);
-    List<List<Object>> combo1 = CollectionsPlume.create_combinations(1, 0, abc);
+    List<List<Object>> combo1 = CollectionsPlume.createCombinations(1, 0, abc);
     assert combo1.size() == 3;
-    assert combo1.contains(a_list);
-    assert combo1.contains(b_list);
-    assert combo1.contains(c_list);
+    assert combo1.contains(aList);
+    assert combo1.contains(bList);
+    assert combo1.contains(cList);
 
-    List<List<Object>> combo2 = CollectionsPlume.create_combinations(2, 0, abc);
+    List<List<Object>> combo2 = CollectionsPlume.createCombinations(2, 0, abc);
     assert combo2.size() == 6;
     assert combo2.contains(aa);
     assert combo2.contains(ab);
@@ -2780,7 +2780,7 @@ public final class TestPlume {
     assert combo2.contains(bc);
     assert combo2.contains(cc);
 
-    // public static List create_combinations (int arity, int start, int cnt)
+    // public static List createCombinations (int arity, int start, int cnt)
     Integer i0 = 0;
     Integer i1 = 1;
     Integer i2 = 2;
@@ -2788,13 +2788,13 @@ public final class TestPlume {
     Integer i11 = 11;
     Integer i12 = 12;
 
-    List<ArrayList<Integer>> combo3 = CollectionsPlume.create_combinations(1, 0, 2);
+    List<ArrayList<Integer>> combo3 = CollectionsPlume.createCombinations(1, 0, 2);
     assert combo3.size() == 3;
     assert combo3.contains(Arrays.asList(new Integer[] {i0}));
     assert combo3.contains(Arrays.asList(new Integer[] {i1}));
     assert combo3.contains(Arrays.asList(new Integer[] {i2}));
 
-    List<ArrayList<Integer>> combo4 = CollectionsPlume.create_combinations(2, 0, 2);
+    List<ArrayList<Integer>> combo4 = CollectionsPlume.createCombinations(2, 0, 2);
     assert combo4.size() == 6;
     assert combo4.contains(Arrays.asList(new Integer[] {i0, i0}));
     assert combo4.contains(Arrays.asList(new Integer[] {i0, i1}));
@@ -2803,7 +2803,7 @@ public final class TestPlume {
     assert combo4.contains(Arrays.asList(new Integer[] {i1, i2}));
     assert combo4.contains(Arrays.asList(new Integer[] {i2, i2}));
 
-    List<ArrayList<Integer>> combo5 = CollectionsPlume.create_combinations(2, 10, 12);
+    List<ArrayList<Integer>> combo5 = CollectionsPlume.createCombinations(2, 10, 12);
     assert combo5.size() == 6;
     assert combo5.contains(Arrays.asList(new Integer[] {i10, i10}));
     assert combo5.contains(Arrays.asList(new Integer[] {i10, i11}));

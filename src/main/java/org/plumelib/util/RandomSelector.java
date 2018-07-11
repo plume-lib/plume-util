@@ -21,10 +21,10 @@ import java.util.Random;
  * fixed number of samples.
  *
  * <p>SPECFIELDS: <br>
- * current_values : Set : The values chosen based on the Objects observed <br>
- * number_observed : int : The number of Objects observed <br>
- * number_to_take : int : The number of elements to choose ('k' above) <br>
- * keep_probability: double : The percentage of elements to keep <br>
+ * values : Set : The values chosen based on the Objects observed <br>
+ * observed : int : The number of Objects observed <br>
+ * numElts : int : The number of elements to choose ('k' above) <br>
+ * keepProbability: double : The percentage of elements to keep <br>
  * selector_mode : {FIXED,PERCENT} : either fixed amount of samples or fixed percent.
  *
  * <p>Example use:
@@ -47,88 +47,93 @@ import java.util.Random;
  */
 public class RandomSelector<T> {
 
-  // Rep Invariant: values != null && values.size() <= num_elts &&
-  //                ((num_elts == -1 && coin_toss_mode == true) ||
-  //                 (keep_probability == -1.0 && coin_toss_mode == false))
+  // Rep Invariant: values != null && values.size() <= numElts &&
+  //                ((numElts == -1 && coinTossMode == true) ||
+  //                 (keepProbability == -1.0 && coinTossMode == false))
 
   // Abstraction Function:
-  // 1. for all elements, 'val' of AF(current_values),
+  // 1. for all elements, 'val' of AF(values),
   //    this.values.indexOf (val) != -1
-  // 2. AF(number_observed) = this.observed
-  // 3. AF(number_to_take) = this.num_elts
-  // 4. AF(keep_probability) = this.keep_probability
-  // 5. AF(selector_mode) = fixed amount if coin_toss_mode == true
-  //                        fixed percentage if coin_toss_mode == false
+  // 2. AF(observed) = this.observed
+  // 3. AF(numElts) = this.numElts
+  // 4. AF(keepProbability) = this.keepProbability
+  // 5. AF(selector_mode) = fixed amount if coinTossMode == true
+  //                        fixed percentage if coinTossMode == false
 
-  private int num_elts = -1;
-  private int observed;
+  /** If true, numElts and observerd are -1. If false, keepProbability = -1. */
+  private boolean coinTossMode;
+  /** The percentage of elements to keep. */
+  private double keepProbability = -1.0;
+  /** The number of objects to choose, or -1. */
+  private int numElts = -1;
+  /** The number of objects observed. */
+  private int observed = -1;
+
+  /** The Random instance to use (for reproducibility). */
   private Random generator;
-  private ArrayList<T> values;
-  private boolean coin_toss_mode = false;
-  private double keep_probability = -1.0;
+
+  /** The values chosen. */
+  private ArrayList<T> values = new ArrayList<T>();
 
   /**
-   * @param num_elts the number of elements intended to be selected from the input elements
-   *     <p>Sets 'number_to_take' = num_elts
+   * @param numElts the number of elements intended to be selected from the input elements
+   *     <p>Sets 'numElts' = numElts
    */
-  public RandomSelector(int num_elts) {
-    this(num_elts, new Random());
+  public RandomSelector(int numElts) {
+    this(numElts, new Random());
   }
 
   /**
-   * @param num_elts the number of elements intended to be selected from the input elements
+   * @param numElts the number of elements intended to be selected from the input elements
    * @param r the seed to give for random number generation.
-   *     <p>Sets 'number_to_take' = num_elts.
+   *     <p>Sets 'numElts' = numElts.
    */
-  public RandomSelector(int num_elts, Random r) {
-    values = new ArrayList<T>();
-    this.num_elts = num_elts;
+  public RandomSelector(int numElts, Random r) {
+    coinTossMode = false;
+    this.numElts = numElts;
     observed = 0;
     generator = r;
   }
 
   /**
-   * @param keep_probability the probability that each element is selected from the oncoming
+   * @param keepProbability the probability that each element is selected from the oncoming
    *     Iteration
    * @param r the seed to give for random number generation
    */
-  public RandomSelector(double keep_probability, Random r) {
-    values = new ArrayList<T>();
-    this.keep_probability = keep_probability;
-    coin_toss_mode = true;
-    observed = 0;
+  public RandomSelector(double keepProbability, Random r) {
+    coinTossMode = true;
+    this.keepProbability = keepProbability;
     generator = r;
   }
 
   /**
    * When in fixed sample mode, increments the number of observed elements i by 1, then with
-   * probability k / i, the Object 'next' will be added to the currently selected values
-   * 'current_values' where k is equal to 'number_to_take'. If the size of current_values exceeds
-   * number_to_take, then one of the existing elements in current_values will be removed at random.
+   * probability k / i, the Object 'next' will be added to the currently selected values 'values'
+   * where k is equal to 'numElts'. If the size of values exceeds numElts, then one of the existing
+   * elements in values will be removed at random.
    *
-   * <p>When in probability mode, adds next to 'current_values' with probability equal to
-   * 'keep_probability'.
+   * <p>When in probability mode, adds next to 'values' with probability equal to 'keepProbability'.
    *
    * @param next value to be added to this selector
    */
   public void accept(T next) {
 
     // if we are in coin toss mode, then we want to keep
-    // with probability == keep_probability.
-    if (coin_toss_mode) {
-      if (generator.nextDouble() < keep_probability) {
+    // with probability == keepProbability.
+    if (coinTossMode) {
+      if (generator.nextDouble() < keepProbability) {
         values.add(next);
-        // System.out.println ("ACCEPTED " + keep_probability );
+        // System.out.println ("ACCEPTED " + keepProbability );
       } else {
-        // System.out.println ("didn't accept " + keep_probability );
+        // System.out.println ("didn't accept " + keepProbability );
       }
       return;
     }
 
     // in fixed sample mode, the i-th element has a k/i chance
-    // of being accepted where k is number_to_take.
-    if (generator.nextDouble() < ((double) num_elts / (++observed))) {
-      if (values.size() < num_elts) {
+    // of being accepted where k is numElts.
+    if (generator.nextDouble() < ((double) numElts / (++observed))) {
+      if (values.size() < numElts) {
         values.add(next);
       } else {
         @SuppressWarnings("index") // index checker has no list support
@@ -141,9 +146,9 @@ public class RandomSelector<T> {
   }
 
   /**
-   * Returns current_values, modifies none.
+   * Returns values, modifies none.
    *
-   * @return current_values
+   * @return values
    */
   public List<T> getValues() {
     // avoid concurrent mod errors and rep exposure

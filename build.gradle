@@ -31,13 +31,33 @@ targetCompatibility = 1.7
 
 // Turn Javadoc warnings into errors.
 javadoc {
-  options.addStringOption('Xwerror', '-quiet')
+  options.addStringOption('Xwerror', '-Xdoclint:all')
+  // Can't enable private because WeakIdentityHashMap.java doesn't have exhaustive Javadoc comments
+  // options.addStringOption('private', '-quiet')
 }
 
 task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/plume-util/api")
   classpath = project.sourceSets.main.compileClasspath
+}
+
+// `requireJavadoc` target ensures that all Java elements have Javadoc documentation.
+configurations {
+  requireJavadoc
+}
+dependencies {
+  compile group: 'org.plumelib', name: 'require-javadoc', version: '0.0.4'
+}
+task requireJavadoc(type: Javadoc) {
+  destinationDir.deleteDir()
+  source = sourceSets.main.allJava
+  classpath = project.sourceSets.main.compileClasspath
+  // TODO: uncomment.  "requireJavadoc" has no effect over "javadoc" while this line is commented.
+  options.memberLevel = JavadocMemberLevel.PRIVATE
+  options.docletpath = project.sourceSets.main.compileClasspath as List
+  options.doclet = "org.plumelib.javadoc.RequireJavadoc"
+  options.addStringOption('skip', 'WeakIdentityHashMap|WeakHasherMap')
 }
 
 /* Make Emacs TAGS table */

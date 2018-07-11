@@ -39,6 +39,7 @@ public final class CollectionsPlume {
     throw new Error("do not instantiate");
   }
 
+  /** The system-specific line separator string. */
   private static final String lineSep = System.getProperty("line.separator");
 
   ///////////////////////////////////////////////////////////////////////////
@@ -218,14 +219,14 @@ public final class CollectionsPlume {
    * specified objects starting at index {@code start} over {@code dims} dimensions, for {@code dims
    * > 0}.
    *
-   * <p>For example, create_combinations(1, 0, {a, b, c}) returns a 3-element list of singleton
+   * <p>For example, createCombinations(1, 0, {a, b, c}) returns a 3-element list of singleton
    * lists:
    *
    * <pre>
    *    {a}, {b}, {c}
    * </pre>
    *
-   * And create_combinations(2, 0, {a, b, c}) returns a 6-element list of 2-element lists:
+   * And createCombinations(2, 0, {a, b, c}) returns a 6-element list of 2-element lists:
    *
    * <pre>
    *    {a, a}, {a, b}, {a, c}
@@ -239,7 +240,7 @@ public final class CollectionsPlume {
    * @param objs list of elements to create combinations of
    * @return list of lists of length dims, each of which combines elements from objs
    */
-  public static <T> List<List<T>> create_combinations(
+  public static <T> List<List<T>> createCombinations(
       /*@Positive*/ int dims, /*@NonNegative*/ int start, List<T> objs) {
 
     if (dims < 1) {
@@ -259,7 +260,7 @@ public final class CollectionsPlume {
         simple.add(objs.get(i));
         results.add(simple);
       } else {
-        List<List<T>> combos = create_combinations(dims - 1, i, objs);
+        List<List<T>> combos = createCombinations(dims - 1, i, objs);
         for (List<T> lt : combos) {
           List<T> simple = new ArrayList<T>();
           simple.add(objs.get(i));
@@ -276,13 +277,13 @@ public final class CollectionsPlume {
    * Returns a list of lists of each combination (with repetition, but not permutations) of integers
    * from start to cnt (inclusive) over arity dimensions.
    *
-   * <p>For example, create_combinations(1, 0, 2) returns a 3-element list of singleton lists:
+   * <p>For example, createCombinations(1, 0, 2) returns a 3-element list of singleton lists:
    *
    * <pre>
    *    {0}, {1}, {2}
    * </pre>
    *
-   * And create_combinations(2, 10, 2) returns a 6-element list of 2-element lists:
+   * And createCombinations(2, 10, 2) returns a 6-element list of 2-element lists:
    *
    * <pre>
    *    {10, 10}, {10, 11}, {10, 12}, {11, 11}, {11, 12}, {12, 12}
@@ -295,7 +296,7 @@ public final class CollectionsPlume {
    * @param cnt maximum element value
    * @return list of lists of length arity, each of which combines integers from start to cnt
    */
-  public static ArrayList<ArrayList<Integer>> create_combinations(
+  public static ArrayList<ArrayList<Integer>> createCombinations(
       int arity, /*@NonNegative*/ int start, int cnt) {
 
     long numResults = choose(cnt + arity - 1, arity);
@@ -312,7 +313,7 @@ public final class CollectionsPlume {
     }
 
     for (int i = start; i <= cnt; i++) {
-      ArrayList<ArrayList<Integer>> combos = create_combinations(arity - 1, i, cnt);
+      ArrayList<ArrayList<Integer>> combos = createCombinations(arity - 1, i, cnt);
       for (ArrayList<Integer> li : combos) {
         ArrayList<Integer> simple = new ArrayList<Integer>();
         simple.add(i);
@@ -361,8 +362,14 @@ public final class CollectionsPlume {
 
   /** Converts an Enumeration into an Iterator. */
   public static final class EnumerationIterator<T> implements Iterator<T> {
+    /** The enumeration that this object wraps. */
     Enumeration<T> e;
 
+    /**
+     * Create an Iterator that yields the elements of the given Enumeration.
+     *
+     * @param e the Enumeration to make into an Iterator
+     */
     public EnumerationIterator(Enumeration<T> e) {
       this.e = e;
     }
@@ -386,8 +393,14 @@ public final class CollectionsPlume {
   /** Converts an Iterator into an Enumeration. */
   @SuppressWarnings("JdkObsolete")
   public static final class IteratorEnumeration<T> implements Enumeration<T> {
+    /** The iterator that this object wraps. */
     Iterator<T> itor;
 
+    /**
+     * Create an Enumeration that contains the elements returned by the given Iterator.
+     *
+     * @param itor the Iterator to make an Enumeration from
+     */
     public IteratorEnumeration(Iterator<T> itor) {
       this.itor = itor;
     }
@@ -410,11 +423,20 @@ public final class CollectionsPlume {
    * two arguments.
    */
   public static final class MergedIterator2<T> implements Iterator<T> {
-    Iterator<T> itor1, itor2;
+    /** The first of the two iterators that this object merges. */
+    Iterator<T> itor1;
+    /** The second of the two iterators that this object merges. */
+    Iterator<T> itor2;
 
-    public MergedIterator2(Iterator<T> itor1_, Iterator<T> itor2_) {
-      this.itor1 = itor1_;
-      this.itor2 = itor2_;
+    /**
+     * Create an iterator that returns the elements of {@code itor1} then those of {@code itor2}.
+     *
+     * @param itor1 an Iterator
+     * @param itor2 another Iterator
+     */
+    public MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
+      this.itor1 = itor1;
+      this.itor2 = itor2;
     }
 
     @Override
@@ -446,13 +468,21 @@ public final class CollectionsPlume {
    * of iterators.
    */
   public static final class MergedIterator<T> implements Iterator<T> {
+    /** The iterators that this object merges. */
     Iterator<Iterator<T>> itorOfItors;
 
+    /**
+     * Create an iterator that returns the elements of the given iterators, in turn.
+     *
+     * @param itorOfItors an iterator whose elements are iterators; this MergedIterator will merge
+     *     them all
+     */
     public MergedIterator(Iterator<Iterator<T>> itorOfItors) {
       this.itorOfItors = itorOfItors;
     }
 
-    // an empty iterator to prime the pump
+    /** The current iterator (from {@link #itorOfItors}) that is being iterated over. */
+    // Initialize to an empty iterator to prime the pump.
     Iterator<T> current = new ArrayList<T>().iterator();
 
     @Override
@@ -478,35 +508,49 @@ public final class CollectionsPlume {
   /** An iterator that only returns elements that match the given Filter. */
   @SuppressWarnings("assignment.type.incompatible") // problems in DFF branch
   public static final class FilteredIterator<T> implements Iterator<T> {
+    /** The iterator that this object is filtering. */
     Iterator<T> itor;
+    /** The predicate that determines which elements to retain. */
     Filter<T> filter;
 
+    /**
+     * Create an iterator that only returns elements of {@code itor} that match the given Filter.
+     *
+     * @param itor the Iterator to filter
+     * @param filter the predicate that determines which elements to retain
+     */
     public FilteredIterator(Iterator<T> itor, Filter<T> filter) {
       this.itor = itor;
       this.filter = filter;
     }
 
+    /** A marker object, distinct from any object that the iterator can return. */
     @SuppressWarnings("unchecked")
-    T invalid_t = (T) new Object();
+    T invalidT = (T) new Object();
 
-    T current = invalid_t;
-    boolean current_valid = false;
+    /**
+     * The next object that this iterator will yield, or {@link #invalidT} if {@link #currentValid}
+     * is false.
+     */
+    T current = invalidT;
+    /** True iff {@link #current} is an object from the wrapped iterator. */
+    boolean currentValid = false;
 
     @Override
     public boolean hasNext(/*>>>@GuardSatisfied FilteredIterator<T> this*/) {
-      while ((!current_valid) && itor.hasNext()) {
+      while ((!currentValid) && itor.hasNext()) {
         current = itor.next();
-        current_valid = filter.accept(current);
+        currentValid = filter.accept(current);
       }
-      return current_valid;
+      return currentValid;
     }
 
     @Override
     public T next(/*>>>@GuardSatisfied FilteredIterator<T> this*/) {
       if (hasNext()) {
-        current_valid = false;
+        currentValid = false;
         @SuppressWarnings("interning")
-        boolean ok = (current != invalid_t);
+        boolean ok = (current != invalidT);
         assert ok;
         return current;
       } else {
@@ -526,15 +570,24 @@ public final class CollectionsPlume {
    */
   @SuppressWarnings("assignment.type.incompatible") // problems in DFF branch
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
+    /** The wrapped iterator. */
     Iterator<T> itor;
-    // I don't think this works, because the iterator might itself return null
-    // /*@Nullable*/ T nothing = (/*@Nullable*/ T) null;
+    /** A marker object, distinct from any object that the iterator can return. */
     @SuppressWarnings("unchecked")
     T nothing = (T) new Object();
+    // I don't think this works, because the iterator might itself return null
+    // /*@Nullable*/ T nothing = (/*@Nullable*/ T) null;
 
+    /** The first object yielded by the wrapped iterator. */
     T first = nothing;
+    /** The next object that this iterator will return. */
     T current = nothing;
 
+    /**
+     * Create an iterator just like {@code itor}, except without its first and last elements.
+     *
+     * @param itor an itorator whose first and last elements to discard
+     */
     public RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
@@ -560,6 +613,12 @@ public final class CollectionsPlume {
       return tmp;
     }
 
+    /**
+     * Return the first element of the iterator that was used to construct this. This value is not
+     * part of this iterator (unless the original iterator would have returned it multiple times).
+     *
+     * @return the first element of the iterator that was used to construct this
+     */
     public T getFirst() {
       @SuppressWarnings("interning") // check for equality to a special value
       boolean invalid = (first == nothing);
@@ -569,9 +628,16 @@ public final class CollectionsPlume {
       return first;
     }
 
-    // Throws an error unless the RemoveFirstAndLastIterator has already
-    // been iterated all the way to its end (so the delegate is pointing to
-    // the last element).  Also, this is buggy when the delegate is empty.
+    /**
+     * Return the last element of the iterator that was used to construct this. This value is not
+     * part of this iterator (unless the original iterator would have returned it multiple times).
+     *
+     * <p>Throws an error unless the RemoveFirstAndLastIterator has already been iterated all the
+     * way to its end (so the delegate is pointing to the last element).
+     *
+     * @return the last element of the iterator that was used to construct this.
+     */
+    // TODO: This is buggy when the delegate is empty.
     public T getLast() {
       if (itor.hasNext()) {
         throw new Error();
@@ -586,38 +652,39 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return a List containing num_elts randomly chosen elements from the iterator, or all the
+   * Return a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
    * @param <T> type of the iterator elements
    * @param itor elements to be randomly selected from
-   * @param num_elts number of elements to select
-   * @return list of num_elts elements from itor
+   * @param numElts number of elements to select
+   * @return list of numElts elements from itor
    */
-  public static <T> List<T> randomElements(Iterator<T> itor, int num_elts) {
-    return randomElements(itor, num_elts, r);
+  public static <T> List<T> randomElements(Iterator<T> itor, int numElts) {
+    return randomElements(itor, numElts, r);
   }
 
+  /** The random generator. */
   private static Random r = new Random();
 
   /**
-   * Return a List containing num_elts randomly chosen elements from the iterator, or all the
+   * Return a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
    * @param <T> type of the iterator elements
    * @param itor elements to be randomly selected from
-   * @param num_elts number of elements to select
+   * @param numElts number of elements to select
    * @param random the Random instance to use to make selections
-   * @return list of num_elts elements from itor
+   * @return list of numElts elements from itor
    */
-  public static <T> List<T> randomElements(Iterator<T> itor, int num_elts, Random random) {
+  public static <T> List<T> randomElements(Iterator<T> itor, int numElts, Random random) {
     // The elements are chosen with the following probabilities,
-    // where n == num_elts:
+    // where n == numElts:
     //   n n/2 n/3 n/4 n/5 ...
 
-    RandomSelector<T> rs = new RandomSelector<T>(num_elts, random);
+    RandomSelector<T> rs = new RandomSelector<T>(numElts, random);
 
     while (itor.hasNext()) {
       rs.accept(itor.next());
@@ -625,17 +692,17 @@ public final class CollectionsPlume {
     return rs.getValues();
 
     /*
-    ArrayList<T> result = new ArrayList<T>(num_elts);
+    ArrayList<T> result = new ArrayList<T>(numElts);
     int i=1;
-    for (int n=0; n<num_elts && itor.hasNext(); n++, i++) {
+    for (int n=0; n<numElts && itor.hasNext(); n++, i++) {
       result.add(itor.next());
     }
     for (; itor.hasNext(); i++) {
       T o = itor.next();
-      // test random < num_elts/i
-      if (random.nextDouble() * i < num_elts) {
+      // test random < numElts/i
+      if (random.nextDouble() * i < numElts) {
         // This element will replace one of the existing elements.
-        result.set(random.nextInt(num_elts), o);
+        result.set(random.nextInt(numElts), o);
       }
     }
     return result;
@@ -662,13 +729,13 @@ public final class CollectionsPlume {
    */
   public static <T> /*@Nullable*/ Integer incrementMap(Map<T, Integer> m, T key, int count) {
     Integer old = m.get(key);
-    int new_total;
+    int newTotal;
     if (old == null) {
-      new_total = count;
+      newTotal = count;
     } else {
-      new_total = old.intValue() + count;
+      newTotal = old.intValue() + count;
     }
-    return m.put(key, new_total);
+    return m.put(key, newTotal);
   }
 
   /**
