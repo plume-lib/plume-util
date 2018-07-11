@@ -47,7 +47,7 @@ configurations {
   requireJavadoc
 }
 dependencies {
-  compile group: 'org.plumelib', name: 'require-javadoc', version: '0.0.4'
+  compile group: 'org.plumelib', name: 'require-javadoc', version: '0.0.6'
 }
 task requireJavadoc(type: Javadoc) {
   destinationDir.deleteDir()
