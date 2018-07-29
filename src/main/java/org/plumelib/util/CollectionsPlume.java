@@ -717,19 +717,33 @@ public final class CollectionsPlume {
   // In Python, inlining this gave a 10x speed improvement.
   // Will the same be true for Java?
   /**
-   * Increment the Integer which is indexed by key in the Map. If the key isn't in the Map, it is
-   * added.
+   * Increment the Integer which is indexed by key in the Map. If the key isn't in the Map, its old
+   * value is treated as 0.
    *
-   * @param <T> type of keys in the map
-   * @param m map to have one of its values incremented
-   * @param key the key for the element whose value will be incremented
+   * @param <K> type of keys in the map
+   * @param m map from K to Integer
+   * @param key the key whose value will be incremented
+   * @return the old value, before it was incremented
+   * @throws Error if the key is in the Map but maps to a non-Integer
+   */
+  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, T key) {
+    return incrementMap(m, key, 1);
+  }
+
+  /**
+   * Increment the Integer which is indexed by key in the Map. If the key isn't in the Map, its old
+   * value is treated as 0.
+   *
+   * @param <K> type of keys in the map
+   * @param m map from K to Integer
+   * @param key the key whose value will be incremented
    * @param count how much to increment the value by
    * @return the old value, before it was incremented
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <T> /*@Nullable*/ Integer incrementMap(Map<T, Integer> m, T key, int count) {
+  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, T key, int count) {
     Integer old = m.get(key);
-    int newTotal;
+    Integer newTotal;
     if (old == null) {
       newTotal = count;
     } else {
