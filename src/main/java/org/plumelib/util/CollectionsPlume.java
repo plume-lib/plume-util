@@ -726,7 +726,7 @@ public final class CollectionsPlume {
    * @return the old value, before it was incremented
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, T key) {
+  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, K key) {
     return incrementMap(m, key, 1);
   }
 
@@ -741,7 +741,7 @@ public final class CollectionsPlume {
    * @return the old value, before it was incremented
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, T key, int count) {
+  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, K key, int count) {
     Integer old = m.get(key);
     Integer newTotal;
     if (old == null) {
