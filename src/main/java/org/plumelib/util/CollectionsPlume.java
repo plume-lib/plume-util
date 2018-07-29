@@ -717,8 +717,8 @@ public final class CollectionsPlume {
   // In Python, inlining this gave a 10x speed improvement.
   // Will the same be true for Java?
   /**
-   * Increment the Integer which is indexed by key in the Map. If the key isn't in the Map, its old
-   * value is treated as 0.
+   * Increment the Integer which is indexed by key in the Map. Set the value to 1 if not currently
+   * mapped.
    *
    * @param <K> type of keys in the map
    * @param m map from K to Integer
@@ -731,8 +731,8 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Increment the Integer which is indexed by key in the Map. If the key isn't in the Map, its old
-   * value is treated as 0.
+   * Increment the Integer which is indexed by key in the Map. Set the value to {@code count} if not
+   * currently mapped.
    *
    * @param <K> type of keys in the map
    * @param m map from K to Integer
