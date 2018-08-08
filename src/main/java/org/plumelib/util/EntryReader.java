@@ -17,13 +17,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-/*>>>
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.checker.regex.qual.*;
-*/
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.IndexOrLow;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.regex.qual.Regex;
 
 // TODO:
 // EntryReader has a public concept of "short entry", but I don't think that
@@ -75,10 +76,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   ///
 
   /** Regular expression that specifies an include file. */
-  private final /*@Nullable*/ /*@Regex(1)*/ Pattern includeRegex;
+  private final @Nullable @Regex(1) Pattern includeRegex;
 
   /** Regular expression that matches a comment. */
-  private final /*@Nullable*/ Pattern commentRegex;
+  private final @Nullable Pattern commentRegex;
 
   /**
    * Regular expression that starts a long entry.
@@ -90,10 +91,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * <p>Otherwise, the first line of an entry does NOT match this regexp (or the regexp is null), in
    * which case the entry is terminated by a blank line or the end of the current file.
    */
-  public /*@MonotonicNonNull*/ /*@Regex(1)*/ Pattern entryStartRegex = null;
+  public @MonotonicNonNull @Regex(1) Pattern entryStartRegex = null;
 
   /** @see #entryStartRegex */
-  public /*@MonotonicNonNull*/ Pattern entryStopRegex = null;
+  public @MonotonicNonNull Pattern entryStopRegex = null;
 
   ///
   /// Internal implementation variables
@@ -103,7 +104,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   private final ArrayDeque<FlnReader> readers = new ArrayDeque<FlnReader>();
 
   /** Line that is pushed back to be reread. */
-  /*@Nullable*/ String pushbackLine = null;
+  @Nullable String pushbackLine = null;
 
   /** Platform-specific line separator. */
   private static final String lineSep = System.getProperty("line.separator");
@@ -182,7 +183,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * @param re regex to match
      * @return a substring that matches re
      */
-    public String getDescription(/*@Nullable*/ Pattern re) {
+    public String getDescription(@Nullable Pattern re) {
 
       if (re == null) {
         return firstLine;
@@ -220,8 +221,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       InputStream in,
       String charsetName,
       String filename,
-      /*@Nullable*/ /*@Regex*/ String commentRegexString,
-      /*@Nullable*/ /*@Regex(1)*/ String includeRegexString)
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString)
       throws UnsupportedEncodingException {
     this(new InputStreamReader(in, charsetName), filename, commentRegexString, includeRegexString);
   }
@@ -255,8 +256,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       InputStream in,
       String filename,
-      /*@Nullable*/ /*@Regex*/ String commentRegexString,
-      /*@Nullable*/ /*@Regex(1)*/ String includeRegexString) {
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString) {
     this(new InputStreamReader(in, UTF_8), filename, commentRegexString, includeRegexString);
   }
 
@@ -285,13 +286,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** A dummy Reader to be used when null is not acceptable. */
   private static class DummyReader extends Reader {
     @Override
-    public void close(/*>>>@GuardSatisfied DummyReader this*/) {
+    public void close(@GuardSatisfied DummyReader this) {
       // No error, because closing is OK if it appears in try-with-resources.
       // Later maybe create two versions (with and without exception here).
     }
 
     @Override
-    public void mark(/*>>>@GuardSatisfied DummyReader this, */ int readAheadLimit) {
+    public void mark(@GuardSatisfied DummyReader this, int readAheadLimit) {
       throw new Error("DummyReader");
     }
 
@@ -301,24 +302,23 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     @Override
-    public /*@GTENegativeOne*/ int read(/*>>>@GuardSatisfied DummyReader this*/) {
+    public @GTENegativeOne int read(@GuardSatisfied DummyReader this) {
       throw new Error("DummyReader");
     }
 
     @Override
-    public /*@IndexOrLow("#1")*/ int read(/*>>>@GuardSatisfied DummyReader this, */ char[] cbuf) {
+    public @IndexOrLow("#1") int read(@GuardSatisfied DummyReader this, char[] cbuf) {
       throw new Error("DummyReader");
     }
 
     @Override
-    public /*@IndexOrLow("#1")*/ int read(
-        /*>>>@GuardSatisfied DummyReader this, */ char[] cbuf, int off, int len) {
+    public @IndexOrLow("#1") int read(
+        @GuardSatisfied DummyReader this, char[] cbuf, int off, int len) {
       throw new Error("DummyReader");
     }
 
     @Override
-    public /*@GTENegativeOne*/ int read(
-        /*>>>@GuardSatisfied DummyReader this, */ CharBuffer target) {
+    public @GTENegativeOne int read(@GuardSatisfied DummyReader this, CharBuffer target) {
       throw new Error("DummyReader");
     }
 
@@ -328,12 +328,12 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     @Override
-    public void reset(/*>>>@GuardSatisfied DummyReader this*/) {
+    public void reset(@GuardSatisfied DummyReader this) {
       throw new Error("DummyReader");
     }
 
     @Override
-    public long skip(/*>>>@GuardSatisfied DummyReader this, */ long n) {
+    public long skip(@GuardSatisfied DummyReader this, long n) {
       throw new Error("DummyReader");
     }
   }
@@ -351,8 +351,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       Reader reader,
       String filename,
-      /*@Nullable*/ /*@Regex*/ String commentRegexString,
-      /*@Nullable*/ /*@Regex(1)*/ String includeRegexString) {
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString) {
     // we won't use superclass methods, but passing null as an argument
     // leads to a NullPointerException.
     super(new DummyReader());
@@ -392,9 +392,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    */
   public EntryReader(
-      Path path,
-      /*@Nullable*/ /*@Regex*/ String commentRegex,
-      /*@Nullable*/ /*@Regex(1)*/ String includeRegex)
+      Path path, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(UtilPlume.fileReader(path), path.toString(), commentRegex, includeRegex);
   }
@@ -435,9 +433,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    */
   public EntryReader(
-      File file,
-      /*@Nullable*/ /*@Regex*/ String commentRegex,
-      /*@Nullable*/ /*@Regex(1)*/ String includeRegex)
+      File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(UtilPlume.fileReader(file), file.toString(), commentRegex, includeRegex);
   }
@@ -480,8 +476,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public EntryReader(
       String filename,
-      /*@Nullable*/ /*@Regex*/ String commentRegex,
-      /*@Nullable*/ /*@Regex(1)*/ String includeRegex)
+      @Nullable @Regex String commentRegex,
+      @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(new File(filename), commentRegex, includeRegex);
   }
@@ -520,8 +516,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return the string that was read, or null at end of file
    */
   @Override
-  public /*@Nullable*/ String readLine(
-      /*>>>@GuardSatisfied EntryReader this*/) throws IOException {
+  public @Nullable String readLine(@GuardSatisfied EntryReader this) throws IOException {
 
     // System.out.printf ("Entering size = %d%n", readers.size());
 
@@ -604,7 +599,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return whether there is another line to read
    */
   @Override
-  public boolean hasNext(/*>>>@GuardSatisfied EntryReader this*/) {
+  public boolean hasNext(@GuardSatisfied EntryReader this) {
     if (pushbackLine != null) {
       return true;
     }
@@ -631,7 +626,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws NoSuchElementException at end of file
    */
   @Override
-  public String next(/*>>>@GuardSatisfied EntryReader this*/) {
+  public String next(@GuardSatisfied EntryReader this) {
     try {
       String result = readLine();
       if (result != null) {
@@ -646,7 +641,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   /** remove() is not supported. */
   @Override
-  public void remove(/*>>>@GuardSatisfied EntryReader this*/) {
+  public void remove(@GuardSatisfied EntryReader this) {
     throw new UnsupportedOperationException("can't remove lines from file");
   }
 
@@ -658,7 +653,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return the next entry (paragraph) in the file
    * @throws IOException if there is a problem reading the file
    */
-  public /*@Nullable*/ Entry getEntry(/*>>>@GuardSatisfied EntryReader this*/) throws IOException {
+  public @Nullable Entry getEntry(@GuardSatisfied EntryReader this) throws IOException {
 
     // Skip any preceding blank lines
     String line = readLine();
@@ -675,7 +670,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     long lineNumber = getLineNumber();
 
     // If first line matches entryStartRegex, this is a long entry.
-    /*@Regex(1)*/ Matcher entryMatch = null;
+    @Regex(1) Matcher entryMatch = null;
     if (entryStartRegex != null) {
       entryMatch = entryStartRegex.matcher(line);
     }
@@ -688,7 +683,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       if (entryMatch.groupCount() > 0) {
         @SuppressWarnings(
             "nullness") // dependent: groupCount() checked group; https://tinyurl.com/cfissue/291
-        /*@NonNull*/ String matchGroup1 = entryMatch.group(1);
+        @NonNull String matchGroup1 = entryMatch.group(1);
         line = entryMatch.replaceFirst(matchGroup1);
       }
 
@@ -749,8 +744,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return next line from the reader, or null if there is no more input
    * @throws IOException if there is trouble with the reader
    */
-  private /*@Nullable*/ String getNextLine(
-      /*>>>@GuardSatisfied EntryReader this*/) throws IOException {
+  private @Nullable String getNextLine(@GuardSatisfied EntryReader this) throws IOException {
 
     if (readers.size() == 0) {
       return (null);
@@ -774,7 +768,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @return the current filename
    */
-  public String getFileName(/*>>>@GuardSatisfied EntryReader this*/) {
+  public String getFileName(@GuardSatisfied EntryReader this) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {
       throw new Error("Past end of input");
@@ -788,7 +782,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return the current line number
    */
   @Override
-  public /*@NonNegative*/ int getLineNumber(/*>>>@GuardSatisfied EntryReader this*/) {
+  public @NonNegative int getLineNumber(@GuardSatisfied EntryReader this) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {
       throw new Error("Past end of input");
@@ -802,9 +796,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param lineNumber new line number for the current file
    */
   @Override
-  public void setLineNumber(
-      /*>>>@GuardSatisfied EntryReader this, */
-      /*@NonNegative*/ int lineNumber) {
+  public void setLineNumber(@GuardSatisfied EntryReader this, @NonNegative int lineNumber) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {
       throw new Error("Past end of input");
@@ -820,8 +812,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param entryStopRegex regular expression that ends a long entry
    */
   public void setEntryStartStop(
-      /*>>>@GuardSatisfied EntryReader this, */
-      /*@Regex(1)*/ String entryStartRegex, /*@Regex*/ String entryStopRegex) {
+      @GuardSatisfied EntryReader this,
+      @Regex(1) String entryStartRegex,
+      @Regex String entryStopRegex) {
     this.entryStartRegex = Pattern.compile(entryStartRegex);
     this.entryStopRegex = Pattern.compile(entryStopRegex);
   }
@@ -834,8 +827,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param entryStopRegex regular expression that ends a long entry
    */
   public void setEntryStartStop(
-      /*>>>@GuardSatisfied EntryReader this, */
-      /*@Regex(1)*/ Pattern entryStartRegex, Pattern entryStopRegex) {
+      @GuardSatisfied EntryReader this, @Regex(1) Pattern entryStartRegex, Pattern entryStopRegex) {
     this.entryStartRegex = entryStartRegex;
     this.entryStopRegex = entryStopRegex;
   }
@@ -847,7 +839,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   // TODO:  This would probably be better implemented with the "mark" mechanism
   // of BufferedReader (which is also in LineNumberReader and FlnReader).
-  public void putback(/*>>>@GuardSatisfied EntryReader this, */ String line) {
+  public void putback(@GuardSatisfied EntryReader this, String line) {
     assert pushbackLine == null
         : "push back '" + line + "' when '" + pushbackLine + "' already back";
     pushbackLine = line;
@@ -855,28 +847,28 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   // No Javadoc on these methods, so the Javadoc is inherited.
   @Override
-  public void mark(/*>>>@GuardSatisfied EntryReader this, */ int readAheadLimit) {
+  public void mark(@GuardSatisfied EntryReader this, int readAheadLimit) {
     throw new Error("not yet implemented");
   }
 
   @Override
-  public /*@GTENegativeOne*/ int read(/*>>>@GuardSatisfied EntryReader this*/) {
+  public @GTENegativeOne int read(@GuardSatisfied EntryReader this) {
     throw new Error("not yet implemented");
   }
 
   @Override
-  public /*@IndexOrLow("#1")*/ int read(
-      /*>>>@GuardSatisfied EntryReader this, */ char[] cbuf, int off, int len) {
+  public @IndexOrLow("#1") int read(
+      @GuardSatisfied EntryReader this, char[] cbuf, int off, int len) {
     throw new Error("not yet implemented");
   }
 
   @Override
-  public void reset(/*>>>@GuardSatisfied EntryReader this*/) {
+  public void reset(@GuardSatisfied EntryReader this) {
     throw new Error("not yet implemented");
   }
 
   @Override
-  public long skip(/*>>>@GuardSatisfied EntryReader this, */ long n) {
+  public long skip(@GuardSatisfied EntryReader this, long n) {
     throw new Error("not yet implemented");
   }
 

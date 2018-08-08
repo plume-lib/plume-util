@@ -11,17 +11,17 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signature.qual.BinaryName;
+import org.checkerframework.checker.signature.qual.BinaryNameForNonArray;
+import org.checkerframework.checker.signature.qual.ClassGetName;
+import org.checkerframework.checker.signature.qual.ClassGetSimpleName;
+import org.checkerframework.checker.signature.qual.FullyQualifiedName;
+import org.checkerframework.dataflow.qual.Pure;
 import org.plumelib.bcelutil.JvmUtil;
-
-/*>>>
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.checker.regex.qual.*;
-import org.checkerframework.checker.signature.qual.*;
-import org.checkerframework.common.value.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
 
 /** Utility functions related to reflection, Class, Method, ClassLoader, and classpath. */
 public final class ReflectionPlume {
@@ -47,7 +47,7 @@ public final class ReflectionPlume {
     "purity.not.deterministic.call", // getInterfaces() is used as a set
     "method.guarantee.violated" // getInterfaces() is used as a set
   })
-  /*@Pure*/
+  @Pure
   public static boolean isSubtype(Class<?> sub, Class<?> sup) {
     if (sub == sup) {
       return true;
@@ -105,8 +105,8 @@ public final class ReflectionPlume {
    */
   // The annotation encourages proper use, even though this can take a
   // fully-qualified name (only for a non-array).
-  public static Class<?> classForName(
-      /*@ClassGetName*/ String className) throws ClassNotFoundException {
+  public static Class<?> classForName(@ClassGetName String className)
+      throws ClassNotFoundException {
     Class<?> result = primitiveClasses.get(className);
     if (result != null) {
       return result;
@@ -119,8 +119,7 @@ public final class ReflectionPlume {
           throw e;
         }
         @SuppressWarnings("signature") // checked below & exception is handled
-        /*@ClassGetName*/ String innerName =
-            className.substring(0, pos) + "$" + className.substring(pos + 1);
+        @ClassGetName String innerName = className.substring(0, pos) + "$" + className.substring(pos + 1);
         try {
           return Class.forName(innerName);
         } catch (ClassNotFoundException ee) {
@@ -140,8 +139,8 @@ public final class ReflectionPlume {
   // TODO: does not follow the specification for inner classes (where the
   // type name should be empty), but I think this is more informative anyway.
   @SuppressWarnings("signature") // string conversion
-  public static /*@ClassGetSimpleName*/ String fullyQualifiedNameToSimpleName(
-      /*@FullyQualifiedName*/ String qualifiedName) {
+  public static @ClassGetSimpleName String fullyQualifiedNameToSimpleName(
+      @FullyQualifiedName String qualifiedName) {
 
     int offset = qualifiedName.lastIndexOf('.');
     if (offset == -1) {
@@ -170,8 +169,7 @@ public final class ReflectionPlume {
      * @throws FileNotFoundException if the file does not exist
      * @throws IOException if there is trouble reading the file
      */
-    public Class<?> defineClassFromFile(
-        /*@BinaryName*/ String className, String pathname)
+    public Class<?> defineClassFromFile(@BinaryName String className, String pathname)
         throws FileNotFoundException, IOException {
       FileInputStream fi = new FileInputStream(pathname);
       int numbytes = fi.available();
@@ -205,8 +203,8 @@ public final class ReflectionPlume {
    * @throws IOException if there is trouble reading the file
    */
   // Also throws UnsupportedClassVersionError and some other exceptions.
-  public static Class<?> defineClassFromFile(
-      /*@BinaryName*/ String className, String pathname) throws FileNotFoundException, IOException {
+  public static Class<?> defineClassFromFile(@BinaryName String className, String pathname)
+      throws FileNotFoundException, IOException {
     return thePromiscuousLoader.defineClassFromFile(className, pathname);
   }
 
@@ -288,7 +286,7 @@ public final class ReflectionPlume {
     }
 
     @SuppressWarnings("signature") // throws exception if class does not exist
-    /*@BinaryNameForNonArray*/ String classname = method.substring(0, dotpos);
+    @BinaryNameForNonArray String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
     String all_argnames = method.substring(oparenpos + 1, cparenpos).trim();
     Class<?>[] argclasses = args_seen.get(all_argnames);
@@ -300,14 +298,14 @@ public final class ReflectionPlume {
         argnames = UtilPlume.split(all_argnames, ',');
       }
 
-      /*@MonotonicNonNull*/ Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
+      @MonotonicNonNull Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
       for (int i = 0; i < argnames.length; i++) {
         String bnArgname = argnames[i].trim();
-        /*@ClassGetName*/ String cgnArgname = JvmUtil.binaryNameToClassGetName(bnArgname);
+        @ClassGetName String cgnArgname = JvmUtil.binaryNameToClassGetName(bnArgname);
         argclasses_tmp[i] = classForName(cgnArgname);
       }
       @SuppressWarnings("cast")
-      Class<?>[] argclasses_res = (/*@NonNull*/ Class<?>[]) argclasses_tmp;
+      Class<?>[] argclasses_res = (@NonNull Class<?>[]) argclasses_tmp;
       argclasses = argclasses_res;
       args_seen.put(all_argnames, argclasses_res);
     }
@@ -325,7 +323,7 @@ public final class ReflectionPlume {
    * @throws NoSuchMethodException if the method is not found
    */
   public static Method methodForName(
-      /*@BinaryNameForNonArray*/ String classname, String methodname, Class<?>[] params)
+      @BinaryNameForNonArray String classname, String methodname, Class<?>[] params)
       throws ClassNotFoundException, NoSuchMethodException, SecurityException {
 
     Class<?> c = Class.forName(classname);
@@ -351,7 +349,7 @@ public final class ReflectionPlume {
    * @param value new value of field
    * @throws NoSuchFieldException if the field does not exist in the object
    */
-  public static void setFinalField(Object o, String fieldName, /*@Nullable*/ Object value)
+  public static void setFinalField(Object o, String fieldName, @Nullable Object value)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
     while (c != Object.class) { // Class is interned
@@ -383,7 +381,7 @@ public final class ReflectionPlume {
    * @return new value of field
    * @throws NoSuchFieldException if the field does not exist in the object
    */
-  public static /*@Nullable*/ Object getPrivateField(Object o, String fieldName)
+  public static @Nullable Object getPrivateField(Object o, String fieldName)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
     while (c != Object.class) { // Class is interned
@@ -415,8 +413,7 @@ public final class ReflectionPlume {
    * @param <T> the (inferred) least upper bound of the two arguments
    * @return the least upper bound of the two classes, or null if both are null
    */
-  public static <T> /*@Nullable*/ Class<T> leastUpperBound(
-      /*@Nullable*/ Class<T> a, /*@Nullable*/ Class<T> b) {
+  public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T> a, @Nullable Class<T> b) {
     if (a == b) {
       return a;
     } else if (a == null) {
@@ -445,7 +442,7 @@ public final class ReflectionPlume {
    * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of all the given classes
    */
-  public static <T> /*@Nullable*/ Class<T> leastUpperBound(/*@Nullable*/ Class<T>[] classes) {
+  public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T>[] classes) {
     Class<T> result = null;
     for (Class<T> clazz : classes) {
       result = leastUpperBound(result, clazz);
@@ -461,7 +458,7 @@ public final class ReflectionPlume {
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  public static <T> /*@Nullable*/ Class<T> leastUpperBound(/*@PolyNull*/ Object[] objects) {
+  public static <T> @Nullable Class<T> leastUpperBound(@PolyNull Object[] objects) {
     Class<T> result = null;
     for (Object obj : objects) {
       if (obj != null) {
@@ -479,8 +476,7 @@ public final class ReflectionPlume {
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  public static <T> /*@Nullable*/ Class<T> leastUpperBound(
-      List<? extends /*@Nullable*/ Object> objects) {
+  public static <T> @Nullable Class<T> leastUpperBound(List<? extends @Nullable Object> objects) {
     Class<T> result = null;
     for (Object obj : objects) {
       if (obj != null) {

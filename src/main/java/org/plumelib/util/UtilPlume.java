@@ -44,16 +44,14 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-/*>>>
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.checker.regex.qual.*;
-import org.checkerframework.checker.signature.qual.*;
-import org.checkerframework.common.value.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.index.qual.IndexOrHigh;
+import org.checkerframework.checker.index.qual.LTEqLengthOf;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.StaticallyExecutable;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility functions that do not belong elsewhere in the plume package. */
 public final class UtilPlume {
@@ -80,8 +78,8 @@ public final class UtilPlume {
    * @return true iff size(a intersect b) &ge; i
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
-  /*@Pure*/
-  public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, /*@NonNegative*/ int i) {
+  @Pure
+  public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
     // Here are three implementation strategies to determine the
     // cardinality of the intersection:
     // 1. a.clone().and(b).cardinality()
@@ -116,9 +114,9 @@ public final class UtilPlume {
    * @return true iff size(a intersect b intersect c) &ge; i
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
-  /*@Pure*/
+  @Pure
   public static boolean intersectionCardinalityAtLeast(
-      BitSet a, BitSet b, BitSet c, /*@NonNegative*/ int i) {
+      BitSet a, BitSet b, BitSet c, @NonNegative int i) {
     // See comments in intersectionCardinalityAtLeast(BitSet, BitSet, int).
     // This is a copy of that.
 
@@ -145,7 +143,7 @@ public final class UtilPlume {
    * @return size(a intersect b)
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
-  /*@Pure*/
+  @Pure
   public static int intersectionCardinality(BitSet a, BitSet b) {
     BitSet intersection = (BitSet) a.clone();
     intersection.and(b);
@@ -161,7 +159,7 @@ public final class UtilPlume {
    * @return size(a intersect b intersect c)
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
-  /*@Pure*/
+  @Pure
   public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
     BitSet intersection = (BitSet) a.clone();
     intersection.and(b);
@@ -277,7 +275,7 @@ public final class UtilPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  public static InputStreamReader fileReader(Path path, /*@Nullable*/ String charsetName)
+  public static InputStreamReader fileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = new FileInputStream(path.toFile());
     InputStreamReader fileReader;
@@ -320,7 +318,7 @@ public final class UtilPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  public static InputStreamReader fileReader(File file, /*@Nullable*/ String charsetName)
+  public static InputStreamReader fileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = new FileInputStream(file);
     InputStreamReader fileReader;
@@ -382,7 +380,7 @@ public final class UtilPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  public static BufferedReader bufferedFileReader(String filename, /*@Nullable*/ String charsetName)
+  public static BufferedReader bufferedFileReader(String filename, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     return bufferedFileReader(new File(filename), charsetName);
   }
@@ -401,7 +399,7 @@ public final class UtilPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  public static BufferedReader bufferedFileReader(File file, /*@Nullable*/ String charsetName)
+  public static BufferedReader bufferedFileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     Reader fileReader = fileReader(file, charsetName);
     return new BufferedReader(fileReader);
@@ -622,7 +620,7 @@ public final class UtilPlume {
    * @param file2 second file to compare
    * @return true iff the files have the same contents
    */
-  /*@Pure*/
+  @Pure
   public static boolean equalFiles(String file1, String file2) {
     return equalFiles(file1, file2, false);
   }
@@ -636,7 +634,7 @@ public final class UtilPlume {
    * @return true iff the files have the same contents
    */
   @SuppressWarnings({"purity", "lock"}) // reads files, side effects local state
-  /*@Pure*/
+  @Pure
   public static boolean equalFiles(String file1, String file2, boolean trimLines) {
     try (LineNumberReader reader1 = UtilPlume.lineNumberFileReader(file1);
         LineNumberReader reader2 = UtilPlume.lineNumberFileReader(file2); ) {
@@ -1042,7 +1040,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(double /*@Nullable*/ [] a) {
+  public static int hash(double @Nullable [] a) {
     double result = 17;
     if (a != null) {
       result = result * 37 + a.length;
@@ -1060,7 +1058,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(double /*@Nullable*/ [] a, double /*@Nullable*/ [] b) {
+  public static int hash(double @Nullable [] a, double @Nullable [] b) {
     return hash(hash(a), hash(b));
   }
 
@@ -1123,7 +1121,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(long /*@Nullable*/ [] a) {
+  public static int hash(long @Nullable [] a) {
     long result = 17;
     if (a != null) {
       result = result * 37 + a.length;
@@ -1141,7 +1139,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(long /*@Nullable*/ [] a, long /*@Nullable*/ [] b) {
+  public static int hash(long @Nullable [] a, long @Nullable [] b) {
     return hash(hash(a), hash(b));
   }
 
@@ -1151,7 +1149,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(/*@Nullable*/ String a) {
+  public static int hash(@Nullable String a) {
     return (a == null) ? 0 : a.hashCode();
   }
 
@@ -1162,7 +1160,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(/*@Nullable*/ String a, /*@Nullable*/ String b) {
+  public static int hash(@Nullable String a, @Nullable String b) {
     long result = 17;
     result = result * 37 + hash(a);
     result = result * 37 + hash(b);
@@ -1177,7 +1175,7 @@ public final class UtilPlume {
    * @param c value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(/*@Nullable*/ String a, /*@Nullable*/ String b, /*@Nullable*/ String c) {
+  public static int hash(@Nullable String a, @Nullable String b, @Nullable String c) {
     long result = 17;
     result = result * 37 + hash(a);
     result = result * 37 + hash(b);
@@ -1191,7 +1189,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @return a hash of the arguments
    */
-  public static int hash(/*@Nullable*/ String /*@Nullable*/ [] a) {
+  public static int hash(@Nullable String @Nullable [] a) {
     long result = 17;
     if (a != null) {
       result = result * 37 + a.length;
@@ -1249,7 +1247,7 @@ public final class UtilPlume {
    * @return true iff the property has value "true", "yes", or "1"
    */
   @SuppressWarnings({"purity", "lock"}) // does not depend on object identity
-  /*@Pure*/
+  @Pure
   public static boolean propertyIsTrue(Properties p, String key) {
     String pvalue = p.getProperty(key);
     if (pvalue == null) {
@@ -1270,7 +1268,7 @@ public final class UtilPlume {
    * @see Properties#getProperty
    * @see Properties#setProperty
    */
-  public static /*@Nullable*/ String appendProperty(Properties p, String key, String value) {
+  public static @Nullable String appendProperty(Properties p, String key, String value) {
     return (String) p.setProperty(key, p.getProperty(key, "") + value);
   }
 
@@ -1284,7 +1282,7 @@ public final class UtilPlume {
    * @param value value to set the property to, if it is not already set
    * @return the previous value of the property
    */
-  public static /*@Nullable*/ String setDefaultMaybe(Properties p, String key, String value) {
+  public static @Nullable String setDefaultMaybe(Properties p, String key, String value) {
     String currentValue = p.getProperty(key);
     if (currentValue == null) {
       p.setProperty(key, value);
@@ -1368,7 +1366,7 @@ public final class UtilPlume {
     }
 
     StringBuilder result = new StringBuilder();
-    /*@IndexOrHigh("target")*/ int lastend = 0;
+    @IndexOrHigh("target") int lastend = 0;
     int pos;
     while ((pos = target.indexOf(oldStr, lastend)) != -1) {
       result.append(target.substring(lastend, pos));
@@ -1396,7 +1394,7 @@ public final class UtilPlume {
       s = s.substring(delimpos + 1);
     }
     resultList.add(s);
-    String[] result = resultList.toArray(new /*@NonNull*/ String[resultList.size()]);
+    String[] result = resultList.toArray(new @NonNull String[resultList.size()]);
     return result;
   }
 
@@ -1421,7 +1419,7 @@ public final class UtilPlume {
       s = s.substring(delimpos + delimlen);
     }
     resultList.add(s);
-    String[] result = resultList.toArray(new /*@NonNull*/ String[resultList.size()]);
+    String[] result = resultList.toArray(new @NonNull String[resultList.size()]);
     return result;
   }
 
@@ -1435,8 +1433,8 @@ public final class UtilPlume {
    * @param s the string to split
    * @return an array of Strings, one for each line in the argument
    */
-  /*@SideEffectFree*/
-  /*@StaticallyExecutable*/
+  @SideEffectFree
+  @StaticallyExecutable
   public static String[] splitLines(String s) {
     return s.split("\r\n?|\n\r?", -1);
   }
@@ -1525,7 +1523,7 @@ public final class UtilPlume {
   public static String escapeNonJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen right before this position.
-    /*@IndexOrHigh("orig")*/ int postEsc = 0;
+    @IndexOrHigh("orig") int postEsc = 0;
     int origLen = orig.length();
     for (int i = 0; i < origLen; i++) {
       char c = orig.charAt(i);
@@ -1653,7 +1651,7 @@ public final class UtilPlume {
   public static String unescapeNonJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen just before this position.
-    /*@LTEqLengthOf("orig")*/ int postEsc = 0;
+    @LTEqLengthOf("orig") int postEsc = 0;
     int thisEsc = orig.indexOf('\\');
     while (thisEsc != -1) {
       if (thisEsc == orig.length() - 1) {
@@ -1828,7 +1826,7 @@ public final class UtilPlume {
    * @param length goal length
    * @return s truncated or padded to length characters
    */
-  public static String lpad(String s, /*@NonNegative*/ int length) {
+  public static String lpad(String s, @NonNegative int length) {
     if (s.length() < length) {
       StringBuilder buf = new StringBuilder();
       for (int i = s.length(); i < length; i++) {
@@ -1848,7 +1846,7 @@ public final class UtilPlume {
    * @param length goal length
    * @return s truncated or padded to length characters
    */
-  public static String rpad(String s, /*@NonNegative*/ int length) {
+  public static String rpad(String s, @NonNegative int length) {
     if (s.length() < length) {
       StringBuilder buf = new StringBuilder(s);
       for (int i = s.length(); i < length; i++) {
@@ -1867,7 +1865,7 @@ public final class UtilPlume {
    * @param length goal length
    * @return a string representation of num truncated or padded to length characters
    */
-  public static String rpad(int num, /*@NonNegative*/ int length) {
+  public static String rpad(int num, @NonNegative int length) {
     return rpad(String.valueOf(num), length);
   }
 
@@ -1878,7 +1876,7 @@ public final class UtilPlume {
    * @param length goal length
    * @return a string representation of num truncated or padded to length characters
    */
-  public static String rpad(double num, /*@NonNegative*/ int length) {
+  public static String rpad(double num, @NonNegative int length) {
     return rpad(String.valueOf(num), length);
   }
 
@@ -1888,7 +1886,7 @@ public final class UtilPlume {
   public static class NullableStringComparator implements Comparator<String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
-    /*@Pure*/
+    @Pure
     @Override
     public int compare(String s1, String s2) {
       if (s1 == null && s2 == null) {
@@ -1914,16 +1912,16 @@ public final class UtilPlume {
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
    */
-  public static class ObjectComparator implements Comparator</*@Nullable*/ Object>, Serializable {
+  public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
 
     @SuppressWarnings({
       "purity.not.deterministic.call",
       "lock"
     }) // toString is being used in a deterministic way
-    /*@Pure*/
+    @Pure
     @Override
-    public int compare(/*@Nullable*/ Object o1, /*@Nullable*/ Object o2) {
+    public int compare(@Nullable Object o1, @Nullable Object o2) {
       // Make null compare smaller than anything else
       if ((o1 == o2)) {
         return 0;

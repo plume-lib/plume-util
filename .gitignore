@@ -1,1 +1,19 @@
+.gradle
+gradle.properties
+
 build
+
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar # Need to commit gradle-wrapper.jar file
+*.war
+*.ear
+# .jar file not to ignore
+!gradle/wrapper/gradle-wrapper.jar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*

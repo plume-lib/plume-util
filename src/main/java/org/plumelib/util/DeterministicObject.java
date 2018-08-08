@@ -5,10 +5,7 @@ package org.plumelib.util;
 // classes.
 // import java.util.HashMap;
 // import java.util.HashSet;
-
-/*>>>
-import org.checkerframework.checker.lock.qual.*;
-*/
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
 
 /**
  * This is a deterministic version of the {@link Object} class. To remove one source of
@@ -38,7 +35,7 @@ public class DeterministicObject {
    * the second one has 1, and so forth.
    */
   @Override
-  public int hashCode(/*>>>@GuardSatisfied DeterministicObject this*/) {
+  public int hashCode(@GuardSatisfied DeterministicObject this) {
     return uid;
   }
 }

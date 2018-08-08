@@ -20,16 +20,12 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-/*>>>
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.checker.regex.qual.*;
-import org.checkerframework.checker.signature.qual.*;
-import org.checkerframework.common.value.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, ArrayList, Iterator, and Map. */
 public final class CollectionsPlume {
@@ -96,8 +92,8 @@ public final class CollectionsPlume {
    * @return true iff o1 and o2 are deeply equal
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to static field deepEqualsUnderway
-  /*@Pure*/
-  public static boolean deepEquals(/*@Nullable*/ Object o1, /*@Nullable*/ Object o2) {
+  @Pure
+  public static boolean deepEquals(@Nullable Object o1, @Nullable Object o2) {
     @SuppressWarnings("interning")
     boolean sameObject = (o1 == o2);
     if (sameObject) {
@@ -241,7 +237,7 @@ public final class CollectionsPlume {
    * @return list of lists of length dims, each of which combines elements from objs
    */
   public static <T> List<List<T>> createCombinations(
-      /*@Positive*/ int dims, /*@NonNegative*/ int start, List<T> objs) {
+      @Positive int dims, @NonNegative int start, List<T> objs) {
 
     if (dims < 1) {
       throw new IllegalArgumentException();
@@ -297,7 +293,7 @@ public final class CollectionsPlume {
    * @return list of lists of length arity, each of which combines integers from start to cnt
    */
   public static ArrayList<ArrayList<Integer>> createCombinations(
-      int arity, /*@NonNegative*/ int start, int cnt) {
+      int arity, @NonNegative int start, int cnt) {
 
     long numResults = choose(cnt + arity - 1, arity);
     if (numResults > 100000000) {
@@ -375,17 +371,17 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public boolean hasNext(/*>>>@GuardSatisfied EnumerationIterator<T> this*/) {
+    public boolean hasNext(@GuardSatisfied EnumerationIterator<T> this) {
       return e.hasMoreElements();
     }
 
     @Override
-    public T next(/*>>>@GuardSatisfied EnumerationIterator<T> this*/) {
+    public T next(@GuardSatisfied EnumerationIterator<T> this) {
       return e.nextElement();
     }
 
     @Override
-    public void remove(/*>>>@GuardSatisfied EnumerationIterator<T> this*/) {
+    public void remove(@GuardSatisfied EnumerationIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -440,12 +436,12 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public boolean hasNext(/*>>>@GuardSatisfied MergedIterator2<T> this*/) {
+    public boolean hasNext(@GuardSatisfied MergedIterator2<T> this) {
       return (itor1.hasNext() || itor2.hasNext());
     }
 
     @Override
-    public T next(/*>>>@GuardSatisfied MergedIterator2<T> this*/) {
+    public T next(@GuardSatisfied MergedIterator2<T> this) {
       if (itor1.hasNext()) {
         return itor1.next();
       } else if (itor2.hasNext()) {
@@ -456,7 +452,7 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public void remove(/*>>>@GuardSatisfied MergedIterator2<T> this*/) {
+    public void remove(@GuardSatisfied MergedIterator2<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -486,7 +482,7 @@ public final class CollectionsPlume {
     Iterator<T> current = new ArrayList<T>().iterator();
 
     @Override
-    public boolean hasNext(/*>>>@GuardSatisfied MergedIterator<T> this*/) {
+    public boolean hasNext(@GuardSatisfied MergedIterator<T> this) {
       while ((!current.hasNext()) && (itorOfItors.hasNext())) {
         current = itorOfItors.next();
       }
@@ -494,13 +490,13 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public T next(/*>>>@GuardSatisfied MergedIterator<T> this*/) {
+    public T next(@GuardSatisfied MergedIterator<T> this) {
       hasNext(); // for side effect
       return current.next();
     }
 
     @Override
-    public void remove(/*>>>@GuardSatisfied MergedIterator<T> this*/) {
+    public void remove(@GuardSatisfied MergedIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -537,7 +533,7 @@ public final class CollectionsPlume {
     boolean currentValid = false;
 
     @Override
-    public boolean hasNext(/*>>>@GuardSatisfied FilteredIterator<T> this*/) {
+    public boolean hasNext(@GuardSatisfied FilteredIterator<T> this) {
       while ((!currentValid) && itor.hasNext()) {
         current = itor.next();
         currentValid = filter.accept(current);
@@ -546,7 +542,7 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public T next(/*>>>@GuardSatisfied FilteredIterator<T> this*/) {
+    public T next(@GuardSatisfied FilteredIterator<T> this) {
       if (hasNext()) {
         currentValid = false;
         @SuppressWarnings("interning")
@@ -559,7 +555,7 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public void remove(/*>>>@GuardSatisfied FilteredIterator<T> this*/) {
+    public void remove(@GuardSatisfied FilteredIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -576,7 +572,7 @@ public final class CollectionsPlume {
     @SuppressWarnings("unchecked")
     T nothing = (T) new Object();
     // I don't think this works, because the iterator might itself return null
-    // /*@Nullable*/ T nothing = (/*@Nullable*/ T) null;
+    // @Nullable T nothing = (@Nullable T) null;
 
     /** The first object yielded by the wrapped iterator. */
     T first = nothing;
@@ -599,12 +595,12 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public boolean hasNext(/*>>>@GuardSatisfied RemoveFirstAndLastIterator<T> this*/) {
+    public boolean hasNext(@GuardSatisfied RemoveFirstAndLastIterator<T> this) {
       return itor.hasNext();
     }
 
     @Override
-    public T next(/*>>>@GuardSatisfied RemoveFirstAndLastIterator<T> this*/) {
+    public T next(@GuardSatisfied RemoveFirstAndLastIterator<T> this) {
       if (!itor.hasNext()) {
         throw new NoSuchElementException();
       }
@@ -646,7 +642,7 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public void remove(/*>>>@GuardSatisfied RemoveFirstAndLastIterator<T> this*/) {
+    public void remove(@GuardSatisfied RemoveFirstAndLastIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -726,7 +722,7 @@ public final class CollectionsPlume {
    * @return the old value, before it was incremented
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, K key) {
+  public static <K> @Nullable Integer incrementMap(Map<K, Integer> m, K key) {
     return incrementMap(m, key, 1);
   }
 
@@ -741,7 +737,7 @@ public final class CollectionsPlume {
    * @return the old value, before it was incremented
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <K> /*@Nullable*/ Integer incrementMap(Map<K, Integer> m, K key, int count) {
+  public static <K> @Nullable Integer incrementMap(Map<K, Integer> m, K key, int count) {
     Integer old = m.get(key);
     Integer newTotal;
     if (old == null) {
@@ -798,9 +794,9 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
    */
-  public static <K extends Comparable<? super K>, V> Collection</*@KeyFor("#1")*/ K> sortedKeySet(
+  public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m) {
-    ArrayList</*@KeyFor("#1")*/ K> theKeys = new ArrayList</*@KeyFor("#1")*/ K>(m.keySet());
+    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<@KeyFor("#1") K>(m.keySet());
     Collections.sort(theKeys);
     return theKeys;
   }
@@ -814,9 +810,9 @@ public final class CollectionsPlume {
    * @param comparator the Comparator to use for sorting
    * @return a sorted version of m.keySet()
    */
-  public static <K, V> Collection</*@KeyFor("#1")*/ K> sortedKeySet(
+  public static <K, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m, Comparator<K> comparator) {
-    ArrayList</*@KeyFor("#1")*/ K> theKeys = new ArrayList</*@KeyFor("#1")*/ K>(m.keySet());
+    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<@KeyFor("#1") K>(m.keySet());
     Collections.sort(theKeys, comparator);
     return theKeys;
   }
@@ -833,7 +829,7 @@ public final class CollectionsPlume {
    * @param key the value to look up in the set
    * @return the object in this set that is equal to key, or null
    */
-  public static /*@Nullable*/ Object getFromSet(Set<?> set, Object key) {
+  public static @Nullable Object getFromSet(Set<?> set, Object key) {
     if (key == null) {
       return null;
     }

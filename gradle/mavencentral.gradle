@@ -1,18 +1,21 @@
-// To use this, your ~/.gradle/gradle.properties file must contain:
+// To make a release:
+//  * Update the version number in ../README.md and in this file.
+//  * Run in the top-level directory:  ./gradlew uploadArchives && ./gradlew javadocWeb
+//  * Browse to https://oss.sonatype.org/#stagingRepositories
+// Your ~/.gradle/gradle.properties file must contain:
 //   ossrhUsername=YOUR_USER_NAME_HERE
-//   ossrhPassword=YOUR_PASSWORD_HREE
-
+//   ossrhPassword=YOUR_PASSWORD_HERE
 
 ///////////////////////////////////////////////////////////////////////////
 /// Maven Central publishing
-///
+/// (From http://central.sonatype.org/pages/gradle.html )
 
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = "org.plumelib"
 archivesBaseName = "plume-util"
-version = "0.1.1"
+version = "1.0.0"
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'

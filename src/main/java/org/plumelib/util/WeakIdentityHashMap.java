@@ -19,11 +19,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-/*>>>
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * This class combines the features of {@link java.util.WeakHashMap} and {@link
@@ -134,7 +133,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
   /** The table, resized as necessary. Length MUST Always be a power of two. */
-  private /*@Nullable*/ Entry<K, V>[] table;
+  private @Nullable Entry<K, V>[] table;
 
   /** The number of key-value mappings contained in this weak hash map. */
   private int size;
@@ -234,40 +233,40 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * @return key if it is null, otherwise {@link NULL_KEY}
    */
   // not: "private static <K> K maskNull(K key)" because NULL_KEY isn't of type K.
-  /*@Pure*/
-  private static /*@NonNull*/ Object maskNull(/*@Nullable*/ Object key) {
+  @Pure
+  private static @NonNull Object maskNull(@Nullable Object key) {
     return (key == null ? NULL_KEY : key);
   }
 
   /** Return internal representation of null key back to caller as null */
   // Argument is actually either of type K, or is NULL_KEY.
   @SuppressWarnings("unchecked")
-  /*@Pure*/
-  private static <K> /*@Nullable*/ K unmaskNull(K key) {
+  @Pure
+  private static <K> @Nullable K unmaskNull(K key) {
     return (key == NULL_KEY ? null : key);
   }
 
   /** Check for equality of non-null reference x and possibly-null y. Uses identity equality. */
-  /*@Pure*/
-  static boolean eq(Object x, /*@Nullable*/ Object y) {
+  @Pure
+  static boolean eq(Object x, @Nullable Object y) {
     return x == y;
   }
 
   /** Return the hash code for x */
-  /*@Pure*/
+  @Pure
   static int hasher(Object x) {
     return System.identityHashCode(x);
   }
 
   /** Return index for hash code h. */
-  /*@Pure*/
+  @Pure
   static int indexFor(int h, int length) {
     return h & (length - 1);
   }
 
   /** Expunge stale entries from the table. */
   @SuppressWarnings("purity") // actually has side effects due to weak pointers
-  /*@SideEffectFree*/
+  @SideEffectFree
   private void expungeStaleEntries() {
     Entry<K, V> e;
     // These types look wrong to me.
@@ -294,8 +293,8 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   }
 
   /** Return the table after first expunging stale entries */
-  /*@Pure*/
-  private /*@Nullable*/ Entry<K, V>[] getTable() {
+  @Pure
+  private @Nullable Entry<K, V>[] getTable() {
     expungeStaleEntries();
     return table;
   }
@@ -305,7 +304,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * reflect unprocessed entries that will be removed before next attempted access because they are
    * no longer referenced.
    */
-  /*@Pure*/
+  @Pure
   @Override
   public int size() {
     if (size == 0) return 0;
@@ -318,7 +317,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * snapshot, and may not reflect unprocessed entries that will be removed before next attempted
    * access because they are no longer referenced.
    */
-  /*@Pure*/
+  @Pure
   @Override
   public boolean isEmpty() {
     return size() == 0;
@@ -336,12 +335,12 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    *     contains no mapping for this key.
    * @see #put(Object, Object)
    */
-  /*@Pure*/
+  @Pure
   @Override
-  public /*@Nullable*/ V get(/*@Nullable*/ Object key) {
+  public @Nullable V get(@Nullable Object key) {
     Object k = maskNull(key);
     int h = hasher(k);
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     int index = indexFor(h, tab.length);
     Entry<K, V> e = tab[index];
     while (e != null) {
@@ -358,9 +357,9 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * @return <code>true</code> if there is a mapping for <code>key</code>; <code>false</code>
    *     otherwise
    */
-  /*@Pure*/
+  @Pure
   @Override
-  public boolean containsKey(/*@Nullable*/ Object key) {
+  public boolean containsKey(@Nullable Object key) {
     return getEntry(key) != null;
   }
 
@@ -368,11 +367,11 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * Returns the entry associated with the specified key in the HashMap. Returns null if the HashMap
    * contains no mapping for this key.
    */
-  /*@SideEffectFree*/
-  /*@Nullable*/ Entry<K, V> getEntry(/*@Nullable*/ Object key) {
+  @SideEffectFree
+  @Nullable Entry<K, V> getEntry(@Nullable Object key) {
     Object k = maskNull(key);
     int h = hasher(k);
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     int index = indexFor(h, tab.length);
     Entry<K, V> e = tab[index];
     while (e != null && !(e.hash == h && eq(k, e.get()))) e = e.next;
@@ -391,11 +390,11 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    */
   @SuppressWarnings("NonAtomicVolatileUpdate")
   @Override
-  public /*@Nullable*/ V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     @SuppressWarnings("unchecked")
     K k = (K) maskNull(key);
     int h = System.identityHashCode(k);
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     int i = indexFor(h, tab.length);
 
     for (Entry<K, V> e = tab[i]; e != null; e = e.next) {
@@ -424,7 +423,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    *     capacity unless current capacity is MAXIMUM_CAPACITY (in which case value is irrelevant)
    */
   void resize(int newCapacity) {
-    /*@Nullable*/ Entry<K, V>[] oldTable = getTable();
+    @Nullable Entry<K, V>[] oldTable = getTable();
     int oldCapacity = oldTable.length;
     if (oldCapacity == MAXIMUM_CAPACITY) {
       threshold = Integer.MAX_VALUE;
@@ -451,7 +450,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   }
 
   /** Transfer all entries from src to dest tables */
-  private void transfer(/*@Nullable*/ Entry<K, V>[] src, /*@Nullable*/ Entry<K, V>[] dest) {
+  private void transfer(@Nullable Entry<K, V>[] src, @Nullable Entry<K, V>[] dest) {
     for (int j = 0; j < src.length; ++j) {
       Entry<K, V> e = src[j];
       src[j] = null; // Help GC (?)
@@ -520,10 +519,10 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    */
   @SuppressWarnings("NonAtomicVolatileUpdate")
   @Override
-  public /*@Nullable*/ V remove(Object key) {
+  public @Nullable V remove(Object key) {
     Object k = maskNull(key);
     int h = hasher(k);
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     int i = indexFor(h, tab.length);
     Entry<K, V> prev = tab[i];
     Entry<K, V> e = prev;
@@ -546,9 +545,9 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
   /** Special version of remove needed by Entry set */
   @SuppressWarnings("NonAtomicVolatileUpdate")
-  /*@Nullable*/ Entry<K, V> removeMapping(/*@Nullable*/ Object o) {
+  @Nullable Entry<K, V> removeMapping(@Nullable Object o) {
     if (!(o instanceof Map.Entry)) return null;
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     Map.Entry<K, V> entry = (Map.Entry<K, V>) o;
     Object k = maskNull(entry.getKey());
     int h = hasher(k);
@@ -581,7 +580,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     while (queue.poll() != null) ;
 
     modCount++;
-    /*@Nullable*/ Entry<K, V>[] tab = table;
+    @Nullable Entry<K, V>[] tab = table;
     for (int i = 0; i < tab.length; ++i) tab[i] = null; // Help GC (?)
     size = 0;
 
@@ -597,12 +596,12 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * @param value value whose presence in this map is to be tested
    * @return <code>true</code> if this map maps one or more keys to the specified value.
    */
-  /*@Pure*/
+  @Pure
   @Override
-  public boolean containsValue(/*@Nullable*/ Object value) {
+  public boolean containsValue(@Nullable Object value) {
     if (value == null) return containsNullValue();
 
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     for (int i = tab.length; i-- > 0; )
       for (Entry e = tab[i]; e != null; e = e.next) if (value.equals(e.value)) return true;
     return false;
@@ -610,7 +609,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
   /** Special-case code for containsValue with null argument */
   private boolean containsNullValue() {
-    /*@Nullable*/ Entry<K, V>[] tab = getTable();
+    @Nullable Entry<K, V>[] tab = getTable();
     for (int i = tab.length; i-- > 0; )
       for (Entry e = tab[i]; e != null; e = e.next) if (e.value == null) return true;
     return false;
@@ -620,7 +619,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private static class Entry<K, V> extends WeakReference<K> implements Map.Entry<K, V> {
     private V value;
     private final int hash;
-    private /*@Nullable*/ Entry<K, V> next;
+    private @Nullable Entry<K, V> next;
 
     /** Create new entry. */
     Entry(K key, V value, ReferenceQueue<K> queue, int hash, Entry<K, V> next) {
@@ -630,13 +629,13 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       this.next = next;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public K getKey() {
       return WeakIdentityHashMap.<K>unmaskNull(get());
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public V getValue() {
       return value;
@@ -650,9 +649,9 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
 
     @SuppressWarnings("purity") // side effects on local state
-    /*@Pure*/
+    @Pure
     @Override
-    public boolean equals(/*@Nullable*/ Object o) {
+    public boolean equals(@Nullable Object o) {
       if (!(o instanceof Map.Entry)) return false;
       Map.Entry<K, V> e = (Map.Entry<K, V>) o;
       Object k1 = getKey();
@@ -666,7 +665,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
 
     @SuppressWarnings("purity") // side effects on local state
-    /*@Pure*/
+    @Pure
     @Override
     public int hashCode() {
       Object k = getKey();
@@ -674,7 +673,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return ((k == null ? 0 : hasher(k)) ^ (v == null ? 0 : v.hashCode()));
     }
 
-    /*@SideEffectFree*/
+    @SideEffectFree
     @Override
     public String toString() {
       return getKey() + "=" + getValue();
@@ -683,18 +682,18 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
   private abstract class HashIterator<T> implements Iterator<T> {
     int index;
-    /*@Nullable*/ Entry<K, V> entry = null;
-    /*@Nullable*/ Entry<K, V> lastReturned = null;
+    @Nullable Entry<K, V> entry = null;
+    @Nullable Entry<K, V> lastReturned = null;
     int expectedModCount = modCount;
 
     /** Strong reference needed to avoid disappearance of key between hasNext and next */
-    /*@Nullable*/ Object nextKey = null;
+    @Nullable Object nextKey = null;
 
     /**
      * Strong reference needed to avoid disappearance of key between nextEntry() and any use of the
      * entry
      */
-    /*@Nullable*/ Object currentKey = null;
+    @Nullable Object currentKey = null;
 
     HashIterator() {
       index = (size() != 0 ? table.length : 0);
@@ -702,7 +701,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
     @Override
     public boolean hasNext() {
-      /*@Nullable*/ Entry<K, V>[] t = table;
+      @Nullable Entry<K, V>[] t = table;
 
       while (nextKey == null) {
         Entry<K, V> e = entry;
@@ -767,8 +766,8 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
 
   // Views
 
-  private transient /*@Nullable*/ Set<Map.Entry<K, V>> entrySet = null;
-  private transient volatile /*@Nullable*/ Set<K> our_keySet = null;
+  private transient @Nullable Set<Map.Entry<K, V>> entrySet = null;
+  private transient volatile @Nullable Set<K> our_keySet = null;
 
   /**
    * Returns a set view of the keys contained in this map. The set is backed by the map, so changes
@@ -779,7 +778,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    *
    * @return a set view of the keys contained in this map
    */
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
   public Set<K> keySet() {
     Set<K> ks = our_keySet;
@@ -792,20 +791,20 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return new KeyIterator();
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int size() {
       return WeakIdentityHashMap.this.size();
     }
 
-    /*@Pure*/
+    @Pure
     @Override
-    public boolean contains(/*@Nullable*/ Object o) {
+    public boolean contains(@Nullable Object o) {
       return containsKey(o);
     }
 
     @Override
-    public boolean remove(/*@Nullable*/ Object o) {
+    public boolean remove(@Nullable Object o) {
       if (containsKey(o)) {
         WeakIdentityHashMap.this.remove(o);
         return true;
@@ -832,7 +831,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  transient volatile /*@Nullable*/ Collection<V> our_values = null;
+  transient volatile @Nullable Collection<V> our_values = null;
 
   /**
    * Returns a collection view of the values contained in this map. The collection is backed by the
@@ -844,7 +843,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    *
    * @return a collection view of the values contained in this map
    */
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
   public Collection<V> values() {
     Collection<V> vs = our_values;
@@ -857,15 +856,15 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return new ValueIterator();
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int size() {
       return WeakIdentityHashMap.this.size();
     }
 
-    /*@Pure*/
+    @Pure
     @Override
-    public boolean contains(/*@Nullable*/ Object o) {
+    public boolean contains(@Nullable Object o) {
       return containsValue(o);
     }
 
@@ -900,7 +899,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * @return a collection view of the mappings contained in this map
    * @see java.util.Map.Entry
    */
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     Set<Map.Entry<K, V>> es = entrySet;
@@ -913,9 +912,9 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return new EntryIterator();
     }
 
-    /*@Pure*/
+    @Pure
     @Override
-    public boolean contains(/*@Nullable*/ Object o) {
+    public boolean contains(@Nullable Object o) {
       if (!(o instanceof Map.Entry)) return false;
       Map.Entry<K, V> e = (Map.Entry<K, V>) o;
       Object k = e.getKey();
@@ -924,11 +923,11 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
 
     @Override
-    public boolean remove(/*@Nullable*/ Object o) {
+    public boolean remove(@Nullable Object o) {
       return removeMapping(o) != null;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int size() {
       return WeakIdentityHashMap.this.size();
@@ -971,13 +970,13 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       this.value = e.getValue();
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public K getKey() {
       return key;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public V getValue() {
       return value;
@@ -990,27 +989,27 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return oldValue;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
-    public boolean equals(/*@Nullable*/ Object o) {
+    public boolean equals(@Nullable Object o) {
       if (!(o instanceof Map.Entry)) return false;
       Map.Entry<K, V> e = (Map.Entry<K, V>) o;
       return WeakIdentityHashMap.eq(key, e.getKey()) && eq(value, e.getValue());
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int hashCode() {
       return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
     }
 
-    /*@SideEffectFree*/
+    @SideEffectFree
     @Override
     public String toString() {
       return key + "=" + value;
     }
 
-    private static boolean eq(/*@Nullable*/ Object o1, /*@Nullable*/ Object o2) {
+    private static boolean eq(@Nullable Object o1, @Nullable Object o2) {
       return (o1 == null ? o2 == null : o1.equals(o2));
     }
   }

@@ -23,11 +23,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-/*>>>
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 // The purpose of this class is to be used by Intern.java.  It is difficult
 // to upgrade this to use the Java 1.5 version of WeakHashMap (which is
@@ -40,7 +38,7 @@ import org.checkerframework.dataflow.qual.*;
  * accidentally. It is slightly less efficient, in the absence of a Hasher, and has not been as
  * extensively tested.
  *
- * <hr>
+ * <p>The original documentation follows.
  *
  * <p>A hashtable-based <code>Map</code> implementation with <em>weak keys</em>. An entry in a
  * <code>WeakHashMap</code> will automatically be removed when its key is no longer in ordinary use.
@@ -115,11 +113,13 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
   allocation overhead is tolerable. */
 
   private Hasher hasher = null;
-  /*@Pure*/
+
+  @Pure
   private boolean keyEquals(Object k1, Object k2) {
     return (hasher == null ? k1.equals(k2) : hasher.equals(k1, k2));
   }
-  /*@Pure*/
+
+  @Pure
   private int keyHashCode(Object k1) {
     return (hasher == null ? k1.hashCode() : hasher.hashCode(k1));
   }
@@ -130,12 +130,12 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
   // were static in the original version of this code.
   // This finesses that.
 
-  private /*@Nullable*/ WeakKey WeakKeyCreate(K k) {
+  private @Nullable WeakKey WeakKeyCreate(K k) {
     if (k == null) return null;
     else return new WeakKey(k);
   }
 
-  private /*@Nullable*/ WeakKey WeakKeyCreate(K k, ReferenceQueue<? super K> q) {
+  private @Nullable WeakKey WeakKeyCreate(K k, ReferenceQueue<? super K> q) {
     if (k == null) return null;
     else return new WeakKey(k, q);
   }
@@ -150,7 +150,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       hash = keyHashCode(k);
     }
 
-    private /*@Nullable*/ WeakKey create(K k) {
+    private @Nullable WeakKey create(K k) {
       if (k == null) return null;
       else return new WeakKey(k);
     }
@@ -160,16 +160,16 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       hash = keyHashCode(k);
     }
 
-    private /*@Nullable*/ WeakKey create(K k, ReferenceQueue<? super K> q) {
+    private @Nullable WeakKey create(K k, ReferenceQueue<? super K> q) {
       if (k == null) return null;
       else return new WeakKey(k, q);
     }
 
     /* A WeakKey is equal to another WeakKey iff they both refer to objects
     that are, in turn, equal according to their own equals methods */
-    /*@Pure*/
+    @Pure
     @Override
-    public boolean equals(/*@Nullable*/ Object o) {
+    public boolean equals(@Nullable Object o) {
       if (o == null) return false; // never happens
       if (this == o) return true;
       // This test is illegal because WeakKey is a generic type,
@@ -184,7 +184,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       return keyEquals(t, u);
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int hashCode() {
       return hash;
@@ -263,14 +263,14 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    * most implementations of the <code>Map</code> interface, the time required by this operation is
    * linear in the size of the map.</em>
    */
-  /*@Pure*/
+  @Pure
   @Override
   public int size() {
     return entrySet().size();
   }
 
   /** Returns <code>true</code> if this map contains no key-value mappings. */
-  /*@Pure*/
+  @Pure
   @Override
   public boolean isEmpty() {
     return entrySet().isEmpty();
@@ -281,7 +281,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    *
    * @param key the key whose presence in this map is to be tested
    */
-  /*@Pure*/
+  @Pure
   @Override
   public boolean containsKey(Object key) {
     @SuppressWarnings("unchecked")
@@ -297,9 +297,9 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    *
    * @param key the key whose associated value, if any, is to be returned
    */
-  /*@Pure*/
+  @Pure
   @Override
-  public /*@Nullable*/ V get(Object key) { // type of argument is Object, not K
+  public @Nullable V get(Object key) { // type of argument is Object, not K
     @SuppressWarnings("unchecked")
     K kkey = (K) key;
     return hash.get(WeakKeyCreate(kkey));
@@ -359,13 +359,13 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       this.key = key;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public K getKey() {
       return key;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public V getValue() {
       return ent.getValue();
@@ -376,17 +376,17 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       return ent.setValue(value);
     }
 
-    /*@Pure*/
+    @Pure
     private boolean keyvalEquals(K o1, K o2) {
       return (o1 == null) ? (o2 == null) : keyEquals(o1, o2);
     }
 
-    /*@Pure*/
+    @Pure
     private boolean valEquals(V o1, V o2) {
       return (o1 == null) ? (o2 == null) : o1.equals(o2);
     }
 
-    /*@Pure*/
+    @Pure
     @SuppressWarnings("NonOverridingEquals")
     public boolean equals(Map.Entry<K, V> e /* Object o*/) {
       // if (! (o instanceof Map.Entry)) return false;
@@ -394,7 +394,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       return (keyvalEquals(key, e.getKey()) && valEquals(getValue(), e.getValue()));
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int hashCode() {
       V v;
@@ -445,13 +445,13 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       };
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public boolean isEmpty() {
       return !(iterator().hasNext());
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int size() {
       int j = 0;
@@ -475,7 +475,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       return false;
     }
 
-    /*@Pure*/
+    @Pure
     @Override
     public int hashCode() {
       int h = 0;
@@ -490,10 +490,10 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  private /*@Nullable*/ Set<Map.Entry<K, V>> entrySet = null;
+  private @Nullable Set<Map.Entry<K, V>> entrySet = null;
 
   /** Returns a <code>Set</code> view of the mappings in this map. */
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
   public Set<Map.Entry<K, V>> entrySet() {
     if (entrySet == null) entrySet = new EntrySet();

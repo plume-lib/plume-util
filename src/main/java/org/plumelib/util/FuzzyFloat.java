@@ -3,13 +3,9 @@ package org.plumelib.util;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
-
-/*>>>
-import org.checkerframework.checker.initialization.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.dataflow.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.Raw;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * Routines for doing approximate ('fuzzy') floating-point comparisons. Those are comparisons that
@@ -65,8 +61,7 @@ public class FuzzyFloat {
    *     which requires exact matching rather than permitting fuzzy matching)
    * @see #FuzzyFloat
    */
-  public void setRelativeRatio(
-      /*>>> @UnknownInitialization @Raw FuzzyFloat this,*/ double relativeRatio) {
+  public void setRelativeRatio(@UnknownInitialization @Raw FuzzyFloat this, double relativeRatio) {
     minRatio = 1 - relativeRatio;
     maxRatio = 1 + relativeRatio;
     exactComparisons = (relativeRatio == 0.0);
@@ -86,8 +81,7 @@ public class FuzzyFloat {
    * @param d2 the second value to compare
    * @return true if d1 and d2 are considered equal, false otherwise
    */
-
-  /*@Pure*/
+  @Pure
   public boolean eq(double d1, double d2) {
 
     // NaNs are not considered equal.
@@ -136,7 +130,7 @@ public class FuzzyFloat {
    * @return whether d1 and d2 are non-equal
    * @see #eq
    */
-  /*@Pure*/
+  @Pure
   public boolean ne(double d1, double d2) {
     return (!eq(d1, d2));
   }
@@ -150,7 +144,7 @@ public class FuzzyFloat {
    * @return whether d1 &lt; d2
    * @see #eq
    */
-  /*@Pure*/
+  @Pure
   public boolean lt(double d1, double d2) {
     return ((d1 < d2) && ne(d1, d2));
   }
@@ -164,7 +158,7 @@ public class FuzzyFloat {
    * @return whether d1 &le; d2
    * @see #eq
    */
-  /*@Pure*/
+  @Pure
   public boolean lte(double d1, double d2) {
     return ((d1 <= d2) || eq(d1, d2));
   }
@@ -178,7 +172,7 @@ public class FuzzyFloat {
    * @return whether d1 &gt; d2
    * @see #eq
    */
-  /*@Pure*/
+  @Pure
   public boolean gt(double d1, double d2) {
     return ((d1 > d2) && ne(d1, d2));
   }
@@ -191,7 +185,7 @@ public class FuzzyFloat {
    * @return whether d1 &ge; d2
    * @see #eq
    */
-  /*@Pure*/
+  @Pure
   public boolean gte(double d1, double d2) {
     return ((d1 >= d2) || eq(d1, d2));
   }
@@ -206,7 +200,7 @@ public class FuzzyFloat {
    *     the array
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
-  /*@Pure*/
+  @Pure
   public int indexOf(double[] a, double elt) {
     for (int i = 0; i < a.length; i++) {
       if (eq(elt, a[i])) {
@@ -227,7 +221,7 @@ public class FuzzyFloat {
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    * @see java.lang.String#indexOf(java.lang.String)
    */
-  /*@Pure*/
+  @Pure
   public int indexOf(double[] a, double[] sub) {
 
     int aIndexMax = a.length - sub.length;
@@ -256,7 +250,7 @@ public class FuzzyFloat {
    * @return true if a1 and a2 are set equivalent, false otherwise
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (arrays)
-  /*@Pure*/
+  @Pure
   public boolean isElemMatch(double[] a1, double[] a2) {
 
     // don't change our parameters
@@ -346,7 +340,7 @@ public class FuzzyFloat {
      * @param a2 the second array to compare
      * @return positive if o1 &gt; 02, 0 if o1 == o2, negative if o1 &lt; o2
      */
-    /*@Pure*/
+    @Pure
     @Override
     public int compare(double[] a1, double[] a2) {
       if (a1 == a2) {
@@ -374,7 +368,7 @@ public class FuzzyFloat {
    *     bigger, false otherwise
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (arrays)
-  /*@Pure*/
+  @Pure
   public boolean isSubset(double[] smaller, double[] bigger) {
 
     // don't change our parameters

@@ -3,14 +3,15 @@ package org.plumelib.util;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-
-/*>>>
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.common.value.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.index.qual.IndexOrHigh;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.index.qual.SameLen;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * LimitedSizeSet stores up to some maximum number of unique values. If more than that many elements
@@ -32,11 +33,11 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    * If null, then at least {@link #numValues} distinct values have been seen (and {@link
    * #numValues} equals the {@code maxValues} argument to the constructor).
    */
-  protected /*@Nullable*/ T /*@Nullable*/ /*@MinLen(1)*/[] values;
+  protected @Nullable T @Nullable @MinLen(1) [] values;
   /** The number of active elements (equivalently, the first unused index). */
   // The Index Checker annotation is not @IndexOrHigh("values"), because the invariant is broken
   // when the values field is set to null. Warnings are suppressed when breaking the invariant.
-  protected /*@IndexOrHigh("values")*/ int numValues;
+  protected @IndexOrHigh("values") int numValues;
 
   /** Whether assertions are enabled. */
   private static boolean assertsEnabled = false;
@@ -51,7 +52,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    *
    * @param maxValues the maximum number of values this set will be able to hold; must be positive
    */
-  public LimitedSizeSet(/*@Positive*/ int maxValues) {
+  public LimitedSizeSet(@Positive int maxValues) {
     if (assertsEnabled && !(maxValues > 0)) {
       throw new IllegalArgumentException("maxValues should be positive, is " + maxValues);
     }
@@ -60,8 +61,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
       "unchecked",
       "value" // https://github.com/kelloggm/checker-framework/issues/174
     })
-    /*@Nullable*/ T /*@MinLen(1)*/[] newValuesArray =
-        (/*@Nullable*/ T[]) new /*@Nullable*/ Object[maxValues];
+    @Nullable T @MinLen(1) [] newValuesArray = (@Nullable T[]) new @Nullable Object[maxValues];
     values = newValuesArray;
     numValues = 0;
   }
@@ -115,7 +115,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
     }
     // TODO: s.values isn't modified by the call to add.  Use a local variable until
     // https://tinyurl.com/cfissue/984 is fixed.
-    /*@Nullable*/ T /*@SameLen("s.values")*/[] svalues = s.values;
+    @Nullable T @SameLen("s.values") [] svalues = s.values;
     for (int i = 0; i < s.size(); i++) {
       // This implies that the set cannot hold null.
       assert svalues[i] != null : "@AssumeAssertion(nullness): used portion of array";
@@ -133,7 +133,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    * @return true if this set contains {@code elt}
    */
   @SuppressWarnings("deterministic") // pure wrt equals() but not ==: throws a new exception
-  /*@Pure*/
+  @Pure
   public boolean contains(T elt) {
     if (repNulled()) {
       throw new UnsupportedOperationException();
@@ -152,8 +152,8 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    *
    * @return a number that is a lower bound on the number of elements added to the set
    */
-  /*@Pure*/
-  public /*@IndexOrHigh("this.values")*/ int size(/*>>>@GuardSatisfied LimitedSizeSet<T> this*/) {
+  @Pure
+  public @IndexOrHigh("this.values") int size(@GuardSatisfied LimitedSizeSet<T> this) {
     return numValues;
   }
 
@@ -165,7 +165,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    */
   @SuppressWarnings(
       "lowerbound") // https://tinyurl.com/cfissue/1606: nulling the rep leaves numValues positive
-  public /*@Positive*/ int maxSize() {
+  public @Positive int maxSize() {
     if (repNulled()) {
       return numValues;
     } else {
@@ -179,9 +179,9 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    *
    * @return true if this set has been filled to capacity and its internal representation is nulled
    */
-  /*@EnsuresNonNullIf(result=false, expression="values")*/
-  /*@Pure*/
-  public boolean repNulled(/*>>>@GuardSatisfied LimitedSizeSet<T> this*/) {
+  @EnsuresNonNullIf(result = false, expression = "values")
+  @Pure
+  public boolean repNulled(@GuardSatisfied LimitedSizeSet<T> this) {
     return values == null;
   }
 
@@ -200,9 +200,9 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
   }
 
   @SuppressWarnings("sideeffectfree") // side effect to local state (clone)
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
-  public LimitedSizeSet<T> clone(/*>>>@GuardSatisfied LimitedSizeSet<T> this*/) {
+  public LimitedSizeSet<T> clone(@GuardSatisfied LimitedSizeSet<T> this) {
     LimitedSizeSet<T> result;
     try {
       @SuppressWarnings("unchecked")
@@ -227,7 +227,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    * @return a LimitedSizeSet that merges the elements of slist
    */
   public static <T> LimitedSizeSet<T> merge(
-      /*@Positive*/ int maxValues, List<LimitedSizeSet<? extends T>> slist) {
+      @Positive int maxValues, List<LimitedSizeSet<? extends T>> slist) {
     LimitedSizeSet<T> result = new LimitedSizeSet<T>(maxValues);
     for (LimitedSizeSet<? extends T> s : slist) {
       result.addAll(s);
@@ -235,9 +235,9 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
     return result;
   }
 
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
-  public String toString(/*>>>@GuardSatisfied LimitedSizeSet<T> this*/) {
+  public String toString(@GuardSatisfied LimitedSizeSet<T> this) {
     return ("[size="
         + size()
         + "; "

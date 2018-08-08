@@ -9,10 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-/*>>>
-import org.checkerframework.checker.nullness.qual.*;
-*/
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /** Deterministic versions of Class methods */
 public class ClassDeterministic {
@@ -78,7 +75,7 @@ public class ClassDeterministic {
    * @return the class's enum constants
    */
   @SuppressWarnings("nullness:argument.type.incompatible") //  comparator handles null
-  public static <T> T /*@Nullable*/ [] getEnumConstants(Class<T> c) {
+  public static <T> T @Nullable [] getEnumConstants(Class<T> c) {
     T[] result = c.getEnumConstants();
     if (result == null) {
       return null;

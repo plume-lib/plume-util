@@ -1,8 +1,6 @@
 package org.plumelib.util;
 
-/*>>>
-import org.checkerframework.checker.nullness.qual.*;
-*/
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A Partitioner accepts Objects and assigns them to an equivalence class.
@@ -11,8 +9,7 @@ import org.checkerframework.checker.nullness.qual.*;
  * @param <CLASS> the type of equivalence classes (classification buckets)
  * @see MultiRandSelector
  */
-public interface Partitioner<
-    ELEMENT extends /*@Nullable*/ Object, CLASS extends /*@Nullable*/ Object> {
+public interface Partitioner<ELEMENT extends @Nullable Object, CLASS extends @Nullable Object> {
 
   /**
    * @param obj the Object to be assigned to a bucket

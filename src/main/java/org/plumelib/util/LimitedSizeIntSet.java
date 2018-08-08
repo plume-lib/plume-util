@@ -3,14 +3,15 @@ package org.plumelib.util;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-
-/*>>>
-import org.checkerframework.checker.index.qual.*;
-import org.checkerframework.checker.lock.qual.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.checkerframework.common.value.qual.*;
-import org.checkerframework.dataflow.qual.*;
-*/
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.IndexOrHigh;
+import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * LimitedSizeIntSet stores up to some maximum number of unique values. If more than that many
@@ -36,11 +37,11 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    * If null, then at least numValues distinct values have been seen. The size is not separately
    * stored, because that would take extra space.
    */
-  protected int /*@Nullable*/ /*@MinLen(1)*/[] values;
+  protected int @Nullable @MinLen(1) [] values;
   /** The number of active elements (equivalently, the first unused index). */
   // Not exactly @IndexOrHigh("values"), because the invariant is broken when
   // the values field is set to null. Warnings are suppressed when breaking the invariant.
-  /*@IndexOrHigh("values")*/ int numValues;
+  @IndexOrHigh("values") int numValues;
 
   /** Whether assertions are enabled. */
   private static boolean assertsEnabled = false;
@@ -55,7 +56,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    *
    * @param maxValues the maximum number of values this set will be able to hold; must be positive
    */
-  public LimitedSizeIntSet(/*@Positive*/ int maxValues) {
+  public LimitedSizeIntSet(@Positive int maxValues) {
     if (assertsEnabled && !(maxValues > 0)) {
       throw new IllegalArgumentException("maxValues should be positive, is " + maxValues);
     }
@@ -117,7 +118,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     for (int i = 0; i < s.size(); i++) {
       @SuppressWarnings(
           "index") // svalues is the internal rep of s, and s.size() <= s.values.length
-      /*@IndexFor("svalues")*/ int index = i;
+      @IndexFor("svalues") int index = i;
       add(svalues[index]);
       if (repNulled()) {
         return; // optimization, not necessary for correctness
@@ -132,7 +133,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    * @return true if this set contains {@code elt}
    */
   @SuppressWarnings("deterministic") // pure wrt equals() but not ==: throws a new exception
-  /*@Pure*/
+  @Pure
   public boolean contains(int elt) {
     if (repNulled()) {
       throw new UnsupportedOperationException();
@@ -151,8 +152,8 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    *
    * @return a number that is a lower bound on the number of elements added to the set
    */
-  /*@Pure*/
-  public int size(/*>>>@GuardSatisfied LimitedSizeIntSet this*/) {
+  @Pure
+  public int size(@GuardSatisfied LimitedSizeIntSet this) {
     return numValues;
   }
 
@@ -164,7 +165,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    */
   @SuppressWarnings(
       "lowerbound") // https://tinyurl.com/cfissue/1606: nulling the rep leaves numValues positive
-  public /*@Positive*/ int maxSize() {
+  public @Positive int maxSize() {
     if (repNulled()) {
       return numValues;
     } else {
@@ -178,9 +179,9 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    *
    * @return true if this set has been filled to capacity and its internal representation is nulled
    */
-  /*@EnsuresNonNullIf(result=false, expression="values")*/
-  /*@Pure*/
-  public boolean repNulled(/*>>>@GuardSatisfied LimitedSizeIntSet this*/) {
+  @EnsuresNonNullIf(result = false, expression = "values")
+  @Pure
+  public boolean repNulled(@GuardSatisfied LimitedSizeIntSet this) {
     return values == null;
   }
 
@@ -199,9 +200,9 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   }
 
   @SuppressWarnings("sideeffectfree") // side effect to local state (clone)
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
-  public LimitedSizeIntSet clone(/*>>>@GuardSatisfied LimitedSizeIntSet this*/) {
+  public LimitedSizeIntSet clone(@GuardSatisfied LimitedSizeIntSet this) {
     LimitedSizeIntSet result;
     try {
       result = (LimitedSizeIntSet) super.clone();
@@ -222,8 +223,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    * @param slist a list of LimitedSizeIntSet, whose elements will be merged
    * @return a LimitedSizeIntSet that merges the elements of slist
    */
-  public static LimitedSizeIntSet merge(
-      /*@Positive*/ int maxValues, List<LimitedSizeIntSet> slist) {
+  public static LimitedSizeIntSet merge(@Positive int maxValues, List<LimitedSizeIntSet> slist) {
     LimitedSizeIntSet result = new LimitedSizeIntSet(maxValues);
     for (LimitedSizeIntSet s : slist) {
       result.addAll(s);
@@ -231,9 +231,9 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     return result;
   }
 
-  /*@SideEffectFree*/
+  @SideEffectFree
   @Override
-  public String toString(/*>>>@GuardSatisfied LimitedSizeIntSet this*/) {
+  public String toString(@GuardSatisfied LimitedSizeIntSet this) {
     return ("[size=" + size() + "; " + Arrays.toString(values) + "]");
   }
 }

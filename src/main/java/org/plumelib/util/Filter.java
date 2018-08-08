@@ -1,15 +1,13 @@
 package org.plumelib.util;
 
-/*>>>
-import org.checkerframework.checker.nullness.qual.*;
-*/
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Interface for things that make boolean decisions. This is inspired by java.io.FilenameFilter.
  *
  * @param <T> the type of arguments to {@link #accept}.
  */
-public interface Filter<T extends /*@Nullable*/ Object> {
+public interface Filter<T extends @Nullable Object> {
   /**
    * Tests whether a specified Object satisfies the filter.
    *
