@@ -84,8 +84,8 @@ public final class ReflectionPlume {
     primitiveClasses.put("short", Short.TYPE);
   }
 
-  // TODO: should create a method that handles any ClassGetName (including
-  // primitives), but not fully-qualified names.
+  // TODO: Should create a method that handles any ClassGetName (including primitives), but not
+  // fully-qualified names.  A routine with a polymorphic parameter type is confusing.
   /**
    * Like {@link Class#forName(String)}, but also works when the string represents a primitive type
    * or a fully-qualified name (as opposed to a binary name).
