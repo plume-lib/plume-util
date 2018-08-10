@@ -285,7 +285,7 @@ public final class ReflectionPlume {
     }
 
     @SuppressWarnings("signature") // throws exception if class does not exist
-    @BinaryNameFor String classname = method.substring(0, dotpos);
+    @BinaryName String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
     String all_argnames = method.substring(oparenpos + 1, cparenpos).trim();
     Class<?>[] argclasses = args_seen.get(all_argnames);
@@ -322,7 +322,7 @@ public final class ReflectionPlume {
    * @throws NoSuchMethodException if the method is not found
    */
   public static Method methodForName(
-      @BinaryNameFor String classname, String methodname, Class<?>[] params)
+      @BinaryName String classname, String methodname, Class<?>[] params)
       throws ClassNotFoundException, NoSuchMethodException, SecurityException {
 
     Class<?> c = Class.forName(classname);
