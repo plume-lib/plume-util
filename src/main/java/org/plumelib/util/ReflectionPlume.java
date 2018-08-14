@@ -20,7 +20,7 @@ import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.ClassGetSimpleName;
 import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.dataflow.qual.Pure;
-import org.plumelib.bcelutil.JvmUtil;
+import org.plumelib.signature.Signatures;
 
 /** Utility functions related to reflection, Class, Method, ClassLoader, and classpath. */
 public final class ReflectionPlume {
@@ -300,7 +300,7 @@ public final class ReflectionPlume {
       @MonotonicNonNull Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
       for (int i = 0; i < argnames.length; i++) {
         String bnArgname = argnames[i].trim();
-        @ClassGetName String cgnArgname = JvmUtil.binaryNameToClassGetName(bnArgname);
+        @ClassGetName String cgnArgname = Signatures.binaryNameToClassGetName(bnArgname);
         argclasses_tmp[i] = classForName(cgnArgname);
       }
       @SuppressWarnings("cast")
