@@ -16,7 +16,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signature.qual.BinaryName;
-import org.checkerframework.checker.signature.qual.BinaryNameForNonArray;
 import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.ClassGetSimpleName;
 import org.checkerframework.checker.signature.qual.FullyQualifiedName;
@@ -286,7 +285,7 @@ public final class ReflectionPlume {
     }
 
     @SuppressWarnings("signature") // throws exception if class does not exist
-    @BinaryNameForNonArray String classname = method.substring(0, dotpos);
+    @BinaryName String classname = method.substring(0, dotpos);
     String methodname = method.substring(dotpos + 1, oparenpos);
     String all_argnames = method.substring(oparenpos + 1, cparenpos).trim();
     Class<?>[] argclasses = args_seen.get(all_argnames);
@@ -323,7 +322,7 @@ public final class ReflectionPlume {
    * @throws NoSuchMethodException if the method is not found
    */
   public static Method methodForName(
-      @BinaryNameForNonArray String classname, String methodname, Class<?>[] params)
+      @BinaryName String classname, String methodname, Class<?>[] params)
       throws ClassNotFoundException, NoSuchMethodException, SecurityException {
 
     Class<?> c = Class.forName(classname);
