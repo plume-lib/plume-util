@@ -1,6 +1,6 @@
 // To make a release:
 //  * Update the version number in ../README.md and in this file.
-//  * Run in the top-level directory:  ./gradlew uploadArchives && ./gradlew javadocWeb
+//  * Run in the top-level directory:  ./gradlew clean uploadArchives && ./gradlew javadocWeb
 //  * Browse to https://oss.sonatype.org/#stagingRepositories
 // Your ~/.gradle/gradle.properties file must contain:
 //   ossrhUsername=YOUR_USER_NAME_HERE
