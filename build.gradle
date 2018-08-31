@@ -18,7 +18,7 @@ apply from: "${buildscript.sourceFile.parent}/gradle/checkerframework.gradle"
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 dependencies {
-  implementation 'org.plumelib:signature-util:0.0.4'
+  implementation 'org.plumelib:signature-util:0.0.6'
   testImplementation 'junit:junit:4.12'
   errorprone 'com.google.errorprone:error_prone_core:2.3.1'
 }
@@ -48,7 +48,7 @@ configurations {
   requireJavadoc
 }
 dependencies {
-  implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.0.7'
+  implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
 }
 task requireJavadoc(type: Javadoc) {
   destinationDir.deleteDir()
