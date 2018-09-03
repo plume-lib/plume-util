@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
@@ -1770,26 +1769,6 @@ public final class TestPlume {
     // public static BufferedWriter bufferedFileWriter(String filename) throws IOException
     // public static Class classForName(String className)
 
-    // private boolean isSubtype(Class<?> sub, Class<?> sup) {
-    assert ReflectionPlume.isSubtype(Integer.class, Integer.class);
-    assert ReflectionPlume.isSubtype(Cloneable.class, Cloneable.class);
-    assert ReflectionPlume.isSubtype(Object.class, Object.class);
-    assert ReflectionPlume.isSubtype(Integer.class, Number.class);
-    assert !ReflectionPlume.isSubtype(Number.class, Integer.class);
-    assert ReflectionPlume.isSubtype(Integer.class, Comparable.class);
-    assert !ReflectionPlume.isSubtype(Comparable.class, Integer.class);
-    assert ReflectionPlume.isSubtype(Integer.class, Object.class);
-    assert !ReflectionPlume.isSubtype(Object.class, Integer.class);
-    assert !ReflectionPlume.isSubtype(Integer.class, Float.class);
-    assert ReflectionPlume.isSubtype(Collection.class, Iterable.class);
-    assert !ReflectionPlume.isSubtype(Iterable.class, Collection.class);
-    assert ReflectionPlume.isSubtype(ArrayList.class, Iterable.class);
-    assert !ReflectionPlume.isSubtype(Iterable.class, ArrayList.class);
-    assert ReflectionPlume.isSubtype(ArrayList.class, Cloneable.class);
-    assert !ReflectionPlume.isSubtype(Cloneable.class, ArrayList.class);
-    assert ReflectionPlume.isSubtype(ArrayList.class, List.class);
-    assert !ReflectionPlume.isSubtype(List.class, ArrayList.class);
-
     // public static void addToClasspath(String dir)
     // public static final class WildcardFilter implements FilenameFilter
     //   public WildcardFilter(String filename)
@@ -2025,32 +2004,6 @@ public final class TestPlume {
     //     sortedKeySet(Map<K,V> m) {
     // public static <K,V> Collection<@KeyFor("#1") K>
     //     sortedKeySet(Map<K,V> m, Comparator<K> comparator) {
-
-    // public static Method methodForName(String methodname) throws ClassNotFoundException
-    //
-    // essentially I am just testing whether the return is erroneous
-    try {
-      assert null
-          != ReflectionPlume.methodForName(
-              "org.plumelib.util.ReflectionPlume.methodForName(java.lang.String, java.lang.String, java.lang.Class[])");
-      assert null
-          != ReflectionPlume.methodForName(
-              "org.plumelib.util.ReflectionPlume.methodForName(java.lang.String,java.lang.String,java.lang.Class[])");
-      assert null != ReflectionPlume.methodForName("java.lang.Math.min(int,int)");
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new Error(e);
-    }
-    try {
-      java.lang.reflect.Method m =
-          ReflectionPlume.methodForName("org.plumelib.util.ReflectionPlume.methodForName()");
-      throw new Error("Didn't throw NoSuchMethodException");
-    } catch (NoSuchMethodException e) {
-      // nothing to do; this is the expected case
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new Error(e);
-    }
 
     // public static boolean propertyIsTrue(Properties p, String key)
     // public static String appendProperty(Properties p, String key, String value)
@@ -2807,13 +2760,6 @@ public final class TestPlume {
     assert combo5.contains(Arrays.asList(new Integer[] {i11, i11}));
     assert combo5.contains(Arrays.asList(new Integer[] {i11, i12}));
     assert combo5.contains(Arrays.asList(new Integer[] {i12, i12}));
-  }
-
-  @Test
-  public void test_fullyQualifiedNameToSimpleName() {
-
-    assert ReflectionPlume.fullyQualifiedNameToSimpleName("java.lang.String").equals("String");
-    assert ReflectionPlume.fullyQualifiedNameToSimpleName("String").equals("String");
   }
 
   @Test

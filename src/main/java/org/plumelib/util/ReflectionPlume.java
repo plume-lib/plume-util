@@ -20,9 +20,14 @@ import org.checkerframework.checker.signature.qual.ClassGetName;
 import org.checkerframework.checker.signature.qual.ClassGetSimpleName;
 import org.checkerframework.checker.signature.qual.FullyQualifiedName;
 import org.checkerframework.dataflow.qual.Pure;
-import org.plumelib.signature.Signatures;
+import org.plumelib.reflection.Signatures;
 
-/** Utility functions related to reflection, Class, Method, ClassLoader, and classpath. */
+/**
+ * Utility functions related to reflection, Class, Method, ClassLoader, and classpath.
+ *
+ * @deprecated use org.plumelib.reflection.ReflectionPlume
+ */
+@Deprecated // use org.plumelib.reflection.ReflectionPlume
 public final class ReflectionPlume {
 
   /** This class is a collection of methods; it does not represent anything. */

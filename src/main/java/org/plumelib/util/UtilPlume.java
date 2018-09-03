@@ -1382,6 +1382,10 @@ public final class UtilPlume {
    * delimiter character. Always returns an array of length at least 1 (it might contain only the
    * empty string).
    *
+   * <p>Consider using the built-in <a
+   * href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-">String.split</a>
+   * method.
+   *
    * @see #split(String s, String delim)
    * @param s the string to split
    * @param delim delimiter to split the string on
@@ -1402,6 +1406,10 @@ public final class UtilPlume {
    * Return an array of Strings representing the characters between successive instances of the
    * delimiter String. Always returns an array of length at least 1 (it might contain only the empty
    * string).
+   *
+   * <p>Consider using the built-in <a
+   * href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-">String.split</a>
+   * method.
    *
    * @see #split(String s, char delim)
    * @param s the string to split
