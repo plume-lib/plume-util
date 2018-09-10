@@ -12,6 +12,7 @@ import org.checkerframework.dataflow.qual.Pure;
  */
 public final class FileWriterWithName extends FileWriter {
 
+  /** The file being written by this. */
   private final String fileName;
 
   /**
