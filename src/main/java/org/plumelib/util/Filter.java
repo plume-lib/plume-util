@@ -3,7 +3,8 @@ package org.plumelib.util;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Interface for things that make boolean decisions. This is inspired by java.io.FilenameFilter.
+ * Interface for things that make boolean decisions. This is inspired by {@code
+ * java.io.FilenameFilter}.
  *
  * @param <T> the type of arguments to {@link #accept}.
  */

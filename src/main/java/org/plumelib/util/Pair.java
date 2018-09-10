@@ -6,9 +6,9 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * Mutable pair class: type-safely holds two objects of possibly-different types. Defines toStrng(),
- * equals(), and hashCode() routines. It is also used by OrderedPairIterator. If you don't need
- * these features, you are better off defining your own tiny class.
+ * Mutable pair class: type-safely holds two objects of possibly-different types. Defines
+ * toString(), equals(), and hashCode() routines. It is also used by OrderedPairIterator. If you
+ * don't need these features, you are better off defining your own tiny class.
  *
  * @param <T1> the type of the first element of the pair
  * @param <T2> the type of the second element of the pair

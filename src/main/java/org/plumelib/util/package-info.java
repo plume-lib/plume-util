@@ -12,10 +12,11 @@
  *   <dt>{@link org.plumelib.util.CollectionsPlume CollectionsPlume}
  *   <dd>Utilities for manipulating collections, iterators, lists, maps, and sets.
  *   <dt>{@link org.plumelib.util.LimitedSizeSet LimitedSizeSet}
- *   <dd>LimitedSizeSet stores up to some maximum number of unique values, at which point its rep is
- *       nulled, in order to save space. <br>
- *       There is also {@link org.plumelib.util.LimitedSizeIntSet LimitedSizeIntSet}, which takes
- *       less memory than LimitedSizeSet&lt;Integer&gt;.
+ *   <dd>Stores up to some maximum number of unique values, at which point its rep is nulled, in
+ *       order to save space.
+ *   <dt>{@link org.plumelib.util.LimitedSizeIntSet LimitedSizeIntSet}
+ *   <dd>Stores up to some maximum number of unique integer values, at which point its rep is
+ *       nulled, in order to save space. More efficient than {@code LimitedSizeSet<Integer>}.
  *   <dt>{@link org.plumelib.util.WeakHasherMap WeakHasherMap}
  *   <dd>WeakHashMap is a modified version of WeakHashMap from JDK 1.2.2, that adds a constructor
  *       that takes a {@link org.plumelib.util.Hasher Hasher} argument.
@@ -44,7 +45,11 @@
  *   <dt>{@link org.plumelib.util.StringBuilderDelimited StringBuilderDelimited}
  *   <dd>Like StringBuilder, but adds a delimiter between each pair of strings that are insered into
  *       the Stringbuilder. This can simplify the logic of programs and also avoid errors.
- *       <!--  <dt>{link org.plumelib.util.CountingPrintWriter CountingPrintWriter}
+ *   <dt>{@link org.plumelib.util.FileWriterWithName FileWriterWithName}
+ *   <dd>Just like {@code FileWriter}, but adds a {@code getFileName()} method and overrides {@code
+ *       toString()} to give the file name.
+ *       <!--
+ *   <dt>{link org.plumelib.util.CountingPrintWriter CountingPrintWriter}
  *   <dd>Prints formatted representations of objects to a text-output stream counting the number of
  *       bytes and characters printed.
  * -->
@@ -77,12 +82,30 @@
  *       number from each group.
  * </dl>
  *
- * <h3 id="java-miscellaneous">Miscellaneous</h3>
+ * <h3 id="Determinism">Determinism</h3>
  *
  * <dl>
  *   <dt>{@link org.plumelib.util.DeterministicObject DeterministicObject}
  *   <dd>A version of <tt>Object</tt> with a deterministic <tt>hashCode()</tt> method. Instantiate
  *       this instead of <tt>Object</tt> to remove a source of nondeterminism from your programs.
+ *   <dt>{@link org.plumelib.util.ClassDeterministic ClassDeterministic}
+ *   <dd>Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted
+ *       order.
+ * </dl>
+ *
+ * <h3 id="interfaces">Utility interfaces</h3>
+ *
+ * <dl>
+ *   <dt>{@link org.plumelib.util.Filter Filter}
+ *   <dd>Interface for things that make boolean decisions. This is inspired by {@code
+ *       java.io.FilenameFilter}.
+ *   <dt>{@link org.plumelib.util.Partitioner Partitioner}
+ *   <dd>A Partitioner accepts Objects and assigns them to an equivalence class.
+ * </dl>
+ *
+ * <h3 id="miscellaneous">Miscellaneous</h3>
+ *
+ * <dl>
  *   <dt>{@link org.plumelib.util.GraphPlume GraphPlume}
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
@@ -91,6 +114,12 @@
  *       and the client discards the argument and uses the result instead.
  *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
  *   <dd>Utility functions that do not belong elsewhere in the plume package.
+ *   <dt>{@link org.plumelib.util.Pair Pair}
+ *   <dd>Mutable pair class: type-safely holds two objects of possibly-different types.
+ *   <dt>{@link org.plumelib.util.WeakIdentityPair WeakIdentityPair}
+ *   <dd>Immutable pair class: type-safely holds two objects of possibly-different types. Differs
+ *       from {@code Pair} in the following ways: is immutable, cannot hold null, holds its elements
+ *       with weak pointers, and its equals() method uses object equality to compare its elements.
  * </dl>
  */
 package org.plumelib.util;

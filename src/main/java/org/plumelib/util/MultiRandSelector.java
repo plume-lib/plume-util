@@ -37,7 +37,7 @@ public class MultiRandSelector<T> {
   /** The Random instance to use. Is not a seed. Gets side-effected. */
   private Random r;
 
-  /** partioner that determines how to partition the objects. */
+  /** Partioner that determines how to partition the objects. */
   private Partitioner<T, T> eq;
 
   /** Maps from partition representatives to the RandomSelector to use on that partition. */

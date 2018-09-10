@@ -9,8 +9,9 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 /**
  * Immutable pair class: type-safely holds two objects of possibly-different types.
  *
- * <p>Differs from Pair in the following ways: is immutable, cannot hold null, holds its elements
- * with weak pointers, and its equals() method uses object equality to compare its elements.
+ * <p>Differs from {@code Pair} in the following ways: is immutable, cannot hold null, holds its
+ * elements with weak pointers, and its equals() method uses object equality to compare its
+ * elements.
  */
 public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
 
