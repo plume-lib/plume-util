@@ -7,8 +7,8 @@ import org.checkerframework.checker.lock.qual.GuardedByUnknown;
 import org.checkerframework.dataflow.qual.Pure;
 
 /**
- * Just like {@code FileWriter}, but adds a {@code getFileName()} method and overrides {@code
- * toString()} to give the file name.
+ * Just like {@code FileWriter}, but adds a {@link #getFileName()} method and overrides {@code
+ * #toString()} to give the file name.
  */
 public final class FileWriterWithName extends FileWriter {
 

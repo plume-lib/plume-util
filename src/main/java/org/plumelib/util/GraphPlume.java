@@ -89,9 +89,9 @@ public final class GraphPlume {
     // preds and dom have the same keyset.
     // All of the following are keys for both preds and dom:
     //  * every key in pred
-    //  * elery element of every pred value
+    //  * every element of every pred value
     //  * every key in dom
-    //  * elery element of every dom value
+    //  * every element of every dom value
     // So, the type of pred is now
     //
     // rather than its original type

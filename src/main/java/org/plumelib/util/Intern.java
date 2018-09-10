@@ -894,7 +894,7 @@ public final class Intern {
   }
 
   /**
-   * Convenince method to intern an Object when we don't know its runtime type. Its runtime type
+   * Convenience method to intern an Object when we don't know its run-time type. Its run-time type
    * must be one of the types for which we have an intern() method, else an exception is thrown. If
    * the argument is an array, its elements should themselves be interned.
    *

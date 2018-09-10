@@ -12,7 +12,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * Like StringBuilder, but adds a delimiter between each pair of strings that are inserted into the
- * Stringbuilder. This can simplify the logic of programs and also avoid errors.
+ * StringBuilder. This can simplify the logic of programs and also avoid errors.
  *
  * <p>Does not extend StringBuilder because that would probably break, due to the possibility of
  * calling the wrong version of append. Also, I don't (yet) want to override all the methods; this
@@ -78,7 +78,7 @@ public class StringBuilderDelimited implements Appendable, CharSequence {
   }
 
   /**
-   * Appends the specified object's printed representatioin to this.
+   * Appends the specified object's printed representation to this.
    *
    * @param o the object whose toString() to append to this StringBuilderDelimited
    * @return a reference to this StringBuilderDelimited

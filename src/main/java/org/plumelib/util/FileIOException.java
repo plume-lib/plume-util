@@ -21,9 +21,9 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 public class FileIOException extends IOException {
   static final long serialVersionUID = 20050923L;
 
-  /** The file being read when the IOException ocurred. */
+  /** The file being read when the IOException occurred. */
   public final @Nullable String fileName;
-  /** The line being read when the IOException ocurred. */
+  /** The line being read when the IOException occurred. */
   public final int lineNumber;
 
   ///

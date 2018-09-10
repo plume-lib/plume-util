@@ -88,7 +88,7 @@ public final class CollectionsPlume {
    * </ul>
    *
    * @param o1 first value to compare
-   * @param o2 second value to comare
+   * @param o2 second value to compare
    * @return true iff o1 and o2 are deeply equal
    */
   @SuppressWarnings({"purity", "lock"}) // side effect to static field deepEqualsUnderway
@@ -562,7 +562,7 @@ public final class CollectionsPlume {
 
   /**
    * Returns an iterator just like its argument, except that the first and last elements are
-   * removed. They can be accessed via the getFirst and getLast methods.
+   * removed. They can be accessed via the {@link #getFirst} and {@link #getLast} methods.
    */
   @SuppressWarnings("assignment.type.incompatible") // problems in DFF branch
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {

@@ -38,7 +38,7 @@ import org.plumelib.reflection.ReflectionPlume;
  */
 @SuppressWarnings("interning") // to do later
 public final class ArraysPlume {
-  /** This class is a collecton of methods; it does not represent anything. */
+  /** This class is a collection of methods; it does not represent anything. */
   private ArraysPlume() {
     throw new Error("do not instantiate");
   }
@@ -2304,10 +2304,10 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted in desending order.
+   * Returns whether the array is sorted in descending order.
    *
    * @param a an array
-   * @return true iff the array is sorted in desending order
+   * @return true iff the array is sorted in descending order
    */
   @Pure
   public static boolean isSortedDescending(int[] a) {
@@ -2320,10 +2320,10 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted in desending order.
+   * Returns whether the array is sorted in descending order.
    *
    * @param a an array
-   * @return true iff the array is sorted in desending order
+   * @return true iff the array is sorted in descending order
    */
   @Pure
   public static boolean isSortedDescending(long[] a) {
@@ -2635,7 +2635,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array [0..lenth).
+   * Return an array [0..length).
    *
    * @param length the length of the result
    * @return fresh array that is the identity function of the given length
@@ -2995,7 +2995,7 @@ public final class ArraysPlume {
    * lengths differ, then the shorter array is considered less.
    *
    * <p>Note: this comparator imposes orderings that are inconsistent with {@link Object#equals}.
-   * That is, it may return 0 if the arrays contain identical elemetns but are not equal according
+   * That is, it may return 0 if the arrays contain identical elements but are not equal according
    * to {@code equals()} (which tests reference equality).
    */
   public static final class ComparableArrayComparatorLexical<T extends Comparable<T>>

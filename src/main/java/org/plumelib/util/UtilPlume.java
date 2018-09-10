@@ -1614,7 +1614,7 @@ public final class UtilPlume {
    * Like escapeNonJava(), but quote more characters so that the result is sure to be printable
    * ASCII.
    *
-   * <p>This implementatino is not particularly optimized.
+   * <p>This implementation is not particularly optimized.
    *
    * @param c character to quote
    * @return quoted version of c
@@ -1653,7 +1653,7 @@ public final class UtilPlume {
    * respective characters). This is the inverse operation of escapeNonJava(). Previously known as
    * unquote().
    *
-   * @param orig string to quoto
+   * @param orig string to quote
    * @return quoted version of orig
    */
   public static String unescapeNonJava(String orig) {
@@ -1680,7 +1680,7 @@ public final class UtilPlume {
           break;
         case '\\':
           // This is not in the default case because the search would find
-          // the quoted backslash.  Here we incluce the first backslash in
+          // the quoted backslash.  Here we include the first backslash in
           // the output, but not the first.
           sb.append(orig.substring(postEsc, thisEsc + 1));
           postEsc = thisEsc + 2;
@@ -1910,7 +1910,7 @@ public final class UtilPlume {
     }
   }
 
-  // This could test the types of the elemets, and do something more sophisticated based on the
+  // This could test the types of the elements, and do something more sophisticated based on the
   // types.
   /**
    * Attempt to order Objects. Puts null at the beginning. Returns 0 for equal elements. Otherwise,

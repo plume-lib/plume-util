@@ -211,8 +211,8 @@ public class FuzzyFloat {
   }
 
   /**
-   * Searches for the first subsequence of a that matches sub elementwise. Elements of sub are
-   * considered to match elements of a if they pass the {@link #eq} test.
+   * Searches for the first subsequence of {@code a} that matches {@code sub} elementwise. Elements
+   * of {@code sub} are considered to match elements of {@code a} if they pass the {@link #eq} test.
    *
    * @param a the sequence to search in
    * @param sub the sequence to search for

@@ -26,7 +26,7 @@
  *   <dt>{@link org.plumelib.util.OrderedPairIterator OrderedPairIterator}
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
- *       their respective sort orders. (This opertation is sometimes called "zipping".)
+ *       their respective sort orders. (This operation is sometimes called "zipping".)
  * </dl>
  *
  * <h3 id="Text_processing">Text processing</h3>
@@ -43,8 +43,8 @@
  *   <dd>Extends IOException by also reporting a file name and line number at which the exception
  *       occurred.
  *   <dt>{@link org.plumelib.util.StringBuilderDelimited StringBuilderDelimited}
- *   <dd>Like StringBuilder, but adds a delimiter between each pair of strings that are insered into
- *       the Stringbuilder. This can simplify the logic of programs and also avoid errors.
+ *   <dd>Like StringBuilder, but adds a delimiter between each pair of strings that are inserted
+ *       into the StringBuilder. This can simplify the logic of programs and also avoid errors.
  *   <dt>{@link org.plumelib.util.FileWriterWithName FileWriterWithName}
  *   <dd>Just like {@code FileWriter}, but adds a {@code getFileName()} method and overrides {@code
  *       toString()} to give the file name.
@@ -86,8 +86,8 @@
  *
  * <dl>
  *   <dt>{@link org.plumelib.util.DeterministicObject DeterministicObject}
- *   <dd>A version of <tt>Object</tt> with a deterministic <tt>hashCode()</tt> method. Instantiate
- *       this instead of <tt>Object</tt> to remove a source of nondeterminism from your programs.
+ *   <dd>A version of {@code Object} with a deterministic {@code hashCode()} method. Instantiate
+ *       this instead of {@code Object} to remove a source of nondeterminism from your programs.
  *   <dt>{@link org.plumelib.util.ClassDeterministic ClassDeterministic}
  *   <dd>Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted
  *       order.
@@ -110,7 +110,7 @@
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
  *   <dd>Utilities for interning objects. Interning is also known as canonicalization or
- *       hash-consing: it returns a single representative object that <tt>.equals()</tt> the object,
+ *       hash-consing: it returns a single representative object that {@code .equals()} the object,
  *       and the client discards the argument and uses the result instead.
  *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
  *   <dd>Utility functions that do not belong elsewhere in the plume package.

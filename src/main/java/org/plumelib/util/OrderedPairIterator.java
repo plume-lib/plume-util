@@ -54,7 +54,7 @@ public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable
   @Nullable Comparator<? super T> comparator;
 
   /**
-   * Create an iterator that returns pairs, where each pair contains has an alement from each
+   * Create an iterator that returns pairs, where each pair contains has an element from each
    * iterator and the two elements are equal.
    *
    * @param itor1 iterator for first elements of pairs
@@ -70,7 +70,7 @@ public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable
   }
 
   /**
-   * Create an iterator that returns pairs, where each pair contains has an alement from each
+   * Create an iterator that returns pairs, where each pair contains has an element from each
    * iterator and the two elements are equal according to the comparator.
    *
    * @param itor1 iterator for first elements of pairs

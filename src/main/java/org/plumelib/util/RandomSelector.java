@@ -60,7 +60,7 @@ public class RandomSelector<T> {
   // 5. AF(selector_mode) = fixed amount if coinTossMode == true
   //                        fixed percentage if coinTossMode == false
 
-  /** If true, numElts and observerd are -1. If false, keepProbability = -1. */
+  /** If true, numElts and observers are -1. If false, keepProbability = -1. */
   private boolean coinTossMode;
   /** The percentage of elements to keep. */
   private double keepProbability = -1.0;

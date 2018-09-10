@@ -1,4 +1,3 @@
-// MultiRandSelector.java
 package org.plumelib.util;
 
 import java.util.ArrayList;
