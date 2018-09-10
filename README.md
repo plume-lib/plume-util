@@ -11,7 +11,7 @@ In a gradle buildfile, write
 
 ```
 dependencies {
-  implementation 'org.plumelib:plume-util:1.0.4'
+  implementation 'org.plumelib:plume-util:1.0.5'
 }
 ```
 
