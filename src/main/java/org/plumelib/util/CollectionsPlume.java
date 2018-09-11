@@ -502,7 +502,6 @@ public final class CollectionsPlume {
   }
 
   /** An iterator that only returns elements that match the given Filter. */
-  @SuppressWarnings("assignment.type.incompatible") // problems in DFF branch
   public static final class FilteredIterator<T> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
@@ -564,7 +563,6 @@ public final class CollectionsPlume {
    * Returns an iterator just like its argument, except that the first and last elements are
    * removed. They can be accessed via the {@link #getFirst} and {@link #getLast} methods.
    */
-  @SuppressWarnings("assignment.type.incompatible") // problems in DFF branch
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
     Iterator<T> itor;
