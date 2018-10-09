@@ -1284,7 +1284,7 @@ public final class MathPlume {
     int min = nums[0];
     int max = nums[nums.length - 1];
     int sizeEstimate = max - min + 1 - nums.length;
-    List<Integer> resultList = new ArrayList<Integer>(sizeEstimate < 1 ? 1 : sizeEstimate);
+    List<Integer> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
     int val = min;
     for (int i = 0; i < nums.length; i++) {
       while (val < nums[i]) {
@@ -1603,7 +1603,7 @@ public final class MathPlume {
     long min = nums[0];
     long max = nums[nums.length - 1];
     int sizeEstimate = ((int) (max - min + 1 - nums.length));
-    List<Long> resultList = new ArrayList<Long>(sizeEstimate < 1 ? 1 : sizeEstimate);
+    List<Long> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
     long val = min;
     for (int i = 0; i < nums.length; i++) {
       while (val < nums[i]) {

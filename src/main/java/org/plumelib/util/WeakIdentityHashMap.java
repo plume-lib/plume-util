@@ -145,7 +145,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   private final float loadFactor;
 
   /** Reference queue for cleared WeakEntries */
-  private final ReferenceQueue<K> queue = new ReferenceQueue<K>();
+  private final ReferenceQueue<K> queue = new ReferenceQueue<>();
 
   /**
    * The number of times this HashMap has been structurally modified Structural modifications are

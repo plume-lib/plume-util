@@ -339,49 +339,26 @@ public final class Intern {
       internedStringSubsequence;
 
   static {
-    internedIntegers =
-        new WeakHasherMap<@Interned Integer, WeakReference<@Interned Integer>>(new IntegerHasher());
-    internedLongs =
-        new WeakHasherMap<@Interned Long, WeakReference<@Interned Long>>(new LongHasher());
-    internedIntArrays =
-        new WeakHasherMap<int @Interned [], WeakReference<int @Interned []>>(new IntArrayHasher());
-    internedLongArrays =
-        new WeakHasherMap<long @Interned [], WeakReference<long @Interned []>>(
-            new LongArrayHasher());
-    internedDoubles =
-        new WeakHasherMap<@Interned Double, WeakReference<@Interned Double>>(new DoubleHasher());
+    internedIntegers = new WeakHasherMap<>(new IntegerHasher());
+    internedLongs = new WeakHasherMap<>(new LongHasher());
+    internedIntArrays = new WeakHasherMap<>(new IntArrayHasher());
+    internedLongArrays = new WeakHasherMap<>(new LongArrayHasher());
+    internedDoubles = new WeakHasherMap<>(new DoubleHasher());
     internedDoubleNaN = Double.NaN;
     internedDoubleZero = 0.0;
-    internedDoubleArrays =
-        new WeakHasherMap<double @Interned [], WeakReference<double @Interned []>>(
-            new DoubleArrayHasher());
-    internedStringArrays =
-        new WeakHasherMap<
-            @Nullable @Interned String @Interned [],
-            WeakReference<@Nullable @Interned String @Interned []>>(new StringArrayHasher());
+    internedDoubleArrays = new WeakHasherMap<>(new DoubleArrayHasher());
+    internedStringArrays = new WeakHasherMap<>(new StringArrayHasher());
     internedObjectArrays =
         new WeakHasherMap<
             @Nullable @Interned Object @Interned [],
             WeakReference<@Nullable @Interned Object @Interned []>>(new ObjectArrayHasher());
-    internedIntSubsequence =
-        new WeakHasherMap<Subsequence<int @Interned []>, WeakReference<int @Interned []>>(
-            new SubsequenceHasher<int @Interned []>());
-    internedLongSubsequence =
-        new WeakHasherMap<Subsequence<long @Interned []>, WeakReference<long @Interned []>>(
-            new SubsequenceHasher<long @Interned []>());
-    internedDoubleSubsequence =
-        new WeakHasherMap<Subsequence<double @Interned []>, WeakReference<double @Interned []>>(
-            new SubsequenceHasher<double @Interned []>());
+    internedIntSubsequence = new WeakHasherMap<>(new SubsequenceHasher<int @Interned []>());
+    internedLongSubsequence = new WeakHasherMap<>(new SubsequenceHasher<long @Interned []>());
+    internedDoubleSubsequence = new WeakHasherMap<>(new SubsequenceHasher<double @Interned []>());
     internedObjectSubsequence =
-        new WeakHasherMap<
-            Subsequence<@Nullable @Interned Object @Interned []>,
-            WeakReference<@Nullable @Interned Object @Interned []>>(
-            new SubsequenceHasher<@Nullable @Interned Object @Interned []>());
+        new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned Object @Interned []>());
     internedStringSubsequence =
-        new WeakHasherMap<
-            Subsequence<@Nullable @Interned String @Interned []>,
-            WeakReference<@Nullable @Interned String @Interned []>>(
-            new SubsequenceHasher<@Nullable @Interned String @Interned []>());
+        new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned String @Interned []>());
   }
 
   /// For testing only
@@ -590,7 +567,7 @@ public final class Intern {
     } else {
       @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned Integer result = (@Interned Integer) a;
-      internedIntegers.put(result, new WeakReference<@Interned Integer>(result));
+      internedIntegers.put(result, new WeakReference<>(result));
       return result;
     }
   }
@@ -636,7 +613,7 @@ public final class Intern {
     } else {
       @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned Long result = (@Interned Long) a;
-      internedLongs.put(result, new WeakReference<@Interned Long>(result));
+      internedLongs.put(result, new WeakReference<>(result));
       return result;
     }
   }
@@ -694,7 +671,7 @@ public final class Intern {
     } else {
       @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned int[] result = (int @Interned @PolyValue []) a;
-      internedIntArrays.put(result, new WeakReference<int @Interned []>(result));
+      internedIntArrays.put(result, new WeakReference<>(result));
       return result;
     }
   }
@@ -723,7 +700,7 @@ public final class Intern {
     } else {
       @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned long[] result = (long @Interned @PolyValue []) a;
-      internedLongArrays.put(result, new WeakReference<long @Interned []>(result));
+      internedLongArrays.put(result, new WeakReference<>(result));
       return result;
     }
   }
@@ -755,7 +732,7 @@ public final class Intern {
     } else {
       @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned Double result = (@Interned Double) a;
-      internedDoubles.put(result, new WeakReference<@Interned Double>(result));
+      internedDoubles.put(result, new WeakReference<>(result));
       return result;
     }
   }
@@ -809,7 +786,7 @@ public final class Intern {
     } else {
       @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned double[] result = (double @Interned @PolyValue []) a;
-      internedDoubleArrays.put(result, new WeakReference<double @Interned []>(result));
+      internedDoubleArrays.put(result, new WeakReference<>(result));
       return result;
     }
   }
@@ -844,8 +821,7 @@ public final class Intern {
     @Nullable @Interned String @Interned [] result = (lookup != null) ? lookup.get() : null;
     if (result == null) {
       result = (@Nullable @Interned String @Interned []) a;
-      internedStringArrays.put(
-          result, new WeakReference<@Nullable @Interned String @Interned []>(result));
+      internedStringArrays.put(result, new WeakReference<>(result));
     }
     @SuppressWarnings({
       "nullness", // for this map, get() can be annotated as @PolyAll (except not interning); also
@@ -879,8 +855,7 @@ public final class Intern {
     @Nullable @Interned Object @Interned [] result = (lookup != null) ? lookup.get() : null;
     if (result == null) {
       result = (@Nullable @Interned Object @Interned []) a;
-      internedObjectArrays.put(
-          result, new WeakReference<@Nullable @Interned Object @Interned []>(result));
+      internedObjectArrays.put(result, new WeakReference<>(result));
     }
     @SuppressWarnings({
       "nullness", // for this map, get() can be annotated as @PolyAll (except not interning); also
@@ -955,7 +930,7 @@ public final class Intern {
     if (assertsEnabled && !Intern.isInterned(seq)) {
       throw new IllegalArgumentException();
     }
-    Subsequence<int @Interned []> sai = new Subsequence<int @Interned []>(seq, start, end);
+    Subsequence<int @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<int @Interned []> lookup = internedIntSubsequence.get(sai);
     int[] result1 = (lookup != null) ? lookup.get() : null;
     if (result1 != null) {
@@ -963,7 +938,7 @@ public final class Intern {
     } else {
       int[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
       int @Interned [] subseq = Intern.intern(subseqUninterned);
-      internedIntSubsequence.put(sai, new WeakReference<int @Interned []>(subseq));
+      internedIntSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -984,7 +959,7 @@ public final class Intern {
     if (assertsEnabled && !Intern.isInterned(seq)) {
       throw new IllegalArgumentException();
     }
-    Subsequence<long @Interned []> sai = new Subsequence<long @Interned []>(seq, start, end);
+    Subsequence<long @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<long @Interned []> lookup = internedLongSubsequence.get(sai);
     long[] result1 = (lookup != null) ? lookup.get() : null;
     if (result1 != null) {
@@ -992,7 +967,7 @@ public final class Intern {
     } else {
       long[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
       long @Interned [] subseq = Intern.intern(subseq_uninterned);
-      internedLongSubsequence.put(sai, new WeakReference<long @Interned []>(subseq));
+      internedLongSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -1013,7 +988,7 @@ public final class Intern {
     if (assertsEnabled && !Intern.isInterned(seq)) {
       throw new IllegalArgumentException();
     }
-    Subsequence<double @Interned []> sai = new Subsequence<double @Interned []>(seq, start, end);
+    Subsequence<double @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<double @Interned []> lookup = internedDoubleSubsequence.get(sai);
     double[] result1 = (lookup != null) ? lookup.get() : null;
     if (result1 != null) {
@@ -1021,7 +996,7 @@ public final class Intern {
     } else {
       double[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
       double @Interned [] subseq = Intern.intern(subseq_uninterned);
-      internedDoubleSubsequence.put(sai, new WeakReference<double @Interned []>(subseq));
+      internedDoubleSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -1056,8 +1031,7 @@ public final class Intern {
       @SuppressWarnings("nullness") // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
-          internedObjectSubsequence.put(
-                  sai, new WeakReference<@PolyNull @Interned Object @Interned []>(subseq));
+          internedObjectSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -1092,8 +1066,7 @@ public final class Intern {
       @SuppressWarnings("nullness") // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
-          internedStringSubsequence.put(
-                  sai, new WeakReference<@PolyNull @Interned String @Interned []>(subseq));
+          internedStringSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }

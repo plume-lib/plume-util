@@ -228,7 +228,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    */
   public static <T> LimitedSizeSet<T> merge(
       @Positive int maxValues, List<LimitedSizeSet<? extends T>> slist) {
-    LimitedSizeSet<T> result = new LimitedSizeSet<T>(maxValues);
+    LimitedSizeSet<T> result = new LimitedSizeSet<>(maxValues);
     for (LimitedSizeSet<? extends T> s : slist) {
       result.addAll(s);
     }

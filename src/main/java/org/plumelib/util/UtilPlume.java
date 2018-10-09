@@ -1392,7 +1392,7 @@ public final class UtilPlume {
    * @return array of length at least 1, containing s split on delimiter
    */
   public static String[] split(String s, char delim) {
-    ArrayList<String> resultList = new ArrayList<String>();
+    ArrayList<String> resultList = new ArrayList<>();
     for (int delimpos = s.indexOf(delim); delimpos != -1; delimpos = s.indexOf(delim)) {
       resultList.add(s.substring(0, delimpos));
       s = s.substring(delimpos + 1);
@@ -1421,7 +1421,7 @@ public final class UtilPlume {
     if (delimlen == 0) {
       throw new Error("Second argument to split was empty.");
     }
-    ArrayList<String> resultList = new ArrayList<String>();
+    ArrayList<String> resultList = new ArrayList<>();
     for (int delimpos = s.indexOf(delim); delimpos != -1; delimpos = s.indexOf(delim)) {
       resultList.add(s.substring(0, delimpos));
       s = s.substring(delimpos + delimlen);

@@ -35,8 +35,8 @@ public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
       throw new IllegalArgumentException(
           String.format("WeakIdentityPair cannot hold null: %s %s", a, b));
     }
-    this.a = new WeakReference<T1>(a);
-    this.b = new WeakReference<T2>(b);
+    this.a = new WeakReference<>(a);
+    this.b = new WeakReference<>(b);
     int localHashCode = 0;
     try {
       localHashCode = a.hashCode() + b.hashCode();

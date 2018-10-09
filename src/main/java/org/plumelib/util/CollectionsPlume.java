@@ -52,7 +52,7 @@ public final class CollectionsPlume {
    * @param c a sorted version of the list
    */
   public static <T> List<T> sortList(List<T> l, Comparator<? super T> c) {
-    List<T> result = new ArrayList<T>(l);
+    List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);
     return result;
   }
@@ -67,8 +67,8 @@ public final class CollectionsPlume {
    * @return a copy of the list with duplicates removed
    */
   public static <T> List<T> removeDuplicates(List<T> l) {
-    HashSet<T> hs = new LinkedHashSet<T>(l);
-    List<T> result = new ArrayList<T>(hs);
+    HashSet<T> hs = new LinkedHashSet<>(l);
+    List<T> result = new ArrayList<>(hs);
     return result;
   }
 
@@ -129,7 +129,7 @@ public final class CollectionsPlume {
     }
 
     @SuppressWarnings({"purity", "lock"}) // creates local state
-    WeakIdentityPair<Object, Object> mypair = new WeakIdentityPair<Object, Object>(o1, o2);
+    WeakIdentityPair<Object, Object> mypair = new WeakIdentityPair<>(o1, o2);
     if (deepEqualsUnderway.contains(mypair)) {
       return true;
     }
@@ -175,7 +175,7 @@ public final class CollectionsPlume {
    * @return a vector containing the elements of the enumeration
    */
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
-    ArrayList<T> result = new ArrayList<T>();
+    ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
       result.add(e.nextElement());
     }
@@ -252,13 +252,13 @@ public final class CollectionsPlume {
 
     for (int i = start; i < objs.size(); i++) {
       if (dims == 1) {
-        List<T> simple = new ArrayList<T>();
+        List<T> simple = new ArrayList<>();
         simple.add(objs.get(i));
         results.add(simple);
       } else {
         List<List<T>> combos = createCombinations(dims - 1, i, objs);
         for (List<T> lt : combos) {
-          List<T> simple = new ArrayList<T>();
+          List<T> simple = new ArrayList<>();
           simple.add(objs.get(i));
           simple.addAll(lt);
           results.add(simple);
@@ -300,7 +300,7 @@ public final class CollectionsPlume {
       throw new Error("Do you really want to create more than 100 million lists?");
     }
 
-    ArrayList<ArrayList<Integer>> results = new ArrayList<ArrayList<Integer>>();
+    ArrayList<ArrayList<Integer>> results = new ArrayList<>();
 
     // Return a list with one zero length element if arity is zero
     if (arity == 0) {
@@ -311,7 +311,7 @@ public final class CollectionsPlume {
     for (int i = start; i <= cnt; i++) {
       ArrayList<ArrayList<Integer>> combos = createCombinations(arity - 1, i, cnt);
       for (ArrayList<Integer> li : combos) {
-        ArrayList<Integer> simple = new ArrayList<Integer>();
+        ArrayList<Integer> simple = new ArrayList<>();
         simple.add(i);
         simple.addAll(li);
         results.add(simple);
@@ -678,7 +678,7 @@ public final class CollectionsPlume {
     // where n == numElts:
     //   n n/2 n/3 n/4 n/5 ...
 
-    RandomSelector<T> rs = new RandomSelector<T>(numElts, random);
+    RandomSelector<T> rs = new RandomSelector<>(numElts, random);
 
     while (itor.hasNext()) {
       rs.accept(itor.next());
@@ -686,7 +686,7 @@ public final class CollectionsPlume {
     return rs.getValues();
 
     /*
-    ArrayList<T> result = new ArrayList<T>(numElts);
+    ArrayList<T> result = new ArrayList<>(numElts);
     int i=1;
     for (int n=0; n<numElts && itor.hasNext(); n++, i++) {
       result.add(itor.next());
@@ -794,7 +794,7 @@ public final class CollectionsPlume {
    */
   public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m) {
-    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<@KeyFor("#1") K>(m.keySet());
+    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys);
     return theKeys;
   }
@@ -810,7 +810,7 @@ public final class CollectionsPlume {
    */
   public static <K, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m, Comparator<K> comparator) {
-    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<@KeyFor("#1") K>(m.keySet());
+    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys, comparator);
     return theKeys;
   }

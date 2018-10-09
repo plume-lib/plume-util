@@ -2346,7 +2346,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(boolean[] a) {
-    HashSet<Boolean> hs = new HashSet<Boolean>();
+    HashSet<Boolean> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to add the last element,
       // but that would make the code much less readable.
@@ -2370,7 +2370,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(byte[] a) {
-    HashSet<Byte> hs = new HashSet<Byte>();
+    HashSet<Byte> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to add the last element,
       // but that would make the code much less readable.
@@ -2394,7 +2394,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(char[] a) {
-    HashSet<Character> hs = new HashSet<Character>();
+    HashSet<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to add the last element,
       // but that would make the code much less readable.
@@ -2418,7 +2418,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(float[] a) {
-    HashSet<Float> hs = new HashSet<Float>();
+    HashSet<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to add the last element,
       // but that would make the code much less readable.
@@ -2442,7 +2442,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(short[] a) {
-    HashSet<Short> hs = new HashSet<Short>();
+    HashSet<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to add the last element,
       // but that would make the code much less readable.
@@ -2466,7 +2466,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(int[] a) {
-    HashSet<Integer> hs = new HashSet<Integer>();
+    HashSet<Integer> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to add the last element,
       // but that would make the code much less readable.
@@ -2491,7 +2491,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(double[] a) {
-    HashSet<Double> hs = new HashSet<Double>();
+    HashSet<Double> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to create the last element,
       // but that would make the code much less readable.
@@ -2515,7 +2515,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(long[] a) {
-    HashSet<Long> hs = new HashSet<Long>();
+    HashSet<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       // Could be optimized not to create the last element,
       // but that would make the code much less readable.
@@ -2539,7 +2539,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(String[] a) {
-    HashSet<String> hs = new HashSet<String>();
+    HashSet<String> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (hs.contains(a[i])) {
         return false;
@@ -2562,7 +2562,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(Object[] a) {
-    HashSet<Object> hs = new HashSet<Object>();
+    HashSet<Object> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (hs.contains(a[i])) {
         return false;
@@ -2586,7 +2586,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
-    HashSet<T> hs = new HashSet<T>();
+    HashSet<T> hs = new HashSet<>();
     for (int i = 0; i < a.size(); i++) {
       if (hs.contains(a.get(i))) {
         return false;
@@ -2748,7 +2748,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(long[] smaller, long[] bigger) {
-    Set<Long> setBigger = new HashSet<Long>();
+    Set<Long> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -2780,7 +2780,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(double[] smaller, double[] bigger) {
-    Set<Double> setBigger = new HashSet<Double>();
+    Set<Double> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -2812,7 +2812,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(String[] smaller, String[] bigger) {
-    Set<String> setBigger = new HashSet<String>();
+    Set<String> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -3468,7 +3468,7 @@ public final class ArraysPlume {
      * @return all the elements in any part of the Partitioning
      */
     List<T> partitionedSet() {
-      List<T> result = new ArrayList<T>();
+      List<T> result = new ArrayList<>();
       for (List<T> part : this) {
         result.addAll(part);
       }
@@ -3495,12 +3495,12 @@ public final class ArraysPlume {
      * @return a new partitioning just like this one, but with elt added to the ith part
      */
     Partitioning<T> addToPart(@NonNegative int i, T elt) {
-      Partitioning<T> result = new Partitioning<T>(this);
+      Partitioning<T> result = new Partitioning<>(this);
       if (size() == i) {
         ArrayList<T> newPart = newArrayList(elt);
         result.add(newPart);
       } else {
-        ArrayList<T> newPart = new ArrayList<T>(result.get(i));
+        ArrayList<T> newPart = new ArrayList<>(result.get(i));
         newPart.add(elt);
         result.set(i, newPart);
       }
@@ -3516,7 +3516,7 @@ public final class ArraysPlume {
    * @return a singleton ArrayList containing {@code elt}
    */
   private static <T> ArrayList<T> newArrayList(T elt) {
-    ArrayList<T> result = new ArrayList<T>(1);
+    ArrayList<T> result = new ArrayList<>(1);
     result.add(elt);
     return result;
   }
@@ -3529,7 +3529,7 @@ public final class ArraysPlume {
    * @return a singleton ArrayDeque containing {@code elt}
    */
   private static <T extends @NonNull Object> ArrayDeque<T> newArrayDeque(T elt) {
-    ArrayDeque<T> result = new ArrayDeque<T>();
+    ArrayDeque<T> result = new ArrayDeque<>();
     result.add(elt);
     return result;
   }

@@ -222,7 +222,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    *     factor is nonpositive
    */
   public WeakHasherMap(int initialCapacity, float loadFactor) {
-    hash = new HashMap<WeakKey, V>(initialCapacity, loadFactor);
+    hash = new HashMap<>(initialCapacity, loadFactor);
   }
 
   /**
@@ -233,7 +233,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    * @throws IllegalArgumentException If the initial capacity is less than zero
    */
   public WeakHasherMap(int initialCapacity) {
-    hash = new HashMap<WeakKey, V>(initialCapacity);
+    hash = new HashMap<>(initialCapacity);
   }
 
   /**
@@ -241,7 +241,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    * factor, which is <code>0.75</code>.
    */
   public WeakHasherMap() {
-    hash = new HashMap<WeakKey, V>();
+    hash = new HashMap<>();
   }
 
   /**
@@ -252,7 +252,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
    * @param h the Hasher to use when hashing values for this map
    */
   public WeakHasherMap(Hasher h) {
-    hash = new HashMap<WeakKey, V>();
+    hash = new HashMap<>();
     hasher = h;
   }
 

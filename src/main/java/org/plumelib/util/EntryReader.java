@@ -101,7 +101,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   ///
 
   /** Stack of readers. Used to support include files. */
-  private final ArrayDeque<FlnReader> readers = new ArrayDeque<FlnReader>();
+  private final ArrayDeque<FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
   @Nullable String pushbackLine = null;

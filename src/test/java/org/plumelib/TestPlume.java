@@ -98,7 +98,7 @@ public final class TestPlume {
   ///
 
   public static Iterator<Integer> intArrayIterator(int[] nums) {
-    List<Integer> asList = new ArrayList<Integer>(nums.length);
+    List<Integer> asList = new ArrayList<>(nums.length);
     for (int i = 0; i < nums.length; i++) {
       asList.add(nums[i]);
     }
@@ -106,7 +106,7 @@ public final class TestPlume {
   }
 
   public static int[] intIteratorArray(Iterator<Integer> itor) {
-    ArrayList<Integer> v = new ArrayList<Integer>();
+    ArrayList<Integer> v = new ArrayList<>();
     while (itor.hasNext()) {
       v.add(itor.next());
     }
@@ -118,7 +118,7 @@ public final class TestPlume {
   }
 
   public static <T> ArrayList<T> toArrayList(Iterator<T> itor) {
-    ArrayList<T> v = new ArrayList<T>();
+    ArrayList<T> v = new ArrayList<>();
     while (itor.hasNext()) {
       v.add(itor.next());
     }
@@ -126,7 +126,7 @@ public final class TestPlume {
   }
 
   public static <T> ArrayList<T> toArrayList(Enumeration<T> e) {
-    ArrayList<T> v = new ArrayList<T>();
+    ArrayList<T> v = new ArrayList<>();
     while (e.hasMoreElements()) {
       v.add(e.nextElement());
     }
@@ -1245,7 +1245,7 @@ public final class TestPlume {
 
   // Create a LimitedSizeSet of the given size, and add elements to it.
   private static void lsis_test(@Positive int maxSize) {
-    LimitedSizeSet<Integer> s = new LimitedSizeSet<Integer>(maxSize);
+    LimitedSizeSet<Integer> s = new LimitedSizeSet<>(maxSize);
     for (int i = 1; i < 2 * maxSize; i++) {
       lsisAddElts(i, s);
       int size = s.size();
@@ -1257,7 +1257,7 @@ public final class TestPlume {
   }
 
   private static void lss_withNull_test() {
-    LimitedSizeSet<@Nullable Integer> s = new LimitedSizeSet<@Nullable Integer>(10);
+    LimitedSizeSet<@Nullable Integer> s = new LimitedSizeSet<>(10);
     s.add(1);
     s.add(2);
     s.add(null);
@@ -1532,15 +1532,15 @@ public final class TestPlume {
   public void testOrderedPairIterator() {
     final int NULL = -2222;
 
-    ArrayList<Integer> ones = new ArrayList<Integer>();
+    ArrayList<Integer> ones = new ArrayList<>();
     for (int i = 1; i <= 30; i++) {
       ones.add(i);
     }
-    ArrayList<Integer> twos = new ArrayList<Integer>();
+    ArrayList<Integer> twos = new ArrayList<>();
     for (int i = 2; i <= 30; i += 2) {
       twos.add(i);
     }
-    ArrayList<Integer> threes = new ArrayList<Integer>();
+    ArrayList<Integer> threes = new ArrayList<>();
     for (int i = 3; i <= 30; i += 3) {
       threes.add(i);
     }
@@ -1803,15 +1803,15 @@ public final class TestPlume {
     {
       // These names are taken from APL notation, where iota creates an
       // array of all the numbers up to its argument.
-      ArrayList<Integer> iota0 = new ArrayList<Integer>();
-      ArrayList<Integer> iota10 = new ArrayList<Integer>();
+      ArrayList<Integer> iota0 = new ArrayList<>();
+      ArrayList<Integer> iota10 = new ArrayList<>();
       for (int i = 0; i < 10; i++) {
         iota10.add(i);
       }
-      ArrayList<Integer> iota10Twice = new ArrayList<Integer>();
+      ArrayList<Integer> iota10Twice = new ArrayList<>();
       iota10Twice.addAll(iota10);
       iota10Twice.addAll(iota10);
-      ArrayList<Integer> iota10Thrice = new ArrayList<Integer>();
+      ArrayList<Integer> iota10Thrice = new ArrayList<>();
       iota10Thrice.addAll(iota10);
       iota10Thrice.addAll(iota10);
       iota10Thrice.addAll(iota10);
@@ -1838,22 +1838,22 @@ public final class TestPlume {
               new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota0.iterator())));
 
       // public static class MergedIterator implements Iterator {
-      ArrayList<Iterator<Integer>> iota10IteratorThrice = new ArrayList<Iterator<Integer>>();
+      ArrayList<Iterator<Integer>> iota10IteratorThrice = new ArrayList<>();
       iota10IteratorThrice.add(iota10.iterator());
       iota10IteratorThrice.add(iota10.iterator());
       iota10IteratorThrice.add(iota10.iterator());
       assert iota10Thrice.equals(
           toArrayList(
               new CollectionsPlume.MergedIterator<Integer>(iota10IteratorThrice.iterator())));
-      ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<Iterator<Integer>>();
+      ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<>();
       iota10IteratorTwice1.add(iota0.iterator());
       iota10IteratorTwice1.add(iota10.iterator());
       iota10IteratorTwice1.add(iota10.iterator());
-      ArrayList<Iterator<Integer>> iota10IteratorTwice2 = new ArrayList<Iterator<Integer>>();
+      ArrayList<Iterator<Integer>> iota10IteratorTwice2 = new ArrayList<>();
       iota10IteratorTwice2.add(iota10.iterator());
       iota10IteratorTwice2.add(iota0.iterator());
       iota10IteratorTwice2.add(iota10.iterator());
-      ArrayList<Iterator<Integer>> iota10IteratorTwice3 = new ArrayList<Iterator<Integer>>();
+      ArrayList<Iterator<Integer>> iota10IteratorTwice3 = new ArrayList<>();
       iota10IteratorTwice3.add(iota10.iterator());
       iota10IteratorTwice3.add(iota10.iterator());
       iota10IteratorTwice3.add(iota0.iterator());
@@ -1878,7 +1878,7 @@ public final class TestPlume {
 
       // public static final class FilteredIterator implements Iterator
 
-      ArrayList<Integer> iota10Odd = new ArrayList<Integer>();
+      ArrayList<Integer> iota10Odd = new ArrayList<>();
       for (int i = 0; i < iota10.size(); i++) {
         if (i % 2 != 0) {
           iota10Odd.add(i);
@@ -1891,11 +1891,11 @@ public final class TestPlume {
 
     // public static final class RemoveFirstAndLastIterator implements Iterator
     {
-      ArrayList<Integer> iota5 = new ArrayList<Integer>();
+      ArrayList<Integer> iota5 = new ArrayList<>();
       for (int i = 0; i < 5; i++) {
         iota5.add(i);
       }
-      ArrayList<Integer> iota5middle = new ArrayList<Integer>();
+      ArrayList<Integer> iota5middle = new ArrayList<>();
       for (int i = 1; i < 4; i++) {
         iota5middle.add(i);
       }
@@ -2045,7 +2045,7 @@ public final class TestPlume {
     assert UtilPlume.join(new String[] {"foo"}, ", ").equals("foo");
     assert UtilPlume.join(new String[] {}, ", ").equals("");
     assert UtilPlume.join(new Integer[] {0, 1, 2, 3, 4}, "").equals("01234");
-    ArrayList<Object> potpourri = new ArrayList<Object>();
+    ArrayList<Object> potpourri = new ArrayList<>();
     potpourri.add("day");
     potpourri.add(2);
     potpourri.add("day");
@@ -2215,29 +2215,29 @@ public final class TestPlume {
     // public static List sortList (List l, Comparator c)
     // public static <T> List<T> removeDuplicates(List<T> l) {
 
-    List<Integer> l123 = new ArrayList<Integer>();
+    List<Integer> l123 = new ArrayList<>();
     l123.add(1);
     l123.add(2);
     l123.add(3);
-    List<Integer> l123123 = new ArrayList<Integer>();
+    List<Integer> l123123 = new ArrayList<>();
     l123123.add(1);
     l123123.add(2);
     l123123.add(3);
     l123123.add(1);
     l123123.add(2);
     l123123.add(3);
-    List<Integer> l12223 = new ArrayList<Integer>();
+    List<Integer> l12223 = new ArrayList<>();
     l12223.add(1);
     l12223.add(2);
     l12223.add(2);
     l12223.add(2);
     l12223.add(3);
-    List<Integer> l1123 = new ArrayList<Integer>();
+    List<Integer> l1123 = new ArrayList<>();
     l1123.add(1);
     l1123.add(1);
     l1123.add(2);
     l1123.add(3);
-    List<Integer> l1233 = new ArrayList<Integer>();
+    List<Integer> l1233 = new ArrayList<>();
     l1233.add(1);
     l1233.add(1);
     l1233.add(2);
@@ -2259,9 +2259,9 @@ public final class TestPlume {
     assert !zatft1.equals(zatff);
     assert !CollectionsPlume.deepEquals(zatft1, zatff);
 
-    List<Object> l1 = new ArrayList<Object>();
-    List<Object> l2 = new ArrayList<Object>();
-    List<Object> l3 = new ArrayList<Object>();
+    List<Object> l1 = new ArrayList<>();
+    List<Object> l2 = new ArrayList<>();
+    List<Object> l3 = new ArrayList<>();
     l1.add(l1);
     l2.add(l2);
     l3.add(l3);
@@ -2327,8 +2327,8 @@ public final class TestPlume {
     String s2 = "two";
     String s3 = "three";
 
-    WeakIdentityHashMap<String, Integer> m = new WeakIdentityHashMap<String, Integer>();
-    // WeakHashMap<String,Integer> m = new WeakHashMap<String,Integer>();
+    WeakIdentityHashMap<String, Integer> m = new WeakIdentityHashMap<>();
+    // WeakHashMap<String,Integer> m = new WeakHashMap<>();
 
     m.put(s1, 1);
     m.put(s2, 2);
@@ -2796,8 +2796,8 @@ public final class TestPlume {
       return;
     }
 
-    preds1 = new LinkedHashMap<Integer, List<Integer>>();
-    succs1 = new LinkedHashMap<Integer, List<Integer>>();
+    preds1 = new LinkedHashMap<>();
+    succs1 = new LinkedHashMap<>();
     for (int i = 0; i <= 7; i++) {
       preds1.put(i, new ArrayList<Integer>());
       succs1.put(i, new ArrayList<Integer>());

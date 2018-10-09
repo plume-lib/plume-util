@@ -57,13 +57,13 @@ public final class GraphPlume {
   public static <T> Map<T, List<T>> dominators(Map<T, List<@KeyFor("#1") T>> predecessors) {
 
     // Map<@KeyFor({"preds","dom"}) T,List<@KeyFor({"preds","dom"}) T>> dom
-    //   = new HashMap<@KeyFor({"preds","dom"}) T,List<@KeyFor({"preds","dom"}) T>>();
-    Map<T, List<T>> dom = new HashMap<T, List<T>>();
+    //   = new HashMap<>();
+    Map<T, List<T>> dom = new HashMap<>();
 
     @SuppressWarnings("keyfor") // every element of pred's value will be a key for dom
     Map<T, List<@KeyFor({"dom"}) T>> preds = predecessors;
 
-    List<T> nodes = new ArrayList<T>(preds.keySet());
+    List<T> nodes = new ArrayList<>(preds.keySet());
 
     // Compute roots & non-roots, for convenience
     List<@KeyFor({"preds", "dom"}) T> roots = new ArrayList<T>();

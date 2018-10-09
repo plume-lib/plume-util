@@ -147,7 +147,7 @@ public class MultiRandSelector<T> {
    * @return an iterator of all objects selected
    */
   public Iterator<T> valuesIter() {
-    ArrayList<T> ret = new ArrayList<T>();
+    ArrayList<T> ret = new ArrayList<>();
     for (RandomSelector<T> rs : map.values()) {
       ret.addAll(rs.getValues());
     }

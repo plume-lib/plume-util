@@ -75,7 +75,7 @@ public final class ReflectionPlume {
   }
 
   /** Used by {@link #classForName}. */
-  private static HashMap<String, Class<?>> primitiveClasses = new HashMap<String, Class<?>>(8);
+  private static HashMap<String, Class<?>> primitiveClasses = new HashMap<>(8);
 
   static {
     primitiveClasses.put("boolean", Boolean.TYPE);
@@ -246,7 +246,7 @@ public final class ReflectionPlume {
    * array of Class objects, one for each arg type. Example keys include: "java.lang.String,
    * java.lang.String, java.lang.Class[]" and "int,int".
    */
-  static HashMap<String, Class<?>[]> args_seen = new HashMap<String, Class<?>[]>();
+  static HashMap<String, Class<?>[]> args_seen = new HashMap<>();
 
   /**
    * Given a method signature, return the method.

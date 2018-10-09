@@ -73,7 +73,7 @@ public class RandomSelector<T> {
   private Random generator;
 
   /** The values chosen. */
-  private ArrayList<T> values = new ArrayList<T>();
+  private ArrayList<T> values = new ArrayList<>();
 
   /**
    * @param numElts the number of elements intended to be selected from the input elements
@@ -152,7 +152,7 @@ public class RandomSelector<T> {
    */
   public List<T> getValues() {
     // avoid concurrent mod errors and rep exposure
-    ArrayList<T> ret = new ArrayList<T>();
+    ArrayList<T> ret = new ArrayList<>();
     ret.addAll(values);
     return ret;
   }

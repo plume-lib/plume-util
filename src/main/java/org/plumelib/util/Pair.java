@@ -40,7 +40,7 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
    * @return a pair of the values (a, b)
    */
   public static <A extends @Nullable Object, B extends @Nullable Object> Pair<A, B> of(A a, B b) {
-    return new Pair<A, B>(a, b);
+    return new Pair<>(a, b);
   }
 
   @Override
