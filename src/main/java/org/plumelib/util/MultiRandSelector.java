@@ -91,7 +91,7 @@ public class MultiRandSelector<T> {
   }
 
   /**
-   * Helper constructor to create a not-fully-initialized MultiRandSelector
+   * Helper constructor to create a not-fully-initialized MultiRandSelector.
    *
    * @param r the Random instance to use for making random choices
    * @param eq partioner that determines how to partition the objects

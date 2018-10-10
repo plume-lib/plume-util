@@ -144,7 +144,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   /** The load factor for the hash table. */
   private final float loadFactor;
 
-  /** Reference queue for cleared WeakEntries */
+  /** Reference queue for cleared WeakEntries. */
   private final ReferenceQueue<K> queue = new ReferenceQueue<>();
 
   /**
@@ -238,7 +238,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     return (key == null ? NULL_KEY : key);
   }
 
-  /** Return internal representation of null key back to caller as null */
+  /** Return internal representation of null key back to caller as null. */
   // Argument is actually either of type K, or is NULL_KEY.
   @SuppressWarnings("unchecked")
   @Pure
@@ -252,7 +252,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     return x == y;
   }
 
-  /** Return the hash code for x */
+  /** Return the hash code for x. */
   @Pure
   static int hasher(Object x) {
     return System.identityHashCode(x);
@@ -292,7 +292,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  /** Return the table after first expunging stale entries */
+  /** Return the table after first expunging stale entries. */
   @Pure
   private @Nullable Entry<K, V>[] getTable() {
     expungeStaleEntries();
@@ -449,7 +449,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  /** Transfer all entries from src to dest tables */
+  /** Transfer all entries from src to dest tables. */
   private void transfer(@Nullable Entry<K, V>[] src, @Nullable Entry<K, V>[] dest) {
     for (int j = 0; j < src.length; ++j) {
       Entry<K, V> e = src[j];
@@ -543,7 +543,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     return null;
   }
 
-  /** Special version of remove needed by Entry set */
+  /** Special version of remove needed by Entry set. */
   @SuppressWarnings("NonAtomicVolatileUpdate")
   @Nullable Entry<K, V> removeMapping(@Nullable Object o) {
     if (!(o instanceof Map.Entry)) return null;
@@ -607,7 +607,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     return false;
   }
 
-  /** Special-case code for containsValue with null argument */
+  /** Special-case code for containsValue with null argument. */
   private boolean containsNullValue() {
     @Nullable Entry<K, V>[] tab = getTable();
     for (int i = tab.length; i-- > 0; )
@@ -686,7 +686,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     @Nullable Entry<K, V> lastReturned = null;
     int expectedModCount = modCount;
 
-    /** Strong reference needed to avoid disappearance of key between hasNext and next */
+    /** Strong reference needed to avoid disappearance of key between hasNext and next. */
     @Nullable Object nextKey = null;
 
     /**
@@ -719,7 +719,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return true;
     }
 
-    /** The common parts of next() across different types of iterators */
+    /** The common parts of next() across different types of iterators. */
     protected Entry<K, V> nextEntry() {
       if (modCount != expectedModCount) throw new ConcurrentModificationException();
       if (nextKey == null && !hasNext()) throw new NoSuchElementException();
@@ -955,7 +955,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  /** Version copied from Abstract Map because it is not public */
+  /** Version copied from Abstract Map because it is not public. */
   static class OurSimpleEntry<K, V> implements Map.Entry<K, V> {
     K key;
     V value;

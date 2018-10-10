@@ -2680,7 +2680,7 @@ public final class TestPlume {
     }
   }
 
-  /** Initialize f2 to be the same as two copies of f1 */
+  /** Initialize f2 to be the same as two copies of f1. */
   void initializeF1AndF2(int j, double @ArrayLen(10) [] f1, double @ArrayLen(20) [] f2) {
 
     // start two arrays out exactly equal
