@@ -1,7 +1,5 @@
 language: java
 
-sudo: false
-
 # Enable Gradle caching
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
