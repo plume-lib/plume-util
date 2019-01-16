@@ -8,7 +8,6 @@
 
 ## 1.0.4
 
-- Renamed BinaryNameForNonArray to BinaryName
 - Deprecate StringBuilderDelimited; clients should use StringJoiner instead
 
 ## 1.0.0
