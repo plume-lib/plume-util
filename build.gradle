@@ -18,7 +18,7 @@ apply from: "${buildscript.sourceFile.parent}/gradle/checkerframework.gradle"
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 dependencies {
-  implementation 'org.plumelib:reflection-util:0.0.1'
+  implementation 'org.plumelib:reflection-util:0.0.2'
   testImplementation 'junit:junit:4.12'
   errorprone 'com.google.errorprone:error_prone_core:2.3.1'
 }
