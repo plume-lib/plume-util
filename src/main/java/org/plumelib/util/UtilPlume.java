@@ -1650,8 +1650,8 @@ public final class UtilPlume {
   /**
    * Replace "\\", "\"", "\n", and "\r" sequences by their one-character equivalents. All other
    * backslashes are removed (for instance, octal/hex escape sequences are not turned into their
-   * respective characters). This is the inverse operation of escapeNonJava(). Previously known as
-   * unquote().
+   * respective characters). This is the inverse operation of {@link #escapeNonJava}, but it is
+   * <em>not</em> a general unescaping mechanism for Java strings.
    *
    * @param orig string to quote
    * @return quoted version of orig
@@ -1694,20 +1694,23 @@ public final class UtilPlume {
         case '5':
         case '6':
         case '7':
-        case '8':
-        case '9':
+          // Unescape octal characters.
+          // TODO: Why does the code do this, when the Javadoc says it doesn't?
+          // TODO: There is no check for excessively large values; eg, \777 should translate to
+          // "777", not a single octal 0777 character.
           sb.append(orig.substring(postEsc, thisEsc));
           char octalChar = 0;
           int ii = thisEsc + 1;
           while (ii < orig.length()) {
-            char ch = orig.charAt(ii++);
-            if ((ch < '0') || (ch > '8')) {
+            int thisDigit = Character.digit(orig.charAt(ii), 8);
+            if (thisDigit == -1) {
               break;
             }
-            octalChar = (char) ((octalChar * 8) + Character.digit(ch, 8));
+            octalChar = (char) ((octalChar * 8) + thisDigit);
+            ii++;
           }
           sb.append(octalChar);
-          postEsc = ii - 1;
+          postEsc = ii;
           break;
 
         default:

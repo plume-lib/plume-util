@@ -2098,6 +2098,8 @@ public final class TestPlume {
     assert UtilPlume.unescapeNonJava("\\").equals("\\");
     assert UtilPlume.unescapeNonJava("foo\\").equals("foo\\");
     assert UtilPlume.unescapeNonJava("\\*abc").equals("*abc");
+    assert UtilPlume.unescapeNonJava("\\101").equals("A");
+    assert UtilPlume.unescapeNonJava("A\\102C").equals("ABC");
     // Should add more tests here.
 
     // Unfortunately, there isn't yet a unescapeNonASCII function.
