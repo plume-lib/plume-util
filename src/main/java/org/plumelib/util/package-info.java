@@ -82,7 +82,7 @@
  *       number from each group.
  * </dl>
  *
- * <h3 id="Determinism">Determinism and Immutability</h3>
+ * <h3 id="Determinism">Determinism and immutability</h3>
  *
  * <dl>
  *   <dt>{@link org.plumelib.util.DeterministicObject DeterministicObject}
