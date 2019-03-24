@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.0.6
+
+- Add ImmutableTypes class
+
 ## 1.0.5
 
 - Add FileWriterWithName class
