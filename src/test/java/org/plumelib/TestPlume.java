@@ -32,6 +32,8 @@ import org.junit.Test;
 // run like this:
 //   java org.plumelib.util.TestPlume
 
+// TODO: Split this up into one test file for each implementation file.
+
 // Files yet to test:
 // ArraysPlume.java
 // ClassFileVersion.java
