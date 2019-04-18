@@ -45,9 +45,6 @@ task javadocWeb(type: Javadoc) {
 }
 
 // `requireJavadoc` target ensures that all Java elements have Javadoc documentation.
-configurations {
-  requireJavadoc
-}
 dependencies {
   implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
 }
