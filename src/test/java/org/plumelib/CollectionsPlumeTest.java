@@ -14,7 +14,6 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.Test;
 
-/** Test code for the plume package. */
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests
 })

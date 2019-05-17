@@ -5,7 +5,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.Test;
 
-/** Test code for the plume package. */
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests
 })
