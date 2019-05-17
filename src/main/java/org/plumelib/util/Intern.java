@@ -792,7 +792,7 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) an String[]. Return a canonical representation for the String[] array.
+   * Intern (canonicalize) a String[]. Return a canonical representation for the String[] array.
    * Arrays are compared according to their elements' equals() methods.
    *
    * @param a the array to canonicalize. Its elements should already be interned.
