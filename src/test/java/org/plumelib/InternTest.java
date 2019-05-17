@@ -14,7 +14,6 @@ import org.junit.Test;
 public final class InternTest {
 
   static class InternTestHelper {
-    // javadoc won't let this be static.
     void test(boolean random) {
       int size1 = (random ? 100 : 1);
       int size2 = (random ? 10 : 1);
@@ -82,7 +81,6 @@ public final class InternTest {
     }
   }
 
-  // This cannot be static because it instantiates an inner class.
   @Test
   public void testHasher() {
 
@@ -259,7 +257,6 @@ public final class InternTest {
    * Test the intering of subsequences as triples of the original sequence, the start and the end
    * indices.
    */
-  @SuppressWarnings("index") // test code that relies on assumptions about what is being tested
   @Test
   public void testSequenceAndIndices() {
     int[] a1 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});

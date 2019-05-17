@@ -21,7 +21,6 @@ public final class GraphPlumeTest {
   private static @Nullable Map<Integer, List<@KeyFor("preds1") Integer>> preds1;
   private static @Nullable Map<Integer, List<@KeyFor("succs1") Integer>> succs1;
 
-  @SuppressWarnings({"keyfor", "nullness"}) // test code
   @EnsuresNonNull({"preds1", "succs1"})
   private static void initializePreds1AndSucc1() {
     if (preds1 != null) {

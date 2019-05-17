@@ -24,6 +24,10 @@ public final class CollectionsPlumeTest {
   // under instrumentation such as that of Chicory.
   private static final boolean shortRun = false;
 
+  ///////////////////////////////////////////////////////////////////////////
+  /// Helper functions
+  ///
+
   public static <T> ArrayList<T> toArrayList(Iterator<T> itor) {
     ArrayList<T> v = new ArrayList<>();
     while (itor.hasNext()) {
@@ -39,8 +43,6 @@ public final class CollectionsPlumeTest {
     }
     return v;
   }
-
-  ///////////////////////////////////////////////////////////////////////////
 
   // These names are taken from APL notation, where iota creates an
   // array of all the numbers up to its argument.
@@ -99,6 +101,8 @@ public final class CollectionsPlumeTest {
   }
 
   ///////////////////////////////////////////////////////////////////////////
+  /// The tests themselves
+  ///
 
   @Test
   public void testMergedIterator() {
@@ -185,6 +189,8 @@ public final class CollectionsPlumeTest {
   }
 
   public static void testRandomElements() {
+
+    // Tests CollectionsPlume.randomElements(...)
 
     // Typically, no progress reports are printed, because the loop
     // finishes in well under 1 minute.  Users will see progress reports

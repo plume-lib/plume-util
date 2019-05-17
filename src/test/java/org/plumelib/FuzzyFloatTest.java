@@ -11,14 +11,16 @@ import org.junit.Test;
 })
 public final class FuzzyFloatTest {
 
+  ///////////////////////////////////////////////////////////////////////////
+  /// Helper functions
+  ///
+
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
       System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
     }
     assert result;
-    //      assert(Arrays.equals(a1, a2),
-    //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
   }
 
   private static void assertArraysEquals(double[] a1, double[] a2) {
@@ -45,15 +47,19 @@ public final class FuzzyFloatTest {
     }
   }
 
-  @Test
-  public void testFuzzyFloat() {
+  ///////////////////////////////////////////////////////////////////////////
+  /// The tests themselves
+  ///
 
-    FuzzyFloat ff = new FuzzyFloat(0.0001);
-    double offset = 0.00007;
-    double offhigh = 1 + offset;
-    double offlow = 1 - offset;
-    double offhigh2 = 1 + 2 * offset;
-    double offlow2 = 1 - 2 * offset;
+  FuzzyFloat ff = new FuzzyFloat(0.0001);
+  double offset = 0.00007;
+  double offhigh = 1 + offset;
+  double offlow = 1 - offset;
+  double offhigh2 = 1 + 2 * offset;
+  double offlow2 = 1 - 2 * offset;
+
+  @Test
+  public void test_eq() {
 
     // test equality for a variety of postive and negative numbers
     for (double d = -20000; d < 20000; d += 1000.36) {
@@ -83,22 +89,29 @@ public final class FuzzyFloatTest {
     // make sure that various unusual values are equal
     assert ff.eq(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
     assert ff.eq(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+  }
 
-    // rudimentary checks on the comparison operators (since they all just
-    // use eq and ne anyway)
-    {
-      double d = 2563.789;
-      assert !ff.gt(d, d * offlow);
-      assert !ff.lt(d, d * offhigh);
-      assert ff.gt(d, d * offlow2);
-      assert ff.lt(d, d * offhigh2);
-      assert ff.gte(d, d * offhigh);
-      assert ff.lte(d, d * offlow);
-      assert !ff.gte(d, d * offhigh2);
-      assert !ff.lte(d, d * offlow2);
-    }
+  // rudimentary checks on the comparison operators (since they all just
+  // use eq and ne anyway)
+  @Test
+  public void testcomparisons() {
+
+    double d = 2563.789;
+    assert !ff.gt(d, d * offlow);
+    assert !ff.lt(d, d * offhigh);
+    assert ff.gt(d, d * offlow2);
+    assert ff.lt(d, d * offhigh2);
+    assert ff.gte(d, d * offhigh);
+    assert ff.lte(d, d * offlow);
+    assert !ff.gte(d, d * offhigh2);
+    assert !ff.lte(d, d * offlow2);
+  }
+
+  @Test
+  public void test_indexOf() {
 
     // public int indexOf (double[] a, double elt)
+
     {
       double[] a = new double[10];
       for (int i = 0; i < a.length; i++) {
@@ -179,6 +192,10 @@ public final class FuzzyFloatTest {
       assertArraysEquals(g, gCopy);
       assertArraysEquals(h, hCopy);
     }
+  }
+
+  @Test
+  public void test_isElemMatch() {
 
     // public boolean isElemMatch (double[] a1, double[] a2)
     {
@@ -231,100 +248,106 @@ public final class FuzzyFloatTest {
       assert ff.isElemMatch(d, c);
       assert ff.isElemMatch(b, b);
     }
+  }
+
+  @Test
+  public void test_compare() {
 
     // public class DoubleArrayComparatorLexical implements Comparator
     // public int compare(Object o1, Object o2)
-    {
-      Comparator<double[]> comparator = ff.new DoubleArrayComparatorLexical();
-      double[] a0 = new double[] {};
-      double[] a1 = new double[] {};
-      double[] a2 = new double[] {0, 1, 2, 3};
-      double[] a3 = new double[] {0, 1, 2, 3, 0};
-      double[] a4 = new double[] {0, 1, 2, 3, 4};
-      double[] a5 = new double[] {0, 1, 2, 3, 4};
-      double[] a6 = new double[] {0, 1, 5, 3, 4};
-      double[] a7 = new double[] {1, 2, 3, 4};
-      double[] a0Copy = a0.clone();
-      double[] a1Copy = a1.clone();
-      double[] a2Copy = a2.clone();
-      double[] a3Copy = a3.clone();
-      double[] a4Copy = a4.clone();
-      double[] a5Copy = a5.clone();
-      double[] a6Copy = a6.clone();
-      double[] a7Copy = a7.clone();
 
-      assert comparator.compare(a0, a1) == 0;
-      assert comparator.compare(a1, a0) == 0;
-      assert comparator.compare(a1, a2) < 0;
-      assert comparator.compare(a2, a1) > 0;
-      assert comparator.compare(a2, a3) < 0;
-      assert comparator.compare(a3, a2) > 0;
-      assert comparator.compare(a3, a4) < 0;
-      assert comparator.compare(a4, a3) > 0;
-      assert comparator.compare(a4, a5) == 0;
-      assert comparator.compare(a5, a4) == 0;
-      assert comparator.compare(a5, a6) < 0;
-      assert comparator.compare(a6, a5) > 0;
-      assert comparator.compare(a6, a7) < 0;
-      assert comparator.compare(a7, a6) > 0;
-      assert comparator.compare(a1, a4) < 0;
-      assert comparator.compare(a4, a1) > 0;
-      assert comparator.compare(a2, a4) < 0;
-      assert comparator.compare(a4, a2) > 0;
-      assert comparator.compare(a6, a4) > 0;
-      assert comparator.compare(a4, a6) < 0;
-      assert comparator.compare(a7, a4) > 0;
-      assert comparator.compare(a4, a7) < 0;
+    Comparator<double[]> comparator = ff.new DoubleArrayComparatorLexical();
+    double[] a0 = new double[] {};
+    double[] a1 = new double[] {};
+    double[] a2 = new double[] {0, 1, 2, 3};
+    double[] a3 = new double[] {0, 1, 2, 3, 0};
+    double[] a4 = new double[] {0, 1, 2, 3, 4};
+    double[] a5 = new double[] {0, 1, 2, 3, 4};
+    double[] a6 = new double[] {0, 1, 5, 3, 4};
+    double[] a7 = new double[] {1, 2, 3, 4};
+    double[] a0Copy = a0.clone();
+    double[] a1Copy = a1.clone();
+    double[] a2Copy = a2.clone();
+    double[] a3Copy = a3.clone();
+    double[] a4Copy = a4.clone();
+    double[] a5Copy = a5.clone();
+    double[] a6Copy = a6.clone();
+    double[] a7Copy = a7.clone();
 
-      assertArraysEquals(a0, a0Copy);
-      assertArraysEquals(a1, a1Copy);
-      assertArraysEquals(a2, a2Copy);
-      assertArraysEquals(a3, a3Copy);
-      assertArraysEquals(a4, a4Copy);
-      assertArraysEquals(a5, a5Copy);
-      assertArraysEquals(a6, a6Copy);
-      assertArraysEquals(a7, a7Copy);
-    }
+    assert comparator.compare(a0, a1) == 0;
+    assert comparator.compare(a1, a0) == 0;
+    assert comparator.compare(a1, a2) < 0;
+    assert comparator.compare(a2, a1) > 0;
+    assert comparator.compare(a2, a3) < 0;
+    assert comparator.compare(a3, a2) > 0;
+    assert comparator.compare(a3, a4) < 0;
+    assert comparator.compare(a4, a3) > 0;
+    assert comparator.compare(a4, a5) == 0;
+    assert comparator.compare(a5, a4) == 0;
+    assert comparator.compare(a5, a6) < 0;
+    assert comparator.compare(a6, a5) > 0;
+    assert comparator.compare(a6, a7) < 0;
+    assert comparator.compare(a7, a6) > 0;
+    assert comparator.compare(a1, a4) < 0;
+    assert comparator.compare(a4, a1) > 0;
+    assert comparator.compare(a2, a4) < 0;
+    assert comparator.compare(a4, a2) > 0;
+    assert comparator.compare(a6, a4) > 0;
+    assert comparator.compare(a4, a6) < 0;
+    assert comparator.compare(a7, a4) > 0;
+    assert comparator.compare(a4, a7) < 0;
+
+    assertArraysEquals(a0, a0Copy);
+    assertArraysEquals(a1, a1Copy);
+    assertArraysEquals(a2, a2Copy);
+    assertArraysEquals(a3, a3Copy);
+    assertArraysEquals(a4, a4Copy);
+    assertArraysEquals(a5, a5Copy);
+    assertArraysEquals(a6, a6Copy);
+    assertArraysEquals(a7, a7Copy);
+  }
+
+  @Test
+  public void test_isSubset() {
 
     // public boolean FuzzyFloat.isSubset (double[] a1, double[] a2)
-    {
-      double[] f1 = new double[10];
-      double[] f2 = new double[20];
 
-      for (int j = 0; j < f2.length; j++) {
-        f2[j] = j;
-      }
-      for (int i = 0; i < f2.length - f1.length; i++) {
+    double[] f1 = new double[10];
+    double[] f2 = new double[20];
 
-        // fill up f1 with elements of f2
-        for (int j = 0; j < f1.length; j++) {
-          f1[j] = f2[i + j];
-        }
-
-        f1[5] = f2[i] * offhigh;
-
-        double[] f1Copy = f1.clone();
-        double[] f2Copy = f2.clone();
-
-        assert ff.isSubset(f1, f2);
-        assertArraysEquals(f1, f1Copy);
-        assertArraysEquals(f2, f2Copy);
-      }
-
-      double[] a1 = new double[] {1, 5, 10};
-      double[] a2 = new double[] {};
-      double[] a3 = new double[] {1};
-      double[] a4 = new double[] {10};
-      double[] a5 = new double[] {1, 10, 15, 20};
-      double[] a6 = new double[] {10, 10, 10, 10, 10, 1};
-
-      assert ff.isSubset(a2, a1);
-      assert !ff.isSubset(a1, a2);
-      assert !ff.isSubset(a1, a5);
-      assert ff.isSubset(a3, a1);
-      assert ff.isSubset(a4, a1);
-      assert ff.isSubset(a6, a1);
-      assert !ff.isSubset(a1, a6);
+    for (int j = 0; j < f2.length; j++) {
+      f2[j] = j;
     }
+    for (int i = 0; i < f2.length - f1.length; i++) {
+
+      // fill up f1 with elements of f2
+      for (int j = 0; j < f1.length; j++) {
+        f1[j] = f2[i + j];
+      }
+
+      f1[5] = f2[i] * offhigh;
+
+      double[] f1Copy = f1.clone();
+      double[] f2Copy = f2.clone();
+
+      assert ff.isSubset(f1, f2);
+      assertArraysEquals(f1, f1Copy);
+      assertArraysEquals(f2, f2Copy);
+    }
+
+    double[] a1 = new double[] {1, 5, 10};
+    double[] a2 = new double[] {};
+    double[] a3 = new double[] {1};
+    double[] a4 = new double[] {10};
+    double[] a5 = new double[] {1, 10, 15, 20};
+    double[] a6 = new double[] {10, 10, 10, 10, 10, 1};
+
+    assert ff.isSubset(a2, a1);
+    assert !ff.isSubset(a1, a2);
+    assert !ff.isSubset(a1, a5);
+    assert ff.isSubset(a3, a1);
+    assert ff.isSubset(a4, a1);
+    assert ff.isSubset(a6, a1);
+    assert !ff.isSubset(a1, a6);
   }
 }

@@ -16,11 +16,6 @@ import org.junit.Test;
 })
 public final class UtilPlumeTest {
 
-  ///////////////////////////////////////////////////////////////////////////
-
-  /// UtilPlume
-  ///
-
   private static BitSet randomBitSet(@NonNegative int length, Random r) {
     BitSet result = new BitSet(length);
     for (int i = 0; i < length; i++) {
@@ -29,47 +24,48 @@ public final class UtilPlumeTest {
     return result;
   }
 
-  // This cannot be static because it instantiates an inner class.
-  @SuppressWarnings("ArrayEquals")
   @Test
-  public void testUtilPlume() {
+  public void test_intersectionCardinalityAtLeast() {
 
     // public static intersectionCardinalityAtLeast(BitSet a, BitSet b, int i)
-    {
-      Random r = new Random(20031008);
-      for (int i = 0; i < 100; i++) {
-        BitSet b1 = randomBitSet(r.nextInt(100), r);
-        BitSet b2 = randomBitSet(r.nextInt(100), r);
-        BitSet b3 = randomBitSet(r.nextInt(100), r);
-        BitSet intersection = (BitSet) b1.clone();
-        intersection.and(b2);
-        int card = intersection.cardinality();
-        for (int j = 0; j < 100; j++) {
-          assert UtilPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j);
-        }
-        intersection.and(b3);
-        card = intersection.cardinality();
-        for (int j = 0; j < 100; j++) {
-          assert UtilPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j);
-        }
+
+    Random r = new Random(20031008);
+    for (int i = 0; i < 100; i++) {
+      BitSet b1 = randomBitSet(r.nextInt(100), r);
+      BitSet b2 = randomBitSet(r.nextInt(100), r);
+      BitSet b3 = randomBitSet(r.nextInt(100), r);
+      BitSet intersection = (BitSet) b1.clone();
+      intersection.and(b2);
+      int card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assert UtilPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j);
+      }
+      intersection.and(b3);
+      card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assert UtilPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j);
       }
     }
+  }
 
-    // public static BufferedReader bufferedFileReader(String filename)
-    // public static LineNumberReader lineNumberFileReader(String filename)
-    // public static BufferedWriter bufferedFileWriter(String filename) throws IOException
-    // public static Class classForName(String className)
+  // public static BufferedReader bufferedFileReader(String filename)
+  // public static LineNumberReader lineNumberFileReader(String filename)
+  // public static BufferedWriter bufferedFileWriter(String filename) throws IOException
+  // public static Class classForName(String className)
 
-    // public static void addToClasspath(String dir)
-    // public static final class WildcardFilter implements FilenameFilter
-    //   public WildcardFilter(String filename)
-    //   public boolean accept(File dir, String name)
-    // public static boolean canCreateAndWrite(File file)
-    // public static void writeObject(Object o, File file) throws IOException
-    // public static Object readObject(File file)
-    // public static File createTempDir(String prefix, String suffix)
+  // public static void addToClasspath(String dir)
+  // public static final class WildcardFilter implements FilenameFilter
+  //   public WildcardFilter(String filename)
+  //   public boolean accept(File dir, String name)
+  // public static boolean canCreateAndWrite(File file)
+  // public static void writeObject(Object o, File file) throws IOException
+  // public static Object readObject(File file)
+  // public static File createTempDir(String prefix, String suffix)
 
-    // public Object incrementHashMap(HashMap hm, Object key, int count)
+  // public Object incrementHashMap(HashMap hm, Object key, int count)
+
+  @Test
+  public void test_canCreateAndWrite() {
 
     try {
       assert UtilPlume.canCreateAndWrite(new File("TestPlume.java"));
@@ -90,22 +86,26 @@ public final class UtilPlumeTest {
       e.printStackTrace();
       org.junit.Assert.fail("failure while testing UtilPlume.canCreateAndWrite(): " + e.toString());
     }
+  }
 
-    // public static ArrayList randomElements(Iterator itor, int numElts)
-    // public static ArrayList randomElements(Iterator itor, int numElts, Random random)
+  // public static ArrayList randomElements(Iterator itor, int numElts)
+  // public static ArrayList randomElements(Iterator itor, int numElts, Random random)
 
-    // public static <T> @Nullable Integer incrementMap(Map<T,Integer> m, T key, int count) {
-    // public static <K,V> String mapToString(Map<K,V> m) {
-    // public static <K,V> void mapToString(Appendable sb, Map<K,V> m, String linePrefix) {
-    // public static <K extends Comparable<? super K>,V> Collection<@KeyFor("#1") K>
-    //     sortedKeySet(Map<K,V> m) {
-    // public static <K,V> Collection<@KeyFor("#1") K>
-    //     sortedKeySet(Map<K,V> m, Comparator<K> comparator) {
+  // public static <T> @Nullable Integer incrementMap(Map<T,Integer> m, T key, int count) {
+  // public static <K,V> String mapToString(Map<K,V> m) {
+  // public static <K,V> void mapToString(Appendable sb, Map<K,V> m, String linePrefix) {
+  // public static <K extends Comparable<? super K>,V> Collection<@KeyFor("#1") K>
+  //     sortedKeySet(Map<K,V> m) {
+  // public static <K,V> Collection<@KeyFor("#1") K>
+  //     sortedKeySet(Map<K,V> m, Comparator<K> comparator) {
 
-    // public static boolean propertyIsTrue(Properties p, String key)
-    // public static String appendProperty(Properties p, String key, String value)
-    // public static String setDefault(Properties p, String key, String value)
-    // public static void streamCopy(java.io.InputStream from, java.io.OutputStream to)
+  // public static boolean propertyIsTrue(Properties p, String key)
+  // public static String appendProperty(Properties p, String key, String value)
+  // public static String setDefault(Properties p, String key, String value)
+  // public static void streamCopy(java.io.InputStream from, java.io.OutputStream to)
+
+  @Test
+  public void test_replaceString() {
 
     // public static String replaceString(String target, String oldStr, String newStr)
 
@@ -117,6 +117,10 @@ public final class UtilPlumeTest {
         .equals("heyo doyy wey heyo doyy");
     assert UtilPlume.replaceString("hello dolly well hello dolly", "q", "yyy")
         .equals("hello dolly well hello dolly");
+  }
+
+  @Test
+  public void test_split() {
 
     // public static String[] split(String s, char delim)
     // public static String[] split(String s, String delim)
@@ -134,6 +138,10 @@ public final class UtilPlumeTest {
     assert Arrays.equals(UtilPlume.split("foo", ", "), new String[] {"foo"});
     assert Arrays.equals(UtilPlume.split("", ", "), new String[] {""});
     assert Arrays.equals(UtilPlume.split(", foo, ", ", "), new String[] {"", "foo", ""});
+  }
+
+  @Test
+  public void test_join() {
 
     // public static String join(Object[] a, String delim)
     // public static String join(ArrayList v, String delim)
@@ -147,6 +155,10 @@ public final class UtilPlumeTest {
     potpourri.add(2);
     potpourri.add("day");
     assert UtilPlume.join(potpourri, " ").equals("day 2 day");
+  }
+
+  @Test
+  public void test_escapeNonJava() {
 
     // public static String escapeNonJava(String orig)
     // public static String escapeNonJava(Character ch)
@@ -174,8 +186,12 @@ public final class UtilPlumeTest {
         .equals("\\000\\001\\002\\007\\n8@I\\222");
     assert UtilPlume.escapeNonASCII("\u0100\u1000\ucafe\uffff")
         .equals("\\u0100\\u1000\\ucafe\\uffff");
+  }
 
-    // private static String escapeNonASCII(char c)
+  // private static String escapeNonASCII(char c)
+
+  @Test
+  public void test_unescapeNonJava() {
 
     // public static String unescapeNonJava(String orig)
 
@@ -203,6 +219,11 @@ public final class UtilPlumeTest {
     // If implemented, it should have the following behavior:
     // assert UtilPlume.unescapeNonASCII("\\115").equals("M");
     // assert UtilPlume.unescapeNonASCII("\\115\\111\\124").equals("MIT");
+
+  }
+
+  @Test
+  public void test_removeWhitespace() {
 
     // public static String removeWhitespaceAround(String arg, String delimiter)
     // public static String removeWhitespaceAfter(String arg, String delimiter)
@@ -258,6 +279,10 @@ public final class UtilPlumeTest {
     assert UtilPlume.removeWhitespaceAround("cd 123 ", "123").equals("cd123");
     assert UtilPlume.removeWhitespaceAround("cd123 ", "123").equals("cd123");
     assert UtilPlume.removeWhitespaceAround("cd 123", "123").equals("cd123");
+  }
+
+  @Test
+  public void test_nplural() {
 
     // public static String nplural(int n, String noun)
 
@@ -279,6 +304,10 @@ public final class UtilPlumeTest {
     assert UtilPlume.nplural(0, "f-stop").equals("0 f-stops");
     assert UtilPlume.nplural(1, "f-stop").equals("1 f-stop");
     assert UtilPlume.nplural(2, "f-stop").equals("2 f-stops");
+  }
+
+  @Test
+  public void test_rpad() {
 
     // public static String rpad(String s, int length)
     // public static String rpad(int num, int length)
@@ -295,6 +324,11 @@ public final class UtilPlumeTest {
     // public static class NullableStringComparator
     //   public int compare(Object o1, Object o2)
 
+  }
+
+  @Test
+  public void test_count() {
+
     // public static int count(String s, int ch)
     // public static int count(String s, String sub)
 
@@ -305,14 +339,18 @@ public final class UtilPlumeTest {
     assert UtilPlume.count("abacadaea", 'a') == 5;
     assert UtilPlume.count("aaa aea", 'a') == 5;
     assert UtilPlume.count("daeaaa", 'a') == 4;
+  }
 
-    // This will be easy to write tests for, when I get around to it.
-    // public static ArrayList tokens(String str, String delim, boolean returnTokens)
-    // public static ArrayList tokens(String str, String delim)
-    // public static ArrayList tokens(String str)
+  // This will be easy to write tests for, when I get around to it.
+  // public static ArrayList tokens(String str, String delim, boolean returnTokens)
+  // public static ArrayList tokens(String str, String delim)
+  // public static ArrayList tokens(String str)
 
-    // This is tested by the tokens methods.
-    // public static ArrayList makeArrayList(Enumeration e)
+  // This is tested by the tokens methods.
+  // public static ArrayList makeArrayList(Enumeration e)
+
+  @Test
+  public void test_abbreviateNumber() {
 
     Locale.setDefault(Locale.US);
     assert UtilPlume.abbreviateNumber(5).equals("5.00");

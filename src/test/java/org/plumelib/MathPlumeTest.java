@@ -12,6 +12,10 @@ import org.junit.Test;
 })
 public final class MathPlumeTest {
 
+  ///////////////////////////////////////////////////////////////////////////
+  /// Utility functions
+  ///
+
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
@@ -30,9 +34,6 @@ public final class MathPlumeTest {
     }
     assert result;
   }
-  ///////////////////////////////////////////////////////////////////////////
-  /// Utility functions
-  ///
 
   private static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<>(nums.length);
@@ -62,6 +63,8 @@ public final class MathPlumeTest {
   }
 
   ///////////////////////////////////////////////////////////////////////////
+  /// The tests themselves
+  ///
 
   @Test
   public void test_negate() {
@@ -167,6 +170,16 @@ public final class MathPlumeTest {
     assert MathPlume.modPositive(-33, -5) == 2;
   }
 
+  static class TestMissingNumbersIteratorInt {
+    void test(int[] orig, boolean addEnds, int[] goalMissing) {
+      Iterator<Integer> orig_iterator = intArrayIterator(orig);
+      Iterator<Integer> missing_iterator =
+          new MathPlume.MissingNumbersIteratorInt(orig_iterator, addEnds);
+      int[] missing = intIteratorArray(missing_iterator);
+      assertArraysEquals(missing, goalMissing);
+    }
+  }
+
   @Test
   public void test_missingNumbers() {
 
@@ -179,18 +192,6 @@ public final class MathPlumeTest {
     assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 5, 5, 6, 7, 8}), new int[] {});
     assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 4, 6, 6, 7, 8}), new int[] {5});
     assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 3, 3}), new int[] {});
-
-    // class MissingNumbersIteratorInt
-    class TestMissingNumbersIteratorInt {
-      // javadoc won't let this be static
-      void test(int[] orig, boolean addEnds, int[] goalMissing) {
-        Iterator<Integer> orig_iterator = intArrayIterator(orig);
-        Iterator<Integer> missing_iterator =
-            new MathPlume.MissingNumbersIteratorInt(orig_iterator, addEnds);
-        int[] missing = intIteratorArray(missing_iterator);
-        assertArraysEquals(missing, goalMissing);
-      }
-    }
 
     TestMissingNumbersIteratorInt tmni = new TestMissingNumbersIteratorInt();
     tmni.test(new int[] {3, 4, 5, 6, 7, 8}, false, new int[] {});
@@ -210,50 +211,85 @@ public final class MathPlumeTest {
     tmni.test(new int[] {-1, 1, 2, 3, 5, 6, 7, 9}, true, new int[] {-2, 0, 4, 8, 10});
   }
 
+  static class TestModulus {
+    void check(int[] nums, int @Nullable [] goalRm) {
+      int[] rm = MathPlume.modulus(nums);
+      if (!Arrays.equals(rm, goalRm)) {
+        throw new Error(
+            "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
+      }
+      if (rm == null) {
+        return;
+      }
+      int goalR = rm[0];
+      int m = rm[1];
+      for (int i = 0; i < nums.length; i++) {
+        int r = nums[i] % m;
+        if (r < 0) {
+          r += m;
+        }
+        if (r != goalR) {
+          throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
+        }
+      }
+    }
+
+    void check(Iterator<Integer> itor, int @Nullable [] goalRm) {
+      // There would be no point to this:  it's testing
+      // intIteratorArray, not the iterator version!
+      // return check(intIteratorArray(itor), goalRm);
+      assertArraysEquals(MathPlume.modulusInt(itor), goalRm);
+    }
+
+    void checkIterator(int[] nums, int @Nullable [] goalRm) {
+      check(intArrayIterator(nums), goalRm);
+    }
+  }
+
+  static class TestNonModulus {
+    void checkStrict(int[] nums, int @Nullable [] goalRm) {
+      check(nums, goalRm, true);
+      Iterator<Integer> itor = intArrayIterator(nums);
+      assertArraysEquals(MathPlume.nonmodulusStrictInt(itor), goalRm);
+    }
+
+    void checkNonstrict(int[] nums, int @Nullable [] goalRm) {
+      check(nums, goalRm, false);
+    }
+
+    void check(int[] nums, int @Nullable [] goalRm, boolean strict) {
+      int[] rm;
+      if (strict) {
+        rm = MathPlume.nonmodulusStrict(nums);
+      } else {
+        rm = MathPlume.nonmodulusNonstrict(nums);
+      }
+      if (!Arrays.equals(rm, goalRm)) {
+        throw new Error(
+            "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
+      }
+      if (rm == null) {
+        return;
+      }
+      int goalR = rm[0];
+      int m = rm[1];
+      for (int i = 0; i < nums.length; i++) {
+        int r = nums[i] % m;
+        if (r < 0) {
+          r += m;
+        }
+        if (r == goalR) {
+          throw new Error("Expected inequality, saw " + nums[i] + " % " + m + " = " + r);
+        }
+      }
+    }
+  }
+
   @Test
   public void test_modulus() {
 
     // int[] modulus(int[] nums)
     // int[] modulus(Iterator itor)
-
-    class TestModulus {
-      // javadoc won't let this be static
-      void check(int[] nums, int @Nullable [] goalRm) {
-        int[] rm = MathPlume.modulus(nums);
-        if (!Arrays.equals(rm, goalRm)) {
-          throw new Error(
-              "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
-        }
-        if (rm == null) {
-          return;
-        }
-        int goalR = rm[0];
-        int m = rm[1];
-        for (int i = 0; i < nums.length; i++) {
-          int r = nums[i] % m;
-          if (r < 0) {
-            r += m;
-          }
-          if (r != goalR) {
-            throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
-          }
-        }
-      }
-
-      // javadoc won't let this be static
-      void check(Iterator<Integer> itor, int @Nullable [] goalRm) {
-        // There would be no point to this:  it's testing
-        // intIteratorArray, not the iterator version!
-        // return check(intIteratorArray(itor), goalRm);
-        assertArraysEquals(MathPlume.modulusInt(itor), goalRm);
-      }
-
-      // javadoc won't let this be static
-      void checkIterator(int[] nums, int @Nullable [] goalRm) {
-        ;
-        check(intArrayIterator(nums), goalRm);
-      }
-    }
 
     TestModulus testModulus = new TestModulus();
 
@@ -279,48 +315,6 @@ public final class MathPlumeTest {
     // int[] nonmodulusStrict(int[] nums)
     // int[] nonmodulusNonstrict(int[] nums)
     // int[] nonmodulusStrict(Iterator nums)
-
-    class TestNonModulus {
-      // javadoc won't let this be static
-      void checkStrict(int[] nums, int @Nullable [] goalRm) {
-        check(nums, goalRm, true);
-        Iterator<Integer> itor = intArrayIterator(nums);
-        assertArraysEquals(MathPlume.nonmodulusStrictInt(itor), goalRm);
-      }
-
-      // javadoc won't let this be static
-      void checkNonstrict(int[] nums, int @Nullable [] goalRm) {
-        check(nums, goalRm, false);
-      }
-
-      // javadoc won't let this be static
-      void check(int[] nums, int @Nullable [] goalRm, boolean strict) {
-        int[] rm;
-        if (strict) {
-          rm = MathPlume.nonmodulusStrict(nums);
-        } else {
-          rm = MathPlume.nonmodulusNonstrict(nums);
-        }
-        if (!Arrays.equals(rm, goalRm)) {
-          throw new Error(
-              "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
-        }
-        if (rm == null) {
-          return;
-        }
-        int goalR = rm[0];
-        int m = rm[1];
-        for (int i = 0; i < nums.length; i++) {
-          int r = nums[i] % m;
-          if (r < 0) {
-            r += m;
-          }
-          if (r == goalR) {
-            throw new Error("Expected inequality, saw " + nums[i] + " % " + m + " = " + r);
-          }
-        }
-      }
-    }
 
     TestNonModulus testNonModulus = new TestNonModulus();
 

@@ -27,9 +27,6 @@ public final class OrderedPairIteratorTest {
       threes.add(i);
     }
 
-    // I've replaced the nulls by 0 in order to permit the array elements
-    // to be ints instead of Integers.
-
     compareOrderedPairIterator(
         new OrderedPairIterator<Integer>(ones.iterator(), ones.iterator()),
         new int[][] {

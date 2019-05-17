@@ -134,7 +134,6 @@ public final class ArraysPlumeTest {
     }
   }
 
-  @SuppressWarnings({"deprecation", "BoxedPrimitiveConstructor"}) // interning tests
   @Test
   public void testIndexOf_array() {
 
