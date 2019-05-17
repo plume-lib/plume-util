@@ -10,7 +10,7 @@ import org.junit.Test;
 
 /** Test code for the plume package. */
 @SuppressWarnings({
-  "UseCorrectAssertInTests" // I don't see the problem with using `assert`
+  "UseCorrectAssertInTests" // `assert` works fine in tests
 })
 public final class InternTest {
 
