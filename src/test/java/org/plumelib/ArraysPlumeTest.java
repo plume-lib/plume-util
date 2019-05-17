@@ -1,12 +1,13 @@
 package org.plumelib.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.MinLen;
 import org.junit.Test;
 
 @SuppressWarnings({
@@ -171,12 +172,15 @@ public final class ArraysPlumeTest {
     // public static int indexOf(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt)
-    {
-      assert ArraysPlume.indexOf((List<?>) new ArrayList<Object>(), (Object) null) == -1;
-      assert ArraysPlume.indexOf((List<?>) new ArrayList<Object>(), (Object) null, 0, -1) == -1;
-      assert ArraysPlume.indexOfEq((List<?>) new ArrayList<Object>(), (Object) null) == -1;
-      assert ArraysPlume.indexOfEq((List<?>) new ArrayList<Object>(), (Object) null, 0, -1) == -1;
-    }
+
+    @SuppressWarnings("value") // annotated JDK doesn't have @MinLen on singletonList yet
+    @MinLen(1) List<?> listOfStrings = Collections.singletonList("hello");
+    assert ArraysPlume.indexOf(listOfStrings, (Object) null) == -1;
+    assert ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1;
+    assert ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 1) == -1;
+    assert ArraysPlume.indexOfEq(listOfStrings, (Object) null) == -1;
+    assert ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 0) == -1;
+    assert ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 1) == -1;
   }
 
   @Test
