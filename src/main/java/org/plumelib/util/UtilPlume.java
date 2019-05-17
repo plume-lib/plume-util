@@ -1701,10 +1701,12 @@ public final class UtilPlume {
           int ii = thisEsc + 1;
           while (ii < orig.length()) {
             char ch = orig.charAt(ii++);
-            if ((ch < '0') || (ch > '8')) {
+            if ((ch < '0') || (ch > '7')) {
               break;
             }
-            octalChar = (char) ((octalChar * 8) + Character.digit(ch, 8));
+            int nextDigit = Character.digit(ch, 8);
+            assert nextDigit == -1 : "@AssumeAssertion(index): just checked that char is a digit";
+            octalChar = (char) ((octalChar * 8) + nextDigit);
           }
           sb.append(octalChar);
           postEsc = ii - 1;
