@@ -1,10 +1,20 @@
+// REQUIREMENTS to make a release:
+//  * Perform work on a machine connected to the CSE filesystem.
+//  * Your ~/.gradle/gradle.properties file must contain:
+//     ossrhUsername=YOUR_USER_NAME_HERE
+//     ossrhPassword=YOUR_PASSWORD_HERE
+
 // To make a release:
 //  * Update the version number in ../README.md and in this file.
-//  * Run in the top-level directory:  ./gradlew clean uploadArchives && ./gradlew javadocWeb
-//  * Browse to https://oss.sonatype.org/#stagingRepositories
-// Your ~/.gradle/gradle.properties file must contain:
-//   ossrhUsername=YOUR_USER_NAME_HERE
-//   ossrhPassword=YOUR_PASSWORD_HERE
+//  * Update CHANGELOG.md.
+//  * Run in the top-level directory:
+//   ./gradlew clean uploadArchives && ./gradlew javadocWeb
+//  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
+//  * Stage changes.
+//  * Add a git tag:
+//    VER=1.0.6 && git commit -m "Version $VER" && git tag -a v$VER -m "Version $VER" && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, attach the .jar file from build/libs/
+
 
 ///////////////////////////////////////////////////////////////////////////
 /// Maven Central publishing
@@ -15,7 +25,7 @@ apply plugin: 'signing'
 
 group = "org.plumelib"
 archivesBaseName = "plume-util"
-version = "1.0.5"
+version = "1.0.6"
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'

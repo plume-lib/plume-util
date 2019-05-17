@@ -36,7 +36,7 @@ public final class CollectionsPlume {
   }
 
   /** The system-specific line separator string. */
-  private static final String lineSep = System.getProperty("line.separator");
+  private static final String lineSep = System.lineSeparator();
 
   ///////////////////////////////////////////////////////////////////////////
   /// Collections

@@ -82,7 +82,7 @@
  *       number from each group.
  * </dl>
  *
- * <h3 id="Determinism">Determinism</h3>
+ * <h3 id="Determinism">Determinism and immutability</h3>
  *
  * <dl>
  *   <dt>{@link org.plumelib.util.DeterministicObject DeterministicObject}
@@ -91,6 +91,8 @@
  *   <dt>{@link org.plumelib.util.ClassDeterministic ClassDeterministic}
  *   <dd>Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted
  *       order.
+ *   <dt>{@link org.plumelib.util.ImmutableTypes ImmutableTypes}
+ *   <dd>Indicates which types in the JDK are immutable.
  * </dl>
  *
  * <h3 id="interfaces">Utility interfaces</h3>

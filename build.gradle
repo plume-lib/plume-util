@@ -18,9 +18,10 @@ apply plugin: 'java-library'
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 dependencies {
-  implementation 'org.plumelib:reflection-util:0.0.1'
+  // https://mvnrepository.com/artifact/org.plumelib/reflection-util
+  implementation 'org.plumelib:reflection-util:0.0.2'
   testImplementation 'junit:junit:4.12'
-  errorprone 'com.google.errorprone:error_prone_core:2.3.1'
+  errorprone 'com.google.errorprone:error_prone_core:2.3.3'
 }
 
 repositories {
@@ -61,9 +62,6 @@ task javadocWeb(type: Javadoc) {
 }
 
 // `requireJavadoc` target ensures that all Java elements have Javadoc documentation.
-configurations {
-  requireJavadoc
-}
 dependencies {
   implementation group: 'org.plumelib', name: 'require-javadoc', version: '0.1.0'
 }
