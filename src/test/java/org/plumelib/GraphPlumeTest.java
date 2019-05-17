@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Test;
 
 @SuppressWarnings({
+  "keyfor", // https://github.com/typetools/checker-framework/issues/2358 and maybe other issues
+  "nullness",
   "UseCorrectAssertInTests" // `assert` works fine in tests
 })
 public final class GraphPlumeTest {
@@ -18,17 +19,13 @@ public final class GraphPlumeTest {
 
   // Figure 1 from
   // http://www.boost.org/libs/graph/doc/lengauer_tarjan_dominator.htm#fig:dominator-tree-example
-  private static @Nullable Map<Integer, List<@KeyFor("preds1") Integer>> preds1;
-  private static @Nullable Map<Integer, List<@KeyFor("succs1") Integer>> succs1;
+  private static Map<Integer, List<@KeyFor("preds1") Integer>> preds1 = new LinkedHashMap<>();
+  private static Map<Integer, List<@KeyFor("succs1") Integer>> succs1 = new LinkedHashMap<>();
 
   @EnsuresNonNull({"preds1", "succs1"})
   private static void initializePreds1AndSucc1() {
-    if (preds1 != null) {
-      return;
-    }
-
-    preds1 = new LinkedHashMap<>();
-    succs1 = new LinkedHashMap<>();
+    preds1.clear();
+    succs1.clear();
     for (int i = 0; i <= 7; i++) {
       preds1.put(i, new ArrayList<Integer>());
       succs1.put(i, new ArrayList<Integer>());

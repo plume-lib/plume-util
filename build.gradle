@@ -7,12 +7,12 @@ plugins {
   // this issue is fixed: https://github.com/google/google-java-format/issues/5
   // // Code formatting with Google Java Format; defines targets "goJF" and "verJF".
   // id "com.github.sherter.google-java-format" version "0.7.1"
+
+  // Checker Framework pluggable type-checking
+  id "org.checkerframework" version "0.3.0"
 }
 
 apply plugin: 'java-library'
-
-// Checker Framework pluggable type-checking
-apply from: "${buildscript.sourceFile.parent}/gradle/checkerframework.gradle"
 
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
@@ -30,6 +30,23 @@ repositories {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+// Checker Framework pluggable type-checking
+apply plugin: 'org.checkerframework'
+checkerFramework {
+  checkers = [
+    'org.checkerframework.checker.formatter.FormatterChecker',
+    'org.checkerframework.checker.index.IndexChecker',
+    'org.checkerframework.checker.interning.InterningChecker',
+    'org.checkerframework.checker.lock.LockChecker',
+    'org.checkerframework.checker.nullness.NullnessChecker',
+    'org.checkerframework.checker.nullness.NullnessRawnessChecker',
+    'org.checkerframework.checker.regex.RegexChecker',
+    'org.checkerframework.checker.signature.SignatureChecker'
+  ]
+}
+
+/// Javadoc
 
 // Turn Javadoc warnings into errors.
 javadoc {
@@ -57,6 +74,8 @@ task requireJavadoc(type: Javadoc) {
   options.doclet = "org.plumelib.javadoc.RequireJavadoc"
   options.addStringOption('skip', 'WeakIdentityHashMap|WeakHasherMap')
 }
+
+/// Emacs support
 
 /* Make Emacs TAGS table */
 task tags(type: Exec) {
