@@ -3,6 +3,7 @@ package org.plumelib.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
+import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
@@ -150,7 +151,7 @@ public final class InternTest {
     Object sOtherIntern = Intern.intern(new String("foo"));
     assert sIntern == sOtherIntern;
 
-    String[] saOrig = new String[] {"foo", "bar"};
+    @Interned String[] saOrig = new String[] {"foo", "bar"};
     String[] saIntern = Intern.intern(saOrig);
     Object saObjIntern = Intern.intern((Object) saOrig);
     assert saIntern == saObjIntern;
@@ -238,11 +239,11 @@ public final class InternTest {
             (Object) new double[] {-0.0, Double.POSITIVE_INFINITY / Double.POSITIVE_INFINITY});
     assert da2Intern == da2OtherIntern;
 
-    Object[] oaOrig = new Object[] {new String("foo"), new Integer(1)};
+    @Interned Object[] oaOrig = new Object[] {"foo", 1};
     Object[] oaIntern = Intern.intern(oaOrig);
     Object oaObjIntern = Intern.intern((Object) oaOrig);
     assert oaIntern == oaObjIntern;
-    Object oaOtherIntern = Intern.intern((Object) new Object[] {new String("foo"), new Integer(1)});
+    Object oaOtherIntern = Intern.intern((Object) new Object[] {"foo", 1});
     assert oaIntern == oaOtherIntern;
 
     java.awt.Point pOrig = new java.awt.Point(1, 2);
@@ -257,6 +258,7 @@ public final class InternTest {
    * Test the intering of subsequences as triples of the original sequence, the start and the end
    * indices.
    */
+  @SuppressWarnings("index") // https://github.com/typetools/checker-framework/issues/2484
   @Test
   public void testSequenceAndIndices() {
     int[] a1 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});
