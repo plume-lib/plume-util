@@ -15,6 +15,10 @@ import org.junit.Test;
 })
 public final class ArraysPlumeTest {
 
+  ///////////////////////////////////////////////////////////////////////////
+  /// Helper functions
+  ///
+
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
@@ -36,10 +40,6 @@ public final class ArraysPlumeTest {
 
   ///////////////////////////////////////////////////////////////////////////
   /// Now the actual testing
-  ///
-
-  ///////////////////////////////////////////////////////////////////////////
-  /// ArraysPlume
   ///
 
   @Test
@@ -361,7 +361,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testSorting() {
+  public void test_sorted() {
 
     // public static boolean sorted(int[] a)
     assert ArraysPlume.sorted(new int[] {0, 1, 2});
@@ -371,7 +371,10 @@ public final class ArraysPlumeTest {
     assert ArraysPlume.sorted(new int[] {0, 1});
     assert !ArraysPlume.sorted(new int[] {1, 0});
     assert !ArraysPlume.sorted(new int[] {0, 1, 2, 1, 2, 3});
+  }
 
+  @Test
+  public void test_noDuplicates() {
     // public static int noDuplicates(int[] a)
     assert ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 0}) == true;
     assert ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 100}) == true;
@@ -407,7 +410,10 @@ public final class ArraysPlumeTest {
     assert ArraysPlume.noDuplicates(new String[] {"A", "a", "foo", "Foo", ""}) == true;
     assert ArraysPlume.noDuplicates(new String[] {" ", " "}) == false;
     assert ArraysPlume.noDuplicates(new String[] {"  ", " "}) == true;
+  }
 
+  @Test
+  public void test_fnIsPermutation() {
     // public static boolean fnIsPermutation(int[] a)
     assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 3}) == true;
     assert ArraysPlume.fnIsPermutation(new int[] {1, 2, 3, 0}) == true;
@@ -416,7 +422,10 @@ public final class ArraysPlumeTest {
     assert ArraysPlume.fnIsPermutation(new int[] {0, -1, 2, 3}) == false;
     assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 4}) == false;
     assert ArraysPlume.fnIsPermutation(new int[] {0, 0, 0, 0}) == false;
+  }
 
+  @Test
+  public void test_fnIsTotal() {
     // public static boolean fnIsTotal(int[] a)
     assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}) == true;
     assert ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}) == true;
@@ -540,312 +549,322 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testComparators() {
+  public void test_IntArrayComparator() {
 
     // public static class IntArrayComparatorLexical implements Comparator
     // public static class IntArrayComparatorLengthFirst implements Comparator
-    {
-      Comparator<int[]> iacl = new ArraysPlume.IntArrayComparatorLexical();
-      Comparator<int[]> iaclf = new ArraysPlume.IntArrayComparatorLengthFirst();
 
-      int[] a0 = new int[] {};
-      int[] a1 = new int[] {};
-      int[] a2 = new int[] {0, 1, 2, 3};
-      int[] a3 = new int[] {0, 1, 2, 3, 0};
-      int[] a4 = new int[] {0, 1, 2, 3, 4};
-      int[] a5 = new int[] {0, 1, 2, 3, 4};
-      int[] a6 = new int[] {0, 1, 5, 3, 4};
-      int[] a7 = new int[] {1, 2, 3, 4};
-      int[] a8 = new int[] {-5};
-      int[] a9 = new int[] {Integer.MAX_VALUE};
-      int[] a10 = new int[] {Integer.MIN_VALUE};
+    Comparator<int[]> iacl = new ArraysPlume.IntArrayComparatorLexical();
+    Comparator<int[]> iaclf = new ArraysPlume.IntArrayComparatorLengthFirst();
 
-      assert iacl.compare(a0, a1) == 0;
-      assert iaclf.compare(a0, a1) == 0;
-      assert iacl.compare(a1, a0) == 0;
-      assert iaclf.compare(a1, a0) == 0;
-      assert iacl.compare(a1, a2) < 0;
-      assert iaclf.compare(a1, a2) < 0;
-      assert iacl.compare(a2, a1) > 0;
-      assert iaclf.compare(a2, a1) > 0;
-      assert iacl.compare(a2, a3) < 0;
-      assert iaclf.compare(a2, a3) < 0;
-      assert iacl.compare(a3, a2) > 0;
-      assert iaclf.compare(a3, a2) > 0;
-      assert iacl.compare(a3, a4) < 0;
-      assert iaclf.compare(a3, a4) < 0;
-      assert iacl.compare(a4, a3) > 0;
-      assert iaclf.compare(a4, a3) > 0;
-      assert iacl.compare(a4, a5) == 0;
-      assert iaclf.compare(a4, a5) == 0;
-      assert iacl.compare(a5, a4) == 0;
-      assert iaclf.compare(a5, a4) == 0;
-      assert iacl.compare(a5, a6) < 0;
-      assert iaclf.compare(a5, a6) < 0;
-      assert iacl.compare(a6, a5) > 0;
-      assert iaclf.compare(a6, a5) > 0;
-      assert iacl.compare(a6, a7) < 0;
-      assert iaclf.compare(a6, a7) > 0;
-      assert iacl.compare(a7, a6) > 0;
-      assert iaclf.compare(a7, a6) < 0;
-      assert iacl.compare(a1, a4) < 0;
-      assert iaclf.compare(a1, a4) < 0;
-      assert iacl.compare(a4, a1) > 0;
-      assert iaclf.compare(a4, a1) > 0;
-      assert iacl.compare(a2, a4) < 0;
-      assert iaclf.compare(a2, a4) < 0;
-      assert iacl.compare(a4, a2) > 0;
-      assert iaclf.compare(a4, a2) > 0;
-      assert iacl.compare(a6, a4) > 0;
-      assert iaclf.compare(a6, a4) > 0;
-      assert iacl.compare(a4, a6) < 0;
-      assert iaclf.compare(a4, a6) < 0;
-      assert iacl.compare(a7, a4) > 0;
-      assert iaclf.compare(a7, a4) < 0;
-      assert iacl.compare(a4, a7) < 0;
-      assert iaclf.compare(a4, a7) > 0;
-      assert iacl.compare(a8, a9) < 0;
-      assert iaclf.compare(a8, a9) < 0;
-      assert iacl.compare(a10, a7) < 0;
-    }
+    int[] a0 = new int[] {};
+    int[] a1 = new int[] {};
+    int[] a2 = new int[] {0, 1, 2, 3};
+    int[] a3 = new int[] {0, 1, 2, 3, 0};
+    int[] a4 = new int[] {0, 1, 2, 3, 4};
+    int[] a5 = new int[] {0, 1, 2, 3, 4};
+    int[] a6 = new int[] {0, 1, 5, 3, 4};
+    int[] a7 = new int[] {1, 2, 3, 4};
+    int[] a8 = new int[] {-5};
+    int[] a9 = new int[] {Integer.MAX_VALUE};
+    int[] a10 = new int[] {Integer.MIN_VALUE};
+
+    assert iacl.compare(a0, a1) == 0;
+    assert iaclf.compare(a0, a1) == 0;
+    assert iacl.compare(a1, a0) == 0;
+    assert iaclf.compare(a1, a0) == 0;
+    assert iacl.compare(a1, a2) < 0;
+    assert iaclf.compare(a1, a2) < 0;
+    assert iacl.compare(a2, a1) > 0;
+    assert iaclf.compare(a2, a1) > 0;
+    assert iacl.compare(a2, a3) < 0;
+    assert iaclf.compare(a2, a3) < 0;
+    assert iacl.compare(a3, a2) > 0;
+    assert iaclf.compare(a3, a2) > 0;
+    assert iacl.compare(a3, a4) < 0;
+    assert iaclf.compare(a3, a4) < 0;
+    assert iacl.compare(a4, a3) > 0;
+    assert iaclf.compare(a4, a3) > 0;
+    assert iacl.compare(a4, a5) == 0;
+    assert iaclf.compare(a4, a5) == 0;
+    assert iacl.compare(a5, a4) == 0;
+    assert iaclf.compare(a5, a4) == 0;
+    assert iacl.compare(a5, a6) < 0;
+    assert iaclf.compare(a5, a6) < 0;
+    assert iacl.compare(a6, a5) > 0;
+    assert iaclf.compare(a6, a5) > 0;
+    assert iacl.compare(a6, a7) < 0;
+    assert iaclf.compare(a6, a7) > 0;
+    assert iacl.compare(a7, a6) > 0;
+    assert iaclf.compare(a7, a6) < 0;
+    assert iacl.compare(a1, a4) < 0;
+    assert iaclf.compare(a1, a4) < 0;
+    assert iacl.compare(a4, a1) > 0;
+    assert iaclf.compare(a4, a1) > 0;
+    assert iacl.compare(a2, a4) < 0;
+    assert iaclf.compare(a2, a4) < 0;
+    assert iacl.compare(a4, a2) > 0;
+    assert iaclf.compare(a4, a2) > 0;
+    assert iacl.compare(a6, a4) > 0;
+    assert iaclf.compare(a6, a4) > 0;
+    assert iacl.compare(a4, a6) < 0;
+    assert iaclf.compare(a4, a6) < 0;
+    assert iacl.compare(a7, a4) > 0;
+    assert iaclf.compare(a7, a4) < 0;
+    assert iacl.compare(a4, a7) < 0;
+    assert iaclf.compare(a4, a7) > 0;
+    assert iacl.compare(a8, a9) < 0;
+    assert iaclf.compare(a8, a9) < 0;
+    assert iacl.compare(a10, a7) < 0;
+  }
+
+  @Test
+  public void test_LongArrayComparator() {
 
     // public static class LongArrayComparatorLexical implements Comparator
     // public static class LongArrayComparatorLengthFirst implements Comparator
-    {
-      Comparator<long[]> lacl = new ArraysPlume.LongArrayComparatorLexical();
-      Comparator<long[]> laclf = new ArraysPlume.LongArrayComparatorLengthFirst();
-      long[] a0 = new long[] {};
-      long[] a1 = new long[] {};
-      long[] a2 = new long[] {0, 1, 2, 3};
-      long[] a3 = new long[] {0, 1, 2, 3, 0};
-      long[] a4 = new long[] {0, 1, 2, 3, 4};
-      long[] a5 = new long[] {0, 1, 2, 3, 4};
-      long[] a6 = new long[] {0, 1, 5, 3, 4};
-      long[] a7 = new long[] {1, 2, 3, 4};
-      long[] a8 = new long[] {-5};
-      long[] a9 = new long[] {Long.MAX_VALUE};
-      long[] a10 = new long[] {Long.MIN_VALUE};
 
-      assert lacl.compare(a0, a1) == 0;
-      assert laclf.compare(a0, a1) == 0;
-      assert lacl.compare(a1, a0) == 0;
-      assert laclf.compare(a1, a0) == 0;
-      assert lacl.compare(a1, a2) < 0;
-      assert laclf.compare(a1, a2) < 0;
-      assert lacl.compare(a2, a1) > 0;
-      assert laclf.compare(a2, a1) > 0;
-      assert lacl.compare(a2, a3) < 0;
-      assert laclf.compare(a2, a3) < 0;
-      assert lacl.compare(a3, a2) > 0;
-      assert laclf.compare(a3, a2) > 0;
-      assert lacl.compare(a3, a4) < 0;
-      assert laclf.compare(a3, a4) < 0;
-      assert lacl.compare(a4, a3) > 0;
-      assert laclf.compare(a4, a3) > 0;
-      assert lacl.compare(a4, a5) == 0;
-      assert laclf.compare(a4, a5) == 0;
-      assert lacl.compare(a5, a4) == 0;
-      assert laclf.compare(a5, a4) == 0;
-      assert lacl.compare(a5, a6) < 0;
-      assert laclf.compare(a5, a6) < 0;
-      assert lacl.compare(a6, a5) > 0;
-      assert laclf.compare(a6, a5) > 0;
-      assert lacl.compare(a6, a7) < 0;
-      assert laclf.compare(a6, a7) > 0;
-      assert lacl.compare(a7, a6) > 0;
-      assert laclf.compare(a7, a6) < 0;
-      assert lacl.compare(a1, a4) < 0;
-      assert laclf.compare(a1, a4) < 0;
-      assert lacl.compare(a4, a1) > 0;
-      assert laclf.compare(a4, a1) > 0;
-      assert lacl.compare(a2, a4) < 0;
-      assert laclf.compare(a2, a4) < 0;
-      assert lacl.compare(a4, a2) > 0;
-      assert laclf.compare(a4, a2) > 0;
-      assert lacl.compare(a6, a4) > 0;
-      assert laclf.compare(a6, a4) > 0;
-      assert lacl.compare(a4, a6) < 0;
-      assert laclf.compare(a4, a6) < 0;
-      assert lacl.compare(a7, a4) > 0;
-      assert laclf.compare(a7, a4) < 0;
-      assert lacl.compare(a4, a7) < 0;
-      assert laclf.compare(a4, a7) > 0;
-      assert lacl.compare(a8, a9) < 0;
-      assert laclf.compare(a8, a9) < 0;
-      assert lacl.compare(a10, a7) < 0;
-    }
+    Comparator<long[]> lacl = new ArraysPlume.LongArrayComparatorLexical();
+    Comparator<long[]> laclf = new ArraysPlume.LongArrayComparatorLengthFirst();
+    long[] a0 = new long[] {};
+    long[] a1 = new long[] {};
+    long[] a2 = new long[] {0, 1, 2, 3};
+    long[] a3 = new long[] {0, 1, 2, 3, 0};
+    long[] a4 = new long[] {0, 1, 2, 3, 4};
+    long[] a5 = new long[] {0, 1, 2, 3, 4};
+    long[] a6 = new long[] {0, 1, 5, 3, 4};
+    long[] a7 = new long[] {1, 2, 3, 4};
+    long[] a8 = new long[] {-5};
+    long[] a9 = new long[] {Long.MAX_VALUE};
+    long[] a10 = new long[] {Long.MIN_VALUE};
+
+    assert lacl.compare(a0, a1) == 0;
+    assert laclf.compare(a0, a1) == 0;
+    assert lacl.compare(a1, a0) == 0;
+    assert laclf.compare(a1, a0) == 0;
+    assert lacl.compare(a1, a2) < 0;
+    assert laclf.compare(a1, a2) < 0;
+    assert lacl.compare(a2, a1) > 0;
+    assert laclf.compare(a2, a1) > 0;
+    assert lacl.compare(a2, a3) < 0;
+    assert laclf.compare(a2, a3) < 0;
+    assert lacl.compare(a3, a2) > 0;
+    assert laclf.compare(a3, a2) > 0;
+    assert lacl.compare(a3, a4) < 0;
+    assert laclf.compare(a3, a4) < 0;
+    assert lacl.compare(a4, a3) > 0;
+    assert laclf.compare(a4, a3) > 0;
+    assert lacl.compare(a4, a5) == 0;
+    assert laclf.compare(a4, a5) == 0;
+    assert lacl.compare(a5, a4) == 0;
+    assert laclf.compare(a5, a4) == 0;
+    assert lacl.compare(a5, a6) < 0;
+    assert laclf.compare(a5, a6) < 0;
+    assert lacl.compare(a6, a5) > 0;
+    assert laclf.compare(a6, a5) > 0;
+    assert lacl.compare(a6, a7) < 0;
+    assert laclf.compare(a6, a7) > 0;
+    assert lacl.compare(a7, a6) > 0;
+    assert laclf.compare(a7, a6) < 0;
+    assert lacl.compare(a1, a4) < 0;
+    assert laclf.compare(a1, a4) < 0;
+    assert lacl.compare(a4, a1) > 0;
+    assert laclf.compare(a4, a1) > 0;
+    assert lacl.compare(a2, a4) < 0;
+    assert laclf.compare(a2, a4) < 0;
+    assert lacl.compare(a4, a2) > 0;
+    assert laclf.compare(a4, a2) > 0;
+    assert lacl.compare(a6, a4) > 0;
+    assert laclf.compare(a6, a4) > 0;
+    assert lacl.compare(a4, a6) < 0;
+    assert laclf.compare(a4, a6) < 0;
+    assert lacl.compare(a7, a4) > 0;
+    assert laclf.compare(a7, a4) < 0;
+    assert lacl.compare(a4, a7) < 0;
+    assert laclf.compare(a4, a7) > 0;
+    assert lacl.compare(a8, a9) < 0;
+    assert laclf.compare(a8, a9) < 0;
+    assert lacl.compare(a10, a7) < 0;
+  }
+
+  @Test
+  public void test_DoubleArrayComparatorLexical() {
 
     // public static class DoubleArrayComparatorLexical implements Comparator
-    {
-      Comparator<double[]> dacl = new ArraysPlume.DoubleArrayComparatorLexical();
-      double[] a0 = new double[] {};
-      double[] a1 = new double[] {};
-      double[] a2 = new double[] {0, 1, 2, 3};
-      double[] a3 = new double[] {0, 1, 2, 3, 0};
-      double[] a4 = new double[] {0, 1, 2, 3, 4};
-      double[] a5 = new double[] {0, 1, 2, 3, 4};
-      double[] a6 = new double[] {0, 1, 5, 3, 4};
-      double[] a7 = new double[] {1, 2, 3, 4};
-      double[] a8 = new double[] {0.005};
-      double[] a9 = new double[] {0.004};
-      double[] a10 = new double[] {-0.005};
-      double[] a11 = new double[] {-0.004};
-      double[] a12 = new double[] {10.0 * Integer.MAX_VALUE};
-      double[] a13 = new double[] {10.0 * Integer.MIN_VALUE};
 
-      assert dacl.compare(a0, a1) == 0;
-      assert dacl.compare(a1, a0) == 0;
-      assert dacl.compare(a1, a2) < 0;
-      assert dacl.compare(a2, a1) > 0;
-      assert dacl.compare(a2, a3) < 0;
-      assert dacl.compare(a3, a2) > 0;
-      assert dacl.compare(a3, a4) < 0;
-      assert dacl.compare(a4, a3) > 0;
-      assert dacl.compare(a4, a5) == 0;
-      assert dacl.compare(a5, a4) == 0;
-      assert dacl.compare(a5, a6) < 0;
-      assert dacl.compare(a6, a5) > 0;
-      assert dacl.compare(a6, a7) < 0;
-      assert dacl.compare(a7, a6) > 0;
-      assert dacl.compare(a1, a4) < 0;
-      assert dacl.compare(a4, a1) > 0;
-      assert dacl.compare(a2, a4) < 0;
-      assert dacl.compare(a4, a2) > 0;
-      assert dacl.compare(a6, a4) > 0;
-      assert dacl.compare(a4, a6) < 0;
-      assert dacl.compare(a7, a4) > 0;
-      assert dacl.compare(a4, a7) < 0;
+    Comparator<double[]> dacl = new ArraysPlume.DoubleArrayComparatorLexical();
+    double[] a0 = new double[] {};
+    double[] a1 = new double[] {};
+    double[] a2 = new double[] {0, 1, 2, 3};
+    double[] a3 = new double[] {0, 1, 2, 3, 0};
+    double[] a4 = new double[] {0, 1, 2, 3, 4};
+    double[] a5 = new double[] {0, 1, 2, 3, 4};
+    double[] a6 = new double[] {0, 1, 5, 3, 4};
+    double[] a7 = new double[] {1, 2, 3, 4};
+    double[] a8 = new double[] {0.005};
+    double[] a9 = new double[] {0.004};
+    double[] a10 = new double[] {-0.005};
+    double[] a11 = new double[] {-0.004};
+    double[] a12 = new double[] {10.0 * Integer.MAX_VALUE};
+    double[] a13 = new double[] {10.0 * Integer.MIN_VALUE};
 
-      // Test the comparisons on small/large numbers
-      assert dacl.compare(a8, a9) > 0;
-      assert dacl.compare(a10, a11) < 0;
-      assert dacl.compare(a11, a12) < 0;
-      assert dacl.compare(a12, a13) > 0;
-      assert dacl.compare(a13, a11) < 0;
-    }
+    assert dacl.compare(a0, a1) == 0;
+    assert dacl.compare(a1, a0) == 0;
+    assert dacl.compare(a1, a2) < 0;
+    assert dacl.compare(a2, a1) > 0;
+    assert dacl.compare(a2, a3) < 0;
+    assert dacl.compare(a3, a2) > 0;
+    assert dacl.compare(a3, a4) < 0;
+    assert dacl.compare(a4, a3) > 0;
+    assert dacl.compare(a4, a5) == 0;
+    assert dacl.compare(a5, a4) == 0;
+    assert dacl.compare(a5, a6) < 0;
+    assert dacl.compare(a6, a5) > 0;
+    assert dacl.compare(a6, a7) < 0;
+    assert dacl.compare(a7, a6) > 0;
+    assert dacl.compare(a1, a4) < 0;
+    assert dacl.compare(a4, a1) > 0;
+    assert dacl.compare(a2, a4) < 0;
+    assert dacl.compare(a4, a2) > 0;
+    assert dacl.compare(a6, a4) > 0;
+    assert dacl.compare(a4, a6) < 0;
+    assert dacl.compare(a7, a4) > 0;
+    assert dacl.compare(a4, a7) < 0;
+
+    // Test the comparisons on small/large numbers
+    assert dacl.compare(a8, a9) > 0;
+    assert dacl.compare(a10, a11) < 0;
+    assert dacl.compare(a11, a12) < 0;
+    assert dacl.compare(a12, a13) > 0;
+    assert dacl.compare(a13, a11) < 0;
+  }
+
+  @Test
+  public void test_ComparableArrayComparator() {
 
     // public static class ObjectArrayComparatorLexical implements Comparator
     // public static class ObjectArrayComparatorLengthFirst implements Comparator
 
     // public static final class ComparableArrayComparatorLexical implements Comparator
     // public static final class ComparableArrayComparatorLengthFirst implements Comparator
-    {
-      Comparator<String[]> cacl = new ArraysPlume.ComparableArrayComparatorLexical<String>();
-      Comparator<String[]> caclf = new ArraysPlume.ComparableArrayComparatorLengthFirst<String>();
-      String[] a0 = new String[] {};
-      String[] a1 = new String[] {};
-      String[] a2 = new String[] {"0", "1", "2", "3"};
-      String[] a3 = new String[] {"0", "1", "2", "3", "0"};
-      String[] a4 = new String[] {"0", "1", "2", "3", "4"};
-      String[] a5 = new String[] {"0", "1", "2", "3", "4"};
-      String[] a6 = new String[] {"0", "1", "5", "3", "4"};
-      String[] a7 = new String[] {"1", "2", "3", "4"};
-      @SuppressWarnings(
-          "nullness") // accommodates poor annotation on ComparableArrayComparatorLexical.compare()
-      // and ComparableArrayComparatorLengthFirst.compare()
-      String[] a8 = new String[] {"0", "1", null, "3", "4"};
 
-      assert cacl.compare(a0, a1) == 0;
-      assert caclf.compare(a0, a1) == 0;
-      assert cacl.compare(a1, a0) == 0;
-      assert caclf.compare(a1, a0) == 0;
-      assert cacl.compare(a1, a2) < 0;
-      assert caclf.compare(a1, a2) < 0;
-      assert cacl.compare(a2, a1) > 0;
-      assert caclf.compare(a2, a1) > 0;
-      assert cacl.compare(a2, a3) < 0;
-      assert caclf.compare(a2, a3) < 0;
-      assert cacl.compare(a3, a2) > 0;
-      assert caclf.compare(a3, a2) > 0;
-      assert cacl.compare(a3, a4) < 0;
-      assert caclf.compare(a3, a4) < 0;
-      assert cacl.compare(a4, a3) > 0;
-      assert caclf.compare(a4, a3) > 0;
-      assert cacl.compare(a4, a5) == 0;
-      assert caclf.compare(a4, a5) == 0;
-      assert cacl.compare(a5, a4) == 0;
-      assert caclf.compare(a5, a4) == 0;
-      assert cacl.compare(a5, a6) < 0;
-      assert caclf.compare(a5, a6) < 0;
-      assert cacl.compare(a6, a5) > 0;
-      assert caclf.compare(a6, a5) > 0;
-      assert cacl.compare(a6, a7) < 0;
-      assert caclf.compare(a6, a7) > 0;
-      assert cacl.compare(a7, a6) > 0;
-      assert caclf.compare(a7, a6) < 0;
-      assert cacl.compare(a1, a4) < 0;
-      assert caclf.compare(a1, a4) < 0;
-      assert cacl.compare(a4, a1) > 0;
-      assert caclf.compare(a4, a1) > 0;
-      assert cacl.compare(a2, a4) < 0;
-      assert caclf.compare(a2, a4) < 0;
-      assert cacl.compare(a4, a2) > 0;
-      assert caclf.compare(a4, a2) > 0;
-      assert cacl.compare(a6, a4) > 0;
-      assert caclf.compare(a6, a4) > 0;
-      assert cacl.compare(a4, a6) < 0;
-      assert caclf.compare(a4, a6) < 0;
-      assert cacl.compare(a7, a4) > 0;
-      assert caclf.compare(a7, a4) < 0;
-      assert cacl.compare(a8, a1) > 0;
-      assert caclf.compare(a8, a1) > 0;
-      assert cacl.compare(a1, a8) < 0;
-      assert caclf.compare(a1, a8) < 0;
-      assert cacl.compare(a8, a2) < 0;
-      assert caclf.compare(a8, a2) > 0;
-      assert cacl.compare(a2, a8) > 0;
-      assert caclf.compare(a2, a8) < 0;
-      assert cacl.compare(a8, a3) < 0;
-      assert caclf.compare(a8, a3) < 0;
-      assert cacl.compare(a3, a8) > 0;
-      assert caclf.compare(a3, a8) > 0;
-    }
+    Comparator<String[]> cacl = new ArraysPlume.ComparableArrayComparatorLexical<String>();
+    Comparator<String[]> caclf = new ArraysPlume.ComparableArrayComparatorLengthFirst<String>();
+    String[] a0 = new String[] {};
+    String[] a1 = new String[] {};
+    String[] a2 = new String[] {"0", "1", "2", "3"};
+    String[] a3 = new String[] {"0", "1", "2", "3", "0"};
+    String[] a4 = new String[] {"0", "1", "2", "3", "4"};
+    String[] a5 = new String[] {"0", "1", "2", "3", "4"};
+    String[] a6 = new String[] {"0", "1", "5", "3", "4"};
+    String[] a7 = new String[] {"1", "2", "3", "4"};
+    @SuppressWarnings(
+        "nullness") // accommodates poor annotation on ComparableArrayComparatorLexical.compare()
+    // and ComparableArrayComparatorLengthFirst.compare()
+    String[] a8 = new String[] {"0", "1", null, "3", "4"};
+
+    assert cacl.compare(a0, a1) == 0;
+    assert caclf.compare(a0, a1) == 0;
+    assert cacl.compare(a1, a0) == 0;
+    assert caclf.compare(a1, a0) == 0;
+    assert cacl.compare(a1, a2) < 0;
+    assert caclf.compare(a1, a2) < 0;
+    assert cacl.compare(a2, a1) > 0;
+    assert caclf.compare(a2, a1) > 0;
+    assert cacl.compare(a2, a3) < 0;
+    assert caclf.compare(a2, a3) < 0;
+    assert cacl.compare(a3, a2) > 0;
+    assert caclf.compare(a3, a2) > 0;
+    assert cacl.compare(a3, a4) < 0;
+    assert caclf.compare(a3, a4) < 0;
+    assert cacl.compare(a4, a3) > 0;
+    assert caclf.compare(a4, a3) > 0;
+    assert cacl.compare(a4, a5) == 0;
+    assert caclf.compare(a4, a5) == 0;
+    assert cacl.compare(a5, a4) == 0;
+    assert caclf.compare(a5, a4) == 0;
+    assert cacl.compare(a5, a6) < 0;
+    assert caclf.compare(a5, a6) < 0;
+    assert cacl.compare(a6, a5) > 0;
+    assert caclf.compare(a6, a5) > 0;
+    assert cacl.compare(a6, a7) < 0;
+    assert caclf.compare(a6, a7) > 0;
+    assert cacl.compare(a7, a6) > 0;
+    assert caclf.compare(a7, a6) < 0;
+    assert cacl.compare(a1, a4) < 0;
+    assert caclf.compare(a1, a4) < 0;
+    assert cacl.compare(a4, a1) > 0;
+    assert caclf.compare(a4, a1) > 0;
+    assert cacl.compare(a2, a4) < 0;
+    assert caclf.compare(a2, a4) < 0;
+    assert cacl.compare(a4, a2) > 0;
+    assert caclf.compare(a4, a2) > 0;
+    assert cacl.compare(a6, a4) > 0;
+    assert caclf.compare(a6, a4) > 0;
+    assert cacl.compare(a4, a6) < 0;
+    assert caclf.compare(a4, a6) < 0;
+    assert cacl.compare(a7, a4) > 0;
+    assert caclf.compare(a7, a4) < 0;
+    assert cacl.compare(a8, a1) > 0;
+    assert caclf.compare(a8, a1) > 0;
+    assert cacl.compare(a1, a8) < 0;
+    assert caclf.compare(a1, a8) < 0;
+    assert cacl.compare(a8, a2) < 0;
+    assert caclf.compare(a8, a2) > 0;
+    assert cacl.compare(a2, a8) > 0;
+    assert caclf.compare(a2, a8) < 0;
+    assert cacl.compare(a8, a3) < 0;
+    assert caclf.compare(a8, a3) < 0;
+    assert cacl.compare(a3, a8) > 0;
+    assert caclf.compare(a3, a8) > 0;
   }
 
   @Test
-  public void testNullness() {
+  public void test_anyNull() {
 
     // public static boolean anyNull(Object[] a)
-    {
-      Object o = new Object();
-      assert ArraysPlume.anyNull(new Object[] {}) == false;
-      assert ArraysPlume.anyNull(new Object[] {null}) == true;
-      assert ArraysPlume.anyNull(new Object[] {null, null}) == true;
-      assert ArraysPlume.anyNull(new Object[] {o}) == false;
-      assert ArraysPlume.anyNull(new Object[] {o, o}) == false;
-      assert ArraysPlume.anyNull(new Object[] {o, null, null}) == true;
-      assert ArraysPlume.anyNull(new Object[] {null, o, null}) == true;
-      assert ArraysPlume.anyNull(new Object[] {o, null, o}) == true;
-      assert ArraysPlume.anyNull(new Object[] {null, o, o}) == true;
-      assert ArraysPlume.anyNull(new Object[][] {}) == false;
-      assert ArraysPlume.anyNull(new Object[][] {null}) == true;
-      // Extraneous @Nullable on the following lines are due to https://tinyurl.com/cfissue/599
-      assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}}) == false;
-      assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, null}) == true;
-      assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
-          == false;
-    }
+
+    Object o = new Object();
+    assert ArraysPlume.anyNull(new Object[] {}) == false;
+    assert ArraysPlume.anyNull(new Object[] {null}) == true;
+    assert ArraysPlume.anyNull(new Object[] {null, null}) == true;
+    assert ArraysPlume.anyNull(new Object[] {o}) == false;
+    assert ArraysPlume.anyNull(new Object[] {o, o}) == false;
+    assert ArraysPlume.anyNull(new Object[] {o, null, null}) == true;
+    assert ArraysPlume.anyNull(new Object[] {null, o, null}) == true;
+    assert ArraysPlume.anyNull(new Object[] {o, null, o}) == true;
+    assert ArraysPlume.anyNull(new Object[] {null, o, o}) == true;
+    assert ArraysPlume.anyNull(new Object[][] {}) == false;
+    assert ArraysPlume.anyNull(new Object[][] {null}) == true;
+    // Extraneous @Nullable on the following lines are due to https://tinyurl.com/cfissue/599
+    assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}}) == false;
+    assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, null}) == true;
+    assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
+        == false;
+  }
+
+  @Test
+  public void test_allNull() {
 
     // public static boolean allNull(Object[] a)
-    {
-      Object o = new Object();
-      assert ArraysPlume.allNull(new Object[] {}) == true;
-      assert ArraysPlume.allNull(new Object[] {null}) == true;
-      assert ArraysPlume.allNull(new Object[] {null, null}) == true;
-      assert ArraysPlume.allNull(new Object[] {o}) == false;
-      assert ArraysPlume.allNull(new Object[] {o, o}) == false;
-      assert ArraysPlume.allNull(new Object[] {o, null, null}) == false;
-      assert ArraysPlume.allNull(new Object[] {null, o, null}) == false;
-      assert ArraysPlume.allNull(new Object[] {o, null, o}) == false;
-      assert ArraysPlume.allNull(new Object[] {null, o, o}) == false;
-      assert ArraysPlume.allNull(new Object[][] {}) == true;
-      assert ArraysPlume.allNull(new Object[][] {null}) == true;
-      assert ArraysPlume.allNull(new Object[][] {null, null}) == true;
-      assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}}) == false;
-      assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, null}) == false;
-      assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
-          == false;
-    }
+
+    Object o = new Object();
+    assert ArraysPlume.allNull(new Object[] {}) == true;
+    assert ArraysPlume.allNull(new Object[] {null}) == true;
+    assert ArraysPlume.allNull(new Object[] {null, null}) == true;
+    assert ArraysPlume.allNull(new Object[] {o}) == false;
+    assert ArraysPlume.allNull(new Object[] {o, o}) == false;
+    assert ArraysPlume.allNull(new Object[] {o, null, null}) == false;
+    assert ArraysPlume.allNull(new Object[] {null, o, null}) == false;
+    assert ArraysPlume.allNull(new Object[] {o, null, o}) == false;
+    assert ArraysPlume.allNull(new Object[] {null, o, o}) == false;
+    assert ArraysPlume.allNull(new Object[][] {}) == true;
+    assert ArraysPlume.allNull(new Object[][] {null}) == true;
+    assert ArraysPlume.allNull(new Object[][] {null, null}) == true;
+    assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}}) == false;
+    assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, null}) == false;
+    assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
+        == false;
   }
 
   /** Return true if the toString of each element in elts equals the corresponding string. */
