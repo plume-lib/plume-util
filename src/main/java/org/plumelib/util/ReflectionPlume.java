@@ -305,6 +305,7 @@ public final class ReflectionPlume {
       @MonotonicNonNull Class<?>[] argclasses_tmp = new Class<?>[argnames.length];
       for (int i = 0; i < argnames.length; i++) {
         String bnArgname = argnames[i].trim();
+        @SuppressWarnings("signature") // string manipulation: extract part of signature
         @ClassGetName String cgnArgname = Signatures.binaryNameToClassGetName(bnArgname);
         argclasses_tmp[i] = classForName(cgnArgname);
       }
