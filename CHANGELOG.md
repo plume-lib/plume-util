@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.0.8
+
+- Update dependencies.
+
 ## 1.0.7
 
 - No user-visible changes.

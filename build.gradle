@@ -3,13 +3,13 @@ plugins {
   id "com.github.johnrengelman.shadow" version "2.0.4"
   // Run the Error Prone linter.
   id "net.ltgt.errorprone-base" version "0.0.16"
-  // Formating is disabled due to poor handling of type annotations; wait until
+  // Formatting is disabled due to poor handling of type annotations; wait until
   // this issue is fixed: https://github.com/google/google-java-format/issues/5
   // // Code formatting with Google Java Format; defines targets "goJF" and "verJF".
   // id "com.github.sherter.google-java-format" version "0.7.1"
 
   // Checker Framework pluggable type-checking
-  id "org.checkerframework" version "0.3.0"
+  id "org.checkerframework" version "0.3.4"
 }
 
 apply plugin: 'java-library'
@@ -19,7 +19,7 @@ apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 dependencies {
   // https://mvnrepository.com/artifact/org.plumelib/reflection-util
-  implementation 'org.plumelib:reflection-util:0.0.3'
+  implementation 'org.plumelib:reflection-util:0.0.4'
   testImplementation 'junit:junit:4.12'
   errorprone 'com.google.errorprone:error_prone_core:2.3.3'
 }
@@ -63,7 +63,7 @@ task javadocWeb(type: Javadoc) {
 
 // `requireJavadoc` target ensures that all Java elements have Javadoc documentation.
 dependencies {
-  compileOnly group: 'org.plumelib', name: 'require-javadoc', version: '0.1.1'
+  compileOnly group: 'org.plumelib', name: 'require-javadoc', version: '0.1.2'
 }
 task requireJavadoc(type: Javadoc) {
   destinationDir.deleteDir()
