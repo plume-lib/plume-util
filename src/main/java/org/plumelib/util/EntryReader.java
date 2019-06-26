@@ -333,7 +333,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     @Override
-    public long skip(@GuardSatisfied DummyReader this, long n) {
+    public @NonNegative long skip(@GuardSatisfied DummyReader this, long n) {
       throw new Error("DummyReader");
     }
   }
@@ -868,7 +868,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   @Override
-  public long skip(@GuardSatisfied EntryReader this, long n) {
+  public @NonNegative long skip(@GuardSatisfied EntryReader this, long n) {
     throw new Error("not yet implemented");
   }
 
