@@ -77,7 +77,7 @@ public final class UtilPlume {
    * @param i the cardinality bound
    * @return true iff size(a intersect b) &ge; i
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
     // Here are three implementation strategies to determine the
@@ -113,7 +113,7 @@ public final class UtilPlume {
    * @param i the cardinality bound
    * @return true iff size(a intersect b intersect c) &ge; i
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static boolean intersectionCardinalityAtLeast(
       BitSet a, BitSet b, BitSet c, @NonNegative int i) {
@@ -142,7 +142,7 @@ public final class UtilPlume {
    * @param b the second BitSet to intersect
    * @return size(a intersect b)
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b) {
     BitSet intersection = (BitSet) a.clone();
@@ -158,7 +158,7 @@ public final class UtilPlume {
    * @param c the third BitSet to intersect
    * @return size(a intersect b intersect c)
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (BitSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
     BitSet intersection = (BitSet) a.clone();
@@ -633,7 +633,7 @@ public final class UtilPlume {
    * @param trimLines if true, call String.trim on each line before comparing
    * @return true iff the files have the same contents
    */
-  @SuppressWarnings({"purity", "lock"}) // reads files, side effects local state
+  @SuppressWarnings({"all:purity", "lock"}) // reads files, side effects local state
   @Pure
   public static boolean equalFiles(String file1, String file2, boolean trimLines) {
     try (LineNumberReader reader1 = UtilPlume.lineNumberFileReader(file1);
@@ -1246,7 +1246,7 @@ public final class UtilPlume {
    * @param key name of the property to look up
    * @return true iff the property has value "true", "yes", or "1"
    */
-  @SuppressWarnings({"purity", "lock"}) // does not depend on object identity
+  @SuppressWarnings({"all:purity", "lock"}) // does not depend on object identity
   @Pure
   public static boolean propertyIsTrue(Properties p, String key) {
     String pvalue = p.getProperty(key);
@@ -1927,7 +1927,7 @@ public final class UtilPlume {
     static final long serialVersionUID = 20170420L;
 
     @SuppressWarnings({
-      "purity.not.deterministic.call",
+      "all:purity.not.deterministic.call",
       "lock"
     }) // toString is being used in a deterministic way
     @Pure

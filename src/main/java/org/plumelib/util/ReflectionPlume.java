@@ -48,7 +48,7 @@ public final class ReflectionPlume {
    * @return true iff sub is a subtype of sup
    */
   @SuppressWarnings({
-    "purity.not.deterministic.call", // getInterfaces() is used as a set
+    "all:purity.not.deterministic.call", // getInterfaces() is used as a set
     "method.guarantee.violated" // getInterfaces() is used as a set
   })
   @Pure

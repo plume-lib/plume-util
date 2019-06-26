@@ -91,7 +91,7 @@ public final class CollectionsPlume {
    * @param o2 second value to compare
    * @return true iff o1 and o2 are deeply equal
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to static field deepEqualsUnderway
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to static field deepEqualsUnderway
   @Pure
   public static boolean deepEquals(@Nullable Object o1, @Nullable Object o2) {
     @SuppressWarnings("interning")
@@ -128,7 +128,7 @@ public final class CollectionsPlume {
       return Arrays.equals((short[]) o1, (short[]) o2);
     }
 
-    @SuppressWarnings({"purity", "lock"}) // creates local state
+    @SuppressWarnings({"all:purity", "lock"}) // creates local state
     WeakIdentityPair<Object, Object> mypair = new WeakIdentityPair<>(o1, o2);
     if (deepEqualsUnderway.contains(mypair)) {
       return true;

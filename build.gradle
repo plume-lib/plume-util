@@ -44,7 +44,13 @@ checkerFramework {
     'org.checkerframework.checker.regex.RegexChecker',
     'org.checkerframework.checker.signature.SignatureChecker'
   ]
+  extraJavacArgs = [
+    '-AcheckPurityAnnotations',
+    '-ArequirePrefixInWarningSuppressions',
+    '-AwarnUnneededSuppressions'
+  ]
 }
+
 
 /// Javadoc
 

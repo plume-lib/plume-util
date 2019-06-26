@@ -117,7 +117,9 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     int[] svalues = s.values;
     for (int i = 0; i < s.size(); i++) {
       @SuppressWarnings(
-          "index") // svalues is the internal rep of s, and s.size() <= s.values.length
+          "index:assignment.type.incompatible" // svalues is the internal rep of s, and s.size() <=
+      // s.values.length
+      )
       @IndexFor("svalues") int index = i;
       add(svalues[index]);
       if (repNulled()) {
@@ -132,7 +134,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
    * @param elt the element whose membership to test
    * @return true if this set contains {@code elt}
    */
-  @SuppressWarnings("deterministic") // pure wrt equals() but not ==: throws a new exception
+  @SuppressWarnings("all:deterministic") // pure wrt equals() but not ==: throws a new exception
   @Pure
   public boolean contains(int elt) {
     if (repNulled()) {
@@ -199,7 +201,8 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     values = null;
   }
 
-  @SuppressWarnings("sideeffectfree") // side effect to local state (clone)
+  @SuppressWarnings(
+      "all:purity.not.sideeffectfree.assign.field") // side effect to local state (clone)
   @SideEffectFree
   @Override
   public LimitedSizeIntSet clone(@GuardSatisfied LimitedSizeIntSet this) {

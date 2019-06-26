@@ -101,7 +101,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "keyfor",
   "lock",
   "nullness",
-  "purity",
+  "all:purity",
   "regex"
 }) // old, non-typesafe Sun code, not worth annotating or checking
 public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {

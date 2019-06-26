@@ -360,7 +360,7 @@ public final class ArraysPlume {
     if (a.length == 0) {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(int[])");
     }
-    @SuppressWarnings("purity.not.deterministic.call") // use deterministic parts of object
+    @SuppressWarnings("all:purity.not.deterministic.call") // use deterministic parts of object
     int[] minAndMax = minAndMax(a);
     return minAndMax[1] - minAndMax[0];
   }
@@ -378,7 +378,7 @@ public final class ArraysPlume {
     if (a.length == 0) {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(long[])");
     }
-    @SuppressWarnings("purity.not.deterministic.call") // use deterministic parts of object
+    @SuppressWarnings("all:purity.not.deterministic.call") // use deterministic parts of object
     long[] minAndMax = minAndMax(a);
     return minAndMax[1] - minAndMax[0];
   }
@@ -2075,7 +2075,7 @@ public final class ArraysPlume {
    * @return a string representation of the array
    * @throws IllegalArgumentException if a is not an array
    */
-  @SuppressWarnings("purity") // defensive coding: throw exception when argument is invalid
+  @SuppressWarnings("all:purity") // defensive coding: throw exception when argument is invalid
   @SideEffectFree
   public static String toString(Object a) {
     if (a == null) {
@@ -2114,7 +2114,7 @@ public final class ArraysPlume {
    * @return the length of the array
    * @throws IllegalArgumentException if obj is null or is not an array
    */
-  @SuppressWarnings("purity") // defensive coding: throw exception when argument is invalid
+  @SuppressWarnings("all:purity") // defensive coding: throw exception when argument is invalid
   @Pure
   public static @NonNegative int length(Object a) throws IllegalArgumentException {
     if (a == null) {
@@ -2179,7 +2179,7 @@ public final class ArraysPlume {
    * @return a string representation of the array
    * @see java.util.ArrayList#toString
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (string creation)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
   public static String toString(@PolyAll Object @Nullable [] a, boolean quoted) {
     if (a == null) {
@@ -2240,7 +2240,7 @@ public final class ArraysPlume {
    * @return a string representation of the list
    * @see java.util.ArrayList#toString
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (string creation)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
   public static String toString(@Nullable Collection<?> a, boolean quoted) {
     if (a == null) {
@@ -2343,7 +2343,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(boolean[] a) {
     HashSet<Boolean> hs = new HashSet<>();
@@ -2367,7 +2367,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(byte[] a) {
     HashSet<Byte> hs = new HashSet<>();
@@ -2391,7 +2391,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(char[] a) {
     HashSet<Character> hs = new HashSet<>();
@@ -2415,7 +2415,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(float[] a) {
     HashSet<Float> hs = new HashSet<>();
@@ -2439,7 +2439,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(short[] a) {
     HashSet<Short> hs = new HashSet<>();
@@ -2463,7 +2463,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(int[] a) {
     HashSet<Integer> hs = new HashSet<>();
@@ -2488,7 +2488,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(double[] a) {
     HashSet<Double> hs = new HashSet<>();
@@ -2512,7 +2512,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(long[] a) {
     HashSet<Long> hs = new HashSet<>();
@@ -2536,7 +2536,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(String[] a) {
     HashSet<String> hs = new HashSet<>();
@@ -2559,7 +2559,7 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(Object[] a) {
     HashSet<Object> hs = new HashSet<>();
@@ -2583,7 +2583,7 @@ public final class ArraysPlume {
    * @param a a list
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
     HashSet<T> hs = new HashSet<>();
@@ -2608,7 +2608,7 @@ public final class ArraysPlume {
    * @param a an array, representing a function
    * @return true iff all elements of a are in [0..a.length) and a contains no duplicates.
    */
-  @SuppressWarnings("purity") // side effect to local state (array)
+  @SuppressWarnings("all:purity") // side effect to local state (array)
   @Pure
   public static boolean fnIsPermutation(int[] a) {
     // In the common case we expect to succeed, so use as few loops as possible
@@ -2745,7 +2745,7 @@ public final class ArraysPlume {
    * @param bigger second set to test
    * @return true iff smaller is a subset of bigger
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(long[] smaller, long[] bigger) {
     Set<Long> setBigger = new HashSet<>();
@@ -2777,7 +2777,7 @@ public final class ArraysPlume {
    * @param bigger second set to test
    * @return true iff smaller is a subset of bigger
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(double[] smaller, double[] bigger) {
     Set<Double> setBigger = new HashSet<>();
@@ -2809,7 +2809,7 @@ public final class ArraysPlume {
    * @param bigger second set to test
    * @return true iff smaller is a subset of bigger
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (HashSet)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(String[] smaller, String[] bigger) {
     Set<String> setBigger = new HashSet<>();
