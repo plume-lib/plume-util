@@ -76,7 +76,6 @@ public class ClassDeterministic {
    * @param c the Class whose enum constants to return
    * @return the class's enum constants
    */
-  @SuppressWarnings("nullness:argument.type.incompatible") //  comparator handles null
   public static <T> T @Nullable [] getEnumConstants(Class<T> c) {
     T[] result = c.getEnumConstants();
     if (result == null) {

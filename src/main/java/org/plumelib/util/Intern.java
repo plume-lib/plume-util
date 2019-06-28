@@ -74,7 +74,7 @@ public final class Intern {
    * @param value the value to test for interning
    * @return true iff value is interned
    */
-  @SuppressWarnings({"interning", "lock"}) // interning implementation
+  @SuppressWarnings({"interning"}) // interning implementation
   @Pure
   public static boolean isInterned(@Nullable Object value) {
     if (value == null) {
@@ -516,7 +516,6 @@ public final class Intern {
    * @return an interned version of the argument, or null if the argument was null
    */
   @Pure
-  @SuppressWarnings("lock")
   public static @Interned @PolyNull @PolyValue @SameLen("#1") String intern(
       @PolyNull @PolyValue String a) {
     // Checker Framework cannot typecheck:  return (a == null) ? null : a.intern();
@@ -565,7 +564,6 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned Integer result = (@Interned Integer) a;
       internedIntegers.put(result, new WeakReference<>(result));
       return result;
@@ -611,7 +609,6 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned Long result = (@Interned Long) a;
       internedLongs.put(result, new WeakReference<>(result));
       return result;
@@ -669,7 +666,6 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned int[] result = (int @Interned @PolyValue []) a;
       internedIntArrays.put(result, new WeakReference<>(result));
       return result;
@@ -698,7 +694,6 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned long[] result = (long @Interned @PolyValue []) a;
       internedLongArrays.put(result, new WeakReference<>(result));
       return result;
@@ -730,7 +725,6 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned Double result = (@Interned Double) a;
       internedDoubles.put(result, new WeakReference<>(result));
       return result;
@@ -784,7 +778,6 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @SuppressWarnings("cast") // cast is redundant (except in JSR 308)
       @Interned double[] result = (double @Interned @PolyValue []) a;
       internedDoubleArrays.put(result, new WeakReference<>(result));
       return result;

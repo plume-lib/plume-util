@@ -1688,7 +1688,7 @@ public final class ArraysPlume {
       } else if (theList != null) {
         for (int i = destPos; i < theList.size(); i++) {
           @SuppressWarnings("index") // index checker has no list support
-          @IndexFor("result") int index = i + theList.size();
+          @IndexFor("dest") int index = i + theList.size();
           dest[index] = theList.get(i);
         }
       } else {
@@ -2959,8 +2959,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings(
-        "override.param.invalid") // CF bug: doesn't expand annotations on array elements with @Poly
+    @SuppressWarnings("all:override.param.invalid") // CF bug: doesn't expand annotations on array
+    // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyAll(1) String[], @PolyAll(2) String[]), but the
@@ -3011,8 +3011,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings(
-        "override.param.invalid") // CF bug: doesn't expand annotations on array elements with @Poly
+    @SuppressWarnings("all:override.param.invalid") // CF bug: doesn't expand annotations on array
+    // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyAll(1) T[], @PolyAll(2) T[]), but the
@@ -3072,8 +3072,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings(
-        "override.param.invalid") // CF bug: doesn't expand annotations on array elements with @Poly
+    @SuppressWarnings("all:override.param.invalid") // CF bug: doesn't expand annotations on array
+    // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyAll(1) Object[], @PolyAll(2) Object[]), but the
@@ -3191,8 +3191,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings(
-        "override.param.invalid") // CF bug: doesn't expand annotations on array elements with @Poly
+    @SuppressWarnings("all:override.param.invalid") // CF bug: doesn't expand annotations on array
+    // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyAll(1) T[], @PolyAll(2) T[]), but the
@@ -3258,8 +3258,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings(
-        "override.param.invalid") // CF bug: doesn't expand annotations on array elements with @Poly
+    @SuppressWarnings("all:override.param.invalid") // CF bug: doesn't expand annotations on array
+    // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyAll(1) Object[], @PolyAll(2) Object[]), but the
