@@ -1274,7 +1274,7 @@ public final class MathPlume {
    * @param nums numbers to be excluded; length &gt; 0; may contain duplicates
    * @return the set: [min(nums)..max(nums)] - nums
    */
-  @SuppressWarnings({"purity", "lock"})
+  @SuppressWarnings({"all:purity", "lock"})
   @Pure
   @StaticallyExecutable
   public static int[] missingNumbers(int @MinLen(1) [] nums) {
@@ -1451,7 +1451,7 @@ public final class MathPlume {
    * @param nums the list of operands
    * @return a (remainder, modulus) pair that fails to match elements of nums
    */
-  @SuppressWarnings({"purity", "lock"})
+  @SuppressWarnings({"all:purity", "lock"})
   @Pure
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] nonmodulusStrict(int[] nums) {
@@ -1543,7 +1543,7 @@ public final class MathPlume {
    */
   // This seems to give too many false positives (or maybe my probability
   // model was wrong); use nonmodulusStrict instead.
-  @SuppressWarnings("purity")
+  @SuppressWarnings("all:purity")
   @Pure
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] nonmodulusNonstrict(int[] nums) {
@@ -1593,7 +1593,7 @@ public final class MathPlume {
    * @param nums numbers to be excluded; length &gt; 0; may contain duplicates
    * @return the set: [min(nums)..max(nums)] - nums
    */
-  @SuppressWarnings({"purity", "lock"})
+  @SuppressWarnings({"all:purity", "lock"})
   @Pure
   @StaticallyExecutable
   public static long[] missingNumbers(long @MinLen(1) [] nums) {
@@ -1771,7 +1771,7 @@ public final class MathPlume {
    * @param nums the list of operands
    * @return a (remainder, modulus) pair that fails to match elements of nums
    */
-  @SuppressWarnings({"purity", "lock"})
+  @SuppressWarnings({"all:purity", "lock"})
   @Pure
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] nonmodulusStrict(long[] nums) {
@@ -1863,7 +1863,7 @@ public final class MathPlume {
    */
   // This seems to give too many false positives (or maybe my probability
   // model was wrong); use nonmodulusStrict instead.
-  @SuppressWarnings("purity")
+  @SuppressWarnings("all:purity")
   @Pure
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] nonmodulusNonstrict(long[] nums) {

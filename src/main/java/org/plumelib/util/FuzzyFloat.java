@@ -249,7 +249,7 @@ public class FuzzyFloat {
    * @param a2 the second set to compare
    * @return true if a1 and a2 are set equivalent, false otherwise
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (arrays)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (arrays)
   @Pure
   public boolean isElemMatch(double[] a1, double[] a2) {
 
@@ -367,7 +367,7 @@ public class FuzzyFloat {
    * @return true if smaller is a subset (each element of smaller is also a element of bigger) of
    *     bigger, false otherwise
    */
-  @SuppressWarnings({"purity", "lock"}) // side effect to local state (arrays)
+  @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (arrays)
   @Pure
   public boolean isSubset(double[] smaller, double[] bigger) {
 
