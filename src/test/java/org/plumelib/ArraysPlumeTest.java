@@ -173,7 +173,6 @@ public final class ArraysPlumeTest {
     // public static int indexOfEq(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt)
 
-    @SuppressWarnings("value") // annotated JDK doesn't have @MinLen on singletonList yet
     @MinLen(1) List<?> listOfStrings = Collections.singletonList("hello");
     assert ArraysPlume.indexOf(listOfStrings, (Object) null) == -1;
     assert ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1;
@@ -441,7 +440,10 @@ public final class ArraysPlumeTest {
     assert ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}) == true;
   }
 
-  @SuppressWarnings("index") // https://github.com/kelloggm/checker-framework/issues/147
+  @SuppressWarnings({
+    "lowerbound:argument.type.incompatible",
+    "index:argument.type.incompatible"
+  }) // https://github.com/kelloggm/checker-framework/issues/147
   @Test
   public void testFunctions() {
 
