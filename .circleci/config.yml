@@ -25,7 +25,8 @@ jobs:
             - gradle-v1-{{ .Branch }}-
             - gradle-v1-
 
-      - run: ./gradlew build
+      - run: ./gradlew build javadoc
+      - run: ./gradlew requireJavadoc
 
       - save_cache:
           paths:
