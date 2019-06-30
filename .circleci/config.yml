@@ -21,7 +21,7 @@ jobs:
       - restore_cache:
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
-            - gradle-v1-{{ .Branch }}-{{ checksum "gradle.cache" }}
+            - gradle-v1-{{ .Branch }}-{{ checksum "build.gradle" }}
             - gradle-v1-{{ .Branch }}-
             - gradle-v1-
 
@@ -31,7 +31,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: gradle-v1-{{ .Branch }}-{{ checksum "gradle.cache" }}
+          key: gradle-v1-{{ .Branch }}-{{ checksum "build.gradle" }}
 
 workflows:
   version: 2
