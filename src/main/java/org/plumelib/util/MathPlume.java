@@ -820,9 +820,12 @@ public final class MathPlume {
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
    */
-  @SuppressWarnings(
-      "index") // result is non-negative because either y is positive (-> x % y is non-negative) or
-  // |y| is added to x % y, which is also non-negative
+  @SuppressWarnings({
+    "lessthan:return.type.incompatible",
+    "lowerbound:return.type.incompatible",
+    "index:return.type.incompatible"
+  }) // result is non-negative because either y is positive (-> x % y is non-negative)
+  // or |y| is added to x % y, which is also non-negative
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modNonnegative(
@@ -1054,8 +1057,11 @@ public final class MathPlume {
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
    */
-  @SuppressWarnings(
-      "index") // result is non-negative because either y is positive (-> x % y is non-negative) or
+  @SuppressWarnings({
+    "lessthan:return.type.incompatible",
+    "lowerbound:return.type.incompatible",
+    "index:return.type.incompatible"
+  }) // result is non-negative because either y is positive (-> x % y is non-negative) or
   // |y| is added to x % y, which is also non-negative
   @Pure
   @StaticallyExecutable
@@ -1369,7 +1375,8 @@ public final class MathPlume {
         currentMissing = currentNonmissing;
       }
       this.numsItor = numsItor;
-      @SuppressWarnings("index") // unused variable, so value doesn't matter
+      @SuppressWarnings(
+          "lowerbound:assignment.type.incompatible") // unused variable, so value doesn't matter
       @IndexFor("nums") int unused = Integer.MIN_VALUE;
       currentIndex = unused;
     }
@@ -1383,8 +1390,8 @@ public final class MathPlume {
       while (currentMissing == currentNonmissing) {
         if (nums != null) {
           @SuppressWarnings(
-              "index") // This breaks the invariant, but it's checked right below and the function
-          // exits.
+              "index:assignment.type.incompatible") // This breaks the invariant, but it's
+          // checked right below and the function exits.
           @IndexFor("nums") int currentIndex_temp = currentIndex + 1;
           currentIndex = currentIndex_temp;
           if (currentIndex >= nums.length) {
@@ -1689,7 +1696,8 @@ public final class MathPlume {
         currentMissing = currentNonmissing;
       }
       this.numsItor = numsItor;
-      @SuppressWarnings("index") // unused variable, so value doesn't matter
+      @SuppressWarnings(
+          "lowerbound:assignment.type.incompatible") // unused variable, so value doesn't matter
       @IndexFor("nums") int unused = Integer.MIN_VALUE;
       currentIndex = unused;
     }
@@ -1703,8 +1711,8 @@ public final class MathPlume {
       while (currentMissing == currentNonmissing) {
         if (nums != null) {
           @SuppressWarnings(
-              "index") // This breaks the invariant, but it's checked right below and the function
-          // exits.
+              "index:assignment.type.incompatible") // This breaks the invariant, but it's
+          // checked right below and the function exits.
           @IndexFor("nums") int currentIndex_temp = currentIndex + 1;
           currentIndex = currentIndex_temp;
           if (currentIndex >= nums.length) {
