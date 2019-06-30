@@ -309,7 +309,6 @@ public final class ReflectionPlume {
         @ClassGetName String cgnArgname = Signatures.binaryNameToClassGetName(bnArgname);
         argclasses_tmp[i] = classForName(cgnArgname);
       }
-      @SuppressWarnings("cast")
       Class<?>[] argclasses_res = (@NonNull Class<?>[]) argclasses_tmp;
       argclasses = argclasses_res;
       args_seen.put(all_argnames, argclasses_res);

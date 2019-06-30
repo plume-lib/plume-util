@@ -218,7 +218,9 @@ public final class CollectionsPlumeTest {
           }
         }
         @SuppressWarnings({
-          "index", "value"
+          "lowerbound:assignment.type.incompatible",
+          "index:assignment.type.incompatible",
+          "value"
         }) // The IotaIterator only contains indexes for totals.length, and since chosen's
         // elements are selected randomly from the IotaIterator, all of its elements are
         // @IndexFor

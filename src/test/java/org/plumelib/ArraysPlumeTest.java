@@ -440,7 +440,10 @@ public final class ArraysPlumeTest {
     assert ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}) == true;
   }
 
-  @SuppressWarnings("index") // https://github.com/kelloggm/checker-framework/issues/147
+  @SuppressWarnings({
+    "lowerbound:argument.type.incompatible",
+    "index:argument.type.incompatible"
+  }) // https://github.com/kelloggm/checker-framework/issues/147
   @Test
   public void testFunctions() {
 

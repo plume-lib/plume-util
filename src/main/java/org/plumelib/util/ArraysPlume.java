@@ -1681,13 +1681,19 @@ public final class ArraysPlume {
      * @param dest the destination array
      * @param destPos the index at which to start overwriting elements of {@code dest}
      */
-    @SuppressWarnings("index") // TODO: annotate for Index Checker
+    @SuppressWarnings({
+      "lowerbound:argument.type.incompatible",
+      "index:argument.type.incompatible"
+    }) // TODO: annotate for Index Checker
     void copyInto(T[] dest, int destPos) {
       if (theArray != null) {
         System.arraycopy(theArray, 0, dest, destPos, theArray.length);
       } else if (theList != null) {
         for (int i = destPos; i < theList.size(); i++) {
-          @SuppressWarnings("index") // index checker has no list support
+          @SuppressWarnings({
+            "lowerbound:assignment.type.incompatible",
+            "index:assignment.type.incompatible"
+          }) // index checker has no list support
           @IndexFor("dest") int index = i + theList.size();
           dest[index] = theList.get(i);
         }
