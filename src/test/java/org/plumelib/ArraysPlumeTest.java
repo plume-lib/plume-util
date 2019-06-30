@@ -173,7 +173,6 @@ public final class ArraysPlumeTest {
     // public static int indexOfEq(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt)
 
-    @SuppressWarnings("value") // annotated JDK doesn't have @MinLen on singletonList yet
     @MinLen(1) List<?> listOfStrings = Collections.singletonList("hello");
     assert ArraysPlume.indexOf(listOfStrings, (Object) null) == -1;
     assert ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1;
