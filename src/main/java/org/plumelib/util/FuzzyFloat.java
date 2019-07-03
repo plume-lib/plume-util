@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
-import org.checkerframework.checker.nullness.qual.Raw;
 import org.checkerframework.dataflow.qual.Pure;
 
 /**
@@ -61,7 +60,7 @@ public class FuzzyFloat {
    *     which requires exact matching rather than permitting fuzzy matching)
    * @see #FuzzyFloat
    */
-  public void setRelativeRatio(@UnknownInitialization @Raw FuzzyFloat this, double relativeRatio) {
+  public void setRelativeRatio(@UnknownInitialization FuzzyFloat this, double relativeRatio) {
     minRatio = 1 - relativeRatio;
     maxRatio = 1 + relativeRatio;
     exactComparisons = (relativeRatio == 0.0);

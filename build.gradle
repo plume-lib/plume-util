@@ -40,7 +40,6 @@ checkerFramework {
     'org.checkerframework.checker.interning.InterningChecker',
     'org.checkerframework.checker.lock.LockChecker',
     'org.checkerframework.checker.nullness.NullnessChecker',
-    'org.checkerframework.checker.nullness.NullnessRawnessChecker',
     'org.checkerframework.checker.regex.RegexChecker',
     'org.checkerframework.checker.signature.SignatureChecker'
   ]
