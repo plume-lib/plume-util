@@ -19,6 +19,7 @@ public class DumpHeap {
   /** The method com.sun.management.HotSpotDiagnosticMXBean#dumpHeap. */
   private static @MonotonicNonNull Method dumpHeapMethod;
 
+  /** Initialize the fields of this class. */
   @SuppressWarnings({
     "nullness:assignment.type.incompatible",
     "nullness:contracts.postcondition.not.satisfied"
