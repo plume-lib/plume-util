@@ -108,6 +108,8 @@
  * <h3 id="miscellaneous">Miscellaneous</h3>
  *
  * <dl>
+ *   <dt>{@link org.plumelib.util.DumpHeap DumpHeap}
+ *   <dd>Dumps the heap into a {@code .hprof} file.
  *   <dt>{@link org.plumelib.util.GraphPlume GraphPlume}
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
