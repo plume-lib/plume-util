@@ -1,7 +1,11 @@
+package org.plumelib.util;
+
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /** Defines a method {@link #dumpHeap} that dumps the heap to an .hprof file. */
 public class DumpHeap {
@@ -10,11 +14,16 @@ public class DumpHeap {
    * The HotSpot Diagnostic MBean. Its type is Object, in case HotSpotDiagnosticMXBean is not
    * available at compile time.
    */
-  private static volatile Object hotspotMBean;
+  private static volatile @MonotonicNonNull Object hotspotMBean;
 
   /** The method com.sun.management.HotSpotDiagnosticMXBean#dumpHeap. */
-  private static Method dumpHeapMethod;
+  private static @MonotonicNonNull Method dumpHeapMethod;
 
+  @SuppressWarnings({
+    "nullness:assignment.type.incompatible",
+    "nullness:contracts.postcondition.not.satisfied"
+  }) // reflection
+  @EnsuresNonNull({"hotspotMBean", "dumpHeapMethod"})
   private static synchronized void initializeFields() {
     try {
       Class<?> mxbeanClass = Class.forName("com.sun.management.HotSpotDiagnosticMXBean");

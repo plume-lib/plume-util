@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## ??
+## 1.0.9
 
 - Add DumpHeap class, for creating a .hprof file of the current heap.
 
