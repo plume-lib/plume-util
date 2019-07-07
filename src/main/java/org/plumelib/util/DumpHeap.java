@@ -44,7 +44,7 @@ public class DumpHeap {
    *
    * @param fileName file into which to dump a heap snapshot
    */
-  static void dumpHeap(String fileName) {
+  public static void dumpHeap(String fileName) {
     dumpHeap(fileName, true);
   }
 
@@ -54,7 +54,7 @@ public class DumpHeap {
    * @param fileName file into which to dump a heap snapshot
    * @param live if true, dump only the live objects
    */
-  static void dumpHeap(String fileName, boolean live) {
+  public static void dumpHeap(String fileName, boolean live) {
     initializeFields();
     try {
       // reflective way to do:  hotspotMBean.dumpHeap(fileName, live);
