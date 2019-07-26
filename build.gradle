@@ -2,7 +2,7 @@ plugins {
   // To create a fat jar build/libs/plume-util-all.jar, run: ./gradlew shadowJar
   id "com.github.johnrengelman.shadow" version "5.1.0"
   // Run the Error Prone linter.
-  id "net.ltgt.errorprone-base" version "0.0.16"
+  id "net.ltgt.errorprone-base" version "0.6.1"
   // Formatting is disabled due to poor handling of type annotations; wait until
   // this issue is fixed: https://github.com/google/google-java-format/issues/5
   // // Code formatting with Google Java Format; defines targets "goJF" and "verJF".
