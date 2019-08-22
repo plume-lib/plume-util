@@ -42,7 +42,7 @@ public class DumpHeap {
   /**
    * Dumps a heap snapshot (of only the live objects) into a file.
    *
-   * @param fileName file into which to dump a heap snapshot
+   * @param fileName file into which to dump a heap snapshot; is overwritten if it exists
    */
   public static void dumpHeap(String fileName) {
     dumpHeap(fileName, true);
@@ -51,11 +51,15 @@ public class DumpHeap {
   /**
    * Dumps a heap snapshot into a file.
    *
-   * @param fileName file into which to dump a heap snapshot
+   * @param fileName file into which to dump a heap snapshot; is overwritten if it exists
    * @param live if true, dump only the live objects
    */
   public static void dumpHeap(String fileName, boolean live) {
     initializeFields();
+    File heapFile = new File(heapFile);
+    if (heapFile.exists()) {
+      heapFile.delete();
+    }
     try {
       // reflective way to do:  hotspotMBean.dumpHeap(fileName, live);
       dumpHeapMethod.invoke(hotspotMBean, fileName, live);
