@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
@@ -56,7 +57,7 @@ public class DumpHeap {
    */
   public static void dumpHeap(String fileName, boolean live) {
     initializeFields();
-    File heapFile = new File(heapFile);
+    File heapFile = new File(fileName);
     if (heapFile.exists()) {
       heapFile.delete();
     }
