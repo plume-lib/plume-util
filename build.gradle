@@ -9,7 +9,7 @@ plugins {
   // id "com.github.sherter.google-java-format" version "0.7.1"
 
   // Checker Framework pluggable type-checking
-  id "org.checkerframework" version "0.3.25" apply false
+  id "org.checkerframework" version "0.3.28" apply false
 }
 
 apply plugin: 'java-library'
