@@ -19,7 +19,7 @@ apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 dependencies {
   // https://mvnrepository.com/artifact/org.plumelib/reflection-util
-  implementation 'org.plumelib:reflection-util:0.0.4'
+  implementation 'org.plumelib:reflection-util:0.1.2'
   testImplementation 'junit:junit:4.12'
   errorprone 'com.google.errorprone:error_prone_core:2.3.3'
 }
