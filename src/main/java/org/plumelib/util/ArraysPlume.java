@@ -30,7 +30,6 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-import org.checkerframework.framework.qual.PolyAll;
 import org.plumelib.reflection.ReflectionPlume;
 
 /**
