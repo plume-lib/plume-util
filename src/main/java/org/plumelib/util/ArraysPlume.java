@@ -22,6 +22,7 @@ import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
+import org.checkerframework.checker.interning.qual.PolyInterned;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -568,7 +569,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOfEq(@PolyAll Object[] a, @Nullable Object elt) {
+  public static int indexOfEq(@PolyNull Object[] a, @Nullable Object elt) {
     for (int i = 0; i < a.length; i++) {
       if (elt == a[i]) {
         return i;
@@ -812,7 +813,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(@PolyAll Object[] a, Object[] sub) {
+  public static int indexOf(@PolyNull Object[] a, Object[] sub) {
     int aIndexMax = a.length - sub.length + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -835,10 +836,10 @@ public final class ArraysPlume {
    */
   // The signature on this method is unnecessarily strict because it
   // requires that the component types be identical.  The signature should
-  // be indexOfEq(@PolyAll(1) Object[], @PolyAll(2) Object[]), but the
-  // @PolyAll qualifier does not yet take an argument.
+  // be indexOfEq(@PolyNull(1) Object[], @PolyNull(2) Object[]), but the
+  // @PolyNull qualifier does not yet take an argument.
   @Pure
-  public static int indexOfEq(@PolyAll Object[] a, @PolyAll Object[] sub) {
+  public static int indexOfEq(@PolyNull Object[] a, @PolyNull Object[] sub) {
     int aIndexMax = a.length - sub.length + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -860,7 +861,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(List<?> a, @PolyAll Object[] sub) {
+  public static int indexOf(List<?> a, @PolyNull Object[] sub) {
     int aIndexMax = a.size() - sub.length + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -882,7 +883,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOfEq(List<?> a, @PolyAll Object[] sub) {
+  public static int indexOfEq(List<?> a, @PolyNull Object[] sub) {
     int aIndexMax = a.size() - sub.length + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -904,7 +905,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(@PolyAll Object[] a, List<?> sub) {
+  public static int indexOf(@PolyNull Object[] a, List<?> sub) {
     int aIndexMax = a.length - sub.size() + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -926,7 +927,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOfEq(@PolyAll Object[] a, List<?> sub) {
+  public static int indexOfEq(@PolyNull Object[] a, List<?> sub) {
     int aIndexMax = a.length - sub.size() + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -1091,11 +1092,11 @@ public final class ArraysPlume {
    *     whether it would be the last included index or the first non-included index)
    */
   @SideEffectFree
-  public static @PolyAll Object[] subarray(
-      @PolyAll Object[] a,
+  public static @PolyNull @PolyInterned Object[] subarray(
+      @PolyNull @PolyInterned Object[] a,
       @NonNegative int startindex,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int length) {
-    @PolyAll Object[] result = new @PolyAll Object[length];
+    @PolyNull @PolyInterned Object[] result = new @PolyNull @PolyInterned Object[length];
     System.arraycopy(a, startindex, result, 0, length);
     return result;
   }
@@ -1126,11 +1127,11 @@ public final class ArraysPlume {
    * @return a subarray of the given array
    */
   @SideEffectFree
-  public static @PolyAll String[] subarray(
-      @PolyAll String[] a,
+  public static @PolyNull @PolyInterned String[] subarray(
+      @PolyNull @PolyInterned String[] a,
       @NonNegative int startindex,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int length) {
-    @PolyAll String[] result = new @PolyAll String[length];
+    @PolyNull @PolyInterned String[] result = new @PolyNull @PolyInterned String[length];
     System.arraycopy(a, startindex, result, 0, length);
     return result;
   }
@@ -1303,7 +1304,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean isSubarray(
-      @PolyAll Object[] a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+      @PolyNull Object[] a, @PolyNull Object[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -1327,7 +1328,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean isSubarrayEq(
-      @PolyAll Object[] a, @PolyAll Object[] sub, @NonNegative int aOffset) {
+      @PolyNull Object[] a, @PolyNull Object[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -1351,7 +1352,7 @@ public final class ArraysPlume {
    *     element is found in the array
    */
   @Pure
-  public static boolean isSubarray(@PolyAll Object[] a, List<?> sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(@PolyNull  Object[] a, List<?> sub, @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.length) {
       return false;
     }
@@ -1374,7 +1375,7 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarrayEq(@PolyAll Object[] a, List<?> sub, @NonNegative int aOffset) {
+  public static boolean isSubarrayEq(@PolyNull Object[] a, List<?> sub, @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.length) {
       return false;
     }
@@ -1398,7 +1399,7 @@ public final class ArraysPlume {
    *     element is found in the array
    */
   @Pure
-  public static boolean isSubarray(List<?> a, @PolyAll Object[] sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(List<?> a, @PolyNull Object[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.size()) {
       return false;
     }
@@ -1421,7 +1422,7 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarrayEq(List<?> a, @PolyAll Object[] sub, @NonNegative int aOffset) {
+  public static boolean isSubarrayEq(List<?> a, @PolyNull Object[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.size()) {
       return false;
     }
@@ -1823,8 +1824,8 @@ public final class ArraysPlume {
    * @param b the second array to concatenate
    * @return an array that concatenates the arguments
    */
-  public static @PolyAll String[] concat(
-      @PolyAll String @Nullable [] a, @PolyAll String @Nullable [] b) {
+  public static @PolyNull @PolyInterned String[] concat(
+      @PolyNull @PolyInterned String @Nullable [] a, @PolyNull @PolyInterned String @Nullable [] b) {
     if (a == null) {
       if (b == null) {
         return new String[0];
@@ -1835,7 +1836,7 @@ public final class ArraysPlume {
       if (b == null) {
         return a;
       } else {
-        @PolyAll String[] result = new String[a.length + b.length];
+        @PolyNull @PolyInterned String[] result = new String[a.length + b.length];
 
         System.arraycopy(a, 0, result, 0, a.length);
         System.arraycopy(b, 0, result, a.length, b.length);
@@ -2158,7 +2159,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toString(@PolyAll Object @Nullable [] a) {
+  public static String toString(@PolyNull Object @Nullable [] a) {
     return toString(a, false);
   }
 
@@ -2171,7 +2172,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toStringQuoted(@PolyAll Object @Nullable [] a) {
+  public static String toStringQuoted(@PolyNull Object @Nullable [] a) {
     return toString(a, true);
   }
 
@@ -2187,7 +2188,7 @@ public final class ArraysPlume {
    */
   @SuppressWarnings({"all:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
-  public static String toString(@PolyAll Object @Nullable [] a, boolean quoted) {
+  public static String toString(@PolyNull Object @Nullable [] a, boolean quoted) {
     if (a == null) {
       return "null";
     }
@@ -2703,9 +2704,9 @@ public final class ArraysPlume {
    * @return function from [0..a.length) to range R that is the composition of a and b
    */
   @SuppressWarnings("nullness") // https://tinyurl.com/cfissue/1654
-  public static @PolyAll int @SameLen("#1") [] fnCompose(
-      @IndexFor("#2") int[] a, @PolyAll int[] b) {
-    @PolyAll int[] result = new int[a.length];
+  public static @PolyNull @PolyInterned int @SameLen("#1") [] fnCompose(
+      @IndexFor("#2") int[] a, @PolyNull @PolyInterned int[] b) {
+    @PolyNull @PolyInterned int[] result = new int[a.length];
     for (int i = 0; i < a.length; i++) {
       result[i] = b[a[i]];
     }
@@ -2969,10 +2970,10 @@ public final class ArraysPlume {
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
-    // be compare(@PolyAll(1) String[], @PolyAll(2) String[]), but the
-    // @PolyAll qualifier does not yet take an argument.
+    // be compare(@PolyNull(1) String[], @PolyNull(2) String[]), but the
+    // @PolyNull qualifier does not yet take an argument.
     @Override
-    public int compare(@PolyAll String[] a1, @PolyAll String[] a2) {
+    public int compare(@PolyNull String[] a1, @PolyNull String[] a2) {
       if (a1 == a2) {
         return 0;
       }
@@ -3021,10 +3022,10 @@ public final class ArraysPlume {
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
-    // be compare(@PolyAll(1) T[], @PolyAll(2) T[]), but the
-    // @PolyAll qualifier does not yet take an argument.
+    // be compare(@PolyNull(1) T[], @PolyNull(2) T[]), but the
+    // @PolyNull qualifier does not yet take an argument.
     @Override
-    public int compare(@PolyAll T[] a1, @PolyAll T[] a2) {
+    public int compare(@PolyNull T[] a1, @PolyNull T[] a2) {
       if (a1 == a2) {
         return 0;
       }
@@ -3082,10 +3083,10 @@ public final class ArraysPlume {
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
-    // be compare(@PolyAll(1) Object[], @PolyAll(2) Object[]), but the
-    // @PolyAll qualifier does not yet take an argument.
+    // be compare(@PolyNull(1) Object[], @PolyNull(2) Object[]), but the
+    // @PolyNull qualifier does not yet take an argument.
     @Override
-    public int compare(@PolyAll Object[] a1, @PolyAll Object[] a2) {
+    public int compare(@PolyNull Object[] a1, @PolyNull Object[] a2) {
       if (a1 == a2) {
         return 0;
       }
@@ -3201,10 +3202,10 @@ public final class ArraysPlume {
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
-    // be compare(@PolyAll(1) T[], @PolyAll(2) T[]), but the
-    // @PolyAll qualifier does not yet take an argument.
+    // be compare(@PolyNull(1) T[], @PolyNull(2) T[]), but the
+    // @PolyNull qualifier does not yet take an argument.
     @Override
-    public int compare(@PolyAll T[] a1, @PolyAll T[] a2) {
+    public int compare(@PolyNull T[] a1, @PolyNull T[] a2) {
       if (a1 == a2) {
         return 0;
       }
@@ -3268,10 +3269,10 @@ public final class ArraysPlume {
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
-    // be compare(@PolyAll(1) Object[], @PolyAll(2) Object[]), but the
-    // @PolyAll qualifier does not yet take an argument.
+    // be compare(@PolyNull(1) Object[], @PolyNull(2) Object[]), but the
+    // @PolyNull qualifier does not yet take an argument.
     @Override
-    public int compare(@PolyAll Object[] a1, @PolyAll Object[] a2) {
+    public int compare(@PolyNull Object[] a1, @PolyNull Object[] a2) {
       if (a1 == a2) {
         return 0;
       }
@@ -3299,7 +3300,7 @@ public final class ArraysPlume {
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
-  public static boolean anyNull(@PolyAll Object[] a) {
+  public static boolean anyNull(@PolyNull Object[] a) {
     if (a.length == 0) {
       return false;
     }
@@ -3314,7 +3315,7 @@ public final class ArraysPlume {
    * @return true iff all elements of a are null (unspecified result if a is zero-sized)
    */
   @Pure
-  public static boolean allNull(@PolyAll Object[] a) {
+  public static boolean allNull(@PolyNull Object[] a) {
     for (int i = 0; i < a.length; i++) {
       if (!(a[i] == null)) {
         return false;
