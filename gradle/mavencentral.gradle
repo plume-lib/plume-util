@@ -5,15 +5,15 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release:
-//  * Update the version number in ../README.md and in this file (twice).
-//  * Update ../CHANGELOG.md.
-//  * Run in the top-level directory:
-//   ./gradlew clean uploadArchives && ./gradlew javadocWeb
+//  * git pull
+//  * Update the version number in ../README.md and in this file (thrice).
+//  * Update ../CHANGELOG.md .
+//  * Run in the top-level directory:  ./gradlew clean uploadArchives && ./gradlew javadocWeb
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Stage changes.
 //  * Add a git tag:
-//    VER=1.0.10 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, attach the .jar file from ../build/libs/
+//    VER=1.0.10 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.0.10", attach the .jar file from ../build/libs/
 
 
 ///////////////////////////////////////////////////////////////////////////
