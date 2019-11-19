@@ -104,3 +104,13 @@ task tags(type: Exec) {
   description "Run etags to create an Emacs TAGS table"
   commandLine "bash", "-c", "find src/ -name '*.java' | sort | xargs etags"
 }
+
+/// Determine classpath
+
+task printTestCompileClasspath {
+  description = 'Print the compile-time test classpath'
+  doFirst {
+    println "Compile classpath:"
+    println sourceSets.test.compileClasspath.asPath
+  }
+}
