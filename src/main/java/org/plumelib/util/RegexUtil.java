@@ -1,4 +1,5 @@
-// This class should be kept in sync with org.checkerframework.checker.regex.RegexUtil.
+// This class should be kept in sync with org.checkerframework.checker.regex.RegexUtil in the
+// Checker Framework project.
 
 package org.plumelib.util;
 
