@@ -4,11 +4,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -159,20 +156,20 @@ public class ClassDeterministic {
 
   /// Helper routines
 
-  /**
-   * Creates a sorted list from an array of elements using the given classComparator.
-   *
-   * @param array the array of elements to be sorted
-   * @param comparator the classComparator over the element type
-   * @param <T> the element type
-   * @return the sorted list of elements of the given array
-   */
-  private <T> List<T> toSortedList(T[] array, Comparator<T> comparator) {
-    List<T> list = new ArrayList<>();
-    Collections.addAll(list, array);
-    Collections.sort(list, comparator);
-    return list;
-  }
+  // /**
+  //  * Creates a sorted list from an array of elements using the given classComparator.
+  //  *
+  //  * @param array the array of elements to be sorted
+  //  * @param comparator the classComparator over the element type
+  //  * @param <T> the element type
+  //  * @return the sorted list of elements of the given array
+  //  */
+  // private <T> List<T> toSortedList(T[] array, Comparator<T> comparator) {
+  //   List<T> list = new ArrayList<>();
+  //   Collections.addAll(list, array);
+  //   Collections.sort(list, comparator);
+  //   return list;
+  // }
 
   /** Compares Annotation objects by type name. */
   static AnnotationComparator annotationComparator = new AnnotationComparator();

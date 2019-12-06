@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 @SuppressWarnings({
@@ -34,21 +36,21 @@ public final class WeakIdentityHashMapTest {
     m.put(s2a, 2);
     m.put(s3a, 3);
 
-    assert m.get(s1) == 1;
-    assert m.get(s2) == 2;
-    assert m.get(s3) == 3;
-    assert m.get(s1a) == 1;
-    assert m.get(s2a) == 2;
-    assert m.get(s3a) == 3;
+    assertTrue(m.get(s1) == 1);
+    assertTrue(m.get(s2) == 2);
+    assertTrue(m.get(s3) == 3);
+    assertTrue(m.get(s1a) == 1);
+    assertTrue(m.get(s2a) == 2);
+    assertTrue(m.get(s3a) == 3);
 
     m.remove(s1);
     m.remove(s2);
     m.remove(s3);
-    assert m.get(s1) == null;
-    assert m.get(s2) == null;
-    assert m.get(s3) == null;
-    assert m.get(s1a) == 1;
-    assert m.get(s2a) == 2;
-    assert m.get(s3a) == 3;
+    assertTrue(m.get(s1) == null);
+    assertTrue(m.get(s2) == null);
+    assertTrue(m.get(s3) == null);
+    assertTrue(m.get(s1a) == 1);
+    assertTrue(m.get(s2a) == 2);
+    assertTrue(m.get(s3a) == 3);
   }
 }

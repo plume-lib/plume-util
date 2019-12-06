@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
@@ -177,7 +179,7 @@ public final class OrderedPairIteratorTest {
    */
   @SuppressWarnings(
       "index:array.access.unsafe.high.range") // same length iterator and array, and while loop with
-                                              // ++ on index
+  // ++ on index
   public static void compareOrderedPairIterator(
       OrderedPairIterator<Integer> opi, int[] @ArrayLen(2) [] ints) {
     int pairno = 0;
@@ -185,10 +187,10 @@ public final class OrderedPairIteratorTest {
       Pair<@Nullable Integer, @Nullable Integer> pair = opi.next();
       // System.out.println("Iterator: <" + pair.a + "," + pair.b + ">, array: <" + ints[pairno][0]
       //     + "," + ints[pairno][1] + ">");
-      assert (pair.a == null) || (pair.a.intValue() == ints[pairno][0]);
-      assert (pair.b == null) || (pair.b.intValue() == ints[pairno][1]);
+      assertTrue((pair.a == null) || (pair.a.intValue() == ints[pairno][0]));
+      assertTrue((pair.b == null) || (pair.b.intValue() == ints[pairno][1]));
       pairno++;
     }
-    assert pairno == ints.length;
+    assertTrue(pairno == ints.length);
   }
 }

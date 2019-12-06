@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Random;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -36,14 +38,14 @@ public final class LimitedSizeSetTest {
     s.add(1);
     s.add(2);
     s.add(null);
-    assert s.size() == 3;
-    assert s.contains(1);
-    assert s.contains(null);
+    assertTrue(s.size() == 3);
+    assertTrue(s.contains(1));
+    assertTrue(s.contains(null));
     s.add(3);
-    assert s.size() == 4;
-    assert s.contains(1);
-    assert s.contains(null);
-    assert s.contains(3);
+    assertTrue(s.size() == 4);
+    assertTrue(s.contains(1));
+    assertTrue(s.contains(null));
+    assertTrue(s.contains(3));
   }
 
   @Test

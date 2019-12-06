@@ -270,10 +270,14 @@ public class FileIOException extends IOException {
   /// Utility and helper methods
   ///
 
+  @SuppressWarnings("lock:override.sideeffect.invalid") // temporary until after CF 3.0.1
   @SideEffectFree
   @Override
-  public String toString(@GuardSatisfied FileIOException this) {
-    String result = super.toString();
+  public String getMessage(@GuardSatisfied FileIOException this) {
+    String result = super.getMessage();
+    if (result == null) {
+      result = this.getClass().getName();
+    }
     if (fileName != null) {
       result += " in file " + fileName;
     }

@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,19 +23,19 @@ public final class MathPlumeTest {
     if (!result) {
       System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
     }
-    assert result;
+    assertTrue(result);
     //      assert(Arrays.equals(a1, a2),
     //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
   }
 
-  private static void assertArraysEquals(double[] a1, double[] a2) {
-    boolean result = Arrays.equals(a1, a2);
-    if (!result) {
-      System.out.println(
-          "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
-    }
-    assert result;
-  }
+  // private static void assertArraysEquals(double[] a1, double[] a2) {
+  //   boolean result = Arrays.equals(a1, a2);
+  //   if (!result) {
+  //     System.out.println(
+  //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+  //   }
+  //   assertTrue(result);
+  // }
 
   private static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<>(nums.length);
@@ -70,27 +72,27 @@ public final class MathPlumeTest {
   public void test_negate() {
 
     // int negate(int a)
-    assert MathPlume.negate(3) == -3;
-    assert MathPlume.negate(-22) == 22;
-    assert MathPlume.negate(0) == 0;
+    assertTrue(MathPlume.negate(3) == -3);
+    assertTrue(MathPlume.negate(-22) == 22);
+    assertTrue(MathPlume.negate(0) == 0);
   }
 
   @Test
   public void test_bitwiseComplement() {
 
     // int bitwiseComplement(int a)
-    assert MathPlume.bitwiseComplement(3) == -4;
-    assert MathPlume.bitwiseComplement(-22) == 21;
-    assert MathPlume.bitwiseComplement(0) == -1;
+    assertTrue(MathPlume.bitwiseComplement(3) == -4);
+    assertTrue(MathPlume.bitwiseComplement(-22) == 21);
+    assertTrue(MathPlume.bitwiseComplement(0) == -1);
   }
 
   @Test
   public void test_sign() {
 
     // int sign(int a)
-    assert MathPlume.sign(3) == 1;
-    assert MathPlume.sign(-22) == -1;
-    assert MathPlume.sign(0) == 0;
+    assertTrue(MathPlume.sign(3) == 1);
+    assertTrue(MathPlume.sign(-22) == -1);
+    assertTrue(MathPlume.sign(0) == 0);
   }
 
   @Test
@@ -98,14 +100,14 @@ public final class MathPlumeTest {
 
     // int pow(int base, int expt)
     try {
-      assert MathPlume.pow(3, 3) == 27;
-      assert MathPlume.pow(-5, 5) == -3125;
-      assert MathPlume.pow(22, 0) == 1;
-      assert MathPlume.pow(4, 6) == 4096;
-      assert MathPlume.pow(1, 222222) == 1;
-      assert MathPlume.pow(-2, 25) == -33554432;
+      assertTrue(MathPlume.pow(3, 3) == 27);
+      assertTrue(MathPlume.pow(-5, 5) == -3125);
+      assertTrue(MathPlume.pow(22, 0) == 1);
+      assertTrue(MathPlume.pow(4, 6) == 4096);
+      assertTrue(MathPlume.pow(1, 222222) == 1);
+      assertTrue(MathPlume.pow(-2, 25) == -33554432);
       // This is beyond the precision.  Maybe return a long instead of an int?
-      // assert MathPlume.pow(-3, 25) == ...;
+      // assertTrue(MathPlume.pow(-3, 25) == ...);
     } catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
@@ -121,53 +123,54 @@ public final class MathPlumeTest {
   public void test_gcd() {
 
     // int gcd(int a, int b)
-    assert MathPlume.gcd(2, 50) == 2;
-    assert MathPlume.gcd(50, 2) == 2;
-    assert MathPlume.gcd(12, 144) == 12;
-    assert MathPlume.gcd(144, 12) == 12;
-    assert MathPlume.gcd(96, 144) == 48;
-    assert MathPlume.gcd(144, 96) == 48;
-    assert MathPlume.gcd(10, 25) == 5;
-    assert MathPlume.gcd(25, 10) == 5;
-    assert MathPlume.gcd(17, 25) == 1;
-    assert MathPlume.gcd(25, 17) == 1;
-    assert MathPlume.gcd(0, 10) == 10;
-    assert MathPlume.gcd(10, 0) == 10;
-    assert MathPlume.gcd(25, -10) == 5;
-    assert MathPlume.gcd(-25, -10) == 5;
-    assert MathPlume.gcd(-25, 10) == 5;
+    assertTrue(MathPlume.gcd(2, 50) == 2);
+    assertTrue(MathPlume.gcd(50, 2) == 2);
+    assertTrue(MathPlume.gcd(12, 144) == 12);
+    assertTrue(MathPlume.gcd(144, 12) == 12);
+    assertTrue(MathPlume.gcd(96, 144) == 48);
+    assertTrue(MathPlume.gcd(144, 96) == 48);
+    assertTrue(MathPlume.gcd(10, 25) == 5);
+    assertTrue(MathPlume.gcd(25, 10) == 5);
+    assertTrue(MathPlume.gcd(17, 25) == 1);
+    assertTrue(MathPlume.gcd(25, 17) == 1);
+    assertTrue(MathPlume.gcd(0, 10) == 10);
+    assertTrue(MathPlume.gcd(10, 0) == 10);
+    assertTrue(MathPlume.gcd(25, -10) == 5);
+    assertTrue(MathPlume.gcd(-25, -10) == 5);
+    assertTrue(MathPlume.gcd(-25, 10) == 5);
 
     // int gcd(int[] a)
-    assert MathPlume.gcd(new int[] {2, 50}) == 2;
-    assert MathPlume.gcd(new int[] {12, 144}) == 12;
-    assert MathPlume.gcd(new int[] {96, 144}) == 48;
-    assert MathPlume.gcd(new int[] {10, 25}) == 5;
-    assert MathPlume.gcd(new int[] {100, 10, 25}) == 5;
-    assert MathPlume.gcd(new int[] {768, 324}) == 12;
-    assert MathPlume.gcd(new int[] {2400, 48, 36}) == 12;
-    assert MathPlume.gcd(new int[] {2400, 72, 36}) == 12;
+    assertTrue(MathPlume.gcd(new int[] {2, 50}) == 2);
+    assertTrue(MathPlume.gcd(new int[] {12, 144}) == 12);
+    assertTrue(MathPlume.gcd(new int[] {96, 144}) == 48);
+    assertTrue(MathPlume.gcd(new int[] {10, 25}) == 5);
+    assertTrue(MathPlume.gcd(new int[] {100, 10, 25}) == 5);
+    assertTrue(MathPlume.gcd(new int[] {768, 324}) == 12);
+    assertTrue(MathPlume.gcd(new int[] {2400, 48, 36}) == 12);
+    assertTrue(MathPlume.gcd(new int[] {2400, 72, 36}) == 12);
 
     // int gcdDifferences(int[] a)
     // Weak set of tests, derived directly from those of "int gcd(int[] a)".
-    assert MathPlume.gcdDifferences(new int[] {0, 2, 52}) == 2;
-    assert MathPlume.gcdDifferences(new int[] {0, 12, 156}) == 12;
-    assert MathPlume.gcdDifferences(new int[] {0, 96, 240}) == 48;
-    assert MathPlume.gcdDifferences(new int[] {0, 10, 35}) == 5;
-    assert MathPlume.gcdDifferences(new int[] {0, 100, 110, 135}) == 5;
-    assert MathPlume.gcdDifferences(new int[] {0, 768, 1092}) == 12;
-    assert MathPlume.gcdDifferences(new int[] {0, 2400, 2448, 2484}) == 12;
-    assert MathPlume.gcdDifferences(new int[] {0, 2400, 2472, 2508}) == 12;
-    assert MathPlume.gcdDifferences(new int[] {5, 5, 5, 5}) == 0;
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 2, 52}) == 2);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 12, 156}) == 12);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 96, 240}) == 48);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 10, 35}) == 5);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 100, 110, 135}) == 5);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 768, 1092}) == 12);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 2400, 2448, 2484}) == 12);
+    assertTrue(MathPlume.gcdDifferences(new int[] {0, 2400, 2472, 2508}) == 12);
+    assertTrue(MathPlume.gcdDifferences(new int[] {5, 5, 5, 5}) == 0);
   }
 
+  @SuppressWarnings("deprecation")
   @Test
   public void test_mod() {
 
     // int modPositive(int x, int y)
-    assert MathPlume.modPositive(33, 5) == 3;
-    assert MathPlume.modPositive(-33, 5) == 2;
-    assert MathPlume.modPositive(33, -5) == 3;
-    assert MathPlume.modPositive(-33, -5) == 2;
+    assertTrue(MathPlume.modPositive(33, 5) == 3);
+    assertTrue(MathPlume.modPositive(-33, 5) == 2);
+    assertTrue(MathPlume.modPositive(33, -5) == 3);
+    assertTrue(MathPlume.modPositive(-33, -5) == 2);
   }
 
   static class TestMissingNumbersIteratorInt {

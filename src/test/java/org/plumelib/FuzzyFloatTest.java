@@ -1,8 +1,9 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Comparator;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.Test;
 
@@ -15,13 +16,13 @@ public final class FuzzyFloatTest {
   /// Helper functions
   ///
 
-  private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
-    boolean result = Arrays.equals(a1, a2);
-    if (!result) {
-      System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
-    }
-    assert result;
-  }
+  // private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
+  //   boolean result = Arrays.equals(a1, a2);
+  //   if (!result) {
+  //     System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
+  //   }
+  //   assertTrue(result);
+  // }
 
   private static void assertArraysEquals(double[] a1, double[] a2) {
     boolean result = Arrays.equals(a1, a2);
@@ -29,7 +30,7 @@ public final class FuzzyFloatTest {
       System.out.println(
           "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
     }
-    assert result;
+    assertTrue(result);
   }
 
   /** Initialize f2 to be the same as two copies of f1. */
@@ -63,32 +64,32 @@ public final class FuzzyFloatTest {
 
     // test equality for a variety of postive and negative numbers
     for (double d = -20000; d < 20000; d += 1000.36) {
-      assert ff.eq(d, d * offhigh);
-      assert ff.eq(d, d * offlow);
-      assert !ff.eq(d, d * offhigh2);
-      assert !ff.eq(d, d * offlow2);
-      assert !ff.ne(d, d * offhigh);
-      assert !ff.ne(d, d * offlow);
-      assert ff.ne(d, d * offhigh2);
-      assert ff.ne(d, d * offlow2);
+      assertTrue(ff.eq(d, d * offhigh));
+      assertTrue(ff.eq(d, d * offlow));
+      assertTrue(!ff.eq(d, d * offhigh2));
+      assertTrue(!ff.eq(d, d * offlow2));
+      assertTrue(!ff.ne(d, d * offhigh));
+      assertTrue(!ff.ne(d, d * offlow));
+      assertTrue(ff.ne(d, d * offhigh2));
+      assertTrue(ff.ne(d, d * offlow2));
     }
 
     // make sure nothing is equal to zero
-    assert ff.eq(0, Double.MIN_VALUE);
-    assert ff.eq(0, -Double.MIN_VALUE);
-    assert !ff.ne(0, Double.MIN_VALUE);
-    assert !ff.ne(0, -Double.MIN_VALUE);
+    assertTrue(ff.eq(0, Double.MIN_VALUE));
+    assertTrue(ff.eq(0, -Double.MIN_VALUE));
+    assertTrue(!ff.ne(0, Double.MIN_VALUE));
+    assertTrue(!ff.ne(0, -Double.MIN_VALUE));
 
     // make sure that 0 equals 0
-    assert ff.eq(0, 0);
-    assert !ff.ne(0, 0);
+    assertTrue(ff.eq(0, 0));
+    assertTrue(!ff.ne(0, 0));
 
     // make sure that NaNs are not equal
-    assert !ff.eq(Double.NaN, Double.NaN);
+    assertTrue(!ff.eq(Double.NaN, Double.NaN));
 
     // make sure that various unusual values are equal
-    assert ff.eq(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-    assert ff.eq(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+    assertTrue(ff.eq(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
+    assertTrue(ff.eq(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY));
   }
 
   // rudimentary checks on the comparison operators (since they all just
@@ -97,14 +98,14 @@ public final class FuzzyFloatTest {
   public void testcomparisons() {
 
     double d = 2563.789;
-    assert !ff.gt(d, d * offlow);
-    assert !ff.lt(d, d * offhigh);
-    assert ff.gt(d, d * offlow2);
-    assert ff.lt(d, d * offhigh2);
-    assert ff.gte(d, d * offhigh);
-    assert ff.lte(d, d * offlow);
-    assert !ff.gte(d, d * offhigh2);
-    assert !ff.lte(d, d * offlow2);
+    assertTrue(!ff.gt(d, d * offlow));
+    assertTrue(!ff.lt(d, d * offhigh));
+    assertTrue(ff.gt(d, d * offlow2));
+    assertTrue(ff.lt(d, d * offhigh2));
+    assertTrue(ff.gte(d, d * offhigh));
+    assertTrue(ff.lte(d, d * offlow));
+    assertTrue(!ff.gte(d, d * offhigh2));
+    assertTrue(!ff.lte(d, d * offlow2));
   }
 
   @Test
@@ -118,17 +119,17 @@ public final class FuzzyFloatTest {
         a[i] = i;
       }
       double[] aCopy = a.clone();
-      assert ff.indexOf(a, -1) == -1;
-      assert ff.indexOf(a, 0) == 0;
-      assert ff.indexOf(a, 7) == 7;
-      assert ff.indexOf(a, 9) == 9;
-      assert ff.indexOf(a, 10) == -1;
-      assert ff.indexOf(a, 20) == -1;
-      assert ff.indexOf(a, Double.MIN_VALUE) == 0;
-      assert ff.indexOf(a, 7 * offhigh) == 7;
-      assert ff.indexOf(a, 9 * offlow) == 9;
-      assert ff.indexOf(a, 7 * offhigh2) == -1;
-      assert ff.indexOf(a, 9 * offlow2) == -1;
+      assertTrue(ff.indexOf(a, -1) == -1);
+      assertTrue(ff.indexOf(a, 0) == 0);
+      assertTrue(ff.indexOf(a, 7) == 7);
+      assertTrue(ff.indexOf(a, 9) == 9);
+      assertTrue(ff.indexOf(a, 10) == -1);
+      assertTrue(ff.indexOf(a, 20) == -1);
+      assertTrue(ff.indexOf(a, Double.MIN_VALUE) == 0);
+      assertTrue(ff.indexOf(a, 7 * offhigh) == 7);
+      assertTrue(ff.indexOf(a, 9 * offlow) == 9);
+      assertTrue(ff.indexOf(a, 7 * offhigh2) == -1);
+      assertTrue(ff.indexOf(a, 9 * offlow2) == -1);
       assertArraysEquals(a, aCopy);
     }
 
@@ -146,13 +147,13 @@ public final class FuzzyFloatTest {
       double[] g = new double[] {a[7], 22, a[9]};
       double[] h = new double[] {a[7], a[8], a[9], 10};
 
-      assert ff.indexOf(a, b) == 0;
-      assert ff.indexOf(a, c) == 0;
-      assert ff.indexOf(a, d) == 1;
-      assert ff.indexOf(a, e) == 2;
-      assert ff.indexOf(a, f) == 7;
-      assert ff.indexOf(a, g) == -1;
-      assert ff.indexOf(a, h) == -1;
+      assertTrue(ff.indexOf(a, b) == 0);
+      assertTrue(ff.indexOf(a, c) == 0);
+      assertTrue(ff.indexOf(a, d) == 1);
+      assertTrue(ff.indexOf(a, e) == 2);
+      assertTrue(ff.indexOf(a, f) == 7);
+      assertTrue(ff.indexOf(a, g) == -1);
+      assertTrue(ff.indexOf(a, h) == -1);
     }
     {
       double[] a = new double[10];
@@ -175,13 +176,13 @@ public final class FuzzyFloatTest {
       double[] gCopy = g.clone();
       double[] hCopy = h.clone();
 
-      assert ff.indexOf(a, b) == 0;
-      assert ff.indexOf(a, c) == 0;
-      assert ff.indexOf(a, d) == 1;
-      assert ff.indexOf(a, e) == 2;
-      assert ff.indexOf(a, f) == 7;
-      assert ff.indexOf(a, g) == -1;
-      assert ff.indexOf(a, h) == -1;
+      assertTrue(ff.indexOf(a, b) == 0);
+      assertTrue(ff.indexOf(a, c) == 0);
+      assertTrue(ff.indexOf(a, d) == 1);
+      assertTrue(ff.indexOf(a, e) == 2);
+      assertTrue(ff.indexOf(a, f) == 7);
+      assertTrue(ff.indexOf(a, g) == -1);
+      assertTrue(ff.indexOf(a, h) == -1);
 
       assertArraysEquals(a, aCopy);
       assertArraysEquals(b, bCopy);
@@ -212,9 +213,9 @@ public final class FuzzyFloatTest {
 
         // test with each array the bigger one
         if ((j % 2) == 0) {
-          assert ff.isElemMatch(f1, f2);
+          assertTrue(ff.isElemMatch(f1, f2));
         } else {
-          assert ff.isElemMatch(f2, f1);
+          assertTrue(ff.isElemMatch(f2, f1));
         }
       }
       for (int j = 0; j < 200; j++) {
@@ -229,9 +230,9 @@ public final class FuzzyFloatTest {
         double[] f1Copy = f1.clone();
         double[] f2Copy = f2.clone();
         if ((j % 2) == 0) {
-          assert !ff.isElemMatch(f1, f2);
+          assertTrue(!ff.isElemMatch(f1, f2));
         } else {
-          assert !ff.isElemMatch(f2, f1);
+          assertTrue(!ff.isElemMatch(f2, f1));
         }
         assertArraysEquals(f1, f1Copy);
         assertArraysEquals(f2, f2Copy);
@@ -242,11 +243,11 @@ public final class FuzzyFloatTest {
       double[] b = new double[] {};
       double[] c = new double[] {1, 1, 1, 1};
       double[] d = new double[] {1};
-      assert !ff.isElemMatch(a, b);
-      assert !ff.isElemMatch(b, a);
-      assert ff.isElemMatch(c, d);
-      assert ff.isElemMatch(d, c);
-      assert ff.isElemMatch(b, b);
+      assertTrue(!ff.isElemMatch(a, b));
+      assertTrue(!ff.isElemMatch(b, a));
+      assertTrue(ff.isElemMatch(c, d));
+      assertTrue(ff.isElemMatch(d, c));
+      assertTrue(ff.isElemMatch(b, b));
     }
   }
 
@@ -274,28 +275,28 @@ public final class FuzzyFloatTest {
     double[] a6Copy = a6.clone();
     double[] a7Copy = a7.clone();
 
-    assert comparator.compare(a0, a1) == 0;
-    assert comparator.compare(a1, a0) == 0;
-    assert comparator.compare(a1, a2) < 0;
-    assert comparator.compare(a2, a1) > 0;
-    assert comparator.compare(a2, a3) < 0;
-    assert comparator.compare(a3, a2) > 0;
-    assert comparator.compare(a3, a4) < 0;
-    assert comparator.compare(a4, a3) > 0;
-    assert comparator.compare(a4, a5) == 0;
-    assert comparator.compare(a5, a4) == 0;
-    assert comparator.compare(a5, a6) < 0;
-    assert comparator.compare(a6, a5) > 0;
-    assert comparator.compare(a6, a7) < 0;
-    assert comparator.compare(a7, a6) > 0;
-    assert comparator.compare(a1, a4) < 0;
-    assert comparator.compare(a4, a1) > 0;
-    assert comparator.compare(a2, a4) < 0;
-    assert comparator.compare(a4, a2) > 0;
-    assert comparator.compare(a6, a4) > 0;
-    assert comparator.compare(a4, a6) < 0;
-    assert comparator.compare(a7, a4) > 0;
-    assert comparator.compare(a4, a7) < 0;
+    assertTrue(comparator.compare(a0, a1) == 0);
+    assertTrue(comparator.compare(a1, a0) == 0);
+    assertTrue(comparator.compare(a1, a2) < 0);
+    assertTrue(comparator.compare(a2, a1) > 0);
+    assertTrue(comparator.compare(a2, a3) < 0);
+    assertTrue(comparator.compare(a3, a2) > 0);
+    assertTrue(comparator.compare(a3, a4) < 0);
+    assertTrue(comparator.compare(a4, a3) > 0);
+    assertTrue(comparator.compare(a4, a5) == 0);
+    assertTrue(comparator.compare(a5, a4) == 0);
+    assertTrue(comparator.compare(a5, a6) < 0);
+    assertTrue(comparator.compare(a6, a5) > 0);
+    assertTrue(comparator.compare(a6, a7) < 0);
+    assertTrue(comparator.compare(a7, a6) > 0);
+    assertTrue(comparator.compare(a1, a4) < 0);
+    assertTrue(comparator.compare(a4, a1) > 0);
+    assertTrue(comparator.compare(a2, a4) < 0);
+    assertTrue(comparator.compare(a4, a2) > 0);
+    assertTrue(comparator.compare(a6, a4) > 0);
+    assertTrue(comparator.compare(a4, a6) < 0);
+    assertTrue(comparator.compare(a7, a4) > 0);
+    assertTrue(comparator.compare(a4, a7) < 0);
 
     assertArraysEquals(a0, a0Copy);
     assertArraysEquals(a1, a1Copy);
@@ -330,7 +331,7 @@ public final class FuzzyFloatTest {
       double[] f1Copy = f1.clone();
       double[] f2Copy = f2.clone();
 
-      assert ff.isSubset(f1, f2);
+      assertTrue(ff.isSubset(f1, f2));
       assertArraysEquals(f1, f1Copy);
       assertArraysEquals(f2, f2Copy);
     }
@@ -342,12 +343,12 @@ public final class FuzzyFloatTest {
     double[] a5 = new double[] {1, 10, 15, 20};
     double[] a6 = new double[] {10, 10, 10, 10, 10, 1};
 
-    assert ff.isSubset(a2, a1);
-    assert !ff.isSubset(a1, a2);
-    assert !ff.isSubset(a1, a5);
-    assert ff.isSubset(a3, a1);
-    assert ff.isSubset(a4, a1);
-    assert ff.isSubset(a6, a1);
-    assert !ff.isSubset(a1, a6);
+    assertTrue(ff.isSubset(a2, a1));
+    assertTrue(!ff.isSubset(a1, a2));
+    assertTrue(!ff.isSubset(a1, a5));
+    assertTrue(ff.isSubset(a3, a1));
+    assertTrue(ff.isSubset(a4, a1));
+    assertTrue(ff.isSubset(a6, a1));
+    assertTrue(!ff.isSubset(a1, a6));
   }
 }

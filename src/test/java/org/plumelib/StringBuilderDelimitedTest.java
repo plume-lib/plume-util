@@ -1,9 +1,11 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 @SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
+  "deprecation" // StringBuilderDelimited is deprecated
 })
 public final class StringBuilderDelimitedTest {
 
@@ -19,6 +21,6 @@ public final class StringBuilderDelimitedTest {
     for (String str : strings) {
       sbd.add(str);
     }
-    assert sbd.toString().equals(UtilPlume.join(strings, ","));
+    assertTrue(sbd.toString().equals(UtilPlume.join(strings, ",")));
   }
 }

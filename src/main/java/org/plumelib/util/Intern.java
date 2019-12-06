@@ -659,7 +659,7 @@ public final class Intern {
     WeakReference<int @Interned []> lookup = internedIntArrays.get(a);
     @SuppressWarnings({
       "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
-                                              // @SameLen("#1")
+      // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
@@ -688,7 +688,7 @@ public final class Intern {
     WeakReference<long @Interned []> lookup = internedLongArrays.get(a);
     @SuppressWarnings({
       "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
-                                              // @SameLen("#1")
+      // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
@@ -773,7 +773,7 @@ public final class Intern {
     WeakReference<double @Interned []> lookup = internedDoubleArrays.get(a);
     @SuppressWarnings({
       "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
-                                              // @SameLen("#1")
+      // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
@@ -795,10 +795,14 @@ public final class Intern {
    * @return a canonical representation for the String[] array
    */
   @SuppressWarnings({
+    // Java warnings
+    "cast",
+    // Checker Framework warnings
     "interning", // interns its argument
     "all:purity",
     "lock",
-    "cast"
+    // Error Prone Warnings
+    "ReferenceEquality"
   }) // cast is redundant (except in JSR 308)
   @Pure
   public static @PolyNull @Interned String @Interned @PolyValue @SameLen("#1") [] intern(
@@ -807,7 +811,7 @@ public final class Intern {
     // Make sure each element is already interned
     if (assertsEnabled) {
       for (int k = 0; k < a.length; k++) {
-        if (!(a[k] == Intern.intern(a[k]))) {
+        if (a[k] != Intern.intern(a[k])) {
           throw new IllegalArgumentException();
         }
       }
@@ -823,7 +827,7 @@ public final class Intern {
       "nullness", // for this map, get() can be annotated as @PolyAll (except not interning); also
       // see https://github.com/kelloggm/checker-framework/issues/177
       "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
-                                              // @SameLen("#1")
+      // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
@@ -858,7 +862,7 @@ public final class Intern {
       "nullness", // for this map, get() can be annotated as @PolyAll (except not interning); also
       // see https://github.com/kelloggm/checker-framework/issues/177
       "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
-                                              // @SameLen("#1")
+      // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     }) // PolyNull/PolyValue:  value = parameter a, so same type & nullness as for parameter a
@@ -1026,7 +1030,7 @@ public final class Intern {
     } else {
       @PolyNull @Interned Object[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
       @PolyNull @Interned Object @Interned [] subseq = Intern.intern(subseq_uninterned);
-      @SuppressWarnings("nullness") // safe because map does no side effects
+      @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
           internedObjectSubsequence.put(sai, new WeakReference<>(subseq));
@@ -1061,7 +1065,7 @@ public final class Intern {
     } else {
       @PolyNull @Interned String[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
       @PolyNull @Interned String @Interned [] subseq = Intern.intern(subseq_uninterned);
-      @SuppressWarnings("nullness") // safe because map does no side effects
+      @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
           internedStringSubsequence.put(sai, new WeakReference<>(subseq));

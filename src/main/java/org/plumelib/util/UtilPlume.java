@@ -645,7 +645,7 @@ public final class UtilPlume {
           line1 = line1.trim();
           line2 = line2.trim();
         }
-        if (!(line1.equals(line2))) {
+        if (!line1.equals(line2)) {
           return false;
         }
         line1 = reader1.readLine();
@@ -816,8 +816,8 @@ public final class UtilPlume {
   public static File expandFilename(File name) {
     String path = name.getPath();
     String newname = expandFilename(path);
-    @SuppressWarnings("interning")
-    boolean changed = (newname != path);
+    @SuppressWarnings({"interning", "ReferenceEquality"})
+    boolean changed = newname != path;
     if (changed) {
       return new File(newname);
     } else {
@@ -1758,7 +1758,7 @@ public final class UtilPlume {
     int delimIndex = arg.indexOf(delimiter);
     while (delimIndex > -1) {
       int nonWsIndex = delimIndex + delimLen;
-      while ((nonWsIndex < arg.length()) && (Character.isWhitespace(arg.charAt(nonWsIndex)))) {
+      while (nonWsIndex < arg.length() && Character.isWhitespace(arg.charAt(nonWsIndex))) {
         nonWsIndex++;
       }
       // if (nonWsIndex == arg.length()) {
@@ -1791,7 +1791,7 @@ public final class UtilPlume {
     int delimIndex = arg.indexOf(delimiter);
     while (delimIndex > -1) {
       int nonWsIndex = delimIndex - 1;
-      while ((nonWsIndex >= 0) && (Character.isWhitespace(arg.charAt(nonWsIndex)))) {
+      while (nonWsIndex >= 0 && Character.isWhitespace(arg.charAt(nonWsIndex))) {
         nonWsIndex--;
       }
       // if (nonWsIndex == -1) {

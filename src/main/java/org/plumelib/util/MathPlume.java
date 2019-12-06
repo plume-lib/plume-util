@@ -511,8 +511,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns of value of the first argument raised to the power of the second argument. Uses a fast
-   * algorithm.
+   * Returns the first argument raised to the power of the second argument. Uses a fast algorithm.
    *
    * @param base the base
    * @param expt the exponent
@@ -538,28 +537,28 @@ public final class MathPlume {
     return result;
   }
 
-  /**
-   * Returns of value of the first argument raised to the power of the second argument. Uses a slow
-   * algorithm.
-   *
-   * @param base the base
-   * @param expt the exponent
-   * @return base to the expt power
-   * @see Math#pow(double, double)
-   */
-  @Pure
-  @StaticallyExecutable
-  private static int powSlow(int base, int expt) throws ArithmeticException {
-    if (expt < 0) {
-      throw new ArithmeticException("Negative exponent passed to pow");
-    }
-
-    int result = 1;
-    for (int i = 0; i < expt; i++) {
-      result *= base;
-    }
-    return result;
-  }
+  // /**
+  //  * Returns the first argument raised to the power of the second argument. Uses a slow
+  //  * algorithm.
+  //  *
+  //  * @param base the base
+  //  * @param expt the exponent
+  //  * @return base to the expt power
+  //  * @see Math#pow(double, double)
+  //  */
+  // @Pure
+  // @StaticallyExecutable
+  // private static int powSlow(int base, int expt) throws ArithmeticException {
+  //   if (expt < 0) {
+  //     throw new ArithmeticException("Negative exponent passed to pow");
+  //   }
+  //
+  //   int result = 1;
+  //   for (int i = 0; i < expt; i++) {
+  //     result *= base;
+  //   }
+  //   return result;
+  // }
 
   ///
   /// gcd
@@ -1006,7 +1005,7 @@ public final class MathPlume {
     while (itor.hasNext()) {
       prev = next;
       next = itor.next().intValue();
-      if (nonstrictEnds && (!itor.hasNext())) {
+      if (nonstrictEnds && !itor.hasNext()) {
         lastNonstrict = next;
         break;
       }
@@ -1243,7 +1242,7 @@ public final class MathPlume {
     while (itor.hasNext()) {
       prev = next;
       next = itor.next().longValue();
-      if (nonstrictEnds && (!itor.hasNext())) {
+      if (nonstrictEnds && !itor.hasNext()) {
         lastNonstrict = next;
         break;
       }
@@ -1878,7 +1877,7 @@ public final class MathPlume {
     if (nums.length < 4) {
       return null;
     }
-    int maxModulus = ((int) (Math.min(nums.length / 2, ArraysPlume.elementRange(nums) / 2)));
+    int maxModulus = (int) Math.min(nums.length / 2, ArraysPlume.elementRange(nums) / 2);
 
     // System.out.println("nums.length=" + nums.length + ", range=" +
     // ArraysPlume.elementRange(nums) + ", maxModulus=" + maxModulus);
@@ -1890,7 +1889,7 @@ public final class MathPlume {
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
       for (int i = 0; i < nums.length; i++) {
-        @IndexFor("hasModulus") int rem = ((int) (modPositive(nums[i], m)));
+        @IndexFor("hasModulus") int rem = (int) modPositive(nums[i], m);
         if (!hasModulus[rem]) {
           hasModulus[rem] = true;
           numNonmodulus--;

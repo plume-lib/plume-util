@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +26,7 @@ public final class ArraysPlumeTest {
     if (!result) {
       System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
     }
-    assert result;
+    assertTrue(result);
     //      assert(Arrays.equals(a1, a2),
     //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
   }
@@ -35,7 +37,7 @@ public final class ArraysPlumeTest {
       System.out.println(
           "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
     }
-    assert result;
+    assertTrue(result);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -46,16 +48,16 @@ public final class ArraysPlumeTest {
   public void testMinAndMax() {
 
     // public static int min(int[] a)
-    assert ArraysPlume.min(new int[] {1, 2, 3}) == 1;
-    assert ArraysPlume.min(new int[] {2, 33, 1}) == 1;
-    assert ArraysPlume.min(new int[] {3, -2, 1}) == -2;
-    assert ArraysPlume.min(new int[] {3}) == 3;
+    assertTrue(ArraysPlume.min(new int[] {1, 2, 3}) == 1);
+    assertTrue(ArraysPlume.min(new int[] {2, 33, 1}) == 1);
+    assertTrue(ArraysPlume.min(new int[] {3, -2, 1}) == -2);
+    assertTrue(ArraysPlume.min(new int[] {3}) == 3);
 
     // public static int max(int[] a)
-    assert ArraysPlume.max(new int[] {1, 2, 3}) == 3;
-    assert ArraysPlume.max(new int[] {2, 33, 1}) == 33;
-    assert ArraysPlume.max(new int[] {3, -2, 1}) == 3;
-    assert ArraysPlume.max(new int[] {3}) == 3;
+    assertTrue(ArraysPlume.max(new int[] {1, 2, 3}) == 3);
+    assertTrue(ArraysPlume.max(new int[] {2, 33, 1}) == 33);
+    assertTrue(ArraysPlume.max(new int[] {3, -2, 1}) == 3);
+    assertTrue(ArraysPlume.max(new int[] {3}) == 3);
 
     // public static int[] minAndMax(int[] a)
     assertArraysEquals(ArraysPlume.minAndMax(new int[] {1, 2, 3}), new int[] {1, 3});
@@ -74,32 +76,32 @@ public final class ArraysPlumeTest {
     }
 
     // public static int elementRange(int[] a)
-    assert ArraysPlume.elementRange(new int[] {1, 2, 3}) == 2;
-    assert ArraysPlume.elementRange(new int[] {2, 33, 1}) == 32;
-    assert ArraysPlume.elementRange(new int[] {3, -2, 1}) == 5;
-    assert ArraysPlume.elementRange(new int[] {3}) == 0;
+    assertTrue(ArraysPlume.elementRange(new int[] {1, 2, 3}) == 2);
+    assertTrue(ArraysPlume.elementRange(new int[] {2, 33, 1}) == 32);
+    assertTrue(ArraysPlume.elementRange(new int[] {3, -2, 1}) == 5);
+    assertTrue(ArraysPlume.elementRange(new int[] {3}) == 0);
   }
 
   @Test
   public void testSum() {
 
     // public static int sum(int[] a)
-    assert 0 == ArraysPlume.sum(new int[0]);
-    assert 10 == ArraysPlume.sum(new int[] {10});
-    assert 10 == ArraysPlume.sum(new int[] {1, 2, 3, 4});
+    assertTrue(0 == ArraysPlume.sum(new int[0]));
+    assertTrue(10 == ArraysPlume.sum(new int[] {10}));
+    assertTrue(10 == ArraysPlume.sum(new int[] {1, 2, 3, 4}));
 
     // public static int sum(int[][] a)
-    assert 0 == ArraysPlume.sum(new int[0][0]);
-    assert 78 == ArraysPlume.sum(new int[][] {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}});
-    assert 68 == ArraysPlume.sum(new int[][] {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 11, 12}});
+    assertTrue(0 == ArraysPlume.sum(new int[0][0]));
+    assertTrue(78 == ArraysPlume.sum(new int[][] {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}}));
+    assertTrue(68 == ArraysPlume.sum(new int[][] {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 11, 12}}));
 
     // public static double sum(double[] a)
-    assert 0 == ArraysPlume.sum(new double[0]);
-    assert 3.14 == ArraysPlume.sum(new double[] {3.14});
-    assert 8.624 == ArraysPlume.sum(new double[] {3.14, 2.718, -1.234, 4});
+    assertTrue(0 == ArraysPlume.sum(new double[0]));
+    assertTrue(3.14 == ArraysPlume.sum(new double[] {3.14}));
+    assertTrue(8.624 == ArraysPlume.sum(new double[] {3.14, 2.718, -1.234, 4}));
 
     // public static double sum(double[][] a)
-    assert 0 == ArraysPlume.sum(new double[0][0]);
+    assertTrue(0 == ArraysPlume.sum(new double[0][0]));
     assert 79.5
         == ArraysPlume.sum(new double[][] {{1.1, 2.2, 3.3, 4.4}, {5.5, 6, 7, 8}, {9, 10, 11, 12}});
   }
@@ -135,6 +137,7 @@ public final class ArraysPlumeTest {
     }
   }
 
+  @SuppressWarnings("BoxedPrimitiveConstructor") // == comparisons on Integers, need new values
   @Test
   public void testIndexOf_array() {
 
@@ -144,26 +147,26 @@ public final class ArraysPlumeTest {
     for (int i = 0; i < a.length; i++) {
       a[i] = new Integer(i);
     }
-    assert ArraysPlume.indexOf(a, new Integer(-1)) == -1;
-    assert ArraysPlume.indexOf(a, new Integer(0)) == 0;
-    assert ArraysPlume.indexOf(a, new Integer(7)) == 7;
-    assert ArraysPlume.indexOf(a, new Integer(9)) == 9;
-    assert ArraysPlume.indexOf(a, new Integer(10)) == -1;
-    assert ArraysPlume.indexOf(a, new Integer(20)) == -1;
-    assert ArraysPlume.indexOf(a, (Object) null) == -1;
-    assert ArraysPlume.indexOf(a, (Object) null, 1, 5) == -1;
+    assertTrue(ArraysPlume.indexOf(a, new Integer(-1)) == -1);
+    assertTrue(ArraysPlume.indexOf(a, new Integer(0)) == 0);
+    assertTrue(ArraysPlume.indexOf(a, new Integer(7)) == 7);
+    assertTrue(ArraysPlume.indexOf(a, new Integer(9)) == 9);
+    assertTrue(ArraysPlume.indexOf(a, new Integer(10)) == -1);
+    assertTrue(ArraysPlume.indexOf(a, new Integer(20)) == -1);
+    assertTrue(ArraysPlume.indexOf(a, (Object) null) == -1);
+    assertTrue(ArraysPlume.indexOf(a, (Object) null, 1, 5) == -1);
 
-    assert ArraysPlume.indexOfEq(a, new Integer(-1)) == -1;
-    assert ArraysPlume.indexOfEq(a, new Integer(0)) == -1;
-    assert ArraysPlume.indexOfEq(a, new Integer(7)) == -1;
-    assert ArraysPlume.indexOfEq(a, new Integer(9)) == -1;
-    assert ArraysPlume.indexOfEq(a, new Integer(10)) == -1;
-    assert ArraysPlume.indexOfEq(a, new Integer(20)) == -1;
-    assert ArraysPlume.indexOfEq(a, (Object) null) == -1;
-    assert ArraysPlume.indexOfEq(a, (Object) null, 1, 5) == -1;
-    assert ArraysPlume.indexOfEq(a, a[0]) == 0;
-    assert ArraysPlume.indexOfEq(a, a[7]) == 7;
-    assert ArraysPlume.indexOfEq(a, a[9]) == 9;
+    assertTrue(ArraysPlume.indexOfEq(a, new Integer(-1)) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, new Integer(0)) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, new Integer(7)) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, new Integer(9)) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, new Integer(10)) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, new Integer(20)) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, (Object) null) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, (Object) null, 1, 5) == -1);
+    assertTrue(ArraysPlume.indexOfEq(a, a[0]) == 0);
+    assertTrue(ArraysPlume.indexOfEq(a, a[7]) == 7);
+    assertTrue(ArraysPlume.indexOfEq(a, a[9]) == 9);
   }
 
   @Test
@@ -174,12 +177,12 @@ public final class ArraysPlumeTest {
     // public static int indexOfEq(List<?> a, Object elt)
 
     @MinLen(1) List<?> listOfStrings = Collections.singletonList("hello");
-    assert ArraysPlume.indexOf(listOfStrings, (Object) null) == -1;
-    assert ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1;
-    assert ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 1) == -1;
-    assert ArraysPlume.indexOfEq(listOfStrings, (Object) null) == -1;
-    assert ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 0) == -1;
-    assert ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 1) == -1;
+    assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null) == -1);
+    assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1);
+    assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 1) == -1);
+    assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null) == -1);
+    assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 0) == -1);
+    assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 1) == -1);
   }
 
   @Test
@@ -191,12 +194,12 @@ public final class ArraysPlumeTest {
       for (int i = 0; i < a.length; i++) {
         a[i] = i;
       }
-      assert ArraysPlume.indexOf(a, -1) == -1;
-      assert ArraysPlume.indexOf(a, 0) == 0;
-      assert ArraysPlume.indexOf(a, 7) == 7;
-      assert ArraysPlume.indexOf(a, 9) == 9;
-      assert ArraysPlume.indexOf(a, 10) == -1;
-      assert ArraysPlume.indexOf(a, 20) == -1;
+      assertTrue(ArraysPlume.indexOf(a, -1) == -1);
+      assertTrue(ArraysPlume.indexOf(a, 0) == 0);
+      assertTrue(ArraysPlume.indexOf(a, 7) == 7);
+      assertTrue(ArraysPlume.indexOf(a, 9) == 9);
+      assertTrue(ArraysPlume.indexOf(a, 10) == -1);
+      assertTrue(ArraysPlume.indexOf(a, 20) == -1);
     }
 
     // public static int indexOf(boolean[] a, boolean elt)
@@ -205,25 +208,26 @@ public final class ArraysPlumeTest {
       for (int i = 0; i < a.length; i++) {
         a[i] = false;
       }
-      assert ArraysPlume.indexOf(a, true) == -1;
-      assert ArraysPlume.indexOf(a, false) == 0;
+      assertTrue(ArraysPlume.indexOf(a, true) == -1);
+      assertTrue(ArraysPlume.indexOf(a, false) == 0);
       a[9] = true;
-      assert ArraysPlume.indexOf(a, true) == 9;
-      assert ArraysPlume.indexOf(a, false) == 0;
+      assertTrue(ArraysPlume.indexOf(a, true) == 9);
+      assertTrue(ArraysPlume.indexOf(a, false) == 0);
       a[7] = true;
-      assert ArraysPlume.indexOf(a, true) == 7;
-      assert ArraysPlume.indexOf(a, false) == 0;
+      assertTrue(ArraysPlume.indexOf(a, true) == 7);
+      assertTrue(ArraysPlume.indexOf(a, false) == 0);
       a[0] = true;
-      assert ArraysPlume.indexOf(a, true) == 0;
-      assert ArraysPlume.indexOf(a, false) == 1;
+      assertTrue(ArraysPlume.indexOf(a, true) == 0);
+      assertTrue(ArraysPlume.indexOf(a, false) == 1);
       for (int i = 0; i < a.length; i++) {
         a[i] = true;
       }
-      assert ArraysPlume.indexOf(a, true) == 0;
-      assert ArraysPlume.indexOf(a, false) == -1;
+      assertTrue(ArraysPlume.indexOf(a, true) == 0);
+      assertTrue(ArraysPlume.indexOf(a, false) == -1);
     }
   }
 
+  @SuppressWarnings("BoxedPrimitiveConstructor")
   @Test
   public void testIndexOf_array_array() {
 
@@ -250,32 +254,32 @@ public final class ArraysPlumeTest {
       Integer[] e2 = new Integer[] {new Integer(2), new Integer(3), new Integer(4), new Integer(5)};
       Integer[] f2 = new Integer[] {new Integer(7), new Integer(8), new Integer(9)};
 
-      assert ArraysPlume.indexOf(a, b) == 0;
-      assert ArraysPlume.indexOfEq(a, b) == 0;
-      assert ArraysPlume.indexOf(a, c) == 0;
-      assert ArraysPlume.indexOfEq(a, c) == 0;
-      assert ArraysPlume.indexOf(a, c2) == 0;
-      assert ArraysPlume.indexOfEq(a, c2) == -1;
-      assert ArraysPlume.indexOf(a, d) == 1;
-      assert ArraysPlume.indexOfEq(a, d) == 1;
-      assert ArraysPlume.indexOf(a, d2) == 1;
-      assert ArraysPlume.indexOfEq(a, d2) == -1;
-      assert ArraysPlume.indexOf(a, e) == 2;
-      assert ArraysPlume.indexOfEq(a, e) == 2;
-      assert ArraysPlume.indexOf(a, e2) == 2;
-      assert ArraysPlume.indexOfEq(a, e2) == -1;
-      assert ArraysPlume.indexOf(a, f) == 7;
-      assert ArraysPlume.indexOfEq(a, f) == 7;
-      assert ArraysPlume.indexOf(a, f2) == 7;
-      assert ArraysPlume.indexOfEq(a, f2) == -1;
-      assert ArraysPlume.indexOf(a, g) == 7;
-      assert ArraysPlume.indexOfEq(a, g) == -1;
-      assert ArraysPlume.indexOf(a, h) == -1;
-      assert ArraysPlume.indexOfEq(a, h) == -1;
-      assert ArraysPlume.indexOf(i, j) == 1;
-      assert ArraysPlume.indexOfEq(i, j) == 1;
-      assert ArraysPlume.indexOf(a, i) == -1;
-      assert ArraysPlume.indexOfEq(a, i) == -1;
+      assertTrue(ArraysPlume.indexOf(a, b) == 0);
+      assertTrue(ArraysPlume.indexOfEq(a, b) == 0);
+      assertTrue(ArraysPlume.indexOf(a, c) == 0);
+      assertTrue(ArraysPlume.indexOfEq(a, c) == 0);
+      assertTrue(ArraysPlume.indexOf(a, c2) == 0);
+      assertTrue(ArraysPlume.indexOfEq(a, c2) == -1);
+      assertTrue(ArraysPlume.indexOf(a, d) == 1);
+      assertTrue(ArraysPlume.indexOfEq(a, d) == 1);
+      assertTrue(ArraysPlume.indexOf(a, d2) == 1);
+      assertTrue(ArraysPlume.indexOfEq(a, d2) == -1);
+      assertTrue(ArraysPlume.indexOf(a, e) == 2);
+      assertTrue(ArraysPlume.indexOfEq(a, e) == 2);
+      assertTrue(ArraysPlume.indexOf(a, e2) == 2);
+      assertTrue(ArraysPlume.indexOfEq(a, e2) == -1);
+      assertTrue(ArraysPlume.indexOf(a, f) == 7);
+      assertTrue(ArraysPlume.indexOfEq(a, f) == 7);
+      assertTrue(ArraysPlume.indexOf(a, f2) == 7);
+      assertTrue(ArraysPlume.indexOfEq(a, f2) == -1);
+      assertTrue(ArraysPlume.indexOf(a, g) == 7);
+      assertTrue(ArraysPlume.indexOfEq(a, g) == -1);
+      assertTrue(ArraysPlume.indexOf(a, h) == -1);
+      assertTrue(ArraysPlume.indexOfEq(a, h) == -1);
+      assertTrue(ArraysPlume.indexOf(i, j) == 1);
+      assertTrue(ArraysPlume.indexOfEq(i, j) == 1);
+      assertTrue(ArraysPlume.indexOf(a, i) == -1);
+      assertTrue(ArraysPlume.indexOfEq(a, i) == -1);
     }
 
     // public static int indexOf(int[] a, int[] sub)
@@ -292,13 +296,13 @@ public final class ArraysPlumeTest {
       int[] g = new int[] {a[7], 22, a[9]};
       int[] h = new int[] {a[7], a[8], a[9], 10};
 
-      assert ArraysPlume.indexOf(a, b) == 0;
-      assert ArraysPlume.indexOf(a, c) == 0;
-      assert ArraysPlume.indexOf(a, d) == 1;
-      assert ArraysPlume.indexOf(a, e) == 2;
-      assert ArraysPlume.indexOf(a, f) == 7;
-      assert ArraysPlume.indexOf(a, g) == -1;
-      assert ArraysPlume.indexOf(a, h) == -1;
+      assertTrue(ArraysPlume.indexOf(a, b) == 0);
+      assertTrue(ArraysPlume.indexOf(a, c) == 0);
+      assertTrue(ArraysPlume.indexOf(a, d) == 1);
+      assertTrue(ArraysPlume.indexOf(a, e) == 2);
+      assertTrue(ArraysPlume.indexOf(a, f) == 7);
+      assertTrue(ArraysPlume.indexOf(a, g) == -1);
+      assertTrue(ArraysPlume.indexOf(a, h) == -1);
 
       // Tests pulled from actual StackAr data
       int[] origTheArray =
@@ -308,8 +312,8 @@ public final class ArraysPlumeTest {
           };
 
       int[] postTheArray = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-      assert ArraysPlume.indexOf(postTheArray, origTheArray) == -1;
-      assert ArraysPlume.indexOf(origTheArray, postTheArray) == -1;
+      assertTrue(ArraysPlume.indexOf(postTheArray, origTheArray) == -1);
+      assertTrue(ArraysPlume.indexOf(origTheArray, postTheArray) == -1);
     }
   }
 
@@ -347,97 +351,97 @@ public final class ArraysPlumeTest {
     // public static String toStringQuoted(List<?> a)
     // public static String toString(List<?> a, boolean quoted)
     {
-      assert ArraysPlume.toString((Object[]) null).equals("null");
-      assert ArraysPlume.toStringQuoted((Object[]) null).equals("null");
-      assert ArraysPlume.toString((List<?>) null).equals("null");
-      assert ArraysPlume.toStringQuoted((List<?>) null).equals("null");
+      assertTrue(ArraysPlume.toString((Object[]) null).equals("null"));
+      assertTrue(ArraysPlume.toStringQuoted((Object[]) null).equals("null"));
+      assertTrue(ArraysPlume.toString((List<?>) null).equals("null"));
+      assertTrue(ArraysPlume.toStringQuoted((List<?>) null).equals("null"));
       assert ArraysPlume.toStringQuoted(Arrays.asList(new Object[] {3.14, null, "hello"}))
           .equals("[3.14, null, \"hello\"]");
     }
 
     // static String toString(int[] a)
-    assert Arrays.toString(new int[] {}).equals("[]");
-    assert Arrays.toString(new int[] {0}).equals("[0]");
-    assert Arrays.toString(new int[] {0, 1, 2}).equals("[0, 1, 2]");
+    assertTrue(Arrays.toString(new int[] {}).equals("[]"));
+    assertTrue(Arrays.toString(new int[] {0}).equals("[0]"));
+    assertTrue(Arrays.toString(new int[] {0, 1, 2}).equals("[0, 1, 2]"));
   }
 
   @Test
   public void test_sorted() {
 
     // public static boolean sorted(int[] a)
-    assert ArraysPlume.sorted(new int[] {0, 1, 2});
-    assert ArraysPlume.sorted(new int[] {0, 1, 2, 2, 3, 3});
-    assert ArraysPlume.sorted(new int[] {});
-    assert ArraysPlume.sorted(new int[] {0});
-    assert ArraysPlume.sorted(new int[] {0, 1});
-    assert !ArraysPlume.sorted(new int[] {1, 0});
-    assert !ArraysPlume.sorted(new int[] {0, 1, 2, 1, 2, 3});
+    assertTrue(ArraysPlume.sorted(new int[] {0, 1, 2}));
+    assertTrue(ArraysPlume.sorted(new int[] {0, 1, 2, 2, 3, 3}));
+    assertTrue(ArraysPlume.sorted(new int[] {}));
+    assertTrue(ArraysPlume.sorted(new int[] {0}));
+    assertTrue(ArraysPlume.sorted(new int[] {0, 1}));
+    assertTrue(!ArraysPlume.sorted(new int[] {1, 0}));
+    assertTrue(!ArraysPlume.sorted(new int[] {0, 1, 2, 1, 2, 3}));
   }
 
   @Test
   public void test_noDuplicates() {
     // public static int noDuplicates(int[] a)
-    assert ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 0}) == true;
-    assert ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 100}) == true;
-    assert ArraysPlume.noDuplicates(new int[] {2, 2, 3, 5, 4, 0}) == false;
-    assert ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 1}) == false;
-    assert ArraysPlume.noDuplicates(new int[] {1, 2, -3, -5, 4, 0}) == true;
-    assert ArraysPlume.noDuplicates(new int[] {1, 2, -2, -2, 4, 100}) == false;
-    assert ArraysPlume.noDuplicates(new int[] {}) == true;
-    assert ArraysPlume.noDuplicates(new int[] {42}) == true;
+    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 0}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 100}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {2, 2, 3, 5, 4, 0}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 1}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, -3, -5, 4, 0}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, -2, -2, 4, 100}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new int[] {42}) == true);
 
     // public static int noDuplicates(long[] a)
-    assert ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 0}) == true;
-    assert ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 100}) == true;
-    assert ArraysPlume.noDuplicates(new long[] {2, 2, 3, 5, 4, 0}) == false;
-    assert ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 1}) == false;
-    assert ArraysPlume.noDuplicates(new long[] {1, 2, -3, -5, 4, 0}) == true;
-    assert ArraysPlume.noDuplicates(new long[] {1, 2, -2, -2, 4, 100}) == false;
-    assert ArraysPlume.noDuplicates(new long[] {}) == true;
-    assert ArraysPlume.noDuplicates(new long[] {42}) == true;
+    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 0}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 100}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {2, 2, 3, 5, 4, 0}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 1}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, -3, -5, 4, 0}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, -2, -2, 4, 100}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new long[] {42}) == true);
 
     // public static int noDuplicates(double[] a)
-    assert ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 0}) == true;
-    assert ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 100}) == true;
-    assert ArraysPlume.noDuplicates(new double[] {2, 2, 3, 5, 4, 0}) == false;
-    assert ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 1}) == false;
-    assert ArraysPlume.noDuplicates(new double[] {1., 1.001, -3, -5, 4, 0}) == true;
-    assert ArraysPlume.noDuplicates(new double[] {1., 2, -2.00, -2, 4, 100}) == false;
-    assert ArraysPlume.noDuplicates(new double[] {}) == true;
-    assert ArraysPlume.noDuplicates(new double[] {42}) == true;
+    assertTrue(ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 0}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 100}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {2, 2, 3, 5, 4, 0}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 1}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {1., 1.001, -3, -5, 4, 0}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {1., 2, -2.00, -2, 4, 100}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new double[] {42}) == true);
 
     // public static int noDuplicates(String[] a)
-    assert ArraysPlume.noDuplicates(new String[] {"1", "2", "3", "5", "4", "0"}) == true;
-    assert ArraysPlume.noDuplicates(new String[] {"A", "a", "foo", "Foo", ""}) == true;
-    assert ArraysPlume.noDuplicates(new String[] {" ", " "}) == false;
-    assert ArraysPlume.noDuplicates(new String[] {"  ", " "}) == true;
+    assertTrue(ArraysPlume.noDuplicates(new String[] {"1", "2", "3", "5", "4", "0"}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new String[] {"A", "a", "foo", "Foo", ""}) == true);
+    assertTrue(ArraysPlume.noDuplicates(new String[] {" ", " "}) == false);
+    assertTrue(ArraysPlume.noDuplicates(new String[] {"  ", " "}) == true);
   }
 
   @Test
   public void test_fnIsPermutation() {
     // public static boolean fnIsPermutation(int[] a)
-    assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 3}) == true;
-    assert ArraysPlume.fnIsPermutation(new int[] {1, 2, 3, 0}) == true;
-    assert ArraysPlume.fnIsPermutation(new int[] {3, 2, 1, 0}) == true;
-    assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 2}) == false;
-    assert ArraysPlume.fnIsPermutation(new int[] {0, -1, 2, 3}) == false;
-    assert ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 4}) == false;
-    assert ArraysPlume.fnIsPermutation(new int[] {0, 0, 0, 0}) == false;
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 3}) == true);
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {1, 2, 3, 0}) == true);
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {3, 2, 1, 0}) == true);
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 2}) == false);
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {0, -1, 2, 3}) == false);
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 4}) == false);
+    assertTrue(ArraysPlume.fnIsPermutation(new int[] {0, 0, 0, 0}) == false);
   }
 
   @Test
   public void test_fnIsTotal() {
     // public static boolean fnIsTotal(int[] a)
-    assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}) == true;
-    assert ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}) == true;
-    assert ArraysPlume.fnIsTotal(new int[] {3, 2, 1, 0}) == true;
-    assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 2}) == true;
-    assert ArraysPlume.fnIsTotal(new int[] {-1, 0, 2, 3}) == false;
-    assert ArraysPlume.fnIsTotal(new int[] {0, -1, 2, 3}) == false;
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}) == true);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}) == true);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {3, 2, 1, 0}) == true);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 2}) == true);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {-1, 0, 2, 3}) == false);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, -1, 2, 3}) == false);
     assert ArraysPlume.fnIsTotal(new int[] {0, -2, 1, 3}) == true; // weird
-    assert ArraysPlume.fnIsTotal(new int[] {0, 2, 3, -1}) == false;
-    assert ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 4}) == true;
-    assert ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}) == true;
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 2, 3, -1}) == false);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 4}) == true);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}) == true);
   }
 
   @SuppressWarnings({
@@ -469,7 +473,8 @@ public final class ArraysPlumeTest {
       ArraysPlume.fnInverse(new int[] {1, 0, 3, 0}, 4);
       throw new Error();
     } catch (UnsupportedOperationException e) {
-      assert e.getMessage() != null && e.getMessage().equals("Not invertible; a[1]=0 and a[3]=0");
+      assertTrue(
+          e.getMessage() != null && e.getMessage().equals("Not invertible; a[1]=0 and a[3]=0"));
     }
     assertArraysEquals(ArraysPlume.fnInverse(new int[] {5}, 6), new int[] {-1, -1, -1, -1, -1, 0});
     assertArraysEquals(
@@ -480,7 +485,7 @@ public final class ArraysPlumeTest {
           ArraysPlume.fnInverse(new int[] {100, 101, 102, 103}, 4), new int[] {40, 41, 42, 43});
       throw new Error();
     } catch (IllegalArgumentException e) {
-      assert e.getMessage() != null && e.getMessage().equals("Bad range value: a[0]=100");
+      assertTrue(e.getMessage() != null && e.getMessage().equals("Bad range value: a[0]=100"));
     }
 
     // public static int[] fnCompose(int[] a, int[] b)
@@ -530,7 +535,7 @@ public final class ArraysPlumeTest {
         double[] f1Copy = f1.clone();
         double[] f2Copy = f2.clone();
 
-        assert ArraysPlume.isSubset(f1, f2);
+        assertTrue(ArraysPlume.isSubset(f1, f2));
         assertArraysEquals(f1, f1Copy);
         assertArraysEquals(f2, f2Copy);
       }
@@ -542,13 +547,13 @@ public final class ArraysPlumeTest {
       double[] a5 = new double[] {1, 10, 15, 20};
       double[] a6 = new double[] {10, 10, 10, 10, 10, 1};
 
-      assert ArraysPlume.isSubset(a2, a1);
-      assert !ArraysPlume.isSubset(a1, a2);
-      assert !ArraysPlume.isSubset(a1, a5);
-      assert ArraysPlume.isSubset(a3, a1);
-      assert ArraysPlume.isSubset(a4, a1);
-      assert ArraysPlume.isSubset(a6, a1);
-      assert !ArraysPlume.isSubset(a1, a6);
+      assertTrue(ArraysPlume.isSubset(a2, a1));
+      assertTrue(!ArraysPlume.isSubset(a1, a2));
+      assertTrue(!ArraysPlume.isSubset(a1, a5));
+      assertTrue(ArraysPlume.isSubset(a3, a1));
+      assertTrue(ArraysPlume.isSubset(a4, a1));
+      assertTrue(ArraysPlume.isSubset(a6, a1));
+      assertTrue(!ArraysPlume.isSubset(a1, a6));
     }
   }
 
@@ -573,53 +578,53 @@ public final class ArraysPlumeTest {
     int[] a9 = new int[] {Integer.MAX_VALUE};
     int[] a10 = new int[] {Integer.MIN_VALUE};
 
-    assert iacl.compare(a0, a1) == 0;
-    assert iaclf.compare(a0, a1) == 0;
-    assert iacl.compare(a1, a0) == 0;
-    assert iaclf.compare(a1, a0) == 0;
-    assert iacl.compare(a1, a2) < 0;
-    assert iaclf.compare(a1, a2) < 0;
-    assert iacl.compare(a2, a1) > 0;
-    assert iaclf.compare(a2, a1) > 0;
-    assert iacl.compare(a2, a3) < 0;
-    assert iaclf.compare(a2, a3) < 0;
-    assert iacl.compare(a3, a2) > 0;
-    assert iaclf.compare(a3, a2) > 0;
-    assert iacl.compare(a3, a4) < 0;
-    assert iaclf.compare(a3, a4) < 0;
-    assert iacl.compare(a4, a3) > 0;
-    assert iaclf.compare(a4, a3) > 0;
-    assert iacl.compare(a4, a5) == 0;
-    assert iaclf.compare(a4, a5) == 0;
-    assert iacl.compare(a5, a4) == 0;
-    assert iaclf.compare(a5, a4) == 0;
-    assert iacl.compare(a5, a6) < 0;
-    assert iaclf.compare(a5, a6) < 0;
-    assert iacl.compare(a6, a5) > 0;
-    assert iaclf.compare(a6, a5) > 0;
-    assert iacl.compare(a6, a7) < 0;
-    assert iaclf.compare(a6, a7) > 0;
-    assert iacl.compare(a7, a6) > 0;
-    assert iaclf.compare(a7, a6) < 0;
-    assert iacl.compare(a1, a4) < 0;
-    assert iaclf.compare(a1, a4) < 0;
-    assert iacl.compare(a4, a1) > 0;
-    assert iaclf.compare(a4, a1) > 0;
-    assert iacl.compare(a2, a4) < 0;
-    assert iaclf.compare(a2, a4) < 0;
-    assert iacl.compare(a4, a2) > 0;
-    assert iaclf.compare(a4, a2) > 0;
-    assert iacl.compare(a6, a4) > 0;
-    assert iaclf.compare(a6, a4) > 0;
-    assert iacl.compare(a4, a6) < 0;
-    assert iaclf.compare(a4, a6) < 0;
-    assert iacl.compare(a7, a4) > 0;
-    assert iaclf.compare(a7, a4) < 0;
-    assert iacl.compare(a4, a7) < 0;
-    assert iaclf.compare(a4, a7) > 0;
-    assert iacl.compare(a8, a9) < 0;
-    assert iaclf.compare(a8, a9) < 0;
-    assert iacl.compare(a10, a7) < 0;
+    assertTrue(iacl.compare(a0, a1) == 0);
+    assertTrue(iaclf.compare(a0, a1) == 0);
+    assertTrue(iacl.compare(a1, a0) == 0);
+    assertTrue(iaclf.compare(a1, a0) == 0);
+    assertTrue(iacl.compare(a1, a2) < 0);
+    assertTrue(iaclf.compare(a1, a2) < 0);
+    assertTrue(iacl.compare(a2, a1) > 0);
+    assertTrue(iaclf.compare(a2, a1) > 0);
+    assertTrue(iacl.compare(a2, a3) < 0);
+    assertTrue(iaclf.compare(a2, a3) < 0);
+    assertTrue(iacl.compare(a3, a2) > 0);
+    assertTrue(iaclf.compare(a3, a2) > 0);
+    assertTrue(iacl.compare(a3, a4) < 0);
+    assertTrue(iaclf.compare(a3, a4) < 0);
+    assertTrue(iacl.compare(a4, a3) > 0);
+    assertTrue(iaclf.compare(a4, a3) > 0);
+    assertTrue(iacl.compare(a4, a5) == 0);
+    assertTrue(iaclf.compare(a4, a5) == 0);
+    assertTrue(iacl.compare(a5, a4) == 0);
+    assertTrue(iaclf.compare(a5, a4) == 0);
+    assertTrue(iacl.compare(a5, a6) < 0);
+    assertTrue(iaclf.compare(a5, a6) < 0);
+    assertTrue(iacl.compare(a6, a5) > 0);
+    assertTrue(iaclf.compare(a6, a5) > 0);
+    assertTrue(iacl.compare(a6, a7) < 0);
+    assertTrue(iaclf.compare(a6, a7) > 0);
+    assertTrue(iacl.compare(a7, a6) > 0);
+    assertTrue(iaclf.compare(a7, a6) < 0);
+    assertTrue(iacl.compare(a1, a4) < 0);
+    assertTrue(iaclf.compare(a1, a4) < 0);
+    assertTrue(iacl.compare(a4, a1) > 0);
+    assertTrue(iaclf.compare(a4, a1) > 0);
+    assertTrue(iacl.compare(a2, a4) < 0);
+    assertTrue(iaclf.compare(a2, a4) < 0);
+    assertTrue(iacl.compare(a4, a2) > 0);
+    assertTrue(iaclf.compare(a4, a2) > 0);
+    assertTrue(iacl.compare(a6, a4) > 0);
+    assertTrue(iaclf.compare(a6, a4) > 0);
+    assertTrue(iacl.compare(a4, a6) < 0);
+    assertTrue(iaclf.compare(a4, a6) < 0);
+    assertTrue(iacl.compare(a7, a4) > 0);
+    assertTrue(iaclf.compare(a7, a4) < 0);
+    assertTrue(iacl.compare(a4, a7) < 0);
+    assertTrue(iaclf.compare(a4, a7) > 0);
+    assertTrue(iacl.compare(a8, a9) < 0);
+    assertTrue(iaclf.compare(a8, a9) < 0);
+    assertTrue(iacl.compare(a10, a7) < 0);
   }
 
   @Test
@@ -642,53 +647,53 @@ public final class ArraysPlumeTest {
     long[] a9 = new long[] {Long.MAX_VALUE};
     long[] a10 = new long[] {Long.MIN_VALUE};
 
-    assert lacl.compare(a0, a1) == 0;
-    assert laclf.compare(a0, a1) == 0;
-    assert lacl.compare(a1, a0) == 0;
-    assert laclf.compare(a1, a0) == 0;
-    assert lacl.compare(a1, a2) < 0;
-    assert laclf.compare(a1, a2) < 0;
-    assert lacl.compare(a2, a1) > 0;
-    assert laclf.compare(a2, a1) > 0;
-    assert lacl.compare(a2, a3) < 0;
-    assert laclf.compare(a2, a3) < 0;
-    assert lacl.compare(a3, a2) > 0;
-    assert laclf.compare(a3, a2) > 0;
-    assert lacl.compare(a3, a4) < 0;
-    assert laclf.compare(a3, a4) < 0;
-    assert lacl.compare(a4, a3) > 0;
-    assert laclf.compare(a4, a3) > 0;
-    assert lacl.compare(a4, a5) == 0;
-    assert laclf.compare(a4, a5) == 0;
-    assert lacl.compare(a5, a4) == 0;
-    assert laclf.compare(a5, a4) == 0;
-    assert lacl.compare(a5, a6) < 0;
-    assert laclf.compare(a5, a6) < 0;
-    assert lacl.compare(a6, a5) > 0;
-    assert laclf.compare(a6, a5) > 0;
-    assert lacl.compare(a6, a7) < 0;
-    assert laclf.compare(a6, a7) > 0;
-    assert lacl.compare(a7, a6) > 0;
-    assert laclf.compare(a7, a6) < 0;
-    assert lacl.compare(a1, a4) < 0;
-    assert laclf.compare(a1, a4) < 0;
-    assert lacl.compare(a4, a1) > 0;
-    assert laclf.compare(a4, a1) > 0;
-    assert lacl.compare(a2, a4) < 0;
-    assert laclf.compare(a2, a4) < 0;
-    assert lacl.compare(a4, a2) > 0;
-    assert laclf.compare(a4, a2) > 0;
-    assert lacl.compare(a6, a4) > 0;
-    assert laclf.compare(a6, a4) > 0;
-    assert lacl.compare(a4, a6) < 0;
-    assert laclf.compare(a4, a6) < 0;
-    assert lacl.compare(a7, a4) > 0;
-    assert laclf.compare(a7, a4) < 0;
-    assert lacl.compare(a4, a7) < 0;
-    assert laclf.compare(a4, a7) > 0;
-    assert lacl.compare(a8, a9) < 0;
-    assert laclf.compare(a8, a9) < 0;
-    assert lacl.compare(a10, a7) < 0;
+    assertTrue(lacl.compare(a0, a1) == 0);
+    assertTrue(laclf.compare(a0, a1) == 0);
+    assertTrue(lacl.compare(a1, a0) == 0);
+    assertTrue(laclf.compare(a1, a0) == 0);
+    assertTrue(lacl.compare(a1, a2) < 0);
+    assertTrue(laclf.compare(a1, a2) < 0);
+    assertTrue(lacl.compare(a2, a1) > 0);
+    assertTrue(laclf.compare(a2, a1) > 0);
+    assertTrue(lacl.compare(a2, a3) < 0);
+    assertTrue(laclf.compare(a2, a3) < 0);
+    assertTrue(lacl.compare(a3, a2) > 0);
+    assertTrue(laclf.compare(a3, a2) > 0);
+    assertTrue(lacl.compare(a3, a4) < 0);
+    assertTrue(laclf.compare(a3, a4) < 0);
+    assertTrue(lacl.compare(a4, a3) > 0);
+    assertTrue(laclf.compare(a4, a3) > 0);
+    assertTrue(lacl.compare(a4, a5) == 0);
+    assertTrue(laclf.compare(a4, a5) == 0);
+    assertTrue(lacl.compare(a5, a4) == 0);
+    assertTrue(laclf.compare(a5, a4) == 0);
+    assertTrue(lacl.compare(a5, a6) < 0);
+    assertTrue(laclf.compare(a5, a6) < 0);
+    assertTrue(lacl.compare(a6, a5) > 0);
+    assertTrue(laclf.compare(a6, a5) > 0);
+    assertTrue(lacl.compare(a6, a7) < 0);
+    assertTrue(laclf.compare(a6, a7) > 0);
+    assertTrue(lacl.compare(a7, a6) > 0);
+    assertTrue(laclf.compare(a7, a6) < 0);
+    assertTrue(lacl.compare(a1, a4) < 0);
+    assertTrue(laclf.compare(a1, a4) < 0);
+    assertTrue(lacl.compare(a4, a1) > 0);
+    assertTrue(laclf.compare(a4, a1) > 0);
+    assertTrue(lacl.compare(a2, a4) < 0);
+    assertTrue(laclf.compare(a2, a4) < 0);
+    assertTrue(lacl.compare(a4, a2) > 0);
+    assertTrue(laclf.compare(a4, a2) > 0);
+    assertTrue(lacl.compare(a6, a4) > 0);
+    assertTrue(laclf.compare(a6, a4) > 0);
+    assertTrue(lacl.compare(a4, a6) < 0);
+    assertTrue(laclf.compare(a4, a6) < 0);
+    assertTrue(lacl.compare(a7, a4) > 0);
+    assertTrue(laclf.compare(a7, a4) < 0);
+    assertTrue(lacl.compare(a4, a7) < 0);
+    assertTrue(laclf.compare(a4, a7) > 0);
+    assertTrue(lacl.compare(a8, a9) < 0);
+    assertTrue(laclf.compare(a8, a9) < 0);
+    assertTrue(lacl.compare(a10, a7) < 0);
   }
 
   @Test
@@ -712,35 +717,35 @@ public final class ArraysPlumeTest {
     double[] a12 = new double[] {10.0 * Integer.MAX_VALUE};
     double[] a13 = new double[] {10.0 * Integer.MIN_VALUE};
 
-    assert dacl.compare(a0, a1) == 0;
-    assert dacl.compare(a1, a0) == 0;
-    assert dacl.compare(a1, a2) < 0;
-    assert dacl.compare(a2, a1) > 0;
-    assert dacl.compare(a2, a3) < 0;
-    assert dacl.compare(a3, a2) > 0;
-    assert dacl.compare(a3, a4) < 0;
-    assert dacl.compare(a4, a3) > 0;
-    assert dacl.compare(a4, a5) == 0;
-    assert dacl.compare(a5, a4) == 0;
-    assert dacl.compare(a5, a6) < 0;
-    assert dacl.compare(a6, a5) > 0;
-    assert dacl.compare(a6, a7) < 0;
-    assert dacl.compare(a7, a6) > 0;
-    assert dacl.compare(a1, a4) < 0;
-    assert dacl.compare(a4, a1) > 0;
-    assert dacl.compare(a2, a4) < 0;
-    assert dacl.compare(a4, a2) > 0;
-    assert dacl.compare(a6, a4) > 0;
-    assert dacl.compare(a4, a6) < 0;
-    assert dacl.compare(a7, a4) > 0;
-    assert dacl.compare(a4, a7) < 0;
+    assertTrue(dacl.compare(a0, a1) == 0);
+    assertTrue(dacl.compare(a1, a0) == 0);
+    assertTrue(dacl.compare(a1, a2) < 0);
+    assertTrue(dacl.compare(a2, a1) > 0);
+    assertTrue(dacl.compare(a2, a3) < 0);
+    assertTrue(dacl.compare(a3, a2) > 0);
+    assertTrue(dacl.compare(a3, a4) < 0);
+    assertTrue(dacl.compare(a4, a3) > 0);
+    assertTrue(dacl.compare(a4, a5) == 0);
+    assertTrue(dacl.compare(a5, a4) == 0);
+    assertTrue(dacl.compare(a5, a6) < 0);
+    assertTrue(dacl.compare(a6, a5) > 0);
+    assertTrue(dacl.compare(a6, a7) < 0);
+    assertTrue(dacl.compare(a7, a6) > 0);
+    assertTrue(dacl.compare(a1, a4) < 0);
+    assertTrue(dacl.compare(a4, a1) > 0);
+    assertTrue(dacl.compare(a2, a4) < 0);
+    assertTrue(dacl.compare(a4, a2) > 0);
+    assertTrue(dacl.compare(a6, a4) > 0);
+    assertTrue(dacl.compare(a4, a6) < 0);
+    assertTrue(dacl.compare(a7, a4) > 0);
+    assertTrue(dacl.compare(a4, a7) < 0);
 
     // Test the comparisons on small/large numbers
-    assert dacl.compare(a8, a9) > 0;
-    assert dacl.compare(a10, a11) < 0;
-    assert dacl.compare(a11, a12) < 0;
-    assert dacl.compare(a12, a13) > 0;
-    assert dacl.compare(a13, a11) < 0;
+    assertTrue(dacl.compare(a8, a9) > 0);
+    assertTrue(dacl.compare(a10, a11) < 0);
+    assertTrue(dacl.compare(a11, a12) < 0);
+    assertTrue(dacl.compare(a12, a13) > 0);
+    assertTrue(dacl.compare(a13, a11) < 0);
   }
 
   @Test
@@ -767,60 +772,60 @@ public final class ArraysPlumeTest {
     // and ComparableArrayComparatorLengthFirst.compare()
     String[] a8 = new String[] {"0", "1", null, "3", "4"};
 
-    assert cacl.compare(a0, a1) == 0;
-    assert caclf.compare(a0, a1) == 0;
-    assert cacl.compare(a1, a0) == 0;
-    assert caclf.compare(a1, a0) == 0;
-    assert cacl.compare(a1, a2) < 0;
-    assert caclf.compare(a1, a2) < 0;
-    assert cacl.compare(a2, a1) > 0;
-    assert caclf.compare(a2, a1) > 0;
-    assert cacl.compare(a2, a3) < 0;
-    assert caclf.compare(a2, a3) < 0;
-    assert cacl.compare(a3, a2) > 0;
-    assert caclf.compare(a3, a2) > 0;
-    assert cacl.compare(a3, a4) < 0;
-    assert caclf.compare(a3, a4) < 0;
-    assert cacl.compare(a4, a3) > 0;
-    assert caclf.compare(a4, a3) > 0;
-    assert cacl.compare(a4, a5) == 0;
-    assert caclf.compare(a4, a5) == 0;
-    assert cacl.compare(a5, a4) == 0;
-    assert caclf.compare(a5, a4) == 0;
-    assert cacl.compare(a5, a6) < 0;
-    assert caclf.compare(a5, a6) < 0;
-    assert cacl.compare(a6, a5) > 0;
-    assert caclf.compare(a6, a5) > 0;
-    assert cacl.compare(a6, a7) < 0;
-    assert caclf.compare(a6, a7) > 0;
-    assert cacl.compare(a7, a6) > 0;
-    assert caclf.compare(a7, a6) < 0;
-    assert cacl.compare(a1, a4) < 0;
-    assert caclf.compare(a1, a4) < 0;
-    assert cacl.compare(a4, a1) > 0;
-    assert caclf.compare(a4, a1) > 0;
-    assert cacl.compare(a2, a4) < 0;
-    assert caclf.compare(a2, a4) < 0;
-    assert cacl.compare(a4, a2) > 0;
-    assert caclf.compare(a4, a2) > 0;
-    assert cacl.compare(a6, a4) > 0;
-    assert caclf.compare(a6, a4) > 0;
-    assert cacl.compare(a4, a6) < 0;
-    assert caclf.compare(a4, a6) < 0;
-    assert cacl.compare(a7, a4) > 0;
-    assert caclf.compare(a7, a4) < 0;
-    assert cacl.compare(a8, a1) > 0;
-    assert caclf.compare(a8, a1) > 0;
-    assert cacl.compare(a1, a8) < 0;
-    assert caclf.compare(a1, a8) < 0;
-    assert cacl.compare(a8, a2) < 0;
-    assert caclf.compare(a8, a2) > 0;
-    assert cacl.compare(a2, a8) > 0;
-    assert caclf.compare(a2, a8) < 0;
-    assert cacl.compare(a8, a3) < 0;
-    assert caclf.compare(a8, a3) < 0;
-    assert cacl.compare(a3, a8) > 0;
-    assert caclf.compare(a3, a8) > 0;
+    assertTrue(cacl.compare(a0, a1) == 0);
+    assertTrue(caclf.compare(a0, a1) == 0);
+    assertTrue(cacl.compare(a1, a0) == 0);
+    assertTrue(caclf.compare(a1, a0) == 0);
+    assertTrue(cacl.compare(a1, a2) < 0);
+    assertTrue(caclf.compare(a1, a2) < 0);
+    assertTrue(cacl.compare(a2, a1) > 0);
+    assertTrue(caclf.compare(a2, a1) > 0);
+    assertTrue(cacl.compare(a2, a3) < 0);
+    assertTrue(caclf.compare(a2, a3) < 0);
+    assertTrue(cacl.compare(a3, a2) > 0);
+    assertTrue(caclf.compare(a3, a2) > 0);
+    assertTrue(cacl.compare(a3, a4) < 0);
+    assertTrue(caclf.compare(a3, a4) < 0);
+    assertTrue(cacl.compare(a4, a3) > 0);
+    assertTrue(caclf.compare(a4, a3) > 0);
+    assertTrue(cacl.compare(a4, a5) == 0);
+    assertTrue(caclf.compare(a4, a5) == 0);
+    assertTrue(cacl.compare(a5, a4) == 0);
+    assertTrue(caclf.compare(a5, a4) == 0);
+    assertTrue(cacl.compare(a5, a6) < 0);
+    assertTrue(caclf.compare(a5, a6) < 0);
+    assertTrue(cacl.compare(a6, a5) > 0);
+    assertTrue(caclf.compare(a6, a5) > 0);
+    assertTrue(cacl.compare(a6, a7) < 0);
+    assertTrue(caclf.compare(a6, a7) > 0);
+    assertTrue(cacl.compare(a7, a6) > 0);
+    assertTrue(caclf.compare(a7, a6) < 0);
+    assertTrue(cacl.compare(a1, a4) < 0);
+    assertTrue(caclf.compare(a1, a4) < 0);
+    assertTrue(cacl.compare(a4, a1) > 0);
+    assertTrue(caclf.compare(a4, a1) > 0);
+    assertTrue(cacl.compare(a2, a4) < 0);
+    assertTrue(caclf.compare(a2, a4) < 0);
+    assertTrue(cacl.compare(a4, a2) > 0);
+    assertTrue(caclf.compare(a4, a2) > 0);
+    assertTrue(cacl.compare(a6, a4) > 0);
+    assertTrue(caclf.compare(a6, a4) > 0);
+    assertTrue(cacl.compare(a4, a6) < 0);
+    assertTrue(caclf.compare(a4, a6) < 0);
+    assertTrue(cacl.compare(a7, a4) > 0);
+    assertTrue(caclf.compare(a7, a4) < 0);
+    assertTrue(cacl.compare(a8, a1) > 0);
+    assertTrue(caclf.compare(a8, a1) > 0);
+    assertTrue(cacl.compare(a1, a8) < 0);
+    assertTrue(caclf.compare(a1, a8) < 0);
+    assertTrue(cacl.compare(a8, a2) < 0);
+    assertTrue(caclf.compare(a8, a2) > 0);
+    assertTrue(cacl.compare(a2, a8) > 0);
+    assertTrue(caclf.compare(a2, a8) < 0);
+    assertTrue(cacl.compare(a8, a3) < 0);
+    assertTrue(caclf.compare(a8, a3) < 0);
+    assertTrue(cacl.compare(a3, a8) > 0);
+    assertTrue(caclf.compare(a3, a8) > 0);
   }
 
   @Test
@@ -829,20 +834,20 @@ public final class ArraysPlumeTest {
     // public static boolean anyNull(Object[] a)
 
     Object o = new Object();
-    assert ArraysPlume.anyNull(new Object[] {}) == false;
-    assert ArraysPlume.anyNull(new Object[] {null}) == true;
-    assert ArraysPlume.anyNull(new Object[] {null, null}) == true;
-    assert ArraysPlume.anyNull(new Object[] {o}) == false;
-    assert ArraysPlume.anyNull(new Object[] {o, o}) == false;
-    assert ArraysPlume.anyNull(new Object[] {o, null, null}) == true;
-    assert ArraysPlume.anyNull(new Object[] {null, o, null}) == true;
-    assert ArraysPlume.anyNull(new Object[] {o, null, o}) == true;
-    assert ArraysPlume.anyNull(new Object[] {null, o, o}) == true;
-    assert ArraysPlume.anyNull(new Object[][] {}) == false;
-    assert ArraysPlume.anyNull(new Object[][] {null}) == true;
+    assertTrue(ArraysPlume.anyNull(new Object[] {}) == false);
+    assertTrue(ArraysPlume.anyNull(new Object[] {null}) == true);
+    assertTrue(ArraysPlume.anyNull(new Object[] {null, null}) == true);
+    assertTrue(ArraysPlume.anyNull(new Object[] {o}) == false);
+    assertTrue(ArraysPlume.anyNull(new Object[] {o, o}) == false);
+    assertTrue(ArraysPlume.anyNull(new Object[] {o, null, null}) == true);
+    assertTrue(ArraysPlume.anyNull(new Object[] {null, o, null}) == true);
+    assertTrue(ArraysPlume.anyNull(new Object[] {o, null, o}) == true);
+    assertTrue(ArraysPlume.anyNull(new Object[] {null, o, o}) == true);
+    assertTrue(ArraysPlume.anyNull(new Object[][] {}) == false);
+    assertTrue(ArraysPlume.anyNull(new Object[][] {null}) == true);
     // Extraneous @Nullable on the following lines are due to https://tinyurl.com/cfissue/599
-    assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}}) == false;
-    assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, null}) == true;
+    assertTrue(ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}}) == false);
+    assertTrue(ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, null}) == true);
     assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
         == false;
   }
@@ -853,20 +858,20 @@ public final class ArraysPlumeTest {
     // public static boolean allNull(Object[] a)
 
     Object o = new Object();
-    assert ArraysPlume.allNull(new Object[] {}) == true;
-    assert ArraysPlume.allNull(new Object[] {null}) == true;
-    assert ArraysPlume.allNull(new Object[] {null, null}) == true;
-    assert ArraysPlume.allNull(new Object[] {o}) == false;
-    assert ArraysPlume.allNull(new Object[] {o, o}) == false;
-    assert ArraysPlume.allNull(new Object[] {o, null, null}) == false;
-    assert ArraysPlume.allNull(new Object[] {null, o, null}) == false;
-    assert ArraysPlume.allNull(new Object[] {o, null, o}) == false;
-    assert ArraysPlume.allNull(new Object[] {null, o, o}) == false;
-    assert ArraysPlume.allNull(new Object[][] {}) == true;
-    assert ArraysPlume.allNull(new Object[][] {null}) == true;
-    assert ArraysPlume.allNull(new Object[][] {null, null}) == true;
-    assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}}) == false;
-    assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, null}) == false;
+    assertTrue(ArraysPlume.allNull(new Object[] {}) == true);
+    assertTrue(ArraysPlume.allNull(new Object[] {null}) == true);
+    assertTrue(ArraysPlume.allNull(new Object[] {null, null}) == true);
+    assertTrue(ArraysPlume.allNull(new Object[] {o}) == false);
+    assertTrue(ArraysPlume.allNull(new Object[] {o, o}) == false);
+    assertTrue(ArraysPlume.allNull(new Object[] {o, null, null}) == false);
+    assertTrue(ArraysPlume.allNull(new Object[] {null, o, null}) == false);
+    assertTrue(ArraysPlume.allNull(new Object[] {o, null, o}) == false);
+    assertTrue(ArraysPlume.allNull(new Object[] {null, o, o}) == false);
+    assertTrue(ArraysPlume.allNull(new Object[][] {}) == true);
+    assertTrue(ArraysPlume.allNull(new Object[][] {null}) == true);
+    assertTrue(ArraysPlume.allNull(new Object[][] {null, null}) == true);
+    assertTrue(ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}}) == false);
+    assertTrue(ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, null}) == false);
     assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
         == false;
   }
@@ -922,7 +927,7 @@ public final class ArraysPlumeTest {
   public void testConcat() {
     Date[] da1 = new Date[] {new Date()};
     Date[] da2 = new Date[] {new Date()};
-    System.out.println("concat result: " + ArraysPlume.concat(da1, da2));
     Date[] da3 = ArraysPlume.concat(da1, da2);
+    System.out.println("concat result: " + Arrays.toString(da3));
   }
 }

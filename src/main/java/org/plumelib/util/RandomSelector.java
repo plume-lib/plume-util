@@ -132,7 +132,7 @@ public class RandomSelector<T> {
 
     // in fixed sample mode, the i-th element has a k/i chance
     // of being accepted where k is numElts.
-    if (generator.nextDouble() < ((double) numElts / (++observed))) {
+    if (generator.nextDouble() < ((double) numElts / ++observed)) {
       if (values.size() < numElts) {
         values.add(next);
       } else {

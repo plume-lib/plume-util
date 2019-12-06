@@ -483,7 +483,7 @@ public final class CollectionsPlume {
 
     @Override
     public boolean hasNext(@GuardSatisfied MergedIterator<T> this) {
-      while ((!current.hasNext()) && (itorOfItors.hasNext())) {
+      while (!current.hasNext() && itorOfItors.hasNext()) {
         current = itorOfItors.next();
       }
       return current.hasNext();
@@ -533,7 +533,7 @@ public final class CollectionsPlume {
 
     @Override
     public boolean hasNext(@GuardSatisfied FilteredIterator<T> this) {
-      while ((!currentValid) && itor.hasNext()) {
+      while (!currentValid && itor.hasNext()) {
         current = itor.next();
         currentValid = filter.accept(current);
       }

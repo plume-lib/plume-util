@@ -125,7 +125,7 @@ public class MultiRandSelector<T> {
     RandomSelector<T> delegation = map.get(equivClass);
     if (delegation == null) {
       delegation =
-          ((coinTossMode)
+          (coinTossMode
               ? new RandomSelector<T>(keepProbability, r)
               : new RandomSelector<T>(numElts, r));
       map.put(equivClass, delegation);

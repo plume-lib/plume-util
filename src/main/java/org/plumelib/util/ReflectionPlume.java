@@ -414,10 +414,9 @@ public final class ReflectionPlume {
    *
    * @param a a class
    * @param b a class
-   * @param <T> the (inferred) least upper bound of the two arguments
    * @return the least upper bound of the two classes, or null if both are null
    */
-  public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T> a, @Nullable Class<T> b) {
+  public static @Nullable Class<?> leastUpperBound(@Nullable Class<?> a, @Nullable Class<?> b) {
     if (a == b) {
       return a;
     } else if (a == null) {
@@ -443,12 +442,11 @@ public final class ReflectionPlume {
    * Returns the least upper bound of all the given classes.
    *
    * @param classes a non-empty list of classes
-   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of all the given classes
    */
-  public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T>[] classes) {
-    Class<T> result = null;
-    for (Class<T> clazz : classes) {
+  public static @Nullable Class<?> leastUpperBound(@Nullable Class<?>[] classes) {
+    Class<?> result = null;
+    for (Class<?> clazz : classes) {
       result = leastUpperBound(result, clazz);
     }
     return result;
@@ -458,15 +456,14 @@ public final class ReflectionPlume {
    * Returns the least upper bound of the classes of the given objects.
    *
    * @param objects a list of objects
-   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  public static <T> @Nullable Class<T> leastUpperBound(@PolyNull Object[] objects) {
-    Class<T> result = null;
+  public static @Nullable Class<?> leastUpperBound(@PolyNull Object[] objects) {
+    Class<?> result = null;
     for (Object obj : objects) {
       if (obj != null) {
-        result = leastUpperBound(result, (Class<T>) obj.getClass());
+        result = leastUpperBound(result, obj.getClass());
       }
     }
     return result;
@@ -476,15 +473,14 @@ public final class ReflectionPlume {
    * Returns the least upper bound of the classes of the given objects.
    *
    * @param objects a non-empty list of objects
-   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  public static <T> @Nullable Class<T> leastUpperBound(List<? extends @Nullable Object> objects) {
-    Class<T> result = null;
+  public static @Nullable Class<?> leastUpperBound(List<? extends @Nullable Object> objects) {
+    Class<?> result = null;
     for (Object obj : objects) {
       if (obj != null) {
-        result = leastUpperBound(result, (Class<T>) obj.getClass());
+        result = leastUpperBound(result, obj.getClass());
       }
     }
     return result;

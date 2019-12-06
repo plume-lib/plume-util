@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,10 +112,10 @@ public final class CollectionsPlumeTest {
     // public static class EnumerationIterator implements Iterator
     // public static class IteratorEnumeration implements Enumeration
 
-    assert iota0.equals(toArrayList(iota0.iterator()));
+    assertTrue(iota0.equals(toArrayList(iota0.iterator())));
     assert iota0.equals(
         toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota0.iterator())));
-    assert iota10.equals(toArrayList(iota10.iterator()));
+    assertTrue(iota10.equals(toArrayList(iota10.iterator())));
     assert iota10.equals(
         toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
 
@@ -155,7 +157,8 @@ public final class CollectionsPlumeTest {
         toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice3.iterator())));
   }
 
-  public static void testFilteredIterator() {
+  @Test
+  public void testFilteredIterator() {
 
     // public static final class FilteredIterator implements Iterator
 
@@ -170,7 +173,8 @@ public final class CollectionsPlumeTest {
             new CollectionsPlume.FilteredIterator<Integer>(iota10.iterator(), new OddFilter())));
   }
 
-  public static void testRemoveFirstAndLastIterator() {
+  @Test
+  public void testRemoveFirstAndLastIterator() {
 
     ArrayList<Integer> iota5 = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
@@ -183,12 +187,13 @@ public final class CollectionsPlumeTest {
     CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali =
         new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(iota5.iterator());
     ArrayList<Integer> rfali_vector = toArrayList(rfali);
-    assert iota5middle.equals(rfali_vector);
-    assert rfali.getFirst().equals(0);
-    assert rfali.getLast().equals(4);
+    assertTrue(iota5middle.equals(rfali_vector));
+    assertTrue(rfali.getFirst().equals(0));
+    assertTrue(rfali.getLast().equals(4));
   }
 
-  public static void testRandomElements() {
+  @Test
+  public void testRandomElements() {
 
     // Tests CollectionsPlume.randomElements(...)
 
@@ -239,7 +244,7 @@ public final class CollectionsPlumeTest {
       }
       int iTruncated = Math.min(itorSize, i);
       int grandTotal = tries * iTruncated;
-      assert ArraysPlume.sum(totals) == grandTotal : "Totals = " + ArraysPlume.sum(totals);
+      assertTrue(ArraysPlume.sum(totals) == grandTotal); // "Totals = " + ArraysPlume.sum(totals))
       // System.out.print("chosen:\t");
       for (int k = 0; k < numEltsLimit; k++) {
         int thisTotal = totals[k];
@@ -247,13 +252,15 @@ public final class CollectionsPlumeTest {
         double ratio = (double) thisTotal / (double) expected;
         // System.out.print(((k<10) ? " " : "") + k + " " + thisTotal + "\t");
         // System.out.print("\nExp=" + expected + "\tratio=" + ratio + "\t");
-        assert k >= itorSize || (ratio > ratioLimit && ratio < 1 / ratioLimit);
+        assertTrue(k >= itorSize || (ratio > ratioLimit && ratio < 1 / ratioLimit));
       }
       // System.out.println();
     }
   }
 
-  public static void testRemoveDuplicates() {
+  @SuppressWarnings("ArrayEquals")
+  @Test
+  public void testRemoveDuplicates() {
 
     // public static List sortList (List l, Comparator c)
     // public static <T> List<T> removeDuplicates(List<T> l) {
@@ -286,21 +293,21 @@ public final class CollectionsPlumeTest {
     l1233.add(2);
     l1233.add(3);
 
-    assert CollectionsPlume.removeDuplicates(l123).equals(l123);
-    assert CollectionsPlume.removeDuplicates(l123123).equals(l123);
-    assert CollectionsPlume.removeDuplicates(l12223).equals(l123);
-    assert CollectionsPlume.removeDuplicates(l1123).equals(l123);
-    assert CollectionsPlume.removeDuplicates(l1233).equals(l123);
+    assertTrue(CollectionsPlume.removeDuplicates(l123).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l123123).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l12223).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l1123).equals(l123));
+    assertTrue(CollectionsPlume.removeDuplicates(l1233).equals(l123));
 
     // public boolean deepEquals(Object o1, Object o2)
 
     boolean[] zatft1 = new boolean[] {true, false, true};
     boolean[] zatft2 = new boolean[] {true, false, true};
     boolean[] zatff = new boolean[] {true, false, false};
-    assert !zatft1.equals(zatft2);
-    assert CollectionsPlume.deepEquals(zatft1, zatft2);
-    assert !zatft1.equals(zatff);
-    assert !CollectionsPlume.deepEquals(zatft1, zatff);
+    assertTrue(!zatft1.equals(zatft2));
+    assertTrue(CollectionsPlume.deepEquals(zatft1, zatft2));
+    assertTrue(!zatft1.equals(zatff));
+    assertTrue(!CollectionsPlume.deepEquals(zatft1, zatff));
 
     List<Object> l1 = new ArrayList<>();
     List<Object> l2 = new ArrayList<>();
@@ -312,12 +319,12 @@ public final class CollectionsPlumeTest {
     l2.add(zatft2);
     l3.add(zatff);
     // Don't test .equals because it suffers infinite recursion.
-    // assert ! l1.equals(l2);
-    // assert ! l1.equals(l3);
-    // assert ! l2.equals(l3);
-    assert CollectionsPlume.deepEquals(l1, l2);
-    assert !CollectionsPlume.deepEquals(l1, l3);
-    assert !CollectionsPlume.deepEquals(l2, l3);
+    // assertTrue(! l1.equals(l2));
+    // assertTrue(! l1.equals(l3));
+    // assertTrue(! l2.equals(l3));
+    assertTrue(CollectionsPlume.deepEquals(l1, l2));
+    assertTrue(!CollectionsPlume.deepEquals(l1, l3));
+    assertTrue(!CollectionsPlume.deepEquals(l2, l3));
   }
 
   /** Tests UtilPlume createCombinations routines. */
@@ -340,19 +347,19 @@ public final class CollectionsPlumeTest {
 
     List<Object> abc = Arrays.asList(a, b, c);
     List<List<Object>> combo1 = CollectionsPlume.createCombinations(1, 0, abc);
-    assert combo1.size() == 3;
-    assert combo1.contains(aList);
-    assert combo1.contains(bList);
-    assert combo1.contains(cList);
+    assertTrue(combo1.size() == 3);
+    assertTrue(combo1.contains(aList));
+    assertTrue(combo1.contains(bList));
+    assertTrue(combo1.contains(cList));
 
     List<List<Object>> combo2 = CollectionsPlume.createCombinations(2, 0, abc);
-    assert combo2.size() == 6;
-    assert combo2.contains(aa);
-    assert combo2.contains(ab);
-    assert combo2.contains(ac);
-    assert combo2.contains(bb);
-    assert combo2.contains(bc);
-    assert combo2.contains(cc);
+    assertTrue(combo2.size() == 6);
+    assertTrue(combo2.contains(aa));
+    assertTrue(combo2.contains(ab));
+    assertTrue(combo2.contains(ac));
+    assertTrue(combo2.contains(bb));
+    assertTrue(combo2.contains(bc));
+    assertTrue(combo2.contains(cc));
 
     // public static List createCombinations (int arity, int start, int cnt)
     Integer i0 = 0;
@@ -363,27 +370,27 @@ public final class CollectionsPlumeTest {
     Integer i12 = 12;
 
     List<ArrayList<Integer>> combo3 = CollectionsPlume.createCombinations(1, 0, 2);
-    assert combo3.size() == 3;
-    assert combo3.contains(Arrays.asList(new Integer[] {i0}));
-    assert combo3.contains(Arrays.asList(new Integer[] {i1}));
-    assert combo3.contains(Arrays.asList(new Integer[] {i2}));
+    assertTrue(combo3.size() == 3);
+    assertTrue(combo3.contains(Arrays.asList(new Integer[] {i0})));
+    assertTrue(combo3.contains(Arrays.asList(new Integer[] {i1})));
+    assertTrue(combo3.contains(Arrays.asList(new Integer[] {i2})));
 
     List<ArrayList<Integer>> combo4 = CollectionsPlume.createCombinations(2, 0, 2);
-    assert combo4.size() == 6;
-    assert combo4.contains(Arrays.asList(new Integer[] {i0, i0}));
-    assert combo4.contains(Arrays.asList(new Integer[] {i0, i1}));
-    assert combo4.contains(Arrays.asList(new Integer[] {i0, i2}));
-    assert combo4.contains(Arrays.asList(new Integer[] {i1, i1}));
-    assert combo4.contains(Arrays.asList(new Integer[] {i1, i2}));
-    assert combo4.contains(Arrays.asList(new Integer[] {i2, i2}));
+    assertTrue(combo4.size() == 6);
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i0})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i1})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i2})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i1, i1})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i1, i2})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i2, i2})));
 
     List<ArrayList<Integer>> combo5 = CollectionsPlume.createCombinations(2, 10, 12);
-    assert combo5.size() == 6;
-    assert combo5.contains(Arrays.asList(new Integer[] {i10, i10}));
-    assert combo5.contains(Arrays.asList(new Integer[] {i10, i11}));
-    assert combo5.contains(Arrays.asList(new Integer[] {i10, i12}));
-    assert combo5.contains(Arrays.asList(new Integer[] {i11, i11}));
-    assert combo5.contains(Arrays.asList(new Integer[] {i11, i12}));
-    assert combo5.contains(Arrays.asList(new Integer[] {i12, i12}));
+    assertTrue(combo5.size() == 6);
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i10})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i11})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i12})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i11, i11})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i11, i12})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i12, i12})));
   }
 }

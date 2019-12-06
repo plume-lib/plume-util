@@ -1351,7 +1351,7 @@ public final class ArraysPlume {
    *     element is found in the array
    */
   @Pure
-  public static boolean isSubarray(@PolyNull  Object[] a, List<?> sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(@PolyNull Object[] a, List<?> sub, @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.length) {
       return false;
     }
@@ -1597,7 +1597,7 @@ public final class ArraysPlume {
    * the cost of object construction and method calls.
    */
   private static class ListOrArray<T> {
-    // At most one field is non-null.
+    // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
     /** The list that this object wraps, or null. */
@@ -1796,7 +1796,9 @@ public final class ArraysPlume {
     // Both a and b are non-empty.
     else {
       int size = a.size() + b.size();
-      // Heuristic and perhaps often wrong.  TODO: Fix.
+      // TODO: Fix.  We want an array of type exactly T.  This computes an estimate to T,
+      // from the elements in the arrays.  It might be a subtype of T, though, which is incorrect.
+      @SuppressWarnings("unchecked")
       Class<T> resultType =
           ReflectionPlume.leastUpperBound(
               (Class<T>) a.leastUpperBound(), (Class<T>) b.leastUpperBound());
@@ -1824,7 +1826,8 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static @PolyNull @PolyInterned String[] concat(
-      @PolyNull @PolyInterned String @Nullable [] a, @PolyNull @PolyInterned String @Nullable [] b) {
+      @PolyNull @PolyInterned String @Nullable [] a,
+      @PolyNull @PolyInterned String @Nullable [] b) {
     if (a == null) {
       if (b == null) {
         return new String[0];
@@ -3438,7 +3441,6 @@ public final class ArraysPlume {
 
     // Put elt in a newly-created part in the partitioning.
     if (numEmptyParts > 0) {
-      List<T> part = newArrayList(elt);
       List<Partitioning<T>> resultSoFar_augmented = new ArrayList<Partitioning<T>>();
       for (Partitioning<T> p : resultSoFar) {
         resultSoFar_augmented.add(p.addToPart(numNonemptyParts, elt));
@@ -3527,16 +3529,16 @@ public final class ArraysPlume {
     return result;
   }
 
-  /**
-   * Return a singleton ArrayDeque containing the given element.
-   *
-   * @param <T> the element type of the list
-   * @param elt the element to put in the ArrayDeque
-   * @return a singleton ArrayDeque containing {@code elt}
-   */
-  private static <T extends @NonNull Object> ArrayDeque<T> newArrayDeque(T elt) {
-    ArrayDeque<T> result = new ArrayDeque<>();
-    result.add(elt);
-    return result;
-  }
+  // /**
+  //  * Return a singleton ArrayDeque containing the given element.
+  //  *
+  //  * @param <T> the element type of the list
+  //  * @param elt the element to put in the ArrayDeque
+  //  * @return a singleton ArrayDeque containing {@code elt}
+  //  */
+  // private static <T extends @NonNull Object> ArrayDeque<T> newArrayDeque(T elt) {
+  //   ArrayDeque<T> result = new ArrayDeque<>();
+  //   result.add(elt);
+  //   return result;
+  // }
 }

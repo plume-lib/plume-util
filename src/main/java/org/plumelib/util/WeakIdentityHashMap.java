@@ -108,8 +108,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @see java.lang.ref.WeakReference
  */
 @SuppressWarnings({
+  // Java compiler warnings
   "unchecked",
   "rawtypes",
+  // Checker Framework warnings
   "index",
   "interning",
   "keyfor",

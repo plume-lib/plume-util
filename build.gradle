@@ -9,8 +9,8 @@ plugins {
   // // Code formatting with Google Java Format; defines targets "goJF" and "verJF".
   // id 'com.github.sherter.google-java-format' version '0.7.1'
 
-  // Run the Error Prone linter.
-  id 'net.ltgt.errorprone-base' version '0.0.16'
+  // Error Prone linter
+  id("net.ltgt.errorprone") version "1.1.1"
 
   // Checker Framework pluggable type-checking
   id 'org.checkerframework' version '0.4.9' apply false
@@ -32,6 +32,21 @@ targetCompatibility = 1.8
 
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
+
+/// Error Prone linter
+
+dependencies {
+  errorprone("com.google.errorprone:error_prone_core:2.3.4")
+  // JDK 8 support for Error Prone:
+  errorproneJavac("com.google.errorprone:javac:9+181-r4173-1")
+}
+tasks.withType(JavaCompile).configureEach {
+  options.compilerArgs << "-Xlint:all,-processing" << "-Werror"
+  options.errorprone {
+    // Code copied from the JDK that we don't want to change gratuitously.
+    excludedPaths = ".*/Weak.*Hash(er)?Map.java"
+  }
+}
 
 /// Checker Framework pluggable type-checking
 

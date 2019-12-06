@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
@@ -123,18 +125,18 @@ public final class InternTest {
   @Test
   public void testIntern() {
     Integer i = Intern.internedInteger("1234");
-    assert Intern.isInterned(i);
-    assert i.intValue() == 1234;
+    assertTrue(Intern.isInterned(i));
+    assertTrue(i.intValue() == 1234);
     i = Intern.internedInteger("0x12ab");
-    assert Intern.isInterned(i);
-    assert i.intValue() == 0x12ab;
+    assertTrue(Intern.isInterned(i));
+    assertTrue(i.intValue() == 0x12ab);
 
     Long l = Intern.internedLong("12345678");
-    assert Intern.isInterned(l);
-    assert l.intValue() == 12345678;
+    assertTrue(Intern.isInterned(l));
+    assertTrue(l.intValue() == 12345678);
     l = Intern.internedLong("0x1234abcd");
-    assert Intern.isInterned(l);
-    assert l.intValue() == 0x1234abcd;
+    assertTrue(Intern.isInterned(l));
+    assertTrue(l.intValue() == 0x1234abcd);
   }
 
   // Tests the method "Object intern(Object)" in Intern.java
@@ -142,109 +144,109 @@ public final class InternTest {
   @Test
   public void testInternObject() {
     Object nIntern = Intern.intern((@Nullable Object) null);
-    assert nIntern == null;
+    assertTrue(nIntern == null);
 
     String sOrig = new String("foo");
     String sIntern = Intern.intern(sOrig);
     Object sObjIntern = Intern.intern((Object) sOrig);
-    assert sIntern == sObjIntern;
+    assertTrue(sIntern == sObjIntern);
     Object sOtherIntern = Intern.intern(new String("foo"));
-    assert sIntern == sOtherIntern;
+    assertTrue(sIntern == sOtherIntern);
 
     @Interned String[] saOrig = new String[] {"foo", "bar"};
     String[] saIntern = Intern.intern(saOrig);
     Object saObjIntern = Intern.intern((Object) saOrig);
-    assert saIntern == saObjIntern;
+    assertTrue(saIntern == saObjIntern);
     Object saOtherIntern = Intern.intern(new String[] {"foo", "bar"});
-    assert saIntern == saOtherIntern;
+    assertTrue(saIntern == saOtherIntern);
 
     Integer iOrig = new Integer(1);
     Integer iIntern = Intern.intern(iOrig);
     Object iObjIntern = Intern.intern((Object) iOrig);
-    assert iIntern == iObjIntern;
+    assertTrue(iIntern == iObjIntern);
     Object iOtherIntern = Intern.intern((Object) new Integer(1));
-    assert iIntern == iOtherIntern;
+    assertTrue(iIntern == iOtherIntern);
 
     Long lOrig = new Long(12345678901234L);
     Long lIntern = Intern.intern(lOrig);
     Object lObjIntern = Intern.intern((Object) lOrig);
-    assert lIntern == lObjIntern;
+    assertTrue(lIntern == lObjIntern);
     Object lOtherIntern = Intern.intern((Object) new Long(12345678901234L));
-    assert lIntern == lOtherIntern;
+    assertTrue(lIntern == lOtherIntern);
 
     int[] iaOrig = new int[] {1, 2, 3};
     int[] iaIntern = Intern.intern(iaOrig);
     Object iaObjIntern = Intern.intern((Object) iaOrig);
-    assert iaIntern == iaObjIntern;
+    assertTrue(iaIntern == iaObjIntern);
     Object iaOtherIntern = Intern.intern((Object) new int[] {1, 2, 3});
-    assert iaIntern == iaOtherIntern;
+    assertTrue(iaIntern == iaOtherIntern);
 
     long[] laOrig = new long[] {12345678901234L, 98765432109876L};
     long[] laIntern = Intern.intern(laOrig);
     Object laObjIntern = Intern.intern((Object) laOrig);
-    assert laIntern == laObjIntern;
+    assertTrue(laIntern == laObjIntern);
     Object laOtherIntern = Intern.intern((Object) new long[] {12345678901234L, 98765432109876L});
-    assert laIntern == laOtherIntern;
+    assertTrue(laIntern == laOtherIntern);
 
     // Need to test positive and negative zeros, infinities.
 
     Double dOrig = new Double(3.14);
     Double dIntern = Intern.intern(dOrig);
     Object dObjIntern = Intern.intern((Object) dOrig);
-    assert dIntern == dObjIntern;
+    assertTrue(dIntern == dObjIntern);
     Object dOtherIntern = Intern.intern((Object) dOrig);
-    assert dIntern == dOtherIntern;
+    assertTrue(dIntern == dOtherIntern);
 
     Double dnOrig = new Double(Double.NaN);
     Double dnIntern = Intern.intern(dnOrig);
     Object dnObjIntern = Intern.intern((Object) dnOrig);
-    assert dnIntern == dnObjIntern;
+    assertTrue(dnIntern == dnObjIntern);
     Object dnOtherIntern =
         Intern.intern((Object) new Double(Double.POSITIVE_INFINITY / Double.POSITIVE_INFINITY));
-    assert dnIntern == dnOtherIntern;
+    assertTrue(dnIntern == dnOtherIntern);
 
     Double diOrig = new Double(Double.POSITIVE_INFINITY);
     Double diIntern = Intern.intern(diOrig);
     Object diObjIntern = Intern.intern((Object) diOrig);
-    assert diIntern == diObjIntern;
+    assertTrue(diIntern == diObjIntern);
     Object diOtherIntern = Intern.intern((Object) new Double(2 * Double.MAX_VALUE));
-    assert diIntern == diOtherIntern;
+    assertTrue(diIntern == diOtherIntern);
 
     double positiveZero = +0.0;
     double negativeZero = -0.0;
-    assert positiveZero == negativeZero;
-    assert 1 / positiveZero == Double.POSITIVE_INFINITY;
-    assert 1 / negativeZero == Double.NEGATIVE_INFINITY;
+    assertTrue(positiveZero == negativeZero);
+    assertTrue(1 / positiveZero == Double.POSITIVE_INFINITY);
+    assertTrue(1 / negativeZero == Double.NEGATIVE_INFINITY);
 
     Double dzOrig = new Double(positiveZero);
     Double dzIntern = Intern.intern(dzOrig);
     Object dzObjIntern = Intern.intern((Object) dzOrig);
-    assert dzIntern == dzObjIntern;
+    assertTrue(dzIntern == dzObjIntern);
     Object dzOtherIntern = Intern.intern((Object) new Double(negativeZero));
-    assert dzIntern == dzOtherIntern;
+    assertTrue(dzIntern == dzOtherIntern);
 
     double[] daOrig = new double[] {3.14, 2.71};
     double[] daIntern = Intern.intern(daOrig);
     Object daObjIntern = Intern.intern((Object) daOrig);
-    assert daIntern == daObjIntern;
+    assertTrue(daIntern == daObjIntern);
     Object daOtherIntern = Intern.intern((Object) new double[] {3.14, 2.71});
-    assert daIntern == daOtherIntern;
+    assertTrue(daIntern == daOtherIntern);
 
     double[] da2Orig = new double[] {+0.0, Double.NaN};
     double[] da2Intern = Intern.intern(da2Orig);
     Object da2ObjIntern = Intern.intern((Object) da2Orig);
-    assert da2Intern == da2ObjIntern;
+    assertTrue(da2Intern == da2ObjIntern);
     Object da2OtherIntern =
         Intern.intern(
             (Object) new double[] {-0.0, Double.POSITIVE_INFINITY / Double.POSITIVE_INFINITY});
-    assert da2Intern == da2OtherIntern;
+    assertTrue(da2Intern == da2OtherIntern);
 
     @Interned Object[] oaOrig = new Object[] {"foo", 1};
     Object[] oaIntern = Intern.intern(oaOrig);
     Object oaObjIntern = Intern.intern((Object) oaOrig);
-    assert oaIntern == oaObjIntern;
+    assertTrue(oaIntern == oaObjIntern);
     Object oaOtherIntern = Intern.intern((Object) new Object[] {"foo", 1});
-    assert oaIntern == oaOtherIntern;
+    assertTrue(oaIntern == oaOtherIntern);
 
     java.awt.Point pOrig = new java.awt.Point(1, 2);
     try {
@@ -275,14 +277,14 @@ public final class InternTest {
     int[] s4 = Intern.internSubsequence(a1, j, k);
     int[] s5 = Intern.internSubsequence(a3, j - 1, k - 1);
 
-    assert a1 == a2;
-    assert s1 == s2;
-    assert s3 == s4;
-    assert s3 == s5;
-    assert ArraysPlume.isSubarray(s1, ArraysPlume.subarray(a1, i, j - i), 0);
-    assert ArraysPlume.isSubarray(ArraysPlume.subarray(a1, i, j - i), s1, 0);
+    assertTrue(a1 == a2);
+    assertTrue(s1 == s2);
+    assertTrue(s3 == s4);
+    assertTrue(s3 == s5);
+    assertTrue(ArraysPlume.isSubarray(s1, ArraysPlume.subarray(a1, i, j - i), 0));
+    assertTrue(ArraysPlume.isSubarray(ArraysPlume.subarray(a1, i, j - i), s1, 0));
 
     long[] l1 = Intern.intern(new long[] {1, 2, 3, 4, 5, 6});
-    assert l1 == Intern.internSubsequence(l1, 0, l1.length);
+    assertTrue(l1 == Intern.internSubsequence(l1, 0, l1.length));
   }
 }

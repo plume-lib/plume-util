@@ -58,8 +58,8 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
     // generics are not checked at run time!
     @SuppressWarnings("unchecked")
     Pair<T1, T2> other = (Pair<T1, T2>) obj;
-    return (((this.a == other.a) || (this.a != null && (this.a.equals(other.a))))
-        && ((this.b == other.b) || (this.b != null && (this.b.equals(other.b)))));
+    return (((this.a == other.a) || (this.a != null && this.a.equals(other.a)))
+        && ((this.b == other.b) || (this.b != null && this.b.equals(other.b))));
   }
 
   // If fields a and b were made final, then the hashcode could be cached.
