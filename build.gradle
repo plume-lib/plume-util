@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
   // https://mvnrepository.com/artifact/org.plumelib/reflection-util
-  implementation 'org.plumelib:reflection-util:0.1.2'
+  implementation 'org.plumelib:reflection-util:0.2.0'
   testImplementation 'junit:junit:4.12'
   errorprone 'com.google.errorprone:error_prone_core:2.3.4'
 }
