@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.0.11
+
+- New method ReflectionPlume.classpathToString()
+
 ## 1.0.10
 
 - Fix visibility of DumpHeap methods

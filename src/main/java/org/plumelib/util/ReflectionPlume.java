@@ -8,8 +8,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -235,6 +238,21 @@ public final class ReflectionPlume {
     if (!found) {
       System.setProperty("java.class.path", dir + pathSep + cp);
     }
+  }
+
+  /**
+   * Returns the classpath as a multi-line string.
+   *
+   * @return the classpath as a multi-line string
+   */
+  public static String classpathToString() {
+    StringJoiner result = new StringJoiner(System.lineSeparator());
+    ClassLoader cl = ClassLoader.getSystemClassLoader();
+    URL[] urls = ((URLClassLoader) cl).getURLs();
+    for (URL url : urls) {
+      result.add(url.getFile());
+    }
+    return result.toString();
   }
 
   ///////////////////////////////////////////////////////////////////////////
