@@ -717,7 +717,7 @@ public final class CollectionsPlume {
    * @param <K> type of keys in the map
    * @param m map from K to Integer
    * @param key the key whose value will be incremented
-   * @return the old value, before it was incremented
+   * @return the old value, before it was incremented; this might be null
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
   public static <K> @Nullable Integer incrementMap(Map<K, Integer> m, K key) {
@@ -732,7 +732,7 @@ public final class CollectionsPlume {
    * @param m map from K to Integer
    * @param key the key whose value will be incremented
    * @param count how much to increment the value by
-   * @return the old value, before it was incremented
+   * @return the old value, before it was incremented; this might be null
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
   public static <K> @Nullable Integer incrementMap(Map<K, Integer> m, K key, int count) {
