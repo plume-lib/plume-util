@@ -3,13 +3,11 @@ package org.plumelib.util;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.common.value.qual.MinLen;
 import org.junit.Test;
 
 @SuppressWarnings({
@@ -137,7 +135,10 @@ public final class ArraysPlumeTest {
     }
   }
 
-  @SuppressWarnings("BoxedPrimitiveConstructor") // == comparisons on Integers, need new values
+  @SuppressWarnings({
+    "deprecation", // in Java 9+, use Integer.valueOf instead of `new Integer(...)`
+    "BoxedPrimitiveConstructor" // == comparisons on Integers, need new values
+  })
   @Test
   public void testIndexOf_array() {
 
@@ -176,13 +177,15 @@ public final class ArraysPlumeTest {
     // public static int indexOfEq(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt)
 
-    @MinLen(1) List<?> listOfStrings = Collections.singletonList("hello");
-    assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null) == -1);
-    assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1);
-    assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 1) == -1);
-    assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null) == -1);
-    assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 0) == -1);
-    assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 1) == -1);
+    // These calls are no longer legal.  I could create a new version of indexOf that
+    // permits nulls, one for LinkedList and one for Vector (both of which permit nulls).
+    // @MinLen(1) List<?> listOfStrings = Collections.singletonList("hello");
+    // assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null) == -1);
+    // assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 0) == -1);
+    // assertTrue(ArraysPlume.indexOf(listOfStrings, (Object) null, 0, 1) == -1);
+    // assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null) == -1);
+    // assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 0) == -1);
+    // assertTrue(ArraysPlume.indexOfEq(listOfStrings, (Object) null, 0, 1) == -1);
   }
 
   @Test
@@ -227,7 +230,10 @@ public final class ArraysPlumeTest {
     }
   }
 
-  @SuppressWarnings("BoxedPrimitiveConstructor")
+  @SuppressWarnings({
+    "deprecation", // in Java 9+, use Integer.valueOf instead of `new Integer(...)`
+    "BoxedPrimitiveConstructor" // == comparisons on Integers, need new values
+  })
   @Test
   public void testIndexOf_array_array() {
 

@@ -524,7 +524,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOf(List<? extends @PolyNull Object> a, @Nullable Object elt) {
+  public static int indexOf(List<? extends @PolyNull Object> a, Object elt) {
     return a.indexOf(elt);
   }
 

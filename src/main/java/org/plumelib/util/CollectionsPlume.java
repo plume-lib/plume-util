@@ -24,6 +24,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
@@ -720,7 +721,8 @@ public final class CollectionsPlume {
    * @return the old value, before it was incremented; this might be null
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <K> @Nullable Integer incrementMap(Map<K, Integer> m, K key) {
+  public static <K extends @NonNull Object> @Nullable Integer incrementMap(
+      Map<K, Integer> m, K key) {
     return incrementMap(m, key, 1);
   }
 
@@ -735,7 +737,8 @@ public final class CollectionsPlume {
    * @return the old value, before it was incremented; this might be null
    * @throws Error if the key is in the Map but maps to a non-Integer
    */
-  public static <K> @Nullable Integer incrementMap(Map<K, Integer> m, K key, int count) {
+  public static <K extends @NonNull Object> @Nullable Integer incrementMap(
+      Map<K, Integer> m, K key, int count) {
     Integer old = m.get(key);
     Integer newTotal;
     if (old == null) {
