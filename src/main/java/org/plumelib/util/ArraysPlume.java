@@ -2597,12 +2597,10 @@ public final class ArraysPlume {
   public static <T> boolean noDuplicates(List<T> a) {
     HashSet<T> hs = new HashSet<>();
     for (int i = 0; i < a.size(); i++) {
-      if (hs.contains(a.get(i))) {
+      T elt = a.get(i);
+      if (!hs.add(elt)) {
         return false;
       }
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
-      hs.add(a.get(i));
     }
     return true;
   }
