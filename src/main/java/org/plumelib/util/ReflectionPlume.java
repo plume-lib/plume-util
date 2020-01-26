@@ -1,3 +1,8 @@
+// *****
+// DEPRECATED
+// *****
+// Do not edit or use!
+
 // If you edit this file, you must also edit its tests.
 // For tests of this and the entire plume package, see class TestPlume.
 
@@ -94,8 +99,9 @@ public final class ReflectionPlume {
   // TODO: Should create a method that handles any ClassGetName (including primitives), but not
   // fully-qualified names.  A routine with a polymorphic parameter type is confusing.
   /**
-   * Like {@link Class#forName(String)}, but also works when the string represents a primitive type
-   * or a fully-qualified name (as opposed to a binary name).
+   * Like {@link Class#forName(String)}: given a string representing a non-array class, returns the
+   * Class. Unlike {@link Class#forName(String)}, the argument may be a primitive type or a
+   * fully-qualified name (in addition to a binary name).
    *
    * <p>If the given name can't be found, this method changes the last '.' to a dollar sign ($) and
    * tries again. This accounts for inner classes that are incorrectly passed in in fully-qualified
@@ -313,7 +319,7 @@ public final class ReflectionPlume {
     String all_argnames = method.substring(oparenpos + 1, cparenpos).trim();
     Class<?>[] argclasses = args_seen.get(all_argnames);
     if (argclasses == null) {
-      String[] argnames;
+      @BinaryName String[] argnames;
       if (all_argnames.equals("")) {
         argnames = new String[0];
       } else {
@@ -432,9 +438,10 @@ public final class ReflectionPlume {
    *
    * @param a a class
    * @param b a class
+   * @param <T> the (inferred) least upper bound of the two arguments
    * @return the least upper bound of the two classes, or null if both are null
    */
-  public static @Nullable Class<?> leastUpperBound(@Nullable Class<?> a, @Nullable Class<?> b) {
+  public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T> a, @Nullable Class<T> b) {
     if (a == b) {
       return a;
     } else if (a == null) {
@@ -460,11 +467,12 @@ public final class ReflectionPlume {
    * Returns the least upper bound of all the given classes.
    *
    * @param classes a non-empty list of classes
+   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of all the given classes
    */
-  public static @Nullable Class<?> leastUpperBound(@Nullable Class<?>[] classes) {
-    Class<?> result = null;
-    for (Class<?> clazz : classes) {
+  public static <T> @Nullable Class<T> leastUpperBound(@Nullable Class<T>[] classes) {
+    Class<T> result = null;
+    for (Class<T> clazz : classes) {
       result = leastUpperBound(result, clazz);
     }
     return result;
@@ -474,14 +482,16 @@ public final class ReflectionPlume {
    * Returns the least upper bound of the classes of the given objects.
    *
    * @param objects a list of objects
+   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  public static @Nullable Class<?> leastUpperBound(@PolyNull Object[] objects) {
-    Class<?> result = null;
+  @SuppressWarnings("unchecked") // cast to Class<T>
+  public static <T> @Nullable Class<T> leastUpperBound(@PolyNull Object[] objects) {
+    Class<T> result = null;
     for (Object obj : objects) {
       if (obj != null) {
-        result = leastUpperBound(result, obj.getClass());
+        result = leastUpperBound(result, (Class<T>) obj.getClass());
       }
     }
     return result;
@@ -491,14 +501,16 @@ public final class ReflectionPlume {
    * Returns the least upper bound of the classes of the given objects.
    *
    * @param objects a non-empty list of objects
+   * @param <T> the (inferred) least upper bound of the arguments
    * @return the least upper bound of the classes of the given objects, or null if all arguments are
    *     null
    */
-  public static @Nullable Class<?> leastUpperBound(List<? extends @Nullable Object> objects) {
-    Class<?> result = null;
+  @SuppressWarnings("unchecked") // cast to Class<T>
+  public static <T> @Nullable Class<T> leastUpperBound(List<? extends @Nullable Object> objects) {
+    Class<T> result = null;
     for (Object obj : objects) {
       if (obj != null) {
-        result = leastUpperBound(result, obj.getClass());
+        result = leastUpperBound(result, (Class<T>) obj.getClass());
       }
     }
     return result;
