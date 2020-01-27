@@ -2,7 +2,7 @@
 
 ## 1.0.11
 
-- New method ReflectionPlume.classpathToString()
+- No user-visible changes
 
 ## 1.0.10
 
