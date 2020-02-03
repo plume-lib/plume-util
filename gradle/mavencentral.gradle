@@ -13,7 +13,7 @@
 //  * Stage changes.
 //  * Add a git tag:
 //    VER=1.0.11 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.0.11", attach the .jar file from ../build/libs/
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.0.11", use text from ../CHANGELOG.md, attach the .jar file from ../build/libs/
 
 
 ///////////////////////////////////////////////////////////////////////////
