@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.0.12
+
+- Renamed PlumeUtil.backTrace to stackTraceToString
+
 ## 1.0.11
 
 - No user-visible changes

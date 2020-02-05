@@ -2082,8 +2082,21 @@ public final class UtilPlume {
    *
    * @param t the Throwable to obtain a backtrace of
    * @return a String representation of the backtrace of the given Throwable
+   * @deprecated use {@link #stackTraceToString}
    */
+  @Deprecated // use stackTraceToString instead
   public static String backTrace(Throwable t) {
+    return stackTraceToString(t);
+  }
+
+  /**
+   * Return a String representation of the stack trace (the backtrace) of the given Throwable. For a
+   * stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
+   *
+   * @param t the Throwable to obtain a stack trace of
+   * @return a String representation of the stack trace of the given Throwable
+   */
+  public static String stackTraceToString(Throwable t) {
     StringWriter sw = new StringWriter();
     PrintWriter pw = new PrintWriter(sw);
     t.printStackTrace(pw);
