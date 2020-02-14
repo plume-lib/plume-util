@@ -1451,14 +1451,46 @@ public final class UtilPlume {
    * Concatenate the string representations of the array elements, placing the delimiter between
    * them.
    *
-   * <p>If you are using Java 8 or later, then use the {@code String.join()} method instead.
+   * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
+   * takes an array of Objects but that method takes an array of CharSequences. Use the built-in
+   * method when possible.
+   *
+   * @param a array of values to concatenate
+   * @param delim delimiter to place between printed representations
+   * @return the concatenation of the string representations of the values, with the delimiter
+   *     between
+   * @deprecated use {@link #join(CharSequence, Object...)} which has the arguments in the other
+   *     order
+   */
+  @Deprecated
+  public static String join(Object[] a, CharSequence delim) {
+    if (a.length == 0) {
+      return "";
+    }
+    if (a.length == 1) {
+      return String.valueOf(a[0]);
+    }
+    StringBuilder sb = new StringBuilder(String.valueOf(a[0]));
+    for (int i = 1; i < a.length; i++) {
+      sb.append(delim).append(a[i]);
+    }
+    return sb.toString();
+  }
+
+  /**
+   * Concatenate the string representations of the array elements, placing the delimiter between
+   * them.
+   *
+   * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
+   * takes an array of Objects but that method takes an array of CharSequences. Use the built-in
+   * method when possible.
    *
    * @param a array of values to concatenate
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
    *     between
    */
-  public static String join(Object[] a, String delim) {
+  public static String join(CharSequence delim, Object[] a) {
     if (a.length == 0) {
       return "";
     }
@@ -1486,13 +1518,46 @@ public final class UtilPlume {
   /**
    * Concatenate the string representations of the objects, placing the delimiter between them.
    *
+   * <p>This differs from the {@code String.join()} method added in Java 8, in that this takes an
+   * array of Objects but that method takes an array of CharSequences.
+   *
+   * @see java.util.AbstractCollection#toString()
+   * @param v collection of values to concatenate
+   * @param delim delimiter to place between printed representations
+   * @return the concatenation of the string representations of the values, with the delimiter
+   *     between
+   * @deprecated use {@link #join(CharSequence, Iterable)} which has the arguments in the other
+   *     order
+   */
+  @Deprecated
+  public static String join(Iterable<? extends Object> v, CharSequence delim) {
+    StringBuilder sb = new StringBuilder();
+    boolean first = true;
+    Iterator<?> itor = v.iterator();
+    while (itor.hasNext()) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(delim);
+      }
+      sb.append(itor.next());
+    }
+    return sb.toString();
+  }
+
+  /**
+   * Concatenate the string representations of the objects, placing the delimiter between them.
+   *
+   * <p>This differs from the {@code String.join()} method added in Java 8, in that this takes any
+   * Iterable but that method takes only {@code Iterable<? extends CharSequence>}.
+   *
    * @see java.util.AbstractCollection#toString()
    * @param v collection of values to concatenate
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
    *     between
    */
-  public static String join(Iterable<? extends Object> v, String delim) {
+  public static String join(CharSequence delim, Iterable<? extends Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
     Iterator<?> itor = v.iterator();
@@ -1515,8 +1580,8 @@ public final class UtilPlume {
    * @param v list of values to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
    */
-  public static String joinLines(List<String> v) {
-    return join(v, lineSep);
+  public static String joinLines(Iterable<? extends Object> v) {
+    return join(lineSep, v);
   }
 
   /**

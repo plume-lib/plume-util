@@ -2,7 +2,10 @@
 
 ## 1.0.12
 
-- Renamed PlumeUtil.backTrace to stackTraceToString
+- Renamed PlumeUtil.backTrace() to stackTraceToString()
+- Switched the order of the arguments to UtilPlume.join()
+
+The old versions still work, but are now deprecated.
 
 ## 1.0.11
 
