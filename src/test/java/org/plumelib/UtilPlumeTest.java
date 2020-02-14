@@ -151,9 +151,13 @@ public final class UtilPlumeTest {
     // public static String join(ArrayList v, String delim)
 
     assertTrue(UtilPlume.join(", ", new String[] {"foo", "bar", "baz"}).equals("foo, bar, baz"));
+    assertTrue(UtilPlume.join(", ", "foo", "bar", "baz").equals("foo, bar, baz"));
     assertTrue(UtilPlume.join(", ", new String[] {"foo"}).equals("foo"));
+    assertTrue(UtilPlume.join(", ", "foo").equals("foo"));
     assertTrue(UtilPlume.join(", ", new String[] {}).equals(""));
+    assertTrue(UtilPlume.join(", ").equals(""));
     assertTrue(UtilPlume.join("", new Integer[] {0, 1, 2, 3, 4}).equals("01234"));
+    assertTrue(UtilPlume.join("", 0, 1, 2, 3, 4).equals("01234"));
     ArrayList<Object> potpourri = new ArrayList<>();
     potpourri.add("day");
     potpourri.add(2);

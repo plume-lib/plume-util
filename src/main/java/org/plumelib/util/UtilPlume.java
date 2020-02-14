@@ -1455,6 +1455,7 @@ public final class UtilPlume {
    * takes an array of Objects but that method takes an array of CharSequences. Use the built-in
    * method when possible.
    *
+   * @param <T> the type of array elements
    * @param a array of values to concatenate
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
@@ -1463,7 +1464,7 @@ public final class UtilPlume {
    *     order
    */
   @Deprecated
-  public static String join(Object[] a, CharSequence delim) {
+  public static <T> String join(T[] a, CharSequence delim) {
     if (a.length == 0) {
       return "";
     }
@@ -1482,15 +1483,16 @@ public final class UtilPlume {
    * them.
    *
    * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
-   * takes an array of Objects but that method takes an array of CharSequences. Use the built-in
-   * method when possible.
+   * takes any arbitrary array but that method takes an array of CharSequences.
    *
+   * @param <T> the type of array elements
    * @param a array of values to concatenate
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
    *     between
    */
-  public static String join(CharSequence delim, Object[] a) {
+  @SafeVarargs
+  public static <T> String join(CharSequence delim, T... a) {
     if (a.length == 0) {
       return "";
     }
@@ -1508,18 +1510,21 @@ public final class UtilPlume {
    * Concatenate the string representations of the objects, placing the system-specific line
    * separator between them.
    *
-   * @param a array of values to concatenate
+   * @param <T> the type of array elements
+   * @param a array of values to whose string representation to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
    */
-  public static String joinLines(Object... a) {
-    return join(a, lineSep);
+  @SafeVarargs
+  @SuppressWarnings("varargs")
+  public static <T> String joinLines(T... a) {
+    return join(lineSep, a);
   }
 
   /**
    * Concatenate the string representations of the objects, placing the delimiter between them.
    *
-   * <p>This differs from the {@code String.join()} method added in Java 8, in that this takes an
-   * array of Objects but that method takes an array of CharSequences.
+   * <p>This differs from the {@code String.join()} method added in Java 8, in that this takes any
+   * array but that method takes an array of CharSequences.
    *
    * @see java.util.AbstractCollection#toString()
    * @param v collection of values to concatenate
