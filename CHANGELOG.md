@@ -2,8 +2,15 @@
 
 ## 1.1.0
 
-- Renamed PlumeUtil.backTrace() to stackTraceToString()
 - Switched the order of the arguments to UtilPlume.join()
+- Made UtilPlume.join generic, so it handles more types of arguments
+- Renamings:
+   - PlumeUtil.backTrace() to stackTraceToString()
+   - PlumeUtil.escapeNonJava() to escapeJava()
+   - PlumeUtil.unescapeNonJava() to unescapeJava()
+- Added char versions of escapeJava and unescapeJava
+
+The old versions of all methods continue to work, but are deprecated.
 
 ## 1.0.11
 

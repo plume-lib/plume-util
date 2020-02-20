@@ -1463,7 +1463,7 @@ public final class UtilPlume {
    * @deprecated use {@link #join(CharSequence, Object...)} which has the arguments in the other
    *     order
    */
-  @Deprecated
+  @Deprecated // use join(CharSequence, Object...) which has the arguments in the other order
   public static <T> String join(T[] a, CharSequence delim) {
     if (a.length == 0) {
       return "";
@@ -1534,7 +1534,7 @@ public final class UtilPlume {
    * @deprecated use {@link #join(CharSequence, Iterable)} which has the arguments in the other
    *     order
    */
-  @Deprecated
+  @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order
   public static String join(Iterable<? extends Object> v, CharSequence delim) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
@@ -1590,15 +1590,28 @@ public final class UtilPlume {
   }
 
   /**
-   * Escape \, ", newline, and carriage-return characters in the target as \\, \", \n, and \r;
-   * return a new string if any modifications were necessary. The intent is that by surrounding the
-   * return value with double quote marks, the result will be a Java string literal denoting the
-   * original string.
+   * @param orig string to quote
+   * @return quoted version of orig
+   * @deprecated use {@link #escapeJava(String)}
+   */
+  @Deprecated // use escapeJava(String)
+  public static String escapeNonJava(String orig) {
+    return escapeJava(orig);
+  }
+
+  /**
+   * Escapes a String so that it is expressible in Java source code. By surrounding the return value
+   * with double quote marks, the result will be a Java string literal denoting the original string.
+   *
+   * <p>Returns a new string only if any modifications were necessary.
+   *
+   * <p>Compared to the `escapeJava` method in Apache Commons Text StringEscapeUtils, this one
+   * correctly handles non-printable ASCII characters.
    *
    * @param orig string to quote
    * @return quoted version of orig
    */
-  public static String escapeNonJava(String orig) {
+  public static String escapeJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen right before this position.
     @IndexOrHigh("orig") int postEsc = 0;
@@ -1608,28 +1621,30 @@ public final class UtilPlume {
       switch (c) {
         case '\"':
         case '\\':
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append('\\');
-          postEsc = i;
-          break;
+        case '\b':
+        case '\f':
         case '\n': // not lineSep
-          if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
-          }
-          sb.append("\\n"); // not lineSep
-          postEsc = i + 1;
-          break;
         case '\r':
+        case '\t':
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
-          sb.append("\\r");
+          sb.append(escapeJava(c));
           postEsc = i + 1;
           break;
+
         default:
-          // Nothing to do: i gets incremented
+          if (c < ' ' || c == '\377') {
+            if (postEsc < i) {
+              sb.append(orig.substring(postEsc, i));
+            }
+            sb.append("\\");
+            sb.append(String.format("%03o", (int) c));
+            postEsc = i + 1;
+            break;
+          } else {
+            // Nothing to do: i gets incremented
+          }
       }
     }
     if (sb.length() == 0) {
@@ -1639,25 +1654,52 @@ public final class UtilPlume {
     return sb.toString();
   }
 
-  // The overhead of this is too high to call in escapeNonJava(String), so
-  // it is inlined there.
   /**
-   * Like {@link #escapeNonJava(String)}, but for a single character.
+   * @param ch character to quote
+   * @return quoted version of ch
+   * @deprecated use {@link #escapeJava(Character)}
+   */
+  @Deprecated // use escapeJava(Character)
+  public static String escapeNonJava(Character ch) {
+    return escapeJava(ch);
+  }
+
+  // If the overhead of this is too high to call in escapeJava(String), then
+  // inline it there.
+  /**
+   * Like {@link #escapeJava(String)}, but for a single character.
    *
    * @param ch character to quote
-   * @return quoted version och ch
+   * @return quoted version of ch
    */
-  public static String escapeNonJava(Character ch) {
-    char c = ch.charValue();
+  public static String escapeJava(Character ch) {
+    return escapeJava(ch.charValue());
+  }
+
+  // If the overhead of this is too high to call in escapeJava(String), then
+  // inline it there.
+  /**
+   * Like {@link #escapeJava(String)}, but for a single character.
+   *
+   * @param c character to quote
+   * @return quoted version of ch
+   */
+  public static String escapeJava(char c) {
     switch (c) {
       case '\"':
         return "\\\"";
       case '\\':
         return "\\\\";
+      case '\b':
+        return "\\b";
+      case '\f':
+        return "\\f";
       case '\n': // not lineSep
         return "\\n"; // not lineSep
       case '\r':
         return "\\r";
+      case '\t':
+        return "\\t";
       default:
         return new String(new char[] {c});
     }
@@ -1681,8 +1723,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Like escapeNonJava(), but quote more characters so that the result is sure to be printable
-   * ASCII.
+   * Like escapeJava(), but quote more characters so that the result is sure to be printable ASCII.
    *
    * <p>This implementation is not particularly optimized.
    *
@@ -1718,15 +1759,34 @@ public final class UtilPlume {
   }
 
   /**
-   * Replace "\\", "\"", "\n", and "\r" sequences by their one-character equivalents. All other
-   * backslashes are removed (for instance, octal/hex escape sequences are not turned into their
-   * respective characters). This is the inverse operation of {@link #escapeNonJava}, but it is
+   * Convert a string from Java source code format (with escape sequences) into the string it would
+   * represent at run time. This is the inverse operation of {@link #escapeJava}, but it is
    * <em>not</em> a general unescaping mechanism for Java strings.
+   *
+   * <p>Compared to the `unescapeJava` method in Apache Commons Text StringEscapeUtils, this one
+   * correctly handles non-printable ASCII characters.
+   *
+   * @param orig string to quote
+   * @return quoted version of orig
+   * @deprecated use {@link #unescapeJava(String)}
+   */
+  @Deprecated // use unescapeJava(String)
+  public static String unescapeNonJava(String orig) {
+    return unescapeJava(orig);
+  }
+
+  /**
+   * Convert a string from Java source code format (with escape sequences) into the string it would
+   * represent at run time. This is the inverse operation of {@link #escapeJava}, but it is
+   * <em>not</em> a general unescaping mechanism for Java strings.
+   *
+   * <p>Compared to the `unescapeJava` method in Apache Commons Text StringEscapeUtils, this one
+   * correctly handles non-printable ASCII characters.
    *
    * @param orig string to quote
    * @return quoted version of orig
    */
-  public static String unescapeNonJava(String orig) {
+  public static String unescapeJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen just before this position.
     @LTEqLengthOf("orig") int postEsc = 0;
@@ -1738,6 +1798,16 @@ public final class UtilPlume {
         break;
       }
       switch (orig.charAt(thisEsc + 1)) {
+        case 'b':
+          sb.append(orig.substring(postEsc, thisEsc));
+          sb.append('\b');
+          postEsc = thisEsc + 2;
+          break;
+        case 'f':
+          sb.append(orig.substring(postEsc, thisEsc));
+          sb.append('\f');
+          postEsc = thisEsc + 2;
+          break;
         case 'n':
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\n'); // not lineSep
@@ -1746,6 +1816,11 @@ public final class UtilPlume {
         case 'r':
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\r');
+          postEsc = thisEsc + 2;
+          break;
+        case 't':
+          sb.append(orig.substring(postEsc, thisEsc));
+          sb.append('\t');
           postEsc = thisEsc + 2;
           break;
         case '\\':
@@ -2154,7 +2229,7 @@ public final class UtilPlume {
    * @return a String representation of the backtrace of the given Throwable
    * @deprecated use {@link #stackTraceToString}
    */
-  @Deprecated // use stackTraceToString instead
+  @Deprecated // use stackTraceToString
   public static String backTrace(Throwable t) {
     return stackTraceToString(t);
   }

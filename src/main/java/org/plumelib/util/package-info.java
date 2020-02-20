@@ -42,9 +42,6 @@
  *   <dt>{@link org.plumelib.util.FileIOException FileIOException}
  *   <dd>Extends IOException by also reporting a file name and line number at which the exception
  *       occurred.
- *   <dt>{@link org.plumelib.util.StringBuilderDelimited StringBuilderDelimited}
- *   <dd>Like StringBuilder, but adds a delimiter between each pair of strings that are inserted
- *       into the StringBuilder. This can simplify the logic of programs and also avoid errors.
  *   <dt>{@link org.plumelib.util.FileWriterWithName FileWriterWithName}
  *   <dd>Just like {@code FileWriter}, but adds a {@code getFileName()} method and overrides {@code
  *       toString()} to give the file name.

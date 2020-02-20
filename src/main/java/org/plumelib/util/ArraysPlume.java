@@ -2203,7 +2203,7 @@ public final class ArraysPlume {
         if (quoted && a[i] instanceof String) {
           String elt = (String) a[i];
           sb.append('\"');
-          sb.append(UtilPlume.escapeNonJava(elt));
+          sb.append(UtilPlume.escapeJava(elt));
           sb.append('\"');
         } else {
           sb.append(a[i]);
@@ -2265,7 +2265,7 @@ public final class ArraysPlume {
         Object elt = itor.next();
         if (quoted && elt instanceof String) {
           sb.append('\"');
-          sb.append(UtilPlume.escapeNonJava((String) elt));
+          sb.append(UtilPlume.escapeJava((String) elt));
           sb.append('\"');
         } else {
           sb.append(elt);

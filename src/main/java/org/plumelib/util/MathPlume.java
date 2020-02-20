@@ -802,9 +802,9 @@ public final class MathPlume {
    * @param x value to be modded
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
-   * @deprecated use modNonnegative instead
+   * @deprecated use {@link #modNonnegative(int, int)}
    */
-  @Deprecated // use modNonnegative instead
+  @Deprecated // use modNonnegative()
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modPositive(
@@ -1039,9 +1039,9 @@ public final class MathPlume {
    * @param x value to be modded
    * @param y modulus
    * @return x % y, where the result is constrained to be non-negative
-   * @deprecated use modNonnegative instead
+   * @deprecated use {@link #modNonnegative(long, long)}
    */
-  @Deprecated // use modNonnegative instead
+  @Deprecated // use modNonnegative()
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound long modPositive(

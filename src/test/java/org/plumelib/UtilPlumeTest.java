@@ -165,21 +165,45 @@ public final class UtilPlumeTest {
     assertTrue(" ", UtilPlume.join(" ", potpourri).equals("day 2 day"));
   }
 
+  private void oneEscapeJava(String s, String escaped) {
+    assertTrue(UtilPlume.escapeJava(s).equals(escaped));
+    assertTrue(UtilPlume.unescapeJava(escaped).equals(s));
+  }
+
   @Test
-  public void test_escapeNonJava() {
+  public void test_escapeJava() {
 
-    // public static String escapeNonJava(String orig)
-    // public static String escapeNonJava(Character ch)
+    // public static String escapeJava(String orig)
+    // public static String escapeJava(char c)
+    // public static String unescapeJava(String orig)
+    // public static String unescapeJava(char c)
 
-    assertTrue(UtilPlume.escapeNonJava("foobar").equals("foobar"));
-    assertTrue(UtilPlume.escapeNonJava("").equals(""));
-    assertTrue(UtilPlume.escapeNonJava("\\").equals("\\\\"));
-    assertTrue(UtilPlume.escapeNonJava("\\\n\r\"").equals("\\\\\\n\\r\\\""));
-    assertTrue(UtilPlume.escapeNonJava("split\nlines").equals("split\\nlines"));
-    assertTrue(UtilPlume.escapeNonJava("\\relax").equals("\\\\relax"));
-    assertTrue(UtilPlume.escapeNonJava("\"hello\"").equals("\\\"hello\\\""));
-    assertTrue(
-        UtilPlume.escapeNonJava("\"hello\" \"world\"").equals("\\\"hello\\\" \\\"world\\\""));
+    oneEscapeJava("foobar", "foobar");
+    oneEscapeJava("", "");
+    oneEscapeJava("\\", "\\\\");
+    oneEscapeJava("\"", "\\\"");
+    oneEscapeJava("\n", "\\n");
+    oneEscapeJava("\r", "\\r");
+    oneEscapeJava("\\\n", "\\\\\\n");
+    oneEscapeJava("\n\r", "\\n\\r");
+    oneEscapeJava("\\\n\r\"", "\\\\\\n\\r\\\"");
+    oneEscapeJava("split\nlines", "split\\nlines");
+    oneEscapeJava("\\relax", "\\\\relax");
+    oneEscapeJava("\"hello\"", "\\\"hello\\\"");
+    oneEscapeJava("\"hello\" \"world\"", "\\\"hello\\\" \\\"world\\\"");
+    oneEscapeJava("foo\\", "foo\\\\");
+    oneEscapeJava("foo\0bar", "foo\\000bar");
+    oneEscapeJava("foo\tbar", "foo\\tbar");
+    oneEscapeJava("\b\f\n\r\t\1\377", "\\b\\f\\n\\r\\t\\001\\377");
+    // Should add more tests here.
+
+    // These tests are not symmetric because the argument is not a value that escapeJava would ever
+    // return.
+    assertTrue(UtilPlume.unescapeJava("\\").equals("\\"));
+    assertTrue(UtilPlume.unescapeJava("foo\\").equals("foo\\"));
+    assertTrue(UtilPlume.unescapeJava("\\*abc").equals("*abc"));
+    assertTrue(UtilPlume.unescapeJava("\\101").equals("A"));
+    assertTrue(UtilPlume.unescapeJava("A\\102C").equals("ABC"));
 
     // public static String escapeNonASCII(String orig)
 
@@ -196,41 +220,13 @@ public final class UtilPlumeTest {
         .equals("\\000\\001\\002\\007\\n8@I\\222");
     assert UtilPlume.escapeNonASCII("\u0100\u1000\ucafe\uffff")
         .equals("\\u0100\\u1000\\ucafe\\uffff");
-  }
 
-  // private static String escapeNonASCII(char c)
-
-  @Test
-  public void test_unescapeNonJava() {
-
-    // public static String unescapeNonJava(String orig)
-
-    assertTrue(UtilPlume.unescapeNonJava("foobar").equals("foobar"));
-    assertTrue(UtilPlume.unescapeNonJava("").equals(""));
-    assertTrue(UtilPlume.unescapeNonJava("\\\\").equals("\\"));
-    assertTrue(UtilPlume.unescapeNonJava("\\\"").equals("\""));
-    assert UtilPlume.unescapeNonJava("\\n").equals("\n"); // not lineSep
-    assertTrue(UtilPlume.unescapeNonJava("\\r").equals("\r"));
-    assertTrue(UtilPlume.unescapeNonJava("split\\nlines").equals("split\nlines"));
-    assert UtilPlume.unescapeNonJava("\\\\\\n").equals("\\\n"); // not lineSep
-    assert UtilPlume.unescapeNonJava("\\n\\r").equals("\n\r"); // not lineSep
-    assertTrue(UtilPlume.unescapeNonJava("\\\\\\n\\r\\\"").equals("\\\n\r\""));
-    assertTrue(UtilPlume.unescapeNonJava("\\\\relax").equals("\\relax"));
-    assertTrue(UtilPlume.unescapeNonJava("\\\"hello\\\"").equals("\"hello\""));
-    assertTrue(
-        UtilPlume.unescapeNonJava("\\\"hello\\\" \\\"world\\\"").equals("\"hello\" \"world\""));
-    assertTrue(UtilPlume.unescapeNonJava("\\").equals("\\"));
-    assertTrue(UtilPlume.unescapeNonJava("foo\\").equals("foo\\"));
-    assertTrue(UtilPlume.unescapeNonJava("\\*abc").equals("*abc"));
-    assertTrue(UtilPlume.unescapeNonJava("\\101").equals("A"));
-    assertTrue(UtilPlume.unescapeNonJava("A\\102C").equals("ABC"));
-    // Should add more tests here.
+    // private static String escapeNonASCII(char c)
 
     // Unfortunately, there isn't yet a unescapeNonASCII function.
     // If implemented, it should have the following behavior:
     // assertTrue(UtilPlume.unescapeNonASCII("\\115").equals("M"));
     // assertTrue(UtilPlume.unescapeNonASCII("\\115\\111\\124").equals("MIT"));
-
   }
 
   @Test
