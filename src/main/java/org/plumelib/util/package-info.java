@@ -11,22 +11,25 @@
  *       java.util.Collections.
  *   <dt>{@link org.plumelib.util.CollectionsPlume CollectionsPlume}
  *   <dd>Utilities for manipulating collections, iterators, lists, maps, and sets.
+ *   <dt>{@link org.plumelib.util.CombinationIterator CombinationIterator}
+ *   <dd>Given a set of collections, return all combinations that take one element from each
+ *       collection.
  *   <dt>{@link org.plumelib.util.LimitedSizeSet LimitedSizeSet}
  *   <dd>Stores up to some maximum number of unique values, at which point its rep is nulled, in
  *       order to save space.
  *   <dt>{@link org.plumelib.util.LimitedSizeIntSet LimitedSizeIntSet}
  *   <dd>Stores up to some maximum number of unique integer values, at which point its rep is
  *       nulled, in order to save space. More efficient than {@code LimitedSizeSet<Integer>}.
+ *   <dt>{@link org.plumelib.util.OrderedPairIterator OrderedPairIterator}
+ *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
+ *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
+ *       their respective sort orders. (This operation is sometimes called "zipping".)
  *   <dt>{@link org.plumelib.util.WeakHasherMap WeakHasherMap}
  *   <dd>WeakHashMap is a modified version of WeakHashMap from JDK 1.2.2, that adds a constructor
  *       that takes a {@link org.plumelib.util.Hasher Hasher} argument.
  *   <dt>{@link org.plumelib.util.WeakIdentityHashMap WeakIdentityHashMap}
  *   <dd>WeakIdentityHashMap is a modified version of WeakHashMap from JDK 1.5, that uses
  *       System.identityHashCode() rather than the object's hash code.
- *   <dt>{@link org.plumelib.util.OrderedPairIterator OrderedPairIterator}
- *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
- *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
- *       their respective sort orders. (This operation is sometimes called "zipping".)
  * </dl>
  *
  * <h3 id="Text_processing">Text processing</h3>
