@@ -598,6 +598,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @return whether there is another line to read
    */
+  @SuppressWarnings({
+    "all:purity",
+    "lock:method.guarantee.violated"
+  }) // readLine might throw, has side effects
   @Override
   public boolean hasNext(@GuardSatisfied EntryReader this) {
     if (pushbackLine != null) {

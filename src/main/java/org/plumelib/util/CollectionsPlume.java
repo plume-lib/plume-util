@@ -482,6 +482,7 @@ public final class CollectionsPlume {
     // Initialize to an empty iterator to prime the pump.
     Iterator<T> current = new ArrayList<T>().iterator();
 
+    @SuppressWarnings({"all:purity", "lock:method.guarantee.violated"})
     @Override
     public boolean hasNext(@GuardSatisfied MergedIterator<T> this) {
       while (!current.hasNext() && itorOfItors.hasNext()) {
@@ -532,6 +533,7 @@ public final class CollectionsPlume {
     /** True iff {@link #current} is an object from the wrapped iterator. */
     boolean currentValid = false;
 
+    @SuppressWarnings({"all:purity", "lock:method.guarantee.violated"}) // benevolent side effects
     @Override
     public boolean hasNext(@GuardSatisfied FilteredIterator<T> this) {
       while (!currentValid && itor.hasNext()) {

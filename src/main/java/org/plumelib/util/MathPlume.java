@@ -1380,6 +1380,7 @@ public final class MathPlume {
       currentIndex = unused;
     }
 
+    @SuppressWarnings({"all:purity", "lock:method.guarantee.violated"}) // benevolent side effects
     @Override
     public boolean hasNext(@GuardSatisfied MissingNumbersIteratorInt this) {
       if (currentMissing < currentNonmissing) {
@@ -1701,6 +1702,7 @@ public final class MathPlume {
       currentIndex = unused;
     }
 
+    @SuppressWarnings({"all:purity", "lock:method.guarantee.violated"}) // benevolent side effects
     @Override
     public boolean hasNext(@GuardSatisfied MissingNumbersIteratorLong this) {
       if (currentMissing < currentNonmissing) {
