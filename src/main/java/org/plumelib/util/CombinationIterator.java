@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *   ["a2", "b1", "c3"]
  * </pre>
  */
-class CombinationIterator<T> implements Iterator<List<T>> {
+public class CombinationIterator<T> implements Iterator<List<T>> {
 
   /** Lists of candidate values for each position in generated lists. */
   private final List<T>[] listsOfCandidates;
