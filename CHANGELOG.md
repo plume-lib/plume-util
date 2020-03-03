@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.1.1
+
+Added CombinationIterator class.
+
 ## 1.1.0
 
 - Switched the order of the arguments to UtilPlume.join()
