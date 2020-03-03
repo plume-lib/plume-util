@@ -46,7 +46,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
    * @param collectionsOfCandidates lists of candidate values for each position in generated lists
    */
   @SuppressWarnings({"rawtypes", "unchecked"}) // for generic array creation
-  CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
+  public CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
     int size = collectionsOfCandidates.size();
     // Just like collectionsOfCandidates, but indexable.
     ArrayList<? extends Collection<T>> listOfCollectionsOfCanditates =
