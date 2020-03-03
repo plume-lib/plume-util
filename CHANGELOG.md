@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.1.1
+## 1.1.2
 
 Added CombinationIterator class.
 
