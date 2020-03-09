@@ -11,10 +11,10 @@ cache:
     - $HOME/.m2/
 
 jdk:
-  - oraclejdk8
   - openjdk8
-  - oraclejdk11
-  - openjdk11
+## TODO: enable after require-javadoc handles JDK 11
+#  - oraclejdk11
+#  - openjdk11
 
 # Add "verGJF" task when google-java-format handles type annotations better;
 # see https://github.com/google/google-java-format/issues/5
