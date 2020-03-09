@@ -66,7 +66,8 @@ checkerFramework {
     '-Werror',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
-    '-AwarnUnneededSuppressions'
+    '-AwarnUnneededSuppressions',
+    '-AprintGitProperties'
   ]
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
