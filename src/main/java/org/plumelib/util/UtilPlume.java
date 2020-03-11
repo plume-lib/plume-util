@@ -1452,8 +1452,8 @@ public final class UtilPlume {
    * them.
    *
    * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
-   * takes an array of Objects but that method takes an array of CharSequences. Use the built-in
-   * method when possible.
+   * takes an array of Objects but that method takes an array of CharSequences. Use the String
+   * method when the arguments are CharSequences.
    *
    * @param <T> the type of array elements
    * @param a array of values to concatenate
@@ -1483,7 +1483,8 @@ public final class UtilPlume {
    * them.
    *
    * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
-   * takes any arbitrary array but that method takes an array of CharSequences.
+   * takes any arbitrary array but that method takes an array of CharSequences. Use the String
+   * method when the arguments are CharSequences.
    *
    * @param <T> the type of array elements
    * @param a array of values to concatenate
