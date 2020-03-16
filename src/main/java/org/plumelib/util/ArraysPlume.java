@@ -3473,8 +3473,8 @@ public final class ArraysPlume {
      *
      * @return all the elements in any part of the Partitioning
      */
-    List<T> partitionedSet() {
-      List<T> result = new ArrayList<>();
+    ArrayList<T> partitionedSet() {
+      ArrayList<T> result = new ArrayList<>();
       for (List<T> part : this) {
         result.addAll(part);
       }
