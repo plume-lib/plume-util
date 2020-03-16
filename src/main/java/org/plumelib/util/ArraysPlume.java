@@ -3489,7 +3489,7 @@ public final class ArraysPlume {
      */
     boolean isPartitioningFor(List<T> elts) {
       // Inefficient O(n^2) implementation.  We can do O(n log n) if desired.
-      List<T> ps = partitionedSet();
+      ArrayList<T> ps = partitionedSet();
       return ps.size() == elts.size() && ps.containsAll(elts);
     }
 
