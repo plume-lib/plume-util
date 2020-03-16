@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.1.4
+
+Support Unicode escaping and unescaping, improve octal unescaping.
+
 ## 1.1.3
 
 Added CombinationIterator class.

@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -166,8 +167,8 @@ public final class UtilPlumeTest {
   }
 
   private void oneEscapeJava(String s, String escaped) {
-    assertTrue(UtilPlume.escapeJava(s).equals(escaped));
-    assertTrue(UtilPlume.unescapeJava(escaped).equals(s));
+    assertEquals(escaped, UtilPlume.escapeJava(s));
+    assertEquals(s, UtilPlume.unescapeJava(escaped));
   }
 
   @Test
@@ -195,6 +196,12 @@ public final class UtilPlumeTest {
     oneEscapeJava("foo\0bar", "foo\\000bar");
     oneEscapeJava("foo\tbar", "foo\\tbar");
     oneEscapeJava("\b\f\n\r\t\1\377", "\\b\\f\\n\\r\\t\\001\\377");
+    oneEscapeJava("\222", "\\222");
+    oneEscapeJava("\300", "\\300");
+    oneEscapeJava("\u12345", "\\u12345");
+    oneEscapeJava("\u1234A", "\\u1234A");
+    oneEscapeJava("\u54321", "\\u54321");
+    oneEscapeJava("\u5432A", "\\u5432A");
     // Should add more tests here.
 
     // These tests are not symmetric because the argument is not a value that escapeJava would ever
@@ -204,6 +211,12 @@ public final class UtilPlumeTest {
     assertTrue(UtilPlume.unescapeJava("\\*abc").equals("*abc"));
     assertTrue(UtilPlume.unescapeJava("\\101").equals("A"));
     assertTrue(UtilPlume.unescapeJava("A\\102C").equals("ABC"));
+
+    assertEquals("(1", UtilPlume.unescapeJava("\0501"));
+    assertEquals("(1", UtilPlume.unescapeJava("\501"));
+    assertEquals("?7", UtilPlume.unescapeJava("\0777")); // '?' = \077
+    assertEquals("?7", UtilPlume.unescapeJava("\777")); // '?' = \077
+    assertEquals(" M ", UtilPlume.unescapeJava(" \uuu004D "));
 
     // public static String escapeNonASCII(String orig)
 

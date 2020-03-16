@@ -33,6 +33,13 @@ targetCompatibility = 1.8
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
+test {
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
+}
+
 /// Error Prone linter
 
 dependencies {

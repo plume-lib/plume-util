@@ -1452,8 +1452,8 @@ public final class UtilPlume {
    * them.
    *
    * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
-   * takes an array of Objects but that method takes an array of CharSequences. Use the built-in
-   * method when possible.
+   * takes an array of Objects but that method takes an array of CharSequences. Use the String
+   * method when the arguments are CharSequences.
    *
    * @param <T> the type of array elements
    * @param a array of values to concatenate
@@ -1483,7 +1483,8 @@ public final class UtilPlume {
    * them.
    *
    * <p>This differs from the built-in {@code String.join()} method added in Java 8, in that this
-   * takes any arbitrary array but that method takes an array of CharSequences.
+   * takes any arbitrary array but that method takes an array of CharSequences. Use the String
+   * method when the arguments are CharSequences.
    *
    * @param <T> the type of array elements
    * @param a array of values to concatenate
@@ -1634,16 +1635,23 @@ public final class UtilPlume {
           break;
 
         default:
-          if (c < ' ' || c == '\377') {
+          if (c >= ' ' && c <= '~') {
+            // Nothing to do: i gets incremented
+          } else if (c <= '\377') {
             if (postEsc < i) {
               sb.append(orig.substring(postEsc, i));
             }
             sb.append("\\");
-            sb.append(String.format("%03o", (int) c));
+            @SuppressWarnings("lessthan") // https://tinyurl.com/cfissue/3167
+            int cAsInt = (int) c;
+            sb.append(String.format("%03o", cAsInt));
             postEsc = i + 1;
             break;
           } else {
-            // Nothing to do: i gets incremented
+            sb.append("\\u");
+            sb.append(String.format("%04x", (int) c));
+            postEsc = i + 1;
+            break;
           }
       }
     }
@@ -1831,6 +1839,30 @@ public final class UtilPlume {
           postEsc = thisEsc + 2;
           break;
 
+        case 'u':
+          // Unescape Unicode characters.
+          sb.append(orig.substring(postEsc, thisEsc));
+          char unicodeChar = 0;
+          int ii = thisEsc + 2;
+          // The specification permits one or more 'u' characters.
+          while (ii < orig.length() && orig.charAt(ii) == 'u') {
+            ii++;
+          }
+          // The specification requires exactly 4 hexadecimal characters.
+          // This is more liberal.  (Should it be?)
+          int limit = Math.min(ii + 4, orig.length());
+          while (ii < limit) {
+            int thisDigit = Character.digit(orig.charAt(ii), 16);
+            if (thisDigit == -1) {
+              break;
+            }
+            unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
+            ii++;
+          }
+          sb.append(unicodeChar);
+          postEsc = ii;
+          break;
+
         case '0':
         case '1':
         case '2':
@@ -1840,22 +1872,23 @@ public final class UtilPlume {
         case '6':
         case '7':
           // Unescape octal characters.
-          // TODO: Why does the code do this, when the Javadoc says it doesn't?
-          // TODO: There is no check for excessively large values; eg, \777 should translate to
-          // "777", not a single octal 0777 character.
           sb.append(orig.substring(postEsc, thisEsc));
           char octalChar = 0;
-          int ii = thisEsc + 1;
-          while (ii < orig.length()) {
-            int thisDigit = Character.digit(orig.charAt(ii), 8);
+          int iii = thisEsc + 1;
+          while (iii < Math.min(thisEsc + 4, orig.length())) {
+            int thisDigit = Character.digit(orig.charAt(iii), 8);
             if (thisDigit == -1) {
               break;
             }
-            octalChar = (char) ((octalChar * 8) + thisDigit);
-            ii++;
+            int newValue = (octalChar * 8) + thisDigit;
+            if (newValue > 0377) {
+              break;
+            }
+            octalChar = (char) newValue;
+            iii++;
           }
           sb.append(octalChar);
-          postEsc = ii;
+          postEsc = iii;
           break;
 
         default:
