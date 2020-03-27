@@ -3384,7 +3384,8 @@ public final class ArraysPlume {
    * @param k number of subsets into which to partition {@code elts}
    * @return a list of partitionings, where each contains exactly k subsets
    */
-  public static <T> List<Partitioning<T>> partitionInto(Queue<T> elts, @NonNegative int k) {
+  public static <T extends @NonNull Object> List<Partitioning<T>> partitionInto(
+      Queue<T> elts, @NonNegative int k) {
     if (elts.size() < k) {
       throw new IllegalArgumentException();
     }
@@ -3452,7 +3453,7 @@ public final class ArraysPlume {
   }
 
   /** A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}. */
-  static class Partitioning<T> extends ArrayList<ArrayList<T>> {
+  static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
 
     static final long serialVersionUID = 20170418;
 
@@ -3473,8 +3474,8 @@ public final class ArraysPlume {
      *
      * @return all the elements in any part of the Partitioning
      */
-    List<T> partitionedSet() {
-      List<T> result = new ArrayList<>();
+    ArrayList<T> partitionedSet() {
+      ArrayList<T> result = new ArrayList<>();
       for (List<T> part : this) {
         result.addAll(part);
       }
@@ -3489,7 +3490,7 @@ public final class ArraysPlume {
      */
     boolean isPartitioningFor(List<T> elts) {
       // Inefficient O(n^2) implementation.  We can do O(n log n) if desired.
-      List<T> ps = partitionedSet();
+      ArrayList<T> ps = partitionedSet();
       return ps.size() == elts.size() && ps.containsAll(elts);
     }
 
