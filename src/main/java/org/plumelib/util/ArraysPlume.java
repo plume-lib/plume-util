@@ -3471,6 +3471,7 @@ public final class ArraysPlume {
 
     /**
      * The set that has been partitioned. That is, all the elements that have been added to this.
+     * Equivalently, the union of all the partitions.
      *
      * @return all the elements in any part of the Partitioning
      */
