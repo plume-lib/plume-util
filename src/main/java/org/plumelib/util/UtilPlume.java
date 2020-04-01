@@ -1642,7 +1642,6 @@ public final class UtilPlume {
               sb.append(orig.substring(postEsc, i));
             }
             sb.append("\\");
-            @SuppressWarnings("lessthan") // https://tinyurl.com/cfissue/3167
             int cAsInt = (int) c;
             sb.append(String.format("%03o", cAsInt));
             postEsc = i + 1;
