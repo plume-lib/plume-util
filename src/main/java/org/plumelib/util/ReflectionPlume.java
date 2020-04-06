@@ -378,6 +378,7 @@ public final class ReflectionPlume {
    * @param value new value of field
    * @throws NoSuchFieldException if the field does not exist in the object
    */
+  @SuppressWarnings("nullness:argument.type.incompatible") // value in setFinalField parameter can be null
   public static void setFinalField(Object o, String fieldName, @Nullable Object value)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
