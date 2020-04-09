@@ -342,6 +342,7 @@ public final class CollectionsPlume {
       throw new NullPointerException();
     }
     return new Iterable<T>() {
+      /** True if this Iterable object has been used. */
       private AtomicBoolean used = new AtomicBoolean();
 
       @Override
