@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
+import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -370,15 +371,14 @@ public final class ReflectionPlume {
 
   // TODO: make this restore the access to its original value, such as private?
   /**
-   * Sets the given field, which may be final and/or private. Leaves the field accessible. Intended
-   * for use in readObject and nowhere else!
+   * Sets the given field, which may be final and/or private. Leaves the field accessible.
    *
-   * @param o object in which to set the field
+   * @param o object in which to set the field; null iff the field is static
    * @param fieldName name of field to set
-   * @param value new value of field
+   * @param value new value of field; may be null iff the field is nullable
    * @throws NoSuchFieldException if the field does not exist in the object
    */
-  public static void setFinalField(Object o, String fieldName, @Nullable Object value)
+  public static void setFinalField(Object o, String fieldName, @Interned Object value)
       throws NoSuchFieldException {
     Class<?> c = o.getClass();
     while (c != Object.class) { // Class is interned
