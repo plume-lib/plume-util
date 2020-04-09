@@ -113,7 +113,7 @@ task requireJavadoc(type: JavaExec) {
   description = 'Ensures that Javadoc documentation exists.'
   main = "org.plumelib.javadoc.RequireJavadoc"
   classpath = configurations.requireJavadoc
-  args "src/main/java", "--skip=WeakHasherMap|WeakIdentityHashMap"
+  args "src/main/java", "--dont-require=WeakHasherMap|WeakIdentityHashMap"
 }
 check.dependsOn requireJavadoc
 javadocWeb.dependsOn requireJavadoc
