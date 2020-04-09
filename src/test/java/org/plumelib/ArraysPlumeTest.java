@@ -933,7 +933,7 @@ public final class ArraysPlumeTest {
   public void testConcat() {
     Date[] da1 = new Date[] {new Date()};
     Date[] da2 = new Date[] {new Date()};
+    @SuppressWarnings("UnusedVariable")
     Date[] da3 = ArraysPlume.concat(da1, da2);
-    System.out.println("concat result: " + Arrays.toString(da3));
   }
 }
