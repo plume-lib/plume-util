@@ -1536,7 +1536,7 @@ public final class UtilPlume {
    *     order
    */
   @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order
-  public static String join(Iterable<? extends Object> v, CharSequence delim) {
+  public static String join(Iterable<?> v, CharSequence delim) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
     Iterator<?> itor = v.iterator();
@@ -1563,7 +1563,7 @@ public final class UtilPlume {
    * @return the concatenation of the string representations of the values, with the delimiter
    *     between
    */
-  public static String join(CharSequence delim, Iterable<? extends Object> v) {
+  public static String join(CharSequence delim, Iterable<?> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
     Iterator<?> itor = v.iterator();
@@ -1586,7 +1586,7 @@ public final class UtilPlume {
    * @param v list of values to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
    */
-  public static String joinLines(Iterable<? extends Object> v) {
+  public static String joinLines(Iterable<?> v) {
     return join(lineSep, v);
   }
 
