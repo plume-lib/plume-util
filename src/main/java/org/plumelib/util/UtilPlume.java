@@ -1671,8 +1671,7 @@ public final class UtilPlume {
     return escapeJava(ch);
   }
 
-  // If the overhead of this is too high to call in escapeJava(String), then
-  // inline it there.
+  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
    * Like {@link #escapeJava(String)}, but for a single character.
    *
@@ -1683,8 +1682,7 @@ public final class UtilPlume {
     return escapeJava(ch.charValue());
   }
 
-  // If the overhead of this is too high to call in escapeJava(String), then
-  // inline it there.
+  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
    * Like {@link #escapeJava(String)}, but for a single character.
    *
