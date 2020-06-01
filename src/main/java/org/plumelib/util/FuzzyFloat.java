@@ -149,8 +149,8 @@ public class FuzzyFloat {
   }
 
   /**
-   * Test d1 and d2 for {@code d1 &le; d2}. If d1 is equal to d2 using the current ratio, this
-   * returns true.
+   * Test d1 and d2 for {@code d1 <= d2}. If d1 is equal to d2 using the current ratio, this returns
+   * true.
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
@@ -177,7 +177,8 @@ public class FuzzyFloat {
   }
 
   /**
-   * test d1 and d2 for d1 &ge; d2. If d1 is equal to d2 using the current ratio, this returns true.
+   * test d1 and d2 for {@code d1 >= d2}. If d1 is equal to d2 using the current ratio, this returns
+   * true.
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
