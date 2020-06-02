@@ -175,6 +175,7 @@ public final class CollectionsPlume {
    * @param e an enumeration to convert to a ArrayList
    * @return a vector containing the elements of the enumeration
    */
+  @SuppressWarnings("JdkObsolete")
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
@@ -372,11 +373,13 @@ public final class CollectionsPlume {
       this.e = e;
     }
 
+    @SuppressWarnings("JdkObsolete")
     @Override
     public boolean hasNext(@GuardSatisfied EnumerationIterator<T> this) {
       return e.hasMoreElements();
     }
 
+    @SuppressWarnings("JdkObsolete")
     @Override
     public T next(@GuardSatisfied EnumerationIterator<T> this) {
       return e.nextElement();

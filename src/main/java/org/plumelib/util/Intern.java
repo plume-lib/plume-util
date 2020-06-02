@@ -368,7 +368,7 @@ public final class Intern {
    *
    * @return the number of interned integers.
    */
-  protected static int numIntegers() {
+  static int numIntegers() {
     return internedIntegers.size();
   }
 
@@ -377,7 +377,7 @@ public final class Intern {
    *
    * @return the number of interned longs.
    */
-  protected static int numLongs() {
+  static int numLongs() {
     return internedLongs.size();
   }
 
@@ -386,7 +386,7 @@ public final class Intern {
    *
    * @return the number of interned int arrays.
    */
-  protected static int numIntArrays() {
+  static int numIntArrays() {
     return internedIntArrays.size();
   }
 
@@ -395,7 +395,7 @@ public final class Intern {
    *
    * @return the number of interned long arrays.
    */
-  protected static int numLongArrays() {
+  static int numLongArrays() {
     return internedLongArrays.size();
   }
 
@@ -404,7 +404,7 @@ public final class Intern {
    *
    * @return the number of interned doubles.
    */
-  protected static int numDoubles() {
+  static int numDoubles() {
     return internedDoubles.size();
   }
 
@@ -413,7 +413,7 @@ public final class Intern {
    *
    * @return the number of interned double arrays.
    */
-  protected static int numDoubleArrays() {
+  static int numDoubleArrays() {
     return internedDoubleArrays.size();
   }
 
@@ -422,7 +422,7 @@ public final class Intern {
    *
    * @return the number of interned string arrays.
    */
-  protected static int numStringArrays() {
+  static int numStringArrays() {
     return internedStringArrays.size();
   }
 
@@ -431,7 +431,7 @@ public final class Intern {
    *
    * @return the number of interned object arrays.
    */
-  protected static int numObjectArrays() {
+  static int numObjectArrays() {
     return internedObjectArrays.size();
   }
 
@@ -440,7 +440,7 @@ public final class Intern {
    *
    * @return all the interned integers
    */
-  protected static Iterator<@Interned Integer> integers() {
+  static Iterator<@Interned Integer> integers() {
     return internedIntegers.keySet().iterator();
   }
 
@@ -449,7 +449,7 @@ public final class Intern {
    *
    * @return all the interned longs
    */
-  protected static Iterator<@Interned Long> longs() {
+  static Iterator<@Interned Long> longs() {
     return internedLongs.keySet().iterator();
   }
 
@@ -458,7 +458,7 @@ public final class Intern {
    *
    * @return all the interned int arrays
    */
-  protected static Iterator<int @Interned []> intArrays() {
+  static Iterator<int @Interned []> intArrays() {
     return internedIntArrays.keySet().iterator();
   }
 
@@ -467,7 +467,7 @@ public final class Intern {
    *
    * @return all the interned long arrays
    */
-  protected static Iterator<long @Interned []> longArrays() {
+  static Iterator<long @Interned []> longArrays() {
     return internedLongArrays.keySet().iterator();
   }
 
@@ -476,7 +476,7 @@ public final class Intern {
    *
    * @return all the interned doubles
    */
-  protected static Iterator<@Interned Double> doubles() {
+  static Iterator<@Interned Double> doubles() {
     return internedDoubles.keySet().iterator();
   }
 
@@ -485,7 +485,7 @@ public final class Intern {
    *
    * @return all the interned double arrays
    */
-  protected static Iterator<double @Interned []> doubleArrays() {
+  static Iterator<double @Interned []> doubleArrays() {
     return internedDoubleArrays.keySet().iterator();
   }
 
@@ -494,7 +494,7 @@ public final class Intern {
    *
    * @return all the interned string arrays
    */
-  protected static Iterator<@Nullable @Interned String @Interned []> stringArrays() {
+  static Iterator<@Nullable @Interned String @Interned []> stringArrays() {
     return internedStringArrays.keySet().iterator();
   }
 
@@ -503,7 +503,7 @@ public final class Intern {
    *
    * @return all the interned object arrays
    */
-  protected static Iterator<@Nullable @Interned Object @Interned []> objectArrays() {
+  static Iterator<@Nullable @Interned Object @Interned []> objectArrays() {
     return internedObjectArrays.keySet().iterator();
   }
 
@@ -946,6 +946,8 @@ public final class Intern {
   }
 
   /**
+   * Returns a subsequence of seq from start to end that is interned.
+   *
    * @param seq the interned sequence whose subsequence should be computed and interned
    * @param start the index of the start of the subsequence to compute and intern
    * @param end the index of the end of the subsequence to compute and intern
@@ -975,6 +977,8 @@ public final class Intern {
   }
 
   /**
+   * Returns a subsequence of seq from start to end that is interned.
+   *
    * @param seq the interned sequence whose subsequence should be computed and interned
    * @param start the index of the start of the subsequence to compute and intern
    * @param end the index of the end of the subsequence to compute and intern
@@ -1004,6 +1008,8 @@ public final class Intern {
   }
 
   /**
+   * Returns a subsequence of seq from start to end that is interned.
+   *
    * @param seq the interned sequence whose subsequence should be computed and interned
    * @param start the index of the start of the subsequence to compute and intern
    * @param end the index of the end of the subsequence to compute and intern
@@ -1039,6 +1045,8 @@ public final class Intern {
   }
 
   /**
+   * Returns a subsequence of seq from start to end that is interned.
+   *
    * @param seq the interned sequence whose subsequence should be computed and interned
    * @param start the index of the start of the subsequence to compute and intern
    * @param end the index of the end of the subsequence to compute and intern

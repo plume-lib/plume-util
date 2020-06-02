@@ -38,6 +38,7 @@ public final class CollectionsPlumeTest {
     return v;
   }
 
+  @SuppressWarnings("JdkObsolete")
   public static <T> ArrayList<T> toArrayList(Enumeration<T> e) {
     ArrayList<T> v = new ArrayList<>();
     while (e.hasMoreElements()) {

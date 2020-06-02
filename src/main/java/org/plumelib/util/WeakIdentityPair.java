@@ -37,12 +37,19 @@ public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
     }
     this.a = new WeakReference<>(a);
     this.b = new WeakReference<>(b);
-    int localHashCode = 0;
+    int hashCodeA;
+    int hashCodeB;
     try {
-      localHashCode = a.hashCode() + b.hashCode();
+      hashCodeA = a.hashCode();
     } catch (StackOverflowError e) {
+      hashCodeA = 0;
     }
-    hashCode = localHashCode;
+    try {
+      hashCodeB = b.hashCode();
+    } catch (StackOverflowError e) {
+      hashCodeB = 0;
+    }
+    this.hashCode = hashCodeA + hashCodeB;
   }
 
   /**

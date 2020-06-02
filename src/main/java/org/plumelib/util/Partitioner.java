@@ -12,6 +12,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface Partitioner<ELEMENT extends @Nullable Object, CLASS extends @Nullable Object> {
 
   /**
+   * Returns a key representing the bucket containing obj.
+   *
    * @param obj the Object to be assigned to a bucket
    * @return a key representing the bucket containing obj
    */
