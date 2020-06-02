@@ -492,7 +492,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <= i <
    *     indexlimit}, or -1 if the element is not found in that section of the array
    * @see java.util.List#indexOf(java.lang.Object)
    */
@@ -536,7 +536,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <= i <
    *     indexlimit}, or -1 if the element is not found in that section of the list
    * @see java.util.List#indexOf(java.lang.Object)
    */
@@ -585,7 +585,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <= i <
    *     indexlimit}, or -1 if the element is not found in that section of the array
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
@@ -631,7 +631,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <= i <
    *     indexlimit}, or -1 if the element is not found in that section of the list
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
@@ -694,7 +694,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <=; i <
    *     indexlimit}, or -1 if the element is not found in the array
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
@@ -716,7 +716,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <=; i <
    *     indexlimit}, or -1 if the element is not found in the array
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
@@ -776,7 +776,7 @@ public final class ArraysPlume {
    * @param elt the element to search for
    * @param minindex first index at which to search
    * @param indexlimit first index at which not to search
-   * @return the first index i containing the specified element, such that {@code minindex &le; i <
+   * @return the first index i containing the specified element, such that {@code minindex <=; i <
    *     indexlimit}, or -1 if the element is not found in the array
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
@@ -1298,7 +1298,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1322,7 +1322,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1346,7 +1346,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return the first index at which the second array starts in the first array, or -1 if no such
    *     element is found in the array
    */
@@ -1370,7 +1370,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1393,7 +1393,7 @@ public final class ArraysPlume {
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return the first index at which the second array starts in the first array, or -1 if no such
    *     element is found in the array
    */
@@ -1417,7 +1417,7 @@ public final class ArraysPlume {
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1440,7 +1440,7 @@ public final class ArraysPlume {
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return the first index at which the second array starts in the first array, or -1 if no such
    *     element is found in the array
    */
@@ -1464,7 +1464,7 @@ public final class ArraysPlume {
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1487,7 +1487,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1510,7 +1510,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1533,7 +1533,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1556,7 +1556,7 @@ public final class ArraysPlume {
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aAffset} is too large to be a valid index for {@code a}.
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
@@ -1682,9 +1682,9 @@ public final class ArraysPlume {
      * @param destPos the index at which to start overwriting elements of {@code dest}
      */
     @SuppressWarnings({
-      "lowerbound:argument.type.incompatible",
-      "index:argument.type.incompatible"
-    }) // TODO: annotate for Index Checker
+      "lowerbound:argument.type.incompatible", // TODO: annotate for Index Checker
+      "index:argument.type.incompatible" // TODO: annotate for Index Checker
+    })
     void copyInto(T[] dest, int destPos) {
       if (theArray != null) {
         System.arraycopy(theArray, 0, dest, destPos, theArray.length);

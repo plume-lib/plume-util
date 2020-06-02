@@ -2,9 +2,9 @@ package org.plumelib.util;
 
 import static org.junit.Assert.assertTrue;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -931,9 +931,9 @@ public final class ArraysPlumeTest {
 
   @Test
   public void testConcat() {
-    Date[] da1 = new Date[] {new Date()};
-    Date[] da2 = new Date[] {new Date()};
+    Instant[] da1 = new Instant[] {Instant.now()};
+    Instant[] da2 = new Instant[] {Instant.now()};
     @SuppressWarnings("UnusedVariable")
-    Date[] da3 = ArraysPlume.concat(da1, da2);
+    Instant[] da3 = ArraysPlume.concat(da1, da2);
   }
 }

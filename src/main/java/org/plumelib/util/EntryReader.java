@@ -93,7 +93,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public @MonotonicNonNull @Regex(1) Pattern entryStartRegex = null;
 
-  /** @see #entryStartRegex */
+  /**
+   * See {@link entryStartRegex}.
+   *
+   * @see #entryStartRegex
+   */
   public @MonotonicNonNull Pattern entryStopRegex = null;
 
   ///
