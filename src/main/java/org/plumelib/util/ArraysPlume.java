@@ -1682,9 +1682,9 @@ public final class ArraysPlume {
      * @param destPos the index at which to start overwriting elements of {@code dest}
      */
     @SuppressWarnings({
-      "lowerbound:argument.type.incompatible",
-      "index:argument.type.incompatible"
-    }) // TODO: annotate for Index Checker
+      "lowerbound:argument.type.incompatible", // TODO: annotate for Index Checker
+      "index:argument.type.incompatible" // TODO: annotate for Index Checker
+    })
     void copyInto(T[] dest, int destPos) {
       if (theArray != null) {
         System.arraycopy(theArray, 0, dest, destPos, theArray.length);
