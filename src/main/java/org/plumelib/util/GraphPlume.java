@@ -67,8 +67,8 @@ public final class GraphPlume {
     List<T> nodes = new ArrayList<>(preds.keySet());
 
     // Compute roots & non-roots, for convenience
-    List<@KeyFor({"preds", "dom"}) T> roots = new ArrayList<T>();
-    List<@KeyFor({"preds", "dom"}) T> nonRoots = new ArrayList<T>();
+    List<@KeyFor({"preds", "dom"}) T> roots = new ArrayList<>();
+    List<@KeyFor({"preds", "dom"}) T> nonRoots = new ArrayList<>();
 
     // Initialize result:  for roots just the root, otherwise everything
     for (T node : preds.keySet()) {
