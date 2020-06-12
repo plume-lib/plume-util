@@ -132,7 +132,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    * @param elt the element whose membership to test
    * @return true if this set contains {@code elt}
    */
-  @SuppressWarnings("all:deterministic") // pure wrt equals() but not ==: throws a new exception
+  @SuppressWarnings("allcheckers:deterministic") // pure wrt equals() but not ==: throws a new exception
   @Pure
   public boolean contains(T elt) {
     if (repNulled()) {
@@ -200,7 +200,7 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
   }
 
   @SuppressWarnings(
-      "all:purity.not.sideeffectfree.assign.field") // side effect to local state (clone)
+      "allcheckers:purity.not.sideeffectfree.assign.field") // side effect to local state (clone)
   @SideEffectFree
   @Override
   public LimitedSizeSet<T> clone(@GuardSatisfied LimitedSizeSet<T> this) {

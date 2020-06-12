@@ -117,7 +117,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "keyfor",
   "lock",
   "nullness",
-  "all:purity",
+  "allcheckers:purity",
   "regex"
 }) // old, non-typesafe Sun code, not worth annotating or checking
 public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
@@ -267,7 +267,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
   }
 
   /** Expunge stale entries from the table. */
-  @SuppressWarnings("all:purity") // actually has side effects due to weak pointers
+  @SuppressWarnings("allcheckers:purity") // actually has side effects due to weak pointers
   @SideEffectFree
   private void expungeStaleEntries() {
     Entry<K, V> e;
@@ -650,7 +650,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return oldValue;
     }
 
-    @SuppressWarnings("all:purity") // side effects on local state
+    @SuppressWarnings("allcheckers:purity") // side effects on local state
     @Pure
     @Override
     public boolean equals(@Nullable Object o) {
@@ -666,7 +666,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
       return false;
     }
 
-    @SuppressWarnings("all:purity") // side effects on local state
+    @SuppressWarnings("allcheckers:purity") // side effects on local state
     @Pure
     @Override
     public int hashCode() {

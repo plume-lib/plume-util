@@ -556,7 +556,7 @@ public final class Intern {
   // TODO: JLS 5.1.7 requires that the boxing conversion interns integer
   // values between -128 and 127 (and Intern.valueOf is intended to promise
   // the same).  This does not currently take advantage of that.
-  @SuppressWarnings({"interning", "all:purity", "lock"}) // interning implementation
+  @SuppressWarnings({"interning", "allcheckers:purity", "lock"}) // interning implementation
   @Pure
   public static @Interned Integer intern(Integer a) {
     WeakReference<@Interned Integer> lookup = internedIntegers.get(a);
@@ -601,7 +601,7 @@ public final class Intern {
   // TODO: JLS 5.1.7 requires that the boxing conversion interns integer
   // values between -128 and 127 (and Long.valueOf is intended to promise
   // the same).  This could take advantage of that.
-  @SuppressWarnings({"interning", "all:purity", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static @Interned Long intern(Long a) {
     WeakReference<@Interned Long> lookup = internedLongs.get(a);
@@ -649,7 +649,7 @@ public final class Intern {
    * @param a the array to canonicalize
    * @return a canonical representation for the int[] array
    */
-  @SuppressWarnings({"interning", "all:purity", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static int @Interned @PolyValue @SameLen("#1") [] intern(int @PolyValue [] a) {
     // Throwable stack = new Throwable("debug traceback");
@@ -680,7 +680,7 @@ public final class Intern {
    * @param a the array to canonicalize
    * @return a canonical representation for the long[] array
    */
-  @SuppressWarnings({"interning", "all:purity", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static long @Interned @PolyValue @SameLen("#1") [] intern(long @PolyValue [] a) {
     // System.out.printf("intern %s %s long[] %s%n", a.getClass(),
@@ -711,7 +711,7 @@ public final class Intern {
   // TODO: JLS 5.1.7 requires that the boxing conversion interns integer
   // values between -128 and 127 (and Double.valueOf is intended to promise
   // the same).  This could take advantage of that.
-  @SuppressWarnings({"interning", "all:purity", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static @Interned Double intern(Double a) {
     // Double.NaN == Double.Nan  always evaluates to false.
@@ -767,7 +767,7 @@ public final class Intern {
    * @param a the array to canonicalize
    * @return a canonical representation for the double[] array
    */
-  @SuppressWarnings({"interning", "all:purity", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static double @Interned @PolyValue @SameLen("#1") [] intern(double @PolyValue [] a) {
     WeakReference<double @Interned []> lookup = internedDoubleArrays.get(a);
@@ -799,7 +799,7 @@ public final class Intern {
     "cast",
     // Checker Framework warnings
     "interning", // interns its argument
-    "all:purity",
+    "allcheckers:purity",
     "lock",
     // Error Prone Warnings
     "ReferenceEquality"
@@ -845,7 +845,7 @@ public final class Intern {
    */
   @SuppressWarnings({
     "interning", // interns its argument
-    "all:purity",
+    "allcheckers:purity",
     "lock",
     "cast"
   }) // cast is redundant (except in JSR 308)
@@ -878,7 +878,7 @@ public final class Intern {
    * @param a an Object to canonicalize
    * @return a canonical version of a
    */
-  @SuppressWarnings("all:purity") // defensive coding: throw exception when argument is invalid
+  @SuppressWarnings("allcheckers:purity") // defensive coding: throw exception when argument is invalid
   @Pure
   public static @Interned @PolyNull Object intern(@PolyNull Object a) {
     if (a == null) {
@@ -954,7 +954,7 @@ public final class Intern {
    * @return a subsequence of seq from start to end that is interned
    * @see #internSubsequence(int[], int, int)
    */
-  @SuppressWarnings({"all:purity", "lock"}) // interning logic
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // interning logic
   @Pure
   public static long @Interned [] internSubsequence(
       long @Interned [] seq,
@@ -985,7 +985,7 @@ public final class Intern {
    * @return a subsequence of seq from start to end that is interned
    * @see #internSubsequence(int[], int, int)
    */
-  @SuppressWarnings({"all:purity", "lock"}) // interning logic
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // interning logic
   @Pure
   public static double @Interned [] internSubsequence(
       double @Interned [] seq,
@@ -1016,7 +1016,7 @@ public final class Intern {
    * @return a subsequence of seq from start to end that is interned
    * @see #internSubsequence(int[], int, int)
    */
-  @SuppressWarnings({"all:purity", "lock"}) // interning logic
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // interning logic
   @Pure
   public static @PolyNull @Interned Object @Interned [] internSubsequence(
       @PolyNull @Interned Object @Interned [] seq,
@@ -1054,7 +1054,7 @@ public final class Intern {
    * @see #internSubsequence(int[], int, int)
    */
   @Pure
-  @SuppressWarnings({"all:purity", "lock"}) // interning logic
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // interning logic
   public static @PolyNull @Interned String @Interned [] internSubsequence(
       @PolyNull @Interned String @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
