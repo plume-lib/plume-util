@@ -1,7 +1,8 @@
 package org.plumelib.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.Locale;
 import java.util.Random;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.common.value.qual.ArrayLen;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests
@@ -87,7 +88,7 @@ public final class UtilPlumeTest {
       assertTrue(!UtilPlume.canCreateAndWrite(new File("temp/temp")));
     } catch (IOException e) {
       e.printStackTrace();
-      org.junit.Assert.fail("failure while testing UtilPlume.canCreateAndWrite(): " + e.toString());
+      fail("failure while testing UtilPlume.canCreateAndWrite(): " + e.toString());
     }
   }
 
@@ -163,7 +164,7 @@ public final class UtilPlumeTest {
     potpourri.add("day");
     potpourri.add(2);
     potpourri.add("day");
-    assertTrue(" ", UtilPlume.join(" ", potpourri).equals("day 2 day"));
+    assertEquals("day 2 day", UtilPlume.join(" ", potpourri));
   }
 
   private void oneEscapeJava(String s, String escaped) {

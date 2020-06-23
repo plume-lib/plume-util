@@ -1,13 +1,13 @@
 package org.plumelib.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests

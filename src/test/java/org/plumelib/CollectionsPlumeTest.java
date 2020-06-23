@@ -1,6 +1,6 @@
 package org.plumelib.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests

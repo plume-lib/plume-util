@@ -1,6 +1,6 @@
 package org.plumelib.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "keyfor", // https://github.com/typetools/checker-framework/issues/2358 and maybe other issues

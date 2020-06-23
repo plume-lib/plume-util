@@ -1,6 +1,6 @@
 package org.plumelib.util;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests
