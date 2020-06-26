@@ -603,7 +603,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return whether there is another line to read
    */
   @SuppressWarnings({
-    "all:purity",
+    "allcheckers:purity",
     "lock:method.guarantee.violated"
   }) // readLine might throw, has side effects
   @Override

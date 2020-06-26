@@ -92,7 +92,7 @@ public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
   }
 
   @Override
-  @SuppressWarnings({"interning", "all:purity.not.deterministic.call", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity.not.deterministic.call", "lock"})
   // not @Deterministic: values can change by being garbage-collected
   @SideEffectFree
   public boolean equals(
