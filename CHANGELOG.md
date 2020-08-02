@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.1.5
+
+Expand types of join() methods that take an Iterator.
+
 ## 1.1.4
 
 Support Unicode escaping and unescaping, improve octal unescaping.
