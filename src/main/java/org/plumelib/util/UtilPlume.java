@@ -2248,6 +2248,25 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
+  /// sleep
+  ///
+
+  /**
+   * Like Thread.sleep, but does not throw any exceptions, so it is easier for clients to use.
+   * Causes the currently executing thread to sleep (temporarily cease execution) for the specified
+   * number of milliseconds.
+   *
+   * @param millis the length of time to sleep in milliseconds
+   */
+  public static void sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
   /// Throwable
   ///
 

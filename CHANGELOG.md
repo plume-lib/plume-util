@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.1.6 (forthcoming)
+
+Add UtilPlume.sleep method
+
 ## 1.1.5
 
 Expand types of join() methods that take an Iterator.
