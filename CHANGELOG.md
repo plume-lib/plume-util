@@ -17,9 +17,9 @@ Added CombinationIterator class.
 - Switched the order of the arguments to UtilPlume.join()
 - Made UtilPlume.join generic, so it handles more types of arguments
 - Renamings:
-   - PlumeUtil.backTrace() to stackTraceToString()
-   - PlumeUtil.escapeNonJava() to escapeJava()
-   - PlumeUtil.unescapeNonJava() to unescapeJava()
+   - UtilPlume.backTrace() to stackTraceToString()
+   - UtilPlume.escapeNonJava() to escapeJava()
+   - UtilPlume.unescapeNonJava() to unescapeJava()
 - Added char versions of escapeJava and unescapeJava
 
 The old versions of all methods continue to work, but are deprecated.
