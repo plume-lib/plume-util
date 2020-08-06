@@ -104,6 +104,9 @@ javadoc {
   // These copied files don't have exhaustive Javadoc comments.
   exclude 'com/app/com4j/api/**/WeakHasherMap.java'
   exclude '**/WeakIdentityHashMap.java'
+  if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
+      options.addStringOption("-release", "8");
+  }
   doLast {
     if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
       ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
@@ -119,6 +122,9 @@ task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
+  if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
+      options.addStringOption("-release", "8");
+  }
   doLast {
     if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
       ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
