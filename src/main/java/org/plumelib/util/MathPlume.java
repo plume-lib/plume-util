@@ -1380,7 +1380,10 @@ public final class MathPlume {
       currentIndex = unused;
     }
 
-    @SuppressWarnings({"allcheckers:purity", "lock:method.guarantee.violated"}) // benevolent side effects
+    @SuppressWarnings({
+      "allcheckers:purity", // benevolent side effects
+      "lock:method.guarantee.violated"
+    })
     @Override
     public boolean hasNext(@GuardSatisfied MissingNumbersIteratorInt this) {
       if (currentMissing < currentNonmissing) {
@@ -1479,7 +1482,8 @@ public final class MathPlume {
    * Helper for {@link #nonmodulusStrict(int[])}.
    *
    * @param missing the missing integers
-   * @return value to be returned by {@link #nonmodulusStrict(int[])}
+   * @return value to be returned by {@link #nonmodulusStrict(int[])}: a tuple of (r,m) where all
+   *     numbers in {@code missing} are equal to r (ood m)
    */
   private static int @Nullable @ArrayLen(2) [] nonmodulusStrictIntInternal(
       Iterator<Integer> missing) {
@@ -1499,7 +1503,11 @@ public final class MathPlume {
     return result;
   }
 
-  /** @param rm an an array containing two elements */
+  /**
+   * @param rm a tuple of (r,m)
+   * @param rfali a sequence of numbers, plus a first and last element outside their range
+   * @return true if the first and last elements are not equal to r (mod m)
+   */
   private static boolean checkFirstAndLastNonmodulus(
       int @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
@@ -1702,7 +1710,10 @@ public final class MathPlume {
       currentIndex = unused;
     }
 
-    @SuppressWarnings({"allcheckers:purity", "lock:method.guarantee.violated"}) // benevolent side effects
+    @SuppressWarnings({
+      "allcheckers:purity", // benevolent side effects
+      "lock:method.guarantee.violated"
+    })
     @Override
     public boolean hasNext(@GuardSatisfied MissingNumbersIteratorLong this) {
       if (currentMissing < currentNonmissing) {
@@ -1821,7 +1832,11 @@ public final class MathPlume {
     return result;
   }
 
-  /** @param rm an an array containing two elements */
+  /**
+   * @param rm an an array containing two elements
+   * @param rfali a sequence of numbers, plus a first and last element outside their range
+   * @return true if the first and last elements are equal to r (mod m)
+   */
   private static boolean checkFirstAndLastNonmodulus(
       long @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];

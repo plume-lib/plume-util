@@ -10,10 +10,10 @@ plugins {
   // id 'com.github.sherter.google-java-format' version '0.7.1'
 
   // Error Prone linter
-  id("net.ltgt.errorprone") version "1.1.1"
+  id("net.ltgt.errorprone") version "1.2.1"
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.5.8' apply false
+  id 'org.checkerframework' version '0.5.8'
 }
 
 repositories {
@@ -100,15 +100,33 @@ if (project.hasProperty("cfLocal")) {
 // Turn Javadoc warnings into errors.
 javadoc {
   options.addStringOption('Xwerror', '-Xdoclint:all')
-  // Can't enable private because WeakIdentityHashMap.java doesn't have exhaustive Javadoc comments
-  // options.addStringOption('private', '-quiet')
+  options.addStringOption('private', '-quiet')
+  // These copied files don't have exhaustive Javadoc comments.
+  exclude 'com/app/com4j/api/**/WeakHasherMap.java'
+  exclude '**/WeakIdentityHashMap.java'
+  doLast {
+    if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+      ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
+	flags:'g', byline:true) {
+	fileset(dir: destinationDir)
+      }
+    }
+  }
 }
 check.dependsOn javadoc
 
 task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
-  destinationDir = file("/cse/web/research/plumelib/plume-util/api")
+  destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
+  doLast {
+    if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+      ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
+	flags:'g', byline:true) {
+	fileset(dir: destinationDir)
+      }
+    }
+  }
 }
 
 configurations {
