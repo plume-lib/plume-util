@@ -112,13 +112,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "unchecked",
   "rawtypes",
   // Checker Framework warnings
-  "index",
-  "interning",
-  "keyfor",
-  "lock",
-  "nullness",
-  "allcheckers:purity",
-  "regex"
+  "allcheckers" // old, non-typesafe Sun code, not worth annotating or checking
 }) // old, non-typesafe Sun code, not worth annotating or checking
 public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
