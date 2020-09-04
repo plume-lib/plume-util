@@ -401,6 +401,23 @@ public final class UtilPlumeTest {
   }
 
   @Test
+  public void testCountFormatArguments() {
+    assertEquals(0, UtilPlume.countFormatArguments("No specifiier."));
+    assertEquals(0, UtilPlume.countFormatArguments("This is 100%"));
+    assertEquals(0, UtilPlume.countFormatArguments("This is 100%% excellent."));
+    assertEquals(0, UtilPlume.countFormatArguments("Newline%n is not%na specifier."));
+    assertEquals(1, UtilPlume.countFormatArguments("This is my %s"));
+    assertEquals(1, UtilPlume.countFormatArguments("This is my %s."));
+    assertEquals(2, UtilPlume.countFormatArguments("Two %d and %d"));
+    assertEquals(3, UtilPlume.countFormatArguments("%f and %s and %d makes three"));
+    assertEquals(
+        3, UtilPlume.countFormatArguments("Hi! My name is %s and I have %d dogs and a %d cats."));
+
+    assertEquals(2, UtilPlume.countFormatArguments("%f and %1$f and %d and %1$f makes two"));
+    assertEquals(14, UtilPlume.countFormatArguments("%f and %14$f makes fourteen"));
+  }
+
+  @Test
   public void testSplitLines() {
 
     String str = "one\ntwo\n\rthree\r\nfour\rfive\n\n\nsix\r\n\r\n\r\n";

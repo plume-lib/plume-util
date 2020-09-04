@@ -2,7 +2,9 @@
 
 ## 1.1.6 (forthcoming)
 
-Add UtilPlume.sleep method
+- New methods:
+   - UtilPlume.sleep method
+   - UtilPlume.countFormatArguments method
 
 ## 1.1.5
 

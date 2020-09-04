@@ -42,6 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -49,6 +51,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.regex.qual.Regex;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -2201,6 +2204,40 @@ public final class UtilPlume {
     @SuppressWarnings("formatter") // format string computed from precision and mag
     String result = String.format("%,1." + precision + "f" + mag, dval);
     return result;
+  }
+
+  // From
+  // https://stackoverflow.com/questions/37413816/get-number-of-placeholders-in-formatter-format-string
+  /** Regex that matches a format specifier. Some correspond to arguments and some do not. */
+  private static @Regex(6) Pattern formatSpecifier =
+      Pattern.compile("%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%])");
+
+  /**
+   * Returns the number of arguments that the given format string takes. This is the number of
+   * specifiers that take arguments (some, like {@code %n} and {@code %%}, do not take arguments).
+   *
+   * @param s a string
+   * @return the number of format specifiers in the string
+   */
+  public static int countFormatArguments(String s) {
+    int result = 0;
+    int maxIndex = 0;
+    Matcher matcher = formatSpecifier.matcher(s);
+    while (matcher.find()) {
+      String argumentIndex = matcher.group(1);
+      if (argumentIndex != null) {
+        @SuppressWarnings("lowerbound:argument.type.incompatible") // group contains >= 2 chars
+        int thisIndex = Integer.parseInt(argumentIndex.substring(0, argumentIndex.length() - 1));
+        maxIndex = Math.max(maxIndex, thisIndex);
+        continue;
+      }
+      String conversion = matcher.group(6);
+      assert conversion != null : "@AssumeAssertion(nullness): nonempty capturing group";
+      if (!(conversion.equals("%") || conversion.equals("n"))) {
+        result++;
+      }
+    }
+    return Math.max(maxIndex, result);
   }
 
   ///////////////////////////////////////////////////////////////////////////
