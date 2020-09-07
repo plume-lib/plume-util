@@ -1362,7 +1362,9 @@ public final class UtilPlume {
    * @param oldStr the substring to replace
    * @param newStr the replacement
    * @return target with all instances of oldStr replaced by newStr
+   * @deprecated use String.replace
    */
+  @Deprecated // use String.replace
   public static String replaceString(String target, String oldStr, String newStr) {
     if (oldStr.equals("")) {
       throw new IllegalArgumentException();
@@ -1381,13 +1383,74 @@ public final class UtilPlume {
   }
 
   /**
+   * Return the printed represenation of a value, with each line prefixed by another string.
+   *
+   * @param prefix the prefix to place before each line
+   * @param o the value to be printed
+   * @return the printed representation of {@code o}, with each line prefixed by the given prefix
+   */
+  public static String prefixLines(String prefix, @Nullable Object o) {
+    return prefix + prefixLinesExceptFirst(prefix, o);
+  }
+
+  /**
+   * Return the printed represenation of a value, with each line (except the first) prefixed by
+   * another string.
+   *
+   * @param prefix the prefix to place before each line
+   * @param o the value to be printed
+   * @return the printed representation of {@code o}, with each line (except the first) prefixed by
+   *     the given prefix
+   */
+  public static String prefixLinesExceptFirst(String prefix, @Nullable Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace(System.lineSeparator(), System.lineSeparator() + prefix);
+  }
+
+  /**
+   * Return the printed representation of a value, with line indented by {@code indent} spaces.
+   *
+   * @param indent the number of spaces to indent
+   * @param o the value whose printed representation string to increase indentation of
+   * @return the printed representation of {@code o}, with each line prefixed by {@code indent}
+   *     space characters
+   */
+  public static String indentLines(@NonNegative int indent, @Nullable Object o) {
+    if (indent == 0) {
+      return (o == null) ? "null" : o.toString();
+    }
+    String prefix = new String(new char[indent]).replace('\0', ' ');
+    return prefixLines(prefix, o);
+  }
+
+  /**
+   * Return the printed representation of a value, with each line (except the first) indented by
+   * {@code indent} spaces.
+   *
+   * @param indent the number of spaces to indent
+   * @param o the value whose printed representation string to increase indentation of
+   * @return the printed representation of {@code o}, with each line (except the first) prefixed by
+   *     {@code indent} space characters
+   */
+  public static String indentLinesExceptFirst(@NonNegative int indent, @Nullable Object o) {
+    if (indent == 0) {
+      return (o == null) ? "null" : o.toString();
+    }
+    String prefix = new String(new char[indent]).replace('\0', ' ');
+    return prefixLinesExceptFirst(prefix, o);
+  }
+
+  // TODO.  What is the point?  Deprecate?
+  /**
    * Return an array of Strings representing the characters between successive instances of the
    * delimiter character. Always returns an array of length at least 1 (it might contain only the
    * empty string).
    *
    * <p>Consider using the built-in <a
-   * href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-">String.split</a>
-   * method.
+   * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split-java.lang.String-">String.split</a>
+   * method, which takes a regular expression whereas this method takes a string.
    *
    * @see #split(String s, String delim)
    * @param s the string to split
@@ -1408,7 +1471,7 @@ public final class UtilPlume {
   /**
    * Return an array of Strings representing the characters between successive instances of the
    * delimiter String. Always returns an array of length at least 1 (it might contain only the empty
-   * string).
+   * string), which takes a regular expression whereas this method takes a string.
    *
    * <p>Consider using the built-in <a
    * href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-">String.split</a>

@@ -101,8 +101,8 @@ if (project.hasProperty("cfLocal")) {
 javadoc {
   options.addStringOption('Xwerror', '-Xdoclint:all')
   options.addStringOption('private', '-quiet')
-  // These copied files don't have exhaustive Javadoc comments.
-  exclude 'com/app/com4j/api/**/WeakHasherMap.java'
+  // WeakIdentityHashMap leads to lots of Javadoc warnings due to missing Javadoc.
+  // How can I generate Javadoc for it while still being strict for all other files?
   exclude '**/WeakIdentityHashMap.java'
   if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
       options.addStringOption("-release", "8");

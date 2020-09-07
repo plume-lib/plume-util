@@ -1,10 +1,6 @@
 package org.plumelib.util;
 
-// Even with these imports, Javadoc wouldn't make links from {@link HashMap} or
-// {@link HashSet} because this class's public interface does not use those
-// classes.
-// import java.util.HashMap;
-// import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 
 /**
@@ -16,14 +12,18 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
  * Object.hashCode()} is nondeterministic because the return value of {@code Object.hashCode()}
  * depends on when the garbage collector runs. That nondeterminism can affect the iteration order of
  * HashMaps and HashSets, the output of {@code toString()}, and other behavior.
+ *
+ * <p>To implement similar functionality for other classes, see {@link UniqueId}.
+ *
+ * @see UniqueId
  */
 public class DeterministicObject {
 
   /** The number of objects created so far. */
-  static int counter = 0;
+  static final AtomicInteger counter = new AtomicInteger(0);
 
   /** The unique ID for this object. */
-  final int uid = counter++;
+  final int uid = counter.getAndIncrement();
 
   /** Create a DeterministicObject. */
   public DeterministicObject() {}

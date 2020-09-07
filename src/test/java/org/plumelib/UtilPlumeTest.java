@@ -108,6 +108,7 @@ public final class UtilPlumeTest {
   // public static String setDefault(Properties p, String key, String value)
   // public static void streamCopy(java.io.InputStream from, java.io.OutputStream to)
 
+  @SuppressWarnings("deprecation")
   @Test
   public void test_replaceString() {
 
@@ -121,6 +122,32 @@ public final class UtilPlumeTest {
         .equals("heyo doyy wey heyo doyy");
     assert UtilPlume.replaceString("hello dolly well hello dolly", "q", "yyy")
         .equals("hello dolly well hello dolly");
+  }
+
+  @Test
+  public void test_prefixLines() {
+
+    // public static String prefixLines(String prefix, String s) {
+
+    assertEquals(
+        UtilPlume.joinLines("  1", "  2", "  3"),
+        UtilPlume.prefixLines("  ", UtilPlume.joinLines("1", "2", "3")));
+    assertEquals(
+        UtilPlume.joinLines("  ", "  1", "  ", "  2", "  "),
+        UtilPlume.prefixLines("  ", UtilPlume.joinLines("", "1", "", "2", "")));
+  }
+
+  @Test
+  public void test_indentLines() {
+
+    // public static String indentLines(int indent, String s) {
+
+    assertEquals(
+        UtilPlume.prefixLines("  ", UtilPlume.joinLines("1", "2", "3")),
+        UtilPlume.indentLines(2, UtilPlume.joinLines("1", "2", "3")));
+    assertEquals(
+        UtilPlume.prefixLines("  ", UtilPlume.joinLines("", "1", "", "2", "")),
+        UtilPlume.indentLines(2, UtilPlume.joinLines("", "1", "", "2", "")));
   }
 
   @Test

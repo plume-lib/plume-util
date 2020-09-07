@@ -2,9 +2,14 @@
 
 ## 1.1.6 (forthcoming)
 
+- New interface `UniqueId` for objects that have a unique ID.
 - New methods:
-   - UtilPlume.sleep method
-   - UtilPlume.countFormatArguments method
+   - `UtilPlume.sleep`
+   - `UtilPlume.countFormatArguments`
+   - `UtilPlume.prefixLines`
+   - `UtilPlume.prefixLinesExceptFirst`
+   - `UtilPlume.indentLines`
+   - `UtilPlume.indentLinesExceptFirst`
 
 ## 1.1.5
 
