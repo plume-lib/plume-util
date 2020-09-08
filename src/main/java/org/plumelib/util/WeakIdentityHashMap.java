@@ -96,7 +96,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * exception for its correctness: <i>the fail-fast behavior of iterators should be used only to
  * detect bugs.</i>
  *
- * <p>This class is a member of the <a href="{@docRoot}/../guide/collections/index.html">Java
+ * <p>This class is a member of the <a
+ * href="https://docs.oracle.com/javase/8/docs/technotes/guides/collections/overview.html">Java
  * Collections Framework</a>.
  *
  * @version 1.30, 02/19/04
