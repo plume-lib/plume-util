@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.1.6 (forthcoming)
+## 1.1.6
 
 - New interface `UniqueId` for objects that have a unique ID.
 - New methods:
