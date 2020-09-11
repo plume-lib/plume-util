@@ -129,7 +129,6 @@ public final class CollectionsPlume {
       return Arrays.equals((short[]) o1, (short[]) o2);
     }
 
-    @SuppressWarnings({"allcheckers:purity", "lock"}) // creates local state
     WeakIdentityPair<Object, Object> mypair = new WeakIdentityPair<>(o1, o2);
     if (deepEqualsUnderway.contains(mypair)) {
       return true;
