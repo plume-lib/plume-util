@@ -42,6 +42,9 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * You can also use the above code to implement a unique identifier, without subtyping the {@code
  * UniqueId} interface.
+ *
+ * <p>If you need a unique identifier for a class that you do not control (you cannot edit it to mae
+ * it implement this interface, {@code UniqueId}, see {@code UniqueIdMap}.
  */
 public interface UniqueId {
 
