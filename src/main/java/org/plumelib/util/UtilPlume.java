@@ -1449,7 +1449,7 @@ public final class UtilPlume {
    * empty string).
    *
    * <p>Consider using the built-in <a
-   * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split-java.lang.String-">String.split</a>
+   * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
    * method, which takes a regular expression whereas this method takes a string.
    *
    * @see #split(String s, String delim)
