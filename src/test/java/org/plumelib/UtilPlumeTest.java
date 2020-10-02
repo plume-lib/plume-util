@@ -125,6 +125,28 @@ public final class UtilPlumeTest {
   }
 
   @Test
+  public void test_replacePrefix() {
+
+    // public static String replacePrefix(String target, String oldStr, String newStr)
+
+    assert UtilPlume.replacePrefix("abcdefg", "defg", "hijk").equals("abchijk");
+    assert UtilPlume.replacePrefix("abcdefg", "cdef", "hijk").equals("abcdefg");
+    assert UtilPlume.replacePrefix("abcdefg", "defg", "").equals("abc");
+    assert UtilPlume.replacePrefix("abcdefg", "cdef", "").equals("abcdefg");
+  }
+
+  @Test
+  public void test_replaceSuffix() {
+
+    // public static String replaceSuffix(String target, String oldStr, String newStr)
+
+    assert UtilPlume.replaceSuffix("abcdefg", "abc", "hijk").equals("hijkdefg");
+    assert UtilPlume.replaceSuffix("abcdefg", "bcd", "hijk").equals("abcdefg");
+    assert UtilPlume.replaceSuffix("abcdefg", "abc", "").equals("defg");
+    assert UtilPlume.replaceSuffix("abcdefg", "bcd", "").equals("abcdefg");
+  }
+
+  @Test
   public void test_prefixLines() {
 
     // public static String prefixLines(String prefix, String s) {
