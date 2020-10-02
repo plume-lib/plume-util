@@ -129,10 +129,10 @@ public final class UtilPlumeTest {
 
     // public static String replacePrefix(String target, String oldStr, String newStr)
 
-    assert UtilPlume.replacePrefix("abcdefg", "defg", "hijk").equals("abchijk");
-    assert UtilPlume.replacePrefix("abcdefg", "cdef", "hijk").equals("abcdefg");
-    assert UtilPlume.replacePrefix("abcdefg", "defg", "").equals("abc");
-    assert UtilPlume.replacePrefix("abcdefg", "cdef", "").equals("abcdefg");
+    assert UtilPlume.replacePrefix("abcdefg", "abc", "hijk").equals("hijkdefg");
+    assert UtilPlume.replacePrefix("abcdefg", "bcd", "hijk").equals("abcdefg");
+    assert UtilPlume.replacePrefix("abcdefg", "abc", "").equals("defg");
+    assert UtilPlume.replacePrefix("abcdefg", "bcd", "").equals("abcdefg");
   }
 
   @Test
@@ -140,10 +140,10 @@ public final class UtilPlumeTest {
 
     // public static String replaceSuffix(String target, String oldStr, String newStr)
 
-    assert UtilPlume.replaceSuffix("abcdefg", "abc", "hijk").equals("hijkdefg");
-    assert UtilPlume.replaceSuffix("abcdefg", "bcd", "hijk").equals("abcdefg");
-    assert UtilPlume.replaceSuffix("abcdefg", "abc", "").equals("defg");
-    assert UtilPlume.replaceSuffix("abcdefg", "bcd", "").equals("abcdefg");
+    assert UtilPlume.replaceSuffix("abcdefg", "defg", "hijk").equals("abchijk");
+    assert UtilPlume.replaceSuffix("abcdefg", "cdef", "hijk").equals("abcdefg");
+    assert UtilPlume.replaceSuffix("abcdefg", "defg", "").equals("abc");
+    assert UtilPlume.replaceSuffix("abcdefg", "cdef", "").equals("abcdefg");
   }
 
   @Test
