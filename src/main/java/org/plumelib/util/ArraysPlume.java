@@ -360,7 +360,8 @@ public final class ArraysPlume {
     if (a.length == 0) {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(int[])");
     }
-    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // use deterministic parts of object
+    @SuppressWarnings(
+        "allcheckers:purity.not.deterministic.call") // use deterministic parts of object
     int[] minAndMax = minAndMax(a);
     return minAndMax[1] - minAndMax[0];
   }
@@ -378,7 +379,8 @@ public final class ArraysPlume {
     if (a.length == 0) {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(long[])");
     }
-    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // use deterministic parts of object
+    @SuppressWarnings(
+        "allcheckers:purity.not.deterministic.call") // use deterministic parts of object
     long[] minAndMax = minAndMax(a);
     return minAndMax[1] - minAndMax[0];
   }
@@ -2084,7 +2086,8 @@ public final class ArraysPlume {
    * @return a string representation of the array
    * @throws IllegalArgumentException if a is not an array
    */
-  @SuppressWarnings("allcheckers:purity") // defensive coding: throw exception when argument is invalid
+  @SuppressWarnings(
+      "allcheckers:purity") // defensive coding: throw exception when argument is invalid
   @SideEffectFree
   public static String toString(Object a) {
     if (a == null) {
@@ -2123,7 +2126,8 @@ public final class ArraysPlume {
    * @return the length of the array
    * @throws IllegalArgumentException if obj is null or is not an array
    */
-  @SuppressWarnings("allcheckers:purity") // defensive coding: throw exception when argument is invalid
+  @SuppressWarnings(
+      "allcheckers:purity") // defensive coding: throw exception when argument is invalid
   @Pure
   public static @NonNegative int length(Object a) throws IllegalArgumentException {
     if (a == null) {
@@ -2703,10 +2707,8 @@ public final class ArraysPlume {
    * @param b function from [0..b.length) to range R
    * @return function from [0..a.length) to range R that is the composition of a and b
    */
-  @SuppressWarnings("nullness") // https://tinyurl.com/cfissue/1654
-  public static @PolyNull @PolyInterned int @SameLen("#1") [] fnCompose(
-      @IndexFor("#2") int[] a, @PolyNull @PolyInterned int[] b) {
-    @PolyNull @PolyInterned int[] result = new int[a.length];
+  public static int @SameLen("#1") [] fnCompose(@IndexFor("#2") int[] a, int[] b) {
+    int[] result = new int[a.length];
     for (int i = 0; i < a.length; i++) {
       result[i] = b[a[i]];
     }
@@ -2966,7 +2968,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings("allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
+    @SuppressWarnings(
+        "allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
@@ -3018,7 +3021,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings("allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
+    @SuppressWarnings(
+        "allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
@@ -3079,7 +3083,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings("allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
+    @SuppressWarnings(
+        "allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
@@ -3198,7 +3203,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings("allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
+    @SuppressWarnings(
+        "allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
@@ -3265,7 +3271,8 @@ public final class ArraysPlume {
      *     argument is less than, equal to, or greater than the second argument
      */
     @Pure
-    @SuppressWarnings("allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
+    @SuppressWarnings(
+        "allcheckers:override.param.invalid") // CF bug: doesn't expand annotations on array
     // elements with @Poly
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
