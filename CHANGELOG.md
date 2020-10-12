@@ -2,6 +2,7 @@
 
 ## 1.1.7 (forthcoming)
 
+- New class `UniqueIdMap`
 - New methods:
    - `UtilPlume.replacePrefix`
    - `UtilPlume.replaceSuffix`

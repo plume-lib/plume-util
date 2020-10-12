@@ -43,6 +43,9 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  *
  * You can also use the above code to implement a unique identifier, without subtyping the {@code
  * UniqueId} interface.
+ *
+ * <p>If you need a unique identifier for a class that you do not control (you cannot edit it to
+ * make it implement this interface, {@code UniqueId}), see {@code UniqueIdMap}.
  */
 public interface UniqueId {
 

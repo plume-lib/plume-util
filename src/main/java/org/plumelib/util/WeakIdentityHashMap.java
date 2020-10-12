@@ -26,8 +26,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * This class combines the features of {@link java.util.WeakHashMap} and {@link
- * java.util.IdentityHashMap}. The implementation is a modified version of {@link
- * java.util.WeakHashMap} from JDK 1.5, which differs from the original in two ways:
+ * java.util.IdentityHashMap}. That is, keys are weak and are compared using reference equality.
+ *
+ * <p>The implementation is a modified version of {@link java.util.WeakHashMap} from JDK 1.5, which
+ * differs from the original in two ways:
  *
  * <ul>
  *   <li>uses of hashCode() are replaced by System.identityHashCode()
