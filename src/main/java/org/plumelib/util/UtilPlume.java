@@ -1383,6 +1383,58 @@ public final class UtilPlume {
   }
 
   /**
+   * Returns the target with an occurrence of oldStr at the start replaced by newStr. Returns the
+   * target if it does not strt with oldStr.
+   *
+   * <p>An alternative to this is to use regular expressions: {@code target.replaceFirst("^" +
+   * Pattern.quote(oldStr), newStr)}
+   *
+   * @param target the string to do replacement in
+   * @param oldStr the prefix to replace
+   * @param newStr the replacement
+   * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
+   *     target if it does not start with oldStr
+   */
+  @SuppressWarnings("index:argument.type.incompatible") // startsWith implies indexes fit
+  public static String replacePrefix(String target, String oldStr, String newStr) {
+    if (target.startsWith(oldStr)) {
+      if (newStr.isEmpty()) {
+        return target.substring(oldStr.length());
+      } else {
+        return newStr + target.substring(oldStr.length());
+      }
+    } else {
+      return target;
+    }
+  }
+
+  /**
+   * Returns the target with an occurrence of oldStr at the end replaced by newStr. Returns the
+   * target if it does not end with oldStr.
+   *
+   * <p>An alternative to this is to use regular expressions: {@code
+   * target.replaceLast(Pattern.quote(oldStr) + "$", newStr)}
+   *
+   * @param target the string to do replacement in
+   * @param oldStr the substring to replace
+   * @param newStr the replacement
+   * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
+   *     target if it does not start with oldStr
+   */
+  @SuppressWarnings("lowerbound:argument.type.incompatible") // endsWith implies indexes fit
+  public static String replaceSuffix(String target, String oldStr, String newStr) {
+    if (target.endsWith(oldStr)) {
+      if (newStr.isEmpty()) {
+        return target.substring(0, target.length() - oldStr.length());
+      } else {
+        return target.substring(0, target.length() - oldStr.length()) + newStr;
+      }
+    } else {
+      return target;
+    }
+  }
+
+  /**
    * Return the printed represenation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
@@ -1449,7 +1501,7 @@ public final class UtilPlume {
    * empty string).
    *
    * <p>Consider using the built-in <a
-   * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split-java.lang.String-">String.split</a>
+   * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
    * method, which takes a regular expression whereas this method takes a string.
    *
    * @see #split(String s, String delim)
@@ -1507,6 +1559,7 @@ public final class UtilPlume {
    * @param s the string to split
    * @return an array of Strings, one for each line in the argument
    */
+  @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
   @SideEffectFree
   @StaticallyExecutable
   public static String[] splitLines(String s) {

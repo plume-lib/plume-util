@@ -1,5 +1,11 @@
 # Plume-Util change log
 
+## 1.1.7 (forthcoming)
+
+- New methods:
+   - `UtilPlume.replacePrefix`
+   - `UtilPlume.replaceSuffix`
+
 ## 1.1.6
 
 - New interface `UniqueId` for objects that have a unique ID.

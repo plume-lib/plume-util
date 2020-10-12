@@ -1,6 +1,7 @@
 package org.plumelib.util;
 
 import java.util.concurrent.atomic.AtomicLong;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**
  * An interface for objects that have a unique ID (unique identifier). If you are tempted to print
@@ -56,7 +57,7 @@ public interface UniqueId {
    *
    * @return the unique ID of this object.
    */
-  public long getUid();
+  public long getUid(@UnknownInitialization(UniqueId.class) UniqueId this);
 
   /**
    * Returns the simple name of the class and the unique ID of this object. This method is intended
@@ -64,7 +65,7 @@ public interface UniqueId {
    *
    * @return the simple name of the class and the unique ID of this object
    */
-  public default String getClassAndUid() {
+  public default String getClassAndUid(@UnknownInitialization(UniqueId.class) UniqueId this) {
     return this.getClass().getSimpleName() + "#" + getUid();
   }
 }

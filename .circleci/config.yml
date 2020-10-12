@@ -1,12 +1,24 @@
 version: 2.1
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          context:
+            - build-env-vars
+            - docker-hub-credentials
+
 jobs:
   build:
 
     docker:
       - image: circleci/openjdk:8-jdk
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
 
     steps:
-
       - restore_cache:
           keys:
             - source-v1-{{ .Branch }}-{{ .Revision }}
@@ -32,9 +44,3 @@ jobs:
           paths:
             - ~/.gradle
           key: gradle-v1-{{ .Branch }}-{{ checksum "build.gradle" }}
-
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build
