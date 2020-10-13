@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.1.7 (forthcoming)
+## 1.1.7
 
 - New class `UniqueIdMap`
 - New methods:
