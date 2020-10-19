@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *   <li>Define a field:
  *       <pre><code>
  * /** Unique ids for trees. *&#47;
- * static UniqueIdMap<Tree> treeUids = new UniqueIdMap<>();
+ * static UniqueIdMap&lt;Tree&gt; treeUids = new UniqueIdMap&lt;&gt;();
  * </code></pre>
  *   <li>Wherever you would call {@code x.hashCode()}, instead call {@code treeUids.get(x)}.
  * </ol>
