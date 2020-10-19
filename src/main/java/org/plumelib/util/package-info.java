@@ -94,6 +94,9 @@
  *   <dt>{@link org.plumelib.util.ClassDeterministic UniqueId}
  *   <dd>An interface for objects that have a unique ID. If you are tempted to print the value of
  *       {@code System.identityHashCode()}, consider using this instead.
+ *   <dt>{@link org.plumelib.util.ClassDeterministic UniqueIdMap}
+ *   <dd>Provides a unique ID (like the {@link org.plumelib.util.ClassDeterministic UniqueId} class)
+ *       for classes that you cannot modify.
  *   <dt>{@link org.plumelib.util.ImmutableTypes ImmutableTypes}
  *   <dd>Indicates which types in the JDK are immutable.
  * </dl>

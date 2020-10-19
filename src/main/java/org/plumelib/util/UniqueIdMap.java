@@ -8,6 +8,17 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * <p>The IDs count up from 0, per instance of UniqueIdMap. When you look up an object in this map,
  * it is given a unique ID if it didn't already have one.
+ *
+ * <p>Typical use:
+ *
+ * <ol>
+ *   <li>Define a field:
+ *       <pre><code>
+ * /** Unique ids for trees. *&#47;
+ * static UniqueIdMap<Tree> treeUids = new UniqueIdMap<>();
+ * </code></pre>
+ *   <li>Wherever you would call {@code x.hashCode()}, instead call {@code treeUids.get(x)}.
+ * </ol>
  */
 public class UniqueIdMap<E> {
 
