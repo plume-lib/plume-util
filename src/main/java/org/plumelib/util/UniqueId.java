@@ -1,6 +1,5 @@
 package org.plumelib.util;
 
-import java.util.concurrent.atomic.AtomicLong;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**
@@ -15,22 +14,9 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  * the first one was.
  *
  * <p>To use the {@code UniqueId} interface, add {@code implements UniqueId} to your class
- * definition and drop in one of the two following code snippets.
+ * definition and drop in the following code snippet.
  *
  * <pre><code>
- * // The following code implements the UniqueId interface, using one global counter shared by all classes.
- * /** The unique ID of this object. *&#47;
- * final transient long uid = UniqueId.nextUid.getAndIncrement();
- * &#064;Override
- * public long getUid() {
- *   return uid;
- * }
- * </code></pre>
- *
- * or:
- *
- * <pre><code>
- * // The following code implements the UniqueId interface, using a counter just for this class.
  * /** The unique ID for the next-created object. *&#47;
  * static final AtomicLong nextUid = new AtomicLong(0);
  * /** The unique ID of this object. *&#47;
@@ -45,12 +31,9 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  * UniqueId} interface.
  *
  * <p>If you need a unique identifier for a class that you cannot edit (that is, you cannot make it
- * implement {@code UniqueId}), see {@link UniqueIdMap}.
+ * implement {@code UniqueId}), use {@link UniqueIdMap}.
  */
 public interface UniqueId {
-
-  /** The unique ID for the next-created object. */
-  static final AtomicLong nextUid = new AtomicLong(0);
 
   /**
    * Returns the unique ID of this object.

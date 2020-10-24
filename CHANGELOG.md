@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.2.0 (forthcoming)
+
+- Remove field `UniqueId.nextUid`
+
 ## 1.1.7
 
 - New class `UniqueIdMap`
