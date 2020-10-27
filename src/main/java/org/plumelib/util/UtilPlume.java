@@ -40,7 +40,9 @@ import java.util.BitSet;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1203,6 +1205,37 @@ public final class UtilPlume {
     return hash(result);
   }
 
+  ///////////////////////////////////////////////////////////////////////////
+  /// Map
+  ///
+
+  /**
+   * Convert a map to a string, printing the runtime class of keys and values.
+   *
+   * @param m a map
+   * @return a string representation of the map
+   */
+  public String mapToStringAndClass(Map<?, ?> m) {
+    StringJoiner result = new StringJoiner(System.lineSeparator());
+    for (Map.Entry<?, ?> e : m.entrySet()) {
+      result.add("    " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
+    }
+    return result.toString();
+  }
+
+  /**
+   * Returns a string representation of a value and its run-time class.
+   *
+   * @param o an object
+   * @return a string representation of the value and its run-time class
+   */
+  public String toStringAndClass(@Nullable Object o) {
+    if (o == null) {
+      return "null";
+    } else {
+      return o + " [" + o.getClass() + "]";
+    }
+  }
   ///////////////////////////////////////////////////////////////////////////
   /// ProcessBuilder
   ///
