@@ -132,7 +132,6 @@ public class LimitedSizeSet<T> implements Serializable, Cloneable {
    * @param elt the element whose membership to test
    * @return true if this set contains {@code elt}
    */
-  @SuppressWarnings("allcheckers:deterministic") // pure wrt equals() but not ==: throws a new exception
   @Pure
   public boolean contains(T elt) {
     if (repNulled()) {
