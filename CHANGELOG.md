@@ -3,7 +3,7 @@
 ## 1.2.0
 
 - New methods:
-   - `UtilPlume.toStringAndClass'
+   - `UtilPlume.toStringAndClass`
    - `UtilPlume.mapToStringAndClass`
    - `UtilPlume.gc`
    - `UtilPlume.usedMemory`
