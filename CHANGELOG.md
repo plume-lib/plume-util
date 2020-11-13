@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.2.0 (forthcoming)
+## 1.2.0
 
 - New methods:
    - `UtilPlume.toStringAndClass'
