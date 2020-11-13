@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.3.0 (forthcoming)
+
+- Moved string methods from `UtilPlume` to new class `StringsPlume`
+
 ## 1.2.0
 
 - New methods:
