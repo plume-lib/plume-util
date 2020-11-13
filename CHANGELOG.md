@@ -2,7 +2,11 @@
 
 ## 1.2.0 (forthcoming)
 
-- New methods in UtilPlume: `toStringAndClass', `mapToStringAndClass`
+- New methods:
+   - `UtilPlume.toStringAndClass'
+   - `UtilPlume.mapToStringAndClass`
+   - `UtilPlume.gc`
+   - `UtilPlume.usedMemory`
 - Remove field `UniqueId.nextUid`
 
 ## 1.1.7
