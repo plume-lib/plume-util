@@ -1,5 +1,10 @@
 # Plume-Util change log
 
+## 1.2.1 (forthcoming)
+
+- New methods:
+   - `UtilPlume.usedMemory` with no formal parameter
+
 ## 1.2.0
 
 - New methods:
