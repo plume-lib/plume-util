@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted order.
@@ -74,7 +75,7 @@ public class ClassDeterministic {
    * @return the class's enum constants
    */
   public static <T> T @Nullable [] getEnumConstants(Class<T> c) {
-    T[] result = c.getEnumConstants();
+    @NonNull T[] result = c.getEnumConstants();
     if (result == null) {
       return null;
     }
