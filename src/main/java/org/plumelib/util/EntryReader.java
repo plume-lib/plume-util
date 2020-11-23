@@ -848,8 +848,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   // TODO:  This would probably be better implemented with the "mark" mechanism
   // of BufferedReader (which is also in LineNumberReader and FlnReader).
   public void putback(@GuardSatisfied EntryReader this, String line) {
-    assert pushbackLine == null
-        : "push back '" + line + "' when '" + pushbackLine + "' already back";
+    if (pushbackLine != null) {
+      throw new Error(
+          "Cannot put back '" + line + "' because already put back '" + pushbackLine + "'");
+    }
     pushbackLine = line;
   }
 
