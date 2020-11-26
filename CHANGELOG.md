@@ -2,8 +2,8 @@
 
 ## 1.2.1 (forthcoming)
 
-- New methods:
-   - `UtilPlume.usedMemory` with no formal parameter
+- New class `ToStringComparator`
+- New method `UtilPlume.usedMemory` with no formal parameter
 
 ## 1.2.0
 
