@@ -2535,6 +2535,17 @@ public final class UtilPlume {
   private static Runtime runtime = Runtime.getRuntime();
 
   /**
+   * Returns the amount of used memory in the JVM. To force a garbage collection, which gives a more
+   * accurate overapproximation of the memory used, but is also slower, use {@link
+   * #usedMemory(boolean)}
+   *
+   * @return the amount of used memory
+   */
+  public static long usedMemory() {
+    return usedMemory(false);
+  }
+
+  /**
    * Returns the amount of used memory in the JVM.
    *
    * @param forceGc if true, force a garbage collection, which gives a more accurate

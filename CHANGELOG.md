@@ -2,6 +2,8 @@
 
 ## 1.3.0 (forthcoming)
 
+- New class `ToStringComparator`
+- New method `UtilPlume.usedMemory` with no formal parameter
 - Moved string methods from `UtilPlume` to new class `StringsPlume`
 
 ## 1.2.0
