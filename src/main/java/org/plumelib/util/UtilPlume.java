@@ -60,7 +60,11 @@ import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
-/** Utility functions that do not belong elsewhere in the plume package. */
+/**
+ * Utility methods that do not belong elsewhere in the plume package: BitSet; File; directories;
+ * file names; reading and writing; hashing; Map; ProcessBuilder; properties; Stream; System;
+ * Throwable.
+ */
 public final class UtilPlume {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -1069,7 +1073,7 @@ public final class UtilPlume {
     return hash(hash(a), hash(b));
   }
 
-  /// Don't define hash with int args; use the long versions instead.
+  // Don't define hash with int args; use the long versions instead.
 
   /**
    * Return a hash of the arguments. Note that this differs from the result of {@link
