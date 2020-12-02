@@ -23,7 +23,12 @@ import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
-/** Utility functions that manipulate Strings. */
+// The list of features is everything that appears on a line starting with "  /// ".
+/**
+ * Utility functions that manipulate Strings: replacement; prefixing and indentation; splitting and
+ * joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging variants of
+ * toString; diagnostic output; miscellaneous.
+ */
 public final class StringsPlume {
 
   /** This class is a collection of methods; it does not represent anything. */

@@ -1391,7 +1391,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// String
+  /// String (these methods are all deprecated in favor of StringsPlume)
   ///
 
   /**
@@ -2463,7 +2463,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// StringTokenizer
+  /// StringTokenizer (these methods are all deprecated in favor of StringsPlume)
   ///
 
   /**
