@@ -125,7 +125,7 @@
  *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
  *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
  *       directories; file names; reading and writing; hashing; Map; ProcessBuilder; properties;
- *       Stream; StringTokenizer; System; Throwable.
+ *       Stream; System; Throwable.
  *   <dt>{@link org.plumelib.util.Pair Pair}
  *   <dd>Mutable pair class: type-safely holds two objects of possibly-different types.
  *   <dt>{@link org.plumelib.util.WeakIdentityPair WeakIdentityPair}
