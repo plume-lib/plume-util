@@ -960,7 +960,8 @@ public final class StringsPlume {
    * @return a string representation of the array
    * @throws IllegalArgumentException if a is not an array
    */
-  @SuppressWarnings("all:purity") // defensive coding: throw exception when argument is invalid
+  @SuppressWarnings(
+      "allcheckers:purity") // defensive coding: throw exception when argument is invalid
   @SideEffectFree
   public static String arrayToStringAndClass(Object a) {
 
