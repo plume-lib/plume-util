@@ -961,7 +961,8 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if a is not an array
    */
   @SuppressWarnings(
-      "allcheckers:purity") // defensive coding: throw exception when argument is invalid
+      "allcheckers:purity",
+      "lock:method.guarantee.violated") // defensive coding: throw exception if argument is invalid
   @SideEffectFree
   public static String arrayToStringAndClass(Object a) {
 
