@@ -1,8 +1,17 @@
 # Plume-Util change log
 
-## 1.2.0 (forthcoming)
+## 1.2.1 (forthcoming)
 
-- New methods in UtilPlume: `toStringAndClass', `mapToStringAndClass`
+- New class `ToStringComparator`
+- New method `UtilPlume.usedMemory` with no formal parameter
+
+## 1.2.0
+
+- New methods:
+   - `UtilPlume.toStringAndClass`
+   - `UtilPlume.mapToStringAndClass`
+   - `UtilPlume.gc`
+   - `UtilPlume.usedMemory`
 - Remove field `UniqueId.nextUid`
 
 ## 1.1.7
