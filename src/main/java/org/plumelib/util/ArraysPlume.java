@@ -2199,7 +2199,7 @@ public final class ArraysPlume {
         if (quoted && a[i] instanceof String) {
           String elt = (String) a[i];
           sb.append('\"');
-          sb.append(UtilPlume.escapeJava(elt));
+          sb.append(StringsPlume.escapeJava(elt));
           sb.append('\"');
         } else {
           sb.append(a[i]);
@@ -2261,7 +2261,7 @@ public final class ArraysPlume {
         Object elt = itor.next();
         if (quoted && elt instanceof String) {
           sb.append('\"');
-          sb.append(UtilPlume.escapeJava((String) elt));
+          sb.append(StringsPlume.escapeJava((String) elt));
           sb.append('\"');
         } else {
           sb.append(elt);
@@ -3223,8 +3223,8 @@ public final class ArraysPlume {
   }
 
   /** Sorts arbitrary objects; used to determine equal. */
-  private static final UtilPlume.ObjectComparator objectComparator =
-      new UtilPlume.ObjectComparator();
+  private static final StringsPlume.ObjectComparator objectComparator =
+      new StringsPlume.ObjectComparator();
 
   /**
    * Compare two arrays first by length (a shorter array is considered less), and if of equal length

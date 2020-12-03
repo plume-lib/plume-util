@@ -35,6 +35,10 @@
  * <h3 id="Text_processing">Text processing</h3>
  *
  * <dl>
+ *   <dt>{@link org.plumelib.util.StringsPlume}
+ *   <dd>Utility methods that manipulate Strings: replacement; prefixing and indentation; splitting
+ *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging
+ *       variants of toString; diagnostic output; miscellaneous.
  *   <dt>{@link org.plumelib.util.EntryReader EntryReader}
  *   <dd>Class that reads "entries" from a file. In the simplest case, entries can be lines. It
  *       supports: include files, comments, and multi-line entries (paragraphs). The syntax of each
@@ -123,7 +127,9 @@
  *       hash-consing: it returns a single representative object that {@code .equals()} the object,
  *       and the client discards the argument and uses the result instead.
  *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
- *   <dd>Utility functions that do not belong elsewhere in the plume package.
+ *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
+ *       directories; file names; reading and writing; hashing; Map; ProcessBuilder; properties;
+ *       Stream; System; Throwable.
  *   <dt>{@link org.plumelib.util.Pair Pair}
  *   <dd>Mutable pair class: type-safely holds two objects of possibly-different types.
  *   <dt>{@link org.plumelib.util.WeakIdentityPair WeakIdentityPair}
