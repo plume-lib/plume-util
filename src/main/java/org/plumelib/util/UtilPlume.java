@@ -1223,7 +1223,7 @@ public final class UtilPlume {
    * @deprecated use StringsPlume.mapToStringAndClass
    */
   @Deprecated // use StringsPlume.mapToStringAndClass
-  public String mapToStringAndClass(Map<?, ?> m) {
+  public static String mapToStringAndClass(Map<?, ?> m) {
     StringJoiner result = new StringJoiner(System.lineSeparator());
     for (Map.Entry<?, ?> e : m.entrySet()) {
       result.add("    " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
@@ -1239,7 +1239,7 @@ public final class UtilPlume {
    * @deprecated use StringsPlume.toStringAndClass
    */
   @Deprecated // use StringsPlume.toStringAndClass
-  public String toStringAndClass(@Nullable Object o) {
+  public static String toStringAndClass(@Nullable Object o) {
     if (o == null) {
       return "null";
     } else {
