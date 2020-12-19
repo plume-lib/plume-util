@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 /**
@@ -21,6 +22,7 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
  * href="https://checkerframework.org/manual/#regexutil-methods">Testing whether a string is a
  * regular expression</a> in the Checker Framework manual.
  */
+@AnnotatedFor("nullness")
 public final class RegexUtil {
 
   /** This class is a collection of methods; it does not represent anything. */
