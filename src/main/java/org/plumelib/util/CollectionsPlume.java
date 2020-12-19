@@ -20,6 +20,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -164,6 +166,21 @@ public final class CollectionsPlume {
     }
 
     return o1.equals(o2);
+  }
+
+  /**
+   * Applies the function to each element of the given collection, producing a list of the results.
+   *
+   * <p>The point of this method is to make mapping operations more concise.
+   *
+   * @param <FROM> the type of elements of the given collection
+   * @param <TO> the type of elements of the result list
+   * @param f a function
+   * @param c a collection
+   * @return a list of the results of applying {@code f} to the elements of {@code list}
+   */
+  public static <FROM, TO> List<TO> mapList(Function<? super FROM, TO> f, Collection<FROM> c) {
+    return c.stream().map(f).collect(Collectors.toList());
   }
 
   ///////////////////////////////////////////////////////////////////////////

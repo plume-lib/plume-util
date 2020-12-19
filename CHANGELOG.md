@@ -1,9 +1,11 @@
 # Plume-Util change log
 
-## 1.3.0 (forthcoming)
+## 1.3.0
 
 - New class `ToStringComparator`
-- New method `UtilPlume.usedMemory` with no formal parameter
+- New methods:
+   - `UtilPlume.usedMemory` with no formal parameter
+   - `UtilPlume.mapList`
 - Moved string methods from `UtilPlume` to new class `StringsPlume`
 
 ## 1.2.0

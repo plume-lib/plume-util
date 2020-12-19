@@ -299,6 +299,10 @@ public final class CollectionsPlumeTest {
     assertTrue(CollectionsPlume.removeDuplicates(l12223).equals(l123));
     assertTrue(CollectionsPlume.removeDuplicates(l1123).equals(l123));
     assertTrue(CollectionsPlume.removeDuplicates(l1233).equals(l123));
+  }
+
+  @Test
+  public void testDeepEquals() {
 
     // public boolean deepEquals(Object o1, Object o2)
 
@@ -326,6 +330,13 @@ public final class CollectionsPlumeTest {
     assertTrue(CollectionsPlume.deepEquals(l1, l2));
     assertTrue(!CollectionsPlume.deepEquals(l1, l3));
     assertTrue(!CollectionsPlume.deepEquals(l2, l3));
+  }
+
+  @Test
+  public void testMapList() {
+    List in = Arrays.<Object>asList(new Integer[] {1, 2, 3});
+    List out = Arrays.<Object>asList(new Object[] {"1", "2", "3"});
+    assertEquals(out, UtilPlume.mapList(Object::toString, in));
   }
 
   /** Tests UtilPlume createCombinations routines. */
