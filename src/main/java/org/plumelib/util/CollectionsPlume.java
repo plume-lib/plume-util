@@ -92,7 +92,10 @@ public final class CollectionsPlume {
    * @param o2 second value to compare
    * @return true iff o1 and o2 are deeply equal
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to static field deepEqualsUnderway
+  @SuppressWarnings({
+    "allcheckers:purity",
+    "lock"
+  }) // side effect to static field deepEqualsUnderway
   @Pure
   public static boolean deepEquals(@Nullable Object o1, @Nullable Object o2) {
     @SuppressWarnings("interning")
@@ -536,7 +539,10 @@ public final class CollectionsPlume {
     /** True iff {@link #current} is an object from the wrapped iterator. */
     boolean currentValid = false;
 
-    @SuppressWarnings({"allcheckers:purity", "lock:method.guarantee.violated"}) // benevolent side effects
+    @SuppressWarnings({
+      "allcheckers:purity",
+      "lock:method.guarantee.violated"
+    }) // benevolent side effects
     @Override
     public boolean hasNext(@GuardSatisfied FilteredIterator<T> this) {
       while (!currentValid && itor.hasNext()) {
