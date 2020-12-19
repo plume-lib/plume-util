@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.DateFormat;
@@ -302,6 +303,7 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
+  @SuppressWarnings("ArrayEquals") // demonstrates the effect of regular equals
   public void testDeepEquals() {
 
     // public boolean deepEquals(Object o1, Object o2)
@@ -309,9 +311,9 @@ public final class CollectionsPlumeTest {
     boolean[] zatft1 = new boolean[] {true, false, true};
     boolean[] zatft2 = new boolean[] {true, false, true};
     boolean[] zatff = new boolean[] {true, false, false};
-    assertTrue(!zatft1.equals(zatft2));
+    assertTrue(!zatft1.equals(zatft2)); // regular equals returns false
     assertTrue(CollectionsPlume.deepEquals(zatft1, zatft2));
-    assertTrue(!zatft1.equals(zatff));
+    assertTrue(!zatft1.equals(zatff)); // regular equals returns false
     assertTrue(!CollectionsPlume.deepEquals(zatft1, zatff));
 
     List<Object> l1 = new ArrayList<>();
@@ -333,10 +335,11 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
+  @SuppressWarnings("lock:methodref.receiver.invalid")
   public void testMapList() {
-    List in = Arrays.<Object>asList(new Integer[] {1, 2, 3});
-    List out = Arrays.<Object>asList(new Object[] {"1", "2", "3"});
-    assertEquals(out, UtilPlume.mapList(Object::toString, in));
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
+    assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
   }
 
   /** Tests UtilPlume createCombinations routines. */
