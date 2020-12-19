@@ -10,6 +10,7 @@
 //  * Update ../CHANGELOG.md .
 //  * Stage changes.
 //  * Run in the top-level directory:  ./gradlew clean uploadArchives && ./gradlew javadocWeb
+//     * or:  ./gradlew -PcfLocal clean uploadArchives && ./gradlew -PcfLocal javadocWeb
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
 //    VER=1.2.0 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags

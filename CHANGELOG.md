@@ -6,7 +6,8 @@
 - New methods:
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
-- Moved string methods from `UtilPlume` to new class `StringsPlume`
+- Moved string methods from `UtilPlume` to new class `StringsPlume`;
+  old versions are deprecated
 
 ## 1.2.0
 
