@@ -887,7 +887,7 @@ public final class StringsPlume {
    * @return the value's toString and its class
    */
   @SideEffectFree
-  private static String toStringAndClass(@Nullable Object v, boolean shallow) {
+  public static String toStringAndClass(@Nullable Object v, boolean shallow) {
     if (v == null) {
       return "null";
     }

@@ -1,5 +1,10 @@
 # Plume-Util change log
 
+## 1.3.1 (forthcoming
+
+- New methods:
+   - `UtilPlume.toStringAndClass(Object, boolean)`
+
 ## 1.3.0
 
 - New class `ToStringComparator`
