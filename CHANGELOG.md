@@ -1,9 +1,11 @@
 # Plume-Util change log
 
-## 1.3.1 (forthcoming
+## 1.3.1 (forthcoming)
 
 - New methods:
    - `UtilPlume.toStringAndClass(Object, boolean)`
+- Deprecated methods:
+   - `UtilPlume.fileLines` (use `Files.readAllLines`)
 
 ## 1.3.0
 

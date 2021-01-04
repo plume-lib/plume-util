@@ -553,12 +553,15 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the contents of the file, as a list of strings, one per line.
+   * Return the contents of the file, as a list of strings, one per line. The lines do not include
+   * any line termination characters.
    *
    * @param filename the file whose contents to return
    * @return the contents of {@code filename}, one string per line
    * @throws IOException if there was a problem reading the file
+   * @deprecated use Files.readAllLines
    */
+  @Deprecated // use Files.readAllLines
   public static List<String> fileLines(String filename) throws IOException {
     List<String> textList = new ArrayList<>();
     try (LineNumberReader reader = UtilPlume.lineNumberFileReader(filename)) {
