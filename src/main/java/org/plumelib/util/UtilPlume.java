@@ -1137,7 +1137,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use String.hashCode
    */
-  @deprecated // use String.hashCode; deprecated 2020-01-05
+  @Deprecated // use String.hashCode; deprecated 2020-01-05
   public static int hash(@Nullable String a) {
     return (a == null) ? 0 : a.hashCode();
   }
