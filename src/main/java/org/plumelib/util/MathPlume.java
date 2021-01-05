@@ -804,7 +804,7 @@ public final class MathPlume {
    * @return x % y, where the result is constrained to be non-negative
    * @deprecated use {@link #modNonnegative(int, int)}
    */
-  @Deprecated // use modNonnegative()
+  @Deprecated // use modNonnegative(); deprecated 2020-02-20
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modPositive(
@@ -1041,7 +1041,7 @@ public final class MathPlume {
    * @return x % y, where the result is constrained to be non-negative
    * @deprecated use {@link #modNonnegative(long, long)}
    */
-  @Deprecated // use modNonnegative()
+  @Deprecated // use modNonnegative(); deprecated 2020-02-20
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound long modPositive(

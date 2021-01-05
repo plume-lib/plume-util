@@ -557,7 +557,7 @@ public final class UtilPlume {
    * @throws IOException if there was a problem reading the file
    * @deprecated use Files.readAllLines
    */
-  @Deprecated // use Files.readAllLines
+  @Deprecated // use Files.readAllLines; deprecated 2021-01-03
   public static List<String> fileLines(String filename) throws IOException {
     List<String> textList = new ArrayList<>();
     try (LineNumberReader reader = UtilPlume.lineNumberFileReader(filename)) {
@@ -1221,13 +1221,9 @@ public final class UtilPlume {
    * @return a string representation of the map
    * @deprecated use StringsPlume.mapToStringAndClass
    */
-  @Deprecated // use StringsPlume.mapToStringAndClass
+  @Deprecated // use StringsPlume.mapToStringAndClass; deprecated 2020-12-02
   public static String mapToStringAndClass(Map<?, ?> m) {
-    StringJoiner result = new StringJoiner(System.lineSeparator());
-    for (Map.Entry<?, ?> e : m.entrySet()) {
-      result.add("    " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
-    }
-    return result.toString();
+    return StringsPlume.mapToStringAndClass(m);
   }
 
   /**
@@ -1237,13 +1233,9 @@ public final class UtilPlume {
    * @return a string representation of the value and its run-time class
    * @deprecated use StringsPlume.toStringAndClass
    */
-  @Deprecated // use StringsPlume.toStringAndClass
+  @Deprecated // use StringsPlume.toStringAndClass; deprecated 2020-12-02
   public static String toStringAndClass(@Nullable Object o) {
-    if (o == null) {
-      return "null";
-    } else {
-      return o + " [" + o.getClass() + "]";
-    }
+    return StringsPlume.toStringAndClass(o);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -1407,7 +1399,7 @@ public final class UtilPlume {
    * @return target with all instances of oldStr replaced by newStr
    * @deprecated use String.replace
    */
-  @Deprecated // use String.replace
+  @Deprecated // use String.replace; deprecated 2020-09-07
   public static String replaceString(String target, String oldStr, String newStr) {
     if (oldStr.equals("")) {
       throw new IllegalArgumentException();
@@ -1440,7 +1432,7 @@ public final class UtilPlume {
    * @deprecated use StringsPlume.replacePrefix
    */
   @SuppressWarnings("index:argument.type.incompatible") // startsWith implies indexes fit
-  @Deprecated // use StringsPlume.replacePrefix
+  @Deprecated // use StringsPlume.replacePrefix; deprecated 2020-12-02
   public static String replacePrefix(String target, String oldStr, String newStr) {
     if (target.startsWith(oldStr)) {
       if (newStr.isEmpty()) {
@@ -1468,7 +1460,7 @@ public final class UtilPlume {
    * @deprecated use StringsPlume.replaceSuffix
    */
   @SuppressWarnings("lowerbound:argument.type.incompatible") // endsWith implies indexes fit
-  @Deprecated // use StringsPlume.replaceSuffix
+  @Deprecated // use StringsPlume.replaceSuffix; deprecated 2020-12-02
   public static String replaceSuffix(String target, String oldStr, String newStr) {
     if (target.endsWith(oldStr)) {
       if (newStr.isEmpty()) {
@@ -1489,7 +1481,7 @@ public final class UtilPlume {
    * @return the printed representation of {@code o}, with each line prefixed by the given prefix
    * @deprecated use StringsPlume.prefixLines
    */
-  @Deprecated // use StringsPlume.prefixLines
+  @Deprecated // use StringsPlume.prefixLines; deprecated 2020-12-02
   public static String prefixLines(String prefix, @Nullable Object o) {
     return prefix + prefixLinesExceptFirst(prefix, o);
   }
@@ -1504,7 +1496,7 @@ public final class UtilPlume {
    *     the given prefix
    * @deprecated use StringsPlume.prefixLinesExceptFirst
    */
-  @Deprecated // use StringsPlume.prefixLinesExceptFirst
+  @Deprecated // use StringsPlume.prefixLinesExceptFirst; deprecated 2020-12-02
   public static String prefixLinesExceptFirst(String prefix, @Nullable Object o) {
     if (o == null) {
       return "null";
@@ -1521,7 +1513,7 @@ public final class UtilPlume {
    *     space characters
    * @deprecated use StringsPlume.indentLines
    */
-  @Deprecated // use StringsPlume.indentLines
+  @Deprecated // use StringsPlume.indentLines; deprecated 2020-12-02
   public static String indentLines(@NonNegative int indent, @Nullable Object o) {
     if (indent == 0) {
       return (o == null) ? "null" : o.toString();
@@ -1540,7 +1532,7 @@ public final class UtilPlume {
    *     {@code indent} space characters
    * @deprecated use StringsPlume.indentLinesExceptFirst
    */
-  @Deprecated // use StringsPlume.indentLinesExceptFirst
+  @Deprecated // use StringsPlume.indentLinesExceptFirst; deprecated 2020-12-02
   public static String indentLinesExceptFirst(@NonNegative int indent, @Nullable Object o) {
     if (indent == 0) {
       return (o == null) ? "null" : o.toString();
@@ -1565,7 +1557,7 @@ public final class UtilPlume {
    * @return array of length at least 1, containing s split on delimiter
    * @deprecated use StringsPlume.split
    */
-  @Deprecated // use StringsPlume.split
+  @Deprecated // use StringsPlume.split; deprecated 2020-12-02
   public static String[] split(String s, char delim) {
     ArrayList<String> resultList = new ArrayList<>();
     for (int delimpos = s.indexOf(delim); delimpos != -1; delimpos = s.indexOf(delim)) {
@@ -1592,7 +1584,7 @@ public final class UtilPlume {
    * @return array of length at least 1, containing s split on delimiter
    * @deprecated use StringsPlume.split
    */
-  @Deprecated // use StringsPlume.split
+  @Deprecated // use StringsPlume.split; deprecated 2020-12-02
   public static String[] split(String s, String delim) {
     int delimlen = delim.length();
     if (delimlen == 0) {
@@ -1622,7 +1614,7 @@ public final class UtilPlume {
   @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
   @SideEffectFree
   @StaticallyExecutable
-  @Deprecated // use StringsPlume.splitLines
+  @Deprecated // use StringsPlume.splitLines; deprecated 2020-12-02
   public static String[] splitLines(String s) {
     return s.split("\r\n?|\n\r?", -1);
   }
@@ -1643,7 +1635,8 @@ public final class UtilPlume {
    * @deprecated use {@link #join(CharSequence, Object...)} which has the arguments in the other
    *     order
    */
-  @Deprecated // use join(CharSequence, Object...) which has the arguments in the other order
+  @Deprecated // use join(CharSequence, Object...) which has the arguments in the other order;
+  // deprecated 2020-02-20
   public static <T> String join(T[] a, CharSequence delim) {
     if (a.length == 0) {
       return "";
@@ -1674,7 +1667,7 @@ public final class UtilPlume {
    * @deprecated use StringsPlume.join
    */
   @SafeVarargs
-  @Deprecated // use StringsPlume.join
+  @Deprecated // use StringsPlume.join; deprecated 2020-12-02
   public static <T> String join(CharSequence delim, T... a) {
     if (a.length == 0) {
       return "";
@@ -1700,7 +1693,7 @@ public final class UtilPlume {
    */
   @SafeVarargs
   @SuppressWarnings("varargs")
-  @Deprecated // use StringsPlume.joinLines
+  @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
   public static <T> String joinLines(T... a) {
     return join(lineSep, a);
   }
@@ -1719,7 +1712,8 @@ public final class UtilPlume {
    * @deprecated use {@link #join(CharSequence, Iterable)} which has the arguments in the other
    *     order
    */
-  @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order
+  @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order;
+  // deprecated 2020-12-02
   public static String join(Iterable<?> v, CharSequence delim) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
@@ -1748,7 +1742,7 @@ public final class UtilPlume {
    *     between
    * @deprecated use StringsPlume.join
    */
-  @Deprecated // use StringsPlume.join
+  @Deprecated // use StringsPlume.join; deprecated 2020-12-02
   public static String join(CharSequence delim, Iterable<?> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
@@ -1773,7 +1767,7 @@ public final class UtilPlume {
    * @return the concatenation of the string representations of the values, each on its own line
    * @deprecated use StringsPlume.joinLines
    */
-  @Deprecated // use StringsPlume.joinLines
+  @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
   public static String joinLines(Iterable<?> v) {
     return join(lineSep, v);
   }
@@ -1783,7 +1777,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link #escapeJava(String)}
    */
-  @Deprecated // use escapeJava(String)
+  @Deprecated // use escapeJava(String); deprecated 2020-02-20
   public static String escapeNonJava(String orig) {
     return escapeJava(orig);
   }
@@ -1801,7 +1795,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use StringsPlume.escapeJava
    */
-  @Deprecated // use StringsPlume.escapeJava
+  @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
   public static String escapeJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen right before this position.
@@ -1856,7 +1850,7 @@ public final class UtilPlume {
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(Character)}
    */
-  @Deprecated // use escapeJava(Character)
+  @Deprecated // use escapeJava(Character); deprecated 2020-02-20
   public static String escapeNonJava(Character ch) {
     return escapeJava(ch);
   }
@@ -1869,7 +1863,7 @@ public final class UtilPlume {
    * @return quoted version of ch
    * @deprecated use StringsPlume.escapeJava
    */
-  @Deprecated // use StringsPlume.escapeJava
+  @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
   public static String escapeJava(Character ch) {
     return escapeJava(ch.charValue());
   }
@@ -1882,7 +1876,7 @@ public final class UtilPlume {
    * @return quoted version of ch
    * @deprecated use StringsPlume.escapeJava
    */
-  @Deprecated // use StringsPlume.escapeJava
+  @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
   public static String escapeJava(char c) {
     switch (c) {
       case '\"':
@@ -1912,7 +1906,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use StringsPlume.escapeNonASCII
    */
-  @Deprecated // use StringsPlume.escapeNonASCII
+  @Deprecated // use StringsPlume.escapeNonASCII; deprecated 2020-12-02
   public static String escapeNonASCII(String orig) {
     StringBuilder sb = new StringBuilder();
     int origLen = orig.length();
@@ -1971,7 +1965,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link #unescapeJava(String)}
    */
-  @Deprecated // use unescapeJava(String)
+  @Deprecated // use unescapeJava(String); deprecated 2020-02-20
   public static String unescapeNonJava(String orig) {
     return unescapeJava(orig);
   }
@@ -1988,7 +1982,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use StringsPlume.unescapeJava
    */
-  @Deprecated // use StringsPlume.unescapeJava
+  @Deprecated // use StringsPlume.unescapeJava; deprecated 2020-12-02
   public static String unescapeJava(String orig) {
     StringBuilder sb = new StringBuilder();
     // The previous escape character was seen just before this position.
@@ -2110,7 +2104,7 @@ public final class UtilPlume {
    * @return version of arg, with whitespace abutting delimiter removed
    * @deprecated use StringsPlume.removeWhitespaceAround
    */
-  @Deprecated // use StringsPlume.removeWhitespaceAround
+  @Deprecated // use StringsPlume.removeWhitespaceAround; deprecated 2020-12-02
   public static String removeWhitespaceAround(String arg, String delimiter) {
     arg = removeWhitespaceBefore(arg, delimiter);
     arg = removeWhitespaceAfter(arg, delimiter);
@@ -2125,7 +2119,7 @@ public final class UtilPlume {
    * @return version of arg, with whitespace after delimiter removed
    * @deprecated use StringsPlume.removeWhitespaceAfter
    */
-  @Deprecated // use StringsPlume.removeWhitespaceAfter
+  @Deprecated // use StringsPlume.removeWhitespaceAfter; deprecated 2020-12-02
   public static String removeWhitespaceAfter(String arg, String delimiter) {
     if (delimiter == null || delimiter.equals("")) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
@@ -2160,7 +2154,7 @@ public final class UtilPlume {
    * @return version of arg, with whitespace before delimiter removed
    * @deprecated use StringsPlume.removeWhitespaceBefore
    */
-  @Deprecated // use StringsPlume.removeWhitespaceBefore
+  @Deprecated // use StringsPlume.removeWhitespaceBefore; deprecated 2020-12-02
   public static String removeWhitespaceBefore(String arg, String delimiter) {
     if (delimiter == null || delimiter.equals("")) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
@@ -2196,7 +2190,7 @@ public final class UtilPlume {
    * @return noun, if n==1; otherwise, pluralization of noun
    * @deprecated use StringsPlume.nplural
    */
-  @Deprecated // use StringsPlume.nplural
+  @Deprecated // use StringsPlume.nplural; deprecated 2020-12-02
   public static String nplural(int n, String noun) {
     if (n == 1) {
       return n + " " + noun;
@@ -2219,7 +2213,7 @@ public final class UtilPlume {
    * @return s truncated or padded to length characters
    * @deprecated use StringsPlume.lpad
    */
-  @Deprecated // use StringsPlume.lpad
+  @Deprecated // use StringsPlume.lpad; deprecated 2020-12-02
   public static String lpad(String s, @NonNegative int length) {
     if (s.length() < length) {
       StringBuilder buf = new StringBuilder();
@@ -2241,7 +2235,7 @@ public final class UtilPlume {
    * @return s truncated or padded to length characters
    * @deprecated use StringsPlume.rpad
    */
-  @Deprecated // use StringsPlume.rpad
+  @Deprecated // use StringsPlume.rpad; deprecated 2020-12-02
   public static String rpad(String s, @NonNegative int length) {
     if (s.length() < length) {
       StringBuilder buf = new StringBuilder(s);
@@ -2262,7 +2256,7 @@ public final class UtilPlume {
    * @return a string representation of num truncated or padded to length characters
    * @deprecated use StringsPlume.rpad
    */
-  @Deprecated // use StringsPlume.rpad
+  @Deprecated // use StringsPlume.rpad; deprecated 2020-12-02
   public static String rpad(int num, @NonNegative int length) {
     return rpad(String.valueOf(num), length);
   }
@@ -2275,7 +2269,7 @@ public final class UtilPlume {
    * @return a string representation of num truncated or padded to length characters
    * @deprecated use StringsPlume.rpad
    */
-  @Deprecated // use StringsPlume.rpad
+  @Deprecated // use StringsPlume.rpad; deprecated 2020-12-02
   public static String rpad(double num, @NonNegative int length) {
     return rpad(String.valueOf(num), length);
   }
@@ -2285,7 +2279,7 @@ public final class UtilPlume {
    *
    * @deprecated use StringsPlume.NullableStringComparator
    */
-  @Deprecated // use StringsPlume.NullableStringComparator
+  @Deprecated // use StringsPlume.NullableStringComparator; deprecated 2020-12-02
   public static class NullableStringComparator implements Comparator<String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
@@ -2317,7 +2311,7 @@ public final class UtilPlume {
    *
    * @deprecated use StringsPlume.ObjectComparator
    */
-  @Deprecated // use StringsPlume.ObjectComparator
+  @Deprecated // use StringsPlume.ObjectComparator; deprecated 2020-12-02
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
 
@@ -2356,7 +2350,7 @@ public final class UtilPlume {
    * @return number of times the character appears in the string
    * @deprecated use StringsPlume.count
    */
-  @Deprecated // use StringsPlume.count
+  @Deprecated // use StringsPlume.count; deprecated 2020-12-02
   public static int count(String s, int ch) {
     int result = 0;
     int pos = s.indexOf(ch);
@@ -2375,7 +2369,7 @@ public final class UtilPlume {
    * @return number of times the substring appears in the string
    * @deprecated use StringsPlume.count
    */
-  @Deprecated // use StringsPlume.count
+  @Deprecated // use StringsPlume.count; deprecated 2020-12-02
   public static int count(String s, String sub) {
     if (sub.equals("")) {
       throw new IllegalArgumentException("second argument must not be empty");
@@ -2398,7 +2392,7 @@ public final class UtilPlume {
    * @return an abbreviated string representation of the value
    * @deprecated use StringsPlume.abbreviateNumber
    */
-  @Deprecated // use StringsPlume.abbreviateNumber
+  @Deprecated // use StringsPlume.abbreviateNumber; deprecated 2020-12-02
   public static String abbreviateNumber(long val) {
 
     double dval = (double) val;
@@ -2443,7 +2437,7 @@ public final class UtilPlume {
    * @return the number of format specifiers in the string
    * @deprecated use StringsPlume.countFormatArguments
    */
-  @Deprecated // use StringsPlume.countFormatArguments
+  @Deprecated // use StringsPlume.countFormatArguments; deprecated 2020-12-02
   public static int countFormatArguments(String s) {
     int result = 0;
     int maxIndex = 0;
@@ -2483,7 +2477,7 @@ public final class UtilPlume {
    * @return vector of strings resulting from tokenization
    * @deprecated use StringsPlume.tokens
    */
-  @Deprecated // use StringsPlume.tokens
+  @Deprecated // use StringsPlume.tokens; deprecated 2020-12-02
   public static ArrayList<Object> tokens(String str, String delim, boolean returnDelims) {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim, returnDelims));
   }
@@ -2497,7 +2491,7 @@ public final class UtilPlume {
    * @return vector of strings resulting from tokenization
    * @deprecated use StringsPlume.tokens
    */
-  @Deprecated // use StringsPlume.tokens
+  @Deprecated // use StringsPlume.tokens; deprecated 2020-12-02
   public static ArrayList<Object> tokens(String str, String delim) {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim));
   }
@@ -2510,7 +2504,7 @@ public final class UtilPlume {
    * @return vector of strings resulting from tokenization
    * @deprecated use StringsPlume.tokens
    */
-  @Deprecated // use StringsPlume.tokens
+  @Deprecated // use StringsPlume.tokens; deprecated 2020-12-02
   public static ArrayList<Object> tokens(String str) {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str));
   }
@@ -2527,7 +2521,7 @@ public final class UtilPlume {
    * @param millis the length of time to sleep in milliseconds
    * @deprecated use {@link SystemPlume#sleep}
    */
-  @Deprecated //  use SystemPlume.sleep
+  @Deprecated // use SystemPlume.sleep; deprecated 2021-01-05
   public static void sleep(long millis) {
     SystemPlume.sleep(millis);
   }
@@ -2541,7 +2535,7 @@ public final class UtilPlume {
    * @return the amount of used memory
    * @deprecated use {@link SystemPlume#usedMemory()}
    */
-  @Deprecated //  use SystemPlume.usedMemory()
+  @Deprecated // use SystemPlume.usedMemory(); deprecated 2021-01-05
   public static long usedMemory() {
     return SystemPlume.usedMemory();
   }
@@ -2554,7 +2548,7 @@ public final class UtilPlume {
    * @return the amount of used memory
    * @deprecated use {@link SystemPlume#usedMemory(boolean)}
    */
-  @Deprecated //  use SystemPlume.usedMemory(boolean)
+  @Deprecated // use SystemPlume.usedMemory(boolean); deprecated 2021-01-05
   public static long usedMemory(boolean forceGc) {
     return SystemPlume.usedMemory(forceGc);
   }
@@ -2565,7 +2559,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link SystemPlume#gc}
    */
-  @Deprecated //  use SystemPlume.gc
+  @Deprecated // use SystemPlume.gc; deprecated 2021-01-05
   public static void gc() {
     SystemPlume.gc();
   }
@@ -2582,7 +2576,7 @@ public final class UtilPlume {
    * @return a String representation of the backtrace of the given Throwable
    * @deprecated use {@link #stackTraceToString}
    */
-  @Deprecated // use stackTraceToString
+  @Deprecated // use stackTraceToString; deprecated 2020-02-20
   public static String backTrace(Throwable t) {
     return stackTraceToString(t);
   }
