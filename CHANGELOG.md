@@ -3,12 +3,16 @@
 ## 1.4.0 (forthcoming)
 
 - New methods:
-   - `UtilPlume.toStringAndClass(Object, boolean)`
+   - `StringsPlume.toStringAndClass(Object, boolean)`
    - `SystemPlume.gcPercentage` (two overloads)
 - Deprecated methods:
    - `UtilPlume.fileLines` (use `Files.readAllLines`)
    - `UtilPlume.hash` methods (use `Objects.hash` or `Arrays.hashCode`)
-- Moved system methods from `UtilPlume` to new class `SystemPlume`;
+- Moved methods (old versions still work but are deprecated):
+   - moved system from `UtilPlume` to new class `SystemPlume`;
+   - moved from `UtilPlume` to `StringsPlume`:
+      - `mapToStringAndClass`
+      - `toStringAndClass`
   old versions are deprecated.
 - Removed classes that were deprecated in 2018, over 2 years ago:
    - `ReflectionPlume`: use `org.plumelib.reflection.ReflectionPlume` instead
@@ -21,7 +25,7 @@
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
 - Moved string methods from `UtilPlume` to new class `StringsPlume`;
-  old versions are deprecated.
+  old versions still work but are are deprecated.
 
 ## 1.2.0
 
