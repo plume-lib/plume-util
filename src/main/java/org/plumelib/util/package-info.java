@@ -126,16 +126,18 @@
  *   <dd>Utilities for interning objects. Interning is also known as canonicalization or
  *       hash-consing: it returns a single representative object that {@code .equals()} the object,
  *       and the client discards the argument and uses the result instead.
- *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
- *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
- *       directories; file names; reading and writing; hashing; Map; ProcessBuilder; properties;
- *       Stream; System; Throwable.
  *   <dt>{@link org.plumelib.util.Pair Pair}
  *   <dd>Mutable pair class: type-safely holds two objects of possibly-different types.
  *   <dt>{@link org.plumelib.util.WeakIdentityPair WeakIdentityPair}
  *   <dd>Immutable pair class: type-safely holds two objects of possibly-different types. Differs
  *       from {@code Pair} in the following ways: is immutable, cannot hold null, holds its elements
  *       with weak pointers, and its equals() method uses object equality to compare its elements.
+ *   <dt>{@link org.plumelib.util.SystemPlume SystemPlume}
+ *   <dd>Utility methods relating to the JVM runtime system: sleep and garbage collection.
+ *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
+ *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
+ *       directories; file names; reading and writing; hashing; Map; ProcessBuilder; properties;
+ *       Stream; Throwable.
  * </dl>
  */
 package org.plumelib.util;

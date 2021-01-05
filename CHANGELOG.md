@@ -1,11 +1,14 @@
 # Plume-Util change log
 
-## 1.3.1 (forthcoming)
+## 1.4.0 (forthcoming)
 
 - New methods:
    - `UtilPlume.toStringAndClass(Object, boolean)`
+   - `SystemPlume.gcPercentage` (two overloads)
 - Deprecated methods:
    - `UtilPlume.fileLines` (use `Files.readAllLines`)
+- Moved system methods from `UtilPlume` to new class `SystemPlume`;
+  old versions are deprecated.
 
 ## 1.3.0
 
@@ -14,7 +17,7 @@
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
 - Moved string methods from `UtilPlume` to new class `StringsPlume`;
-  old versions are deprecated
+  old versions are deprecated.
 
 ## 1.2.0
 

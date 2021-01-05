@@ -1,5 +1,4 @@
 // If you edit this file, you must also edit its tests.
-// For tests of this and the entire plume package, see class TestPlume.
 
 package org.plumelib.util;
 
@@ -30,8 +29,6 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,8 +59,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * Utility methods that do not belong elsewhere in the plume package: BitSet; File; directories;
- * file names; reading and writing; hashing; Map; ProcessBuilder; properties; Stream; System;
- * Throwable.
+ * file names; reading and writing; hashing; Map; ProcessBuilder; properties; Stream; Throwable.
  */
 public final class UtilPlume {
 
@@ -2520,7 +2516,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// System
+  /// System (this section is deprecated and has been moved to System.java)
   ///
 
   /**
@@ -2529,27 +2525,25 @@ public final class UtilPlume {
    * specified number of milliseconds.
    *
    * @param millis the length of time to sleep in milliseconds
+   * @deprecated use {@link SystemPlume#sleep}
    */
+  @Deprecated //  use SystemPlume.sleep
   public static void sleep(long millis) {
-    try {
-      Thread.sleep(millis);
-    } catch (InterruptedException ex) {
-      Thread.currentThread().interrupt();
-    }
+    SystemPlume.sleep(millis);
   }
 
-  /** The Runtime instance for the current execution. */
-  private static Runtime runtime = Runtime.getRuntime();
-
   /**
-   * Returns the amount of used memory in the JVM. To force a garbage collection, which gives a more
-   * accurate overapproximation of the memory used, but is also slower, use {@link
-   * #usedMemory(boolean)}
+   * Returns the amount of used memory in the JVM.
+   *
+   * <p>To force a garbage collection, which gives a more accurate overapproximation of the memory
+   * used, but is also slower, use {@link #usedMemory(boolean)}
    *
    * @return the amount of used memory
+   * @deprecated use {@link SystemPlume#usedMemory()}
    */
+  @Deprecated //  use SystemPlume.usedMemory()
   public static long usedMemory() {
-    return usedMemory(false);
+    return SystemPlume.usedMemory();
   }
 
   /**
@@ -2558,46 +2552,22 @@ public final class UtilPlume {
    * @param forceGc if true, force a garbage collection, which gives a more accurate
    *     overapproximation of the memory used, but is also slower
    * @return the amount of used memory
+   * @deprecated use {@link SystemPlume#usedMemory(boolean)}
    */
+  @Deprecated //  use SystemPlume.usedMemory(boolean)
   public static long usedMemory(boolean forceGc) {
-    if (forceGc) {
-      gc();
-    }
-    // Implementation note:
-    // MemoryUsage.getUsed() == Runtime.totalMemory() - Runtime.freeMemory()
-    return (runtime.totalMemory() - runtime.freeMemory());
+    return SystemPlume.usedMemory(forceGc);
   }
 
   /**
    * Perform garbage collection. Like System.gc, but waits to return until garbage collection has
    * completed.
-   */
-  public static void gc() {
-    long oldCollectionCount = getCollectionCount();
-    System.gc();
-    while (getCollectionCount() == oldCollectionCount) {
-      try {
-        Thread.sleep(1); // 1 millisecond
-      } catch (InterruptedException e) {
-        // nothing to do
-      }
-    }
-  }
-
-  /**
-   * Return the number of garbage collections that have occurred.
    *
-   * @return the number of garbage collections that have occurred
+   * @deprecated use {@link SystemPlume#gc}
    */
-  private static long getCollectionCount() {
-    long result = 0;
-    for (GarbageCollectorMXBean b : ManagementFactory.getGarbageCollectorMXBeans()) {
-      long count = b.getCollectionCount();
-      if (count != -1) {
-        result += count;
-      }
-    }
-    return result;
+  @Deprecated //  use SystemPlume.gc
+  public static void gc() {
+    SystemPlume.gc();
   }
 
   ///////////////////////////////////////////////////////////////////////////

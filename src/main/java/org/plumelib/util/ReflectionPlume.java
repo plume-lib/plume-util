@@ -4,7 +4,6 @@
 // Do not edit or use!  Use class org.plumelib.reflection.ReflectionPlume instead.
 
 // If you edit this file, you must also edit its tests.
-// For tests of this and the entire plume package, see class TestPlume.
 
 package org.plumelib.util;
 
