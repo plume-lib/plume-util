@@ -41,7 +41,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -983,25 +982,18 @@ public final class UtilPlume {
   /// Hashing
   ///
 
-  // In hashing, there are two separate issues.  First, one must convert
-  // the input datum into an integer.  Then, one must transform the
-  // resulting integer in a pseudorandom way so as to result in a number
-  // that is far separated from other values that may have been near it to
-  // begin with.  Often these two steps are combined, particularly if
-  // one wishes to avoid creating too large an integer (losing information
-  // off the top bits).
+  // In hashing, there are two separate issues.  First, one must convert the input datum into a
+  // (possibly large) integer; this is also known as fingerprinting.  Then, one must transform the
+  // resulting integer in a pseudorandom way so as to result in a number that is far separated from
+  // other values that may have been near it to begin with.  Often these two steps are combined,
+  // particularly if one wishes to avoid creating too large an integer (losing information off the
+  // top bits).
 
-  // http://burtleburtle.net/bob/hash/hashfaq.html says (of combined methods):
-  //  * for (h=0, i=0; i<len; ++i) { h += key[i]; h += (h<<10); h ^= (h>>6); }
-  //    h += (h<<3); h ^= (h>>11); h += (h<<15);
-  //    is good.
-  //  * for (h=0, i=0; i<len; ++i) h = tab[(h^key[i])&0xff]; may be good.
-  //  * for (h=0, i=0; i<len; ++i) h = (h>>8)^tab[(key[i]+h)&0xff]; may be good.
+  // This part of the file focuses on the fingerprinting issue, and uses simplistic approaches for
+  // the second part.
 
-  // In this part of the file, perhaps I will eventually write good hash
-  // functions.  For now, write cheesy ones that primarily deal with the
-  // first issue, transforming a data structure into a single number.  This
-  // is also known as fingerprinting.
+  // TODO: What is the advantage of these methods over the built-in Java hash code routines?
+  // I should document that, or deprecate this section of the file.
 
   /**
    * Return a hash of the arguments. Note that this differs from the result of {@link
