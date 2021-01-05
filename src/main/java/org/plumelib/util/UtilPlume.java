@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -982,6 +983,28 @@ public final class UtilPlume {
   /// Hashing
   ///
 
+  /**
+   * Return a hash of the arguments.
+   *
+   * @param a value to be hashed
+   * @param b value to be hashed
+   * @return a hash of the arguments
+   */
+  public static int hash(double @Nullable [] a, double @Nullable [] b) {
+    return Objects.hash(Arrays.hashCode(a), Arrays.hashCode(b));
+  }
+
+  /**
+   * Return a hash of the arguments.
+   *
+   * @param a value to be hashed
+   * @param b value to be hashed
+   * @return a hash of the arguments
+   */
+  public static int hash(long @Nullable [] a, long @Nullable [] b) {
+    return hash(hash(a), hash(b));
+  }
+
   // In hashing, there are two separate issues.  First, one must convert the input datum into a
   // (possibly large) integer; this is also known as fingerprinting.  Then, one must transform the
   // resulting integer in a pseudorandom way so as to result in a number that is far separated from
@@ -1001,7 +1024,9 @@ public final class UtilPlume {
    *
    * @param x value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Double.hashCode()
    */
+  @Deprecated // use Double.hashCode(); deprecated 2020-01-05
   public static int hash(double x) {
     return hash(Double.doubleToLongBits(x));
   }
@@ -1012,12 +1037,11 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @param b value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Objects.hash
    */
+  @Deprecated // use Objects.hash; deprecated 2020-01-05
   public static int hash(double a, double b) {
-    double result = 17;
-    result = result * 37 + a;
-    result = result * 37 + b;
-    return hash(result);
+    return Objects.hash(a, b);
   }
 
   /**
@@ -1027,13 +1051,11 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @param c value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Objects.hash
    */
+  @Deprecated // use Objects.hash; deprecated 2020-01-05
   public static int hash(double a, double b, double c) {
-    double result = 17;
-    result = result * 37 + a;
-    result = result * 37 + b;
-    result = result * 37 + c;
-    return hash(result);
+    return Objects.hash(a, b, c);
   }
 
   /**
@@ -1041,50 +1063,32 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Arrays.hashCode
    */
+  @Deprecated // use Arrays.hashCode; deprecated 2020-01-05
   public static int hash(double @Nullable [] a) {
-    double result = 17;
-    if (a != null) {
-      result = result * 37 + a.length;
-      for (int i = 0; i < a.length; i++) {
-        result = result * 37 + a[i];
-      }
-    }
-    return hash(result);
-  }
-
-  /**
-   * Return a hash of the arguments.
-   *
-   * @param a value to be hashed
-   * @param b value to be hashed
-   * @return a hash of the arguments
-   */
-  public static int hash(double @Nullable [] a, double @Nullable [] b) {
-    return hash(hash(a), hash(b));
+    return Arrays.hashCode(a);
   }
 
   // Don't define hash with int args; use the long versions instead.
 
   /**
    * Return a hash of the arguments. Note that this differs from the result of {@link
-   * Long#hashCode()}. But it doesn't map -1 and 0 to the same value.
+   * Long#hashCode()}. A problem with {@link Long#hashCode()} is that it maps -1 and 0 to the same
+   * value, 0.
    *
    * @param l value to be hashed
    * @return a hash of the arguments
+   * @deprecated use {@link Long#hashCode()}
    */
+  @Deprecated // use Long.hashCode; deprecated 2021-01-05
   public static int hash(long l) {
     // If possible, use the value itself.
     if (l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE) {
       return (int) l;
     }
 
-    int result = 17;
-    int hibits = (int) (l >> 32);
-    int lobits = (int) l;
-    result = result * 37 + hibits;
-    result = result * 37 + lobits;
-    return result;
+    return Long.hashCode(l);
   }
 
   /**
@@ -1093,12 +1097,11 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @param b value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Objects.hash
    */
+  @Deprecated // use Objects.hash; deprecated 2020-01-05
   public static int hash(long a, long b) {
-    long result = 17;
-    result = result * 37 + a;
-    result = result * 37 + b;
-    return hash(result);
+    return Objects.hash(a, b);
   }
 
   /**
@@ -1108,13 +1111,11 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @param c value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Objects.hash
    */
+  @Deprecated // use Objects.hash; deprecated 2020-01-05
   public static int hash(long a, long b, long c) {
-    long result = 17;
-    result = result * 37 + a;
-    result = result * 37 + b;
-    result = result * 37 + c;
-    return hash(result);
+    return Objects.hash(a, b, c);
   }
 
   /**
@@ -1122,27 +1123,11 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Arrays.hashCode
    */
+  @Deprecated // use Arrays.hashCode; deprecated 2020-01-05
   public static int hash(long @Nullable [] a) {
-    long result = 17;
-    if (a != null) {
-      result = result * 37 + a.length;
-      for (int i = 0; i < a.length; i++) {
-        result = result * 37 + a[i];
-      }
-    }
-    return hash(result);
-  }
-
-  /**
-   * Return a hash of the arguments.
-   *
-   * @param a value to be hashed
-   * @param b value to be hashed
-   * @return a hash of the arguments
-   */
-  public static int hash(long @Nullable [] a, long @Nullable [] b) {
-    return hash(hash(a), hash(b));
+    return Arrays.hashCode(a);
   }
 
   /**
@@ -1150,7 +1135,9 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
+   * @deprecated use String.hashCode
    */
+  @deprecated // use String.hashCode; deprecated 2020-01-05
   public static int hash(@Nullable String a) {
     return (a == null) ? 0 : a.hashCode();
   }
@@ -1161,12 +1148,11 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @param b value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Objects.hash
    */
+  @Deprecated // use Objects.hash; deprecated 2020-01-05
   public static int hash(@Nullable String a, @Nullable String b) {
-    long result = 17;
-    result = result * 37 + hash(a);
-    result = result * 37 + hash(b);
-    return hash(result);
+    return Objects.hash(a, b);
   }
 
   /**
@@ -1176,13 +1162,11 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @param c value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Objects.hash
    */
+  @Deprecated // use Objects.hash; deprecated 2020-01-05
   public static int hash(@Nullable String a, @Nullable String b, @Nullable String c) {
-    long result = 17;
-    result = result * 37 + hash(a);
-    result = result * 37 + hash(b);
-    result = result * 37 + hash(c);
-    return hash(result);
+    return Objects.hash(a, b, c);
   }
 
   /**
@@ -1190,16 +1174,11 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
+   * @deprecated use Arrays.hashCode
    */
+  @Deprecated // use Arrays.hashCode; deprecated 2020-01-05
   public static int hash(@Nullable String @Nullable [] a) {
-    long result = 17;
-    if (a != null) {
-      result = result * 37 + a.length;
-      for (int i = 0; i < a.length; i++) {
-        result = result * 37 + hash(a[i]);
-      }
-    }
-    return hash(result);
+    return Arrays.hashCode(a);
   }
 
   ///////////////////////////////////////////////////////////////////////////

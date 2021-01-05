@@ -7,6 +7,7 @@
    - `SystemPlume.gcPercentage` (two overloads)
 - Deprecated methods:
    - `UtilPlume.fileLines` (use `Files.readAllLines`)
+   - `UtilPlume.hash` methods (use `Objects.hash` or `Arrays.hashCode`)
 - Moved system methods from `UtilPlume` to new class `SystemPlume`;
   old versions are deprecated.
 - Removed classes that were deprecated in 2018, over 2 years ago:
