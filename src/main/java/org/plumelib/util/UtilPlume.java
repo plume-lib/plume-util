@@ -1026,7 +1026,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Double.hashCode()
    */
-  @Deprecated // use Double.hashCode(); deprecated 2020-01-05
+  @Deprecated // use Double.hashCode(); deprecated 2021-01-05
   public static int hash(double x) {
     return hash(Double.doubleToLongBits(x));
   }
@@ -1039,7 +1039,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Objects.hash
    */
-  @Deprecated // use Objects.hash; deprecated 2020-01-05
+  @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(double a, double b) {
     return Objects.hash(a, b);
   }
@@ -1053,7 +1053,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Objects.hash
    */
-  @Deprecated // use Objects.hash; deprecated 2020-01-05
+  @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(double a, double b, double c) {
     return Objects.hash(a, b, c);
   }
@@ -1065,7 +1065,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Arrays.hashCode
    */
-  @Deprecated // use Arrays.hashCode; deprecated 2020-01-05
+  @Deprecated // use Arrays.hashCode; deprecated 2021-01-05
   public static int hash(double @Nullable [] a) {
     return Arrays.hashCode(a);
   }
@@ -1099,7 +1099,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Objects.hash
    */
-  @Deprecated // use Objects.hash; deprecated 2020-01-05
+  @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(long a, long b) {
     return Objects.hash(a, b);
   }
@@ -1113,7 +1113,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Objects.hash
    */
-  @Deprecated // use Objects.hash; deprecated 2020-01-05
+  @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(long a, long b, long c) {
     return Objects.hash(a, b, c);
   }
@@ -1125,7 +1125,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Arrays.hashCode
    */
-  @Deprecated // use Arrays.hashCode; deprecated 2020-01-05
+  @Deprecated // use Arrays.hashCode; deprecated 2021-01-05
   public static int hash(long @Nullable [] a) {
     return Arrays.hashCode(a);
   }
@@ -1137,7 +1137,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use String.hashCode
    */
-  @Deprecated // use String.hashCode; deprecated 2020-01-05
+  @Deprecated // use String.hashCode; deprecated 2021-01-05
   public static int hash(@Nullable String a) {
     return (a == null) ? 0 : a.hashCode();
   }
@@ -1150,7 +1150,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Objects.hash
    */
-  @Deprecated // use Objects.hash; deprecated 2020-01-05
+  @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(@Nullable String a, @Nullable String b) {
     return Objects.hash(a, b);
   }
@@ -1164,7 +1164,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Objects.hash
    */
-  @Deprecated // use Objects.hash; deprecated 2020-01-05
+  @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(@Nullable String a, @Nullable String b, @Nullable String c) {
     return Objects.hash(a, b, c);
   }
@@ -1176,7 +1176,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use Arrays.hashCode
    */
-  @Deprecated // use Arrays.hashCode; deprecated 2020-01-05
+  @Deprecated // use Arrays.hashCode; deprecated 2021-01-05
   public static int hash(@Nullable String @Nullable [] a) {
     return Arrays.hashCode(a);
   }
