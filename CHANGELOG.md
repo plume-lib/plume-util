@@ -8,12 +8,11 @@
 - Deprecated methods:
    - `UtilPlume.fileLines` (use `Files.readAllLines`)
    - `UtilPlume.hash` methods (use `Objects.hash` or `Arrays.hashCode`)
-- Moved methods (old versions still work but are deprecated):
+- Moved methods (the old versions still work but are deprecated):
    - moved system from `UtilPlume` to new class `SystemPlume`;
    - moved from `UtilPlume` to `StringsPlume`:
       - `mapToStringAndClass`
       - `toStringAndClass`
-  old versions are deprecated.
 - Removed classes that were deprecated in 2018, over 2 years ago:
    - `ReflectionPlume`: use `org.plumelib.reflection.ReflectionPlume` instead
    - `StringBuilderDelimited`: use the JDK's `StringJoiner` instead
@@ -25,7 +24,7 @@
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
 - Moved string methods from `UtilPlume` to new class `StringsPlume`;
-  old versions still work but are are deprecated.
+  the old versions still work but are are deprecated.
 
 ## 1.2.0
 
