@@ -59,7 +59,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * Utility methods that do not belong elsewhere in the plume package: BitSet; File; directories;
- * file names; reading and writing; hashing; Map; ProcessBuilder; properties; Stream; Throwable.
+ * file names; reading and writing; hashing; ProcessBuilder; properties; Stream; Throwable.
  */
 public final class UtilPlume {
 
@@ -1211,7 +1211,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Map
+  /// Map (this section is deprecated and has been moved to StringsPlume)
   ///
 
   /**
