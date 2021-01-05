@@ -115,11 +115,18 @@
  *   <dd>A Partitioner accepts Objects and assigns them to an equivalence class.
  * </dl>
  *
- * <h3 id="miscellaneous">Miscellaneous</h3>
+ * <h3 id="system">JVM runtime system</h3>
  *
  * <dl>
  *   <dt>{@link org.plumelib.util.DumpHeap DumpHeap}
  *   <dd>Dumps the heap into a {@code .hprof} file.
+ *   <dt>{@link org.plumelib.util.SystemPlume SystemPlume}
+ *   <dd>Utility methods relating to the JVM runtime system: sleep and garbage collection.
+ * </dl>
+ *
+ * <h3 id="miscellaneous">Miscellaneous</h3>
+ *
+ * <dl>
  *   <dt>{@link org.plumelib.util.GraphPlume GraphPlume}
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
@@ -132,12 +139,10 @@
  *   <dd>Immutable pair class: type-safely holds two objects of possibly-different types. Differs
  *       from {@code Pair} in the following ways: is immutable, cannot hold null, holds its elements
  *       with weak pointers, and its equals() method uses object equality to compare its elements.
- *   <dt>{@link org.plumelib.util.SystemPlume SystemPlume}
- *   <dd>Utility methods relating to the JVM runtime system: sleep and garbage collection.
  *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
  *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
- *       directories; file names; reading and writing; hashing; Map; ProcessBuilder; properties;
- *       Stream; Throwable.
+ *       directories; file names; reading and writing; hashing; ProcessBuilder; properties; Stream;
+ *       Throwable.
  * </dl>
  */
 package org.plumelib.util;
