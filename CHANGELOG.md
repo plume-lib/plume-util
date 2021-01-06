@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.4.0 (forthcoming)
+## 1.4.0
 
 - New methods:
    - `StringsPlume.toStringAndClass(Object, boolean)`
