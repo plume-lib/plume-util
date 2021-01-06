@@ -20,6 +20,9 @@
  *   <dt>{@link org.plumelib.util.LimitedSizeIntSet LimitedSizeIntSet}
  *   <dd>Stores up to some maximum number of unique integer values, at which point its rep is
  *       nulled, in order to save space. More efficient than {@code LimitedSizeSet<Integer>}.
+ *   <dt>{@link org.plumelib.util.LimitedSizeLongSet LimitedSizeLongSet}
+ *   <dd>Stores up to some maximum number of unique long values, at which point its rep is nulled,
+ *       in order to save space. More efficient than {@code LimitedSizeSet<Long>}.
  *   <dt>{@link org.plumelib.util.OrderedPairIterator OrderedPairIterator}
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
