@@ -1,8 +1,8 @@
 # Plume-Util change log
 
-## 1.4.1 (forthcoming)
+## 1.4.1
 
-- New classes:
+- New class:
    - `LimitedSizeLongSet`
 
 ## 1.4.0
