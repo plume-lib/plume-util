@@ -18,7 +18,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * are added, then functionality is degraded: most operations return a conservative estimate
  * (because the internal representation is nulled, in order to save space).
  *
- * <p>If you nee {@code LimitedSizeSet<Integer}, use {@link LimitedSizeIntSet} instead.
+ * <p>If you need {@code LimitedSizeSet<Integer>}, use {@link LimitedSizeIntSet} instead.
  *
  * @param <T> the type of elements in the set
  */
