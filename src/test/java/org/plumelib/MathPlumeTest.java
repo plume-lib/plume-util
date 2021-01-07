@@ -138,8 +138,14 @@ public final class MathPlumeTest {
     assertTrue(MathPlume.gcd(25, -10) == 5);
     assertTrue(MathPlume.gcd(-25, -10) == 5);
     assertTrue(MathPlume.gcd(-25, 10) == 5);
+    assertTrue(MathPlume.gcd(1, 10) == 1);
+    assertTrue(MathPlume.gcd(10, 1) == 1);
+    assertTrue(MathPlume.gcd(1, 0) == 1);
+    assertTrue(MathPlume.gcd(0, 1) == 1);
 
     // int gcd(int[] a)
+    assertTrue(MathPlume.gcd(new int[] {2, 50, 17}) == 1);
+    assertTrue(MathPlume.gcd(new int[] {2, 50, 17, 234, 7}) == 1);
     assertTrue(MathPlume.gcd(new int[] {2, 50}) == 2);
     assertTrue(MathPlume.gcd(new int[] {12, 144}) == 12);
     assertTrue(MathPlume.gcd(new int[] {96, 144}) == 48);
