@@ -170,7 +170,9 @@ public final class CollectionsPlume {
   /**
    * Applies the function to each element of the given collection, producing a list of the results.
    *
-   * <p>The point of this method is to make mapping operations more concise.
+   * <p>The point of this method is to make mapping operations more concise. Import it with
+   *
+   * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
    * @param <FROM> the type of elements of the given collection
    * @param <TO> the type of elements of the result list
