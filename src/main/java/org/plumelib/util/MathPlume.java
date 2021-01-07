@@ -577,7 +577,7 @@ public final class MathPlume {
 
     // Euclid's method
     if (b == 0) {
-      return (Math.abs(a));
+      return Math.abs(a);
     }
     a = Math.abs(a);
     b = Math.abs(b);
@@ -598,7 +598,6 @@ public final class MathPlume {
   @Pure
   @StaticallyExecutable
   public static int gcd(int[] a) {
-    // Euclid's method
     if (a.length == 0) {
       return 0;
     }
@@ -622,7 +621,6 @@ public final class MathPlume {
   @Pure
   @StaticallyExecutable
   public static int gcdDifferences(int[] a) {
-    // Euclid's method
     if (a.length < 2) {
       return 0;
     }
@@ -651,7 +649,7 @@ public final class MathPlume {
 
     // Euclid's method
     if (b == 0) {
-      return (Math.abs(a));
+      return Math.abs(a);
     }
     a = Math.abs(a);
     b = Math.abs(b);
@@ -672,7 +670,6 @@ public final class MathPlume {
   @Pure
   @StaticallyExecutable
   public static long gcd(long[] a) {
-    // Euclid's method
     if (a.length == 0) {
       return 0;
     }
@@ -696,7 +693,6 @@ public final class MathPlume {
   @Pure
   @StaticallyExecutable
   public static long gcdDifferences(long[] a) {
-    // Euclid's method
     if (a.length < 2) {
       return 0;
     }
@@ -732,7 +728,7 @@ public final class MathPlume {
 
     // Euclid's method
     if (b == 0) {
-      return (Math.abs(a));
+      return Math.abs(a);
     }
     a = Math.abs(a);
     b = Math.abs(b);
@@ -753,7 +749,6 @@ public final class MathPlume {
   @Pure
   @StaticallyExecutable
   public static double gcd(double[] a) {
-    // Euclid's method
     if (a.length == 0) {
       return 0;
     }
@@ -777,7 +772,6 @@ public final class MathPlume {
   @Pure
   @StaticallyExecutable
   public static double gcdDifferences(double[] a) {
-    // Euclid's method
     if (a.length < 2) {
       return 0;
     }
