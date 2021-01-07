@@ -555,7 +555,7 @@ public final class UtilPlume {
    * @param filename the file whose contents to return
    * @return the contents of {@code filename}, one string per line
    * @throws IOException if there was a problem reading the file
-   * @deprecated use Files.readAllLines
+   * @deprecated use {@link Files#readAllLines}
    */
   @Deprecated // use Files.readAllLines; deprecated 2021-01-03
   public static List<String> fileLines(String filename) throws IOException {
@@ -1024,7 +1024,7 @@ public final class UtilPlume {
    *
    * @param x value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Double.hashCode()
+   * @deprecated use {@link Double#hashCode()}
    */
   @Deprecated // use Double.hashCode(); deprecated 2021-01-05
   public static int hash(double x) {
@@ -1037,7 +1037,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @param b value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Objects.hash
+   * @deprecated use {@link Objects#hash}
    */
   @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(double a, double b) {
@@ -1051,7 +1051,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @param c value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Objects.hash
+   * @deprecated use {@link Objects#hash}
    */
   @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(double a, double b, double c) {
@@ -1063,7 +1063,7 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Arrays.hashCode
+   * @deprecated use {@link Arrays#hashCode}
    */
   @Deprecated // use Arrays.hashCode; deprecated 2021-01-05
   public static int hash(double @Nullable [] a) {
@@ -1097,7 +1097,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @param b value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Objects.hash
+   * @deprecated use {@link Objects#hash}
    */
   @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(long a, long b) {
@@ -1111,7 +1111,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @param c value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Objects.hash
+   * @deprecated use {@link Objects#hash}
    */
   @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(long a, long b, long c) {
@@ -1123,7 +1123,7 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Arrays.hashCode
+   * @deprecated use {@link Arrays#hashCode}
    */
   @Deprecated // use Arrays.hashCode; deprecated 2021-01-05
   public static int hash(long @Nullable [] a) {
@@ -1135,7 +1135,7 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
-   * @deprecated use String.hashCode
+   * @deprecated use {@link String#hashCode}
    */
   @Deprecated // use String.hashCode; deprecated 2021-01-05
   public static int hash(@Nullable String a) {
@@ -1148,7 +1148,7 @@ public final class UtilPlume {
    * @param a value to be hashed
    * @param b value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Objects.hash
+   * @deprecated use {@link Objects#hash}
    */
   @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(@Nullable String a, @Nullable String b) {
@@ -1162,7 +1162,7 @@ public final class UtilPlume {
    * @param b value to be hashed
    * @param c value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Objects.hash
+   * @deprecated use {@link Objects#hash}
    */
   @Deprecated // use Objects.hash; deprecated 2021-01-05
   public static int hash(@Nullable String a, @Nullable String b, @Nullable String c) {
@@ -1174,7 +1174,7 @@ public final class UtilPlume {
    *
    * @param a value to be hashed
    * @return a hash of the arguments
-   * @deprecated use Arrays.hashCode
+   * @deprecated use {@link Arrays#hashCode}
    */
   @Deprecated // use Arrays.hashCode; deprecated 2021-01-05
   public static int hash(@Nullable String @Nullable [] a) {
@@ -1190,7 +1190,7 @@ public final class UtilPlume {
    *
    * @param m a map
    * @return a string representation of the map
-   * @deprecated use StringsPlume.mapToStringAndClass
+   * @deprecated use {@link StringsPlume#mapToStringAndClass}
    */
   @Deprecated // use StringsPlume.mapToStringAndClass; deprecated 2020-12-02
   public static String mapToStringAndClass(Map<?, ?> m) {
@@ -1202,7 +1202,7 @@ public final class UtilPlume {
    *
    * @param o an object
    * @return a string representation of the value and its run-time class
-   * @deprecated use StringsPlume.toStringAndClass
+   * @deprecated use {@link StringsPlume#toStringAndClass}
    */
   @Deprecated // use StringsPlume.toStringAndClass; deprecated 2020-12-02
   public static String toStringAndClass(@Nullable Object o) {
@@ -1368,7 +1368,7 @@ public final class UtilPlume {
    * @param oldStr the substring to replace
    * @param newStr the replacement
    * @return target with all instances of oldStr replaced by newStr
-   * @deprecated use String.replace
+   * @deprecated use {@link String#replace}
    */
   @Deprecated // use String.replace; deprecated 2020-09-07
   public static String replaceString(String target, String oldStr, String newStr) {
@@ -1400,7 +1400,7 @@ public final class UtilPlume {
    * @param newStr the replacement
    * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
    *     target if it does not start with oldStr
-   * @deprecated use StringsPlume.replacePrefix
+   * @deprecated use {@link StringsPlume#replacePrefix}
    */
   @SuppressWarnings("index:argument.type.incompatible") // startsWith implies indexes fit
   @Deprecated // use StringsPlume.replacePrefix; deprecated 2020-12-02
@@ -1428,7 +1428,7 @@ public final class UtilPlume {
    * @param newStr the replacement
    * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
    *     target if it does not start with oldStr
-   * @deprecated use StringsPlume.replaceSuffix
+   * @deprecated use {@link StringsPlume#replaceSuffix}
    */
   @SuppressWarnings("lowerbound:argument.type.incompatible") // endsWith implies indexes fit
   @Deprecated // use StringsPlume.replaceSuffix; deprecated 2020-12-02
@@ -1450,7 +1450,7 @@ public final class UtilPlume {
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
    * @return the printed representation of {@code o}, with each line prefixed by the given prefix
-   * @deprecated use StringsPlume.prefixLines
+   * @deprecated use {@link StringsPlume#prefixLines}
    */
   @Deprecated // use StringsPlume.prefixLines; deprecated 2020-12-02
   public static String prefixLines(String prefix, @Nullable Object o) {
@@ -1465,7 +1465,7 @@ public final class UtilPlume {
    * @param o the value to be printed
    * @return the printed representation of {@code o}, with each line (except the first) prefixed by
    *     the given prefix
-   * @deprecated use StringsPlume.prefixLinesExceptFirst
+   * @deprecated use {@link StringsPlume#prefixLinesExceptFirst}
    */
   @Deprecated // use StringsPlume.prefixLinesExceptFirst; deprecated 2020-12-02
   public static String prefixLinesExceptFirst(String prefix, @Nullable Object o) {
@@ -1482,7 +1482,7 @@ public final class UtilPlume {
    * @param o the value whose printed representation string to increase indentation of
    * @return the printed representation of {@code o}, with each line prefixed by {@code indent}
    *     space characters
-   * @deprecated use StringsPlume.indentLines
+   * @deprecated use {@link StringsPlume#indentLines}
    */
   @Deprecated // use StringsPlume.indentLines; deprecated 2020-12-02
   public static String indentLines(@NonNegative int indent, @Nullable Object o) {
@@ -1501,7 +1501,7 @@ public final class UtilPlume {
    * @param o the value whose printed representation string to increase indentation of
    * @return the printed representation of {@code o}, with each line (except the first) prefixed by
    *     {@code indent} space characters
-   * @deprecated use StringsPlume.indentLinesExceptFirst
+   * @deprecated use {@link StringsPlume#indentLinesExceptFirst}
    */
   @Deprecated // use StringsPlume.indentLinesExceptFirst; deprecated 2020-12-02
   public static String indentLinesExceptFirst(@NonNegative int indent, @Nullable Object o) {
@@ -1512,7 +1512,6 @@ public final class UtilPlume {
     return prefixLinesExceptFirst(prefix, o);
   }
 
-  // TODO.  What is the point?  Deprecate?
   /**
    * Return an array of Strings representing the characters between successive instances of the
    * delimiter character. Always returns an array of length at least 1 (it might contain only the
@@ -1526,9 +1525,9 @@ public final class UtilPlume {
    * @param s the string to split
    * @param delim delimiter to split the string on
    * @return array of length at least 1, containing s split on delimiter
-   * @deprecated use StringsPlume.split
+   * @deprecated use {@link String#split}
    */
-  @Deprecated // use StringsPlume.split; deprecated 2020-12-02
+  @Deprecated // use String.split; deprecated 2020-12-02
   public static String[] split(String s, char delim) {
     ArrayList<String> resultList = new ArrayList<>();
     for (int delimpos = s.indexOf(delim); delimpos != -1; delimpos = s.indexOf(delim)) {
@@ -1546,16 +1545,17 @@ public final class UtilPlume {
    * string), which takes a regular expression whereas this method takes a string.
    *
    * <p>Consider using the built-in <a
-   * href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#split-java.lang.String-">String.split</a>
-   * method.
+   * href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
+   * method, method, which takes a regular expression whereas this method takes a character that is
+   * interpreted literally.
    *
    * @see #split(String s, char delim)
    * @param s the string to split
    * @param delim delimiter to split the string on
    * @return array of length at least 1, containing s split on delimiter
-   * @deprecated use StringsPlume.split
+   * @deprecated use {@link String#split}
    */
-  @Deprecated // use StringsPlume.split; deprecated 2020-12-02
+  @Deprecated // use String.split; deprecated 2020-12-02
   public static String[] split(String s, String delim) {
     int delimlen = delim.length();
     if (delimlen == 0) {
@@ -1580,7 +1580,7 @@ public final class UtilPlume {
    * @see #split(String s, char delim)
    * @param s the string to split
    * @return an array of Strings, one for each line in the argument
-   * @deprecated use StringsPlume.splitLines
+   * @deprecated use {@link StringsPlume#splitLines}
    */
   @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
   @SideEffectFree
@@ -1635,7 +1635,7 @@ public final class UtilPlume {
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
    *     between
-   * @deprecated use StringsPlume.join
+   * @deprecated use {@link StringsPlume#join}
    */
   @SafeVarargs
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
@@ -1660,7 +1660,7 @@ public final class UtilPlume {
    * @param <T> the type of array elements
    * @param a array of values to whose string representation to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
-   * @deprecated use StringsPlume.joinLines
+   * @deprecated use {@link StringsPlume#joinLines}
    */
   @SafeVarargs
   @SuppressWarnings("varargs")
@@ -1711,7 +1711,7 @@ public final class UtilPlume {
    * @param delim delimiter to place between printed representations
    * @return the concatenation of the string representations of the values, with the delimiter
    *     between
-   * @deprecated use StringsPlume.join
+   * @deprecated use {@link StringsPlume#join}
    */
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
   public static String join(CharSequence delim, Iterable<?> v) {
@@ -1736,7 +1736,7 @@ public final class UtilPlume {
    * @see java.util.AbstractCollection#toString()
    * @param v list of values to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
-   * @deprecated use StringsPlume.joinLines
+   * @deprecated use {@link StringsPlume#joinLines}
    */
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
   public static String joinLines(Iterable<?> v) {
@@ -1764,7 +1764,7 @@ public final class UtilPlume {
    *
    * @param orig string to quote
    * @return quoted version of orig
-   * @deprecated use StringsPlume.escapeJava
+   * @deprecated use {@link StringsPlume#escapeJava}
    */
   @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
   public static String escapeJava(String orig) {
@@ -1832,7 +1832,7 @@ public final class UtilPlume {
    *
    * @param ch character to quote
    * @return quoted version of ch
-   * @deprecated use StringsPlume.escapeJava
+   * @deprecated use {@link StringsPlume#escapeJava}
    */
   @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
   public static String escapeJava(Character ch) {
@@ -1845,7 +1845,7 @@ public final class UtilPlume {
    *
    * @param c character to quote
    * @return quoted version of ch
-   * @deprecated use StringsPlume.escapeJava
+   * @deprecated use {@link StringsPlume#escapeJava}
    */
   @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
   public static String escapeJava(char c) {
@@ -1875,7 +1875,7 @@ public final class UtilPlume {
    *
    * @param orig string to quote
    * @return quoted version of orig
-   * @deprecated use StringsPlume.escapeNonASCII
+   * @deprecated use {@link StringsPlume#escapeNonASCII}
    */
   @Deprecated // use StringsPlume.escapeNonASCII; deprecated 2020-12-02
   public static String escapeNonASCII(String orig) {
@@ -1951,7 +1951,7 @@ public final class UtilPlume {
    *
    * @param orig string to quote
    * @return quoted version of orig
-   * @deprecated use StringsPlume.unescapeJava
+   * @deprecated use {@link StringsPlume#unescapeJava}
    */
   @Deprecated // use StringsPlume.unescapeJava; deprecated 2020-12-02
   public static String unescapeJava(String orig) {
@@ -2073,7 +2073,7 @@ public final class UtilPlume {
    * @param arg string to remove whitespace in
    * @param delimiter string to remove whitespace abutting
    * @return version of arg, with whitespace abutting delimiter removed
-   * @deprecated use StringsPlume.removeWhitespaceAround
+   * @deprecated use {@link StringsPlume#removeWhitespaceAround}
    */
   @Deprecated // use StringsPlume.removeWhitespaceAround; deprecated 2020-12-02
   public static String removeWhitespaceAround(String arg, String delimiter) {
@@ -2088,7 +2088,7 @@ public final class UtilPlume {
    * @param arg string to remove whitespace in
    * @param delimiter string to remove whitespace after
    * @return version of arg, with whitespace after delimiter removed
-   * @deprecated use StringsPlume.removeWhitespaceAfter
+   * @deprecated use {@link StringsPlume#removeWhitespaceAfter}
    */
   @Deprecated // use StringsPlume.removeWhitespaceAfter; deprecated 2020-12-02
   public static String removeWhitespaceAfter(String arg, String delimiter) {
@@ -2123,7 +2123,7 @@ public final class UtilPlume {
    * @param arg string to remove whitespace in
    * @param delimiter string to remove whitespace before
    * @return version of arg, with whitespace before delimiter removed
-   * @deprecated use StringsPlume.removeWhitespaceBefore
+   * @deprecated use {@link StringsPlume#removeWhitespaceBefore}
    */
   @Deprecated // use StringsPlume.removeWhitespaceBefore; deprecated 2020-12-02
   public static String removeWhitespaceBefore(String arg, String delimiter) {
@@ -2159,7 +2159,7 @@ public final class UtilPlume {
    * @param n count of nouns
    * @param noun word being counted
    * @return noun, if n==1; otherwise, pluralization of noun
-   * @deprecated use StringsPlume.nplural
+   * @deprecated use {@link StringsPlume#nplural}
    */
   @Deprecated // use StringsPlume.nplural; deprecated 2020-12-02
   public static String nplural(int n, String noun) {
@@ -2182,7 +2182,7 @@ public final class UtilPlume {
    * @param s string to truncate or pad
    * @param length goal length
    * @return s truncated or padded to length characters
-   * @deprecated use StringsPlume.lpad
+   * @deprecated use {@link StringsPlume#lpad}
    */
   @Deprecated // use StringsPlume.lpad; deprecated 2020-12-02
   public static String lpad(String s, @NonNegative int length) {
@@ -2204,7 +2204,7 @@ public final class UtilPlume {
    * @param s string to truncate or pad
    * @param length goal length
    * @return s truncated or padded to length characters
-   * @deprecated use StringsPlume.rpad
+   * @deprecated use {@link StringsPlume#rpad}
    */
   @Deprecated // use StringsPlume.rpad; deprecated 2020-12-02
   public static String rpad(String s, @NonNegative int length) {
@@ -2225,7 +2225,7 @@ public final class UtilPlume {
    * @param num int whose string representation to truncate or pad
    * @param length goal length
    * @return a string representation of num truncated or padded to length characters
-   * @deprecated use StringsPlume.rpad
+   * @deprecated use {@link StringsPlume#rpad}
    */
   @Deprecated // use StringsPlume.rpad; deprecated 2020-12-02
   public static String rpad(int num, @NonNegative int length) {
@@ -2238,7 +2238,7 @@ public final class UtilPlume {
    * @param num double whose string representation to truncate or pad
    * @param length goal length
    * @return a string representation of num truncated or padded to length characters
-   * @deprecated use StringsPlume.rpad
+   * @deprecated use {@link StringsPlume#rpad}
    */
   @Deprecated // use StringsPlume.rpad; deprecated 2020-12-02
   public static String rpad(double num, @NonNegative int length) {
@@ -2248,7 +2248,7 @@ public final class UtilPlume {
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
    *
-   * @deprecated use StringsPlume.NullableStringComparator
+   * @deprecated use {@link StringsPlume.NullableStringComparator}
    */
   @Deprecated // use StringsPlume.NullableStringComparator; deprecated 2020-12-02
   public static class NullableStringComparator implements Comparator<String>, Serializable {
@@ -2280,7 +2280,7 @@ public final class UtilPlume {
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
    *
-   * @deprecated use StringsPlume.ObjectComparator
+   * @deprecated use {@link StringsPlume.ObjectComparator}
    */
   @Deprecated // use StringsPlume.ObjectComparator; deprecated 2020-12-02
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
@@ -2319,7 +2319,7 @@ public final class UtilPlume {
    * @param s string to search in
    * @param ch character to search for
    * @return number of times the character appears in the string
-   * @deprecated use StringsPlume.count
+   * @deprecated use {@link StringsPlume#count}
    */
   @Deprecated // use StringsPlume.count; deprecated 2020-12-02
   public static int count(String s, int ch) {
@@ -2338,7 +2338,7 @@ public final class UtilPlume {
    * @param s string to search in
    * @param sub non-empty string to search for
    * @return number of times the substring appears in the string
-   * @deprecated use StringsPlume.count
+   * @deprecated use {@link StringsPlume#count}
    */
   @Deprecated // use StringsPlume.count; deprecated 2020-12-02
   public static int count(String s, String sub) {
@@ -2361,7 +2361,7 @@ public final class UtilPlume {
    *
    * @param val a numeric value
    * @return an abbreviated string representation of the value
-   * @deprecated use StringsPlume.abbreviateNumber
+   * @deprecated use {@link StringsPlume#abbreviateNumber}
    */
   @Deprecated // use StringsPlume.abbreviateNumber; deprecated 2020-12-02
   public static String abbreviateNumber(long val) {
@@ -2406,7 +2406,7 @@ public final class UtilPlume {
    *
    * @param s a string
    * @return the number of format specifiers in the string
-   * @deprecated use StringsPlume.countFormatArguments
+   * @deprecated use {@link StringsPlume#countFormatArguments}
    */
   @Deprecated // use StringsPlume.countFormatArguments; deprecated 2020-12-02
   public static int countFormatArguments(String s) {
@@ -2446,7 +2446,7 @@ public final class UtilPlume {
    * @param delim the delimiters
    * @param returnDelims flag indicating whether to return the delimiters as tokens
    * @return vector of strings resulting from tokenization
-   * @deprecated use StringsPlume.tokens
+   * @deprecated use {@link StringsPlume#tokens}
    */
   @Deprecated // use StringsPlume.tokens; deprecated 2020-12-02
   public static ArrayList<Object> tokens(String str, String delim, boolean returnDelims) {
@@ -2460,7 +2460,7 @@ public final class UtilPlume {
    * @param str a string to be parsed
    * @param delim the delimiters
    * @return vector of strings resulting from tokenization
-   * @deprecated use StringsPlume.tokens
+   * @deprecated use {@link StringsPlume#tokens}
    */
   @Deprecated // use StringsPlume.tokens; deprecated 2020-12-02
   public static ArrayList<Object> tokens(String str, String delim) {
@@ -2473,7 +2473,7 @@ public final class UtilPlume {
    *
    * @param str a string to be parsed
    * @return vector of strings resulting from tokenization
-   * @deprecated use StringsPlume.tokens
+   * @deprecated use {@link StringsPlume#tokens}
    */
   @Deprecated // use StringsPlume.tokens; deprecated 2020-12-02
   public static ArrayList<Object> tokens(String str) {

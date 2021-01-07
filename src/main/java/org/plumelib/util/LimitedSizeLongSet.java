@@ -25,7 +25,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  */
 // I have not evaluated the importance of the optimizations in this class.
 // Consider adding the following 2 lines:
-//    * @deprecated Use LimitedSizeSet instead
+//    * @deprecated use {@link LimitedSizeSet}
 //   @Deprecated
 public class LimitedSizeLongSet implements Serializable, Cloneable {
   // We are Serializable, so we specify a version to allow changes to
