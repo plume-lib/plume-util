@@ -24,7 +24,7 @@ dependencies {
   // https://mvnrepository.com/artifact/org.plumelib/reflection-util
   implementation 'org.plumelib:reflection-util:1.0.3'
 
-  errorprone 'com.google.errorprone:error_prone_core:2.4.0'
+  errorprone 'com.google.errorprone:error_prone_core:2.5.0'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
