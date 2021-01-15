@@ -888,13 +888,16 @@ public final class UtilPlume {
   }
 
   /**
-   * Reads an Object from a File.
+   * Reads an Object from a File. This is a wrapper around {@link ObjectInputStream#readObject}, but
+   * it takes a {@link File} as an argument. Note that use of that method can lead to security
+   * vulnerabilities.
    *
    * @param file the file from which to read
    * @return the object read from the file
    * @throws IOException if there is trouble reading the file
    * @throws ClassNotFoundException if the object's class cannot be found
    */
+  @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
     // 8192 is the buffer size in BufferedReader
     InputStream istream = new BufferedInputStream(new FileInputStream(file), 8192);
