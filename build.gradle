@@ -61,6 +61,7 @@ tasks.withType(JavaCompile).configureEach {
     // Code copied from the JDK that we don't want to change gratuitously.
     excludedPaths = ".*/Weak.*Hash(er)?Map.java"
   }
+  options.forkOptions.jvmArgs += "-Xmx2g"
 }
 
 /// Checker Framework pluggable type-checking
