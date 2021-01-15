@@ -5,6 +5,9 @@ workflows:
   build:
     jobs:
       - build:
+          # This requires your CircleCI organization to have a context
+          # named `docker-hub-credentials` that contains environment
+          # variables `DOCKERHUB_USERNAME` and `DOCKERHUB_PASSWORD`.
           context:
             - build-env-vars
             - docker-hub-credentials
