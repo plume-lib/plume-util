@@ -37,6 +37,7 @@ jobs:
             - gradle-v1-{{ .Branch }}-
             - gradle-v1-
 
+      - run: JAVA_OPTS="-Xmx1999m" JAVA_TOOL_OPTS="-Xmx1998m" ./gradlew compileTestJava --debug
       - run: JAVA_OPTS="-Xmx2g" JAVA_TOOL_OPTS="-Xmx2g" ./gradlew build javadoc
       - run: ./gradlew requireJavadoc
 
