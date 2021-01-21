@@ -98,12 +98,12 @@
  *   <dt>{@link org.plumelib.util.ClassDeterministic ClassDeterministic}
  *   <dd>Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted
  *       order.
- *   <dt>{@link org.plumelib.util.ClassDeterministic UniqueId}
+ *   <dt>{@link org.plumelib.util.UniqueId UniqueId}
  *   <dd>An interface for objects that have a unique ID. If you are tempted to print the value of
  *       {@code System.identityHashCode()}, consider using this instead.
- *   <dt>{@link org.plumelib.util.ClassDeterministic UniqueIdMap}
- *   <dd>Provides a unique ID (like the {@link org.plumelib.util.ClassDeterministic UniqueId} class)
- *       for classes that you cannot modify.
+ *   <dt>{@link org.plumelib.util.UniqueIdMap UniqueIdMap}
+ *   <dd>Provides a unique ID (like the {@link org.plumelib.util.UniqueId UniqueId} class) for
+ *       classes that you cannot modify.
  *   <dt>{@link org.plumelib.util.ImmutableTypes ImmutableTypes}
  *   <dd>Indicates which types in the JDK are immutable.
  * </dl>
