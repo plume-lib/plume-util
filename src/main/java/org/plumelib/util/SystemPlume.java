@@ -118,7 +118,9 @@ public final class SystemPlume {
    *
    * <pre>{@code
    * if (GC.gcPercentage() > .25) {
-   *   throw new Error("The JVM has too little memory; re-run with larger max heap.");
+   *   throw new Error("Memory constraints are impeding performance; re-run with larger max heap size (currently "
+   *                   + Runtime.getRuntime().maxMemory()
+   *                   + " bytes).");
    * }
    * }</pre>
    *
@@ -138,7 +140,9 @@ public final class SystemPlume {
    *
    * <pre>{@code
    * if (GC.gcPercentage(10) > .25) {
-   *   throw new Error("The JVM has too little memory; re-run with larger max heap.");
+   *   throw new Error("Memory constraints are impeding performance; re-run with larger max heap size (currently "
+   *                   + Runtime.getRuntime().maxMemory()
+   *                   + " bytes).");
    * }
    * }</pre>
    *
