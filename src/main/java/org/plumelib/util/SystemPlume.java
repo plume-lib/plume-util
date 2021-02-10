@@ -105,6 +105,8 @@ public final class SystemPlume {
   /**
    * A list of pairs of (timestamp, accumulated collection time). The timestamp is an epoch second,
    * and the collection time is in milliseconds. New items are added to the front.
+   *
+   * <p>The list is not currently pruned.
    */
   private static List<Pair<Long, Long>> gcHistory = new ArrayList<>();
 
@@ -118,9 +120,12 @@ public final class SystemPlume {
    *
    * <pre>{@code
    * if (GC.gcPercentage() > .25) {
-   *   throw new Error("Memory constraints are impeding performance; re-run with larger max heap size (currently "
-   *                   + Runtime.getRuntime().maxMemory()
-   *                   + " bytes).");
+   *   String message = String.format(
+   *     "Memory constraints are impeding performance; please increase max heap size (max memory = %d, total memory = %d, free memory = %d)",
+   *     Runtime.getRuntime().maxMemory(),
+   *     Runtime.getRuntime().totalMemory(),
+   *     Runtime.getRuntime().freeMemory());
+   *   System.err.println(message);
    * }
    * }</pre>
    *
@@ -140,9 +145,12 @@ public final class SystemPlume {
    *
    * <pre>{@code
    * if (GC.gcPercentage(10) > .25) {
-   *   throw new Error("Memory constraints are impeding performance; re-run with larger max heap size (currently "
-   *                   + Runtime.getRuntime().maxMemory()
-   *                   + " bytes).");
+   *   String message = String.format(
+   *     "Memory constraints are impeding performance; please increase max heap size (max memory = %d, total memory = %d, free memory = %d)",
+   *     Runtime.getRuntime().maxMemory(),
+   *     Runtime.getRuntime().totalMemory(),
+   *     Runtime.getRuntime().freeMemory());
+   *   System.err.println(message);
    * }
    * }</pre>
    *
