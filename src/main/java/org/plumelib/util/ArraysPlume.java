@@ -481,8 +481,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, within the given boundaries, testing for equality using
-   * the equals method.
+   * Searches for the first occurrence of the given element in the array, within the given
+   * boundaries, testing for equality using the equals method.
    *
    * @param <T> the type of the elements
    * @param a an array
@@ -526,8 +526,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the list, within the given boundaries, testing for equality using
-   * the equals method.
+   * Searches for the first occurrence of the given element in the list, within the given
+   * boundaries, testing for equality using the equals method.
    *
    * @param a a list
    * @param elt the element to search for
@@ -575,8 +575,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, within the given boundaries, testing for equality using
-   * == (not the equals method).
+   * Searches for the first occurrence of the given element in the array, within the given
+   * boundaries, testing for equality using == (not the equals method).
    *
    * @param a an array
    * @param elt the element to search for
@@ -621,8 +621,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the list, within the given boundaries, testing for equality using
-   * == (not the equals method).
+   * Searches for the first occurrence of the given element in the list, within the given
+   * boundaries, testing for equality using == (not the equals method).
    *
    * @param a a list
    * @param elt the element to search for
@@ -685,7 +685,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, within the given boundaries.
+   * Searches for the first occurrence of the given element in the array, within the given
+   * boundaries.
    *
    * @param a an array
    * @param elt the element to search for
@@ -707,7 +708,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, within the given boundaries.
+   * Searches for the first occurrence of the given element in the array, within the given
+   * boundaries.
    *
    * @param a an array
    * @param elt the element to search for
@@ -767,7 +769,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, within the given boundaries.
+   * Searches for the first occurrence of the given element in the array, within the given
+   * boundaries.
    *
    * @param a an array
    * @param elt the element to search for
@@ -1435,8 +1438,8 @@ public final class ArraysPlume {
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
-   * return true iff sub is a contiguous subarray of a
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}. return
+   *     true iff sub is a contiguous subarray of a
    */
   @Pure
   public static boolean isSubarray(List<?> a, List<?> sub, @NonNegative int aOffset) {
