@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.StringJoiner;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
@@ -2189,24 +2189,16 @@ public final class ArraysPlume {
     if (a == null) {
       return "null";
     }
-    StringBuilder sb = new StringBuilder();
-    sb.append("[");
-    if (a.length > 0) {
-      sb.append(a[0]);
-      for (int i = 1; i < a.length; i++) {
-        sb.append(", ");
-        if (quoted && a[i] instanceof String) {
-          String elt = (String) a[i];
-          sb.append('\"');
-          sb.append(StringsPlume.escapeJava(elt));
-          sb.append('\"');
-        } else {
-          sb.append(a[i]);
-        }
+    StringJoiner sj = new StringJoiner(", ", "[", "]");
+    for (int i = 0; i < a.length; i++) {
+      Object elt = a[i];
+      if (quoted && elt instanceof String) {
+        sj.add("\"" + StringsPlume.escapeJava((String) elt) + "\"");
+      } else {
+        sj.add(Objects.toString(elt));
       }
     }
-    sb.append("]");
-    return sb.toString();
+    return sj.toString();
   }
 
   /**
@@ -2250,25 +2242,15 @@ public final class ArraysPlume {
     if (a == null) {
       return "null";
     }
-    StringBuilder sb = new StringBuilder();
-    sb.append("[");
-    if (a.size() > 0) {
-      Iterator<?> itor = a.iterator();
-      sb.append(itor.next());
-      while (itor.hasNext()) {
-        sb.append(", ");
-        Object elt = itor.next();
-        if (quoted && elt instanceof String) {
-          sb.append('\"');
-          sb.append(StringsPlume.escapeJava((String) elt));
-          sb.append('\"');
-        } else {
-          sb.append(elt);
-        }
+    StringJoiner sj = new StringJoiner(", ", "[", "]");
+    for (Object elt : a) {
+      if (quoted && elt instanceof String) {
+        sj.add("\"" + StringsPlume.escapeJava((String) elt) + "\"");
+      } else {
+        sj.add(Objects.toString(elt));
       }
     }
-    sb.append("]");
-    return sb.toString();
+    return sj.toString();
   }
 
   ///////////////////////////////////////////////////////////////////////////

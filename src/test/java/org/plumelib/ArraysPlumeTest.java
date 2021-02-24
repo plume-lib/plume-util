@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
@@ -361,14 +362,22 @@ public final class ArraysPlumeTest {
       assertTrue(ArraysPlume.toStringQuoted((Object[]) null).equals("null"));
       assertTrue(ArraysPlume.toString((List<?>) null).equals("null"));
       assertTrue(ArraysPlume.toStringQuoted((List<?>) null).equals("null"));
-      assert ArraysPlume.toStringQuoted(Arrays.asList(new Object[] {3.14, null, "hello"}))
-          .equals("[3.14, null, \"hello\"]");
+      assertEquals(
+          "[3.14, null, \"hello\"]",
+          ArraysPlume.toStringQuoted(Arrays.asList(new Object[] {3.14, null, "hello"})));
+      assertEquals(
+          "[\"a\\\"quote\", \"b\", \"c\\\\backslash\", \"d\\nnewline\"]",
+          ArraysPlume.toStringQuoted(
+              Arrays.asList(new Object[] {"a\"quote", "b", "c\\backslash", "d\nnewline"})));
     }
 
     // static String toString(int[] a)
     assertTrue(Arrays.toString(new int[] {}).equals("[]"));
     assertTrue(Arrays.toString(new int[] {0}).equals("[0]"));
     assertTrue(Arrays.toString(new int[] {0, 1, 2}).equals("[0, 1, 2]"));
+    assertEquals(
+        "[\"a\\\"quote\", \"b\", \"c\\\\backslash\", \"d\\nnewline\"]",
+        ArraysPlume.toStringQuoted(new Object[] {"a\"quote", "b", "c\\backslash", "d\nnewline"}));
   }
 
   @Test
