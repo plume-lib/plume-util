@@ -2192,7 +2192,14 @@ public final class ArraysPlume {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
     if (a.length > 0) {
-      sb.append(a[0]);
+      if (quoted && a[0] instanceof String) {
+        String elt = (String) a[0];
+        sb.append('\"');
+        sb.append(StringsPlume.escapeJava(elt));
+        sb.append('\"');
+      } else {
+        sb.append(a[0]);
+      }
       for (int i = 1; i < a.length; i++) {
         sb.append(", ");
         if (quoted && a[i] instanceof String) {
