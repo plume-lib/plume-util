@@ -1688,7 +1688,8 @@ public final class ArraysPlume {
             "lowerbound:assignment.type.incompatible",
             "index:assignment.type.incompatible"
           }) // index checker has no list support
-          dest[i + destPos] = theList.get(i);
+          @IndexFor("dest") int index = i + destPos;
+          dest[index] = theList.get(i);
         }
       } else {
         throw new Error("both fields are null");
@@ -2086,7 +2087,7 @@ public final class ArraysPlume {
    * @throws IllegalArgumentException if a is not an array
    */
   @SideEffectFree
-  public static String toString(@Nullalble Object a) {
+  public static String toString(@Nullable Object a) {
     if (a == null) {
       return "null";
     } else if (a instanceof boolean[]) {
