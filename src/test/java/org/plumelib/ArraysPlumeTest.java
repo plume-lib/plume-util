@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -944,5 +945,15 @@ public final class ArraysPlumeTest {
     Instant[] da2 = new Instant[] {Instant.now()};
     @SuppressWarnings("UnusedVariable")
     Instant[] da3 = ArraysPlume.concat(da1, da2);
+
+    List<String> abcdefList = Arrays.asList("a", "b", "c", "d", "e", "f");
+    List<String> abcList = Arrays.asList("a", "b", "c");
+    List<String> defList = Arrays.asList("d", "e", "f");
+    assertArrayEquals(abcdefList.toArray(), ArraysPlume.concat(abcList, defList));
+
+    String[] abcdefArray = new String[] {"a", "b", "c", "d", "e", "f"};
+    String[] abcArray = new String[] {"a", "b", "c"};
+    String[] defArray = new String[] {"d", "e", "f"};
+    assertArrayEquals(abcdefArray, ArraysPlume.concat(abcArray, defArray));
   }
 }
