@@ -164,11 +164,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to min(Double[])");
     }
     Double result = a[0]; // to return a value actually in the array
-    int resultInt = result.intValue(); // for faster comparison
+    double resultDouble = result.doubleValue(); // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].intValue() < resultInt) {
+      if (a[i].doubleValue() < resultDouble) {
         result = a[i];
-        resultInt = result.intValue();
+        resultDouble = result.doubleValue();
       }
     }
     return result;
@@ -290,11 +290,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to max(Double[])");
     }
     Double result = a[0]; // to return a value actually in the array
-    int resultInt = result.intValue(); // for faster comparison
+    double resultDouble = result.doubleValue(); // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].intValue() > resultInt) {
+      if (a[i].doubleValue() > resultDouble) {
         result = a[i];
-        resultInt = result.intValue();
+        resultDouble = result.doubleValue();
       }
     }
     return result;
@@ -468,7 +468,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T> int indexOf(T[] a, @Nullable Object elt) {
+  public static <T> int indexOf(@Nullable T[] a, @Nullable Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -481,7 +481,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, testing for equality using
+   * Searches for the first occurrence of the given element in the array, within the given boundaries, testing for equality using
    * the equals method.
    *
    * @param <T> the type of the elements
@@ -495,7 +495,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static <T> int indexOf(
-      T[] a,
+      @Nullable T[] a,
       @Nullable Object elt,
       @IndexFor("#1") int minindex,
       @IndexOrHigh("#1") int indexlimit) {
@@ -526,7 +526,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the list, testing for equality using
+   * Searches for the first occurrence of the given element in the list, within the given boundaries, testing for equality using
    * the equals method.
    *
    * @param a a list
@@ -575,7 +575,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array, testing for equality using
+   * Searches for the first occurrence of the given element in the array, within the given boundaries, testing for equality using
    * == (not the equals method).
    *
    * @param a an array
@@ -621,7 +621,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the list, testing for equality using
+   * Searches for the first occurrence of the given element in the list, within the given boundaries, testing for equality using
    * == (not the equals method).
    *
    * @param a a list
@@ -685,7 +685,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array.
+   * Searches for the first occurrence of the given element in the array, within the given boundaries.
    *
    * @param a an array
    * @param elt the element to search for
@@ -707,7 +707,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array.
+   * Searches for the first occurrence of the given element in the array, within the given boundaries.
    *
    * @param a an array
    * @param elt the element to search for
@@ -767,7 +767,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Searches for the first occurrence of the given element in the array.
+   * Searches for the first occurrence of the given element in the array, within the given boundaries.
    *
    * @param a an array
    * @param elt the element to search for
@@ -810,7 +810,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(@PolyNull Object[] a, Object[] sub) {
-    int aIndexMax = a.length - sub.length + 1;
+    int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -836,7 +836,7 @@ public final class ArraysPlume {
   // @PolyNull qualifier does not yet take an argument.
   @Pure
   public static int indexOfEq(@PolyNull Object[] a, @PolyNull Object[] sub) {
-    int aIndexMax = a.length - sub.length + 1;
+    int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
         return i;
@@ -858,7 +858,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(List<?> a, @PolyNull Object[] sub) {
-    int aIndexMax = a.size() - sub.length + 1;
+    int aIndexMax = a.size() - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -880,7 +880,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOfEq(List<?> a, @PolyNull Object[] sub) {
-    int aIndexMax = a.size() - sub.length + 1;
+    int aIndexMax = a.size() - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
         return i;
@@ -893,7 +893,7 @@ public final class ArraysPlume {
    * Searches for the first subsequence of the array that matches the given list elementwise,
    * testing for equality using the equals method.
    *
-   * @param a a list
+   * @param a an array
    * @param sub subsequence to search for
    * @return the first index at which the second list starts in the first array, or -1 if no such
    *     element is found in the array
@@ -915,7 +915,7 @@ public final class ArraysPlume {
    * Searches for the first subsequence of the array that matches the given list elementwise,
    * testing for equality using == (not the equals method).
    *
-   * @param a a list
+   * @param a an array
    * @param sub subsequence to search for
    * @return the first index at which the second list starts in the first array, or -1 if the
    *     element is not found in the array
@@ -924,7 +924,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOfEq(@PolyNull Object[] a, List<?> sub) {
-    int aIndexMax = a.length - sub.size() + 1;
+    int aIndexMax = a.length - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
         return i;
@@ -946,7 +946,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(List<?> a, List<?> sub) {
-    int aIndexMax = a.size() - sub.size() + 1;
+    int aIndexMax = a.size() - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -968,7 +968,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOfEq(List<?> a, List<?> sub) {
-    int aIndexMax = a.size() - sub.size() + 1;
+    int aIndexMax = a.size() - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
         return i;
@@ -989,7 +989,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(int[] a, int[] sub) {
-    int aIndexMax = a.length - sub.length + 1;
+    int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -1010,7 +1010,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(double[] a, double[] sub) {
-    int aIndexMax = a.length - sub.length + 1;
+    int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -1031,7 +1031,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(long[] a, long[] sub) {
-    int aIndexMax = a.length - sub.length + 1;
+    int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -1052,7 +1052,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(boolean[] a, boolean[] sub) {
-    int aIndexMax = a.length - sub.length + 1;
+    int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -1344,8 +1344,7 @@ public final class ArraysPlume {
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
    *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
-   * @return the first index at which the second array starts in the first array, or -1 if no such
-   *     element is found in the array
+   * @return true iff sub is a contiguous subarray of a
    */
   @Pure
   public static boolean isSubarray(@PolyNull Object[] a, List<?> sub, @NonNegative int aOffset) {
@@ -1391,8 +1390,7 @@ public final class ArraysPlume {
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
    *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
-   * @return the first index at which the second array starts in the first array, or -1 if no such
-   *     element is found in the array
+   * @return true iff sub is a contiguous subarray of a
    */
   @Pure
   public static boolean isSubarray(List<?> a, @PolyNull Object[] sub, @NonNegative int aOffset) {
@@ -1438,8 +1436,7 @@ public final class ArraysPlume {
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
    *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
-   * @return the first index at which the second array starts in the first array, or -1 if no such
-   *     element is found in the array
+   * return true iff sub is a contiguous subarray of a
    */
   @Pure
   public static boolean isSubarray(List<?> a, List<?> sub, @NonNegative int aOffset) {
@@ -1686,13 +1683,12 @@ public final class ArraysPlume {
       if (theArray != null) {
         System.arraycopy(theArray, 0, dest, destPos, theArray.length);
       } else if (theList != null) {
-        for (int i = destPos; i < theList.size(); i++) {
+        for (int i = 0; i < theList.size(); i++) {
           @SuppressWarnings({
             "lowerbound:assignment.type.incompatible",
             "index:assignment.type.incompatible"
           }) // index checker has no list support
-          @IndexFor("dest") int index = i + theList.size();
-          dest[index] = theList.get(i);
+          dest[i + destPos] = theList.get(i);
         }
       } else {
         throw new Error("both fields are null");
@@ -1852,6 +1848,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static byte[] concat(byte @Nullable [] a, byte @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -1880,6 +1877,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static boolean[] concat(boolean @Nullable [] a, boolean @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -1908,6 +1906,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static char[] concat(char @Nullable [] a, char @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -1936,6 +1935,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static double[] concat(double @Nullable [] a, double @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -1964,6 +1964,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static float[] concat(float @Nullable [] a, float @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -1992,6 +1993,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static int[] concat(int @Nullable [] a, int @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -2020,6 +2022,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static long[] concat(long @Nullable [] a, long @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -2048,6 +2051,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
+  @SideEffectFree
   public static short[] concat(short @Nullable [] a, short @Nullable [] b) {
     if (a == null) {
       if (b == null) {
@@ -2082,7 +2086,7 @@ public final class ArraysPlume {
    * @throws IllegalArgumentException if a is not an array
    */
   @SideEffectFree
-  public static String toString(Object a) {
+  public static String toString(@Nullalble Object a) {
     if (a == null) {
       return "null";
     } else if (a instanceof boolean[]) {
@@ -2120,7 +2124,7 @@ public final class ArraysPlume {
    * @throws IllegalArgumentException if obj is null or is not an array
    */
   @Pure
-  public static @NonNegative int length(Object a) throws IllegalArgumentException {
+  public static @NonNegative int length(@Nullable Object a) throws IllegalArgumentException {
     if (a == null) {
       throw new IllegalArgumentException("Argument is null");
     } else if (a instanceof boolean[]) {
