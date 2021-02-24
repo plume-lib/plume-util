@@ -1438,8 +1438,8 @@ public final class ArraysPlume {
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
-   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}. return
-   *     true iff sub is a contiguous subarray of a
+   *     returns false if {@code aOffset} is too large to be a valid index for {@code a}.
+   * @return true iff sub is a contiguous subarray of a
    */
   @Pure
   public static boolean isSubarray(List<?> a, List<?> sub, @NonNegative int aOffset) {
