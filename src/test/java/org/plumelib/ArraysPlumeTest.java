@@ -48,22 +48,26 @@ public final class ArraysPlumeTest {
   public void testMinAndMax() {
 
     // public static int min(int[] a)
-    assertTrue(ArraysPlume.min(new int[] {1, 2, 3}) == 1);
-    assertTrue(ArraysPlume.min(new int[] {2, 33, 1}) == 1);
-    assertTrue(ArraysPlume.min(new int[] {3, -2, 1}) == -2);
-    assertTrue(ArraysPlume.min(new int[] {3}) == 3);
+    assertEquals(1, ArraysPlume.min(new int[] {1, 2, 3}));
+    assertEquals(1, ArraysPlume.min(new int[] {2, 33, 1}));
+    assertEquals(-2, ArraysPlume.min(new int[] {3, -2, 1}));
+    assertEquals(3, ArraysPlume.min(new int[] {3}));
+    assertEquals(3.1, ArraysPlume.min(new Double[] {3.1, 3.2, 3.3}));
+    assertEquals(3.1, ArraysPlume.min(new Double[] {3.3, 3.2, 3.1}));
 
     // public static int max(int[] a)
-    assertTrue(ArraysPlume.max(new int[] {1, 2, 3}) == 3);
-    assertTrue(ArraysPlume.max(new int[] {2, 33, 1}) == 33);
-    assertTrue(ArraysPlume.max(new int[] {3, -2, 1}) == 3);
-    assertTrue(ArraysPlume.max(new int[] {3}) == 3);
+    assertEquals(3, ArraysPlume.max(new int[] {1, 2, 3}));
+    assertEquals(33, ArraysPlume.max(new int[] {2, 33, 1}));
+    assertEquals(3, ArraysPlume.max(new int[] {3, -2, 1}));
+    assertEquals(3, ArraysPlume.max(new int[] {3}));
+    assertEquals(3.3, ArraysPlume.max(new Double[] {3.1, 3.2, 3.3}));
+    assertEquals(3.3, ArraysPlume.max(new Double[] {3.3, 3.2, 3.1}));
 
     // public static int[] minAndMax(int[] a)
-    assertArraysEquals(ArraysPlume.minAndMax(new int[] {1, 2, 3}), new int[] {1, 3});
-    assertArraysEquals(ArraysPlume.minAndMax(new int[] {2, 33, 1}), new int[] {1, 33});
-    assertArraysEquals(ArraysPlume.minAndMax(new int[] {3, -2, 1}), new int[] {-2, 3});
-    assertArraysEquals(ArraysPlume.minAndMax(new int[] {3}), new int[] {3, 3});
+    assertArraysEquals(new int[] {1, 3}, ArraysPlume.minAndMax(new int[] {1, 2, 3}));
+    assertArraysEquals(new int[] {1, 33}, ArraysPlume.minAndMax(new int[] {2, 33, 1}));
+    assertArraysEquals(new int[] {-2, 3}, ArraysPlume.minAndMax(new int[] {3, -2, 1}));
+    assertArraysEquals(new int[] {3, 3}, ArraysPlume.minAndMax(new int[] {3}));
     try {
       ArraysPlume.minAndMax(new int[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
@@ -76,10 +80,10 @@ public final class ArraysPlumeTest {
     }
 
     // public static int elementRange(int[] a)
-    assertTrue(ArraysPlume.elementRange(new int[] {1, 2, 3}) == 2);
-    assertTrue(ArraysPlume.elementRange(new int[] {2, 33, 1}) == 32);
-    assertTrue(ArraysPlume.elementRange(new int[] {3, -2, 1}) == 5);
-    assertTrue(ArraysPlume.elementRange(new int[] {3}) == 0);
+    assertEquals(2, ArraysPlume.elementRange(new int[] {1, 2, 3}));
+    assertEquals(32, ArraysPlume.elementRange(new int[] {2, 33, 1}));
+    assertEquals(5, ArraysPlume.elementRange(new int[] {3, -2, 1}));
+    assertEquals(0, ArraysPlume.elementRange(new int[] {3}));
   }
 
   @Test
