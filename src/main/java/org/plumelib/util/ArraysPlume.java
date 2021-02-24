@@ -468,7 +468,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T> int indexOf(@Nullable T[] a, @Nullable Object elt) {
+  public static <T> int indexOf(T[] a, @Nullable Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -495,7 +495,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static <T> int indexOf(
-      @Nullable T[] a,
+      T[] a,
       @Nullable Object elt,
       @IndexFor("#1") int minindex,
       @IndexOrHigh("#1") int indexlimit) {
