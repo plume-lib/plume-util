@@ -307,7 +307,7 @@ public final class ArraysPlume {
    * @return a two-element array containing the smallest and largest values in the array
    * @throws ArrayIndexOutOfBoundsException if the array has length 0
    */
-  @Pure
+  @SideEffectFree
   @StaticallyExecutable
   public static int @ArrayLen(2) [] minAndMax(int[] a) {
     if (a.length == 0) {
@@ -330,7 +330,7 @@ public final class ArraysPlume {
    * @return a two-element array containing the smallest and largest values in the array
    * @throws ArrayIndexOutOfBoundsException if the array has length 0
    */
-  @Pure
+  @SideEffectFree
   @StaticallyExecutable
   public static long @ArrayLen(2) [] minAndMax(long[] a) {
     if (a.length == 0) {
