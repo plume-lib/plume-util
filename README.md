@@ -15,4 +15,4 @@ dependencies {
 }
 ```
 
-Other build systems are [https://search.maven.org/artifact/org.plumelib/plume-util/1.4.1/jar](similar).
+Other build systems are [similar](https://search.maven.org/artifact/org.plumelib/plume-util/1.4.1/jar).
