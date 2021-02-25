@@ -308,7 +308,7 @@ public final class ArraysPlume {
    * @throws ArrayIndexOutOfBoundsException if the array has length 0
    */
   @SideEffectFree // Deterministic up to .equals(), but not ==
-  @StaticallyExecutable
+  // @StaticallyExecutable
   public static int @ArrayLen(2) [] minAndMax(int[] a) {
     if (a.length == 0) {
       // return null;
@@ -331,7 +331,7 @@ public final class ArraysPlume {
    * @throws ArrayIndexOutOfBoundsException if the array has length 0
    */
   @SideEffectFree // Deterministic up to .equals(), but not ==
-  @StaticallyExecutable
+  // @StaticallyExecutable
   public static long @ArrayLen(2) [] minAndMax(long[] a) {
     if (a.length == 0) {
       // return null;
@@ -359,6 +359,10 @@ public final class ArraysPlume {
     if (a.length == 0) {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(int[])");
     }
+    @SuppressWarnings({
+      "allcheckers:purity.not.deterministic.call",
+      "allcheckers:method.guarantee.violated"
+    }) // pure up to .equals(), which is enough for arithmetic
     int[] minAndMax = minAndMax(a);
     return minAndMax[1] - minAndMax[0];
   }
@@ -376,6 +380,10 @@ public final class ArraysPlume {
     if (a.length == 0) {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(long[])");
     }
+    @SuppressWarnings({
+      "allcheckers:purity.not.deterministic.call",
+      "allcheckers:method.guarantee.violated"
+    }) // pure up to .equals(), which is enough for arithmetic
     long[] minAndMax = minAndMax(a);
     return minAndMax[1] - minAndMax[0];
   }
