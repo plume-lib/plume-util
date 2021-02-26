@@ -2670,6 +2670,7 @@ public final class ArraysPlume {
    * @throws IllegalArgumentException if a value of a is outside of arange
    * @exception UnsupportedOperationException when the function is not invertible
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // side effect to local state
   @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
     int[] result = new int[arange];
@@ -2698,6 +2699,7 @@ public final class ArraysPlume {
    * @param b function from [0..b.length) to range R
    * @return function from [0..a.length) to range R that is the composition of a and b
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // side effect to local state
   @SideEffectFree
   public static int @SameLen("#1") [] fnCompose(@IndexFor("#2") int[] a, int[] b) {
     int[] result = new int[a.length];
@@ -2716,6 +2718,7 @@ public final class ArraysPlume {
    * @return function from [0..a.length) to {range R} union {-1}, that is the composition of a and
    *     b.
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // side effect to local state
   @SideEffectFree
   public static int @SameLen("#1") [] partialFnCompose(@IndexOrLow("#2") int[] a, int[] b) {
     int[] result = new int[a.length];
