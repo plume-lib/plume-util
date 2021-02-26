@@ -2,6 +2,9 @@
 
 ## 1.5.0 (forthcoming)
 
+- New methods for writing possibly-compressed files:
+   - `FilesPlume.newFileOutputStream` (3 overloads)
+   - `FilesPlume.newFileWritec` (5 overloads)
 - Moved methods (the old versions still work but are deprecated)
    - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
 
