@@ -209,7 +209,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /// Inputstream and charset constructors
 
   /**
-   * Create a EntryReader that uses the given character set.
+   * Create an EntryReader that uses the given character set.
    *
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @param in source from which to read entries
@@ -232,7 +232,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param in the InputStream
    * @param charsetName the character set to use
@@ -248,7 +248,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /// Inputstream (no charset) constructors
 
   /**
-   * Create a EntryReader.
+   * Create an EntryReader.
    *
    * @param in source from which to read entries
    * @param filename non-null file name for stream being read
@@ -266,7 +266,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that uses the default character set and does not support comments or
+   * Create an EntryReader that uses the default character set and does not support comments or
    * include directives.
    *
    * @param in the InputStream
@@ -278,7 +278,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param in the InputStream
    * @see #EntryReader(InputStream,String,String,String)
@@ -343,7 +343,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader.
+   * Create an EntryReader.
    *
    * @param reader source from which to read entries
    * @param filename file name corresponding to reader, for use in error messages
@@ -374,7 +374,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param reader source from which to read entries
    * @see #EntryReader(Reader,String,String,String)
@@ -402,7 +402,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param path the file to read
    * @throws IOException if there is a problem reading the file
@@ -413,7 +413,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param path the file to read
    * @param charsetName the character set to use
@@ -443,7 +443,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param file the file to read
    * @throws IOException if there is a problem reading the file
@@ -454,7 +454,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param file the file to read
    * @param charsetName the character set to use
@@ -487,7 +487,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param filename source from which to read entries
    * @throws IOException if there is a problem reading the file
@@ -498,7 +498,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Create a EntryReader that does not support comments or include directives.
+   * Create an EntryReader that does not support comments or include directives.
    *
    * @param filename source from which to read entries
    * @param charsetName the character set to use
