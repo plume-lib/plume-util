@@ -144,7 +144,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * @throws IOException if there is trobule reading the file
      */
     public FlnReader(String filename) throws IOException {
-      super(UtilPlume.fileReader(filename));
+      super(FilesPlume.newFileReader(filename));
       this.filename = filename;
     }
   }
@@ -398,7 +398,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       Path path, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(UtilPlume.fileReader(path), path.toString(), commentRegex, includeRegex);
+    this(FilesPlume.newFileReader(path), path.toString(), commentRegex, includeRegex);
   }
 
   /**
@@ -421,7 +421,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(Path,String,String)
    */
   public EntryReader(Path path, String charsetName) throws IOException {
-    this(UtilPlume.fileInputStream(path), charsetName, path.toString(), null, null);
+    this(FilesPlume.newFileInputStream(path), charsetName, path.toString(), null, null);
   }
 
   /// File constructors
@@ -439,7 +439,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(UtilPlume.fileReader(file), file.toString(), commentRegex, includeRegex);
+    this(FilesPlume.newFileReader(file), file.toString(), commentRegex, includeRegex);
   }
 
   /**
@@ -462,7 +462,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,String,String)
    */
   public EntryReader(File file, String charsetName) throws IOException {
-    this(UtilPlume.fileInputStream(file), charsetName, file.toString(), null, null);
+    this(FilesPlume.newFileInputStream(file), charsetName, file.toString(), null, null);
   }
 
   /// Filename constructors
@@ -563,7 +563,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
               String.format(
                   "includeRegex (%s) does not capture group 1 in %s", includeRegex, line));
         }
-        File filename = new File(UtilPlume.expandFilename(filenameString));
+        File filename = new File(FilesPlume.expandFilename(filenameString));
         // System.out.printf ("Trying to include filename %s%n", filename);
         if (!filename.isAbsolute()) {
           FlnReader reader = readers.getFirst();

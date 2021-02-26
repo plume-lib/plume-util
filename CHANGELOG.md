@@ -1,6 +1,11 @@
 # Plume-Util change log
 
-## 1.4.1
+## 1.5.0 (forthcoming)
+
+- Moved methods (the old versions still work but are deprecated)
+   - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
+
+## 1.4.1 (2021-01-06)
 
 - New class:
    - `LimitedSizeLongSet`
@@ -14,7 +19,7 @@
    - `UtilPlume.fileLines` (use `Files.readAllLines`)
    - `UtilPlume.hash` methods (use `Objects.hash` or `Arrays.hashCode`)
 - Moved methods (the old versions still work but are deprecated):
-   - moved system from `UtilPlume` to new class `SystemPlume`;
+   - Moved system methods from `UtilPlume` to new class `SystemPlume`.
    - moved from `UtilPlume` to `StringsPlume`:
       - `mapToStringAndClass`
       - `toStringAndClass`
