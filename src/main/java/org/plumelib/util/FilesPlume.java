@@ -71,6 +71,7 @@ public final class FilesPlume {
       try {
         in = new GZIPInputStream(fis);
       } catch (IOException e) {
+        fis.close();
         throw new IOException("Problem while reading " + path, e);
       }
     } else {
@@ -351,6 +352,7 @@ public final class FilesPlume {
       try {
         in = new GZIPOutputStream(fis);
       } catch (IOException e) {
+        fis.close();
         throw new IOException("Problem while reading " + path, e);
       }
     } else {
@@ -872,9 +874,12 @@ public final class FilesPlume {
    */
   public static void writeObject(Object o, File file) throws IOException {
     OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
-    ObjectOutputStream objs = new ObjectOutputStream(bytes);
-    objs.writeObject(o);
-    objs.close();
+    try (ObjectOutputStream objs = new ObjectOutputStream(bytes)) {
+      objs.writeObject(o);
+    } finally {
+      // In case objs was never set.
+      bytes.close();
+    }
   }
 
   /**
@@ -889,11 +894,12 @@ public final class FilesPlume {
    */
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
-    InputStream fis = newFileInputStream(file);
-    // 8192 is the buffer size in BufferedReader
-    InputStream istream = new BufferedInputStream(fis, 8192);
-    ObjectInputStream objs = new ObjectInputStream(istream);
-    return objs.readObject();
+    try (InputStream fis = newFileInputStream(file);
+        // 8192 is the buffer size in BufferedReader
+        InputStream istream = new BufferedInputStream(fis, 8192);
+        ObjectInputStream objs = new ObjectInputStream(istream)) {
+      return objs.readObject();
+    }
   }
 
   /**
@@ -930,8 +936,7 @@ public final class FilesPlume {
    */
   public static String readFile(File file) {
 
-    try {
-      BufferedReader reader = newBufferedFileReader(file);
+    try (BufferedReader reader = newBufferedFileReader(file)) {
       StringBuilder contents = new StringBuilder();
       String line = reader.readLine();
       while (line != null) {
@@ -940,7 +945,6 @@ public final class FilesPlume {
         contents.append(lineSep);
         line = reader.readLine();
       }
-      reader.close();
       return contents.toString();
     } catch (Exception e) {
       throw new Error("Unexpected error in readFile(" + file + ")", e);
@@ -957,10 +961,8 @@ public final class FilesPlume {
    */
   public static void writeFile(File file, String contents) {
 
-    try {
-      Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8);
+    try (Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8)) {
       writer.write(contents, 0, contents.length());
-      writer.close();
     } catch (Exception e) {
       throw new Error("Unexpected error in writeFile(" + file + ")", e);
     }
