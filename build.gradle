@@ -17,6 +17,7 @@ plugins {
 }
 
 repositories {
+  mavenLocal()
   mavenCentral()
 }
 
@@ -68,7 +69,12 @@ tasks.withType(JavaCompile).configureEach {
 
 apply plugin: 'org.checkerframework'
 
+dependencies {
+    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.10-SNAPSHOT'
+    implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.10-SNAPSHOT'
+}
 checkerFramework {
+  /*
   checkers = [
     'org.checkerframework.checker.formatter.FormatterChecker',
     'org.checkerframework.checker.index.IndexChecker',
@@ -79,11 +85,19 @@ checkerFramework {
     'org.checkerframework.checker.signature.SignatureChecker',
     'org.checkerframework.common.initializedfields.InitializedFieldsChecker'
   ]
+  */
+  checkers = ['org.checkerframework.checker.objectconstruction.ObjectConstructionChecker']
   extraJavacArgs = [
     '-Werror',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
+    '-AsuppressWarnings=type.anno.before',
+    '-AcheckMustCall',
+    // -AskipUses does not work; instead, look at "The type of object is" in the checker output
+    // '-AskipUses=^java\\.',
+    // For debugging CFG problems.
+    // '-Aflowdotdir=/home/mernst/java/plume-lib/plume-util-fork-mernst-branch-check-resource-leaks-3/src/main/java/org/plumelib/util',
   ]
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".

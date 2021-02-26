@@ -22,6 +22,7 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
+import org.checkerframework.checker.mustcall.qual.*;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -476,7 +477,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T> int indexOf(T[] a, @Nullable Object elt) {
+  public static <T extends @MustCall Object> int indexOf(T[] a, @Nullable Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -502,7 +503,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T> int indexOf(
+  public static <T extends @MustCall Object> int indexOf(
       T[] a,
       @Nullable Object elt,
       @IndexFor("#1") int minindex,
@@ -1712,7 +1713,8 @@ public final class ArraysPlume {
      *
      * @return the least upper bound of the classes of the elements of this
      */
-    @Nullable Class<?> leastUpperBound() {
+    @SuppressWarnings("mustcall:argument.type.incompatible") // ReflectionPlume is not annotated
+    @Nullable Class<? extends @MustCall Object> leastUpperBound() {
       if (theArray != null) {
         return ReflectionPlume.leastUpperBound(theArray);
       } else if (theList != null) {
@@ -3312,7 +3314,7 @@ public final class ArraysPlume {
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
-  public static boolean anyNull(List<?> a) {
+  public static boolean anyNull(List<? extends @MustCall Object> a) {
     if (a.size() == 0) {
       return false;
     }
