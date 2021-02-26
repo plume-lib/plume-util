@@ -533,8 +533,7 @@ public final class FilesPlume {
       throws IOException {
     if (filename.endsWith(".gz")) {
       return new BufferedWriter(
-          new OutputStreamWriter(
-              new GZIPOutputStream(new FileOutputStream(filename, append)), UTF_8));
+          new OutputStreamWriter(newFileOutputStream(Paths.get(filename), append), UTF_8));
     } else {
       return Files.newBufferedWriter(
           Paths.get(filename),
@@ -872,11 +871,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   public static void writeObject(Object o, File file) throws IOException {
-    // 8192 is the buffer size in BufferedReader
-    OutputStream bytes = new BufferedOutputStream(new FileOutputStream(file), 8192);
-    if (file.getName().endsWith(".gz")) {
-      bytes = new GZIPOutputStream(bytes);
-    }
+    OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
     ObjectOutputStream objs = new ObjectOutputStream(bytes);
     objs.writeObject(o);
     objs.close();
