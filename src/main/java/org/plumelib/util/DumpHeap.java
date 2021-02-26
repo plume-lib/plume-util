@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
-/** Defines a method {@link #dumpHeap} that dumps the heap to an .hprof file. */
+/** Defines a static method {@link #dumpHeap} that dumps the heap to an .hprof file. */
 public class DumpHeap {
 
   /**
