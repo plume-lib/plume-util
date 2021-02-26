@@ -2655,6 +2655,7 @@ public final class ArraysPlume {
    * @return fresh array which is the inverse of the given permutation
    * @see #fnIsPermutation(int[])
    */
+  @SideEffectFree
   public static int[] fnInversePermutation(int[] a) {
     return fnInverse(a, a.length);
   }
@@ -2669,6 +2670,11 @@ public final class ArraysPlume {
    * @throws IllegalArgumentException if a value of a is outside of arange
    * @exception UnsupportedOperationException when the function is not invertible
    */
+  @SuppressWarnings({
+    "allcheckers:purity",
+    "lock:method.guarantee.violated"
+  }) // side effect to local state
+  @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
     int[] result = new int[arange];
     Arrays.fill(result, -1);
@@ -2696,6 +2702,8 @@ public final class ArraysPlume {
    * @param b function from [0..b.length) to range R
    * @return function from [0..a.length) to range R that is the composition of a and b
    */
+  @SuppressWarnings("allcheckers:purity") // side effect to local state
+  @SideEffectFree
   public static int @SameLen("#1") [] fnCompose(@IndexFor("#2") int[] a, int[] b) {
     int[] result = new int[a.length];
     for (int i = 0; i < a.length; i++) {
@@ -2713,6 +2721,8 @@ public final class ArraysPlume {
    * @return function from [0..a.length) to {range R} union {-1}, that is the composition of a and
    *     b.
    */
+  @SuppressWarnings("allcheckers:purity") // side effect to local state
+  @SideEffectFree
   public static int @SameLen("#1") [] partialFnCompose(@IndexOrLow("#2") int[] a, int[] b) {
     int[] result = new int[a.length];
     for (int i = 0; i < a.length; i++) {
