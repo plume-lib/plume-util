@@ -537,25 +537,9 @@ public final class FilesPlume {
   public static @Owning BufferedWriter newBufferedFileWriter(String filename, boolean append)
       throws IOException {
     if (filename.endsWith(".gz")) {
-      FileOutputStream fos = null;
-      GZIPOutputStream gzos = null;
-      OutputStreamWriter osw = null;
-      try {
-        fos = new FileOutputStream(filename, append);
-        gzos = new GZIPOutputStream(fos);
-        osw = new OutputStreamWriter(gzos, UTF_8);
-        return new BufferedWriter(osw);
-      } catch (IOException e) {
-        fos.close();
-        if (gzos != null) {
-          gzos.close();
-        }
-        if (osw != null) {
-          osw.close();
-        }
-        throw new IOException("Problem while reading " + filename, e);
-      }
-
+      OutputStream fos = newFileOutputStream(Paths.get(filename), append);
+      OutputStreamWriter osw = new OutputStreamWriter(fos, UTF_8);
+      return new BufferedWriter(osw);
     } else {
       return Files.newBufferedWriter(
           Paths.get(filename),
@@ -894,22 +878,11 @@ public final class FilesPlume {
    */
   public static void writeObject(Object o, File file) throws IOException {
     OutputStream fos = newBufferedFileOutputStream(file.getName(), false);
-    OutputStream bytes;
-    if (file.getName().endsWith(".gz")) {
-      try {
-        bytes = new GZIPOutputStream(fos);
-      } catch (IOException e) {
-        fos.close();
-        throw new IOException("Problem while reading " + file, e);
-      }
-    } else {
-      bytes = fos;
-    }
-    try (ObjectOutputStream objs = new ObjectOutputStream(bytes)) {
+    try (ObjectOutputStream objs = new ObjectOutputStream(fos)) {
       objs.writeObject(o);
     } finally {
       // In case objs was never set.
-      bytes.close();
+      fos.close();
     }
   }
 
