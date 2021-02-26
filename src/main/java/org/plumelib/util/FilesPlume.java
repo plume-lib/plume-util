@@ -533,8 +533,7 @@ public final class FilesPlume {
       throws IOException {
     if (filename.endsWith(".gz")) {
       return new BufferedWriter(
-          new OutputStreamWriter(
-              new GZIPOutputStream(new FileOutputStream(filename, append)), UTF_8));
+          new OutputStreamWriter(newFileOutputStream(filename, append), UTF_8));
     } else {
       return Files.newBufferedWriter(
           Paths.get(filename),
@@ -873,9 +872,6 @@ public final class FilesPlume {
    */
   public static void writeObject(Object o, File file) throws IOException {
     OutputStream bytes = newBufferedFileOutputStream(file, false);
-    if (file.getName().endsWith(".gz")) {
-      bytes = new GZIPOutputStream(bytes);
-    }
     ObjectOutputStream objs = new ObjectOutputStream(bytes);
     objs.writeObject(o);
     objs.close();
