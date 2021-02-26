@@ -537,9 +537,8 @@ public final class FilesPlume {
   public static @Owning BufferedWriter newBufferedFileWriter(String filename, boolean append)
       throws IOException {
     if (filename.endsWith(".gz")) {
-      OutputStream fos = newFileOutputStream(Paths.get(filename), append);
-      OutputStreamWriter osw = new OutputStreamWriter(fos, UTF_8);
-      return new BufferedWriter(osw);
+      return new BufferedWriter(
+          new OutputStreamWriter(newFileOutputStream(Paths.get(filename), append), UTF_8));
     } else {
       return Files.newBufferedWriter(
           Paths.get(filename),
@@ -877,12 +876,12 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   public static void writeObject(Object o, File file) throws IOException {
-    OutputStream fos = newBufferedFileOutputStream(file.getName(), false);
-    try (ObjectOutputStream objs = new ObjectOutputStream(fos)) {
+    OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
+    try (ObjectOutputStream objs = new ObjectOutputStream(bytes)) {
       objs.writeObject(o);
     } finally {
       // In case objs was never set.
-      fos.close();
+      bytes.close();
     }
   }
 
