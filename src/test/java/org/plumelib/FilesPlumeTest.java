@@ -7,10 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
-public final class UtilPlumeTest {
+public final class FilesPlumeTest {
 
   // public static BufferedReader bufferedFileReader(String filename)
   // public static LineNumberReader lineNumberFileReader(String filename)

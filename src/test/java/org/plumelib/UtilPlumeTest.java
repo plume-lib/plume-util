@@ -7,9 +7,6 @@ import java.util.Random;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class UtilPlumeTest {
 
   private static BitSet randomBitSet(@NonNegative int length, Random r) {
