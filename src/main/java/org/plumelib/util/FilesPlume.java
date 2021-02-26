@@ -49,10 +49,8 @@ public final class FilesPlume {
   private static final String lineSep = System.lineSeparator();
 
   ///////////////////////////////////////////////////////////////////////////
-  /// BufferedFileReader
+  /// File readers
   ///
-
-  // Convenience methods for creating InputStreams, Readers, BufferedReaders, and LineNumberReaders.
 
   /**
    * Returns an InputStream for the file, accounting for the possibility that the file is
@@ -67,15 +65,16 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   public static InputStream newFileInputStream(Path path) throws IOException {
+    FileInputStream fis = new FileInputStream(path.toFile());
     InputStream in;
     if (path.endsWith(".gz")) {
       try {
-        in = new GZIPInputStream(new FileInputStream(path.toFile()));
+        in = new GZIPInputStream(fis);
       } catch (IOException e) {
         throw new IOException("Problem while reading " + path, e);
       }
     } else {
-      in = new FileInputStream(path.toFile());
+      in = fis;
     }
     return in;
   }
@@ -93,17 +92,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   public static InputStream newFileInputStream(File file) throws IOException {
-    InputStream in;
-    if (file.getName().endsWith(".gz")) {
-      try {
-        in = new GZIPInputStream(new FileInputStream(file));
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + file, e);
-      }
-    } else {
-      in = new FileInputStream(file);
-    }
-    return in;
+    return newFileInputStream(file.toPath());
   }
 
   /**
@@ -121,7 +110,6 @@ public final class FilesPlume {
    */
   public static InputStreamReader newFileReader(String filename)
       throws FileNotFoundException, IOException {
-    // return fileReader(filename, "ISO-8859-1");
     return newFileReader(new File(filename), null);
   }
 
@@ -152,14 +140,14 @@ public final class FilesPlume {
    * files) after the first gzipped file.
    *
    * @param path the possibly-compressed file to read
-   * @param charsetName null, or the name of a Charset to use when reading the file
+   * @param charsetName the name of a Charset to use when reading the file, or null to use UTF-8
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
   public static InputStreamReader newFileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    InputStream in = new FileInputStream(path.toFile());
+    InputStream in = newFileInputStream(path.toFile());
     InputStreamReader fileReader;
     if (charsetName == null) {
       fileReader = new InputStreamReader(in, UTF_8);
@@ -196,22 +184,19 @@ public final class FilesPlume {
    * files) after the first gzipped file.
    *
    * @param file the possibly-compressed file to read
-   * @param charsetName null, or the name of a Charset to use when reading the file
+   * @param charsetName the name of a Charset to use when reading the file, or null to use UTF-8
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
   public static InputStreamReader newFileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    InputStream in = new FileInputStream(file);
-    InputStreamReader fileReader;
-    if (charsetName == null) {
-      fileReader = new InputStreamReader(in, UTF_8);
-    } else {
-      fileReader = new InputStreamReader(in, charsetName);
-    }
-    return fileReader;
+    return newFileReader(file.toPath(), charsetName);
   }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Buffered file readers and line number readers
+  ///
 
   /**
    * Returns a BufferedReader for the file, accounting for the possibility that the file is
@@ -228,7 +213,7 @@ public final class FilesPlume {
    */
   public static BufferedReader newBufferedFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return newBufferedFileReader(new File(filename));
+    return newBufferedFileReader(filename, null);
   }
 
   /**
@@ -258,7 +243,7 @@ public final class FilesPlume {
    * files) after the first gzipped file.
    *
    * @param filename the possibly-compressed file to read
-   * @param charsetName the character set to use when reading the file
+   * @param charsetName the character set to use when reading the file, or null to use UTF-8
    * @return a BufferedReader for filename
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
@@ -277,7 +262,7 @@ public final class FilesPlume {
    * files) after the first gzipped file.
    *
    * @param file the possibly-compressed file to read
-   * @param charsetName the character set to use when reading the file
+   * @param charsetName the character set to use when reading the file, or null to use UTF-8
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
@@ -321,19 +306,177 @@ public final class FilesPlume {
    */
   public static LineNumberReader newLineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
-    Reader fileReader;
-    if (file.getName().endsWith(".gz")) {
-      try {
-        fileReader =
-            new InputStreamReader(new GZIPInputStream(new FileInputStream(file)), "ISO-8859-1");
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + file, e);
-      }
-    } else {
-      fileReader = new InputStreamReader(new FileInputStream(file), "ISO-8859-1");
-    }
+    Reader fileReader = newFileReader(file, null);
     return new LineNumberReader(fileReader);
   }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// File writers
+  ///
+
+  /**
+   * Returns an OutputStream for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @return an OutputStream for file
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStream newFileOutputStream(Path path) throws IOException {
+    return newFileOutputStream(path, false);
+  }
+
+  /**
+   * Returns an OutputStream for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param append if true, then bytes will be written to the end of the file rather than the
+   *     beginning
+   * @return an OutputStream for file
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStream newFileOutputStream(Path path, boolean append) throws IOException {
+    FileOutputStream fis = new FileOutputStream(path.toFile(), append);
+    OutputStream in;
+    if (path.endsWith(".gz")) {
+      try {
+        in = new GZIPOutputStream(fis);
+      } catch (IOException e) {
+        throw new IOException("Problem while reading " + path, e);
+      }
+    } else {
+      in = fis;
+    }
+    return in;
+  }
+
+  /**
+   * Returns an OutputStream for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @return an OutputStream for file
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStream newFileOutputStream(File file) throws IOException {
+    return newFileOutputStream(file.toPath());
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param filename the possibly-compressed file to read
+   * @return an OutputStream for filename
+   * @throws IOException if there is trouble reading the file
+   * @throws FileNotFoundException if the file is not found
+   */
+  public static OutputStreamWriter newFileWriter(String filename)
+      throws FileNotFoundException, IOException {
+    return newFileWriter(new File(filename), null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStreamWriter newFileWriter(Path path)
+      throws FileNotFoundException, IOException {
+    return newFileWriter(path.toFile(), null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param charsetName the name of a Charset to use when reading the file, or null to use UTF-8
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
+      throws FileNotFoundException, IOException {
+    OutputStream in = newFileOutputStream(path.toFile());
+    OutputStreamWriter fileWriter;
+    if (charsetName == null) {
+      fileWriter = new OutputStreamWriter(in, UTF_8);
+    } else {
+      fileWriter = new OutputStreamWriter(in, charsetName);
+    }
+    return fileWriter;
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStreamWriter newFileWriter(File file)
+      throws FileNotFoundException, IOException {
+    return newFileWriter(file, null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charsetName the name of a Charset to use when reading the file, or null to use UTF-8
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  public static OutputStreamWriter newFileWriter(File file, @Nullable String charsetName)
+      throws FileNotFoundException, IOException {
+    return newFileWriter(file.toPath(), charsetName);
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Buffered file writers
+  ///
 
   /**
    * Returns a BufferedWriter for the file, accounting for the possibility that the file is
@@ -352,35 +495,6 @@ public final class FilesPlume {
   }
 
   /**
-   * Returns a BufferedWriter for the file, accounting for the possibility that the file is
-   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
-   *
-   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
-   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
-   * files) after the first gzipped file.
-   *
-   * @param filename the possibly-compressed file to write
-   * @param append if true, the resulting BufferedWriter appends to the end of the file instead of
-   *     the beginning
-   * @return a BufferedWriter for filename
-   * @throws IOException if there is trouble writing the file
-   */
-  // Question:  should this be rewritten as a wrapper around bufferedFileOutputStream?
-  public static BufferedWriter newBufferedFileWriter(String filename, boolean append)
-      throws IOException {
-    if (filename.endsWith(".gz")) {
-      return new BufferedWriter(
-          new OutputStreamWriter(
-              new GZIPOutputStream(new FileOutputStream(filename, append)), UTF_8));
-    } else {
-      return Files.newBufferedWriter(
-          Paths.get(filename),
-          UTF_8,
-          append ? new StandardOpenOption[] {CREATE, APPEND} : new StandardOpenOption[] {CREATE});
-    }
-  }
-
-  /**
    * Returns a BufferedOutputStream for the file, accounting for the possibility that the file is
    * compressed. (A file whose name ends with ".gz" is treated as compressed.)
    *
@@ -396,11 +510,37 @@ public final class FilesPlume {
    */
   public static BufferedOutputStream newBufferedFileOutputStream(String filename, boolean append)
       throws IOException {
-    OutputStream os = new FileOutputStream(filename, append);
-    if (filename.endsWith(".gz")) {
-      os = new GZIPOutputStream(os);
-    }
+    OutputStream os = newFileOutputStream(new File(filename).toPath(), append);
     return new BufferedOutputStream(os);
+  }
+
+  /**
+   * Returns a BufferedWriter for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param filename the possibly-compressed file to write
+   * @param append if true, the resulting BufferedWriter appends to the end of the file instead of
+   *     the beginning
+   * @return a BufferedWriter for filename
+   * @throws IOException if there is trouble writing the file
+   */
+  // Question:  should this be rewritten as a wrapper around newBufferedFileOutputStream?
+  public static BufferedWriter newBufferedFileWriter(String filename, boolean append)
+      throws IOException {
+    if (filename.endsWith(".gz")) {
+      return new BufferedWriter(
+          new OutputStreamWriter(
+              new GZIPOutputStream(new FileOutputStream(filename, append)), UTF_8));
+    } else {
+      return Files.newBufferedWriter(
+          Paths.get(filename),
+          UTF_8,
+          append ? new StandardOpenOption[] {CREATE, APPEND} : new StandardOpenOption[] {CREATE});
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -754,15 +894,9 @@ public final class FilesPlume {
    */
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
+    InputStream fis = newFileInputStream(file);
     // 8192 is the buffer size in BufferedReader
-    InputStream istream = new BufferedInputStream(new FileInputStream(file), 8192);
-    if (file.getName().endsWith(".gz")) {
-      try {
-        istream = new GZIPInputStream(istream);
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + file, e);
-      }
-    }
+    InputStream istream = new BufferedInputStream(fis, 8192);
     ObjectInputStream objs = new ObjectInputStream(istream);
     return objs.readObject();
   }
