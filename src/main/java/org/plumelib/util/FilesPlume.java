@@ -872,8 +872,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   public static void writeObject(Object o, File file) throws IOException {
-    // 8192 is the buffer size in BufferedReader
-    OutputStream bytes = new BufferedOutputStream(new FileOutputStream(file), 8192);
+    OutputStream bytes = newBufferedFileOutputStream(file, false);
     if (file.getName().endsWith(".gz")) {
       bytes = new GZIPOutputStream(bytes);
     }
