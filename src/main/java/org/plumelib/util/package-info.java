@@ -38,23 +38,26 @@
  * <h3 id="Text_processing">Text processing</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.StringsPlume}
- *   <dd>Utility methods that manipulate Strings: replacement; prefixing and indentation; splitting
- *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging
- *       variants of toString; diagnostic output; miscellaneous.
  *   <dt>{@link org.plumelib.util.EntryReader EntryReader}
  *   <dd>Class that reads "entries" from a file. In the simplest case, entries can be lines. It
  *       supports: include files, comments, and multi-line entries (paragraphs). The syntax of each
  *       of these is customizable.
- *   <dt>{@link org.plumelib.util.RegexUtil RegexUtil}
- *   <dd>Utility methods for regular expressions, most notably for testing whether a string is a
- *       regular expression.
  *   <dt>{@link org.plumelib.util.FileIOException FileIOException}
  *   <dd>Extends IOException by also reporting a file name and line number at which the exception
  *       occurred.
+ *   <dt>{@link org.plumelib.util.FilesPlume}
+ *   <dd>Utility methods that create and manipulate files, directories, streams, readers, and
+ *       writers.
  *   <dt>{@link org.plumelib.util.FileWriterWithName FileWriterWithName}
  *   <dd>Just like {@code FileWriter}, but adds a {@code getFileName()} method and overrides {@code
  *       toString()} to give the file name.
+ *   <dt>{@link org.plumelib.util.RegexUtil RegexUtil}
+ *   <dd>Utility methods for regular expressions, most notably for testing whether a string is a
+ *       regular expression.
+ *   <dt>{@link org.plumelib.util.StringsPlume}
+ *   <dd>Utility methods that manipulate Strings: replacement; prefixing and indentation; splitting
+ *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging
+ *       variants of toString; diagnostic output; miscellaneous.
  *       <!--
  *   <dt>{link org.plumelib.util.CountingPrintWriter CountingPrintWriter}
  *   <dd>Prints formatted representations of objects to a text-output stream counting the number of

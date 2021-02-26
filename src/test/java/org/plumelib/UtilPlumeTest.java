@@ -1,18 +1,12 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.BitSet;
 import java.util.Random;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class UtilPlumeTest {
 
   private static BitSet randomBitSet(@NonNegative int length, Random r) {
@@ -44,46 +38,6 @@ public final class UtilPlumeTest {
       for (int j = 0; j < 100; j++) {
         assertTrue(UtilPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j));
       }
-    }
-  }
-
-  // public static BufferedReader bufferedFileReader(String filename)
-  // public static LineNumberReader lineNumberFileReader(String filename)
-  // public static BufferedWriter bufferedFileWriter(String filename) throws IOException
-  // public static Class classForName(String className)
-
-  // public static void addToClasspath(String dir)
-  // public static final class WildcardFilter implements FilenameFilter
-  //   public WildcardFilter(String filename)
-  //   public boolean accept(File dir, String name)
-  // public static boolean canCreateAndWrite(File file)
-  // public static void writeObject(Object o, File file) throws IOException
-  // public static Object readObject(File file)
-  // public static File createTempDir(String prefix, String suffix)
-
-  // public Object incrementHashMap(HashMap hm, Object key, int count)
-
-  @Test
-  public void test_canCreateAndWrite() {
-
-    try {
-      assertTrue(UtilPlume.canCreateAndWrite(new File("TestPlume.java")));
-
-      // This test fails if run by the superuser (who can overwrite
-      // any file).
-      if (!System.getProperty("user.name").equals("root")) {
-        File readOnly = new File("temp");
-        readOnly.createNewFile();
-        readOnly.setReadOnly();
-        assertTrue(!UtilPlume.canCreateAndWrite(readOnly));
-        readOnly.delete();
-      }
-
-      assertTrue(UtilPlume.canCreateAndWrite(new File("temp")));
-      assertTrue(!UtilPlume.canCreateAndWrite(new File("temp/temp")));
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail("failure while testing UtilPlume.canCreateAndWrite(): " + e.toString());
     }
   }
 

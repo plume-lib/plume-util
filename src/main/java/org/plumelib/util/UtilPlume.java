@@ -58,8 +58,8 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * Utility methods that do not belong elsewhere in the plume package: BitSet; File; directories;
- * file names; reading and writing; hashing; ProcessBuilder; properties; Stream; Throwable.
+ * Utility methods that do not belong elsewhere in the plume package: BitSet; hashing;
+ * ProcessBuilder; properties; Throwable.
  */
 public final class UtilPlume {
 
@@ -175,7 +175,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// BufferedFileReader
+  /// BufferedFileReader (this section is deprecated in favor of FilesPlume)
   ///
 
   // Convenience methods for creating InputStreams, Readers, BufferedReaders, and LineNumberReaders.
@@ -191,7 +191,9 @@ public final class UtilPlume {
    * @param path the possibly-compressed file to read
    * @return an InputStream for file
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newFileInputStream}
    */
+  @Deprecated // deprecated 2020-02-20
   public static InputStream fileInputStream(Path path) throws IOException {
     InputStream in;
     if (path.endsWith(".gz")) {
@@ -217,7 +219,9 @@ public final class UtilPlume {
    * @param file the possibly-compressed file to read
    * @return an InputStream for file
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newFileInputStream}
    */
+  @Deprecated // deprecated 2021-02-25
   public static InputStream fileInputStream(File file) throws IOException {
     InputStream in;
     if (file.getName().endsWith(".gz")) {
@@ -244,7 +248,9 @@ public final class UtilPlume {
    * @return an InputStream for filename
    * @throws IOException if there is trouble reading the file
    * @throws FileNotFoundException if the file is not found
+   * @deprecated use {@link FilesPlume#newFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(String filename)
       throws FileNotFoundException, IOException {
     // return fileReader(filename, "ISO-8859-1");
@@ -263,7 +269,9 @@ public final class UtilPlume {
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(Path path) throws FileNotFoundException, IOException {
     return fileReader(path.toFile(), null);
   }
@@ -281,7 +289,9 @@ public final class UtilPlume {
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = new FileInputStream(path.toFile());
@@ -306,7 +316,9 @@ public final class UtilPlume {
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(File file) throws FileNotFoundException, IOException {
     return fileReader(file, null);
   }
@@ -324,7 +336,9 @@ public final class UtilPlume {
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = new FileInputStream(file);
@@ -349,7 +363,9 @@ public final class UtilPlume {
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(String filename)
       throws FileNotFoundException, IOException {
     return bufferedFileReader(new File(filename));
@@ -367,7 +383,9 @@ public final class UtilPlume {
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(File file)
       throws FileNotFoundException, IOException {
     return (bufferedFileReader(file, null));
@@ -386,7 +404,9 @@ public final class UtilPlume {
    * @return a BufferedReader for filename
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(String filename, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     return bufferedFileReader(new File(filename), charsetName);
@@ -405,7 +425,9 @@ public final class UtilPlume {
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     Reader fileReader = fileReader(file, charsetName);
@@ -424,7 +446,9 @@ public final class UtilPlume {
    * @return a LineNumberReader for filename
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newLineNumberFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static LineNumberReader lineNumberFileReader(String filename)
       throws FileNotFoundException, IOException {
     return lineNumberFileReader(new File(filename));
@@ -442,7 +466,9 @@ public final class UtilPlume {
    * @return a LineNumberReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#newLineNumberFileReader}
    */
+  @Deprecated // deprecated 2021-02-25
   public static LineNumberReader lineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
     Reader fileReader;
@@ -470,7 +496,9 @@ public final class UtilPlume {
    * @param filename the possibly-compressed file to write
    * @return a BufferedWriter for filename
    * @throws IOException if there is trouble writing the file
+   * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
+  @Deprecated // deprecated 2021-02-25
   public static BufferedWriter bufferedFileWriter(String filename) throws IOException {
     return bufferedFileWriter(filename, false);
   }
@@ -488,7 +516,9 @@ public final class UtilPlume {
    *     the beginning
    * @return a BufferedWriter for filename
    * @throws IOException if there is trouble writing the file
+   * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
+  @Deprecated // deprecated 2021-02-25
   // Question:  should this be rewritten as a wrapper around bufferedFileOutputStream?
   public static BufferedWriter bufferedFileWriter(String filename, boolean append)
       throws IOException {
@@ -517,7 +547,9 @@ public final class UtilPlume {
    *     instead of the beginning
    * @return a BufferedOutputStream for filename
    * @throws IOException if there is trouble writing the file
+   * @deprecated use {@link FilesPlume#newBufferedFileOutputStream}
    */
+  @Deprecated // deprecated 2021-02-25
   public static BufferedOutputStream bufferedFileOutputStream(String filename, boolean append)
       throws IOException {
     OutputStream os = new FileOutputStream(filename, append);
@@ -528,7 +560,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// File
+  /// File (this section is deprecated in favor of FilesPlume)
   ///
 
   /**
@@ -537,7 +569,9 @@ public final class UtilPlume {
    * @param filename file whose size to count
    * @return number of lines in filename
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#countLines}
    */
+  @Deprecated // deprecated 2021-02-25
   public static long countLines(String filename) throws IOException {
     long count = 0;
     try (LineNumberReader reader = UtilPlume.lineNumberFileReader(filename)) {
@@ -575,7 +609,9 @@ public final class UtilPlume {
    * @param filename the file to infer a line separator from
    * @return the inferred line separator used in filename
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#inferLineSeparator}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String inferLineSeparator(String filename) throws IOException {
     return inferLineSeparator(new File(filename));
   }
@@ -586,7 +622,9 @@ public final class UtilPlume {
    * @param file the file to infer a line separator from
    * @return the inferred line separator used in filename
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link FilesPlume#inferLineSeparator}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String inferLineSeparator(File file) throws IOException {
     try (BufferedReader r = UtilPlume.bufferedFileReader(file)) {
       int unix = 0;
@@ -629,7 +667,9 @@ public final class UtilPlume {
    * @param file1 first file to compare
    * @param file2 second file to compare
    * @return true iff the files have the same contents
+   * @deprecated use {@link FilesPlume#equalFiles}
    */
+  @Deprecated // deprecated 2021-02-25
   @Pure
   public static boolean equalFiles(String file1, String file2) {
     return equalFiles(file1, file2, false);
@@ -642,7 +682,9 @@ public final class UtilPlume {
    * @param file2 second file to compare
    * @param trimLines if true, call String.trim on each line before comparing
    * @return true iff the files have the same contents
+   * @deprecated use {@link FilesPlume#equalFiles}
    */
+  @Deprecated // deprecated 2021-02-25
   @SuppressWarnings({"allcheckers:purity", "lock"}) // reads files, side effects local state
   @Pure
   public static boolean equalFiles(String file1, String file2, boolean trimLines) {
@@ -675,7 +717,9 @@ public final class UtilPlume {
    *
    * @param file the file to create and write
    * @return true iff the file can be created and written
+   * @deprecated use {@link FilesPlume#canCreateAndWrite}
    */
+  @Deprecated // deprecated 2021-02-25
   public static boolean canCreateAndWrite(File file) {
     if (file.exists()) {
       return file.canWrite();
@@ -703,7 +747,7 @@ public final class UtilPlume {
   }
 
   ///
-  /// Directories
+  /// Directories (this section is deprecated in favor of FilesPlume)
   ///
 
   /**
@@ -723,7 +767,9 @@ public final class UtilPlume {
    * @throws SecurityException If a security manager exists and its
    *     SecurityManager.checkWrite(java.lang.String) method does not allow a file to be created
    * @see java.io.File#createTempFile(String, String, File)
+   * @deprecated use {@link FilesPlume#createTempDir}
    */
+  @Deprecated // deprecated 2021-02-25
   public static File createTempDir(String prefix, String suffix) throws IOException {
     String fs = File.separator;
     String path = System.getProperty("java.io.tmpdir") + fs + System.getProperty("user.name") + fs;
@@ -751,7 +797,9 @@ public final class UtilPlume {
    *
    * @param dirName the directory to delete
    * @return true if and only if the file or directory is successfully deleted; false otherwise
+   * @deprecated use {@link FilesPlume#deleteDir}
    */
+  @Deprecated // deprecated 2021-02-25
   public static boolean deleteDir(String dirName) {
     return deleteDir(new File(dirName));
   }
@@ -761,7 +809,9 @@ public final class UtilPlume {
    *
    * @param dir the directory to delete
    * @return true if and only if the file or directory is successfully deleted; false otherwise
+   * @deprecated use {@link FilesPlume#deleteDir}
    */
+  @Deprecated // deprecated 2021-02-25
   public static boolean deleteDir(File dir) {
     File[] children = dir.listFiles();
     if (children != null) { // null means not a directory, or I/O error occurred.
@@ -773,7 +823,7 @@ public final class UtilPlume {
   }
 
   ///
-  /// File names (aka filenames)
+  /// File names (aka filenames) (this section is deprecated in favor of FilesPlume)
   ///
 
   // Someone must have already written this.  Right?
@@ -783,7 +833,10 @@ public final class UtilPlume {
   /**
    * A FilenameFilter that accepts files whose name matches the given wildcard. The wildcard must
    * contain exactly one "*".
+   *
+   * @deprecated use {@link FilesPlume.WildcardFilter}
    */
+  @Deprecated // deprecated 2021-02-25
   public static final class WildcardFilter implements FilenameFilter {
     /** The text before the wildcard. */
     String prefix;
@@ -822,7 +875,9 @@ public final class UtilPlume {
    *
    * @param name file whose name to expand
    * @return file with expanded file
+   * @deprecated use {@link FilesPlume#expandFilename}
    */
+  @Deprecated // deprecated 2021-02-25
   public static File expandFilename(File name) {
     String path = name.getPath();
     String newname = expandFilename(path);
@@ -840,7 +895,9 @@ public final class UtilPlume {
    *
    * @param name filename to expand
    * @return expanded filename
+   * @deprecated use {@link FilesPlume#expandFilename}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String expandFilename(String name) {
     if (name.contains("~")) {
       return (name.replace("~", userHome));
@@ -859,14 +916,16 @@ public final class UtilPlume {
    *
    * @param name file whose name to quote
    * @return a string version of the name that can be used in Java source
+   * @deprecated use {@link FilesPlume#javaSource}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String javaSource(File name) {
 
     return name.getPath().replace("\\", "\\\\");
   }
 
   ///
-  /// Reading and writing
+  /// Reading and writing (this section is deprecated in favor of FilesPlume)
   ///
 
   /**
@@ -875,7 +934,9 @@ public final class UtilPlume {
    * @param o the object to write
    * @param file the file to which to write the object
    * @throws IOException if there is trouble writing the file
+   * @deprecated use {@link FilesPlume#writeObject}
    */
+  @Deprecated // deprecated 2021-02-25
   public static void writeObject(Object o, File file) throws IOException {
     // 8192 is the buffer size in BufferedReader
     OutputStream bytes = new BufferedOutputStream(new FileOutputStream(file), 8192);
@@ -896,7 +957,9 @@ public final class UtilPlume {
    * @return the object read from the file
    * @throws IOException if there is trouble reading the file
    * @throws ClassNotFoundException if the object's class cannot be found
+   * @deprecated use {@link FilesPlume#readObject}
    */
+  @Deprecated // deprecated 2021-02-25
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
     // 8192 is the buffer size in BufferedReader
@@ -918,7 +981,9 @@ public final class UtilPlume {
    *
    * @param r the Reader to read
    * @return the entire contents of the reader, as a string
+   * @deprecated use {@link FilesPlume#readerContents}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String readerContents(Reader r) {
     try {
       StringBuilder contents = new StringBuilder();
@@ -943,7 +1008,9 @@ public final class UtilPlume {
    *
    * @param file the file to read
    * @return the entire contents of the reader, as a string
+   * @deprecated use {@link FilesPlume#readFile}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String readFile(File file) {
 
     try {
@@ -970,7 +1037,9 @@ public final class UtilPlume {
    *
    * @param file the file to write to
    * @param contents the text to put in the file
+   * @deprecated use {@link FilesPlume#writeFile}
    */
+  @Deprecated // deprecated 2021-02-25
   public static void writeFile(File file, String contents) {
 
     try {
@@ -1303,7 +1372,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Stream
+  /// Stream (this section is deprecated in favor of FilesPlume)
   ///
 
   /**
@@ -1311,7 +1380,9 @@ public final class UtilPlume {
    *
    * @param from input stream
    * @param to output stream
+   * @deprecated use {@link FilesPlume#streamCopy}
    */
+  @Deprecated // deprecated 2021-02-25
   public static void streamCopy(InputStream from, OutputStream to) {
     byte[] buffer = new byte[1024];
     int bytes;
@@ -1334,7 +1405,9 @@ public final class UtilPlume {
    *
    * @param is input stream to read
    * @return a String containing all the characters from the input stream
+   * @deprecated use {@link FilesPlume#streamString}
    */
+  @Deprecated // deprecated 2021-02-25
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
@@ -1347,7 +1420,9 @@ public final class UtilPlume {
    * @param stream the stream to read from
    * @return the list of lines read from the stream
    * @throws IOException if there is an error reading from the stream
+   * @deprecated use {@link FilesPlume#streamLines}
    */
+  @Deprecated // deprecated 2021-02-25
   public static List<String> streamLines(InputStream stream) throws IOException {
     List<String> outputLines = new ArrayList<>();
     try (BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, UTF_8))) {
@@ -2484,7 +2559,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// System (this section is deprecated and has been moved to System.java)
+  /// System (this section is deprecated in favor of SystemPlume)
   ///
 
   /**
