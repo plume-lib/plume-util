@@ -820,7 +820,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(@PolyNull Object[] a, Object[] sub) {
+  public static int indexOf(@PolyNull Object[] a, @PolyNull Object[] sub) {
     int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
