@@ -743,18 +743,19 @@ public final class StringsPlume {
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
    */
-  public static class NullableStringComparator implements Comparator<@Nullable String>, Serializable {
+  public static class NullableStringComparator
+      implements Comparator<@Nullable String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
     /**
-	 * Compare two Strings lexicographically.
-	 *
-	 * @param s1 first string to compare
-	 * @param s2 second string to compare
-	 * @return 0 if the arguments are equal,
-	 *  positive integer if the first string is greater than the second (or the second one is null)
-	 *  negative integer if the second string is greater that the first (or the first one is null)
-	 */
+     * Compare two Strings lexicographically. Null is considered compares less than any non-null
+     * String.
+     *
+     * @param s1 first string to compare
+     * @param s2 second string to compare
+     * @return a negative integer, zero, or a positive integer as the first argument is less than,
+     *     equal to, or greater than the second
+     */
     @Pure
     @Override
     @SideEffectFree
@@ -775,8 +776,8 @@ public final class StringsPlume {
   // This could test the types of the elements, and do something more sophisticated based on the
   // types.
   /**
-   * Attempt to order Objects. Puts null at the beginning. Returns 0 for equal elements. Otherwise,
-   * orders by the result of {@code toString()}.
+   * Orders Objects according to their {@code toString()} representation. Puts null at the
+   * beginning.
    *
    * <p>Note: if toString returns a nondeterministic value, such as one that depends on the result
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
@@ -786,14 +787,14 @@ public final class StringsPlume {
     static final long serialVersionUID = 20170420L;
 
     /**
-	 * Compare two Objects based on their string representations.
-	 *
-	 * @param o1 first object to compare
-	 * @param o2 second object to compare
-	 * @return 0 if the arguments are equal,
-	 *  positive integer if the first object is greater than the second (or the second one is null)
-	 *  negative integer if the second object is greater that the first (or the first one is null)
-	 */
+     * Compare two Objects based on their string representations. Null compares less than any
+     * non-null Object.
+     *
+     * @param o1 first object to compare
+     * @param o2 second object to compare
+     * @return a negative integer, zero, or a positive integer as the first argument's toString() is
+     *     less than, equal to, or greater than the second argument's toString()
+     */
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",
       "lock"
@@ -802,7 +803,7 @@ public final class StringsPlume {
     @Override
     public int compare(@Nullable Object o1, @Nullable Object o2) {
       // Make null compare smaller than anything else
-      if ((o1 == o2)) {
+      if (o1 == o2) {
         return 0;
       }
       if (o1 == null) {
