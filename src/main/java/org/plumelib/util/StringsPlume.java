@@ -742,7 +742,10 @@ public final class StringsPlume {
 
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
+   *
+   * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
+  @Deprecated // deprecated on 2021-02-27
   public static class NullableStringComparator
       implements Comparator<@Nullable String>, Serializable {
     static final long serialVersionUID = 20150812L;
@@ -779,6 +782,9 @@ public final class StringsPlume {
    * <p>Note: if toString returns a nondeterministic value, such as one that depends on the result
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
+   *
+   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} becase
+   * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
