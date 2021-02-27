@@ -748,17 +748,16 @@ public final class StringsPlume {
     static final long serialVersionUID = 20150812L;
 
     /**
-     * Compare two Strings lexicographically. Null is considered compares less than any non-null
-     * String.
+     * Compare two Strings lexicographically. Null is considered less than any non-null String.
      *
      * @param s1 first string to compare
      * @param s2 second string to compare
      * @return a negative integer, zero, or a positive integer as the first argument is less than,
      *     equal to, or greater than the second
      */
+    @SuppressWarnings("ReferenceEquality") // comparator method uses ==
     @Pure
     @Override
-    @SideEffectFree
     public int compare(@Nullable String s1, @Nullable String s2) {
       if (s1 == s2) {
         return 0;
@@ -773,11 +772,9 @@ public final class StringsPlume {
     }
   }
 
-  // This could test the types of the elements, and do something more sophisticated based on the
-  // types.
   /**
-   * Orders Objects according to their {@code toString()} representation. Puts null at the
-   * beginning.
+   * Orders Objects according to their {@code toString()} representation. Null is considered less
+   * than any non-null Object.
    *
    * <p>Note: if toString returns a nondeterministic value, such as one that depends on the result
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
@@ -787,13 +784,14 @@ public final class StringsPlume {
     static final long serialVersionUID = 20170420L;
 
     /**
-     * Compare two Objects based on their string representations. Null compares less than any
+     * Compare two Objects based on their string representations. Null is considered less than any
      * non-null Object.
      *
      * @param o1 first object to compare
      * @param o2 second object to compare
-     * @return a negative integer, zero, or a positive integer as the first argument's toString() is
-     *     less than, equal to, or greater than the second argument's toString()
+     * @return a negative integer, zero, or a positive integer as the first argument's {@code
+     *     toString()} representation is less than, equal to, or greater than the second argument's
+     *     {@code toString()} representation
      */
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",
