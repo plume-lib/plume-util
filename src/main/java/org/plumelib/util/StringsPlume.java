@@ -745,7 +745,7 @@ public final class StringsPlume {
    *
    * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
-  @Deprecated // deprecated on 2021-02-27
+  @Deprecated // deprecated 2021-02-27
   public static class NullableStringComparator implements Comparator<String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
