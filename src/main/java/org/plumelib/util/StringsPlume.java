@@ -746,29 +746,38 @@ public final class StringsPlume {
    * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
   @Deprecated // deprecated 2021-02-27
-  public static class NullableStringComparator implements Comparator<String>, Serializable {
+  public static class NullableStringComparator
+      implements Comparator<@Nullable String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
+    /**
+     * Compare two Strings lexicographically. Null is considered less than any non-null String.
+     *
+     * @param s1 first string to compare
+     * @param s2 second string to compare
+     * @return a negative integer, zero, or a positive integer as the first argument is less than,
+     *     equal to, or greater than the second
+     */
+    @SuppressWarnings("ReferenceEquality") // comparator method uses ==
     @Pure
     @Override
-    @SideEffectFree
-    public int compare(String s1, String s2) {
-      if (s1 == null && s2 == null) {
+    public int compare(@Nullable String s1, @Nullable String s2) {
+      if (s1 == s2) {
         return 0;
       }
-      if (s1 == null && s2 != null) {
-        return 1;
-      }
-      if (s1 != null && s2 == null) {
+      if (s1 == null) {
         return -1;
+      }
+      if (s2 == null) {
+        return 1;
       }
       return s1.compareTo(s2);
     }
   }
 
   /**
-   * Attempt to order Objects. Puts null at the beginning. Returns 0 for equal elements. Otherwise,
-   * orders by the result of {@code toString()}.
+   * Orders Objects according to their {@code toString()} representation. Null is considered less
+   * than any non-null Object.
    *
    * <p>Note: if toString returns a nondeterministic value, such as one that depends on the result
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
@@ -780,6 +789,16 @@ public final class StringsPlume {
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
 
+    /**
+     * Compare two Objects based on their string representations. Null is considered less than any
+     * non-null Object.
+     *
+     * @param o1 first object to compare
+     * @param o2 second object to compare
+     * @return a negative integer, zero, or a positive integer as the first argument's {@code
+     *     toString()} representation is less than, equal to, or greater than the second argument's
+     *     {@code toString()} representation
+     */
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",
       "lock"
@@ -788,7 +807,7 @@ public final class StringsPlume {
     @Override
     public int compare(@Nullable Object o1, @Nullable Object o2) {
       // Make null compare smaller than anything else
-      if ((o1 == o2)) {
+      if (o1 == o2) {
         return 0;
       }
       if (o1 == null) {
