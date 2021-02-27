@@ -743,21 +743,30 @@ public final class StringsPlume {
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
    */
-  public static class NullableStringComparator implements Comparator<String>, Serializable {
+  public static class NullableStringComparator implements Comparator<@Nullable String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
+    /**
+	 * Compare two Strings lexicographically.
+	 *
+	 * @param s1 first string to compare
+	 * @param s2 second string to compare
+	 * @return 0 if the arguments are equal,
+	 *  positive integer if the first string is greater than the second (or the second one is null)
+	 *  negative integer if the second string is greater that the first (or the first one is null)
+	 */
     @Pure
     @Override
     @SideEffectFree
-    public int compare(String s1, String s2) {
-      if (s1 == null && s2 == null) {
+    public int compare(@Nullable String s1, @Nullable String s2) {
+      if (s1 == s2) {
         return 0;
       }
-      if (s1 == null && s2 != null) {
-        return 1;
-      }
-      if (s1 != null && s2 == null) {
+      if (s1 == null) {
         return -1;
+      }
+      if (s2 == null) {
+        return 1;
       }
       return s1.compareTo(s2);
     }
@@ -776,6 +785,15 @@ public final class StringsPlume {
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
 
+    /**
+	 * Compare two Objects based on their string representations.
+	 *
+	 * @param o1 first object to compare
+	 * @param o2 second object to compare
+	 * @return 0 if the arguments are equal,
+	 *  positive integer if the first object is greater than the second (or the second one is null)
+	 *  negative integer if the second object is greater that the first (or the first one is null)
+	 */
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",
       "lock"
