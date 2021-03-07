@@ -1,4 +1,4 @@
-// This class should be kept in sync with org.checkerframework.checker.regex.RegexUtil in the
+// This class should be kept in sync with org.checkerframework.checker.regex.util.RegexUtil in the
 // Checker Framework project.
 
 package org.plumelib.util;
@@ -187,6 +187,49 @@ public final class RegexUtil {
   }
 
   /**
+   * Returns the argument as a {@code @Regex String} if it is a regex, otherwise throws an error.
+   * The purpose of this method is to suppress Regex Checker warnings. It should be very rarely
+   * needed.
+   *
+   * @param s string to check for being a regular expression
+   * @return its argument
+   * @throws Error if argument is not a regex
+   */
+  @SideEffectFree
+  // The return type annotation is irrelevant; this method is special-cased by
+  // RegexAnnotatedTypeFactory.
+  public static @Regex String asRegex(String s) {
+    return asRegex(s, 0);
+  }
+
+  /**
+   * Returns the argument as a {@code @Regex(groups) String} if it is a regex with at least the
+   * given number of groups, otherwise throws an error. The purpose of this method is to suppress
+   * Regex Checker warnings. It should be very rarely needed.
+   *
+   * @param s string to check for being a regular expression
+   * @param groups number of groups expected
+   * @return its argument
+   * @throws Error if argument is not a regex
+   */
+  @SuppressWarnings("regex") // RegexUtil
+  @SideEffectFree
+  // The return type annotation is irrelevant; this method is special-cased by
+  // RegexAnnotatedTypeFactory.
+  public static @Regex String asRegex(String s, int groups) {
+    try {
+      Pattern p = Pattern.compile(s);
+      int actualGroups = getGroupCount(p);
+      if (actualGroups < groups) {
+        throw new Error(regexErrorMessage(s, groups, actualGroups));
+      }
+      return s;
+    } catch (PatternSyntaxException e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
    * Returns null if the argument is a syntactically valid regular expression. Otherwise returns a
    * string describing why the argument is not a regex.
    *
@@ -255,48 +298,6 @@ public final class RegexUtil {
       return pse;
     }
     return null;
-  }
-
-  /**
-   * Returns the argument as a {@code @Regex String} if it is a regex, otherwise throws an error.
-   * The purpose of this method is to suppress Regex Checker warnings. It should be very rarely
-   * needed.
-   *
-   * @param s string to check for being a regular expression
-   * @return its argument
-   * @throws Error if argument is not a regex
-   */
-  @SideEffectFree
-  // The return type annotation is a conservative bound.
-  public static @Regex String asRegex(String s) {
-    return asRegex(s, 0);
-  }
-
-  /**
-   * Returns the argument as a {@code @Regex(groups) String} if it is a regex with at least the
-   * given number of groups, otherwise throws an error. The purpose of this method is to suppress
-   * Regex Checker warnings. It should be very rarely needed.
-   *
-   * @param s string to check for being a regular expression
-   * @param groups number of groups expected
-   * @return its argument
-   * @throws Error if argument is not a regex
-   */
-  @SuppressWarnings("regex") // RegexUtil
-  @SideEffectFree
-  // The return type annotation is irrelevant; it is special-cased by
-  // RegexAnnotatedTypeFactory.
-  public static @Regex String asRegex(String s, int groups) {
-    try {
-      Pattern p = Pattern.compile(s);
-      int actualGroups = getGroupCount(p);
-      if (actualGroups < groups) {
-        throw new Error(regexErrorMessage(s, groups, actualGroups));
-      }
-      return s;
-    } catch (PatternSyntaxException e) {
-      throw new Error(e);
-    }
   }
 
   /**
