@@ -1068,7 +1068,7 @@ public final class StringsPlume {
     boolean lengthIs1 = true;
     char penultimateLetter = '\u0000';
     char lastLetter = noun.charAt(noun.length() - 1);
-    if(noun.length() > 1) {
+    if (noun.length() > 1) {
       lengthIs1 = false;
       penultimateLetter = noun.charAt(noun.length() - 2);
     }
@@ -1078,13 +1078,13 @@ public final class StringsPlume {
         || lastLetter == 'x') {
       return n + " " + noun + "es";
     }
-    if(lastLetter == 'y'
+    if (lastLetter == 'y'
         && !lengthIs1
-        &&(penultimateLetter != 'a'
-		    && penultimateLetter != 'e'
-		    && penultimateLetter != 'i'
-		    && penultimateLetter != 'o'
-		    && penultimateLetter != 'u')){
+        && (penultimateLetter != 'a'
+            && penultimateLetter != 'e'
+            && penultimateLetter != 'i'
+            && penultimateLetter != 'o'
+            && penultimateLetter != 'u')) {
       return n + " " + noun.substring(0, noun.length() - 1) + "ies";
     }
     return n + " " + noun + "s";
