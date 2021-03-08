@@ -1049,17 +1049,17 @@ public final class StringsPlume {
 
   /**
    * Return either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
-   * with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous letter is
+   * with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous letter is a
    * consonant.
    *
    * @param n count of nouns
-   * @param noun word being counted
+   * @param noun word being counted; must not be the empty string
    * @return noun, if n==1; otherwise, pluralization of noun
    * @throws IllegalArgumentException if the length of noun is 0
    */
   @SideEffectFree
   public static String nplural(int n, String noun) {
-    if (noun.length() < 1) {
+    if (noun.isEmpty()) {
       throw new IllegalArgumentException("The second argument must not be an empty String");
     }
     if (n == 1) {
