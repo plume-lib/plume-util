@@ -1060,26 +1060,21 @@ public final class StringsPlume {
   @SideEffectFree
   public static String nplural(int n, String noun) {
     if (noun.isEmpty()) {
-      throw new IllegalArgumentException("The second argument must not be an empty String");
+      throw new IllegalArgumentException(
+          "The second argument to nplural must not be an empty string");
     }
     if (n == 1) {
       return n + " " + noun;
     }
-    boolean lengthIs1 = true;
-    char penultimateLetter = '\u0000';
     char lastLetter = noun.charAt(noun.length() - 1);
-    if (noun.length() > 1) {
-      lengthIs1 = false;
-      penultimateLetter = noun.charAt(noun.length() - 2);
-    }
-    if ((!lengthIs1 && penultimateLetter == 'c' && lastLetter == 'h')
+    char penultimateLetter = (noun.length() == 1) ? '\u0000' : noun.charAt(noun.length() - 2);
+    if ((penultimateLetter == 'c' && lastLetter == 'h')
         || lastLetter == 's'
-        || (!lengthIs1 && penultimateLetter == 's' && lastLetter == 'h')
+        || (penultimateLetter == 's' && lastLetter == 'h')
         || lastLetter == 'x') {
       return n + " " + noun + "es";
     }
     if (lastLetter == 'y'
-        && !lengthIs1
         && (penultimateLetter != 'a'
             && penultimateLetter != 'e'
             && penultimateLetter != 'i'
