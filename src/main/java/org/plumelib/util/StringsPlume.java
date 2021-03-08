@@ -1049,24 +1049,45 @@ public final class StringsPlume {
 
   /**
    * Return either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
-   * with "ch", "s", "sh", or "x".
+   * with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous letter is
+   * consonant.
    *
    * @param n count of nouns
    * @param noun word being counted
    * @return noun, if n==1; otherwise, pluralization of noun
+   * @throws IllegalArgumentException if the length of noun is 0
    */
   @SideEffectFree
   public static String nplural(int n, String noun) {
+    if (noun.length() < 1) {
+      throw new IllegalArgumentException("The second argument must not be an empty String");
+    }
     if (n == 1) {
       return n + " " + noun;
-    } else if (noun.endsWith("ch")
-        || noun.endsWith("s")
-        || noun.endsWith("sh")
-        || noun.endsWith("x")) {
-      return n + " " + noun + "es";
-    } else {
-      return n + " " + noun + "s";
     }
+    boolean lengthIs1 = true;
+    char penultimateLetter = '\u0000';
+    char lastLetter = noun.charAt(noun.length() - 1);
+    if(noun.length() > 1) {
+      lengthIs1 = false;
+      penultimateLetter = noun.charAt(noun.length() - 2);
+    }
+    if ((!lengthIs1 && penultimateLetter == 'c' && lastLetter == 'h')
+        || lastLetter == 's'
+        || (!lengthIs1 && penultimateLetter == 's' && lastLetter == 'h')
+        || lastLetter == 'x') {
+      return n + " " + noun + "es";
+    }
+    if(lastLetter == 'y'
+        && !lengthIs1
+        &&(penultimateLetter != 'a'
+		    && penultimateLetter != 'e'
+		    && penultimateLetter != 'i'
+		    && penultimateLetter != 'o'
+		    && penultimateLetter != 'u')){
+      return n + " " + noun.substring(0, noun.length() - 1) + "ies";
+    }
+    return n + " " + noun + "s";
   }
 
   /**
