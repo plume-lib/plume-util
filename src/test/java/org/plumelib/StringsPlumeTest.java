@@ -240,6 +240,18 @@ public final class StringsPlumeTest {
     assertTrue(StringsPlume.nplural(0, "f-stop").equals("0 f-stops"));
     assertTrue(StringsPlume.nplural(1, "f-stop").equals("1 f-stop"));
     assertTrue(StringsPlume.nplural(2, "f-stop").equals("2 f-stops"));
+    assertEquals("0 facilities", StringsPlume.nplural(0, "facility"));
+    assertEquals("1 facility", StringsPlume.nplural(1, "facility"));
+    assertEquals("2 facilities", StringsPlume.nplural(2, "facility"));
+    assertEquals("0 factories", StringsPlume.nplural(0, "factory"));
+    assertEquals("1 factory", StringsPlume.nplural(1, "factory"));
+    assertEquals("2 factories", StringsPlume.nplural(2, "factory"));
+    assertEquals("0 fairways", StringsPlume.nplural(0, "fairway"));
+    assertEquals("1 fairway", StringsPlume.nplural(1, "fairway"));
+    assertEquals("2 fairways", StringsPlume.nplural(2, "fairway"));
+    assertEquals("0 fanboys", StringsPlume.nplural(0, "fanboy"));
+    assertEquals("1 fanboy", StringsPlume.nplural(1, "fanboy"));
+    assertEquals("2 fanboys", StringsPlume.nplural(2, "fanboy"));
   }
 
   @Test
