@@ -109,6 +109,17 @@ public final class CollectionsPlumeTest {
   ///
 
   @Test
+  public void testListOf() {
+    assertEquals(Arrays.asList("a", "b"), CollectionsPlume.listOf("a", "b"));
+  }
+
+  @Test
+  public void testAppend() {
+    assertEquals(
+        Arrays.asList("a", "b", "c"), CollectionsPlume.append(Arrays.asList("a", "b"), "c"));
+  }
+
+  @Test
   public void testMergedIterator() {
 
     // public static class EnumerationIterator implements Iterator

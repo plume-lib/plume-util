@@ -225,6 +225,37 @@ public final class CollectionsPlume {
     return result;
   }
 
+  /**
+   * Creates an immutable list containing two elements. In Java 9+, use List.of().
+   *
+   * @param <E> the List's element type
+   * @param e1 the first element
+   * @param e2 the second element
+   * @return a List containing the specified elements
+   */
+  public static <E> List<E> listOf(E e1, E e2) {
+    ArrayList<E> result = new ArrayList<>(2);
+    result.add(e1);
+    result.add(e2);
+    return Collections.unmodifiableList(result);
+  }
+
+  /**
+   * Concatenates a list and an element into a new list.
+   *
+   * @param <T> the type of the list elements
+   * @param list the list
+   * @param lastElt the new last elemeent
+   * @return a new list containing the list elements and the last element, in that order
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> List<T> append(Collection<T> list, T lastElt) {
+    List<T> result = new ArrayList<>(list.size() + 1);
+    result.addAll(list);
+    result.add(lastElt);
+    return result;
+  }
+
   // Rather than writing something like ArrayListToStringArray, use
   //   v.toArray(new String[0])
 

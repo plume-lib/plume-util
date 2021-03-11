@@ -8,6 +8,8 @@
 - New methods:
    - `StringsPlume.conjunction`: to produce text like "a, b, c, or d"
    - `CollectionsPlume.transform`: like `mapList` but with args in opposite order
+   - `CollectionsPlume.listOf`: like `List.of` in Java 9+
+   - `CollectionsPlume.append`: creates a new list with an element added to the end
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Moved methods (the old versions still work but are deprecated)
