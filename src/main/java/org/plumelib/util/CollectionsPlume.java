@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -180,8 +179,13 @@ public final class CollectionsPlume {
    * @param c a collection
    * @return a list of the results of applying {@code f} to the elements of {@code list}
    */
+  // This implementation uses a for loop and is likely more efficient than using streams.
   public static <FROM, TO> List<TO> mapList(Function<? super FROM, TO> f, Collection<FROM> c) {
-    return c.stream().map(f).collect(Collectors.toList());
+    List<TO> result = new ArrayList<>(c.size());
+    for (FROM elt : c) {
+      result.add(f.apply(elt));
+    }
+    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
