@@ -342,6 +342,14 @@ public final class CollectionsPlumeTest {
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
   }
 
+  @Test
+  @SuppressWarnings("lock:methodref.receiver.invalid")
+  public void testTransform() {
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
+    assertEquals(out, CollectionsPlume.transform(in, Object::toString));
+  }
+
   /** Tests UtilPlume createCombinations routines. */
   @Test
   public void test_createCombinations() {

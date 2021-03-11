@@ -6,7 +6,8 @@
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
 - New methods:
-   - `StringsPlume.conjunction`
+   - `StringsPlume.conjunction`: to produce text like "a, b, c, or d"
+   - `CollectionsPlume.transform`: like `mapList` but with args in opposite order
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Moved methods (the old versions still work but are deprecated)
