@@ -5,6 +5,8 @@
 - New methods for writing possibly-compressed files:
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
+- New methods:
+   - `StringsPlume.conjunction`
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Moved methods (the old versions still work but are deprecated)
