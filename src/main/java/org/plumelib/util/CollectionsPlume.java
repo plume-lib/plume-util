@@ -179,8 +179,10 @@ public final class CollectionsPlume {
    * @param c a collection
    * @return a list of the results of applying {@code f} to the elements of {@code list}
    */
-  // This implementation uses a for loop and is likely more efficient than using streams.
   public static <FROM, TO> List<TO> mapList(Function<? super FROM, TO> f, Collection<FROM> c) {
+    // This implementation uses a for loop and is likely more efficient than using streams, both
+    // because it doesn't create stream objects and because it creates an ArrayList of the
+    // appropriate size.
     List<TO> result = new ArrayList<>(c.size());
     for (FROM elt : c) {
       result.add(f.apply(elt));
