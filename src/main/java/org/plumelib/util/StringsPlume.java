@@ -600,10 +600,11 @@ public final class StringsPlume {
    * @param arg string to remove whitespace in
    * @param delimiter string to remove whitespace after
    * @return version of arg, with whitespace after delimiter removed
+   * @throws IllegalArgumentException if the second argument is an empty String
    */
   @SideEffectFree
   public static String removeWhitespaceAfter(String arg, String delimiter) {
-    if (delimiter == null || delimiter.equals("")) {
+    if (delimiter.isEmpty()) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // String orig = arg;
@@ -634,10 +635,11 @@ public final class StringsPlume {
    * @param arg string to remove whitespace in
    * @param delimiter string to remove whitespace before
    * @return version of arg, with whitespace before delimiter removed
+   * @throws IllegalArgumentException if the second argument is an empty String
    */
   @SideEffectFree
   public static String removeWhitespaceBefore(String arg, String delimiter) {
-    if (delimiter == null || delimiter.equals("")) {
+    if (delimiter.isEmpty()) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // System.out.println("removeWhitespaceBefore(\"" + arg + "\", \"" + delimiter + "\")");
@@ -1110,11 +1112,12 @@ public final class StringsPlume {
    * @param s string to search in
    * @param sub non-empty string to search for
    * @return number of times the substring appears in the string
+   * @throws IllegalArgumentException if the second argument is an empty String
    */
   @Pure
   @StaticallyExecutable
   public static int count(String s, String sub) {
-    if (sub.equals("")) {
+    if (sub.isEmpty()) {
       throw new IllegalArgumentException("second argument must not be empty");
     }
     int result = 0;
