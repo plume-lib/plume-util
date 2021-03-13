@@ -308,6 +308,7 @@ public final class StringsPlume {
       char c = orig.charAt(i);
       switch (c) {
         case '\"':
+        case '\'';
         case '\\':
         case '\b':
         case '\f':
@@ -372,6 +373,8 @@ public final class StringsPlume {
     switch (c) {
       case '\"':
         return "\\\"";
+      case '\'':
+        return "\\'";
       case '\\':
         return "\\\\";
       case '\b':
@@ -422,6 +425,8 @@ public final class StringsPlume {
   private static String escapeNonASCII(char c) {
     if (c == '"') {
       return "\\\"";
+    } else if (c == '\''){
+      return "\'";
     } else if (c == '\\') {
       return "\\\\";
     } else if (c == '\n') { // not lineSep
