@@ -463,7 +463,7 @@ public final class StringsPlume {
       case '\t':
         return "'\\t'";
       default:
-        return new String(new char[] {c});
+        return "'" + c + "'";
     }
   }
 
