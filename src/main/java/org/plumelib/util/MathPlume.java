@@ -16,6 +16,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Mathematical utilities. */
 public final class MathPlume {
@@ -841,7 +842,7 @@ public final class MathPlume {
    *     null if no such exists or the iterator contains fewer than 3 elements
    */
   @SideEffectFree
-  @StaticallyExecutable
+  //@StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulus(int[] nums) {
     if (nums.length < 3) {
       return null;
@@ -921,7 +922,7 @@ public final class MathPlume {
    *     null if no such exists or the array contains fewer than 3 elements
    */
   @SideEffectFree
-  @StaticallyExecutable
+  //@StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulusStrict(int[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
       return null;
@@ -1080,7 +1081,7 @@ public final class MathPlume {
    *     null if no such exists or the iterator contains fewer than 3 elements
    */
   @SideEffectFree
-  @StaticallyExecutable
+  //@StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulus(long[] nums) {
     if (nums.length < 3) {
       return null;
@@ -1160,7 +1161,7 @@ public final class MathPlume {
    *     null if no such exists or the array contains fewer than 3 elements
    */
   @SideEffectFree
-  @StaticallyExecutable
+  //@StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulusStrict(long[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
       return null;
