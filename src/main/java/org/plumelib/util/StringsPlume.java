@@ -391,7 +391,7 @@ public final class StringsPlume {
    *
    * @param ch character to quote
    * @return quoted version of ch
-   * @deprecated use {@link #escapeJava(String)} or {@link charLiteral(Character)}
+   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(Character)}
    */
   @Deprecated // 2021-03-14
   @SideEffectFree
@@ -405,7 +405,7 @@ public final class StringsPlume {
    *
    * @param c character to quote
    * @return quoted version of ch
-   * @deprecated use {@link #escapeJava(String)} or {@link charLiteral(char)}
+   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
   @Deprecated // 2021-03-14
   @SideEffectFree
