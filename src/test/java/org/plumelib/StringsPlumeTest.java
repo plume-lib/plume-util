@@ -162,7 +162,6 @@ public final class StringsPlumeTest {
 
   @Test
   public void test_charLiteral() {
-    // Test char version
     assertEquals("'a'", StringsPlume.charLiteral('a'));
     assertEquals("'\\''", StringsPlume.charLiteral('\''));
     assertEquals("'\"'", StringsPlume.charLiteral('\"'));
