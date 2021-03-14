@@ -308,7 +308,7 @@ public final class StringsPlume {
       char c = orig.charAt(i);
       switch (c) {
         case '\"':
-        case '\'';
+        case '\'':
         case '\\':
         case '\b':
         case '\f':
