@@ -450,8 +450,6 @@ public final class StringsPlume {
   @SideEffectFree
   public static String charLiteral(char c) {
     switch (c) {
-      case '\"':
-        return "'\\\"'";
       case '\\':
         return "'\\\\'";
       case '\b':
