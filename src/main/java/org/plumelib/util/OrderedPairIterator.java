@@ -155,7 +155,7 @@ public class OrderedPairIterator<T extends @MustCall Object>
             // for now, remove the annotations.
             // @SuppressWarnings("unchecked")
             // Comparable<@NonNull T> cble1 = (Comparable<@NonNull T>) next1;
-            @SuppressWarnings({"nullness", "unchecked"})
+            @SuppressWarnings({"unchecked"})
             Comparable<T> cble1 = (Comparable<T>) next1;
             comparison = cble1.compareTo(next2);
           } else {
