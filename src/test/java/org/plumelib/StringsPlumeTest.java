@@ -108,6 +108,7 @@ public final class StringsPlumeTest {
     oneEscapeJava("\\relax", "\\\\relax");
     oneEscapeJava("\"hello\"", "\\\"hello\\\"");
     oneEscapeJava("\"hello\" \"world\"", "\\\"hello\\\" \\\"world\\\"");
+    oneEscapeJava("'hello'", "'hello'");
     oneEscapeJava("foo\\", "foo\\\\");
     oneEscapeJava("foo\0bar", "foo\\000bar");
     oneEscapeJava("foo\tbar", "foo\\tbar");
@@ -127,6 +128,7 @@ public final class StringsPlumeTest {
     assertTrue(StringsPlume.unescapeJava("\\*abc").equals("*abc"));
     assertTrue(StringsPlume.unescapeJava("\\101").equals("A"));
     assertTrue(StringsPlume.unescapeJava("A\\102C").equals("ABC"));
+    assertTrue(StringsPlume.unescapeJava("don\\'t").equals("don't"));
 
     assertEquals("(1", StringsPlume.unescapeJava("\0501"));
     assertEquals("(1", StringsPlume.unescapeJava("\501"));
@@ -156,6 +158,13 @@ public final class StringsPlumeTest {
     // If implemented, it should have the following behavior:
     // assertTrue(StringsPlume.unescapeNonASCII("\\115").equals("M"));
     // assertTrue(StringsPlume.unescapeNonASCII("\\115\\111\\124").equals("MIT"));
+  }
+
+  @Test
+  public void test_charLiteral() {
+    assertEquals("'a'", StringsPlume.charLiteral('a'));
+    assertEquals("'\\''", StringsPlume.charLiteral('\''));
+    assertEquals("'\"'", StringsPlume.charLiteral('\"'));
   }
 
   @Test
@@ -240,6 +249,18 @@ public final class StringsPlumeTest {
     assertTrue(StringsPlume.nplural(0, "f-stop").equals("0 f-stops"));
     assertTrue(StringsPlume.nplural(1, "f-stop").equals("1 f-stop"));
     assertTrue(StringsPlume.nplural(2, "f-stop").equals("2 f-stops"));
+    assertEquals("0 facilities", StringsPlume.nplural(0, "facility"));
+    assertEquals("1 facility", StringsPlume.nplural(1, "facility"));
+    assertEquals("2 facilities", StringsPlume.nplural(2, "facility"));
+    assertEquals("0 factories", StringsPlume.nplural(0, "factory"));
+    assertEquals("1 factory", StringsPlume.nplural(1, "factory"));
+    assertEquals("2 factories", StringsPlume.nplural(2, "factory"));
+    assertEquals("0 fairways", StringsPlume.nplural(0, "fairway"));
+    assertEquals("1 fairway", StringsPlume.nplural(1, "fairway"));
+    assertEquals("2 fairways", StringsPlume.nplural(2, "fairway"));
+    assertEquals("0 fanboys", StringsPlume.nplural(0, "fanboy"));
+    assertEquals("1 fanboy", StringsPlume.nplural(1, "fanboy"));
+    assertEquals("2 fanboys", StringsPlume.nplural(2, "fanboy"));
   }
 
   @Test

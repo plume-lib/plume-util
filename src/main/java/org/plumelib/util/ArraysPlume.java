@@ -3252,7 +3252,8 @@ public final class ArraysPlume {
     static final long serialVersionUID = 20150812L;
 
     /**
-     * Compare two arrays by length, then lexically (element-by-element).
+     * Compare two arrays by length, then lexically (element-by-element). Null elements are
+     * considered smaller than non-null elements.
      *
      * @param a1 first array to compare
      * @param a2 second array to compare

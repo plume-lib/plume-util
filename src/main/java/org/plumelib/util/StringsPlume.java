@@ -283,8 +283,9 @@ public final class StringsPlume {
   ///
 
   /**
-   * Escapes a String so that it is expressible in Java source code. By surrounding the return value
-   * with double quote marks, the result will be a Java string literal denoting the original string.
+   * Escapes a String so that it is expressible in a string literal in Java source code. By
+   * surrounding the return value with double quote marks, the result will be a Java string literal
+   * denoting the original string.
    *
    * <p>Returns a new string only if any modifications were necessary.
    *
@@ -308,16 +309,52 @@ public final class StringsPlume {
       char c = orig.charAt(i);
       switch (c) {
         case '\"':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\\"");
+          postEsc = i + 1;
+          break;
         case '\\':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\\\");
+          postEsc = i + 1;
+          break;
         case '\b':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\b");
+          postEsc = i + 1;
+          break;
         case '\f':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\f");
+          postEsc = i + 1;
+          break;
         case '\n': // not lineSep
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\n"); // not lineSep
+          postEsc = i + 1;
+          break;
         case '\r':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\r");
+          postEsc = i + 1;
+          break;
         case '\t':
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
-          sb.append(escapeJava(c));
+          sb.append("\\t");
           postEsc = i + 1;
           break;
 
@@ -348,25 +385,29 @@ public final class StringsPlume {
     return sb.toString();
   }
 
-  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
-   * Like {@link #escapeJava(String)}, but for a single character.
+   * Like {@link #escapeJava(String)}, but for a single character. Note that this quotes its
+   * argument for inclusion in a string literal, not in a character literal.
    *
    * @param ch character to quote
    * @return quoted version of ch
+   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(Character)}
    */
+  @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(Character ch) {
     return escapeJava(ch.charValue());
   }
 
-  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
-   * Like {@link #escapeJava(String)}, but for a single character.
+   * Like {@link #escapeJava(String)}, but for a single character. Note that this quotes its
+   * argument for inclusion in a string literal, not in a character literal.
    *
    * @param c character to quote
    * @return quoted version of ch
+   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
+  @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(char c) {
     switch (c) {
@@ -386,6 +427,45 @@ public final class StringsPlume {
         return "\\t";
       default:
         return new String(new char[] {c});
+    }
+  }
+
+  /**
+   * Given a character, returns a Java character literal denoting the character.
+   *
+   * @param ch character to quote
+   * @return quoted version of ch
+   */
+  @SideEffectFree
+  public static String charLiteral(Character ch) {
+    return charLiteral(ch.charValue());
+  }
+
+  /**
+   * Given a character, returns a Java character literal denoting the character.
+   *
+   * @param c character to quote
+   * @return quoted version of ch
+   */
+  @SideEffectFree
+  public static String charLiteral(char c) {
+    switch (c) {
+      case '\'':
+        return "'\\''";
+      case '\\':
+        return "'\\\\'";
+      case '\b':
+        return "'\\b'";
+      case '\f':
+        return "'\\f'";
+      case '\n': // not lineSep
+        return "'\\n'"; // not lineSep
+      case '\r':
+        return "'\\r'";
+      case '\t':
+        return "'\\t'";
+      default:
+        return "'" + c + "'";
     }
   }
 
@@ -742,40 +822,63 @@ public final class StringsPlume {
 
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
+   *
+   * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
-  public static class NullableStringComparator implements Comparator<String>, Serializable {
+  @Deprecated // deprecated 2021-02-27
+  public static class NullableStringComparator
+      implements Comparator<@Nullable String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
+    /**
+     * Compare two Strings lexicographically. Null is considered less than any non-null String.
+     *
+     * @param s1 first string to compare
+     * @param s2 second string to compare
+     * @return a negative integer, zero, or a positive integer as the first argument is less than,
+     *     equal to, or greater than the second
+     */
+    @SuppressWarnings("ReferenceEquality") // comparator method uses ==
     @Pure
     @Override
-    @SideEffectFree
-    public int compare(String s1, String s2) {
-      if (s1 == null && s2 == null) {
+    public int compare(@Nullable String s1, @Nullable String s2) {
+      if (s1 == s2) {
         return 0;
       }
-      if (s1 == null && s2 != null) {
-        return 1;
-      }
-      if (s1 != null && s2 == null) {
+      if (s1 == null) {
         return -1;
+      }
+      if (s2 == null) {
+        return 1;
       }
       return s1.compareTo(s2);
     }
   }
 
-  // This could test the types of the elements, and do something more sophisticated based on the
-  // types.
   /**
-   * Attempt to order Objects. Puts null at the beginning. Returns 0 for equal elements. Otherwise,
-   * orders by the result of {@code toString()}.
+   * Orders Objects according to their {@code toString()} representation. Null is considered less
+   * than any non-null Object.
    *
    * <p>Note: if toString returns a nondeterministic value, such as one that depends on the result
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
+   *
+   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} becase
+   * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     static final long serialVersionUID = 20170420L;
 
+    /**
+     * Compare two Objects based on their string representations. Null is considered less than any
+     * non-null Object.
+     *
+     * @param o1 first object to compare
+     * @param o2 second object to compare
+     * @return a negative integer, zero, or a positive integer as the first argument's {@code
+     *     toString()} representation is less than, equal to, or greater than the second argument's
+     *     {@code toString()} representation
+     */
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",
       "lock"
@@ -784,7 +887,7 @@ public final class StringsPlume {
     @Override
     public int compare(@Nullable Object o1, @Nullable Object o2) {
       // Make null compare smaller than anything else
-      if ((o1 == o2)) {
+      if (o1 == o2) {
         return 0;
       }
       if (o1 == null) {
@@ -905,7 +1008,7 @@ public final class StringsPlume {
       }
     }
     try {
-      String formatted = StringsPlume.escapeJava(v.toString());
+      String formatted = escapeJava(v.toString());
       return String.format("%s [%s]", formatted, v.getClass());
     } catch (Exception e) {
       return String.format("exception_when_calling_toString [%s]", v.getClass());
@@ -1026,24 +1129,40 @@ public final class StringsPlume {
 
   /**
    * Return either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
-   * with "ch", "s", "sh", or "x".
+   * with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous letter is a
+   * consonant.
    *
    * @param n count of nouns
-   * @param noun word being counted
+   * @param noun word being counted; must not be the empty string
    * @return noun, if n==1; otherwise, pluralization of noun
+   * @throws IllegalArgumentException if the length of noun is 0
    */
   @SideEffectFree
   public static String nplural(int n, String noun) {
+    if (noun.isEmpty()) {
+      throw new IllegalArgumentException(
+          "The second argument to nplural must not be an empty string");
+    }
     if (n == 1) {
       return n + " " + noun;
-    } else if (noun.endsWith("ch")
-        || noun.endsWith("s")
-        || noun.endsWith("sh")
-        || noun.endsWith("x")) {
-      return n + " " + noun + "es";
-    } else {
-      return n + " " + noun + "s";
     }
+    char lastLetter = noun.charAt(noun.length() - 1);
+    char penultimateLetter = (noun.length() == 1) ? '\u0000' : noun.charAt(noun.length() - 2);
+    if ((penultimateLetter == 'c' && lastLetter == 'h')
+        || lastLetter == 's'
+        || (penultimateLetter == 's' && lastLetter == 'h')
+        || lastLetter == 'x') {
+      return n + " " + noun + "es";
+    }
+    if (lastLetter == 'y'
+        && (penultimateLetter != 'a'
+            && penultimateLetter != 'e'
+            && penultimateLetter != 'i'
+            && penultimateLetter != 'o'
+            && penultimateLetter != 'u')) {
+      return n + " " + noun.substring(0, noun.length() - 1) + "ies";
+    }
+    return n + " " + noun + "s";
   }
 
   /**
