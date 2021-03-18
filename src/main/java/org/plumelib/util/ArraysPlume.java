@@ -22,7 +22,7 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
-import org.checkerframework.checker.mustcall.qual.*;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;

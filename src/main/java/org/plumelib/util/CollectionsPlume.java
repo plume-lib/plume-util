@@ -23,7 +23,7 @@ import java.util.function.Function;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.*;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

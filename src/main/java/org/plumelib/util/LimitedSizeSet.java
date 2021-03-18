@@ -7,7 +7,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.*;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.MinLen;

@@ -17,7 +17,6 @@ plugins {
 }
 
 repositories {
-  mavenLocal()
   mavenCentral()
 }
 
@@ -90,12 +89,7 @@ checkerFramework {
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
-    '-AsuppressWarnings=type.anno.before',
     '-AcheckMustCall',
-    // -AskipUses does not work; instead, look at "The type of object is" in the checker output
-    // '-AskipUses=^java\\.',
-    // For debugging CFG problems.
-    // '-Aflowdotdir=/home/mernst/java/plume-lib/plume-util-fork-mernst-branch-check-resource-leaks-3/src/main/java/org/plumelib/util',
   ]
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".

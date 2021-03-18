@@ -34,9 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import org.checkerframework.checker.mustcall.qual.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.objectconstruction.qual.Owning;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
