@@ -21,11 +21,10 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.*;
+import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.objectconstruction.qual.*;
 import org.checkerframework.checker.regex.qual.Regex;
 
 // TODO:
@@ -598,7 +597,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   @SuppressWarnings("mustcall:override.return.invalid") // `Iterable.iterator()` returns @MustCall
   @Override
-  public @MustCallChoice Iterator<String> iterator(@MustCallChoice EntryReader this) {
+  public @MustCallAlias Iterator<String> iterator(@MustCallAlias EntryReader this) {
     return this;
   }
 

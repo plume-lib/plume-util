@@ -70,11 +70,10 @@ tasks.withType(JavaCompile).configureEach {
 apply plugin: 'org.checkerframework'
 
 dependencies {
-    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.10-SNAPSHOT'
-    implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.10-SNAPSHOT'
+    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.10'
+    implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.10'
 }
 checkerFramework {
-  /*
   checkers = [
     'org.checkerframework.checker.formatter.FormatterChecker',
     'org.checkerframework.checker.index.IndexChecker',
@@ -83,10 +82,9 @@ checkerFramework {
     'org.checkerframework.checker.nullness.NullnessChecker',
     'org.checkerframework.checker.regex.RegexChecker',
     'org.checkerframework.checker.signature.SignatureChecker',
-    'org.checkerframework.common.initializedfields.InitializedFieldsChecker'
+    'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
+    'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker',
   ]
-  */
-  checkers = ['org.checkerframework.checker.objectconstruction.ObjectConstructionChecker']
   extraJavacArgs = [
     '-Werror',
     '-AcheckPurityAnnotations',
