@@ -5,8 +5,11 @@
 - New methods for writing possibly-compressed files:
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
+- New methods `StringsPlume.charLiteral` (2 overloads)
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
+- Deprecated `StringsPlume.escapeJava(char)` and `StringsPlume.escapeJava(char)`;
+  use `escapeJava(String)` or `charLiteral()`
 - Moved methods (the old versions still work but are deprecated)
    - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
 
