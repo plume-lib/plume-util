@@ -25,7 +25,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *
  * @param <T> the type of elements in the set
  */
-public class LimitedSizeSet<T extends @MustCall Object> implements Serializable, Cloneable {
+public class LimitedSizeSet<T extends @Nullable @MustCall Object>
+    implements Serializable, Cloneable {
   // We are Serializable, so we specify a version to allow changes to
   // method signatures without breaking serialization.  If you add or
   // remove fields, you should change this number to the current date.
