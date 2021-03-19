@@ -1591,7 +1591,7 @@ public final class ArraysPlume {
    * @param lst the list to convert to an array
    * @return the result of lst.toArray, casted to a more precise type than Object[]
    */
-   @SideEffectFree
+  @SideEffectFree
   private static <T> T[] toTArray(List<T> lst) {
     @SuppressWarnings("unchecked")
     T[] asArray = (T[]) lst.toArray();
@@ -1632,7 +1632,7 @@ public final class ArraysPlume {
      *
      * @return true if this represents a null value
      */
-     @Pure
+    @Pure
     boolean isNull() {
       return theArray == null && theList == null;
     }
@@ -1642,7 +1642,7 @@ public final class ArraysPlume {
      *
      * @return the size of the collection this represents
      */
-     @Pure
+    @Pure
     @NonNegative int size() {
       if (theArray != null) {
         return theArray.length;
@@ -1658,7 +1658,7 @@ public final class ArraysPlume {
      *
      * @return true if this represents an empty collection
      */
-     @Pure
+    @Pure
     boolean isEmpty() {
       if (theArray != null) {
         return theArray.length == 0;
@@ -1674,7 +1674,7 @@ public final class ArraysPlume {
      *
      * @return an array with the same contents as this
      */
-     @SideEffectFree
+    @SideEffectFree
     T[] toArray() {
       if (theArray != null) {
         return theArray;
