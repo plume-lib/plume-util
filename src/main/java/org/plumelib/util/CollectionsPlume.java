@@ -649,6 +649,8 @@ public final class CollectionsPlume {
      *
      * @return the first element of the iterator that was used to construct this
      */
+    @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // constructing an exception
+    @Pure
     public T getFirst() {
       @SuppressWarnings("interning") // check for equality to a special value
       boolean invalid = (first == nothing);
@@ -668,6 +670,7 @@ public final class CollectionsPlume {
      * @return the last element of the iterator that was used to construct this.
      */
     // TODO: This is buggy when the delegate is empty.
+    @Pure
     public T getLast() {
       if (itor.hasNext()) {
         throw new Error();
