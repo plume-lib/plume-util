@@ -283,8 +283,9 @@ public final class StringsPlume {
   ///
 
   /**
-   * Escapes a String so that it is expressible in Java source code. By surrounding the return value
-   * with double quote marks, the result will be a Java string literal denoting the original string.
+   * Escapes a String so that it is expressible in a string literal in Java source code. By
+   * surrounding the return value with double quote marks, the result will be a Java string literal
+   * denoting the original string.
    *
    * <p>Returns a new string only if any modifications were necessary.
    *
@@ -308,16 +309,52 @@ public final class StringsPlume {
       char c = orig.charAt(i);
       switch (c) {
         case '\"':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\\"");
+          postEsc = i + 1;
+          break;
         case '\\':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\\\");
+          postEsc = i + 1;
+          break;
         case '\b':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\b");
+          postEsc = i + 1;
+          break;
         case '\f':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\f");
+          postEsc = i + 1;
+          break;
         case '\n': // not lineSep
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\n"); // not lineSep
+          postEsc = i + 1;
+          break;
         case '\r':
+          if (postEsc < i) {
+            sb.append(orig.substring(postEsc, i));
+          }
+          sb.append("\\r");
+          postEsc = i + 1;
+          break;
         case '\t':
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
-          sb.append(escapeJava(c));
+          sb.append("\\t");
           postEsc = i + 1;
           break;
 
@@ -348,25 +385,29 @@ public final class StringsPlume {
     return sb.toString();
   }
 
-  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
-   * Like {@link #escapeJava(String)}, but for a single character.
+   * Like {@link #escapeJava(String)}, but for a single character. Note that this quotes its
+   * argument for inclusion in a string literal, not in a character literal.
    *
    * @param ch character to quote
    * @return quoted version of ch
+   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(Character)}
    */
+  @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(Character ch) {
     return escapeJava(ch.charValue());
   }
 
-  // If the overhead of this is too high to call in escapeJava(String), then inline it there.
   /**
-   * Like {@link #escapeJava(String)}, but for a single character.
+   * Like {@link #escapeJava(String)}, but for a single character. Note that this quotes its
+   * argument for inclusion in a string literal, not in a character literal.
    *
    * @param c character to quote
    * @return quoted version of ch
+   * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
+  @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(char c) {
     switch (c) {
@@ -386,6 +427,45 @@ public final class StringsPlume {
         return "\\t";
       default:
         return new String(new char[] {c});
+    }
+  }
+
+  /**
+   * Given a character, returns a Java character literal denoting the character.
+   *
+   * @param ch character to quote
+   * @return quoted version of ch
+   */
+  @SideEffectFree
+  public static String charLiteral(Character ch) {
+    return charLiteral(ch.charValue());
+  }
+
+  /**
+   * Given a character, returns a Java character literal denoting the character.
+   *
+   * @param c character to quote
+   * @return quoted version of ch
+   */
+  @SideEffectFree
+  public static String charLiteral(char c) {
+    switch (c) {
+      case '\'':
+        return "'\\''";
+      case '\\':
+        return "'\\\\'";
+      case '\b':
+        return "'\\b'";
+      case '\f':
+        return "'\\f'";
+      case '\n': // not lineSep
+        return "'\\n'"; // not lineSep
+      case '\r':
+        return "'\\r'";
+      case '\t':
+        return "'\\t'";
+      default:
+        return "'" + c + "'";
     }
   }
 
@@ -928,7 +1008,7 @@ public final class StringsPlume {
       }
     }
     try {
-      String formatted = StringsPlume.escapeJava(v.toString());
+      String formatted = escapeJava(v.toString());
       return String.format("%s [%s]", formatted, v.getClass());
     } catch (Exception e) {
       return String.format("exception_when_calling_toString [%s]", v.getClass());
