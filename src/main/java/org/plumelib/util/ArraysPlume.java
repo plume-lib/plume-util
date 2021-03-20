@@ -477,7 +477,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @MustCall Object> int indexOf(T[] a, @Nullable Object elt) {
+  public static <T extends @Nullable @MustCall Object> int indexOf(T[] a, @Nullable Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -503,7 +503,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @MustCall Object> int indexOf(
+  public static <T extends @Nullable @MustCall Object> int indexOf(
       T[] a,
       @Nullable Object elt,
       @IndexFor("#1") int minindex,
@@ -1714,7 +1714,7 @@ public final class ArraysPlume {
      * @return the least upper bound of the classes of the elements of this
      */
     @SuppressWarnings("mustcall:argument.type.incompatible") // ReflectionPlume is not annotated
-    @Nullable Class<? extends @MustCall Object> leastUpperBound() {
+    @Nullable Class<? extends @Nullable @MustCall Object> leastUpperBound() {
       if (theArray != null) {
         return ReflectionPlume.leastUpperBound(theArray);
       } else if (theList != null) {
@@ -3325,7 +3325,7 @@ public final class ArraysPlume {
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
-  public static boolean anyNull(List<? extends @MustCall Object> a) {
+  public static boolean anyNull(List<? extends @Nullable @MustCall Object> a) {
     if (a.size() == 0) {
       return false;
     }

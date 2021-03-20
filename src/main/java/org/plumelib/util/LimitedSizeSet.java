@@ -230,7 +230,7 @@ public class LimitedSizeSet<T extends @Nullable @MustCall Object>
    * @param slist a list of LimitedSizeSet, whose elements will be merged
    * @return a LimitedSizeSet that merges the elements of slist
    */
-  public static <T extends @MustCall Object> LimitedSizeSet<T> merge(
+  public static <T extends @Nullable @MustCall Object> LimitedSizeSet<T> merge(
       @Positive int maxValues, List<LimitedSizeSet<? extends T>> slist) {
     LimitedSizeSet<T> result = new LimitedSizeSet<>(maxValues);
     for (LimitedSizeSet<? extends T> s : slist) {

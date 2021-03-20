@@ -535,7 +535,7 @@ public final class CollectionsPlume {
   }
 
   /** An iterator that only returns elements that match the given Filter. */
-  public static final class FilteredIterator<T extends @MustCall Object> implements Iterator<T> {
+  public static final class FilteredIterator<T extends @Nullable @MustCall Object> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
     /** The predicate that determines which elements to retain. */
@@ -866,7 +866,7 @@ public final class CollectionsPlume {
    * @param key the value to look up in the set
    * @return the object in this set that is equal to key, or null
    */
-  public static @Nullable Object getFromSet(Set<? extends @MustCall Object> set, Object key) {
+  public static @Nullable Object getFromSet(Set<? extends @Nullable @MustCall Object> set, Object key) {
     if (key == null) {
       return null;
     }
