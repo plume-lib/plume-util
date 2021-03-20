@@ -109,6 +109,7 @@ public final class StringsPlumeTest {
     oneEscapeJava("\\relax", "\\\\relax");
     oneEscapeJava("\"hello\"", "\\\"hello\\\"");
     oneEscapeJava("\"hello\" \"world\"", "\\\"hello\\\" \\\"world\\\"");
+    oneEscapeJava("'hello'", "'hello'");
     oneEscapeJava("foo\\", "foo\\\\");
     oneEscapeJava("foo\0bar", "foo\\000bar");
     oneEscapeJava("foo\tbar", "foo\\tbar");
@@ -128,6 +129,7 @@ public final class StringsPlumeTest {
     assertTrue(StringsPlume.unescapeJava("\\*abc").equals("*abc"));
     assertTrue(StringsPlume.unescapeJava("\\101").equals("A"));
     assertTrue(StringsPlume.unescapeJava("A\\102C").equals("ABC"));
+    assertTrue(StringsPlume.unescapeJava("don\\'t").equals("don't"));
 
     assertEquals("(1", StringsPlume.unescapeJava("\0501"));
     assertEquals("(1", StringsPlume.unescapeJava("\501"));
@@ -157,6 +159,13 @@ public final class StringsPlumeTest {
     // If implemented, it should have the following behavior:
     // assertTrue(StringsPlume.unescapeNonASCII("\\115").equals("M"));
     // assertTrue(StringsPlume.unescapeNonASCII("\\115\\111\\124").equals("MIT"));
+  }
+
+  @Test
+  public void test_charLiteral() {
+    assertEquals("'a'", StringsPlume.charLiteral('a'));
+    assertEquals("'\\''", StringsPlume.charLiteral('\''));
+    assertEquals("'\"'", StringsPlume.charLiteral('\"'));
   }
 
   @Test
