@@ -1022,7 +1022,7 @@ public final class StringsPlume {
    * @return the value's toString and its class
    */
   @SideEffectFree
-  public static String listToStringAndClass(List<?> lst) {
+  public static String listToStringAndClass(@Nullable List<?> lst) {
     if (lst == null) {
       return "null";
     } else {
@@ -1042,7 +1042,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String listToString(List<?> lst) {
+  public static String listToString(@Nullable List<?> lst) {
     if (lst == null) {
       return "null";
     }
@@ -1063,7 +1063,7 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if a is not an array
    */
   @SideEffectFree
-  public static String arrayToStringAndClass(Object a) {
+  public static String arrayToStringAndClass(@Nullable Object a) {
 
     if (a == null) {
       return "null";
