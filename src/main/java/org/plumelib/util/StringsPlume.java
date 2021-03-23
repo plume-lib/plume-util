@@ -678,12 +678,12 @@ public final class StringsPlume {
    * Remove all whitespace after instances of delimiter.
    *
    * @param arg string to remove whitespace in
-   * @param delimiter string to remove whitespace after
+   * @param delimiter a non-empty string to remove whitespace after
    * @return version of arg, with whitespace after delimiter removed
    */
   @SideEffectFree
   public static String removeWhitespaceAfter(String arg, String delimiter) {
-    if (delimiter == null || delimiter.equals("")) {
+    if (delimiter.isEmpty()) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // String orig = arg;
@@ -712,12 +712,12 @@ public final class StringsPlume {
    * Remove all whitespace before instances of delimiter.
    *
    * @param arg string to remove whitespace in
-   * @param delimiter string to remove whitespace before
+   * @param delimiter a non-empty string to remove whitespace before
    * @return version of arg, with whitespace before delimiter removed
    */
   @SideEffectFree
   public static String removeWhitespaceBefore(String arg, String delimiter) {
-    if (delimiter == null || delimiter.equals("")) {
+    if (delimiter.isEmpty()) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // System.out.println("removeWhitespaceBefore(\"" + arg + "\", \"" + delimiter + "\")");
