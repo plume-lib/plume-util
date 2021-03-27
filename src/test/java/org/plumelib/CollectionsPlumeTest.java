@@ -109,6 +109,17 @@ public final class CollectionsPlumeTest {
   ///
 
   @Test
+  public void testListOf() {
+    assertEquals(Arrays.asList("a", "b"), CollectionsPlume.listOf("a", "b"));
+  }
+
+  @Test
+  public void testAppend() {
+    assertEquals(
+        Arrays.asList("a", "b", "c"), CollectionsPlume.append(Arrays.asList("a", "b"), "c"));
+  }
+
+  @Test
   public void testMergedIterator() {
 
     // public static class EnumerationIterator implements Iterator
@@ -340,6 +351,14 @@ public final class CollectionsPlumeTest {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
+  }
+
+  @Test
+  @SuppressWarnings("lock:methodref.receiver.invalid")
+  public void testTransform() {
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
+    assertEquals(out, CollectionsPlume.transform(in, Object::toString));
   }
 
   /** Tests UtilPlume createCombinations routines. */

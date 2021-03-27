@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -1163,6 +1164,33 @@ public final class StringsPlume {
       return n + " " + noun.substring(0, noun.length() - 1) + "ies";
     }
     return n + " " + noun + "s";
+  }
+
+  /**
+   * Creates a conjunction or disjunction, like "a", "a or b", and "a, b, or c". Obeys the "serial
+   * comma" or "Oxford comma" rule: when the list has size 3 or larger, puts a comma after every
+   * element but the last.
+   *
+   * @param conjunction the conjunction word, like "and" or "or"
+   * @param elements the elements of the conjunction or disjunction
+   * @return a conjunction or disjunction string
+   */
+  public static String conjunction(String conjunction, List<?> elements) {
+    int size = elements.size();
+    if (size == 0) {
+      throw new IllegalArgumentException("no elements passed to conjunction()");
+    } else if (size == 1) {
+      return Objects.toString(elements.get(0));
+    } else if (size == 2) {
+      return elements.get(0) + " " + conjunction + " " + elements.get(1);
+    }
+
+    StringJoiner sj = new StringJoiner(", ");
+    for (int i = 0; i < size - 1; i++) {
+      sj.add(Objects.toString(elements.get(i)));
+    }
+    sj.add(conjunction + " " + elements.get(size - 1));
+    return sj.toString();
   }
 
   /**

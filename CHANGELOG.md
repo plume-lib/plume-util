@@ -6,6 +6,11 @@
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
 - New methods `StringsPlume.charLiteral` (2 overloads)
+- New methods:
+   - `StringsPlume.conjunction`: to produce text like "a, b, c, or d"
+   - `CollectionsPlume.transform`: like `mapList` but with args in opposite order
+   - `CollectionsPlume.listOf`: like `List.of` in Java 9+
+   - `CollectionsPlume.append`: creates a new list with an element added to the end
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Deprecated `StringsPlume.escapeJava(char)` and `StringsPlume.escapeJava(char)`;

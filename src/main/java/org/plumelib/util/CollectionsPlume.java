@@ -20,6 +20,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -173,6 +174,8 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
+   * This method is just like {@link #transform}, but with the arguments in the other order.
+   *
    * @param <FROM> the type of elements of the given collection
    * @param <TO> the type of elements of the result list
    * @param f a function
@@ -188,6 +191,25 @@ public final class CollectionsPlume {
       result.add(f.apply(elt));
     }
     return result;
+  }
+
+  /**
+   * Applies the function to each element of the given collection, producing a list of the results.
+   *
+   * <p>The point of this method is to make mapping operations more concise. Import it with
+   *
+   * <pre>import static org.plumelib.util.CollectionsPlume.transform;</pre>
+   *
+   * This method is just like {@link #mapList}, but with the arguments in the other order.
+   *
+   * @param <FROM> the type of elements of the given collection
+   * @param <TO> the type of elements of the result list
+   * @param c a collection
+   * @param f a function
+   * @return a list of the results of applying {@code f} to the elements of {@code list}
+   */
+  public static <FROM, TO> List<TO> transform(Collection<FROM> c, Function<? super FROM, TO> f) {
+    return c.stream().map(f).collect(Collectors.toList());
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -207,6 +229,37 @@ public final class CollectionsPlume {
     while (e.hasMoreElements()) {
       result.add(e.nextElement());
     }
+    return result;
+  }
+
+  /**
+   * Creates an immutable list containing two elements. In Java 9+, use List.of().
+   *
+   * @param <E> the List's element type
+   * @param e1 the first element
+   * @param e2 the second element
+   * @return a List containing the specified elements
+   */
+  public static <E> List<E> listOf(E e1, E e2) {
+    ArrayList<E> result = new ArrayList<>(2);
+    result.add(e1);
+    result.add(e2);
+    return Collections.unmodifiableList(result);
+  }
+
+  /**
+   * Concatenates a list and an element into a new list.
+   *
+   * @param <T> the type of the list elements
+   * @param list the list
+   * @param lastElt the new last elemeent
+   * @return a new list containing the list elements and the last element, in that order
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> List<T> append(Collection<T> list, T lastElt) {
+    List<T> result = new ArrayList<>(list.size() + 1);
+    result.addAll(list);
+    result.add(lastElt);
     return result;
   }
 

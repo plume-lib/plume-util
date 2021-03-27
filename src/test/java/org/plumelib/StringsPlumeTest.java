@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
@@ -261,6 +262,23 @@ public final class StringsPlumeTest {
     assertEquals("0 fanboys", StringsPlume.nplural(0, "fanboy"));
     assertEquals("1 fanboy", StringsPlume.nplural(1, "fanboy"));
     assertEquals("2 fanboys", StringsPlume.nplural(2, "fanboy"));
+  }
+
+  @Test
+  public void test_conjunction() {
+
+    // public static String conjunction(String conjunction, List<?> elements)
+
+    assertEquals("a", StringsPlume.conjunction("and", Arrays.asList("a")));
+    assertEquals("a and b", StringsPlume.conjunction("and", Arrays.asList("a", "b")));
+    assertEquals("a, b, and c", StringsPlume.conjunction("and", Arrays.asList("a", "b", "c")));
+    assertEquals(
+        "a, b, c, and d", StringsPlume.conjunction("and", Arrays.asList("a", "b", "c", "d")));
+    assertEquals("a", StringsPlume.conjunction("or", Arrays.asList("a")));
+    assertEquals("a or b", StringsPlume.conjunction("or", Arrays.asList("a", "b")));
+    assertEquals("a, b, or c", StringsPlume.conjunction("or", Arrays.asList("a", "b", "c")));
+    assertEquals(
+        "a, b, c, or d", StringsPlume.conjunction("or", Arrays.asList("a", "b", "c", "d")));
   }
 
   @Test
