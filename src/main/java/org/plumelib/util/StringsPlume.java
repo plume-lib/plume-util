@@ -678,12 +678,12 @@ public final class StringsPlume {
    * Remove all whitespace after instances of delimiter.
    *
    * @param arg string to remove whitespace in
-   * @param delimiter string to remove whitespace after
+   * @param delimiter a non-empty string to remove whitespace after
    * @return version of arg, with whitespace after delimiter removed
    */
   @SideEffectFree
   public static String removeWhitespaceAfter(String arg, String delimiter) {
-    if (delimiter == null || delimiter.equals("")) {
+    if (delimiter.isEmpty()) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // String orig = arg;
@@ -712,12 +712,12 @@ public final class StringsPlume {
    * Remove all whitespace before instances of delimiter.
    *
    * @param arg string to remove whitespace in
-   * @param delimiter string to remove whitespace before
+   * @param delimiter a non-empty string to remove whitespace before
    * @return version of arg, with whitespace before delimiter removed
    */
   @SideEffectFree
   public static String removeWhitespaceBefore(String arg, String delimiter) {
-    if (delimiter == null || delimiter.equals("")) {
+    if (delimiter.isEmpty()) {
       throw new IllegalArgumentException("Bad delimiter: \"" + delimiter + "\"");
     }
     // System.out.println("removeWhitespaceBefore(\"" + arg + "\", \"" + delimiter + "\")");
@@ -1022,7 +1022,7 @@ public final class StringsPlume {
    * @return the value's toString and its class
    */
   @SideEffectFree
-  public static String listToStringAndClass(List<?> lst) {
+  public static String listToStringAndClass(@Nullable List<?> lst) {
     if (lst == null) {
       return "null";
     } else {
@@ -1042,7 +1042,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String listToString(List<?> lst) {
+  public static String listToString(@Nullable List<?> lst) {
     if (lst == null) {
       return "null";
     }
@@ -1063,7 +1063,7 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if a is not an array
    */
   @SideEffectFree
-  public static String arrayToStringAndClass(Object a) {
+  public static String arrayToStringAndClass(@Nullable Object a) {
 
     if (a == null) {
       return "null";

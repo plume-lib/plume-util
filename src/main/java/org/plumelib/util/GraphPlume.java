@@ -115,7 +115,8 @@ public final class GraphPlume {
           }
         }
         assert newDoms != null
-            : "@AssumeAssertion(nullness): the loop was entered at least once because this is a non-root, which has at least one predecessor";
+            : "@AssumeAssertion(nullness): the loop was entered at least once because"
+                + " this is a non-root, which has at least one predecessor";
         newDoms.add(node);
         assert dom.containsKey(node);
         if (!dom.get(node).equals(newDoms)) {

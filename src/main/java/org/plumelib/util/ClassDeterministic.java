@@ -222,7 +222,8 @@ public class ClassDeterministic {
         return result;
       }
       assert ptypes1.length == ptypes2.length
-          : "@AssumeAssertion(index): difference of lengths is 0; https://github.com/kelloggm/checker-framework/issues/231";
+          : "@AssumeAssertion(index): difference of lengths is 0;"
+                + " https://github.com/kelloggm/checker-framework/issues/231";
       for (int i = 0; i < ptypes1.length; i++) {
         result = classComparator.compare(ptypes1[i], ptypes2[i]);
         if (result != 0) {
@@ -270,7 +271,8 @@ public class ClassDeterministic {
         return result;
       }
       assert ptypes1.length == ptypes2.length
-          : "@AssumeAssertion(index): difference of lengths is 0; https://github.com/kelloggm/checker-framework/issues/231";
+          : "@AssumeAssertion(index): difference of lengths is 0;"
+                + " https://github.com/kelloggm/checker-framework/issues/231";
       for (int i = 0; i < ptypes1.length; i++) {
         result = classComparator.compare(ptypes1[i], ptypes2[i]);
         if (result != 0) {

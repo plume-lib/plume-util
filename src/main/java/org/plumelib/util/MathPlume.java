@@ -16,6 +16,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Mathematical utilities. */
 public final class MathPlume {
@@ -840,7 +841,8 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    */
-  @Pure
+  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
+  @SideEffectFree
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulus(int[] nums) {
     if (nums.length < 3) {
@@ -865,7 +867,7 @@ public final class MathPlume {
    * int[] doesn't already exist, because this does not necessarily examine every value produced by
    * its iterator.
    *
-   * @param itor iterator of operands
+   * @param itor iterator of operands; modified by this method
    * @return an array of two integers (r,m) such that each number in itor is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulus(int[])
@@ -919,7 +921,8 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
-  @Pure
+  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
+  @SideEffectFree
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulusStrict(int[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
@@ -968,7 +971,7 @@ public final class MathPlume {
    *
    * <p>For documentation, see {@link #modulusStrict(int[], boolean)}.
    *
-   * @param itor iterator of operands
+   * @param itor iterator of operands; modified by this method
    * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
@@ -1077,7 +1080,8 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    */
-  @Pure
+  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
+  @SideEffectFree
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulus(long[] nums) {
     if (nums.length < 3) {
@@ -1102,7 +1106,7 @@ public final class MathPlume {
    * long[] doesn't already exist, because this does not necessarily examine every value produced by
    * its iterator.
    *
-   * @param itor iterator of operands
+   * @param itor iterator of operands; modified by this method
    * @return an array of two integers (r,m) such that each number in itor is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulus(long[])
@@ -1156,7 +1160,8 @@ public final class MathPlume {
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
-  @Pure
+  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
+  @SideEffectFree
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulusStrict(long[] nums, boolean nonstrictEnds) {
     if (nums.length < 3) {
@@ -1205,7 +1210,7 @@ public final class MathPlume {
    *
    * <p>For documentation, see {@link #modulusStrict(long[], boolean)}.
    *
-   * @param itor iterator of operands
+   * @param itor iterator of operands; modified by this method
    * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
@@ -1475,7 +1480,7 @@ public final class MathPlume {
   /**
    * Helper for {@link #nonmodulusStrict(int[])}.
    *
-   * @param missing the missing integers
+   * @param missing the missing integers; modified by this method
    * @return value to be returned by {@link #nonmodulusStrict(int[])}: a tuple of (r,m) where all
    *     numbers in {@code missing} are equal to r (ood m)
    */
@@ -1499,7 +1504,8 @@ public final class MathPlume {
 
   /**
    * @param rm a tuple of (r,m)
-   * @param rfali a sequence of numbers, plus a first and last element outside their range
+   * @param rfali a sequence of numbers, plus a first and last element outside their range. This
+   *     iterator has already been iterated all the way to its end.
    * @return true if the first and last elements are not equal to r (mod m)
    */
   private static boolean checkFirstAndLastNonmodulus(
@@ -1805,7 +1811,7 @@ public final class MathPlume {
   /**
    * Helper for {@link #nonmodulusStrict(long[])}.
    *
-   * @param missing the missing integers
+   * @param missing the missing integers; modified by this method
    * @return value to be returned by {@link #nonmodulusStrict(long[])}
    */
   private static long @Nullable @ArrayLen(2) [] nonmodulusStrictLongInternal(
@@ -1828,9 +1834,11 @@ public final class MathPlume {
 
   /**
    * @param rm an an array containing two elements
-   * @param rfali a sequence of numbers, plus a first and last element outside their range
+   * @param rfali a sequence of numbers, plus a first and last element outside their range. This
+   *     iterator has already been iterated all the way to its end.
    * @return true if the first and last elements are equal to r (mod m)
    */
+  @Pure
   private static boolean checkFirstAndLastNonmodulus(
       long @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];
