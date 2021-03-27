@@ -153,7 +153,7 @@ public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable
             // for now, remove the annotations.
             // @SuppressWarnings("unchecked")
             // Comparable<@NonNull T> cble1 = (Comparable<@NonNull T>) next1;
-            @SuppressWarnings({"nullness", "unchecked"})
+            @SuppressWarnings({"unchecked", "nullness"})
             Comparable<T> cble1 = (Comparable<T>) next1;
             comparison = cble1.compareTo(next2);
           } else {
