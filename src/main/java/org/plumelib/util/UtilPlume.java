@@ -1328,7 +1328,6 @@ public final class UtilPlume {
    * @return true iff the property has value "true", "yes", or "1"
    * @deprecated use {@link getBooleanProperty}
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
   @Deprecated // 2021-03-28
   public static boolean propertyIsTrue(Properties p, String key) {
@@ -1379,10 +1378,9 @@ public final class UtilPlume {
    * @param key name of the property to look up
    * @return true iff the property has value "true", "yes", or "1"
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
   public static boolean getBooleanProperty(Properties p, String key) {
-    return getBooleanProperty(p, key, defaultValue);
+    return getBooleanProperty(p, key, false);
   }
 
   /**

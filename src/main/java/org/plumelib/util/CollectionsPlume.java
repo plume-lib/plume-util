@@ -17,7 +17,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Random;
+import java.util.RandomAccess;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -59,19 +61,111 @@ public final class CollectionsPlume {
     return result;
   }
 
-  // This should perhaps be named withoutDuplicates to emphasize that
-  // it does not side-effect its argument.
   /**
    * Return a copy of the list with duplicates removed. Retains the original order.
    *
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
    * @return a copy of the list with duplicates removed
+   * @deprecated use {@link withoutDuplicates}
    */
+  @Deprecated // 2021-03-28
   public static <T> List<T> removeDuplicates(List<T> l) {
     HashSet<T> hs = new LinkedHashSet<>(l);
     List<T> result = new ArrayList<>(hs);
     return result;
+  }
+
+  /**
+   * Returns a list with the same contents as its argument, but without duplicates. May return its
+   * argument if its argument has no duplicates, but is not guaranteed to do so.
+   *
+   * @param <T> the type of elements in {@code values}
+   * @param values a list of values
+   * @return the values, with duplicates removed
+   */
+  public static <T extends Comparable<T>> List<T> withoutDuplicates(List<T> values) {
+    // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
+    if (isSortedNoDuplicates(values)) {
+      return values;
+    }
+
+    Set<T> set = new TreeSet<>(values);
+    if (values.size() == set.size()) {
+      return values;
+    } else {
+      return new ArrayList<>(set);
+    }
+  }
+
+  /**
+   * Returns true if the given list is sorted.
+   *
+   * @param <T> the component type of the list
+   * @param values a list
+   * @return true if the list is sorted
+   */
+  public static <T extends Comparable<T>> boolean isSorted(List<T> values) {
+    if (values.isEmpty() || values.size() == 1) {
+      return true;
+    }
+
+    if (values instanceof RandomAccess) {
+      // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
+      int size = values.size();
+      for (int i = 0; i < size - 1; i++) {
+        if (values.get(i).compareTo(values.get(i + 1)) > 0) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      Iterator<T> iter = values.iterator();
+      T previous = iter.next();
+      while (iter.hasNext()) {
+        T current = iter.next();
+        if (previous.compareTo(current) > 0) {
+          return false;
+        }
+        previous = current;
+      }
+      return true;
+    }
+  }
+
+  /**
+   * Returns true if the given list is sorted and has no duplicates
+   *
+   * @param <T> the component type of the list
+   * @param values a list
+   * @return true if the list is sorted and has no duplicates
+   */
+  public static <T extends Comparable<T>> boolean isSortedNoDuplicates(List<T> values) {
+    if (values.isEmpty() || values.size() == 1) {
+      return true;
+    }
+
+    if (values instanceof RandomAccess) {
+      // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
+      int size = values.size();
+      for (int i = 0; i < size - 1; i++) {
+        if (values.get(i).compareTo(values.get(i + 1)) >= 0) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      Iterator<T> iter = values.iterator();
+      T previous = iter.next();
+      while (iter.hasNext()) {
+        T current = iter.next();
+        if (previous.compareTo(current) >= 0) {
+          return false;
+        }
+        previous = current;
+      }
+      return true;
+    }
   }
 
   /** All calls to deepEquals that are currently underway. */

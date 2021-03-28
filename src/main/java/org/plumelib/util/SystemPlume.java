@@ -7,6 +7,7 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
 public final class SystemPlume {
@@ -34,8 +35,8 @@ public final class SystemPlume {
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
-  public static boolean getBooleanSystemProperty(Properties p, String key, boolean defaultValue) {
-    return getBooleanProperty(System.properties(), key, defaultValue);
+  public static boolean getBooleanSystemProperty(String key, boolean defaultValue) {
+    return UtilPlume.getBooleanProperty(System.getProperties(), key, defaultValue);
   }
 
   /**
@@ -46,10 +47,9 @@ public final class SystemPlume {
    * @param key name of the property to look up
    * @return true iff the property has a string value that represents true
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
-  public static boolean getBooleanSystemProperty(Properties p, String key) {
-    return getBooleanProperty(System.properties(), key);
+  public static boolean getBooleanSystemProperty(String key) {
+    return getBooleanSystemProperty(key, false);
   }
 
   ///

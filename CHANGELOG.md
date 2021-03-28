@@ -6,18 +6,24 @@
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
 - New methods:
-   - `CollectionsPlume.append`: creates a new list with an element added to the end
-   - `CollectionsPlume.listOf`: like `List.of` in Java 9+
-   - `CollectionsPlume.transform`: like `mapList` but with args in opposite order
-   - `StringsPlume.charLiteral`: to quote a character as a Java character literal
-   - `StringsPlume.conjunction`: to produce text like "a, b, c, or d"
+   - `CollectionsPlume`:
+       - `append`: creates a new list with an element added to the end
+       - `listOf`: like `List.of` in Java 9+
+       - `transform`: like `mapList` but with args in opposite order
+       - `isSorted`: tests whether a list is sorted
+       - `isSortedNoDuplicates`: tests whether a list is sorted and has no duplicates
+   - `StringsPlume`:
+       - `charLiteral`: to quote a character as a Java character literal
+       - `conjunction`: to produce text like "a, b, c, or d"
    - `SystemPlume.getBooleanSystemProperty`: interpret a system property as a boolean
    - `UtilPlume.getBooleanProperty` interpret a property as a boolean
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Deprecated `StringsPlume.escapeJava(char)` and `StringsPlume.escapeJava(char)`;
   use `escapeJava(String)` or `charLiteral()`
-- Renamed `UtilPlume.propertyIsTrue` to `getBooleanProperty`
+- Renamed methods:
+   - `UtilPlume.propertyIsTrue` to `getBooleanProperty`
+   - `CollectionsPlume.removeDuplicates` to `withoutDuplicates`
 - Moved methods (the old versions still work but are deprecated)
    - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
 
