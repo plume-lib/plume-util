@@ -7,6 +7,7 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
 public final class SystemPlume {
@@ -17,6 +18,38 @@ public final class SystemPlume {
   /** This class is a collection of methods; it does not represent anything. */
   private SystemPlume() {
     throw new Error("do not instantiate");
+  }
+
+  ///
+  /// Properties
+  ///
+
+  /**
+   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
+   * "1", or "0".
+   *
+   * @param key name of the property to look up
+   * @param defaultValue the value to return if the property is not set
+   * @return true iff the property has a string value that represents true
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
+  @Pure
+  public static boolean getBooleanSystemProperty(String key, boolean defaultValue) {
+    return UtilPlume.getBooleanProperty(System.getProperties(), key, defaultValue);
+  }
+
+  /**
+   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
+   * "1", or "0".
+   *
+   * @param key name of the property to look up
+   * @return true iff the property has a string value that represents true
+   */
+  @Pure
+  public static boolean getBooleanSystemProperty(String key) {
+    return getBooleanSystemProperty(key, false);
   }
 
   ///

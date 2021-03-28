@@ -5,16 +5,30 @@
 - New methods for writing possibly-compressed files:
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
-- New methods `StringsPlume.charLiteral` (2 overloads)
 - New methods:
-   - `StringsPlume.conjunction`: to produce text like "a, b, c, or d"
-   - `CollectionsPlume.transform`: like `mapList` but with args in opposite order
-   - `CollectionsPlume.listOf`: like `List.of` in Java 9+
-   - `CollectionsPlume.append`: creates a new list with an element added to the end
+   - `ArraysPlume`:
+       - `append`: creates a new array with an element added to the end
+       - `nCopies`: produces an array that is multiple copies of a value
+       - `sameContents`: tests whether two arrays are the same, setwise
+   - `CollectionsPlume`:
+       - `append`: creates a new list with an element added to the end
+       - `concatenate`: like `concat`, but always returns a new list
+       - `isSortedNoDuplicates`: tests whether a list is sorted and has no duplicates
+       - `isSorted`: tests whether a list is sorted
+       - `listOf`: like `List.of` in Java 9+
+       - `transform`: like `mapList` but with args in opposite order
+   - `StringsPlume`:
+       - `charLiteral`: to quote a character as a Java character literal
+       - `conjunction`: to produce text like "a, b, c, or d"
+   - `SystemPlume.getBooleanSystemProperty`: interpret a system property as a boolean
+   - `UtilPlume.getBooleanProperty` interpret a property as a boolean
 - Deprecated class:
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Deprecated `StringsPlume.escapeJava(char)` and `StringsPlume.escapeJava(char)`;
   use `escapeJava(String)` or `charLiteral()`
+- Renamed methods:
+   - `UtilPlume.propertyIsTrue` to `getBooleanProperty`
+   - `CollectionsPlume.removeDuplicates` to `withoutDuplicates`
 - Moved methods (the old versions still work but are deprecated)
    - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
 

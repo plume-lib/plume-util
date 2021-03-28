@@ -1326,16 +1326,61 @@ public final class UtilPlume {
    * @param p a Properties object in which to look up the property
    * @param key name of the property to look up
    * @return true iff the property has value "true", "yes", or "1"
+   * @deprecated use {@link getBooleanProperty}
+   */
+  @Pure
+  @Deprecated // 2021-03-28
+  public static boolean propertyIsTrue(Properties p, String key) {
+    return getBooleanProperty(p, key);
+  }
+
+  /**
+   * Determines whether a property has a string value that represents true: "true", "yes", or "1".
+   * Errs if the property is set to a value that is not one of "true", "false", "yes", "no", "1", or
+   * "0".
+   *
+   * @see Properties#getProperty
+   * @param p a Properties object in which to look up the property
+   * @param key name of the property to look up
+   * @param defaultValue the value to return if the property is not set
+   * @return true iff the property has value "true", "yes", or "1"
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
-  public static boolean propertyIsTrue(Properties p, String key) {
+  public static boolean getBooleanProperty(Properties p, String key, boolean defaultValue) {
     String pvalue = p.getProperty(key);
     if (pvalue == null) {
-      return false;
+      return defaultValue;
     }
-    pvalue = pvalue.toLowerCase();
-    return (pvalue.equals("true") || pvalue.equals("yes") || pvalue.equals("1"));
+    switch (pvalue.toLowerCase()) {
+      case "true":
+      case "yes":
+      case "1":
+        return true;
+      case "false":
+      case "no":
+      case "0":
+        return false;
+      default:
+        throw new Error(
+            String.format(
+                "Property %s is set to \"%s\" which is not a boolean value", key, pvalue));
+    }
+  }
+
+  /**
+   * Determines whether a property has a string value that represents true: "true", "yes", or "1".
+   * Errs if the property is set to a value that is not one of "true", "false", "yes", "no", "1", or
+   * "0".
+   *
+   * @see Properties#getProperty
+   * @param p a Properties object in which to look up the property
+   * @param key name of the property to look up
+   * @return true iff the property has value "true", "yes", or "1"
+   */
+  @Pure
+  public static boolean getBooleanProperty(Properties p, String key) {
+    return getBooleanProperty(p, key, false);
   }
 
   /**
