@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.5.0 (forthcoming)
+## 1.5.0 (2021-03-28)
 
 - New methods for writing possibly-compressed files:
    - `FilesPlume.newFileOutputStream` (3 overloads)
@@ -26,10 +26,10 @@
    - `StringsPlume.NullableStringComparator` (use `Comparator.nullsFirst(Comparator.naturalOrder())`)
 - Deprecated `StringsPlume.escapeJava(char)` and `StringsPlume.escapeJava(char)`;
   use `escapeJava(String)` or `charLiteral()`
-- Renamed methods:
+- Renamed methods (the old versions still work but are deprecated):
    - `UtilPlume.propertyIsTrue` to `getBooleanProperty`
    - `CollectionsPlume.removeDuplicates` to `withoutDuplicates`
-- Moved methods (the old versions still work but are deprecated)
+- Moved methods (the old versions still work but are deprecated):
    - Moved file, directory, and stream methods from `UtilPlume` to new class `FilesPlume`
 
 ## 1.4.1 (2021-01-06)
