@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.5.1 (2021-03-28)
+
+- Expand the applicability of `CollectionsPlume.mapList` and `transform`
+
 ## 1.5.0 (2021-03-28)
 
 - New methods for writing possibly-compressed files:
