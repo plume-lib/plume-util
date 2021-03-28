@@ -2,6 +2,8 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
@@ -943,6 +945,35 @@ public final class ArraysPlumeTest {
             "[[a], [b, c, d, e]]"));
   }
 
+  List<String> abcdefList = Arrays.asList("a", "b", "c", "d", "e", "f");
+  List<String> abcList = Arrays.asList("a", "b", "c");
+  List<String> defList = Arrays.asList("d", "e", "f");
+
+  String[] abcdefArray = new String[] {"a", "b", "c", "d", "e", "f"};
+  String[] abcArray = new String[] {"a", "b", "c"};
+  String[] defArray = new String[] {"d", "e", "f"};
+  String[] emptyArray = new String[] {};
+
+  Object[] abcdefArrayObject = new Object[] {"a", "b", "c", "d", "e", "f"};
+  Object[] abcArrayObject = new Object[] {"a", "b", "c"};
+  Object[] defArrayObject = new Object[] {"d", "e", "f"};
+  Object[] emptyArrayObject = new Object[] {};
+
+  @Test
+  public void testConcatenate() {
+    String[] abcdefArray2 = ArraysPlume.concatenate(abcArray, defArray);
+    assertArrayEquals(abcdefArray, abcdefArray2);
+    assertNotSame(abcdefArray, abcdefArray2);
+
+    String[] abcArray2 = ArraysPlume.concatenate(abcArray, emptyArray);
+    assertArrayEquals(abcArray, abcArray2);
+    assertNotSame(abcArray, abcArray2);
+
+    String[] abcArray3 = ArraysPlume.concatenate(emptyArray, abcArray);
+    assertArrayEquals(abcArray, abcArray3);
+    assertNotSame(abcArray, abcArray3);
+  }
+
   @Test
   public void testConcat() {
     Instant[] da1 = new Instant[] {Instant.now()};
@@ -950,14 +981,14 @@ public final class ArraysPlumeTest {
     @SuppressWarnings("UnusedVariable")
     Instant[] da3 = ArraysPlume.concat(da1, da2);
 
-    List<String> abcdefList = Arrays.asList("a", "b", "c", "d", "e", "f");
-    List<String> abcList = Arrays.asList("a", "b", "c");
-    List<String> defList = Arrays.asList("d", "e", "f");
     assertArrayEquals(abcdefList.toArray(), ArraysPlume.concat(abcList, defList));
 
-    String[] abcdefArray = new String[] {"a", "b", "c", "d", "e", "f"};
-    String[] abcArray = new String[] {"a", "b", "c"};
-    String[] defArray = new String[] {"d", "e", "f"};
     assertArrayEquals(abcdefArray, ArraysPlume.concat(abcArray, defArray));
+    assertSame(abcArray, ArraysPlume.concat(abcArray, emptyArray));
+    assertSame(abcArray, ArraysPlume.concat(emptyArray, abcArray));
+
+    assertArrayEquals(abcdefArrayObject, ArraysPlume.concat(abcArrayObject, defArrayObject));
+    assertSame(abcArrayObject, ArraysPlume.concat(abcArrayObject, emptyArrayObject));
+    assertSame(abcArrayObject, ArraysPlume.concat(emptyArrayObject, abcArrayObject));
   }
 }

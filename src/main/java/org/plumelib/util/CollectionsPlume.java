@@ -357,6 +357,22 @@ public final class CollectionsPlume {
     return result;
   }
 
+  /**
+   * Concatenates two lists into a new list.
+   *
+   * @param <T> the type of the list elements
+   * @param list1 the first list
+   * @param list2 the second list
+   * @return a new list containing the contents of the given lists, in order
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> List<T> concatenate(Collection<T> list1, Collection<T> list2) {
+    List<T> result = new ArrayList<>(list1.size() + list2.size());
+    result.addAll(list1);
+    result.addAll(list2);
+    return result;
+  }
+
   // Rather than writing something like ArrayListToStringArray, use
   //   v.toArray(new String[0])
 

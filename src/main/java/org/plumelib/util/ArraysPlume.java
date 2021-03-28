@@ -22,6 +22,7 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -1578,8 +1579,30 @@ public final class ArraysPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// concatenation
+  /// Concatenation
   ///
+
+  /**
+   * Concatenates two arrays. Can be invoked varargs-style.
+   *
+   * <p>This differs from {@code concat} in that it always returns a new array, never an existing
+   * array.
+   *
+   * @param <T> the type of the array elements
+   * @param array1 the first array
+   * @param array2 the second array
+   * @return a new array containing the contents of the given arrays, in order
+   */
+  @SuppressWarnings({
+    "unchecked",
+    "index:argument.type.incompatible" // addition for array length
+  })
+  public static <T> T[] concatenate(T[] array1, T... array2) {
+    @SuppressWarnings("nullness") // elements are not non-null yet, but will be by return stmt
+    T[] result = Arrays.copyOf(array1, array1.length + array2.length);
+    System.arraycopy(array2, 0, result, array1.length, array2.length);
+    return result;
+  }
 
   // Concat used to return null if both arguments are null.  That is
   // convenient for the implementer, but not so good for clients.
@@ -1726,6 +1749,39 @@ public final class ArraysPlume {
         throw new Error("both fields are null");
       }
     }
+
+    @Override
+    public String toString(@GuardSatisfied ListOrArray<T> this) {
+      if (theArray != null) {
+        return Arrays.toString(theArray);
+      } else if (theList != null) {
+        return theList.toString();
+      } else {
+        return "null";
+      }
+    }
+
+    /**
+     * Returns a verbose representation of this, for debugging.
+     *
+     * @return a verbose representation of this, for debugging
+     */
+    public String toStringDebug() {
+      String theArrayString;
+      if (theArray == null) {
+        theArrayString = "null";
+      } else {
+        theArrayString = Arrays.toString(theArray) + "[" + System.identityHashCode(theArray) + "]";
+      }
+      String theListString;
+      if (theList == null) {
+        theListString = "null";
+      } else {
+        theListString = theList.toString() + "[" + System.identityHashCode(theList) + "]";
+      }
+
+      return "ListOrArray(theArray=" + theArrayString + ", theList=" + theListString + ")";
+    }
   }
 
   /**
@@ -1742,8 +1798,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order. Returns an existing
-   * array if the list argument is null or empty.
+   * Return an array that contains all the elements of both arguments, in order. Returns the array
+   * argument if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1755,8 +1811,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order. Returns an existing
-   * array if the list argument is null or empty.
+   * Return an array that contains all the elements of both arguments, in order. Returns the array
+   * argument if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1829,7 +1885,7 @@ public final class ArraysPlume {
   // Note: PolyAll is not quite right.  Need to review.
   /**
    * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * array unless one argument is null or empty, in which case it returns the other array.
    *
    * @param a the first array to concatenate
    * @param b the second array to concatenate
@@ -1838,18 +1894,17 @@ public final class ArraysPlume {
   public static @PolyNull @PolyInterned String[] concat(
       @PolyNull @PolyInterned String @Nullable [] a,
       @PolyNull @PolyInterned String @Nullable [] b) {
-    if (a == null) {
+    if (a == null || a.length == 0) {
       if (b == null) {
         return new String[0];
       } else {
         return b;
       }
     } else {
-      if (b == null) {
+      if (b == null || b.length == 0) {
         return a;
       } else {
         @PolyNull @PolyInterned String[] result = new String[a.length + b.length];
-
         System.arraycopy(a, 0, result, 0, a.length);
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
