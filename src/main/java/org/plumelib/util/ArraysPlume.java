@@ -44,6 +44,45 @@ public final class ArraysPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
+  /// Creation
+  ///
+
+  /**
+   * Returns an array consisting of n copies of the specified object.
+   *
+   * @param <T> the class of the object to copy. The returned array's element type is the
+   *     <em>run-time</em> type of {@code o}.
+   * @param n the number of elements in the returned array
+   * @param o the element to appear repeatedly in the returned array; must not be null
+   * @return an array consisting of n copies of the specified object
+   */
+  public static <T extends Object> T[] nCopies(@NonNegative int n, T o) {
+    @SuppressWarnings("unchecked")
+    T[] result = (T[]) Array.newInstance(o.getClass(), n);
+    Arrays.fill(result, o);
+    return result;
+  }
+
+  /**
+   * Concatenates an array and an element into a new array.
+   *
+   * @param <T> the type of the array elements
+   * @param array the array
+   * @param lastElt the new last elemeent
+   * @return a new array containing the array elements and the last element, in that order
+   */
+  @SuppressWarnings({
+    "unchecked",
+    "index:array.access.unsafe.high" // addition in array length
+  })
+  public static <T> T[] append(T[] array, T lastElt) {
+    @SuppressWarnings({"unchecked", "nullness:assignment.type.incompatible"})
+    T[] result = Arrays.copyOf(array, array.length + 1);
+    result[array.length] = lastElt;
+    return result;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
   /// min, max
   ///
 
@@ -2893,6 +2932,27 @@ public final class ArraysPlume {
     }
 
     return true;
+  }
+
+  /**
+   * Returns true if the arrays contain the same contents, treated as a set (order and duplicates do
+   * not matter).
+   *
+   * @param <T> the type of the array contents
+   * @param arr1 an array
+   * @param arr2 an array
+   * @return true if the arrays contain the same contents
+   */
+  public static <T> boolean sameContents(T[] arr1, T[] arr2) {
+    List<T> list1 = Arrays.asList(arr1);
+    List<T> list2 = Arrays.asList(arr2);
+    return list1.containsAll(list2) && list2.containsAll(list1);
+
+    // // Alterate implementation, which is more efficient if the arrays are large:
+    // Note: this sorts the arrays as a side effect.
+    // Arrays.sort(arr1);
+    // Arrays.sort(arr2);
+    // return Arrays.equals(arr1, arr2);
   }
 
   ///////////////////////////////////////////////////////////////////////////

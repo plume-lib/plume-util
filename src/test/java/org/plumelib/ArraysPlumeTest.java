@@ -19,32 +19,19 @@ import org.junit.jupiter.api.Test;
 })
 public final class ArraysPlumeTest {
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Helper functions
-  ///
-
-  private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
-    boolean result = Arrays.equals(a1, a2);
-    if (!result) {
-      System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
-    }
-    assertTrue(result);
-    //      assert(Arrays.equals(a1, a2),
-    //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+  @Test
+  public void testNCopies() {
+    assertArrayEquals(
+        new String[] {"hello", "hello", "hello", "hello"}, ArraysPlume.nCopies(4, "hello"));
+    assertArrayEquals(new String[] {}, ArraysPlume.nCopies(0, "hello"));
   }
 
-  private static void assertArraysEquals(double[] a1, double[] a2) {
-    boolean result = Arrays.equals(a1, a2);
-    if (!result) {
-      System.out.println(
-          "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
-    }
-    assertTrue(result);
+  @Test
+  public void testAppend() {
+    assertArrayEquals(
+        new String[] {"a", "b", "c"}, ArraysPlume.append(new String[] {"a", "b"}, "c"));
+    assertArrayEquals(new String[] {"a"}, ArraysPlume.append(new String[] {}, "a"));
   }
-
-  ///////////////////////////////////////////////////////////////////////////
-  /// Now the actual testing
-  ///
 
   @Test
   public void testMinAndMax() {
@@ -66,10 +53,10 @@ public final class ArraysPlumeTest {
     assertEquals(3.3, ArraysPlume.max(new Double[] {3.3, 3.2, 3.1}));
 
     // public static int[] minAndMax(int[] a)
-    assertArraysEquals(new int[] {1, 3}, ArraysPlume.minAndMax(new int[] {1, 2, 3}));
-    assertArraysEquals(new int[] {1, 33}, ArraysPlume.minAndMax(new int[] {2, 33, 1}));
-    assertArraysEquals(new int[] {-2, 3}, ArraysPlume.minAndMax(new int[] {3, -2, 1}));
-    assertArraysEquals(new int[] {3, 3}, ArraysPlume.minAndMax(new int[] {3}));
+    assertArrayEquals(new int[] {1, 3}, ArraysPlume.minAndMax(new int[] {1, 2, 3}));
+    assertArrayEquals(new int[] {1, 33}, ArraysPlume.minAndMax(new int[] {2, 33, 1}));
+    assertArrayEquals(new int[] {-2, 3}, ArraysPlume.minAndMax(new int[] {3, -2, 1}));
+    assertArrayEquals(new int[] {3, 3}, ArraysPlume.minAndMax(new int[] {3}));
     try {
       ArraysPlume.minAndMax(new int[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
@@ -474,23 +461,23 @@ public final class ArraysPlumeTest {
   public void testFunctions() {
 
     // public static int[] fnIdentity(int length)
-    assertArraysEquals(ArraysPlume.fnIdentity(0), new int[] {});
-    assertArraysEquals(ArraysPlume.fnIdentity(1), new int[] {0});
-    assertArraysEquals(ArraysPlume.fnIdentity(2), new int[] {0, 1});
-    assertArraysEquals(ArraysPlume.fnIdentity(3), new int[] {0, 1, 2});
+    assertArrayEquals(ArraysPlume.fnIdentity(0), new int[] {});
+    assertArrayEquals(ArraysPlume.fnIdentity(1), new int[] {0});
+    assertArrayEquals(ArraysPlume.fnIdentity(2), new int[] {0, 1});
+    assertArrayEquals(ArraysPlume.fnIdentity(3), new int[] {0, 1, 2});
 
     // public static int[] fnInversePermutation(int[] a)
-    assertArraysEquals(
+    assertArrayEquals(
         ArraysPlume.fnInversePermutation(new int[] {0, 1, 2, 3}), new int[] {0, 1, 2, 3});
-    assertArraysEquals(
+    assertArrayEquals(
         ArraysPlume.fnInversePermutation(new int[] {1, 2, 3, 0}), new int[] {3, 0, 1, 2});
-    assertArraysEquals(
+    assertArrayEquals(
         ArraysPlume.fnInversePermutation(new int[] {3, 2, 1, 0}), new int[] {3, 2, 1, 0});
 
     // public static int[] fnInverse(int[] a, int arange)
-    assertArraysEquals(ArraysPlume.fnInverse(new int[] {0, 1, 2, 3}, 4), new int[] {0, 1, 2, 3});
-    assertArraysEquals(ArraysPlume.fnInverse(new int[] {1, 2, 3, 0}, 4), new int[] {3, 0, 1, 2});
-    assertArraysEquals(ArraysPlume.fnInverse(new int[] {3, 2, 1, 0}, 4), new int[] {3, 2, 1, 0});
+    assertArrayEquals(ArraysPlume.fnInverse(new int[] {0, 1, 2, 3}, 4), new int[] {0, 1, 2, 3});
+    assertArrayEquals(ArraysPlume.fnInverse(new int[] {1, 2, 3, 0}, 4), new int[] {3, 0, 1, 2});
+    assertArrayEquals(ArraysPlume.fnInverse(new int[] {3, 2, 1, 0}, 4), new int[] {3, 2, 1, 0});
     try {
       ArraysPlume.fnInverse(new int[] {1, 0, 3, 0}, 4);
       throw new Error();
@@ -498,12 +485,12 @@ public final class ArraysPlumeTest {
       assertTrue(
           e.getMessage() != null && e.getMessage().equals("Not invertible; a[1]=0 and a[3]=0"));
     }
-    assertArraysEquals(ArraysPlume.fnInverse(new int[] {5}, 6), new int[] {-1, -1, -1, -1, -1, 0});
-    assertArraysEquals(
+    assertArrayEquals(ArraysPlume.fnInverse(new int[] {5}, 6), new int[] {-1, -1, -1, -1, -1, 0});
+    assertArrayEquals(
         ArraysPlume.fnInverse(new int[] {1, 2, 3, 5}, 6), new int[] {-1, 0, 1, 2, -1, 3});
 
     try {
-      assertArraysEquals(
+      assertArrayEquals(
           ArraysPlume.fnInverse(new int[] {100, 101, 102, 103}, 4), new int[] {40, 41, 42, 43});
       throw new Error();
     } catch (IllegalArgumentException e) {
@@ -522,12 +509,12 @@ public final class ArraysPlumeTest {
       int[] a9 = new int[] {1, 2, 3, 5};
       int[] a10 = new int[] {1, 2, 3, 5, -1, -1};
 
-      assertArraysEquals(ArraysPlume.fnCompose(a1, a1), a1);
-      assertArraysEquals(ArraysPlume.fnCompose(a2, a2), new int[] {2, 3, 0, 1});
-      assertArraysEquals(ArraysPlume.fnCompose(a3, a3), a1);
-      assertArraysEquals(ArraysPlume.fnCompose(a4, a5), new int[] {0, 5, 0, 1});
-      assertArraysEquals(ArraysPlume.fnCompose(a7, a8), new int[] {5});
-      assertArraysEquals(ArraysPlume.fnCompose(a9, a10), new int[] {2, 3, 5, -1});
+      assertArrayEquals(ArraysPlume.fnCompose(a1, a1), a1);
+      assertArrayEquals(ArraysPlume.fnCompose(a2, a2), new int[] {2, 3, 0, 1});
+      assertArrayEquals(ArraysPlume.fnCompose(a3, a3), a1);
+      assertArrayEquals(ArraysPlume.fnCompose(a4, a5), new int[] {0, 5, 0, 1});
+      assertArrayEquals(ArraysPlume.fnCompose(a7, a8), new int[] {5});
+      assertArrayEquals(ArraysPlume.fnCompose(a9, a10), new int[] {2, 3, 5, -1});
     }
   }
 
@@ -558,8 +545,8 @@ public final class ArraysPlumeTest {
         double[] f2Copy = f2.clone();
 
         assertTrue(ArraysPlume.isSubset(f1, f2));
-        assertArraysEquals(f1, f1Copy);
-        assertArraysEquals(f2, f2Copy);
+        assertArrayEquals(f1, f1Copy);
+        assertArrayEquals(f2, f2Copy);
       }
 
       double[] a1 = new double[] {1, 5, 10};
@@ -577,6 +564,19 @@ public final class ArraysPlumeTest {
       assertTrue(ArraysPlume.isSubset(a6, a1));
       assertTrue(!ArraysPlume.isSubset(a1, a6));
     }
+  }
+
+  @Test
+  public void test_sameContents() {
+    assertTrue(ArraysPlume.sameContents(new String[] {}, new String[] {}));
+    assertTrue(ArraysPlume.sameContents(new String[] {"a"}, new String[] {"a"}));
+    assertTrue(ArraysPlume.sameContents(new String[] {"a", "b"}, new String[] {"a", "b"}));
+    assertTrue(ArraysPlume.sameContents(new String[] {"a", "b"}, new String[] {"b", "a"}));
+    assertTrue(
+        ArraysPlume.sameContents(new String[] {"a", "b", "c"}, new String[] {"c", "b", "a"}));
+    assertTrue(
+        ArraysPlume.sameContents(
+            new String[] {"a", "b", "c"}, new String[] {"c", "b", "a", "b", "b"}));
   }
 
   @Test

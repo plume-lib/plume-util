@@ -6,12 +6,17 @@
    - `FilesPlume.newFileOutputStream` (3 overloads)
    - `FilesPlume.newFileWritec` (5 overloads)
 - New methods:
+   - `ArraysPlume`:
+       - `append`: creates a new array with an element added to the end
+       - `nCopies`: produces an array that is multiple copies of a value
+       - `sameContents`: tests whether two arrays are the same, setwise
    - `CollectionsPlume`:
        - `append`: creates a new list with an element added to the end
+       - `concatenate`: like `concat`, but always returns a new list
+       - `isSortedNoDuplicates`: tests whether a list is sorted and has no duplicates
+       - `isSorted`: tests whether a list is sorted
        - `listOf`: like `List.of` in Java 9+
        - `transform`: like `mapList` but with args in opposite order
-       - `isSorted`: tests whether a list is sorted
-       - `isSortedNoDuplicates`: tests whether a list is sorted and has no duplicates
    - `StringsPlume`:
        - `charLiteral`: to quote a character as a Java character literal
        - `conjunction`: to produce text like "a, b, c, or d"

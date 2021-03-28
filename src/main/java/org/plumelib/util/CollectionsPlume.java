@@ -26,8 +26,10 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, ArrayList, Iterator, and Map. */
@@ -330,9 +332,9 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Applies the function to each element of the given collection, producing a list of the results.
-   * This is just like {@link #mapList(Function, Collection)}, but with the arguments in the
-   * opposite order.
+   * Applies the function to each element of the given iterable, producing a list of the results.
+   * This is just like {@link #mapList(Function, Iterable)}, but with the arguments in the opposite
+   * order.
    *
    * <p>The point of this method is to make mapping operations more concise. Import it with
    *
@@ -342,12 +344,15 @@ public final class CollectionsPlume {
    *
    * @param <FROM> the type of elements of the given collection
    * @param <TO> the type of elements of the result list
-   * @param c a collection
+   * @param iterable an iterable
    * @param f a function
    * @return a list of the results of applying {@code f} to the elements of {@code list}
    */
-  public static <FROM, TO> List<TO> transform(Collection<FROM> c, Function<? super FROM, TO> f) {
-    return mapList(f, c);
+  public static <
+          @KeyForBottom FROM extends @UnknownKeyFor Object,
+          @KeyForBottom TO extends @UnknownKeyFor Object>
+      List<TO> transform(Iterable<FROM> iterable, Function<? super FROM, ? extends TO> f) {
+    return mapList(f, iterable);
   }
 
   ///////////////////////////////////////////////////////////////////////////
