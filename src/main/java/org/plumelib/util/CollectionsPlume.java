@@ -276,8 +276,8 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
   public static <
-          @KeyForBottom FROM extends @UnknownKeyFor Object,
-          @KeyForBottom TO extends @UnknownKeyFor Object>
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
     List<TO> result;
 
@@ -320,8 +320,8 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code a}
    */
   public static <
-          @KeyForBottom FROM extends @UnknownKeyFor Object,
-          @KeyForBottom TO extends @UnknownKeyFor Object>
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapList(Function<? super FROM, ? extends TO> f, FROM[] a) {
     int size = a.length;
     List<TO> result = new ArrayList<>(size);
@@ -349,8 +349,8 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code list}
    */
   public static <
-          @KeyForBottom FROM extends @UnknownKeyFor Object,
-          @KeyForBottom TO extends @UnknownKeyFor Object>
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> transform(Iterable<FROM> iterable, Function<? super FROM, ? extends TO> f) {
     return mapList(f, iterable);
   }
