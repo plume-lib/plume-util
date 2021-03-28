@@ -52,7 +52,7 @@ public final class UtilPlumeTest {
   // public static <K,V> Collection<@KeyFor("#1") K>
   //     sortedKeySet(Map<K,V> m, Comparator<K> comparator) {
 
-  // public static boolean propertyIsTrue(Properties p, String key)
+  // public static boolean gotBooleanProperty(Properties p, String key)
   // public static String appendProperty(Properties p, String key, String value)
   // public static String setDefault(Properties p, String key, String value)
   // public static void streamCopy(java.io.InputStream from, java.io.OutputStream to)
