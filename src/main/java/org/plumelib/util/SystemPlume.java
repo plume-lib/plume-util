@@ -201,9 +201,15 @@ public final class SystemPlume {
     long collectionTime = getCollectionTime(); // in milliseconds
     gcHistory.add(Pair.of(now, collectionTime));
 
-    for (Pair<Long, Long> p : gcHistory) {
-      if (now - p.a >= seconds) {
-        return (collectionTime - p.b) / 1000.0 / (now - p.a);
+    for (int i = gcHistory.size() - 1; i >= 0; i--) {
+      Pair<Long, Long> p = gcHistory.get(i);
+      long historyTimestamp = p.a; // in seconds
+      long elapsed = now - historyTimestamp; // in seconds
+      if (elapsed >= seconds) {
+        long historyCollectionTime = p.b; // in milliseconds
+        double elapsedCollectionTime =
+            (collectionTime - historyCollectionTime) / 1000.0; // in seconds
+        return elapsedCollectionTime / elapsed;
       }
     }
     return 0;
