@@ -135,18 +135,21 @@ public final class SystemPlume {
     return result;
   }
 
+  // This should probably be a deque, so that it can be pruned.
+  // A problem is that a deque cannot be iterated through; it does not implement `get()`.
   /**
-   * A list of pairs of (timestamp, accumulated collection time). The timestamp is an epoch second,
-   * and the collection time is in milliseconds. New items are added to the front.
+   * A list of pairs of (timestamp, cumulative collection time). The timestamp is an epoch second,
+   * and the collection time is in milliseconds. New items are added to the end.
    *
    * <p>The list is not currently pruned.
    */
   private static List<Pair<Long, Long>> gcHistory = new ArrayList<>();
 
   /**
-   * Returns the percentage of time spent garbage collecting, in the past minute. Might return a
-   * value greater than 1 if multiple threads are spending all their time collecting. Returns 0 if
-   * {@code gcPercentage} was not first called more than 1 minute ago.
+   * Returns the fraction of time spent garbage collecting, in the past minute. This is generally a
+   * value between 0 and 1. This method might return a value greater than 1 if multiple threads are
+   * spending all their time collecting. Returns 0 if {@code gcPercentage} was not first called more
+   * than 1 minute ago.
    *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
@@ -169,9 +172,10 @@ public final class SystemPlume {
   }
 
   /**
-   * Returns the percentage of time spent garbage collecting, in the past {@code seconds} seconds.
-   * Might return a value greater than 1 if multiple threads are spending all their time collecting.
-   * Returns 0 if {@code gcPercentage} was not first called more than {@code seconds} seconds ago.
+   * Returns the fraction of time spent garbage collecting, in the past {@code seconds} seconds.
+   * This is generally a value between 0 and 1. This method might return a value greater than 1 if
+   * multiple threads are spending all their time collecting. Returns 0 if {@code gcPercentage} was
+   * not first called more than {@code seconds} seconds ago.
    *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
@@ -190,23 +194,23 @@ public final class SystemPlume {
    * @param seconds the size of the time window, in seconds
    * @return the percentage of time spent garbage collecting, in the past {@code seconds} seconds
    */
-  public static float gcPercentage(int seconds) {
-    long now = Instant.now().getEpochSecond();
-    long collectionTime = getCollectionTime();
+  public static double gcPercentage(int seconds) {
+    long now = Instant.now().getEpochSecond(); // in seconds
+    long collectionTime = getCollectionTime(); // in milliseconds
     gcHistory.add(Pair.of(now, collectionTime));
 
     for (Pair<Long, Long> p : gcHistory) {
       if (now - p.a >= seconds) {
-        return (float) ((collectionTime - p.b) / 1000.0 / (now - p.a));
+        return (collectionTime - p.b) / 1000.0 / (now - p.a);
       }
     }
     return 0;
   }
 
   /**
-   * Return the accumulated garbage collection time in milliseconds.
+   * Return the cumulative garbage collection time in milliseconds, across all threads.
    *
-   * @return the accumulated garbage collection time in milliseconds
+   * @return the cumulative garbage collection time in milliseconds
    */
   private static long getCollectionTime() {
     long result = 0;
