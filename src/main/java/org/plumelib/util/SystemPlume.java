@@ -167,7 +167,7 @@ public final class SystemPlume {
    *
    * @return the percentage of time spent garbage collecting, in the past minute
    */
-  public static float gcPercentage() {
+  public static double gcPercentage() {
     return gcPercentage(60);
   }
 
