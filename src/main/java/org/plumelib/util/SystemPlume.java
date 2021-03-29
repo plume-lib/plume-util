@@ -157,7 +157,8 @@ public final class SystemPlume {
    * <pre>{@code
    * if (GC.gcPercentage() > .25) {
    *   String message = String.format(
-   *     "Memory constraints are impeding performance; please increase max heap size (max memory = %d, total memory = %d, free memory = %d)",
+   *     "Garbage collection consumed over 25% of CPU diring the past minute."
+   *     + " Perhaps increase max heap size (max memory = %d, total memory = %d, free memory = %d).",
    *     Runtime.getRuntime().maxMemory(),
    *     Runtime.getRuntime().totalMemory(),
    *     Runtime.getRuntime().freeMemory());
@@ -183,7 +184,8 @@ public final class SystemPlume {
    * <pre>{@code
    * if (GC.gcPercentage(10) > .25) {
    *   String message = String.format(
-   *     "Memory constraints are impeding performance; please increase max heap size (max memory = %d, total memory = %d, free memory = %d)",
+   *     "Garbage collection consumed over 25% of CPU diring the past 10 seconds."
+   *     + " Perhaps increase max heap size (max memory = %d, total memory = %d, free memory = %d).",
    *     Runtime.getRuntime().maxMemory(),
    *     Runtime.getRuntime().totalMemory(),
    *     Runtime.getRuntime().freeMemory());
