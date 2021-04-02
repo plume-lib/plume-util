@@ -109,6 +109,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   ///
 
   /** Stack of readers. Used to support include files. */
+  @SuppressWarnings("mustcall:type.argument.type.incompatible") // ArrayDeque is not annotated
   private final ArrayDeque<FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
