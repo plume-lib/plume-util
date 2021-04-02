@@ -1780,7 +1780,6 @@ public final class ArraysPlume {
      *
      * @return the least upper bound of the classes of the elements of this
      */
-    @SuppressWarnings("mustcall:argument.type.incompatible") // ReflectionPlume is not annotated
     @Nullable Class<? extends @Nullable @MustCall Object> leastUpperBound() {
       if (theArray != null) {
         return ReflectionPlume.leastUpperBound(theArray);
