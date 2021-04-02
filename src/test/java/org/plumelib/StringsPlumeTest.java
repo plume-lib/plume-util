@@ -1,10 +1,11 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.regex.Pattern;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
@@ -18,10 +19,10 @@ public final class StringsPlumeTest {
 
     // public static String replacePrefix(String target, String oldStr, String newStr)
 
-    assert StringsPlume.replacePrefix("abcdefg", "abc", "hijk").equals("hijkdefg");
-    assert StringsPlume.replacePrefix("abcdefg", "bcd", "hijk").equals("abcdefg");
-    assert StringsPlume.replacePrefix("abcdefg", "abc", "").equals("defg");
-    assert StringsPlume.replacePrefix("abcdefg", "bcd", "").equals("abcdefg");
+    assertEquals("hijkdefg", StringsPlume.replacePrefix("abcdefg", "abc", "hijk"));
+    assertEquals("abcdefg", StringsPlume.replacePrefix("abcdefg", "bcd", "hijk"));
+    assertEquals("defg", StringsPlume.replacePrefix("abcdefg", "abc", ""));
+    assertEquals("abcdefg", StringsPlume.replacePrefix("abcdefg", "bcd", ""));
   }
 
   @Test
@@ -29,10 +30,19 @@ public final class StringsPlumeTest {
 
     // public static String replaceSuffix(String target, String oldStr, String newStr)
 
-    assert StringsPlume.replaceSuffix("abcdefg", "defg", "hijk").equals("abchijk");
-    assert StringsPlume.replaceSuffix("abcdefg", "cdef", "hijk").equals("abcdefg");
-    assert StringsPlume.replaceSuffix("abcdefg", "defg", "").equals("abc");
-    assert StringsPlume.replaceSuffix("abcdefg", "cdef", "").equals("abcdefg");
+    assertEquals("abchijk", StringsPlume.replaceSuffix("abcdefg", "defg", "hijk"));
+    assertEquals("abcdefg", StringsPlume.replaceSuffix("abcdefg", "cdef", "hijk"));
+    assertEquals("abc", StringsPlume.replaceSuffix("abcdefg", "defg", ""));
+    assertEquals("abcdefg", StringsPlume.replaceSuffix("abcdefg", "cdef", ""));
+  }
+
+  @Test
+  public void test_replaceAll() {
+
+    assertEquals("avarywhara", StringsPlume.replaceAll("everywhere", Pattern.compile("e"), "a"));
+    assertEquals("aabaa", StringsPlume.replaceAll("abababa", Pattern.compile("aba"), "aa"));
+    assertEquals(
+        "abbababba", StringsPlume.replaceAll("abababa", Pattern.compile("a(b)a"), "a$1$1a"));
   }
 
   @Test
@@ -67,14 +77,15 @@ public final class StringsPlumeTest {
     // public static String join(Object[] a, String delim)
     // public static String join(ArrayList v, String delim)
 
-    assertTrue(StringsPlume.join(", ", new String[] {"foo", "bar", "baz"}).equals("foo, bar, baz"));
-    assertTrue(StringsPlume.join(", ", "foo", "bar", "baz").equals("foo, bar, baz"));
-    assertTrue(StringsPlume.join(", ", new String[] {"foo"}).equals("foo"));
-    assertTrue(StringsPlume.join(", ", "foo").equals("foo"));
-    assertTrue(StringsPlume.join(", ", new String[] {}).equals(""));
-    assertTrue(StringsPlume.join(", ").equals(""));
-    assertTrue(StringsPlume.join("", new Integer[] {0, 1, 2, 3, 4}).equals("01234"));
-    assertTrue(StringsPlume.join("", 0, 1, 2, 3, 4).equals("01234"));
+    assertEquals("foo, bar, baz", StringsPlume.join(", ", new String[] {"foo", "bar", "baz"}));
+    assertEquals("foo, bar, baz", StringsPlume.join(", ", "foo", "bar", "baz"));
+    assertEquals("foo", StringsPlume.join(", ", new String[] {"foo"}));
+    assertEquals("foo", StringsPlume.join(", ", "foo"));
+    assertEquals("", StringsPlume.join(", ", new String[] {}));
+    assertEquals("", StringsPlume.join(", "));
+    assertEquals("01234", StringsPlume.join("", new Integer[] {0, 1, 2, 3, 4}));
+    assertEquals("01234", StringsPlume.join("", 0, 1, 2, 3, 4));
+
     ArrayList<Object> potpourri = new ArrayList<>();
     potpourri.add("day");
     potpourri.add(2);
@@ -123,12 +134,12 @@ public final class StringsPlumeTest {
 
     // These tests are not symmetric because the argument is not a value that escapeJava would ever
     // return.
-    assertTrue(StringsPlume.unescapeJava("\\").equals("\\"));
-    assertTrue(StringsPlume.unescapeJava("foo\\").equals("foo\\"));
-    assertTrue(StringsPlume.unescapeJava("\\*abc").equals("*abc"));
-    assertTrue(StringsPlume.unescapeJava("\\101").equals("A"));
-    assertTrue(StringsPlume.unescapeJava("A\\102C").equals("ABC"));
-    assertTrue(StringsPlume.unescapeJava("don\\'t").equals("don't"));
+    assertEquals("\\", StringsPlume.unescapeJava("\\"));
+    assertEquals("foo\\", StringsPlume.unescapeJava("foo\\"));
+    assertEquals("*abc", StringsPlume.unescapeJava("\\*abc"));
+    assertEquals("A", StringsPlume.unescapeJava("\\101"));
+    assertEquals("ABC", StringsPlume.unescapeJava("A\\102C"));
+    assertEquals("don't", StringsPlume.unescapeJava("don\\'t"));
 
     assertEquals("(1", StringsPlume.unescapeJava("\0501"));
     assertEquals("(1", StringsPlume.unescapeJava("\501"));
@@ -138,19 +149,19 @@ public final class StringsPlumeTest {
 
     // public static String escapeNonASCII(String orig)
 
-    assertTrue(StringsPlume.escapeNonASCII("foobar").equals("foobar"));
-    assertTrue(StringsPlume.escapeNonASCII("").equals(""));
-    assertTrue(StringsPlume.escapeNonASCII("\\").equals("\\\\"));
-    assertTrue(StringsPlume.escapeNonASCII("\\\n\r\"").equals("\\\\\\n\\r\\\""));
-    assertTrue(StringsPlume.escapeNonASCII("split\nlines").equals("split\\nlines"));
-    assertTrue(StringsPlume.escapeNonASCII("\\relax").equals("\\\\relax"));
-    assertTrue(StringsPlume.escapeNonASCII("\"hello\"").equals("\\\"hello\\\""));
-    assertTrue(
-        StringsPlume.escapeNonASCII("\"hello\" \"world\"").equals("\\\"hello\\\" \\\"world\\\""));
-    assert StringsPlume.escapeNonASCII("\0\1\2\7\12\70\100\111\222")
-        .equals("\\000\\001\\002\\007\\n8@I\\222");
-    assert StringsPlume.escapeNonASCII("\u0100\u1000\ucafe\uffff")
-        .equals("\\u0100\\u1000\\ucafe\\uffff");
+    assertEquals("foobar", StringsPlume.escapeNonASCII("foobar"));
+    assertEquals("", StringsPlume.escapeNonASCII(""));
+    assertEquals("\\\\", StringsPlume.escapeNonASCII("\\"));
+    assertEquals("\\\\\\n\\r\\\"", StringsPlume.escapeNonASCII("\\\n\r\""));
+    assertEquals("split\\nlines", StringsPlume.escapeNonASCII("split\nlines"));
+    assertEquals("\\\\relax", StringsPlume.escapeNonASCII("\\relax"));
+    assertEquals("\\\"hello\\\"", StringsPlume.escapeNonASCII("\"hello\""));
+    assertEquals("\\\"hello\\\" \\\"world\\\"", StringsPlume.escapeNonASCII("\"hello\" \"world\""));
+    assertEquals(
+        "\\000\\001\\002\\007\\n8@I\\222",
+        StringsPlume.escapeNonASCII("\0\1\2\7\12\70\100\111\222"));
+    assertEquals(
+        "\\u0100\\u1000\\ucafe\\uffff", StringsPlume.escapeNonASCII("\u0100\u1000\ucafe\uffff"));
 
     // private static String escapeNonASCII(char c)
 
@@ -174,56 +185,56 @@ public final class StringsPlumeTest {
     // public static String removeWhitespaceAfter(String arg, String delimiter)
     // public static String removeWhitespaceBefore(String arg, String delimiter)
 
-    assertTrue(StringsPlume.removeWhitespaceBefore("a,b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("a, b", ",").equals("a, b"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("a ,b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("a , b", ",").equals("a, b"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("ab=>cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("ab=> cd", "=>").equals("ab=> cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("ab =>cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("ab => cd", "=>").equals("ab=> cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("123cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore(" 123 cd", "123").equals("123 cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore(" 123cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("123 cd", "123").equals("123 cd"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("cd123", "123").equals("cd123"));
-    assertTrue(StringsPlume.removeWhitespaceBefore("cd 123 ", "123").equals("cd123 "));
-    assertTrue(StringsPlume.removeWhitespaceBefore("cd123 ", "123").equals("cd123 "));
-    assertTrue(StringsPlume.removeWhitespaceBefore("cd 123", "123").equals("cd123"));
+    assertEquals("a,b", StringsPlume.removeWhitespaceBefore("a,b", ","));
+    assertEquals("a, b", StringsPlume.removeWhitespaceBefore("a, b", ","));
+    assertEquals("a,b", StringsPlume.removeWhitespaceBefore("a ,b", ","));
+    assertEquals("a, b", StringsPlume.removeWhitespaceBefore("a , b", ","));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceBefore("ab=>cd", "=>"));
+    assertEquals("ab=> cd", StringsPlume.removeWhitespaceBefore("ab=> cd", "=>"));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceBefore("ab =>cd", "=>"));
+    assertEquals("ab=> cd", StringsPlume.removeWhitespaceBefore("ab => cd", "=>"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceBefore("123cd", "123"));
+    assertEquals("123 cd", StringsPlume.removeWhitespaceBefore(" 123 cd", "123"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceBefore(" 123cd", "123"));
+    assertEquals("123 cd", StringsPlume.removeWhitespaceBefore("123 cd", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceBefore("cd123", "123"));
+    assertEquals("cd123 ", StringsPlume.removeWhitespaceBefore("cd 123 ", "123"));
+    assertEquals("cd123 ", StringsPlume.removeWhitespaceBefore("cd123 ", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceBefore("cd 123", "123"));
 
-    assertTrue(StringsPlume.removeWhitespaceAfter("a,b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("a, b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("a ,b", ",").equals("a ,b"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("a , b", ",").equals("a ,b"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("ab=>cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("ab=> cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("ab =>cd", "=>").equals("ab =>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("ab => cd", "=>").equals("ab =>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("123cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter(" 123 cd", "123").equals(" 123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter(" 123cd", "123").equals(" 123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("123 cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("cd123", "123").equals("cd123"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("cd 123 ", "123").equals("cd 123"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("cd123 ", "123").equals("cd123"));
-    assertTrue(StringsPlume.removeWhitespaceAfter("cd 123", "123").equals("cd 123"));
+    assertEquals("a,b", StringsPlume.removeWhitespaceAfter("a,b", ","));
+    assertEquals("a,b", StringsPlume.removeWhitespaceAfter("a, b", ","));
+    assertEquals("a ,b", StringsPlume.removeWhitespaceAfter("a ,b", ","));
+    assertEquals("a ,b", StringsPlume.removeWhitespaceAfter("a , b", ","));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceAfter("ab=>cd", "=>"));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceAfter("ab=> cd", "=>"));
+    assertEquals("ab =>cd", StringsPlume.removeWhitespaceAfter("ab =>cd", "=>"));
+    assertEquals("ab =>cd", StringsPlume.removeWhitespaceAfter("ab => cd", "=>"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceAfter("123cd", "123"));
+    assertEquals(" 123cd", StringsPlume.removeWhitespaceAfter(" 123 cd", "123"));
+    assertEquals(" 123cd", StringsPlume.removeWhitespaceAfter(" 123cd", "123"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceAfter("123 cd", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceAfter("cd123", "123"));
+    assertEquals("cd 123", StringsPlume.removeWhitespaceAfter("cd 123 ", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceAfter("cd123 ", "123"));
+    assertEquals("cd 123", StringsPlume.removeWhitespaceAfter("cd 123", "123"));
 
-    assertTrue(StringsPlume.removeWhitespaceAround("a,b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceAround("a, b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceAround("a ,b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceAround("a , b", ",").equals("a,b"));
-    assertTrue(StringsPlume.removeWhitespaceAround("ab=>cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround("ab=> cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround("ab =>cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround("ab => cd", "=>").equals("ab=>cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround("123cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround(" 123 cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround(" 123cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround("123 cd", "123").equals("123cd"));
-    assertTrue(StringsPlume.removeWhitespaceAround("cd123", "123").equals("cd123"));
-    assertTrue(StringsPlume.removeWhitespaceAround("cd 123 ", "123").equals("cd123"));
-    assertTrue(StringsPlume.removeWhitespaceAround("cd123 ", "123").equals("cd123"));
-    assertTrue(StringsPlume.removeWhitespaceAround("cd 123", "123").equals("cd123"));
+    assertEquals("a,b", StringsPlume.removeWhitespaceAround("a,b", ","));
+    assertEquals("a,b", StringsPlume.removeWhitespaceAround("a, b", ","));
+    assertEquals("a,b", StringsPlume.removeWhitespaceAround("a ,b", ","));
+    assertEquals("a,b", StringsPlume.removeWhitespaceAround("a , b", ","));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceAround("ab=>cd", "=>"));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceAround("ab=> cd", "=>"));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceAround("ab =>cd", "=>"));
+    assertEquals("ab=>cd", StringsPlume.removeWhitespaceAround("ab => cd", "=>"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceAround("123cd", "123"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceAround(" 123 cd", "123"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceAround(" 123cd", "123"));
+    assertEquals("123cd", StringsPlume.removeWhitespaceAround("123 cd", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd123", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd 123 ", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd123 ", "123"));
+    assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd 123", "123"));
   }
 
   @Test
@@ -231,24 +242,24 @@ public final class StringsPlumeTest {
 
     // public static String nplural(int n, String noun)
 
-    assertTrue(StringsPlume.nplural(0, "fuss").equals("0 fusses"));
-    assertTrue(StringsPlume.nplural(1, "fuss").equals("1 fuss"));
-    assertTrue(StringsPlume.nplural(2, "fuss").equals("2 fusses"));
-    assertTrue(StringsPlume.nplural(0, "fox").equals("0 foxes"));
-    assertTrue(StringsPlume.nplural(1, "fox").equals("1 fox"));
-    assertTrue(StringsPlume.nplural(2, "fox").equals("2 foxes"));
-    assertTrue(StringsPlume.nplural(0, "fish").equals("0 fishes"));
-    assertTrue(StringsPlume.nplural(1, "fish").equals("1 fish"));
-    assertTrue(StringsPlume.nplural(2, "fish").equals("2 fishes"));
-    assertTrue(StringsPlume.nplural(0, "fletch").equals("0 fletches"));
-    assertTrue(StringsPlume.nplural(1, "fletch").equals("1 fletch"));
-    assertTrue(StringsPlume.nplural(2, "fletch").equals("2 fletches"));
-    assertTrue(StringsPlume.nplural(0, "fund").equals("0 funds"));
-    assertTrue(StringsPlume.nplural(1, "fund").equals("1 fund"));
-    assertTrue(StringsPlume.nplural(2, "fund").equals("2 funds"));
-    assertTrue(StringsPlume.nplural(0, "f-stop").equals("0 f-stops"));
-    assertTrue(StringsPlume.nplural(1, "f-stop").equals("1 f-stop"));
-    assertTrue(StringsPlume.nplural(2, "f-stop").equals("2 f-stops"));
+    assertEquals("0 fusses", StringsPlume.nplural(0, "fuss"));
+    assertEquals("1 fuss", StringsPlume.nplural(1, "fuss"));
+    assertEquals("2 fusses", StringsPlume.nplural(2, "fuss"));
+    assertEquals("0 foxes", StringsPlume.nplural(0, "fox"));
+    assertEquals("1 fox", StringsPlume.nplural(1, "fox"));
+    assertEquals("2 foxes", StringsPlume.nplural(2, "fox"));
+    assertEquals("0 fishes", StringsPlume.nplural(0, "fish"));
+    assertEquals("1 fish", StringsPlume.nplural(1, "fish"));
+    assertEquals("2 fishes", StringsPlume.nplural(2, "fish"));
+    assertEquals("0 fletches", StringsPlume.nplural(0, "fletch"));
+    assertEquals("1 fletch", StringsPlume.nplural(1, "fletch"));
+    assertEquals("2 fletches", StringsPlume.nplural(2, "fletch"));
+    assertEquals("0 funds", StringsPlume.nplural(0, "fund"));
+    assertEquals("1 fund", StringsPlume.nplural(1, "fund"));
+    assertEquals("2 funds", StringsPlume.nplural(2, "fund"));
+    assertEquals("0 f-stops", StringsPlume.nplural(0, "f-stop"));
+    assertEquals("1 f-stop", StringsPlume.nplural(1, "f-stop"));
+    assertEquals("2 f-stops", StringsPlume.nplural(2, "f-stop"));
     assertEquals("0 facilities", StringsPlume.nplural(0, "facility"));
     assertEquals("1 facility", StringsPlume.nplural(1, "facility"));
     assertEquals("2 facilities", StringsPlume.nplural(2, "facility"));
@@ -264,19 +275,36 @@ public final class StringsPlumeTest {
   }
 
   @Test
+  public void test_conjunction() {
+
+    // public static String conjunction(String conjunction, List<?> elements)
+
+    assertEquals("a", StringsPlume.conjunction("and", Arrays.asList("a")));
+    assertEquals("a and b", StringsPlume.conjunction("and", Arrays.asList("a", "b")));
+    assertEquals("a, b, and c", StringsPlume.conjunction("and", Arrays.asList("a", "b", "c")));
+    assertEquals(
+        "a, b, c, and d", StringsPlume.conjunction("and", Arrays.asList("a", "b", "c", "d")));
+    assertEquals("a", StringsPlume.conjunction("or", Arrays.asList("a")));
+    assertEquals("a or b", StringsPlume.conjunction("or", Arrays.asList("a", "b")));
+    assertEquals("a, b, or c", StringsPlume.conjunction("or", Arrays.asList("a", "b", "c")));
+    assertEquals(
+        "a, b, c, or d", StringsPlume.conjunction("or", Arrays.asList("a", "b", "c", "d")));
+  }
+
+  @Test
   public void test_rpad() {
 
     // public static String rpad(String s, int length)
     // public static String rpad(int num, int length)
     // public static String rpad(double num, int length)
 
-    assertTrue(StringsPlume.rpad("", 5).equals("     "));
-    assertTrue(StringsPlume.rpad("abcd", 5).equals("abcd "));
-    assertTrue(StringsPlume.rpad("abcde", 5).equals("abcde"));
-    assertTrue(StringsPlume.rpad("abcdef", 5).equals("abcde"));
-    assertTrue(StringsPlume.rpad("abcde ghij", 5).equals("abcde"));
-    assertTrue(StringsPlume.rpad(10, 5).equals("10   "));
-    assertTrue(StringsPlume.rpad(3.14, 5).equals("3.14 "));
+    assertEquals("     ", StringsPlume.rpad("", 5));
+    assertEquals("abcd ", StringsPlume.rpad("abcd", 5));
+    assertEquals("abcde", StringsPlume.rpad("abcde", 5));
+    assertEquals("abcde", StringsPlume.rpad("abcdef", 5));
+    assertEquals("abcde", StringsPlume.rpad("abcde ghij", 5));
+    assertEquals("10   ", StringsPlume.rpad(10, 5));
+    assertEquals("3.14 ", StringsPlume.rpad(3.14, 5));
 
     // public static class NullableStringComparator
     //   public int compare(Object o1, Object o2)
@@ -289,13 +317,13 @@ public final class StringsPlumeTest {
     // public static int count(String s, int ch)
     // public static int count(String s, String sub)
 
-    assertTrue(StringsPlume.count("abcde", 'a') == 1);
-    assertTrue(StringsPlume.count("abcde", 'c') == 1);
-    assertTrue(StringsPlume.count("abcde", 'e') == 1);
-    assertTrue(StringsPlume.count("abcde", 'z') == 0);
-    assertTrue(StringsPlume.count("abacadaea", 'a') == 5);
-    assertTrue(StringsPlume.count("aaa aea", 'a') == 5);
-    assertTrue(StringsPlume.count("daeaaa", 'a') == 4);
+    assertEquals(1, StringsPlume.count("abcde", 'a'));
+    assertEquals(1, StringsPlume.count("abcde", 'c'));
+    assertEquals(1, StringsPlume.count("abcde", 'e'));
+    assertEquals(0, StringsPlume.count("abcde", 'z'));
+    assertEquals(5, StringsPlume.count("abacadaea", 'a'));
+    assertEquals(5, StringsPlume.count("aaa aea", 'a'));
+    assertEquals(4, StringsPlume.count("daeaaa", 'a'));
   }
 
   // This will be easy to write tests for, when I get around to it.
@@ -310,30 +338,30 @@ public final class StringsPlumeTest {
   public void test_abbreviateNumber() {
 
     Locale.setDefault(Locale.US);
-    assertTrue(StringsPlume.abbreviateNumber(5).equals("5.00"));
-    assertTrue(StringsPlume.abbreviateNumber(5000).equals("5.00K"));
-    assertTrue(StringsPlume.abbreviateNumber(5000000).equals("5.00M"));
-    assertTrue(StringsPlume.abbreviateNumber(1000000000).equals("1.00G"));
-    assertTrue(StringsPlume.abbreviateNumber(1).equals("1.00"));
-    assertTrue(StringsPlume.abbreviateNumber(12).equals("12.0"));
-    assertTrue(StringsPlume.abbreviateNumber(123).equals("123"));
-    assertTrue(StringsPlume.abbreviateNumber(1234).equals("1.23K"));
-    assertTrue(StringsPlume.abbreviateNumber(12345).equals("12.3K"));
-    assertTrue(StringsPlume.abbreviateNumber(123456).equals("123K"));
-    assertTrue(StringsPlume.abbreviateNumber(1234567).equals("1.23M"));
-    assertTrue(StringsPlume.abbreviateNumber(12345678).equals("12.3M"));
-    assertTrue(StringsPlume.abbreviateNumber(123456789).equals("123M"));
-    assertTrue(StringsPlume.abbreviateNumber(1234567890).equals("1.23G"));
-    assertTrue(StringsPlume.abbreviateNumber(9).equals("9.00"));
-    assertTrue(StringsPlume.abbreviateNumber(98).equals("98.0"));
-    assertTrue(StringsPlume.abbreviateNumber(987).equals("987"));
-    assertTrue(StringsPlume.abbreviateNumber(9876).equals("9.88K"));
-    assertTrue(StringsPlume.abbreviateNumber(98765).equals("98.8K"));
-    assertTrue(StringsPlume.abbreviateNumber(987654).equals("988K"));
-    assertTrue(StringsPlume.abbreviateNumber(9876543).equals("9.88M"));
-    assertTrue(StringsPlume.abbreviateNumber(98765432).equals("98.8M"));
-    assertTrue(StringsPlume.abbreviateNumber(987654321).equals("988M"));
-    assertTrue(StringsPlume.abbreviateNumber(9876543210L).equals("9.88G"));
+    assertEquals("5.00", StringsPlume.abbreviateNumber(5));
+    assertEquals("5.00K", StringsPlume.abbreviateNumber(5000));
+    assertEquals("5.00M", StringsPlume.abbreviateNumber(5000000));
+    assertEquals("1.00G", StringsPlume.abbreviateNumber(1000000000));
+    assertEquals("1.00", StringsPlume.abbreviateNumber(1));
+    assertEquals("12.0", StringsPlume.abbreviateNumber(12));
+    assertEquals("123", StringsPlume.abbreviateNumber(123));
+    assertEquals("1.23K", StringsPlume.abbreviateNumber(1234));
+    assertEquals("12.3K", StringsPlume.abbreviateNumber(12345));
+    assertEquals("123K", StringsPlume.abbreviateNumber(123456));
+    assertEquals("1.23M", StringsPlume.abbreviateNumber(1234567));
+    assertEquals("12.3M", StringsPlume.abbreviateNumber(12345678));
+    assertEquals("123M", StringsPlume.abbreviateNumber(123456789));
+    assertEquals("1.23G", StringsPlume.abbreviateNumber(1234567890));
+    assertEquals("9.00", StringsPlume.abbreviateNumber(9));
+    assertEquals("98.0", StringsPlume.abbreviateNumber(98));
+    assertEquals("987", StringsPlume.abbreviateNumber(987));
+    assertEquals("9.88K", StringsPlume.abbreviateNumber(9876));
+    assertEquals("98.8K", StringsPlume.abbreviateNumber(98765));
+    assertEquals("988K", StringsPlume.abbreviateNumber(987654));
+    assertEquals("9.88M", StringsPlume.abbreviateNumber(9876543));
+    assertEquals("98.8M", StringsPlume.abbreviateNumber(98765432));
+    assertEquals("988M", StringsPlume.abbreviateNumber(987654321));
+    assertEquals("9.88G", StringsPlume.abbreviateNumber(9876543210L));
   }
 
   @Test
@@ -362,17 +390,17 @@ public final class StringsPlumeTest {
     String @ArrayLen(11) [] sa = StringsPlume.splitLines(str);
     // for (String s : sa)
     //   System.out.printf ("'%s'%n", s);
-    assertTrue(sa.length == 11);
-    assertTrue(sa[0].equals("one"));
-    assertTrue(sa[1].equals("two"));
-    assertTrue(sa[2].equals("three"));
-    assertTrue(sa[3].equals("four"));
-    assertTrue(sa[4].equals("five"));
-    assertTrue(sa[5].equals(""));
-    assertTrue(sa[6].equals(""));
-    assertTrue(sa[7].equals("six"));
-    assertTrue(sa[8].equals(""));
-    assertTrue(sa[9].equals(""));
-    assertTrue(sa[10].equals(""));
+    assertEquals(11, sa.length);
+    assertEquals("one", sa[0]);
+    assertEquals("two", sa[1]);
+    assertEquals("three", sa[2]);
+    assertEquals("four", sa[3]);
+    assertEquals("five", sa[4]);
+    assertEquals("", sa[5]);
+    assertEquals("", sa[6]);
+    assertEquals("six", sa[7]);
+    assertEquals("", sa[8]);
+    assertEquals("", sa[9]);
+    assertEquals("", sa[10]);
   }
 }

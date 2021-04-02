@@ -7,6 +7,7 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
 public final class SystemPlume {
@@ -17,6 +18,38 @@ public final class SystemPlume {
   /** This class is a collection of methods; it does not represent anything. */
   private SystemPlume() {
     throw new Error("do not instantiate");
+  }
+
+  ///
+  /// Properties
+  ///
+
+  /**
+   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
+   * "1", or "0".
+   *
+   * @param key name of the property to look up
+   * @param defaultValue the value to return if the property is not set
+   * @return true iff the property has a string value that represents true
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
+  @Pure
+  public static boolean getBooleanSystemProperty(String key, boolean defaultValue) {
+    return UtilPlume.getBooleanProperty(System.getProperties(), key, defaultValue);
+  }
+
+  /**
+   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
+   * "1", or "0".
+   *
+   * @param key name of the property to look up
+   * @return true iff the property has a string value that represents true
+   */
+  @Pure
+  public static boolean getBooleanSystemProperty(String key) {
+    return getBooleanSystemProperty(key, false);
   }
 
   ///
@@ -102,18 +135,21 @@ public final class SystemPlume {
     return result;
   }
 
+  // This should probably be a deque, so that it can be pruned.
+  // A problem is that a deque cannot be iterated through; it does not implement `get()`.
   /**
-   * A list of pairs of (timestamp, accumulated collection time). The timestamp is an epoch second,
-   * and the collection time is in milliseconds. New items are added to the front.
+   * A list of pairs of (timestamp, cumulative collection time). The timestamp is an epoch second,
+   * and the collection time is in milliseconds. New items are added to the end.
    *
    * <p>The list is not currently pruned.
    */
   private static List<Pair<Long, Long>> gcHistory = new ArrayList<>();
 
   /**
-   * Returns the percentage of time spent garbage collecting, in the past minute. Might return a
-   * value greater than 1 if multiple threads are spending all their time collecting. Returns 0 if
-   * {@code gcPercentage} was not first called more than 1 minute ago.
+   * Returns the fraction of time spent garbage collecting, in the past minute. This is generally a
+   * value between 0 and 1. This method might return a value greater than 1 if multiple threads are
+   * spending all their time collecting. Returns 0 if {@code gcPercentage} was not first called more
+   * than 1 minute ago.
    *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
@@ -121,7 +157,8 @@ public final class SystemPlume {
    * <pre>{@code
    * if (GC.gcPercentage() > .25) {
    *   String message = String.format(
-   *     "Memory constraints are impeding performance; please increase max heap size (max memory = %d, total memory = %d, free memory = %d)",
+   *     "Garbage collection consumed over 25% of CPU during the past minute."
+   *     + " Perhaps increase max heap size (max memory = %d, total memory = %d, free memory = %d).",
    *     Runtime.getRuntime().maxMemory(),
    *     Runtime.getRuntime().totalMemory(),
    *     Runtime.getRuntime().freeMemory());
@@ -131,14 +168,15 @@ public final class SystemPlume {
    *
    * @return the percentage of time spent garbage collecting, in the past minute
    */
-  public static float gcPercentage() {
+  public static double gcPercentage() {
     return gcPercentage(60);
   }
 
   /**
-   * Returns the percentage of time spent garbage collecting, in the past {@code seconds} seconds.
-   * Might return a value greater than 1 if multiple threads are spending all their time collecting.
-   * Returns 0 if {@code gcPercentage} was not first called more than {@code seconds} seconds ago.
+   * Returns the fraction of time spent garbage collecting, in the past {@code seconds} seconds.
+   * This is generally a value between 0 and 1. This method might return a value greater than 1 if
+   * multiple threads are spending all their time collecting. Returns 0 if {@code gcPercentage} was
+   * not first called more than {@code seconds} seconds ago.
    *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
@@ -146,7 +184,8 @@ public final class SystemPlume {
    * <pre>{@code
    * if (GC.gcPercentage(10) > .25) {
    *   String message = String.format(
-   *     "Memory constraints are impeding performance; please increase max heap size (max memory = %d, total memory = %d, free memory = %d)",
+   *     "Garbage collection consumed over 25% of CPU during the past 10 seconds."
+   *     + " Perhaps increase max heap size (max memory = %d, total memory = %d, free memory = %d).",
    *     Runtime.getRuntime().maxMemory(),
    *     Runtime.getRuntime().totalMemory(),
    *     Runtime.getRuntime().freeMemory());
@@ -157,23 +196,29 @@ public final class SystemPlume {
    * @param seconds the size of the time window, in seconds
    * @return the percentage of time spent garbage collecting, in the past {@code seconds} seconds
    */
-  public static float gcPercentage(int seconds) {
-    long now = Instant.now().getEpochSecond();
-    long collectionTime = getCollectionTime();
+  public static double gcPercentage(int seconds) {
+    long now = Instant.now().getEpochSecond(); // in seconds
+    long collectionTime = getCollectionTime(); // in milliseconds
     gcHistory.add(Pair.of(now, collectionTime));
 
-    for (Pair<Long, Long> p : gcHistory) {
-      if (now - p.a >= seconds) {
-        return (float) ((collectionTime - p.b) / 1000.0 / (now - p.a));
+    for (int i = gcHistory.size() - 1; i >= 0; i--) {
+      Pair<Long, Long> p = gcHistory.get(i);
+      long historyTimestamp = p.a; // in seconds
+      long elapsed = now - historyTimestamp; // in seconds
+      if (elapsed >= seconds) {
+        long historyCollectionTime = p.b; // in milliseconds
+        double elapsedCollectionTime =
+            (collectionTime - historyCollectionTime) / 1000.0; // in seconds
+        return elapsedCollectionTime / elapsed;
       }
     }
     return 0;
   }
 
   /**
-   * Return the accumulated garbage collection time in milliseconds.
+   * Return the cumulative garbage collection time in milliseconds, across all threads.
    *
-   * @return the accumulated garbage collection time in milliseconds
+   * @return the cumulative garbage collection time in milliseconds
    */
   private static long getCollectionTime() {
     long result = 0;
