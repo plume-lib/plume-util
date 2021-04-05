@@ -269,6 +269,8 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
+   * To perform replacement in place, see {@code List.replaceAll}.
+   *
    * @param <FROM> the type of elements of the given iterable
    * @param <TO> the type of elements of the result list
    * @param f a function
@@ -340,7 +342,8 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.transform;</pre>
    *
-   * This method is just like {@link #mapList}, but with the arguments in the other order.
+   * This method is just like {@link #mapList}, but with the arguments in the other order. To
+   * perform replacement in place, see {@code List.replaceAll}.
    *
    * @param <FROM> the type of elements of the given collection
    * @param <TO> the type of elements of the result list
