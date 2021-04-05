@@ -269,7 +269,9 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
-   * To perform replacement in place, see {@code List.replaceAll}.
+   * This method is just like {@link #transform}, but with the arguments in the other order.
+   *
+   * <p>To perform replacement in place, see {@code List.replaceAll}.
    *
    * @param <FROM> the type of elements of the given iterable
    * @param <TO> the type of elements of the result list
@@ -397,7 +399,7 @@ public final class CollectionsPlume {
    * Concatenates a list and an element into a new list.
    *
    * @param <T> the type of the list elements
-   * @param list the list
+   * @param list the list; is not modified by this method
    * @param lastElt the new last elemeent
    * @return a new list containing the list elements and the last element, in that order
    */
