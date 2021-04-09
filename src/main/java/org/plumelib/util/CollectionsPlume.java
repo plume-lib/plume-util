@@ -48,7 +48,7 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Return the sorted version of the list. Does not alter the list. Simply calls {@code
+   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
    * Collections.sort(List<T>, Comparator<? super T>)}.
    *
    * @return a sorted version of the list
@@ -63,7 +63,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return true iff the list does not contain duplicate elements.
+   * Returns true iff the list does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
@@ -93,7 +93,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return true iff the list does not contain duplicate elements.
+   * Returns true iff the list does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
@@ -107,7 +107,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return a copy of the list with duplicates removed. Retains the original order.
+   * Returns a copy of the list with duplicates removed. Retains the original order.
    *
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
@@ -905,7 +905,7 @@ public final class CollectionsPlume {
     }
 
     /**
-     * Return the first element of the iterator that was used to construct this. This value is not
+     * Returns the first element of the iterator that was used to construct this. This value is not
      * part of this iterator (unless the original iterator would have returned it multiple times).
      *
      * @return the first element of the iterator that was used to construct this
@@ -922,7 +922,7 @@ public final class CollectionsPlume {
     }
 
     /**
-     * Return the last element of the iterator that was used to construct this. This value is not
+     * Returns the last element of the iterator that was used to construct this. This value is not
      * part of this iterator (unless the original iterator would have returned it multiple times).
      *
      * <p>Throws an error unless the RemoveFirstAndLastIterator has already been iterated all the
@@ -946,7 +946,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return a List containing numElts randomly chosen elements from the iterator, or all the
+   * Returns a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
@@ -963,7 +963,7 @@ public final class CollectionsPlume {
   private static Random r = new Random();
 
   /**
-   * Return a List containing numElts randomly chosen elements from the iterator, or all the
+   * Returns a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
@@ -1122,7 +1122,7 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Return the object in this set that is equal to key. The Set abstraction doesn't provide this;
+   * Returns the object in this set that is equal to key. The Set abstraction doesn't provide this;
    * it only provides "contains". Returns null if the argument is null, or if it isn't in the set.
    *
    * @param set a set in which to look up the value

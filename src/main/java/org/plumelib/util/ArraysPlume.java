@@ -87,7 +87,7 @@ public final class ArraysPlume {
   // Could also add linear-time orderStatistics if I liked.
 
   /**
-   * Return the smallest value in the array.
+   * Returns the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -106,7 +106,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the smallest value in the array.
+   * Returns the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -125,7 +125,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the smallest value in the array.
+   * Returns the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -144,7 +144,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the smallest value in the array.
+   * Returns the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -167,7 +167,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the smallest value in the array.
+   * Returns the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -190,7 +190,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the smallest value in the array.
+   * Returns the smallest value in the array.
    *
    * @param a an array
    * @return the smallest value in the array
@@ -213,7 +213,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the largest value in the array.
+   * Returns the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -232,7 +232,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the largest value in the array.
+   * Returns the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -251,7 +251,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the largest value in the array.
+   * Returns the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -270,7 +270,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the largest value in the array.
+   * Returns the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -293,7 +293,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the largest value in the array.
+   * Returns the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -316,7 +316,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the largest value in the array.
+   * Returns the largest value in the array.
    *
    * @param a an array
    * @return the largest value in the array
@@ -339,7 +339,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a two-element array containing the smallest and largest values in the array.
+   * Returns a two-element array containing the smallest and largest values in the array.
    *
    * @param a an array
    * @return a two-element array containing the smallest and largest values in the array
@@ -362,7 +362,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a two-element array containing the smallest and largest values in the array.
+   * Returns a two-element array containing the smallest and largest values in the array.
    *
    * @param a an array
    * @return a two-element array containing the smallest and largest values in the array
@@ -385,7 +385,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the difference between the smallest and largest array elements.
+   * Returns the difference between the smallest and largest array elements.
    *
    * @param a an array
    * @return the difference between the smallest and largest array elements
@@ -406,7 +406,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the difference between the smallest and largest array elements.
+   * Returns the difference between the smallest and largest array elements.
    *
    * @param a an array
    * @return the difference between the smallest and largest array elements
@@ -1128,7 +1128,7 @@ public final class ArraysPlume {
   // index or the first non-included index.
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @return a subarray of the given array
    * @param a the original array
@@ -1147,7 +1147,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a sublist of the given list.
+   * Returns a sublist of the given list.
    *
    * @param <T> type of the elements
    * @param a the original list
@@ -1163,7 +1163,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1182,7 +1182,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1201,7 +1201,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1220,7 +1220,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1239,7 +1239,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1258,7 +1258,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1277,7 +1277,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1296,7 +1296,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1315,7 +1315,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a subarray of the given array.
+   * Returns a subarray of the given array.
    *
    * @param a the original array
    * @param startindex the first index to be included
@@ -1688,7 +1688,7 @@ public final class ArraysPlume {
     }
 
     /**
-     * Return true if this represents a null value.
+     * Returns true if this represents a null value.
      *
      * @return true if this represents a null value
      */
@@ -1698,7 +1698,7 @@ public final class ArraysPlume {
     }
 
     /**
-     * Return the size of the collection this represents.
+     * Returns the size of the collection this represents.
      *
      * @return the size of the collection this represents
      */
@@ -1730,7 +1730,7 @@ public final class ArraysPlume {
     }
 
     /**
-     * Return an array with the same contents as this.
+     * Returns an array with the same contents as this.
      *
      * @return an array with the same contents as this
      */
@@ -1822,8 +1822,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order. Returns an existing
-   * array if possible (when one argument is null or empty).
+   * Returns an array that contains all the elements of both arguments, in order. Returns an
+   * existing array if possible (when one argument is null or empty).
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1835,7 +1835,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order. Returns the array
+   * Returns an array that contains all the elements of both arguments, in order. Returns the array
    * argument if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
@@ -1848,7 +1848,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order. Returns the array
+   * Returns an array that contains all the elements of both arguments, in order. Returns the array
    * argument if the list argument is null or empty.
    *
    * @param <T> the type of the sequence elements
@@ -1861,7 +1861,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order.
+   * Returns an array that contains all the elements of both arguments, in order.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1873,7 +1873,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both arguments, in order.
+   * Returns an array that contains all the elements of both arguments, in order.
    *
    * @param <T> the type of the sequence elements
    * @param a the first sequence to concatenate
@@ -1921,8 +1921,8 @@ public final class ArraysPlume {
 
   // Note: PolyAll is not quite right.  Need to review.
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null or empty, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null or empty, in which case it returns the other array.
    *
    * @param a the first array to concatenate
    * @param b the second array to concatenate
@@ -1950,8 +1950,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -1979,8 +1979,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2008,8 +2008,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2037,8 +2037,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2066,8 +2066,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2095,8 +2095,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2124,8 +2124,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2153,8 +2153,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array that contains all the elements of both argument arrays, in order. Returns a new
-   * array unless one argument is null, in which case it returns the other array.
+   * Returns an array that contains all the elements of both argument arrays, in order. Returns a
+   * new array unless one argument is null, in which case it returns the other array.
    *
    * @param a the first sequence to concatenate
    * @param b the second sequence to concatenate
@@ -2261,7 +2261,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a string representation of the array. The representation is patterned after that of
+   * Returns a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList.
    *
    * @param a an array
@@ -2274,7 +2274,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a string representation of the array. The representation is patterned after that of
+   * Returns a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList. Furthermore, each element is quoted like a Java String.
    *
    * @param a an array
@@ -2287,7 +2287,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a string representation of the array. The representation is patterned after that of
+   * Returns a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList. Furthermore, if quoted is true, then each element is quoted like a Java
    * String.
    *
@@ -2315,8 +2315,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a string representation of the collection. The representation is patterned after that of
-   * java.util.ArrayList.
+   * Returns a string representation of the collection. The representation is patterned after that
+   * of java.util.ArrayList.
    *
    * @param a a collection
    * @return a string representation of the collection
@@ -2328,8 +2328,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a string representation of the collection. The representation is patterned after that of
-   * java.util.ArrayList.
+   * Returns a string representation of the collection. The representation is patterned after that
+   * of java.util.ArrayList.
    *
    * @param a a collection
    * @return a string representation of the collection, with the elements quoted
@@ -2341,8 +2341,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a string representation of the collection. The representation is patterned after that of
-   * java.util.ArrayList. The representation permits quoting (or not) of strings.
+   * Returns a string representation of the collection. The representation is patterned after that
+   * of java.util.ArrayList. The representation permits quoting (or not) of strings.
    *
    * @param a a collection
    * @param quoted whether to quote the collection elements that are Java strings
@@ -2659,7 +2659,7 @@ public final class ArraysPlume {
     return false;
   }
   /**
-   * Return true iff a does not contain duplicate elements. Equality checking uses {@link
+   * Returns true iff a does not contain duplicate elements. Equality checking uses {@link
    * Double#equals}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
@@ -2775,7 +2775,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return true iff the list does not contain duplicate elements.
+   * Returns true iff the list does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
@@ -2834,7 +2834,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return true iff the array does not contain -1.
+   * Returns true iff the array does not contain -1.
    *
    * @param a an array, representing a function
    * @return true iff no element of a maps to -1
@@ -2845,7 +2845,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return an array [0..length).
+   * Returns an array [0..length).
    *
    * @param length the length of the result
    * @return fresh array that is the identity function of the given length
@@ -2871,7 +2871,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the inverse of the given function, which is represented as an array.
+   * Returns the inverse of the given function, which is represented as an array.
    *
    * @param a an array representing a function from [0..a.length) to [0..arange); each element of a
    *     is between 0 (inclusive) and arange (exclusive)
@@ -2906,7 +2906,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the composition of the given two functions, all of which are represented as arrays.
+   * Returns the composition of the given two functions, all of which are represented as arrays.
    *
    * @param a function from [0..a.length) to [0..b.length)
    * @param b function from [0..b.length) to range R
@@ -2923,7 +2923,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return the composition of the given two (possibly partial) functions, all of which are
+   * Returns the composition of the given two (possibly partial) functions, all of which are
    * represented as arrays.
    *
    * @param a function from [0..a.length) to [-1..b.length)
@@ -2954,7 +2954,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Return whether smaller is a subset of bigger.
+   * Returns whether smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -2986,7 +2986,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Return whether smaller is a subset of bigger.
+   * Returns whether smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -3018,7 +3018,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Return whether smaller is a subset of bigger.
+   * Returns whether smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -3517,7 +3517,7 @@ public final class ArraysPlume {
   ///
 
   /**
-   * Return true if a contains null.
+   * Returns true if a contains null.
    *
    * @param a an array
    * @return true iff some element of a is null (false if a is zero-sized)
@@ -3532,7 +3532,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return true if all elements of a are null.
+   * Returns true if all elements of a are null.
    *
    * @param a an array
    * @return true iff all elements of a are null (unspecified result if a is zero-sized)
@@ -3548,7 +3548,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return true if a contains null.
+   * Returns true if a contains null.
    *
    * @param a an array
    * @return true iff some element of a is null (false if a is zero-sized)
@@ -3563,7 +3563,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return true if all elements of a are null.
+   * Returns true if all elements of a are null.
    *
    * @param a an array
    * @return true iff all elements of a are null (unspecified result if a is zero-sized)
@@ -3740,7 +3740,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return a singleton ArrayList containing the given element.
+   * Returns a singleton ArrayList containing the given element.
    *
    * @param <T> the element type of the list
    * @param elt the element to put in the ArrayList
@@ -3753,7 +3753,7 @@ public final class ArraysPlume {
   }
 
   // /**
-  //  * Return a singleton ArrayDeque containing the given element.
+  //  * Returns a singleton ArrayDeque containing the given element.
   //  *
   //  * @param <T> the element type of the list
   //  * @param elt the element to put in the ArrayDeque
