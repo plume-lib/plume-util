@@ -181,7 +181,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     /**
-     * Return a substring of the entry body that matches the specified regular expression. If no
+     * Returns a substring of the entry body that matches the specified regular expression. If no
      * match is found, returns the firstLine.
      *
      * @param re regex to match
@@ -583,7 +583,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Return a line-by-line iterator for this file.
+   * Returns a line-by-line iterator for this file.
    *
    * <p><b>Warning:</b> This does not return a fresh iterator each time. The iterator is a
    * singleton, the same one is returned each time, and a new one can never be created after it is
@@ -628,7 +628,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Return the next line in the multi-file.
+   * Returns the next line in the multi-file.
    *
    * @return the next line in the multi-file
    * @throws NoSuchElementException at end of file
@@ -785,7 +785,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Return the current line number in the current file.
+   * Returns the current line number in the current file.
    *
    * @return the current line number
    */

@@ -69,7 +69,7 @@ public final class Intern {
   ///
 
   /**
-   * Return true if the argument is interned (is canonical among all objects equal to itself).
+   * Returns true if the argument is interned (is canonical among all objects equal to itself).
    *
    * @param value the value to test for interning
    * @return true iff value is interned
@@ -364,7 +364,7 @@ public final class Intern {
   /// For testing only
 
   /**
-   * Return the number of interned integers. For testing only.
+   * Returns the number of interned integers. For testing only.
    *
    * @return the number of interned integers.
    */
@@ -373,7 +373,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned longs. For testing only.
+   * Returns the number of interned longs. For testing only.
    *
    * @return the number of interned longs.
    */
@@ -382,7 +382,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned int arrays. For testing only.
+   * Returns the number of interned int arrays. For testing only.
    *
    * @return the number of interned int arrays.
    */
@@ -391,7 +391,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned long arrays. For testing only.
+   * Returns the number of interned long arrays. For testing only.
    *
    * @return the number of interned long arrays.
    */
@@ -400,7 +400,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned doubles. For testing only.
+   * Returns the number of interned doubles. For testing only.
    *
    * @return the number of interned doubles.
    */
@@ -409,7 +409,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned double arrays. For testing only.
+   * Returns the number of interned double arrays. For testing only.
    *
    * @return the number of interned double arrays.
    */
@@ -418,7 +418,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned string arrays. For testing only.
+   * Returns the number of interned string arrays. For testing only.
    *
    * @return the number of interned string arrays.
    */
@@ -427,7 +427,7 @@ public final class Intern {
   }
 
   /**
-   * Return the number of interned object arrays. For testing only.
+   * Returns the number of interned object arrays. For testing only.
    *
    * @return the number of interned object arrays.
    */
@@ -436,7 +436,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned integers. For testing only.
+   * Returns all the interned integers. For testing only.
    *
    * @return all the interned integers
    */
@@ -445,7 +445,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned longs. For testing only.
+   * Returns all the interned longs. For testing only.
    *
    * @return all the interned longs
    */
@@ -454,7 +454,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned int arrays. For testing only.
+   * Returns all the interned int arrays. For testing only.
    *
    * @return all the interned int arrays
    */
@@ -463,7 +463,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned long arrays. For testing only.
+   * Returns all the interned long arrays. For testing only.
    *
    * @return all the interned long arrays
    */
@@ -472,7 +472,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned doubles. For testing only.
+   * Returns all the interned doubles. For testing only.
    *
    * @return all the interned doubles
    */
@@ -481,7 +481,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned double arrays. For testing only.
+   * Returns all the interned double arrays. For testing only.
    *
    * @return all the interned double arrays
    */
@@ -490,7 +490,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned string arrays. For testing only.
+   * Returns all the interned string arrays. For testing only.
    *
    * @return all the interned string arrays
    */
@@ -499,7 +499,7 @@ public final class Intern {
   }
 
   /**
-   * Return all the interned object arrays. For testing only.
+   * Returns all the interned object arrays. For testing only.
    *
    * @return all the interned object arrays
    */
@@ -909,7 +909,7 @@ public final class Intern {
   }
 
   /**
-   * Return an interned subsequence of seq from start (inclusive) to end (exclusive). The argument
+   * Returns an interned subsequence of seq from start (inclusive) to end (exclusive). The argument
    * seq should already be interned.
    *
    * <p>The result is the same as computing the subsequence and then interning it, but this method
