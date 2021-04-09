@@ -120,7 +120,7 @@ public final class SystemPlume {
   }
 
   /**
-   * Return the number of garbage collections that have occurred.
+   * Returns the number of garbage collections that have occurred.
    *
    * @return the number of garbage collections that have occurred
    */
@@ -216,7 +216,7 @@ public final class SystemPlume {
   }
 
   /**
-   * Return the cumulative garbage collection time in milliseconds, across all threads.
+   * Returns the cumulative garbage collection time in milliseconds, across all threads.
    *
    * @return the cumulative garbage collection time in milliseconds
    */

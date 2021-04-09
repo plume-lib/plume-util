@@ -99,7 +99,7 @@ public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable
     return ((next1 != null) || (next2 != null));
   }
   /**
-   * Return an element of the first iterator, paired with null.
+   * Returns an element of the first iterator, paired with null.
    *
    * @return an element of the first iterator, paired with null
    */
@@ -110,7 +110,7 @@ public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable
     return result;
   }
   /**
-   * Return a pair of null and an element of the second iterator.
+   * Returns a pair of null and an element of the second iterator.
    *
    * @return a pair of null and an element of the second iterator
    */
@@ -121,7 +121,7 @@ public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable
     return result;
   }
   /**
-   * Return a pair containing an element from each iterator.
+   * Returns a pair containing an element from each iterator.
    *
    * @return a pair containing an element from each iterator
    */
