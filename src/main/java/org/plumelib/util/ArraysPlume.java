@@ -2446,13 +2446,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(boolean[] a) {
     HashSet<Boolean> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
       Boolean n = Boolean.valueOf(a[i]);
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2470,13 +2467,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(byte[] a) {
     HashSet<Byte> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
       Byte n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2494,13 +2488,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(char[] a) {
     HashSet<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
       Character n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2518,13 +2509,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(float[] a) {
     HashSet<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
       Float n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2542,13 +2530,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(short[] a) {
     HashSet<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
       Short n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2566,13 +2551,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(int[] a) {
     HashSet<Integer> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
       Integer n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2591,13 +2573,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(double[] a) {
     HashSet<Double> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to create the last element,
-      // but that would make the code much less readable.
       Double n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2615,13 +2594,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(long[] a) {
     HashSet<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      // Could be optimized not to create the last element,
-      // but that would make the code much less readable.
       Long n = a[i];
-      if (hs.contains(n)) {
+      if (hs.add(n)) {
         return false;
       }
-      hs.add(n);
     }
     return true;
   }
@@ -2639,12 +2615,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(String[] a) {
     HashSet<String> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (hs.contains(a[i])) {
+      String n = a[i];
+      if (hs.add(n)) {
         return false;
       }
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
-      hs.add(a[i]);
     }
     return true;
   }
@@ -2662,12 +2636,10 @@ public final class ArraysPlume {
   public static boolean noDuplicates(Object[] a) {
     HashSet<Object> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      if (hs.contains(a[i])) {
+      Object n = a[i];
+      if (hs.add(n)) {
         return false;
       }
-      // Could be optimized not to add the last element,
-      // but that would make the code much less readable.
-      hs.add(a[i]);
     }
     return true;
   }
