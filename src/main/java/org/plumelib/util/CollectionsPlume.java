@@ -607,7 +607,7 @@ public final class CollectionsPlume {
       }
     }
 
-    return (results);
+    return results;
   }
 
   ///////////////////////////////////////////////////////////////////////////

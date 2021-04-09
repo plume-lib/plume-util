@@ -21,8 +21,10 @@ repositories {
 }
 
 dependencies {
-  // https://mvnrepository.com/artifact/org.plumelib/reflection-util
   implementation 'org.plumelib:reflection-util:1.0.3'
+  implementation 'it.unimi.dsi:fastutil-core:8.5.4'
+  implementation 'it.unimi.dsi:fastutil-extra:8.5.4'
+  implementation 'it.unimi.dsi:fastutil:8.5.4'
 
   errorprone 'com.google.errorprone:error_prone_core:2.6.0'
 
