@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.RandomAccess;
 import java.util.Set;
 import java.util.StringJoiner;
 import org.checkerframework.checker.index.qual.IndexFor;
@@ -2434,131 +2435,229 @@ public final class ArraysPlume {
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a contains duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
-   * @return true iff a does not contain duplicate elements
+   * @return true iff a contains duplicate elements
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(boolean[] a) {
+  public static boolean hasDuplicates(boolean[] a) {
     HashSet<Boolean> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Boolean n = Boolean.valueOf(a[i]);
-      if (hs.add(n)) {
-        return false;
+      Boolean elt = Boolean.valueOf(a[i]);
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @Pure
+  public static boolean noDuplicates(boolean[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(byte[] a) {
+  public static boolean hasDuplicates(byte[] a) {
     HashSet<Byte> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Byte n = a[i];
-      if (hs.add(n)) {
-        return false;
+      Byte elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @Pure
+  public static boolean noDuplicates(byte[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(char[] a) {
+  public static boolean hasDuplicates(char[] a) {
     HashSet<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Character n = a[i];
-      if (hs.add(n)) {
-        return false;
+      Character elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @Pure
+  public static boolean noDuplicates(char[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(float[] a) {
+  public static boolean hasDuplicates(float[] a) {
     HashSet<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Float n = a[i];
-      if (hs.add(n)) {
-        return false;
+      Float elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @Pure
+  public static boolean noDuplicates(float[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(short[] a) {
+  public static boolean hasDuplicates(short[] a) {
     HashSet<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Short n = a[i];
-      if (hs.add(n)) {
-        return false;
+      Short elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(int[] a) {
-    HashSet<Integer> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      Integer n = a[i];
-      if (hs.add(n)) {
-        return false;
-      }
-    }
-    return true;
+  public static boolean noDuplicates(short[] a) {
+    return !hasDuplicates(a);
   }
 
+  /**
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
+  @Pure
+  public static boolean hasDuplicates(int[] a) {
+    HashSet<Integer> hs = new HashSet<>();
+    for (int i = 0; i < a.length; i++) {
+      Integer elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true iff a does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a does not contain duplicate elements
+   */
+  @Pure
+  public static boolean noDuplicates(int[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff a contains duplicate elements. Equality checking uses {@link Double#equals}.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
+  @Pure
+  public static boolean hasDuplicates(double[] a) {
+    HashSet<Double> hs = new HashSet<>();
+    for (int i = 0; i < a.length; i++) {
+      Double elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
+      }
+    }
+    return false;
+  }
   /**
    * Return true iff a does not contain duplicate elements. Equality checking uses {@link
    * Double#equals}.
@@ -2568,102 +2667,145 @@ public final class ArraysPlume {
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean noDuplicates(double[] a) {
-    HashSet<Double> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      Double n = a[i];
-      if (hs.add(n)) {
-        return false;
-      }
-    }
-    return true;
+    return !hasDuplicates(a);
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a contains duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
-   * @return true iff a does not contain duplicate elements
+   * @return true iff a contains duplicate elements
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(long[] a) {
+  public static boolean hasDuplicates(long[] a) {
     HashSet<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Long n = a[i];
-      if (hs.add(n)) {
-        return false;
+      Long elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
+  @Pure
+  public static boolean noDuplicates(long[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(String[] a) {
+  public static boolean hasDuplicates(String[] a) {
     HashSet<String> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      String n = a[i];
-      if (hs.add(n)) {
-        return false;
+      String elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param a an array
    * @return true iff a does not contain duplicate elements
    */
-  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean noDuplicates(Object[] a) {
-    HashSet<Object> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      Object n = a[i];
-      if (hs.add(n)) {
-        return false;
-      }
-    }
-    return true;
+  public static boolean noDuplicates(String[] a) {
+    return !hasDuplicates(a);
   }
 
   /**
-   * Return true iff a does not contain duplicate elements.
+   * Returns true iff a contains duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a contains duplicate elements
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
+  @Pure
+  public static boolean hasDuplicates(Object[] a) {
+    HashSet<Object> hs = new HashSet<>();
+    for (int i = 0; i < a.length; i++) {
+      Object elt = a[i];
+      if (!hs.add(elt)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true iff a does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param a an array
+   * @return true iff a does not contain duplicate elements
+   */
+  @Pure
+  public static boolean noDuplicates(Object[] a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Return true iff the list does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param <T> the type of the elements
    * @param a a list
    * @return true iff a does not contain duplicate elements
+   * @deprecated use {@link CollectionsPlume#noDuplicates}
    */
+  @Deprecated // 2021-04-09
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
-    HashSet<T> hs = new HashSet<>();
-    for (int i = 0; i < a.size(); i++) {
-      T elt = a.get(i);
-      if (!hs.add(elt)) {
-        return false;
+    if (a instanceof RandomAccess) {
+      HashSet<T> hs = new HashSet<>();
+      for (int i = 0; i < a.size(); i++) {
+        T elt = a.get(i);
+        if (!hs.add(elt)) {
+          return false;
+        }
       }
+      return true;
+    } else {
+      HashSet<T> hs = new HashSet<>();
+      for (T elt : a) {
+        if (!hs.add(elt)) {
+          return false;
+        }
+      }
+      return true;
     }
-    return true;
   }
 
   ///////////////////////////////////////////////////////////////////////////
