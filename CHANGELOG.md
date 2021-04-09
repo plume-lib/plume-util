@@ -1,5 +1,11 @@
 # Plume-Util change log
 
+## 1.5.2 (forthcoming)
+
+- New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
+- Renamed methods (the old versions still work but are deprecated):
+   - `ArraysPlume.noDuplicates(List)` to `ColletionsPlume.noDuplicates`
+
 ## 1.5.1 (2021-03-28)
 
 - Expand the applicability of `CollectionsPlume.mapList` and `transform`
