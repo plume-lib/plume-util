@@ -1039,12 +1039,7 @@ public final class CollectionsPlume {
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
     Integer old = m.get(key);
-    Integer newTotal;
-    if (old == null) {
-      newTotal = count;
-    } else {
-      newTotal = old.intValue() + count;
-    }
+    Integer newTotal = (old == null) ? count : old.intValue() + count;
     return m.put(key, newTotal);
   }
 
