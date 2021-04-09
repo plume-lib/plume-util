@@ -2445,10 +2445,9 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(boolean[] a) {
-    HashSet<Boolean> hs = new HashSet<>();
+    BooleanSet hs = new BooleanSet();
     for (int i = 0; i < a.length; i++) {
-      Boolean elt = Boolean.valueOf(a[i]);
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2479,10 +2478,9 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(byte[] a) {
-    HashSet<Byte> hs = new HashSet<>();
+    ByteSet hs = new ByteSet();
     for (int i = 0; i < a.length; i++) {
-      Byte elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2515,8 +2513,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(char[] a) {
     HashSet<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Character elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2549,8 +2546,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(float[] a) {
     HashSet<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Float elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2583,8 +2579,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(short[] a) {
     HashSet<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Short elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2617,8 +2612,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(int[] a) {
     HashSet<Integer> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Integer elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2651,8 +2645,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(double[] a) {
     HashSet<Double> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Double elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2685,8 +2678,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(long[] a) {
     HashSet<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Long elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2719,8 +2711,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(String[] a) {
     HashSet<String> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      String elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
@@ -2753,8 +2744,7 @@ public final class ArraysPlume {
   public static boolean hasDuplicates(Object[] a) {
     HashSet<Object> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
-      Object elt = a[i];
-      if (!hs.add(elt)) {
+      if (!hs.add(a[i])) {
         return true;
       }
     }
