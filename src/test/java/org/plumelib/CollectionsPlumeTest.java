@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -272,18 +273,34 @@ public final class CollectionsPlumeTest {
   List<Integer> l1123 = Arrays.asList(1, 1, 2, 3);
   List<Integer> l1233 = Arrays.asList(1, 2, 3, 3);
 
+  @SuppressWarnings("JdkObsolete") // test of List that does not implement RandomAccess
+  @Test
+  public void test_hasDuplicates() {
+    assertFalse(CollectionsPlume.hasDuplicates(l123));
+    assertTrue(CollectionsPlume.hasDuplicates(l123123));
+    assertTrue(CollectionsPlume.hasDuplicates(l12223));
+    assertTrue(CollectionsPlume.hasDuplicates(l1123));
+    assertTrue(CollectionsPlume.hasDuplicates(l1233));
+
+    assertFalse(CollectionsPlume.hasDuplicates(new LinkedList<>(l123)));
+    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l123123)));
+    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l12223)));
+    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l1123)));
+    assertTrue(CollectionsPlume.hasDuplicates(new LinkedList<>(l1233)));
+  }
+
   @SuppressWarnings("ArrayEquals")
   @Test
-  public void testWithoutDuplicates() {
+  public void test_withoutDuplicates() {
 
     // public static List sortList (List l, Comparator c)
     // public static <T> List<T> withoutDuplicates(List<T> l) {
 
-    assertTrue(CollectionsPlume.withoutDuplicates(l123).equals(l123));
-    assertTrue(CollectionsPlume.withoutDuplicates(l123123).equals(l123));
-    assertTrue(CollectionsPlume.withoutDuplicates(l12223).equals(l123));
-    assertTrue(CollectionsPlume.withoutDuplicates(l1123).equals(l123));
-    assertTrue(CollectionsPlume.withoutDuplicates(l1233).equals(l123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicates(l123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicates(l123123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicates(l12223));
+    assertEquals(l123, CollectionsPlume.withoutDuplicates(l1123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicates(l1233));
   }
 
   @Test

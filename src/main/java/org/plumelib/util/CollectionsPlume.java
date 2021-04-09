@@ -63,6 +63,50 @@ public final class CollectionsPlume {
   }
 
   /**
+   * Return true iff the list does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param <T> the type of the elements
+   * @param a a list
+   * @return true iff a does not contain duplicate elements
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
+  @Pure
+  public static <T> boolean hasDuplicates(List<T> a) {
+    HashSet<T> hs = new HashSet<>();
+    if (a instanceof RandomAccess) {
+      for (int i = 0; i < a.size(); i++) {
+        T elt = a.get(i);
+        if (!hs.add(elt)) {
+          return true;
+        }
+      }
+    } else {
+      for (T elt : a) {
+        if (!hs.add(elt)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Return true iff the list does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param <T> the type of the elements
+   * @param a a list
+   * @return true iff a does not contain duplicate elements
+   */
+  @Pure
+  public static <T> boolean noDuplicates(List<T> a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
    * Return a copy of the list with duplicates removed. Retains the original order.
    *
    * @param <T> type of elements of the list
