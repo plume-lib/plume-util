@@ -620,7 +620,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Return true iff files have the same contents.
+   * Returns true iff files have the same contents.
    *
    * @param file1 first file to compare
    * @param file2 second file to compare
@@ -632,7 +632,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Return true iff the files have the same contents.
+   * Returns true iff the files have the same contents.
    *
    * @param file1 first file to compare
    * @param file2 second file to compare
@@ -846,7 +846,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Return a string version of the filename that can be used in Java source. On Windows, the file
+   * Returns a string version of the filename that can be used in Java source. On Windows, the file
    * will return a backslash-separated string. Since backslash is an escape character, it must be
    * quoted itself inside the string.
    *
@@ -996,7 +996,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Return a String containing all the characters from the input stream.
+   * Returns a String containing all the characters from the input stream.
    *
    * @param is input stream to read
    * @return a String containing all the characters from the input stream

@@ -1,9 +1,11 @@
 package org.plumelib.util;
 
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LessThan;
@@ -566,7 +568,7 @@ public final class MathPlume {
   ///
 
   /**
-   * Return the greatest common divisor of the two arguments.
+   * Returns the greatest common divisor of the two arguments.
    *
    * @param a first operand
    * @param b second operand
@@ -591,7 +593,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the greatest common divisor of the elements of int array a.
+   * Returns the greatest common divisor of the elements of int array a.
    *
    * @param a array of operands
    * @return greatest common divisor of the elements of a
@@ -613,7 +615,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the gcd (greatest common divisor) of the differences between the elements of int array
+   * Returns the gcd (greatest common divisor) of the differences between the elements of int array
    * a.
    *
    * @param a array of operands
@@ -638,7 +640,7 @@ public final class MathPlume {
   /// gcd -- version for manipulating long (rather than int) values
 
   /**
-   * Return the greatest common divisor of the two arguments.
+   * Returns the greatest common divisor of the two arguments.
    *
    * @param a first operand
    * @param b second operand
@@ -663,7 +665,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the greatest common divisor of the elements of long array a.
+   * Returns the greatest common divisor of the elements of long array a.
    *
    * @param a array of operands
    * @return greatest common divisor of the elements of a
@@ -685,7 +687,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the gcd (greatest common divisor) of the differences between the elements of long array
+   * Returns the gcd (greatest common divisor) of the differences between the elements of long array
    * a.
    *
    * @param a array of operands
@@ -708,7 +710,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the greatest common divisor of the two arguments.
+   * Returns the greatest common divisor of the two arguments.
    *
    * @param a first operand
    * @param b second operand
@@ -742,7 +744,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the greatest common divisor of the elements of double array a.
+   * Returns the greatest common divisor of the elements of double array a.
    *
    * @param a array of operands
    * @return greatest common divisor of the elements of a
@@ -764,7 +766,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return the gcd (greatest common divisor) of the differences between the elements of double
+   * Returns the gcd (greatest common divisor) of the differences between the elements of double
    * array a.
    *
    * @param a array of operands
@@ -791,7 +793,7 @@ public final class MathPlume {
   ///
 
   /**
-   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
+   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
    * {@code modNonnegative} rather than {@code modPositive}.
    *
    * @param x value to be modded
@@ -808,7 +810,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
+   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
    *
    * @param x value to be modded
    * @param y modulus
@@ -832,7 +834,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead). Also, return null if the array is less than 3
    * elements long.
@@ -903,7 +905,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
@@ -1030,7 +1032,7 @@ public final class MathPlume {
   /// modulus for long (as opposed to int) values
 
   /**
-   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
+   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
    * {@code modNonnegative} rather than {@code modPositive}.
    *
    * @param x value to be modded
@@ -1047,7 +1049,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
+   * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}.
    *
    * @param x value to be modded
    * @param y modulus
@@ -1071,7 +1073,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead). Also, return null if the array is less than 3
    * elements long.
@@ -1142,7 +1144,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
+   * Returns an array of two integers (r,m) such that each number in NUMS is equal to r (mod m). The
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
@@ -1271,7 +1273,7 @@ public final class MathPlume {
   ///
 
   /**
-   * Return an array containing all the numbers <b>not</b> in its argument array (which must be
+   * Returns an array containing all the numbers <b>not</b> in its argument array (which must be
    * non-empty) but in the argument's range; that is, bigger than its argument's minimum value and
    * smaller than its argument's maximum value. The result contains no duplicates and is in order.
    *
@@ -1288,7 +1290,7 @@ public final class MathPlume {
     int min = nums[0];
     int max = nums[nums.length - 1];
     int sizeEstimate = max - min + 1 - nums.length;
-    List<Integer> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
+    IntList resultList = new IntArrayList(sizeEstimate < 1 ? 1 : sizeEstimate);
     int val = min;
     for (int i = 0; i < nums.length; i++) {
       while (val < nums[i]) {
@@ -1299,11 +1301,7 @@ public final class MathPlume {
         val++;
       }
     }
-    int[] resultArray = new int[resultList.size()];
-    for (int i = 0; i < resultArray.length; i++) {
-      resultArray[i] = resultList.get(i).intValue();
-    }
-    return resultArray;
+    return resultList.toArray(new int[resultList.size()]);
   }
 
   /**
@@ -1454,7 +1452,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are. Returns null if the input array has 0 length.
    *
    * @param nums the list of operands
@@ -1518,7 +1516,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are.
    *
    * @param nums the list of operands
@@ -1531,7 +1529,7 @@ public final class MathPlume {
   // Old, slightly less efficient implementation that uses the version of
   // missingNumbers that returns an array instead of an Iterator.
   // /**
-  //  * Return a tuple of (r,m) where no number in NUMS is equal to r (mod
+  //  * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod
   //  * m) but all missing numbers in their range are.
   //  */
   // public static int @Nullable @ArrayLen(2) [] nonmodulusStrict(int[] nums) {
@@ -1549,7 +1547,7 @@ public final class MathPlume {
   // }
 
   /**
-   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
+   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
    * NUMS, at least one is equal to every non-r remainder. The modulus is chosen as small as
    * possible, but no greater than half the range of the input numbers (else null is returned).
    *
@@ -1601,7 +1599,7 @@ public final class MathPlume {
   /// non-modulus for long (as opposed to int) values
 
   /**
-   * Return an array containing all the numbers <b>not</b> in its argument array (which must be
+   * Returns an array containing all the numbers <b>not</b> in its argument array (which must be
    * non-empty) but in the argument's range; that is, bigger than its argument's minimum value and
    * smaller than its argument's maximum value. The result contains no duplicates and is in order.
    *
@@ -1618,7 +1616,7 @@ public final class MathPlume {
     long min = nums[0];
     long max = nums[nums.length - 1];
     int sizeEstimate = ((int) (max - min + 1 - nums.length));
-    List<Long> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
+    LongList resultList = new LongArrayList(sizeEstimate < 1 ? 1 : sizeEstimate);
     long val = min;
     for (int i = 0; i < nums.length; i++) {
       while (val < nums[i]) {
@@ -1629,11 +1627,7 @@ public final class MathPlume {
         val++;
       }
     }
-    long[] resultArray = new long[resultList.size()];
-    for (int i = 0; i < resultArray.length; i++) {
-      resultArray[i] = resultList.get(i).longValue();
-    }
-    return resultArray;
+    return resultList.toArray(new long[resultList.size()]);
   }
 
   /**
@@ -1785,7 +1779,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are. Returns null if the input array has 0 length.
    *
    * @param nums the list of operands
@@ -1849,7 +1843,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
+   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but all missing numbers
    * in their range are.
    *
    * @param nums the list of operands
@@ -1862,7 +1856,7 @@ public final class MathPlume {
   // Old, slightly less efficient implementation that uses the version of
   // missingNumbers that returns an array instead of an Iterator.
   // /**
-  //  * Return a tuple of (r,m) where no number in NUMS is equal to r (mod
+  //  * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod
   //  * m) but all missing numbers in their range are.
   //  */
   // public static long @Nullable @ArrayLen(2) [] nonmodulusStrict(long[] nums) {
@@ -1880,7 +1874,7 @@ public final class MathPlume {
   // }
 
   /**
-   * Return a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
+   * Returns a tuple of (r,m) where no number in NUMS is equal to r (mod m) but for every number in
    * NUMS, at least one is equal to every non-r remainder. The modulus is chosen as small as
    * possible, but no greater than half the range of the input numbers (else null is returned).
    *

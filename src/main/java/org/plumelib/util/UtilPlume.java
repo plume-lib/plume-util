@@ -584,7 +584,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the contents of the file, as a list of strings, one per line. The lines do not include
+   * Returns the contents of the file, as a list of strings, one per line. The lines do not include
    * any line termination characters.
    *
    * @param filename the file whose contents to return
@@ -663,7 +663,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return true iff files have the same contents.
+   * Returns true iff files have the same contents.
    *
    * @param file1 first file to compare
    * @param file2 second file to compare
@@ -677,7 +677,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return true iff the files have the same contents.
+   * Returns true iff the files have the same contents.
    *
    * @param file1 first file to compare
    * @param file2 second file to compare
@@ -908,7 +908,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a string version of the filename that can be used in Java source. On Windows, the file
+   * Returns a string version of the filename that can be used in Java source. On Windows, the file
    * will return a backslash separated string. Since backslash is an escape character, it must be
    * quoted itself inside the string.
    *
@@ -1057,7 +1057,7 @@ public final class UtilPlume {
   ///
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1068,7 +1068,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1092,7 +1092,7 @@ public final class UtilPlume {
   // I should document that, or deprecate this section of the file.
 
   /**
-   * Return a hash of the arguments. Note that this differs from the result of {@link
+   * Returns a hash of the arguments. Note that this differs from the result of {@link
    * Double#hashCode()}.
    *
    * @param x value to be hashed
@@ -1105,7 +1105,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1118,7 +1118,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1132,7 +1132,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @return a hash of the arguments
@@ -1146,7 +1146,7 @@ public final class UtilPlume {
   // Don't define hash with int args; use the long versions instead.
 
   /**
-   * Return a hash of the arguments. Note that this differs from the result of {@link
+   * Returns a hash of the arguments. Note that this differs from the result of {@link
    * Long#hashCode()}. A problem with {@link Long#hashCode()} is that it maps -1 and 0 to the same
    * value, 0.
    *
@@ -1165,7 +1165,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1178,7 +1178,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1192,7 +1192,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @return a hash of the arguments
@@ -1204,7 +1204,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @return a hash of the arguments
@@ -1216,7 +1216,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1229,7 +1229,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @param b value to be hashed
@@ -1243,7 +1243,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a hash of the arguments.
+   * Returns a hash of the arguments.
    *
    * @param a value to be hashed
    * @return a hash of the arguments
@@ -1447,7 +1447,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a String containing all the characters from the input stream.
+   * Returns a String containing all the characters from the input stream.
    *
    * @param is input stream to read
    * @return a String containing all the characters from the input stream
@@ -1485,7 +1485,7 @@ public final class UtilPlume {
   ///
 
   /**
-   * Return a new string which is the text of target with all instances of oldStr replaced by
+   * Returns a new string which is the text of target with all instances of oldStr replaced by
    * newStr.
    *
    * @param target the string to do replacement in
@@ -1569,7 +1569,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the printed represenation of a value, with each line prefixed by another string.
+   * Returns the printed represenation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
@@ -1582,7 +1582,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the printed represenation of a value, with each line (except the first) prefixed by
+   * Returns the printed represenation of a value, with each line (except the first) prefixed by
    * another string.
    *
    * @param prefix the prefix to place before each line
@@ -1600,7 +1600,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the printed representation of a value, with line indented by {@code indent} spaces.
+   * Returns the printed representation of a value, with line indented by {@code indent} spaces.
    *
    * @param indent the number of spaces to indent
    * @param o the value whose printed representation string to increase indentation of
@@ -1618,7 +1618,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the printed representation of a value, with each line (except the first) indented by
+   * Returns the printed representation of a value, with each line (except the first) indented by
    * {@code indent} spaces.
    *
    * @param indent the number of spaces to indent
@@ -1637,7 +1637,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return an array of Strings representing the characters between successive instances of the
+   * Returns an array of Strings representing the characters between successive instances of the
    * delimiter character. Always returns an array of length at least 1 (it might contain only the
    * empty string).
    *
@@ -1664,7 +1664,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return an array of Strings representing the characters between successive instances of the
+   * Returns an array of Strings representing the characters between successive instances of the
    * delimiter String. Always returns an array of length at least 1 (it might contain only the empty
    * string), which takes a regular expression whereas this method takes a string.
    *
@@ -1696,7 +1696,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return an array of Strings, one for each line in the argument. Always returns an array of
+   * Returns an array of Strings, one for each line in the argument. Always returns an array of
    * length at least 1 (it might contain only the empty string). All common line separators (cr, lf,
    * cr-lf, or lf-cr) are supported. Note that a string that ends with a line separator will return
    * an empty string as the last element of the array.
@@ -2277,7 +2277,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
    * with "ch", "s", "sh", or "x".
    *
    * @param n count of nouns
@@ -2438,7 +2438,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the number of times the character appears in the string.
+   * Returns the number of times the character appears in the string.
    *
    * @param s string to search in
    * @param ch character to search for
@@ -2457,7 +2457,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the number of times the second string appears in the first.
+   * Returns the number of times the second string appears in the first.
    *
    * @param s string to search in
    * @param sub non-empty string to search for
@@ -2559,7 +2559,7 @@ public final class UtilPlume {
   ///
 
   /**
-   * Return a ArrayList of the Strings returned by {@link
+   * Returns a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String,boolean)} with the given arguments.
    *
    * <p>The static type is {@code ArrayList<Object>} because StringTokenizer extends {@code
@@ -2578,7 +2578,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a ArrayList of the Strings returned by {@link
+   * Returns a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -2592,7 +2592,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a ArrayList of the Strings returned by {@link
+   * Returns a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -2664,7 +2664,7 @@ public final class UtilPlume {
   ///
 
   /**
-   * Return a String representation of the backtrace of the given Throwable. To see a backtrace at
+   * Returns a String representation of the backtrace of the given Throwable. To see a backtrace at
    * the the current location, do {@code backtrace(new Throwable())}.
    *
    * @param t the Throwable to obtain a backtrace of
@@ -2677,7 +2677,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return a String representation of the stack trace (the backtrace) of the given Throwable. For a
+   * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For a
    * stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
    *
    * @param t the Throwable to obtain a stack trace of

@@ -131,7 +131,7 @@ public class LimitedSizeSet<T extends @Nullable @MustCall Object>
   }
 
   /**
-   * Return true if this set contains the given element.
+   * Returns true if this set contains the given element.
    *
    * @param elt the element whose membership to test
    * @return true if this set contains {@code elt}

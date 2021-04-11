@@ -13,7 +13,7 @@ plugins {
   id("net.ltgt.errorprone") version "2.0.1"
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.5.18'
+  id 'org.checkerframework' version '0.5.19'
 }
 
 repositories {
@@ -21,8 +21,10 @@ repositories {
 }
 
 dependencies {
-  // https://mvnrepository.com/artifact/org.plumelib/reflection-util
   implementation 'org.plumelib:reflection-util:1.0.3'
+  implementation 'it.unimi.dsi:fastutil-core:8.5.4'
+  implementation 'it.unimi.dsi:fastutil-extra:8.5.4'
+  implementation 'it.unimi.dsi:fastutil:8.5.4'
 
   errorprone 'com.google.errorprone:error_prone_core:2.6.0'
 
