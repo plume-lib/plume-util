@@ -1678,8 +1678,10 @@ public final class ArraysPlume {
   /**
    * A wrapper around a list or an array (or null). Avoids code duplication for arrays and lists, at
    * the cost of object construction and method calls.
+   *
+   * @param <T> the type of array or list elements
    */
-  private static class ListOrArray<T> {
+  private static class ListOrArray<T extends @Nullable @MustCall Object> {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
@@ -1847,7 +1849,8 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T> T[] concat(T @Nullable [] a, T @Nullable [] b) {
+  public static <T extends @Nullable @MustCall Object> T[] concat(
+      T @Nullable [] a, T @Nullable [] b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1860,7 +1863,8 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T> T[] concat(T @Nullable [] a, @Nullable List<T> b) {
+  public static <T extends @Nullable @MustCall Object> T[] concat(
+      T @Nullable [] a, @Nullable List<T> b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1873,7 +1877,8 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T> T[] concat(@Nullable List<T> a, T @Nullable [] b) {
+  public static <T extends @Nullable @MustCall Object> T[] concat(
+      @Nullable List<T> a, T @Nullable [] b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1885,7 +1890,8 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T> T[] concat(@Nullable List<T> a, @Nullable List<T> b) {
+  public static <T extends @Nullable @MustCall Object> T[] concat(
+      @Nullable List<T> a, @Nullable List<T> b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1897,7 +1903,8 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  private static <T> T[] concat(ListOrArray<T> a, ListOrArray<T> b) {
+  private static <T extends @Nullable @MustCall Object> T[] concat(
+      ListOrArray<T> a, ListOrArray<T> b) {
     if (a.isNull() && b.isNull()) {
       @SuppressWarnings("unchecked")
       T[] result = (T[]) new Object[0];
