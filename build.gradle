@@ -69,8 +69,8 @@ tasks.withType(JavaCompile).configureEach {
 apply plugin: 'org.checkerframework'
 
 dependencies {
-    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.11'
-    implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.11'
+    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.12'
+    implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.12'
 }
 checkerFramework {
   checkers = [
