@@ -116,7 +116,7 @@ public final class StringsPlume {
   ///
 
   /**
-   * Return the printed represenation of a value, with each line prefixed by another string.
+   * Returns the printed represenation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
@@ -128,7 +128,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return the printed represenation of a value, with each line (except the first) prefixed by
+   * Returns the printed represenation of a value, with each line (except the first) prefixed by
    * another string.
    *
    * @param prefix the prefix to place before each line
@@ -145,7 +145,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return the printed representation of a value, with line indented by {@code indent} spaces.
+   * Returns the printed representation of a value, with line indented by {@code indent} spaces.
    *
    * @param indent the number of spaces to indent
    * @param o the value whose printed representation string to increase indentation of
@@ -162,7 +162,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return the printed representation of a value, with each line (except the first) indented by
+   * Returns the printed representation of a value, with each line (except the first) indented by
    * {@code indent} spaces.
    *
    * @param indent the number of spaces to indent
@@ -184,7 +184,7 @@ public final class StringsPlume {
   ///
 
   /**
-   * Return an array of Strings, one for each line in the argument. Always returns an array of
+   * Returns an array of Strings, one for each line in the argument. Always returns an array of
    * length at least 1 (it might contain only the empty string). All common line separators (cr, lf,
    * cr-lf, or lf-cr) are supported. Note that a string that ends with a line separator will return
    * an empty string as the last element of the array.
@@ -926,7 +926,7 @@ public final class StringsPlume {
   ///
 
   /**
-   * Return a ArrayList of the Strings returned by {@link
+   * Returns a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String,boolean)} with the given arguments.
    *
    * <p>The static type is {@code ArrayList<Object>} because StringTokenizer extends {@code
@@ -948,7 +948,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return a ArrayList of the Strings returned by {@link
+   * Returns a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -965,7 +965,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return a ArrayList of the Strings returned by {@link
+   * Returns a ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -1143,7 +1143,7 @@ public final class StringsPlume {
   ///
 
   /**
-   * Return either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
    * with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous letter is a
    * consonant.
    *
@@ -1208,7 +1208,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return the number of times the character appears in the string.
+   * Returns the number of times the character appears in the string.
    *
    * @param s string to search in
    * @param ch character to search for
@@ -1227,7 +1227,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Return the number of times the second string appears in the first.
+   * Returns the number of times the second string appears in the first.
    *
    * @param s string to search in
    * @param sub non-empty string to search for

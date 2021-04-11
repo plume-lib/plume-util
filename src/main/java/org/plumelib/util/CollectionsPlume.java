@@ -49,7 +49,7 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Return the sorted version of the list. Does not alter the list. Simply calls {@code
+   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
    * Collections.sort(List<T>, Comparator<? super T>)}.
    *
    * @return a sorted version of the list
@@ -64,7 +64,51 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return a copy of the list with duplicates removed. Retains the original order.
+   * Returns true iff the list does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param <T> the type of the elements
+   * @param a a list
+   * @return true iff a does not contain duplicate elements
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
+  @Pure
+  public static <T> boolean hasDuplicates(List<T> a) {
+    HashSet<T> hs = new HashSet<>();
+    if (a instanceof RandomAccess) {
+      for (int i = 0; i < a.size(); i++) {
+        T elt = a.get(i);
+        if (!hs.add(elt)) {
+          return true;
+        }
+      }
+    } else {
+      for (T elt : a) {
+        if (!hs.add(elt)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true iff the list does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param <T> the type of the elements
+   * @param a a list
+   * @return true iff a does not contain duplicate elements
+   */
+  @Pure
+  public static <T> boolean noDuplicates(List<T> a) {
+    return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns a copy of the list with duplicates removed. Retains the original order.
    *
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
@@ -270,6 +314,10 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
+   * This method is just like {@link #transform}, but with the arguments in the other order.
+   *
+   * <p>To perform replacement in place, see {@code List.replaceAll}.
+   *
    * @param <FROM> the type of elements of the given iterable
    * @param <TO> the type of elements of the result list
    * @param f a function
@@ -341,7 +389,8 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.transform;</pre>
    *
-   * This method is just like {@link #mapList}, but with the arguments in the other order.
+   * This method is just like {@link #mapList}, but with the arguments in the other order. To
+   * perform replacement in place, see {@code List.replaceAll}.
    *
    * @param <FROM> the type of elements of the given collection
    * @param <TO> the type of elements of the result list
@@ -395,7 +444,7 @@ public final class CollectionsPlume {
    * Concatenates a list and an element into a new list.
    *
    * @param <T> the type of the list elements
-   * @param list the list
+   * @param list the list; is not modified by this method
    * @param lastElt the new last elemeent
    * @return a new list containing the list elements and the last element, in that order
    */
@@ -559,7 +608,7 @@ public final class CollectionsPlume {
       }
     }
 
-    return (results);
+    return results;
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -858,7 +907,7 @@ public final class CollectionsPlume {
     }
 
     /**
-     * Return the first element of the iterator that was used to construct this. This value is not
+     * Returns the first element of the iterator that was used to construct this. This value is not
      * part of this iterator (unless the original iterator would have returned it multiple times).
      *
      * @return the first element of the iterator that was used to construct this
@@ -875,7 +924,7 @@ public final class CollectionsPlume {
     }
 
     /**
-     * Return the last element of the iterator that was used to construct this. This value is not
+     * Returns the last element of the iterator that was used to construct this. This value is not
      * part of this iterator (unless the original iterator would have returned it multiple times).
      *
      * <p>Throws an error unless the RemoveFirstAndLastIterator has already been iterated all the
@@ -899,7 +948,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Return a List containing numElts randomly chosen elements from the iterator, or all the
+   * Returns a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
@@ -916,7 +965,7 @@ public final class CollectionsPlume {
   private static Random r = new Random();
 
   /**
-   * Return a List containing numElts randomly chosen elements from the iterator, or all the
+   * Returns a List containing numElts randomly chosen elements from the iterator, or all the
    * elements of the iterator if there are fewer. It examines every element of the iterator, but
    * does not keep them all in memory.
    *
@@ -992,12 +1041,7 @@ public final class CollectionsPlume {
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
     Integer old = m.get(key);
-    Integer newTotal;
-    if (old == null) {
-      newTotal = count;
-    } else {
-      newTotal = old.intValue() + count;
-    }
+    Integer newTotal = (old == null) ? count : old.intValue() + count;
     return m.put(key, newTotal);
   }
 
@@ -1075,7 +1119,7 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Return the object in this set that is equal to key. The Set abstraction doesn't provide this;
+   * Returns the object in this set that is equal to key. The Set abstraction doesn't provide this;
    * it only provides "contains". Returns null if the argument is null, or if it isn't in the set.
    *
    * @param set a set in which to look up the value

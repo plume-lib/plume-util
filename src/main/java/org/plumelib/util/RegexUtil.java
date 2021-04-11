@@ -321,7 +321,7 @@ public final class RegexUtil {
   }
 
   /**
-   * Return the count of groups in the argument.
+   * Returns the count of groups in the argument.
    *
    * @param p pattern whose groups to count
    * @return the count of groups in the argument

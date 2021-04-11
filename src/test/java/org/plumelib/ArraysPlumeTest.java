@@ -898,7 +898,7 @@ public final class ArraysPlumeTest {
         == false;
   }
 
-  /** Return true if the toString of each element in elts equals the corresponding string. */
+  /** Returns true if the toString of each element in elts equals the corresponding string. */
   private static boolean equalElementStrings(List<?> elts, List<String> strings) {
     if (elts.size() != strings.size()) {
       return false;
