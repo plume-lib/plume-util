@@ -92,6 +92,7 @@ checkerFramework {
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
     '-AcheckMustCall',
+    // '-ACalledMethodsChecker_disableReturnsReceiver' would also work.
     '-AdisableReturnsReceiver', // because this code does not use fluent APIs
   ]
 }
