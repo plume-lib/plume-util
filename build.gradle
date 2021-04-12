@@ -84,7 +84,6 @@ checkerFramework {
     'org.checkerframework.checker.regex.RegexChecker',
     'org.checkerframework.checker.signature.SignatureChecker',
     'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
-    'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker',
   ]
   extraJavacArgs = [
     '-Werror',
@@ -103,7 +102,10 @@ if (project.hasProperty("cfLocal")) {
     testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
   }
+} else {
+  checkerFramework.checkers += 'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker'
 }
+
 
 /// Javadoc
 
