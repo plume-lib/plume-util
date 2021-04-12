@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
@@ -36,7 +37,8 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 // T need not extend Comparable<T>, because a comparator can be passed in.
 @SuppressWarnings("deprecation") // an acceptable use of the Pair class
-public class OrderedPairIterator<T> implements java.util.Iterator<Pair<@Nullable T, @Nullable T>> {
+public class OrderedPairIterator<T extends @Nullable @MustCall Object>
+    implements java.util.Iterator<Pair<@Nullable T, @Nullable T>> {
 
   /** The iterator for first elements of pairs. */
   Iterator<T> itor1;
