@@ -71,7 +71,6 @@ tasks.withType(JavaCompile).configureEach {
 apply plugin: 'org.checkerframework'
 
 dependencies {
-    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.12'
     implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.12'
 }
 checkerFramework {
@@ -84,15 +83,12 @@ checkerFramework {
     'org.checkerframework.checker.regex.RegexChecker',
     'org.checkerframework.checker.signature.SignatureChecker',
     'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
-    'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker',
   ]
   extraJavacArgs = [
     '-Werror',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
-    '-AcheckMustCall',
-    '-AdisableReturnsReceiver', // because this code does not use fluent APIs
   ]
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
@@ -103,7 +99,18 @@ if (project.hasProperty("cfLocal")) {
     testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
   }
+} else {
+  dependencies {
+    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.12'
+  }
+  checkerFramework.checkers += 'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker'
+  checkerFramework.extraJavacArgs += [
+    '-AcheckMustCall',
+    // '-ACalledMethodsChecker_disableReturnsReceiver' would also work.
+    '-AdisableReturnsReceiver', // because this code does not use fluent APIs
+  ]
 }
+
 
 /// Javadoc
 
