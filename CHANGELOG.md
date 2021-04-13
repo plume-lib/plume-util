@@ -2,6 +2,7 @@
 
 ## 1.5.2 (forthcoming)
 
+- New class `ListMap` is an efficient representation for very small maps
 - New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
 - Renamed methods (the old versions still work but are deprecated):
    - `ArraysPlume.noDuplicates(List)` to `ColletionsPlume.noDuplicates`
@@ -66,7 +67,7 @@
 
 ## 1.3.0
 
-- New class `ToStringComparator`
+- New class `ToStringComparator` compares two objects according to the result of `toString`
 - New methods:
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
