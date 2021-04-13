@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
   "rawtypes",
   "unchecked",
   "deprecation",
+  "nullness", // contains intentional misuses; exceptions are caught in catch statments
   "BoxedPrimitiveConstructor",
   "BoxedPrimitiveEquality",
   "CatchAndPrintStackTrace",
@@ -543,6 +544,7 @@ public class ListMapTestApache {
       this.i = i;
     }
 
+    @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call")
     @Override
     protected Object clone() throws CloneNotSupportedException {
       return new MockClonable(i);
@@ -566,6 +568,7 @@ public class ListMapTestApache {
   }
 
   private static class MockEntry implements Map.Entry {
+    @SuppressWarnings("keyfor:purity.not.deterministic.object.creation")
     @Override
     public Object getKey() {
       return new Integer(1);
