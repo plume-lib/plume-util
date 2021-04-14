@@ -35,6 +35,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.lock.qual.GuardedBy;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,6 +47,8 @@ import org.junit.jupiter.api.Test;
   "unchecked",
   "deprecation",
   "nullness", // contains intentional misuses; exceptions are caught in catch statments
+  "index", // contains intentional misuses; exceptions are caught in catch statments
+  "interning", // ad hoc equality tests
   "BoxedPrimitiveConstructor",
   "BoxedPrimitiveEquality",
   "CatchAndPrintStackTrace",
@@ -55,24 +60,24 @@ import org.junit.jupiter.api.Test;
 public class ListMapTestApache {
   static class MockMap extends AbstractMap {
     @Override
-    public Set entrySet() {
+    public Set entrySet(@GuardSatisfied MockMap this) {
       return Collections.EMPTY_SET;
     }
 
     @Override
-    public int size() {
+    public int size(@GuardSatisfied MockMap this) {
       return 0;
     }
   }
 
   private static class MockMapNull extends AbstractMap {
     @Override
-    public Set entrySet() {
+    public Set entrySet(@GuardSatisfied MockMapNull this) {
       return null;
     }
 
     @Override
-    public int size() {
+    public int size(@GuardSatisfied MockMapNull this) {
       return 10;
     }
   }
@@ -107,10 +112,10 @@ public class ListMapTestApache {
     }
   }
 
-  ListMap hm;
+  @Nullable ListMap hm;
   static final int hmSize = 100;
-  Object[] objArray;
-  Object[] objArray2;
+  Object @Nullable [] objArray;
+  Object @Nullable [] objArray2;
   /** java.util.ListMap#ListMap() */
   @Test
   public void test_Constructor() {
@@ -391,7 +396,7 @@ public class ListMapTestApache {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(@GuardSatisfied MyKey this) {
       return 0;
     }
   }
@@ -521,12 +526,12 @@ public class ListMapTestApache {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode(@GuardSatisfied ReusableKey this) {
       return key;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@GuardSatisfied ReusableKey this, @GuardSatisfied Object o) {
       if (o == this) {
         return true;
       }
@@ -546,7 +551,7 @@ public class ListMapTestApache {
 
     @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call")
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Object clone(@GuardSatisfied MockClonable this) throws CloneNotSupportedException {
       return new MockClonable(i);
     }
   }
@@ -568,19 +573,19 @@ public class ListMapTestApache {
   }
 
   private static class MockEntry implements Map.Entry {
-    @SuppressWarnings("keyfor:purity.not.deterministic.object.creation")
+    @SuppressWarnings("allcheckers:purity.not.deterministic.object.creation")
     @Override
-    public Object getKey() {
+    public Object getKey(@GuardSatisfied MockEntry this) {
       return new Integer(1);
     }
 
     @Override
-    public Object getValue() {
+    public Object getValue(@GuardSatisfied MockEntry this) {
       return "ONE";
     }
 
     @Override
-    public Object setValue(Object object) {
+    public Object setValue(@GuardSatisfied MockEntry this, Object object) {
       return null;
     }
   }
@@ -611,13 +616,17 @@ public class ListMapTestApache {
     objArray2 = null;
   }
 
-  static class SubMap<K, V> extends ListMap<K, V> {
+  static class SubMap<K extends @GuardedBy Object, V extends @GuardedBy Object>
+      extends ListMap<K, V> {
     public SubMap(Map<? extends K, ? extends V> m) {
       super(m);
     }
 
+    @SuppressWarnings({
+      "lock", // ListMap is not yet annotated for the Lock Checker
+    })
     @Override
-    public V put(K key, V value) {
+    public V put(@GuardSatisfied SubMap<K, V> this, K key, V value) {
       throw new UnsupportedOperationException();
     }
   }

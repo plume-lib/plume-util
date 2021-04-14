@@ -15,7 +15,16 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A map backed by a list. It permits null keys and values.
@@ -29,7 +38,10 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
  */
-@SuppressWarnings("allcheckers") // TEMPORARY
+@SuppressWarnings({
+  "lock", // not yet annotated for the Lock Checker
+  "keyfor" // https://tinyurl.com/cfissue/4558
+})
 public class ListMap<K, V> extends AbstractMap<K, V> {
 
   // An alternate  internal representation should be a list of
@@ -57,6 +69,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @param initialCapacity the initial capacity
    * @throws IllegalArgumentException if the initial capacity is negative
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
+  @SideEffectFree
   public ListMap(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -65,6 +79,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** Constructs an empty {@code ListMap} with the default initial capacity. */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
+  @SideEffectFree
   public ListMap() {
     this.keys = new ArrayList<>();
     this.values = new ArrayList<>();
@@ -76,6 +92,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @param keys the keys
    * @param values the values
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
+  @SideEffectFree
   private ListMap(ArrayList<K> keys, ArrayList<V> values) {
     this.keys = keys;
     this.values = values;
@@ -87,6 +105,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @param m the map whose mappings are to be placed in this map
    * @throws NullPointerException if the specified map is null
    */
+  @SuppressWarnings({
+    "allcheckers:purity", // initializes `this`
+    "lock:method.guarantee.violated", // initializes `this`
+    "nullness:method.invocation.invalid", // inference failure
+  })
+  @SideEffectFree
   public ListMap(Map<? extends K, ? extends V> m) {
     int size = m.size();
     this.keys = new ArrayList<>(size);
@@ -103,8 +127,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @param key the key
    * @param value the value
    */
-  @SuppressWarnings("InvalidParam") // Error Prone stupidly warns about field `keys`
-  private void put(int index, K key, V value) {
+  @SuppressWarnings({
+    "InvalidParam", // Error Prone stupidly warns about field `keys`
+    "keyfor:contracts.postcondition.not.satisfied" // insertion in keys array suffices
+  })
+  @EnsuresKeyFor(value = "#2", map = "this")
+  private void put(ListMap<K, V> this, @GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       keys.add(key);
       values.add(value);
@@ -119,7 +147,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @param index the index of the mapping to remove
    * @return true if this map was modified
    */
-  private boolean removeIndex(int index) {
+  private boolean removeIndex(@GTENegativeOne int index) {
     if (index != -1) {
       keys.remove(index);
       values.remove(index);
@@ -131,23 +159,29 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   // Query Operations
 
+  @Pure
   @Override
-  public int size() {
+  public @NonNegative int size() {
     return keys.size();
   }
 
+  @Pure
   @Override
   public boolean isEmpty() {
     return keys.isEmpty();
   }
 
+  @Pure
   @Override
-  public boolean containsKey(Object key) {
+  @SuppressWarnings(
+      "keyfor:contracts.conditional.postcondition.not.satisfied") // delegate test to `keys` field
+  public boolean containsKey(@Nullable Object key) {
     return keys.contains(key);
   }
 
+  @Pure
   @Override
-  public boolean containsValue(Object value) {
+  public boolean containsValue(@Nullable Object value) {
     return values.contains(value);
   }
 
@@ -158,13 +192,15 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @param value the value
    * @return true if this map contains the given mapping.
    */
-  private boolean containsEntry(Object key, Object value) {
+  @Pure
+  private boolean containsEntry(@Nullable Object key, @Nullable Object value) {
     int index = keys.indexOf(key);
     return index != -1 && Objects.equals(value, values.get(index));
   }
 
+  @Pure
   @Override
-  public V get(Object key) {
+  public @Nullable V get(@Nullable Object key) {
     int index = keys.indexOf(key);
     if (index == -1) {
       return null;
@@ -176,7 +212,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   // Modification Operations
 
   @Override
-  public V put(K key, V value) {
+  public @Nullable V put(K key, V value) {
     int index = keys.indexOf(key);
     V currentValue = (index == -1) ? null : values.get(index);
     put(index, key, value);
@@ -184,7 +220,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V remove(Object key) {
+  public @Nullable V remove(@Nullable Object key) {
     int index = keys.indexOf(key);
     // cannot use removeIndex because it has the wrong return type
     if (index == -1) {
@@ -216,12 +252,14 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   // Views
 
   /** A view of the keys. */
-  @MonotonicNonNull Set<K> keySet = null;
+  @MonotonicNonNull Set<@KeyFor("this") K> keySet = null;
 
   // Behavior is undefined if the map is changed while the sets are being iterated through, so these
   // implementations can assume there are no concurrent side effects.
+  @Pure
+  @SuppressWarnings("allcheckers:purity") // update cache
   @Override
-  public Set<K> keySet() {
+  public Set<@KeyFor("this") K> keySet() {
     if (keySet == null) {
       keySet = new KeySet();
     }
@@ -229,9 +267,10 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** Represents a view of the keys. */
-  final class KeySet extends AbstractSet<K> {
+  final class KeySet extends AbstractSet<@KeyFor("this") K> {
+    @Pure
     @Override
-    public final int size() {
+    public final @NonNegative int size() {
       return ListMap.this.size();
     }
 
@@ -241,10 +280,11 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    public final Iterator<K> iterator() {
+    public final Iterator<@KeyFor("this") K> iterator() {
       return new KeyIterator();
     }
 
+    @Pure
     @Override
     public final boolean contains(Object o) {
       return containsKey(o);
@@ -256,13 +296,17 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
       return removeIndex(index);
     }
 
+    @SuppressWarnings("nullness:return.type.incompatible") // polymorphism problem
+    @SideEffectFree
     @Override
     public Object[] toArray() {
-      return keys.toArray(new Object[size()]);
+      return keys.toArray(new Object[keys.size()]);
     }
 
+    @SuppressWarnings("nullness:override.param.invalid") // Nullness Checker special-cases toArray
+    @SideEffectFree
     @Override
-    public <T> T[] toArray(T[] a) {
+    public <T> @Nullable T[] toArray(@PolyNull T[] a) {
       return keys.toArray(a);
     }
 
@@ -275,6 +319,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   /** The view of the values. */
   @MonotonicNonNull Collection<V> valuesCollection = null;
 
+  @Pure
+  @SuppressWarnings("allcheckers:purity")
   @Override
   public Collection<V> values() {
     if (valuesCollection == null) {
@@ -285,8 +331,9 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   /** Represents a view of the values. */
   final class Values extends AbstractCollection<V> {
+    @Pure
     @Override
-    public final int size() {
+    public final @NonNegative int size() {
       return ListMap.this.size();
     }
 
@@ -300,18 +347,23 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
       return new ValueIterator();
     }
 
+    @Pure
     @Override
     public final boolean contains(Object o) {
       return containsValue(o);
     }
 
+    @SuppressWarnings("nullness:override.return.invalid") // polymorphism problem
+    @SideEffectFree
     @Override
-    public Object[] toArray() {
-      return values.toArray(new Object[size()]);
+    public @Nullable Object[] toArray() {
+      return values.toArray(new Object[values.size()]);
     }
 
+    @SuppressWarnings("nullness:override.param.invalid") // Nullness Checker special-cases toArray
+    @SideEffectFree
     @Override
-    public <T> T[] toArray(T[] a) {
+    public <T> @Nullable T[] toArray(@PolyNull T[] a) {
       return values.toArray(a);
     }
 
@@ -322,10 +374,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** The view of the entries. */
-  @MonotonicNonNull Set<Map.Entry<K, V>> entrySet = null;
+  @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
 
+  @SuppressWarnings("allcheckers:purity")
+  @Pure
   @Override
-  public Set<Map.Entry<K, V>> entrySet() {
+  public Set<Map.Entry<@KeyFor("this") K, V>> entrySet() {
     if (entrySet == null) {
       entrySet = new EntrySet();
     }
@@ -333,9 +387,10 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** Represents a view of the entries. */
-  final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
+  final class EntrySet extends AbstractSet<Map.Entry<@KeyFor("this") K, V>> {
+    @Pure
     @Override
-    public final int size() {
+    public final @NonNegative int size() {
       return ListMap.this.size();
     }
 
@@ -345,10 +400,11 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    public final Iterator<Map.Entry<K, V>> iterator() {
+    public final Iterator<Map.Entry<@KeyFor("ListMap.this") K, V>> iterator() {
       return new EntryIterator();
     }
 
+    @Pure
     @Override
     public final boolean contains(Object o) {
       if (!(o instanceof Map.Entry)) {
@@ -373,8 +429,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
     // toArray() and toArray(T[] a) are inherited.
 
+    @SuppressWarnings({
+      "interning:argument.type.incompatible", // TODO: investigate later
+      "signature:argument.type.incompatible", // TODO: investigate later
+    })
     @Override
-    public final void forEach(Consumer<? super Map.Entry<K, V>> action) {
+    public final void forEach(Consumer<? super Map.Entry<@KeyFor("ListMap.this") K, V>> action) {
       int size = size();
       for (int index = 0; index < size; index++) {
         action.accept(new Entry(index));
@@ -392,12 +452,14 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   /** An iterator over the ListMap. */
   abstract class ListMapIterator {
     /** The first unread index; the index of the next value to return. */
-    int index;
+    @NonNegative int index;
     // This should be a modification count.
     /** The size, for fail-fast. */
-    int size;
+    @NonNegative int size;
 
     /** Creates a new ListMapIterator. */
+    @SuppressWarnings("allcheckers:purity") // initializes `this`
+    @SideEffectFree
     ListMapIterator() {
       index = 0;
       size = size();
@@ -408,6 +470,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
      *
      * @return true if this has another element
      */
+    @Pure
     public final boolean hasNext() {
       return index < size();
     }
@@ -428,9 +491,13 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** An iterator over the keys. */
-  final class KeyIterator extends ListMapIterator implements Iterator<K> {
+  final class KeyIterator extends ListMapIterator implements Iterator<@KeyFor("this") K> {
+    /** Creates a new KeyIterator. */
+    @SideEffectFree
+    KeyIterator() {}
+
     @Override
-    public final K next() {
+    public final @KeyFor("ListMap.this") K next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -440,6 +507,10 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   /** An iterator over the values. */
   final class ValueIterator extends ListMapIterator implements Iterator<V> {
+    /** Creates a new ValueIterator. */
+    @SideEffectFree
+    ValueIterator() {}
+
     @Override
     public final V next() {
       if (!hasNext()) {
@@ -451,6 +522,10 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   /** An iterator over the entries. */
   final class EntryIterator extends ListMapIterator implements Iterator<Map.Entry<K, V>> {
+    /** Creates a new EntryIterator. */
+    @SideEffectFree
+    EntryIterator() {}
+
     @Override
     public final Map.Entry<K, V> next() {
       if (!hasNext()) {
@@ -478,22 +553,26 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   /** An entrySet() entry. Tracks the containing list and the index. */
   final class Entry implements Map.Entry<K, V> {
     /** The index. */
-    int index;
+    @NonNegative int index;
 
     /**
      * Creates a new map entry.
      *
      * @param index the index
      */
-    public Entry(int index) {
+    @SuppressWarnings("allcheckers:purity") // initializes `this`
+    @Pure
+    public Entry(@NonNegative int index) {
       this.index = index;
     }
 
+    @Pure
     @Override
     public K getKey() {
       return keys.get(index);
     }
 
+    @Pure
     @Override
     public V getValue() {
       return values.get(index);
@@ -509,20 +588,22 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
      *
      * @return the ListMap associated with this entry
      */
+    @Pure
     private ListMap<K, V> theListMap() {
       return ListMap.this;
     }
 
     // Per the specification of Map.Entry, this does not compare the underlying list and index.
+    @Pure
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) {
         return true;
       }
       if (o instanceof ListMap.Entry) {
         @SuppressWarnings("unchecked")
         Entry otherEntry = (Entry) o;
-        @SuppressWarnings("ReferenceEquality") // fast special case test
+        @SuppressWarnings({"interning:not.interned", "ReferenceEquality"}) // fast special case test
         boolean result =
             this.index == otherEntry.index && this.theListMap() == otherEntry.theListMap();
         if (result) {
@@ -539,6 +620,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
       return false;
     }
 
+    @Pure
     @Override
     public int hashCode() {
       return Objects.hash(getKey(), getValue());
@@ -551,6 +633,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   //   public boolean equals(Object other) equals() is inherited
 
+  @Pure
   @Override
   public int hashCode() {
     return Objects.hash(keys, values);
@@ -558,8 +641,9 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   // Defaultable methods
 
+  @SideEffectFree
   @Override
-  public V getOrDefault(Object key, V defaultValue) {
+  public V getOrDefault(@Nullable Object key, V defaultValue) {
     int index = keys.indexOf(key);
     if (index != -1) {
       return values.get(index);
@@ -615,7 +699,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V putIfAbsent(K key, V value) {
+  public @Nullable V putIfAbsent(K key, V value) {
     int index = keys.indexOf(key);
     V currentValue = index == -1 ? null : values.get(index);
     put(index, key, value);
@@ -623,7 +707,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public boolean remove(Object key, Object value) {
+  public boolean remove(@Nullable Object key, @Nullable Object value) {
     int index = keys.indexOf(key);
     if (index == -1) {
       return false;
@@ -651,7 +735,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V replace(K key, V value) {
+  public @Nullable V replace(K key, V value) {
     int index = keys.indexOf(key);
     if (index == -1) {
       return null;
@@ -662,7 +746,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+  public @Nullable V computeIfAbsent(
+      K key, Function<? super K, ? extends @Nullable V> mappingFunction) {
     Objects.requireNonNull(mappingFunction);
     int index = keys.indexOf(key);
     V currentValue;
@@ -680,8 +765,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V computeIfPresent(
-      K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+  public @Nullable V computeIfPresent(
+      K key, BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     int index = keys.indexOf(key);
     if (index == -1) {
@@ -702,7 +787,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+  public @Nullable V compute(
+      K key, BiFunction<? super K, ? super @Nullable V, ? extends @Nullable V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     int index = keys.indexOf(key);
     V oldValue = (index == -1) ? null : values.get(index);
@@ -717,7 +803,8 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+  public @Nullable V merge(
+      K key, @NonNull V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     Objects.requireNonNull(value);
     int index = keys.indexOf(key);
@@ -737,6 +824,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    * @return a copy of this
    */
   @SuppressWarnings("unchecked")
+  @SideEffectFree
   @Override
   public ListMap<K, V> clone() {
     return new ListMap<>(new ArrayList<>(keys), new ArrayList<>(values));
