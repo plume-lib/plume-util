@@ -1600,7 +1600,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns the printed representation of a value, with line indented by {@code indent} spaces.
+   * Returns the printed representation of a value, with each line indented by {@code indent}
+   * spaces.
    *
    * @param indent the number of spaces to indent
    * @param o the value whose printed representation string to increase indentation of
@@ -2277,8 +2278,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
-   * with "ch", "s", "sh", or "x".
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words
+   * ending with "ch", "s", "sh", or "x".
    *
    * @param n count of nouns
    * @param noun word being counted
@@ -2677,8 +2678,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For a
-   * stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
+   * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For
+   * a stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
    *
    * @param t the Throwable to obtain a stack trace of
    * @return a String representation of the stack trace of the given Throwable
