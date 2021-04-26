@@ -2,6 +2,7 @@
 
 ## 1.5.2 (forthcoming)
 
+- New methods `CollectionsPlume.mapCapacity` to compute the size for a newly-allocated map.
 - New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
 - Renamed methods (the old versions still work but are deprecated):
    - `ArraysPlume.noDuplicates(List)` to `ColletionsPlume.noDuplicates`
