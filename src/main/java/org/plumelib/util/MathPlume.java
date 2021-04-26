@@ -1,11 +1,9 @@
 package org.plumelib.util;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.LessThan;
@@ -1290,7 +1288,7 @@ public final class MathPlume {
     int min = nums[0];
     int max = nums[nums.length - 1];
     int sizeEstimate = max - min + 1 - nums.length;
-    IntList resultList = new IntArrayList(sizeEstimate < 1 ? 1 : sizeEstimate);
+    List<Integer> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
     int val = min;
     for (int i = 0; i < nums.length; i++) {
       while (val < nums[i]) {
@@ -1301,7 +1299,11 @@ public final class MathPlume {
         val++;
       }
     }
-    return resultList.toArray(new int[resultList.size()]);
+    int[] resultArray = new int[resultList.size()];
+    for (int i = 0; i < resultArray.length; i++) {
+      resultArray[i] = resultList.get(i).intValue();
+    }
+    return resultArray;
   }
 
   /**
@@ -1616,7 +1618,7 @@ public final class MathPlume {
     long min = nums[0];
     long max = nums[nums.length - 1];
     int sizeEstimate = ((int) (max - min + 1 - nums.length));
-    LongList resultList = new LongArrayList(sizeEstimate < 1 ? 1 : sizeEstimate);
+    List<Long> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
     long val = min;
     for (int i = 0; i < nums.length; i++) {
       while (val < nums[i]) {
@@ -1627,7 +1629,12 @@ public final class MathPlume {
         val++;
       }
     }
-    return resultList.toArray(new long[resultList.size()]);
+
+    long[] resultArray = new long[resultList.size()];
+    for (int i = 0; i < resultArray.length; i++) {
+      resultArray[i] = resultList.get(i).longValue();
+    }
+    return resultArray;
   }
 
   /**

@@ -145,7 +145,8 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the printed representation of a value, with line indented by {@code indent} spaces.
+   * Returns the printed representation of a value, with each line indented by {@code indent}
+   * spaces.
    *
    * @param indent the number of spaces to indent
    * @param o the value whose printed representation string to increase indentation of
@@ -1143,9 +1144,9 @@ public final class StringsPlume {
   ///
 
   /**
-   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
-   * with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous letter is a
-   * consonant.
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words
+   * ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y" when the previous
+   * letter is a consonant.
    *
    * @param n count of nouns
    * @param noun word being counted; must not be the empty string

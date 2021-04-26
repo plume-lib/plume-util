@@ -2,22 +2,6 @@
 
 package org.plumelib.util;
 
-import it.unimi.dsi.fastutil.booleans.BooleanOpenHashSet;
-import it.unimi.dsi.fastutil.booleans.BooleanSet;
-import it.unimi.dsi.fastutil.bytes.ByteOpenHashSet;
-import it.unimi.dsi.fastutil.bytes.ByteSet;
-import it.unimi.dsi.fastutil.chars.CharOpenHashSet;
-import it.unimi.dsi.fastutil.chars.CharSet;
-import it.unimi.dsi.fastutil.doubles.DoubleOpenHashSet;
-import it.unimi.dsi.fastutil.doubles.DoubleSet;
-import it.unimi.dsi.fastutil.floats.FloatOpenHashSet;
-import it.unimi.dsi.fastutil.floats.FloatSet;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
-import it.unimi.dsi.fastutil.shorts.ShortSet;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
@@ -40,7 +24,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -531,7 +514,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @Nullable @MustCall Object> int indexOf(T[] a, @Nullable Object elt) {
+  public static <T extends @Nullable Object> int indexOf(T[] a, @Nullable Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -557,7 +540,7 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @Nullable @MustCall Object> int indexOf(
+  public static <T extends @Nullable Object> int indexOf(
       T[] a,
       @Nullable Object elt,
       @IndexFor("#1") int minindex,
@@ -1681,7 +1664,7 @@ public final class ArraysPlume {
    *
    * @param <T> the type of array or list elements
    */
-  private static class ListOrArray<T extends @Nullable @MustCall Object> {
+  private static class ListOrArray<T extends @Nullable Object> {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
@@ -1796,7 +1779,7 @@ public final class ArraysPlume {
      *
      * @return the least upper bound of the classes of the elements of this
      */
-    @Nullable Class<? extends @Nullable @MustCall Object> leastUpperBound() {
+    @Nullable Class<? extends @Nullable Object> leastUpperBound() {
       if (theArray != null) {
         return ReflectionPlume.leastUpperBound(theArray);
       } else if (theList != null) {
@@ -1849,8 +1832,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable @MustCall Object> T[] concat(
-      T @Nullable [] a, T @Nullable [] b) {
+  public static <T extends @Nullable Object> T[] concat(T @Nullable [] a, T @Nullable [] b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1863,8 +1845,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable @MustCall Object> T[] concat(
-      T @Nullable [] a, @Nullable List<T> b) {
+  public static <T extends @Nullable Object> T[] concat(T @Nullable [] a, @Nullable List<T> b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1877,8 +1858,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable @MustCall Object> T[] concat(
-      @Nullable List<T> a, T @Nullable [] b) {
+  public static <T extends @Nullable Object> T[] concat(@Nullable List<T> a, T @Nullable [] b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1890,8 +1870,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  public static <T extends @Nullable @MustCall Object> T[] concat(
-      @Nullable List<T> a, @Nullable List<T> b) {
+  public static <T extends @Nullable Object> T[] concat(@Nullable List<T> a, @Nullable List<T> b) {
     return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
   }
 
@@ -1903,8 +1882,7 @@ public final class ArraysPlume {
    * @param b the second sequence to concatenate
    * @return an array that concatenates the arguments
    */
-  private static <T extends @Nullable @MustCall Object> T[] concat(
-      ListOrArray<T> a, ListOrArray<T> b) {
+  private static <T extends @Nullable Object> T[] concat(ListOrArray<T> a, ListOrArray<T> b) {
     if (a.isNull() && b.isNull()) {
       @SuppressWarnings("unchecked")
       T[] result = (T[]) new Object[0];
@@ -2469,7 +2447,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(boolean[] a) {
-    BooleanSet hs = new BooleanOpenHashSet();
+    Set<Boolean> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2502,7 +2480,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(byte[] a) {
-    ByteSet hs = new ByteOpenHashSet();
+    Set<Byte> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2535,7 +2513,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(char[] a) {
-    CharSet hs = new CharOpenHashSet();
+    Set<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2568,7 +2546,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(float[] a) {
-    FloatSet hs = new FloatOpenHashSet();
+    Set<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2601,7 +2579,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(short[] a) {
-    ShortSet hs = new ShortOpenHashSet();
+    Set<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2634,7 +2612,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(int[] a) {
-    IntSet hs = new IntOpenHashSet();
+    Set<Integer> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2667,7 +2645,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(double[] a) {
-    DoubleSet hs = new DoubleOpenHashSet();
+    Set<Double> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2700,7 +2678,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(long[] a) {
-    LongSet hs = new LongOpenHashSet();
+    Set<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2980,7 +2958,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(long[] smaller, long[] bigger) {
-    LongSet setBigger = new LongOpenHashSet();
+    Set<Long> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -3011,7 +2989,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(double[] smaller, double[] bigger) {
-    DoubleSet setBigger = new DoubleOpenHashSet();
+    Set<Double> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -3566,7 +3544,7 @@ public final class ArraysPlume {
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
-  public static boolean anyNull(List<? extends @Nullable @MustCall Object> a) {
+  public static boolean anyNull(List<? extends @Nullable Object> a) {
     if (a.size() == 0) {
       return false;
     }

@@ -31,12 +31,12 @@ public final class UtilPlumeTest {
       intersection.and(b2);
       int card = intersection.cardinality();
       for (int j = 0; j < 100; j++) {
-        assertTrue(UtilPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j));
+        assertTrue(CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j));
       }
       intersection.and(b3);
       card = intersection.cardinality();
       for (int j = 0; j < 100; j++) {
-        assertTrue(UtilPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j));
+        assertTrue(CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j));
       }
     }
   }

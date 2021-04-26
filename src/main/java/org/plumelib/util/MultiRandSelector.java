@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
-import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 // TODO: This does not use the Random value that is passed in.
@@ -27,7 +26,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <T> the type of elements to be selected among
  * @see RandomSelector
  */
-public class MultiRandSelector<T extends @Nullable @MustCall Object> {
+public class MultiRandSelector<T extends @Nullable Object> {
 
   /** Whether to toss a coin or select a given number of elements. */
   private boolean coinTossMode;

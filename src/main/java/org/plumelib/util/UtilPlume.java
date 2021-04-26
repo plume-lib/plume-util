@@ -73,7 +73,7 @@ public final class UtilPlume {
   private static final String lineSep = System.lineSeparator();
 
   ///////////////////////////////////////////////////////////////////////////
-  /// BitSet
+  /// BitSet (this section is deprecated in favor of CollectionsPlume)
   ///
 
   /**
@@ -84,7 +84,9 @@ public final class UtilPlume {
    * @param b the second BitSet to intersect
    * @param i the cardinality bound
    * @return true iff size(a intersect b) &ge; i
+   * @deprecated use CollectionsPlume.intersectionCardinalityAtLeast
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
@@ -120,7 +122,9 @@ public final class UtilPlume {
    * @param c the third BitSet to intersect
    * @param i the cardinality bound
    * @return true iff size(a intersect b intersect c) &ge; i
+   * @deprecated use CollectionsPlume.intersectionCardinalityAtLeast
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static boolean intersectionCardinalityAtLeast(
@@ -149,7 +153,9 @@ public final class UtilPlume {
    * @param a the first BitSet to intersect
    * @param b the second BitSet to intersect
    * @return size(a intersect b)
+   * @deprecated use CollectionsPlume.intersectionCardinality
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b) {
@@ -165,7 +171,9 @@ public final class UtilPlume {
    * @param b the second BitSet to intersect
    * @param c the third BitSet to intersect
    * @return size(a intersect b intersect c)
+   * @deprecated use CollectionsPlume.intersectionCardinality
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
@@ -1255,7 +1263,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Map (this section is deprecated and has been moved to StringsPlume)
+  /// Map (this section is deprecated in favor of StringsPlume)
   ///
 
   /**
@@ -1600,7 +1608,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns the printed representation of a value, with line indented by {@code indent} spaces.
+   * Returns the printed representation of a value, with each line indented by {@code indent}
+   * spaces.
    *
    * @param indent the number of spaces to indent
    * @param o the value whose printed representation string to increase indentation of
@@ -2277,8 +2286,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words ending
-   * with "ch", "s", "sh", or "x".
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words
+   * ending with "ch", "s", "sh", or "x".
    *
    * @param n count of nouns
    * @param noun word being counted
@@ -2677,8 +2686,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For a
-   * stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
+   * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For
+   * a stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
    *
    * @param t the Throwable to obtain a stack trace of
    * @return a String representation of the stack trace of the given Throwable
