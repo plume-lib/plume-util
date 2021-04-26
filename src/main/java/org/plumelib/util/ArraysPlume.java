@@ -2,22 +2,6 @@
 
 package org.plumelib.util;
 
-import it.unimi.dsi.fastutil.booleans.BooleanOpenHashSet;
-import it.unimi.dsi.fastutil.booleans.BooleanSet;
-import it.unimi.dsi.fastutil.bytes.ByteOpenHashSet;
-import it.unimi.dsi.fastutil.bytes.ByteSet;
-import it.unimi.dsi.fastutil.chars.CharOpenHashSet;
-import it.unimi.dsi.fastutil.chars.CharSet;
-import it.unimi.dsi.fastutil.doubles.DoubleOpenHashSet;
-import it.unimi.dsi.fastutil.doubles.DoubleSet;
-import it.unimi.dsi.fastutil.floats.FloatOpenHashSet;
-import it.unimi.dsi.fastutil.floats.FloatSet;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
-import it.unimi.dsi.fastutil.shorts.ShortSet;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
@@ -2463,7 +2447,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(boolean[] a) {
-    BooleanSet hs = new BooleanOpenHashSet();
+    Set<Boolean> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2496,7 +2480,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(byte[] a) {
-    ByteSet hs = new ByteOpenHashSet();
+    Set<Byte> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2529,7 +2513,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(char[] a) {
-    CharSet hs = new CharOpenHashSet();
+    Set<Character> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2562,7 +2546,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(float[] a) {
-    FloatSet hs = new FloatOpenHashSet();
+    Set<Float> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2595,7 +2579,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(short[] a) {
-    ShortSet hs = new ShortOpenHashSet();
+    Set<Short> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2628,7 +2612,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(int[] a) {
-    IntSet hs = new IntOpenHashSet();
+    Set<Integer> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2661,7 +2645,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(double[] a) {
-    DoubleSet hs = new DoubleOpenHashSet();
+    Set<Double> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2694,7 +2678,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(long[] a) {
-    LongSet hs = new LongOpenHashSet();
+    Set<Long> hs = new HashSet<>();
     for (int i = 0; i < a.length; i++) {
       if (!hs.add(a[i])) {
         return true;
@@ -2974,7 +2958,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(long[] smaller, long[] bigger) {
-    LongSet setBigger = new LongOpenHashSet();
+    Set<Long> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -3005,7 +2989,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean isSubset(double[] smaller, double[] bigger) {
-    DoubleSet setBigger = new DoubleOpenHashSet();
+    Set<Double> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
