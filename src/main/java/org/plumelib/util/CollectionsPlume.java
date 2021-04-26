@@ -5,6 +5,7 @@ package org.plumelib.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1180,5 +1181,108 @@ public final class CollectionsPlume {
       }
     }
     return null;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// BitSet
+  ///
+
+  /**
+   * Returns true if the cardinality of the intersection of the two BitSets is at least the given
+   * value.
+   *
+   * @param a the first BitSet to intersect
+   * @param b the second BitSet to intersect
+   * @param i the cardinality bound
+   * @return true iff size(a intersect b) &ge; i
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
+  @Pure
+  public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
+    // Here are three implementation strategies to determine the
+    // cardinality of the intersection:
+    // 1. a.clone().and(b).cardinality()
+    // 2. do the above, but copy only a subset of the bits initially -- enough
+    //    that it should exceed the given number -- and if that fails, do the
+    //    whole thing.  Unfortunately, bits.get(int, int) isn't optimized
+    //    for the case where the indices line up, so I'm not sure at what
+    //    point this approach begins to dominate #1.
+    // 3. iterate through both sets with nextSetBit()
+
+    int size = Math.min(a.length(), b.length());
+    if (size > 10 * i) {
+      // The size is more than 10 times the limit.  So first try processing
+      // just a subset of the bits (4 times the limit).
+      BitSet intersection = a.get(0, 4 * i);
+      intersection.and(b);
+      if (intersection.cardinality() >= i) {
+        return true;
+      }
+    }
+    return (intersectionCardinality(a, b) >= i);
+  }
+
+  /**
+   * Returns true if the cardinality of the intersection of the three BitSets is at least the given
+   * value.
+   *
+   * @param a the first BitSet to intersect
+   * @param b the second BitSet to intersect
+   * @param c the third BitSet to intersect
+   * @param i the cardinality bound
+   * @return true iff size(a intersect b intersect c) &ge; i
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
+  @Pure
+  public static boolean intersectionCardinalityAtLeast(
+      BitSet a, BitSet b, BitSet c, @NonNegative int i) {
+    // See comments in intersectionCardinalityAtLeast(BitSet, BitSet, int).
+    // This is a copy of that.
+
+    int size = Math.min(a.length(), b.length());
+    size = Math.min(size, c.length());
+    if (size > 10 * i) {
+      // The size is more than 10 times the limit.  So first try processing
+      // just a subset of the bits (4 times the limit).
+      BitSet intersection = a.get(0, 4 * i);
+      intersection.and(b);
+      intersection.and(c);
+      if (intersection.cardinality() >= i) {
+        return true;
+      }
+    }
+    return (intersectionCardinality(a, b, c) >= i);
+  }
+
+  /**
+   * Returns the cardinality of the intersection of the two BitSets.
+   *
+   * @param a the first BitSet to intersect
+   * @param b the second BitSet to intersect
+   * @return size(a intersect b)
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
+  @Pure
+  public static int intersectionCardinality(BitSet a, BitSet b) {
+    BitSet intersection = (BitSet) a.clone();
+    intersection.and(b);
+    return intersection.cardinality();
+  }
+
+  /**
+   * Returns the cardinality of the intersection of the three BitSets.
+   *
+   * @param a the first BitSet to intersect
+   * @param b the second BitSet to intersect
+   * @param c the third BitSet to intersect
+   * @return size(a intersect b intersect c)
+   */
+  @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
+  @Pure
+  public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
+    BitSet intersection = (BitSet) a.clone();
+    intersection.and(b);
+    intersection.and(c);
+    return intersection.cardinality();
   }
 }

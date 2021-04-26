@@ -73,7 +73,7 @@ public final class UtilPlume {
   private static final String lineSep = System.lineSeparator();
 
   ///////////////////////////////////////////////////////////////////////////
-  /// BitSet
+  /// BitSet (this section is deprecated in favor of CollectionsPlume)
   ///
 
   /**
@@ -84,7 +84,9 @@ public final class UtilPlume {
    * @param b the second BitSet to intersect
    * @param i the cardinality bound
    * @return true iff size(a intersect b) &ge; i
+   * @deprecated use CollectionsPlume.intersectionCardinalityAtLeast
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i) {
@@ -120,7 +122,9 @@ public final class UtilPlume {
    * @param c the third BitSet to intersect
    * @param i the cardinality bound
    * @return true iff size(a intersect b intersect c) &ge; i
+   * @deprecated use CollectionsPlume.intersectionCardinalityAtLeast
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static boolean intersectionCardinalityAtLeast(
@@ -149,7 +153,9 @@ public final class UtilPlume {
    * @param a the first BitSet to intersect
    * @param b the second BitSet to intersect
    * @return size(a intersect b)
+   * @deprecated use CollectionsPlume.intersectionCardinality
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b) {
@@ -165,7 +171,9 @@ public final class UtilPlume {
    * @param b the second BitSet to intersect
    * @param c the third BitSet to intersect
    * @return size(a intersect b intersect c)
+   * @deprecated use CollectionsPlume.intersectionCardinality
    */
+  @Deprecated // 2021-04-24
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
@@ -1255,7 +1263,7 @@ public final class UtilPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  /// Map (this section is deprecated and has been moved to StringsPlume)
+  /// Map (this section is deprecated in favor of StringsPlume)
   ///
 
   /**

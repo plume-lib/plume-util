@@ -6,6 +6,8 @@
 - New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
 - Renamed methods (the old versions still work but are deprecated):
    - `ArraysPlume.noDuplicates(List)` to `ColletionsPlume.noDuplicates`
+- Moved methods (the old versions still work but are deprecated):
+   - `UtilPlume.intersectionCardinality` and `intersectionCardinalityAtLeast` to `CollectionsPlume`
 
 ## 1.5.1 (2021-03-28)
 
@@ -15,7 +17,7 @@
 
 - New methods for writing possibly-compressed files:
    - `FilesPlume.newFileOutputStream` (3 overloads)
-   - `FilesPlume.newFileWritec` (5 overloads)
+   - `FilesPlume.newFileWriter` (5 overloads)
 - New methods:
    - `ArraysPlume`:
        - `append`: creates a new array with an element added to the end
