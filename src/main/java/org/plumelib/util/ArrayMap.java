@@ -98,7 +98,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   }
 
   /**
-   * Private constructor. Installs the given objects in this as its representation.
+   * Private constructor. Installs the given objects in this as its representation, without making
+   * defensive copies.
    *
    * @param keys the keys
    * @param values the values
@@ -137,7 +138,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   /**
    * Adds the (key, value) mapping to this.
    *
-   * @param index -1 or the index of {@code key} in {@code keys}
+   * @param index the index of {@code key} in {@code keys}; may be -1
    * @param key the key
    * @param value the value
    */
@@ -146,7 +147,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     "keyfor:contracts.postcondition.not.satisfied" // insertion in keys array suffices
   })
   @EnsuresKeyFor(value = "#2", map = "this")
-  private void put(ArrayMap<K, V> this, @GTENegativeOne int index, K key, V value) {
+  private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       keys.add(key);
       values.add(value);
@@ -206,7 +207,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
    *
    * @param key the key
    * @param value the value
-   * @return true if this map contains the given mapping.
+   * @return true if this map contains the given mapping
    */
   @Pure
   private boolean containsEntry(@Nullable Object key, @Nullable Object value) {
@@ -582,9 +583,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   // An alternate representation would be a triple of index, key, and value.
   //  * That would make Entry objects a bit larger (more allocation would be necessary, though the
   //    same *number* of objects), and would take a tiny bit more computation to create.
-  //  * That would make calling getKey and getValue slightly cheaper (a local lookup instead of
-  //    calling an ArrayList method), though in practice the implementation would probably compute
-  //    both ways and issue ConcurrentModificationException if the results differed.
+  //  * That would make calling getKey and getValue slightly cheaper if they are called multiple
+  //    times (a local lookup instead of calling an ArrayList method).
   //  * That would provide less surprising results for some illegal client code.  Removing from the
   //    entrySet iterator and then calling any entry method (getKey, getValue, setValue) has
   //    undefined behavior, but clients might try to do it.  This could issue
