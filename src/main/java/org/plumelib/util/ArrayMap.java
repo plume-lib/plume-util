@@ -30,10 +30,12 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * A map backed by a list. It permits null keys and values.
  *
  * <p>Compared to a HashMap or LinkedHashMap: For very small maps, this uses much less space, has
- * comparable or better performance, and (like a LinkedHashMap) is deterministic. For large maps,
- * this is significantly less performant.
+ * comparable performance, and (like a LinkedHashMap) is deterministic. For large maps, this is
+ * significantly less performant than other map implementations.
  *
- * <p>Compared to a TreeMap: This does not require defining a comparator. This isn't sorted.
+ * <p>Compared to a TreeMap: This uses somewhat less space, and it does not require defining a
+ * comparator. This isn't sorted. For large maps, this is significantly less performant than other
+ * map implementations.
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -44,22 +46,25 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 })
 public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
-  // An alternate  internal representation should be a list of
-  // Map.Entry objects (e.g., AbstractMap.SimpleEntry) instead of two arrays for lists and values.
-  // It would make some operations more expensive.
+  // An alternate internal representation would be a list of Map.Entry objects (e.g.,
+  // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  It would make some
+  // operations more expensive.
+
+  // An alternate internal representation would be two arrays, similar to the internal
+  // representation of ArrayList.  That would be slightly more performant, at the cost of increased
+  // implementation complexity.
 
   /** The keys. */
   private final ArrayList<K> keys;
   /** The values. */
   private final ArrayList<V> values;
 
-  // TODO: Maintain and check this.
   /**
-   * The number of times this HashMap has been structurally modified (a change to the list lengths
-   * due to adding or removing an element). This field is used to make iterators on Collection-views
-   * of the HashMap fail-fast.
+   * The number of times this HashMap has been modified (a change to the list lengths due to adding
+   * or removing an element; changing the value associated with a key does not count as a change).
+   * This field is used to make view iterators fail-fast.
    */
-  transient int modCount = 0;
+  transient int modificationCount = 0;
 
   // Constructors
 
@@ -69,7 +74,10 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
    * @param initialCapacity the initial capacity
    * @throws IllegalArgumentException if the initial capacity is negative
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
+    "allcheckers:purity.not.sideeffectfree.call" // JDK annotations will appear in CF 3.13.0
+  })
   @SideEffectFree
   public ArrayMap(int initialCapacity) {
     if (initialCapacity < 0)
@@ -79,7 +87,10 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** Constructs an empty {@code ArrayMap} with the default initial capacity. */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
+    "allcheckers:purity.not.sideeffectfree.call" // JDK annotations will appear in CF 3.13.0
+  })
   @SideEffectFree
   public ArrayMap() {
     this.keys = new ArrayList<>();
@@ -92,7 +103,10 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
    * @param keys the keys
    * @param values the values
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
+    "allcheckers:purity.not.sideeffectfree.call" // JDK annotations will appear in CF 3.13.0
+  })
   @SideEffectFree
   private ArrayMap(ArrayList<K> keys, ArrayList<V> values) {
     this.keys = keys;
@@ -136,6 +150,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     if (index == -1) {
       keys.add(key);
       values.add(value);
+      modificationCount++;
     } else {
       values.set(index, value);
     }
@@ -151,6 +166,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     if (index != -1) {
       keys.remove(index);
       values.remove(index);
+      modificationCount++;
       return true;
     } else {
       return false;
@@ -202,11 +218,18 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   @Override
   public @Nullable V get(@Nullable Object key) {
     int index = keys.indexOf(key);
-    if (index == -1) {
-      return null;
-    } else {
-      return values.get(index);
-    }
+    return getOrNull(index);
+  }
+
+  /**
+   * Returns the value at the given index, or null if the index is -1.
+   *
+   * @param index the index
+   * @return the value at the given index, or null if the index is -1
+   */
+  @Pure
+  private @Nullable V getOrNull(@GTENegativeOne int index) {
+    return (index == -1) ? null : values.get(index);
   }
 
   // Modification Operations
@@ -214,7 +237,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   @Override
   public @Nullable V put(K key, V value) {
     int index = keys.indexOf(key);
-    V currentValue = (index == -1) ? null : values.get(index);
+    V currentValue = getOrNull(index);
     put(index, key, value);
     return currentValue;
   }
@@ -245,6 +268,9 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
   @Override
   public void clear() {
+    if (size() != 0) {
+      modificationCount++;
+    }
     keys.clear();
     values.clear();
   }
@@ -312,7 +338,11 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
     @Override
     public final void forEach(Consumer<? super K> action) {
+      int oldModificationCount = modificationCount;
       keys.forEach(action);
+      if (oldModificationCount != modificationCount) {
+        throw new ConcurrentModificationException();
+      }
     }
   }
 
@@ -369,7 +399,11 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
     @Override
     public final void forEach(Consumer<? super V> action) {
+      int oldModificationCount = modificationCount;
       values.forEach(action);
+      if (oldModificationCount != modificationCount) {
+        throw new ConcurrentModificationException();
+      }
     }
   }
 
@@ -435,11 +469,11 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     })
     @Override
     public final void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
-      int size = size();
-      for (int index = 0; index < size; index++) {
+      int oldModificationCount = modificationCount;
+      for (int index = 0; index < size(); index++) {
         action.accept(new Entry(index));
       }
-      if (size != size()) { // it would be better to maintain a modification count
+      if (oldModificationCount != modificationCount) {
         throw new ConcurrentModificationException();
       }
     }
@@ -453,16 +487,18 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   abstract class ArrayMapIterator {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
-    // This should be a modification count.
-    /** The size, for fail-fast. */
-    @NonNegative int size;
+    /** True if remove() has been called since the last call to next(). */
+    boolean removed;
+    /** The modification count when the iterator is created, for fail-fast. */
+    int initialModificationCount;
 
     /** Creates a new ArrayMapIterator. */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
     ArrayMapIterator() {
       index = 0;
-      size = size();
+      removed = true; // can't remove until next() has been called
+      initialModificationCount = modificationCount;
     }
 
     /**
@@ -479,14 +515,19 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     // IllegalStateException.
     /** Removes the previously-returned element. */
     public final void remove() {
-      if (index == 0) {
+      if (removed) {
         throw new IllegalStateException();
       }
-      // WRONG TEST since this is allowed to change the size.
-      // if (size != size()) {
-      //   throw new ConcurrentModificationException();
-      // }
-      ArrayMap.this.removeIndex(--index);
+      if (initialModificationCount != modificationCount) {
+        throw new ConcurrentModificationException();
+      }
+      @SuppressWarnings(
+          "lowerbound:assignment.type.incompatible") // If removed==false, then index>0.
+      @NonNegative int newIndex = index - 1;
+      index = newIndex;
+      ArrayMap.this.removeIndex(index);
+      initialModificationCount = modificationCount;
+      removed = true;
     }
   }
 
@@ -501,6 +542,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
+      removed = false;
       return keys.get(index++);
     }
   }
@@ -516,6 +558,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
+      removed = false;
       return values.get(index++);
     }
   }
@@ -531,6 +574,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
+      removed = false;
       return new Entry(index++);
     }
   }
@@ -580,6 +624,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
     @Override
     public V setValue(V value) {
+      // Do not increment modificationCount.
       return values.set(index, value);
     }
 
@@ -655,6 +700,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     Objects.requireNonNull(action);
+    int oldModificationCount = modificationCount;
     int size = size();
     for (int index = 0; index < size; index++) {
       K k;
@@ -667,7 +713,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       }
       action.accept(k, v);
     }
-    if (size != size()) { // it would be better to maintain a modification count
+    if (oldModificationCount != modificationCount) {
       throw new ConcurrentModificationException();
     }
   }
@@ -675,6 +721,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
     Objects.requireNonNull(function);
+    int oldModificationCount = modificationCount;
     int size = size();
     for (int index = 0; index < size; index++) {
       K k;
@@ -689,11 +736,12 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
       try {
         values.set(index, v);
+        // Do not increment modificationCount.
       } catch (IndexOutOfBoundsException e) {
         throw new ConcurrentModificationException(e);
       }
     }
-    if (size != size()) { // it would be better to maintain a modification count
+    if (oldModificationCount != modificationCount) {
       throw new ConcurrentModificationException();
     }
   }
@@ -701,7 +749,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   @Override
   public @Nullable V putIfAbsent(K key, V value) {
     int index = keys.indexOf(key);
-    V currentValue = index == -1 ? null : values.get(index);
+    V currentValue = getOrNull(index);
     put(index, key, value);
     return currentValue;
   }
@@ -731,6 +779,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       return false;
     }
     values.set(index, newValue);
+    // Do not increment modificationCount.
     return true;
   }
 
@@ -742,6 +791,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     }
     V currentValue = values.get(index);
     values.set(index, value);
+    // Do not increment modificationCount.
     return currentValue;
   }
 
@@ -757,8 +807,12 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
         return currentValue;
       }
     }
-    V newValue;
-    if ((newValue = mappingFunction.apply(key)) != null) {
+    int oldModificationCount = modificationCount;
+    V newValue = mappingFunction.apply(key);
+    if (oldModificationCount != modificationCount) {
+      throw new ConcurrentModificationException();
+    }
+    if (newValue != null) {
       put(index, key, newValue);
     }
     return newValue;
@@ -776,9 +830,14 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     if (oldValue == null) {
       return null;
     }
+    int oldModificationCount = modificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
+    if (oldModificationCount != modificationCount) {
+      throw new ConcurrentModificationException();
+    }
     if (newValue != null) {
       values.set(index, newValue);
+      // Do not increment modificationCount.
       return newValue;
     } else {
       removeIndex(index);
@@ -787,12 +846,16 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public @Nullable V compute(
-      K key, BiFunction<? super K, ? super @Nullable V, ? extends @Nullable V> remappingFunction) {
+  public @PolyNull V compute(
+      K key, BiFunction<? super K, ? super @Nullable V, ? extends @PolyNull V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     int index = keys.indexOf(key);
-    V oldValue = (index == -1) ? null : values.get(index);
+    V oldValue = getOrNull(index);
+    int oldModificationCount = modificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
+    if (oldModificationCount != modificationCount) {
+      throw new ConcurrentModificationException();
+    }
     if (newValue == null) {
       removeIndex(index);
       return null;
@@ -803,13 +866,24 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public @Nullable V merge(
-      K key, @NonNull V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+  public @PolyNull V merge(
+      K key,
+      @NonNull V value,
+      BiFunction<? super V, ? super V, ? extends @PolyNull V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     Objects.requireNonNull(value);
     int index = keys.indexOf(key);
-    V oldValue = (index == -1) ? null : values.get(index);
-    V newValue = (oldValue == null) ? value : remappingFunction.apply(oldValue, value);
+    V oldValue = getOrNull(index);
+    int oldModificationCount = modificationCount;
+    @PolyNull V newValue;
+    if (oldValue == null) {
+      newValue = value;
+    } else {
+      newValue = remappingFunction.apply(oldValue, value);
+    }
+    if (oldModificationCount != modificationCount) {
+      throw new ConcurrentModificationException();
+    }
     if (newValue == null) {
       removeIndex(index);
     } else {
