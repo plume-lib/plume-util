@@ -2,7 +2,7 @@
 
 ## 1.5.2 (forthcoming)
 
-- New class `ListMap` is an efficient representation for very small maps
+- New class `ArrayMap` is an efficient representation for very small maps
 - New methods `CollectionsPlume.mapCapacity` to compute the size for a newly-allocated map.
 - New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
 - Renamed methods (the old versions still work but are deprecated):

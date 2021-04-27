@@ -35,7 +35,7 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("nullness") // Should be removed after CF 3.12.1 is released
-public final class ListMapTestNayuki {
+public final class ArrayMapTestNayuki {
 
   /* Utilities */
 
@@ -45,7 +45,7 @@ public final class ListMapTestNayuki {
 
   @Test
   public void testPut() {
-    ListMap<String, Integer> map = new ListMap<String, Integer>();
+    ArrayMap<String, Integer> map = new ArrayMap<String, Integer>();
     assertEquals(null, map.put("a", 9));
     assertEquals(null, map.put("b", 8));
     assertEquals(null, map.put("c", 7));
@@ -66,7 +66,7 @@ public final class ListMapTestNayuki {
 
   @Test
   public void testSize() {
-    ListMap<String, Integer> map = new ListMap<String, Integer>();
+    ArrayMap<String, Integer> map = new ArrayMap<String, Integer>();
     assertEquals(0, map.size());
     map.put("xy", 32);
     assertEquals(1, map.size());
@@ -82,7 +82,7 @@ public final class ListMapTestNayuki {
 
   @Test
   public void testMediumSimple() {
-    Map<String, Integer> map = new ListMap<String, Integer>();
+    Map<String, Integer> map = new ArrayMap<String, Integer>();
     for (int i = 0; i < 100; i++) {
       assertNull(map.put(Integer.toString(i), i));
       assertEquals(i + 1, map.size());
@@ -94,7 +94,7 @@ public final class ListMapTestNayuki {
   @Test
   public void testMediumSeesaw() {
     Map<String, Integer> map0 = new HashMap<String, Integer>();
-    ListMap<String, Integer> map1 = new ListMap<String, Integer>();
+    ArrayMap<String, Integer> map1 = new ArrayMap<String, Integer>();
     for (int i = 0; i < 30; i++) {
       // Generate random data
       int n = rand.nextInt(30);
@@ -129,7 +129,7 @@ public final class ListMapTestNayuki {
   @Test
   public void testLargeRandomly() {
     Map<String, Integer> map0 = new HashMap<String, Integer>();
-    ListMap<String, Integer> map1 = new ListMap<String, Integer>();
+    ArrayMap<String, Integer> map1 = new ArrayMap<String, Integer>();
     for (int i = 0; i < 1000; i++) {
       String key = Integer.toString(rand.nextInt(100000), 36);
       int op = rand.nextInt(10);
@@ -161,7 +161,7 @@ public final class ListMapTestNayuki {
 
       // Do insertions and removals
       Map<String, Integer> map0 = new HashMap<String, Integer>();
-      ListMap<String, Integer> map1 = new ListMap<String, Integer>();
+      ArrayMap<String, Integer> map1 = new ArrayMap<String, Integer>();
       for (int j = 0; j < n / 2; j++) {
         map0.put(keys[j], values[j]);
         map1.put(keys[j], values[j]);
@@ -192,7 +192,7 @@ public final class ListMapTestNayuki {
 
       // Do insertions and removals
       Map<String, Integer> map0 = new HashMap<String, Integer>();
-      ListMap<String, Integer> map1 = new ListMap<String, Integer>();
+      ArrayMap<String, Integer> map1 = new ArrayMap<String, Integer>();
       for (int j = 0; j < n / 2; j++) {
         map0.put(keys[j], values[j]);
         map1.put(keys[j], values[j]);

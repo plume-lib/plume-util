@@ -42,7 +42,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "keyfor" // https://tinyurl.com/cfissue/4558
 })
-public class ListMap<K, V> extends AbstractMap<K, V> {
+public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
   // An alternate  internal representation should be a list of
   // Map.Entry objects (e.g., AbstractMap.SimpleEntry) instead of two arrays for lists and values.
@@ -64,24 +64,24 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   // Constructors
 
   /**
-   * Constructs an empty {@code ListMap} with the specified initial capacity.
+   * Constructs an empty {@code ArrayMap} with the specified initial capacity.
    *
    * @param initialCapacity the initial capacity
    * @throws IllegalArgumentException if the initial capacity is negative
    */
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
   @SideEffectFree
-  public ListMap(int initialCapacity) {
+  public ArrayMap(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
     this.keys = new ArrayList<>(initialCapacity);
     this.values = new ArrayList<>(initialCapacity);
   }
 
-  /** Constructs an empty {@code ListMap} with the default initial capacity. */
+  /** Constructs an empty {@code ArrayMap} with the default initial capacity. */
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
   @SideEffectFree
-  public ListMap() {
+  public ArrayMap() {
     this.keys = new ArrayList<>();
     this.values = new ArrayList<>();
   }
@@ -94,13 +94,13 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
    */
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.assign.field") // initializes `this`
   @SideEffectFree
-  private ListMap(ArrayList<K> keys, ArrayList<V> values) {
+  private ArrayMap(ArrayList<K> keys, ArrayList<V> values) {
     this.keys = keys;
     this.values = values;
   }
 
   /**
-   * Constructs a new {@code ListMap} with the same mappings as the specified {@code Map}.
+   * Constructs a new {@code ArrayMap} with the same mappings as the specified {@code Map}.
    *
    * @param m the map whose mappings are to be placed in this map
    * @throws NullPointerException if the specified map is null
@@ -111,7 +111,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     "nullness:method.invocation.invalid", // inference failure
   })
   @SideEffectFree
-  public ListMap(Map<? extends K, ? extends V> m) {
+  public ArrayMap(Map<? extends K, ? extends V> m) {
     int size = m.size();
     this.keys = new ArrayList<>(size);
     this.values = new ArrayList<>(size);
@@ -132,7 +132,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     "keyfor:contracts.postcondition.not.satisfied" // insertion in keys array suffices
   })
   @EnsuresKeyFor(value = "#2", map = "this")
-  private void put(ListMap<K, V> this, @GTENegativeOne int index, K key, V value) {
+  private void put(ArrayMap<K, V> this, @GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       keys.add(key);
       values.add(value);
@@ -271,12 +271,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     @Pure
     @Override
     public final @NonNegative int size() {
-      return ListMap.this.size();
+      return ArrayMap.this.size();
     }
 
     @Override
     public final void clear() {
-      ListMap.this.clear();
+      ArrayMap.this.clear();
     }
 
     @Override
@@ -334,12 +334,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     @Pure
     @Override
     public final @NonNegative int size() {
-      return ListMap.this.size();
+      return ArrayMap.this.size();
     }
 
     @Override
     public final void clear() {
-      ListMap.this.clear();
+      ArrayMap.this.clear();
     }
 
     @Override
@@ -391,16 +391,16 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     @Pure
     @Override
     public final @NonNegative int size() {
-      return ListMap.this.size();
+      return ArrayMap.this.size();
     }
 
     @Override
     public final void clear() {
-      ListMap.this.clear();
+      ArrayMap.this.clear();
     }
 
     @Override
-    public final Iterator<Map.Entry<@KeyFor("ListMap.this") K, V>> iterator() {
+    public final Iterator<Map.Entry<@KeyFor("ArrayMap.this") K, V>> iterator() {
       return new EntryIterator();
     }
 
@@ -422,7 +422,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
         Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
         Object key = e.getKey();
         Object value = e.getValue();
-        return ListMap.this.remove(key, value);
+        return ArrayMap.this.remove(key, value);
       }
       return false;
     }
@@ -434,7 +434,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
       "signature:argument.type.incompatible", // TODO: investigate later
     })
     @Override
-    public final void forEach(Consumer<? super Map.Entry<@KeyFor("ListMap.this") K, V>> action) {
+    public final void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
       int size = size();
       for (int index = 0; index < size; index++) {
         action.accept(new Entry(index));
@@ -449,18 +449,18 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
 
   // iterators
 
-  /** An iterator over the ListMap. */
-  abstract class ListMapIterator {
+  /** An iterator over the ArrayMap. */
+  abstract class ArrayMapIterator {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
     // This should be a modification count.
     /** The size, for fail-fast. */
     @NonNegative int size;
 
-    /** Creates a new ListMapIterator. */
+    /** Creates a new ArrayMapIterator. */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
-    ListMapIterator() {
+    ArrayMapIterator() {
       index = 0;
       size = size();
     }
@@ -486,18 +486,18 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
       // if (size != size()) {
       //   throw new ConcurrentModificationException();
       // }
-      ListMap.this.removeIndex(--index);
+      ArrayMap.this.removeIndex(--index);
     }
   }
 
   /** An iterator over the keys. */
-  final class KeyIterator extends ListMapIterator implements Iterator<@KeyFor("this") K> {
+  final class KeyIterator extends ArrayMapIterator implements Iterator<@KeyFor("this") K> {
     /** Creates a new KeyIterator. */
     @SideEffectFree
     KeyIterator() {}
 
     @Override
-    public final @KeyFor("ListMap.this") K next() {
+    public final @KeyFor("ArrayMap.this") K next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -506,7 +506,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** An iterator over the values. */
-  final class ValueIterator extends ListMapIterator implements Iterator<V> {
+  final class ValueIterator extends ArrayMapIterator implements Iterator<V> {
     /** Creates a new ValueIterator. */
     @SideEffectFree
     ValueIterator() {}
@@ -521,7 +521,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   }
 
   /** An iterator over the entries. */
-  final class EntryIterator extends ListMapIterator implements Iterator<Map.Entry<K, V>> {
+  final class EntryIterator extends ArrayMapIterator implements Iterator<Map.Entry<K, V>> {
     /** Creates a new EntryIterator. */
     @SideEffectFree
     EntryIterator() {}
@@ -584,13 +584,13 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
     }
 
     /**
-     * Returns the ListMap associated with this entry.
+     * Returns the ArrayMap associated with this entry.
      *
-     * @return the ListMap associated with this entry
+     * @return the ArrayMap associated with this entry
      */
     @Pure
-    private ListMap<K, V> theListMap() {
-      return ListMap.this;
+    private ArrayMap<K, V> theArrayMap() {
+      return ArrayMap.this;
     }
 
     // Per the specification of Map.Entry, this does not compare the underlying list and index.
@@ -600,12 +600,12 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
       if (this == o) {
         return true;
       }
-      if (o instanceof ListMap.Entry) {
+      if (o instanceof ArrayMap.Entry) {
         @SuppressWarnings("unchecked")
         Entry otherEntry = (Entry) o;
         @SuppressWarnings({"interning:not.interned", "ReferenceEquality"}) // fast special case test
         boolean result =
-            this.index == otherEntry.index && this.theListMap() == otherEntry.theListMap();
+            this.index == otherEntry.index && this.theArrayMap() == otherEntry.theArrayMap();
         if (result) {
           return true;
         }
@@ -826,7 +826,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> {
   @SuppressWarnings("unchecked")
   @SideEffectFree
   @Override
-  public ListMap<K, V> clone() {
-    return new ListMap<>(new ArrayList<>(keys), new ArrayList<>(values));
+  public ArrayMap<K, V> clone() {
+    return new ArrayMap<>(new ArrayList<>(keys), new ArrayList<>(values));
   }
 }

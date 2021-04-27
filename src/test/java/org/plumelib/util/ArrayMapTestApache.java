@@ -57,7 +57,7 @@ import org.junit.jupiter.api.Test;
   "ReferenceEquality",
   "UnnecessaryParentheses"
 })
-public class ListMapTestApache {
+public class ArrayMapTestApache {
   static class MockMap extends AbstractMap {
     @Override
     public Set entrySet(@GuardSatisfied MockMap this) {
@@ -112,67 +112,67 @@ public class ListMapTestApache {
     }
   }
 
-  @Nullable ListMap hm;
+  @Nullable ArrayMap hm;
   static final int hmSize = 100;
   Object @Nullable [] objArray;
   Object @Nullable [] objArray2;
-  /** java.util.ListMap#ListMap() */
+  /** java.util.ArrayMap#ArrayMap() */
   @Test
   public void test_Constructor() {
-    // Test for method java.util.ListMap()
-    ListMap hm2 = new ListMap();
+    // Test for method java.util.ArrayMap()
+    ArrayMap hm2 = new ArrayMap();
     assertEquals(0, hm2.size());
   }
-  /** java.util.ListMap#ListMap(int) */
+  /** java.util.ArrayMap#ArrayMap(int) */
   @Test
   public void test_ConstructorI() {
-    // Test for method java.util.ListMap(int)
-    ListMap hm2 = new ListMap(5);
+    // Test for method java.util.ArrayMap(int)
+    ArrayMap hm2 = new ArrayMap(5);
     assertEquals(0, hm2.size());
     try {
-      new ListMap(-1);
+      new ArrayMap(-1);
       fail("IllegalArgumentException expected");
     } catch (IllegalArgumentException e) {
       // expected
     }
-    ListMap empty = new ListMap(0);
+    ArrayMap empty = new ArrayMap(0);
     assertNull(empty.get("nothing"));
     empty.put("something", "here");
     assertTrue(empty.get("something") == "here"); // interned
   }
-  /** java.util.ListMap#ListMap(int, float) */
+  /** java.util.ArrayMap#ArrayMap(int, float) */
   @Test
   public void test_ConstructorIF() {
-    // Test for method java.util.ListMap(int, float)
-    ListMap hm2 = new ListMap(5);
+    // Test for method java.util.ArrayMap(int, float)
+    ArrayMap hm2 = new ArrayMap(5);
     assertEquals(0, hm2.size());
-    ListMap empty = new ListMap(0);
+    ArrayMap empty = new ArrayMap(0);
     assertNull(empty.get("nothing"));
     empty.put("something", "here");
     assertTrue(empty.get("something") == "here"); // interned
   }
-  /** java.util.ListMap#ListMap(java.util.Map) */
+  /** java.util.ArrayMap#ArrayMap(java.util.Map) */
   @Test
   public void test_ConstructorLjava_util_Map() {
-    // Test for method java.util.ListMap(java.util.Map)
+    // Test for method java.util.ArrayMap(java.util.Map)
     Map myMap = new TreeMap();
     for (int counter = 0; counter < hmSize; counter++)
       myMap.put(objArray2[counter], objArray[counter]);
-    ListMap hm2 = new ListMap(myMap);
+    ArrayMap hm2 = new ArrayMap(myMap);
     for (int counter = 0; counter < hmSize; counter++)
       assertTrue(hm.get(objArray2[counter]) == hm2.get(objArray2[counter]));
     Map mockMap = new MockMap();
-    hm = new ListMap(mockMap);
+    hm = new ArrayMap(mockMap);
     assertEquals(hm, mockMap);
   }
-  /** java.util.ListMap#clear() */
+  /** java.util.ArrayMap#clear() */
   @Test
   public void test_clear() {
     hm.clear();
     assertEquals(0, hm.size());
     for (int i = 0; i < hmSize; i++) assertNull(hm.get(objArray2[i]));
     // Check clear on a large loaded map of Integer keys
-    ListMap<Integer, String> map = new ListMap<Integer, String>();
+    ArrayMap<Integer, String> map = new ArrayMap<Integer, String>();
     for (int i = -67; i < 68; i++) {
       map.put(i, "foobar");
     }
@@ -182,15 +182,15 @@ public class ListMapTestApache {
       assertNull(map.get(i));
     }
   }
-  /** java.util.ListMap#clone() */
+  /** java.util.ArrayMap#clone() */
   @Test
   public void test_clone() {
-    // Test for method java.lang.Object java.util.ListMap.clone()
-    ListMap hm2 = hm.clone();
+    // Test for method java.lang.Object java.util.ArrayMap.clone()
+    ArrayMap hm2 = hm.clone();
     assertTrue(hm2 != hm);
     for (int counter = 0; counter < hmSize; counter++)
       assertTrue(hm.get(objArray2[counter]) == hm2.get(objArray2[counter]));
-    ListMap map = new ListMap();
+    ArrayMap map = new ArrayMap();
     map.put("key", "value");
     // get the keySet() and values() on the original Map
     Set keys = map.keySet();
@@ -209,40 +209,40 @@ public class ListMapTestApache {
     assertTrue(key2 != keys);
     assertEquals("key2", key2.iterator().next());
     // regresion test for HARMONY-4603
-    ListMap hashmap = new ListMap();
+    ArrayMap hashmap = new ArrayMap();
     MockClonable mock = new MockClonable(1);
     hashmap.put(1, mock);
     assertEquals(1, ((MockClonable) hashmap.get(1)).i);
-    ListMap hm3 = hashmap.clone();
+    ArrayMap hm3 = hashmap.clone();
     assertEquals(1, ((MockClonable) hm3.get(1)).i);
     mock.i = 0;
     assertEquals(0, ((MockClonable) hashmap.get(1)).i);
     assertEquals(0, ((MockClonable) hm3.get(1)).i);
   }
-  /** java.util.ListMap#containsKey(java.lang.Object) */
+  /** java.util.ArrayMap#containsKey(java.lang.Object) */
   @Test
   public void test_containsKeyLjava_lang_Object() {
     // Test for method boolean
-    // java.util.ListMap.containsKey(java.lang.Object)
+    // java.util.ArrayMap.containsKey(java.lang.Object)
     assertTrue(hm.containsKey(new Integer(87).toString()));
     assertTrue(!hm.containsKey("KKDKDKD"));
-    ListMap m = new ListMap();
+    ArrayMap m = new ArrayMap();
     m.put(null, "test");
     assertTrue(m.containsKey(null));
     assertTrue(!m.containsKey(new Integer(0)));
   }
-  /** java.util.ListMap#containsValue(java.lang.Object) */
+  /** java.util.ArrayMap#containsValue(java.lang.Object) */
   @Test
   public void test_containsValueLjava_lang_Object() {
     // Test for method boolean
-    // java.util.ListMap.containsValue(java.lang.Object)
+    // java.util.ArrayMap.containsValue(java.lang.Object)
     assertTrue(hm.containsValue(new Integer(87)));
     assertTrue(!hm.containsValue(new Integer(-9)));
   }
-  /** java.util.ListMap#entrySet() */
+  /** java.util.ArrayMap#entrySet() */
   @Test
   public void test_entrySet() {
-    // Test for method java.util.Set java.util.ListMap.entrySet()
+    // Test for method java.util.Set java.util.ArrayMap.entrySet()
     Set s = hm.entrySet();
     Iterator i = s.iterator();
     assertTrue(hm.size() == s.size());
@@ -254,55 +254,55 @@ public class ListMapTestApache {
     s.remove(iter.next());
     assertEquals(101, s.size());
   }
-  /** java.util.ListMap#entrySet() */
+  /** java.util.ArrayMap#entrySet() */
   @Test
   public void test_entrySetEquals() {
     Set s1 = hm.entrySet();
-    Set s2 = new ListMap(hm).entrySet();
+    Set s2 = new ArrayMap(hm).entrySet();
     assertEquals(s1, s2);
   }
-  /** java.util.ListMap#entrySet() */
+  /** java.util.ArrayMap#entrySet() */
   @Test
   public void test_removeFromViews() {
     hm.put("A", null);
     hm.put("B", null);
     assertTrue(hm.keySet().remove("A"));
-    Map<String, String> m2 = new ListMap<String, String>();
+    Map<String, String> m2 = new ArrayMap<String, String>();
     m2.put("B", null);
     assertTrue(hm.entrySet().remove(m2.entrySet().iterator().next()));
   }
-  /** java.util.ListMap#get(java.lang.Object) */
+  /** java.util.ArrayMap#get(java.lang.Object) */
   @Test
   public void test_getLjava_lang_Object() {
     // Test for method java.lang.Object
-    // java.util.ListMap.get(java.lang.Object)
+    // java.util.ArrayMap.get(java.lang.Object)
     assertNull(hm.get("T"));
     hm.put("T", "HELLO");
     assertEquals("HELLO", hm.get("T"));
-    ListMap m = new ListMap();
+    ArrayMap m = new ArrayMap();
     m.put(null, "test");
     assertEquals("test", m.get(null));
     assertNull(m.get(new Integer(0)));
   }
-  /** java.util.ListMap#isEmpty() */
+  /** java.util.ArrayMap#isEmpty() */
   @Test
   public void test_isEmpty() {
-    // Test for method boolean java.util.ListMap.isEmpty()
-    assertTrue(new ListMap().isEmpty());
+    // Test for method boolean java.util.ArrayMap.isEmpty()
+    assertTrue(new ArrayMap().isEmpty());
     assertTrue(!hm.isEmpty());
   }
-  /** java.util.ListMap#keySet() */
+  /** java.util.ArrayMap#keySet() */
   @Test
   public void test_keySet() {
-    // Test for method java.util.Set java.util.ListMap.keySet()
+    // Test for method java.util.Set java.util.ArrayMap.keySet()
     Set s = hm.keySet();
     assertTrue(s.size() == hm.size());
     for (int i = 0; i < objArray.length; i++) assertTrue(s.contains(objArray[i].toString()));
-    ListMap m = new ListMap();
+    ArrayMap m = new ArrayMap();
     m.put(null, "test");
     assertTrue(m.keySet().contains(null));
     assertNull(m.keySet().iterator().next());
-    Map map = new ListMap(101);
+    Map map = new ArrayMap(101);
     map.put(new Integer(1), "1");
     map.put(new Integer(102), "102");
     map.put(new Integer(203), "203");
@@ -322,7 +322,7 @@ public class ListMapTestApache {
     assertEquals(it.next(), list.get(0));
     assertEquals(1, map.size());
     assertTrue(map.keySet().iterator().next().equals(list.get(0)));
-    Map map2 = new ListMap(101);
+    Map map2 = new ArrayMap(101);
     map2.put(new Integer(1), "1");
     map2.put(new Integer(4), "4");
     Iterator it2 = map2.keySet().iterator();
@@ -336,19 +336,19 @@ public class ListMapTestApache {
     assertEquals(1, map2.size());
     assertTrue(map2.keySet().iterator().next().equals(next));
   }
-  /** java.util.ListMap#put(java.lang.Object, java.lang.Object) */
+  /** java.util.ArrayMap#put(java.lang.Object, java.lang.Object) */
   @Test
   public void test_putLjava_lang_ObjectLjava_lang_Object() {
     hm.put("KEY", "VALUE");
     assertEquals("VALUE", hm.get("KEY"));
-    ListMap<Object, Object> m = new ListMap<Object, Object>();
+    ArrayMap<Object, Object> m = new ArrayMap<Object, Object>();
     m.put(Short.valueOf((short) 0), "short");
     m.put(null, "test");
     m.put(new Integer(0), "int");
     assertEquals("short", m.get(Short.valueOf((short) 0)));
     assertEquals("int", m.get(new Integer(0)));
     // Check my actual key instance is returned
-    ListMap<Integer, String> map = new ListMap<Integer, String>();
+    ArrayMap<Integer, String> map = new ArrayMap<Integer, String>();
     for (int i = -67; i < 68; i++) {
       map.put(i, "foobar");
     }
@@ -378,7 +378,7 @@ public class ListMapTestApache {
     }
     assertTrue(found);
     // Ensure keys with identical hashcode are stored separately
-    ListMap<Object, Object> objmap = new ListMap<Object, Object>();
+    ArrayMap<Object, Object> objmap = new ArrayMap<Object, Object>();
     for (int i = 0; i < 68; i++) {
       objmap.put(i, "foobar");
     }
@@ -400,23 +400,23 @@ public class ListMapTestApache {
       return 0;
     }
   }
-  /** java.util.ListMap#putAll(java.util.Map) */
+  /** java.util.ArrayMap#putAll(java.util.Map) */
   @Test
   public void test_putAllLjava_util_Map() {
-    // Test for method void java.util.ListMap.putAll(java.util.Map)
-    ListMap hm2 = new ListMap();
+    // Test for method void java.util.ArrayMap.putAll(java.util.Map)
+    ArrayMap hm2 = new ArrayMap();
     hm2.putAll(hm);
     for (int i = 0; i < 10; i++)
       assertTrue(hm2.get(new Integer(i).toString()).equals((new Integer(i))));
     Map mockMap = new MockMap();
-    hm2 = new ListMap();
+    hm2 = new ArrayMap();
     hm2.putAll(mockMap);
     assertEquals(0, hm2.size());
   }
-  /** java.util.ListMap#putAll(java.util.Map) */
+  /** java.util.ArrayMap#putAll(java.util.Map) */
   @Test
   public void test_putAllLjava_util_Map_Null() {
-    ListMap hashMap = new ListMap();
+    ArrayMap hashMap = new ArrayMap();
     try {
       hashMap.putAll(new MockMapNull());
       fail("Should throw NullPointerException");
@@ -424,7 +424,7 @@ public class ListMapTestApache {
       // expected.
     }
     try {
-      hashMap = new ListMap(new MockMapNull());
+      hashMap = new ArrayMap(new MockMapNull());
       fail("Should throw NullPointerException");
     } catch (NullPointerException e) {
       // expected.
@@ -434,13 +434,13 @@ public class ListMapTestApache {
   @Test
   public void test_putAllLjava_util_Map_Resize() {
     Random rnd = new Random(666);
-    Map<Integer, Integer> m1 = new ListMap<Integer, Integer>();
+    Map<Integer, Integer> m1 = new ArrayMap<Integer, Integer>();
     int MID = 10;
     for (int i = 0; i < MID; i++) {
       Integer j = rnd.nextInt();
       m1.put(j, j);
     }
-    Map<Integer, Integer> m2 = new ListMap<Integer, Integer>();
+    Map<Integer, Integer> m2 = new ArrayMap<Integer, Integer>();
     int HI = 30;
     for (int i = MID; i < HI; i++) {
       Integer j = rnd.nextInt();
@@ -453,7 +453,7 @@ public class ListMapTestApache {
       assertEquals(j, m1.get(j));
     }
   }
-  /** java.util.ListMap#remove(java.lang.Object) */
+  /** java.util.ArrayMap#remove(java.lang.Object) */
   @Test
   public void test_removeLjava_lang_Object() {
     int size = hm.size();
@@ -463,11 +463,11 @@ public class ListMapTestApache {
     assertNull(hm.get(new Integer(9)));
     assertTrue(hm.size() == (size - 1));
     assertNull(hm.remove("LCLCLC"));
-    ListMap m = new ListMap();
+    ArrayMap m = new ArrayMap();
     m.put(null, "test");
     assertNull(m.remove(new Integer(0)));
     assertEquals("test", m.remove(null));
-    ListMap<Integer, Object> map = new ListMap<Integer, Object>();
+    ArrayMap<Integer, Object> map = new ArrayMap<Integer, Object>();
     for (int i = 0; i < 68; i++) {
       map.put(i, "const");
     }
@@ -480,7 +480,7 @@ public class ListMapTestApache {
       assertEquals(values[i], map.remove(i));
     }
     // Ensure keys with identical hashcode are removed properly
-    map = new ListMap<Integer, Object>();
+    map = new ArrayMap<Integer, Object>();
     for (int i = -67; i < 68; i++) {
       map.put(i, "foobar");
     }
@@ -490,29 +490,29 @@ public class ListMapTestApache {
     map.remove(0);
     assertNull(map.get(0));
   }
-  /** java.util.ListMap#size() */
+  /** java.util.ArrayMap#size() */
   @Test
   public void test_size() {
-    // Test for method int java.util.ListMap.size()
+    // Test for method int java.util.ArrayMap.size()
     assertTrue(hm.size() == (objArray.length + 2));
   }
-  /** java.util.ListMap#values() */
+  /** java.util.ArrayMap#values() */
   @Test
   public void test_values() {
-    // Test for method java.util.Collection java.util.ListMap.values()
+    // Test for method java.util.Collection java.util.ArrayMap.values()
     Collection c = hm.values();
     assertTrue(c.size() == hm.size());
     for (int i = 0; i < objArray.length; i++) assertTrue(c.contains(objArray[i]));
-    ListMap myListMap = new ListMap();
-    for (int i = 0; i < 100; i++) myListMap.put(objArray2[i], objArray[i]);
-    Collection values = myListMap.values();
+    ArrayMap myArrayMap = new ArrayMap();
+    for (int i = 0; i < 100; i++) myArrayMap.put(objArray2[i], objArray[i]);
+    Collection values = myArrayMap.values();
     values.remove(new Integer(0));
-    assertTrue(!myListMap.containsValue(new Integer(0)));
+    assertTrue(!myArrayMap.containsValue(new Integer(0)));
   }
   /** java.util.AbstractMap#toString() */
   @Test
   public void test_toString() {
-    ListMap m = new ListMap();
+    ArrayMap m = new ArrayMap();
     m.put(m, m);
     String result = m.toString();
     assertTrue(result.indexOf("(this") > -1);
@@ -560,7 +560,7 @@ public class ListMapTestApache {
    */
   @Test
   public void test_EntrySet() {
-    ListMap map = new ListMap();
+    ArrayMap map = new ArrayMap();
     map.put(new Integer(1), "ONE");
     Set entrySet = map.entrySet();
     Iterator e = entrySet.iterator();
@@ -601,7 +601,7 @@ public class ListMapTestApache {
       objArray[i] = new Integer(i);
       objArray2[i] = objArray[i].toString();
     }
-    hm = new ListMap();
+    hm = new ArrayMap();
     for (int i = 0; i < objArray.length; i++) {
       hm.put(objArray2[i], objArray[i]);
     }
@@ -617,13 +617,13 @@ public class ListMapTestApache {
   }
 
   static class SubMap<K extends @GuardedBy Object, V extends @GuardedBy Object>
-      extends ListMap<K, V> {
+      extends ArrayMap<K, V> {
     public SubMap(Map<? extends K, ? extends V> m) {
       super(m);
     }
 
     @SuppressWarnings({
-      "lock", // ListMap is not yet annotated for the Lock Checker
+      "lock", // ArrayMap is not yet annotated for the Lock Checker
     })
     @Override
     public V put(@GuardSatisfied SubMap<K, V> this, K key, V value) {
