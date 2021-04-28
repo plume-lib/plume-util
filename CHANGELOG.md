@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.5.2 (forthcoming)
+## 1.5.2 (2021-04-28)
 
 - New methods `CollectionsPlume.mapCapacity` to compute the size for a newly-allocated map.
 - New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
