@@ -232,8 +232,8 @@ public final class CollectionsPlumeTest {
           }
         }
         @SuppressWarnings({
-          "lowerbound:assignment.type.incompatible",
-          "index:assignment.type.incompatible",
+          "lowerbound:assignment",
+          "index:assignment",
           "value"
         }) // The IotaIterator only contains indexes for totals.length, and since chosen's
         // elements are selected randomly from the IotaIterator, all of its elements are
@@ -354,7 +354,7 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
-  @SuppressWarnings("lock:methodref.receiver.invalid")
+  @SuppressWarnings("lock:methodref.receiver")
   public void testMapList() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
@@ -362,7 +362,7 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
-  @SuppressWarnings("lock:methodref.receiver.invalid")
+  @SuppressWarnings("lock:methodref.receiver")
   public void testTransform() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});

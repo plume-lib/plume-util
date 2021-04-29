@@ -74,7 +74,7 @@ public final class ArraysPlume {
     "index:array.access.unsafe.high" // addition in array length
   })
   public static <T> T[] append(T[] array, T lastElt) {
-    @SuppressWarnings({"unchecked", "nullness:assignment.type.incompatible"})
+    @SuppressWarnings({"unchecked", "nullness:assignment"})
     T[] result = Arrays.copyOf(array, array.length + 1);
     result[array.length] = lastElt;
     return result;
@@ -1632,7 +1632,7 @@ public final class ArraysPlume {
    */
   @SuppressWarnings({
     "unchecked",
-    "index:argument.type.incompatible" // addition for array length
+    "index:argument" // addition for array length
   })
   public static <T> T[] concatenate(T[] array1, T... array2) {
     @SuppressWarnings("nullness") // elements are not non-null yet, but will be by return stmt
@@ -1754,8 +1754,8 @@ public final class ArraysPlume {
      * @param destPos the index at which to start overwriting elements of {@code dest}
      */
     @SuppressWarnings({
-      "lowerbound:argument.type.incompatible", // TODO: annotate for Index Checker
-      "index:argument.type.incompatible" // TODO: annotate for Index Checker
+      "lowerbound:argument", // TODO: annotate for Index Checker
+      "index:argument" // TODO: annotate for Index Checker
     })
     void copyInto(T[] dest, int destPos) {
       if (theArray != null) {
@@ -1763,8 +1763,8 @@ public final class ArraysPlume {
       } else if (theList != null) {
         for (int i = 0; i < theList.size(); i++) {
           @SuppressWarnings({
-            "lowerbound:assignment.type.incompatible",
-            "index:assignment.type.incompatible"
+            "lowerbound:assignment",
+            "index:assignment"
           }) // index checker has no list support
           @IndexFor("dest") int index = i + destPos;
           dest[index] = theList.get(i);

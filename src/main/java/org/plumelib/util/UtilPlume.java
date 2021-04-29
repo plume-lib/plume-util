@@ -1534,7 +1534,7 @@ public final class UtilPlume {
    *     target if it does not start with oldStr
    * @deprecated use {@link StringsPlume#replacePrefix}
    */
-  @SuppressWarnings("index:argument.type.incompatible") // startsWith implies indexes fit
+  @SuppressWarnings("index:argument") // startsWith implies indexes fit
   @Deprecated // use StringsPlume.replacePrefix; deprecated 2020-12-02
   public static String replacePrefix(String target, String oldStr, String newStr) {
     if (target.startsWith(oldStr)) {
@@ -1562,7 +1562,7 @@ public final class UtilPlume {
    *     target if it does not start with oldStr
    * @deprecated use {@link StringsPlume#replaceSuffix}
    */
-  @SuppressWarnings("lowerbound:argument.type.incompatible") // endsWith implies indexes fit
+  @SuppressWarnings("lowerbound:argument") // endsWith implies indexes fit
   @Deprecated // use StringsPlume.replaceSuffix; deprecated 2020-12-02
   public static String replaceSuffix(String target, String oldStr, String newStr) {
     if (target.endsWith(oldStr)) {
@@ -2549,7 +2549,7 @@ public final class UtilPlume {
     while (matcher.find()) {
       String argumentIndex = matcher.group(1);
       if (argumentIndex != null) {
-        @SuppressWarnings("lowerbound:argument.type.incompatible") // group contains >= 2 chars
+        @SuppressWarnings("lowerbound:argument") // group contains >= 2 chars
         int thisIndex = Integer.parseInt(argumentIndex.substring(0, argumentIndex.length() - 1));
         maxIndex = Math.max(maxIndex, thisIndex);
         continue;
