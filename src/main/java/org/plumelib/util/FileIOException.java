@@ -270,7 +270,7 @@ public class FileIOException extends IOException {
   /// Utility and helper methods
   ///
 
-  @SuppressWarnings("lock:override.sideeffect.invalid") // temporary until after CF 3.0.1
+  @SuppressWarnings("lock:override.sideeffect") // temporary until after CF 3.0.1
   @SideEffectFree
   @Override
   public String getMessage(@GuardSatisfied FileIOException this) {
