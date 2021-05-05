@@ -98,7 +98,7 @@ if (project.hasProperty("cfLocal")) {
   }
 } else {
   dependencies {
-    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.12'
+    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.13'
   }
   checkerFramework.checkers += 'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker'
   checkerFramework.extraJavacArgs += [
