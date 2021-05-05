@@ -454,8 +454,8 @@ public final class ArraysPlumeTest {
   }
 
   @SuppressWarnings({
-    "lowerbound:argument.type.incompatible",
-    "index:argument.type.incompatible"
+    "lowerbound:argument",
+    "index:argument"
   }) // https://github.com/kelloggm/checker-framework/issues/147
   @Test
   public void testFunctions() {

@@ -658,7 +658,7 @@ public final class Intern {
 
     WeakReference<int @Interned []> lookup = internedIntArrays.get(a);
     @SuppressWarnings({
-      "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
+      "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
@@ -687,7 +687,7 @@ public final class Intern {
     //                   a, Arrays.toString (a));
     WeakReference<long @Interned []> lookup = internedLongArrays.get(a);
     @SuppressWarnings({
-      "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
+      "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
@@ -772,7 +772,7 @@ public final class Intern {
   public static double @Interned @PolyValue @SameLen("#1") [] intern(double @PolyValue [] a) {
     WeakReference<double @Interned []> lookup = internedDoubleArrays.get(a);
     @SuppressWarnings({
-      "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
+      "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
@@ -826,7 +826,7 @@ public final class Intern {
     @SuppressWarnings({
       "nullness", // for this map, get() can be annotated as @PolyAll (except not interning); also
       // see https://github.com/kelloggm/checker-framework/issues/177
-      "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
+      "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
@@ -861,7 +861,7 @@ public final class Intern {
     @SuppressWarnings({
       "nullness", // for this map, get() can be annotated as @PolyAll (except not interning); also
       // see https://github.com/kelloggm/checker-framework/issues/177
-      "samelen:assignment.type.incompatible", // for this map, get() can be annotated as
+      "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177

@@ -260,8 +260,7 @@ public final class InternTest {
    * Test the intering of subsequences as triples of the original sequence, the start and the end
    * indices.
    */
-  @SuppressWarnings(
-      "index:argument.type.incompatible") // https://github.com/typetools/checker-framework/issues/2484
+  @SuppressWarnings("index:argument") // https://github.com/typetools/checker-framework/issues/2484
   @Test
   public void testSequenceAndIndices() {
     int[] a1 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});
