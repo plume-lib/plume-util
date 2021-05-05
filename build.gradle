@@ -67,9 +67,6 @@ tasks.withType(JavaCompile).configureEach {
 
 apply plugin: 'org.checkerframework'
 
-dependencies {
-    implementation 'net.sridharan.objectconstruction:object-construction-qual:0.1.13'
-}
 checkerFramework {
   checkers = [
     'org.checkerframework.checker.formatter.FormatterChecker',
@@ -96,16 +93,6 @@ if (project.hasProperty("cfLocal")) {
     testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
   }
-} else {
-  dependencies {
-    checkerFramework 'net.sridharan.objectconstruction:object-construction-checker:0.1.13'
-  }
-  checkerFramework.checkers += 'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker'
-  checkerFramework.extraJavacArgs += [
-    '-AcheckMustCall',
-    // '-ACalledMethodsChecker_disableReturnsReceiver' would also work.
-    '-AdisableReturnsReceiver', // because this code does not use fluent APIs
-  ]
 }
 
 

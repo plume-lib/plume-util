@@ -61,7 +61,6 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * Utility methods that do not belong elsewhere in the plume package: BitSet; hashing;
  * ProcessBuilder; properties; Throwable.
  */
-@SuppressWarnings("objectconstruction") // File methods in this class are deprecated
 public final class UtilPlume {
 
   /** This class is a collection of methods; it does not represent anything. */

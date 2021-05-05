@@ -21,7 +21,6 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -69,10 +68,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * @see #getEntry() and @see #setEntryStartStop(String,String)
  */
-@SuppressWarnings({
-  "IterableAndIterator",
-  "objectconstruction:required.method.not.called" // generic collection of owned resources `readers`
-})
+@SuppressWarnings({"IterableAndIterator"})
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
   ///
@@ -595,9 +591,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @return a line-by-line iterator for this file
    */
-  @SuppressWarnings("mustcall:override.return") // `Iterable.iterator()` returns @MustCall
   @Override
-  public @MustCallAlias Iterator<String> iterator(@MustCallAlias EntryReader this) {
+  public Iterator<String> iterator(EntryReader this) {
     return this;
   }
 
