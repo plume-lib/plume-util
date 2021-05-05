@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.5.3 (2021-05-04)
+
+- Fix problem with .jar file in previous release.
+
 ## 1.5.2 (2021-04-28)
 
 - New methods `CollectionsPlume.mapCapacity` to compute the size for a newly-allocated map.
