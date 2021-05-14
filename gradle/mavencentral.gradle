@@ -5,6 +5,7 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release:
+//  * Use JDK 8
 //  * git pull
 //  * Update the version number in ../README.md and in this file (multiple times in each).
 //  * Update ../CHANGELOG.md .
