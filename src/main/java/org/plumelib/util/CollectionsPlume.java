@@ -1148,17 +1148,6 @@ public final class CollectionsPlume {
     return mapCapacity(m.size());
   }
 
-  /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
-   *
-   * @param s a set whose size is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   */
-  public static int mapCapacity(Set<?> s) {
-    return mapCapacity(s.size());
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Set
   ///
