@@ -785,7 +785,9 @@ public final class CollectionsPlume {
 
     @Override
     public T next(@GuardSatisfied MergedIterator<T> this) {
-      hasNext(); // for side effect
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       return current.next();
     }
 

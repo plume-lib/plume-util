@@ -23,7 +23,7 @@ repositories {
 dependencies {
   implementation 'org.plumelib:reflection-util:1.0.3'
 
-  errorprone 'com.google.errorprone:error_prone_core:2.6.0'
+  errorprone 'com.google.errorprone:error_prone_core:2.7.1'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -59,6 +59,9 @@ tasks.withType(JavaCompile).configureEach {
   options.errorprone {
     // Code copied from the JDK that we don't want to change gratuitously.
     excludedPaths = ".*/Weak.*Hash(er)?Map.java"
+    disable(
+        // The suggestion recommends an Error-Prone-specific annotation
+        "InlineMeSuggester")
   }
   options.forkOptions.jvmArgs += "-Xmx2g"
 }
