@@ -65,6 +65,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
   public OrderedPairIterator(Iterator<T> itor1, Iterator<T> itor2) {
     this.itor1 = itor1;
     this.itor2 = itor2;
+    this.comparator = null;
     setnext1();
     setnext2();
   }
