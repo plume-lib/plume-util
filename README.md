@@ -11,8 +11,8 @@ In a Gradle buildfile, write
 
 ```
 dependencies {
-  implementation 'org.plumelib:plume-util:1.5.3'
+  implementation 'org.plumelib:plume-util:1.5.4'
 }
 ```
 
-Other build systems are [similar](https://search.maven.org/artifact/org.plumelib/plume-util/1.5.3/jar).
+Other build systems are [similar](https://search.maven.org/artifact/org.plumelib/plume-util/1.5.4/jar).

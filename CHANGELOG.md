@@ -1,5 +1,10 @@
 # Plume-Util change log
 
+## 1.5.4 (2021-06-08)
+
+- Expand the contract of `CollectionsPlume.withoutDuplicates`.
+- Add `withoutDuplicatesComparable` which is more efficient.
+
 ## 1.5.3 (2021-05-04)
 
 - Fix problem with .jar file in previous release.
