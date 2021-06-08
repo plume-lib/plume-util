@@ -2383,19 +2383,21 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume.NullableStringComparator}
    */
   @Deprecated // use StringsPlume.NullableStringComparator; deprecated 2020-12-02
-  public static class NullableStringComparator implements Comparator<String>, Serializable {
+  public static class NullableStringComparator
+      implements Comparator<@Nullable String>, Serializable {
     static final long serialVersionUID = 20150812L;
 
     @Pure
     @Override
-    public int compare(String s1, String s2) {
-      if (s1 == null && s2 == null) {
-        return 0;
+    public int compare(@Nullable String s1, @Nullable String s2) {
+      if (s1 == null) {
+        if (s2 == null) {
+          return 0;
+        } else {
+          return 1;
+        }
       }
-      if (s1 == null && s2 != null) {
-        return 1;
-      }
-      if (s1 != null && s2 == null) {
+      if (s2 == null) {
         return -1;
       }
       return s1.compareTo(s2);
