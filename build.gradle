@@ -13,7 +13,7 @@ plugins {
   id("net.ltgt.errorprone") version "2.0.1"
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.5.20'
+  id 'org.checkerframework' version '0.5.21'
 }
 
 repositories {
