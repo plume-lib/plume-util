@@ -67,7 +67,7 @@ public final class FilesPlume {
   public static InputStream newFileInputStream(Path path) throws IOException {
     FileInputStream fis = new FileInputStream(path.toFile());
     InputStream in;
-    if (path.endsWith(".gz")) {
+    if (path.getFileName().toString().endsWith(".gz")) {
       try {
         in = new GZIPInputStream(fis);
       } catch (IOException e) {
@@ -348,7 +348,7 @@ public final class FilesPlume {
   public static OutputStream newFileOutputStream(Path path, boolean append) throws IOException {
     FileOutputStream fis = new FileOutputStream(path.toFile(), append);
     OutputStream in;
-    if (path.endsWith(".gz")) {
+    if (path.getFileName().toString().endsWith(".gz")) {
       try {
         in = new GZIPOutputStream(fis);
       } catch (IOException e) {
