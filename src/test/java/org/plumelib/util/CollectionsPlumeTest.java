@@ -273,6 +273,16 @@ public final class CollectionsPlumeTest {
   List<Integer> l1123 = Arrays.asList(1, 1, 2, 3);
   List<Integer> l1233 = Arrays.asList(1, 2, 3, 3);
 
+  Object object1 = new Object();
+  Object object2 = new Object();
+  Object object3 = new Object();
+
+  List<Object> lo123 = Arrays.asList(object1, object2, object3);
+  List<Object> lo123123 = Arrays.asList(object1, object2, object3, object1, object2, object3);
+  List<Object> lo12223 = Arrays.asList(object1, object2, object2, object2, object3);
+  List<Object> lo1123 = Arrays.asList(object1, object1, object2, object3);
+  List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
+
   @SuppressWarnings("JdkObsolete") // test of List that does not implement RandomAccess
   @Test
   public void test_hasDuplicates() {
@@ -301,6 +311,26 @@ public final class CollectionsPlumeTest {
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l12223));
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l1123));
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l1233));
+
+    assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo123));
+    assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo123123));
+    assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo12223));
+    assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo1123));
+    assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo1233));
+  }
+
+  @SuppressWarnings("ArrayEquals")
+  @Test
+  public void test_withoutDuplicatesComparable() {
+
+    // public static List sortList (List l, Comparator c)
+    // public static <T> List<T> withoutDuplicates(List<T> l) {
+
+    assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l123123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l12223));
+    assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l1123));
+    assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l1233));
   }
 
   @Test

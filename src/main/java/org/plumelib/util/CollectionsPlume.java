@@ -113,7 +113,7 @@ public final class CollectionsPlume {
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
    * @return a copy of the list with duplicates removed
-   * @deprecated use {@link withoutDuplicates}
+   * @deprecated use {@link withoutDuplicates} or {@link withoutDuplicatesComparable}
    */
   @Deprecated // 2021-03-28
   public static <T> List<T> removeDuplicates(List<T> l) {
@@ -123,14 +123,37 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a list with the same contents as its argument, but without duplicates. May return its
+   * Returns a copy of the list with duplicates removed. Retains the original order. May return its
    * argument if its argument has no duplicates, but is not guaranteed to do so.
+   *
+   * <p>If the element type implements {@link Comparable}, use {@link #withoutDuplicatesComparable}.
    *
    * @param <T> the type of elements in {@code values}
    * @param values a list of values
    * @return the values, with duplicates removed
    */
-  public static <T extends Comparable<T>> List<T> withoutDuplicates(List<T> values) {
+  public static <T> List<T> withoutDuplicates(List<T> values) {
+    HashSet<T> hs = new LinkedHashSet<>(values);
+    if (values.size() == hs.size()) {
+      return values;
+    } else {
+      return new ArrayList<>(hs);
+    }
+  }
+
+  /**
+   * Returns a list with the same contents as its argument, but without duplicates. May return its
+   * argument if its argument has no duplicates, but is not guaranteed to do so.
+   *
+   * <p>This is like {@link #withoutDuplicates}, but requires the list elements to implement {@link
+   * Comparable}, and thus can be more efficient. Also, this does not retain the original order; the
+   * result is sorted.
+   *
+   * @param <T> the type of elements in {@code values}
+   * @param values a list of values
+   * @return the values, with duplicates removed
+   */
+  public static <T extends Comparable<T>> List<T> withoutDuplicatesComparable(List<T> values) {
     // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
     if (isSortedNoDuplicates(values)) {
       return values;
