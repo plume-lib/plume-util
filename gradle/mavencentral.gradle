@@ -92,4 +92,5 @@ signing {
     required = true
     sign publishing.publications.maven
 }
-tasks.withType(Sign).configureEach { onlyIf { project.gradle.taskGraph.hasTask("publish") } }
+
+tasks.withType(Sign).configureEach { onlyIf { !isSnapshot } }
