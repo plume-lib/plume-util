@@ -9,7 +9,7 @@
 //  * git pull
 //  * Update the version number in ../README.md and in this file (multiple times in each).
 //  * Update ../CHANGELOG.md .
-//  * Save and stage changes.
+//  * Save files and stage changes.
 //  * Run in the top-level directory:
 //      ./gradlew clean publish && ./gradlew javadocWeb
 //    or, to use a locally-built Checker Framework:
@@ -17,7 +17,7 @@
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
 //    VER=1.5.5 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.5.5", use text from ../CHANGELOG.md, attach the .jar file from ../build/libs/
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.5.5", use the text from ../CHANGELOG.md as the description, attach the .jar file from ../build/libs/
 
 
 apply plugin: 'maven-publish'
@@ -29,68 +29,68 @@ version '1.5.6-SNAPSHOT'
 final isSnapshot = version.contains('SNAPSHOT')
 
 java {
-    withJavadocJar()
-    withSourcesJar()
+  withJavadocJar()
+  withSourcesJar()
 }
 
 artifacts {
-    archives javadocJar, sourcesJar
+  archives javadocJar, sourcesJar
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
+  publications {
+    maven(MavenPublication) {
+      from components.java
 
-            pom {
-                name = 'Plume-lib Util'
-                description = 'Utility libraries for Java.'
-                url = 'https://github.com/plume-lib/plume-util'
+      pom {
+        name = 'Plume-lib Util'
+        description = 'Utility libraries for Java.'
+        url = 'https://github.com/plume-lib/plume-util'
 
-                scm {
-                    connection = 'scm:git:git@github.com:plume-lib/plume-util.git'
-                    developerConnection = 'scm:git:git@github.com:plume-lib/plume-util.git'
-                    url = 'git@github.com:plume-lib/plume-util.git'
-                }
-
-                licenses {
-                    license {
-                        name = 'MIT License'
-                        url = 'https://opensource.org/licenses/MIT'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id = 'mernst'
-                        name = 'Michael Ernst'
-                        email = 'mernst@alum.mit.edu'
-                    }
-                }
-            }
+        scm {
+          connection = 'scm:git:git@github.com:plume-lib/plume-util.git'
+          developerConnection = 'scm:git:git@github.com:plume-lib/plume-util.git'
+          url = 'git@github.com:plume-lib/plume-util.git'
         }
+
+        licenses {
+          license {
+            name = 'MIT License'
+            url = 'https://opensource.org/licenses/MIT'
+          }
+        }
+
+        developers {
+          developer {
+            id = 'mernst'
+            name = 'Michael Ernst'
+            email = 'mernst@alum.mit.edu'
+          }
+        }
+      }
     }
+  }
+  repositories {
     repositories {
-        repositories {
-            maven {
-                url = (isSnapshot
-                        ? project.properties.getOrDefault('SNAPSHOT_REPOSITORY_URL', 'https://oss.sonatype.org/content/repositories/snapshots/')
-                        : project.properties.getOrDefault('RELEASE_REPOSITORY_URL', 'https://oss.sonatype.org/service/local/staging/deploy/maven2/')
-                )
-                credentials {
-                    username = project.properties.get('ossrhUsername')
-                    password = project.properties.get('ossrhPassword')
-                }
-            }
+      maven {
+        url = (isSnapshot
+            ? project.properties.getOrDefault('SNAPSHOT_REPOSITORY_URL', 'https://oss.sonatype.org/content/repositories/snapshots/')
+            : project.properties.getOrDefault('RELEASE_REPOSITORY_URL', 'https://oss.sonatype.org/service/local/staging/deploy/maven2/')
+        )
+        credentials {
+          username = project.properties.get('ossrhUsername')
+          password = project.properties.get('ossrhPassword')
         }
+      }
     }
+  }
 }
 
 signing {
-    // If anything about signing is misconfigured, fail loudly rather than quietly continuing with
-    // unsigned artifacts.
-    required = true
-    sign publishing.publications.maven
+  // If anything about signing is misconfigured, fail loudly rather than quietly continuing with
+  // unsigned artifacts.
+  required = true
+  sign publishing.publications.maven
 }
 
 tasks.withType(Sign).configureEach { onlyIf { !isSnapshot } }
