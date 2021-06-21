@@ -2,8 +2,8 @@
 
 ## 1.5.5 (2021-06-08)
 
-- Fix bug where `.gz` files were read & written uncompressed
-- Fix nullness type of class `StringsPlume.NullableStringComparator`
+- Fix bug where `.gz` files were read and written uncompressed.
+- Fix nullness type of class `StringsPlume.NullableStringComparator`.
 
 ## 1.5.4 (2021-06-08)
 
