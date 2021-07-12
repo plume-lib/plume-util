@@ -25,9 +25,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @param <T> the type of elements in the set
  */
 public class LimitedSizeSet<T extends @Nullable Object> implements Serializable, Cloneable {
-  // We are Serializable, so we specify a version to allow changes to
-  // method signatures without breaking serialization.  If you add or
-  // remove fields, you should change this number to the current date.
+  /** Unique identifier for serialization. If you add or remove fields, change this number. */
   static final long serialVersionUID = 20031021L;
 
   // The size is not separately stored, because that would take extra space.
