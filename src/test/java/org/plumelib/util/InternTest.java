@@ -140,7 +140,7 @@ public final class InternTest {
   }
 
   // Tests the method "Object intern(Object)" in Intern.java
-  @SuppressWarnings({"deprecation", "BoxedPrimitiveConstructor"}) // interning test
+  @SuppressWarnings({"deprecation", "removal", "BoxedPrimitiveConstructor"}) // interning test
   @Test
   public void testInternObject() {
     Object nIntern = Intern.intern((@Nullable Object) null);
