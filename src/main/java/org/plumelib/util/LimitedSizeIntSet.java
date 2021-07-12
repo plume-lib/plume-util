@@ -28,9 +28,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 //    * @deprecated use {@link LimitedSizeSet}
 //   @Deprecated
 public class LimitedSizeIntSet implements Serializable, Cloneable {
-  // We are Serializable, so we specify a version to allow changes to
-  // method signatures without breaking serialization.  If you add or
-  // remove fields, you should change this number to the current date.
+  /** Unique identifier for serialization. If you add or remove fields, change this number. */
   static final long serialVersionUID = 20031021L;
 
   /**
