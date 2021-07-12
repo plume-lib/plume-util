@@ -60,6 +60,7 @@ public final class RegexUtil {
    */
   public static class CheckedPatternSyntaxException extends Exception {
 
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     private static final long serialVersionUID = 6266881831979001480L;
 
     /** The PatternSyntaxException that this is a wrapper around. */

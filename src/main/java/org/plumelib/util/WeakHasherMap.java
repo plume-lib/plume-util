@@ -104,13 +104,27 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
   done.  Fortunately these are small, short-lived objects, so the added
   allocation overhead is tolerable. */
 
+  /** hasher. */
   private Hasher hasher = null;
 
+  /**
+   * keyEquals.
+   *
+   * @param k1 k1
+   * @param k2 k2
+   * @return return
+   */
   @Pure
   private boolean keyEquals(Object k1, Object k2) {
     return (hasher == null ? k1.equals(k2) : hasher.equals(k1, k2));
   }
 
+  /**
+   * keyHashCode.
+   *
+   * @param k1 k1
+   * @return return
+   */
   @Pure
   private int keyHashCode(Object k1) {
     return (hasher == null ? k1.hashCode() : hasher.hashCode(k1));
@@ -122,36 +136,75 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
   // were static in the original version of this code.
   // This finesses that.
 
+  /**
+   * WeakKeyCreate.
+   *
+   * @param k k
+   * @return return
+   */
   private @Nullable WeakKey WeakKeyCreate(K k) {
     if (k == null) return null;
     else return new WeakKey(k);
   }
 
+  /**
+   * WeakKeyCreate.
+   *
+   * @param k k
+   * @param q q
+   * @return return
+   */
   private @Nullable WeakKey WeakKeyCreate(K k, ReferenceQueue<? super K> q) {
     if (k == null) return null;
     else return new WeakKey(k, q);
   }
 
+  /** WeakKey. */
   // Cannot be a static class: uses keyHashCode() and keyEquals()
   private final class WeakKey extends WeakReference<K> {
+    /** hash. */
     private int hash; /* Hashcode of key, stored here since the key
 				   may be tossed by the GC */
 
+    /**
+     * WeakKey.
+     *
+     * @param k k
+     */
     private WeakKey(K k) {
       super(k);
       hash = keyHashCode(k);
     }
 
+    /**
+     * create.
+     *
+     * @param k k
+     * @return return
+     */
     private @Nullable WeakKey create(K k) {
       if (k == null) return null;
       else return new WeakKey(k);
     }
 
+    /**
+     * WeakKey.
+     *
+     * @param k k
+     * @param q q
+     */
     private WeakKey(K k, ReferenceQueue<? super K> q) {
       super(k, q);
       hash = keyHashCode(k);
     }
 
+    /**
+     * create.
+     *
+     * @param k k
+     * @param q q
+     * @return return
+     */
     private @Nullable WeakKey create(K k, ReferenceQueue<? super K> q) {
       if (k == null) return null;
       else return new WeakKey(k, q);
@@ -183,10 +236,10 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  /* Hash table mapping WeakKeys to values */
+  /** Hash table mapping WeakKeys to values */
   private Map<WeakKey, V> hash;
 
-  /* Reference queue for cleared WeakKeys */
+  /** Reference queue for cleared WeakKeys */
   private ReferenceQueue<? super K> queue = new ReferenceQueue<K>();
 
   /* Remove all invalidated entries from the map, that is, remove all entries
@@ -194,6 +247,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
   each public mutator in this class.  We don't invoke this method in
   public accessors because that can lead to surprising
   ConcurrentModificationExceptions. */
+  /** processQueue. */
   @SuppressWarnings("unchecked")
   private void processQueue() {
     WeakKey wk;
@@ -337,15 +391,23 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
 
   /* -- Views -- */
 
-  /* Internal class for entries */
+  /** Internal class for entries */
   // This can't be static, again because of dependence on hasher.
   @SuppressWarnings("TypeParameterShadowing")
   private final class Entry<K, V> implements Map.Entry<K, V> {
+    /** ent. */
     private Map.Entry<WeakKey, V> ent;
+    /** key. */
     private K key; /* Strong reference to key, so that the GC
 				   will leave it alone as long as this Entry
 				   exists */
 
+    /**
+     * Entry.
+     *
+     * @param ent ent
+     * @param key key
+     */
     Entry(Map.Entry<WeakKey, V> ent, K key) {
       this.ent = ent;
       this.key = key;
@@ -368,16 +430,36 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
       return ent.setValue(value);
     }
 
+    /**
+     * keyvalEquals.
+     *
+     * @param o1 o1
+     * @param o2 o2
+     * @return return
+     */
     @Pure
     private boolean keyvalEquals(K o1, K o2) {
       return (o1 == null) ? (o2 == null) : keyEquals(o1, o2);
     }
 
+    /**
+     * valEquals.
+     *
+     * @param o1 o1
+     * @param o2 o2
+     * @return return
+     */
     @Pure
     private boolean valEquals(V o1, V o2) {
       return (o1 == null) ? (o2 == null) : o1.equals(o2);
     }
 
+    /**
+     * equals.
+     *
+     * @param e e
+     * @return return
+     */
     @Pure
     @SuppressWarnings("NonOverridingEquals")
     public boolean equals(Map.Entry<K, V> e /* Object o*/) {
@@ -395,8 +477,9 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
-  /* Internal class for entry sets */
+  /** Internal class for entry sets */
   private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
+    /** hashEntrySet. */
     Set<Map.Entry<WeakKey, V>> hashEntrySet = hash.entrySet();
 
     @Override
@@ -482,6 +565,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
     }
   }
 
+  /** entrySet. */
   private @Nullable Set<Map.Entry<K, V>> entrySet = null;
 
   /** Returns a <code>Set</code> view of the mappings in this map. */

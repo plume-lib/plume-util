@@ -3069,6 +3069,7 @@ public final class ArraysPlume {
    * {@code equals()} (which tests reference equality).
    */
   public static final class IntArrayComparatorLexical implements Comparator<int[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3104,6 +3105,7 @@ public final class ArraysPlume {
    * {@code equals()} (which tests reference equality).
    */
   public static final class LongArrayComparatorLexical implements Comparator<long[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3140,6 +3142,7 @@ public final class ArraysPlume {
    */
   public static final class DoubleArrayComparatorLexical
       implements Comparator<double[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3177,6 +3180,7 @@ public final class ArraysPlume {
    */
   public static final class StringArrayComparatorLexical
       implements Comparator<String[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3227,6 +3231,7 @@ public final class ArraysPlume {
    */
   public static final class ComparableArrayComparatorLexical<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3286,6 +3291,7 @@ public final class ArraysPlume {
    */
   public static final class ObjectArrayComparatorLexical
       implements Comparator<Object[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3327,6 +3333,7 @@ public final class ArraysPlume {
    */
   public static final class IntArrayComparatorLengthFirst
       implements Comparator<int[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3365,6 +3372,7 @@ public final class ArraysPlume {
    */
   public static final class LongArrayComparatorLengthFirst
       implements Comparator<long[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3403,6 +3411,7 @@ public final class ArraysPlume {
    */
   public static final class ComparableArrayComparatorLengthFirst<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3468,6 +3477,7 @@ public final class ArraysPlume {
    */
   public static final class ObjectArrayComparatorLengthFirst
       implements Comparator<Object[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3668,6 +3678,7 @@ public final class ArraysPlume {
   /** A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}. */
   static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
 
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170418;
 
     /** Empty constructor. */

@@ -331,6 +331,7 @@ public class FuzzyFloat {
 
   /** Lexically compares two double arrays. */
   public class DoubleArrayComparatorLexical implements Comparator<double[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**

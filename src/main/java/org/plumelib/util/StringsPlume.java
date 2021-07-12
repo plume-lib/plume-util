@@ -844,6 +844,7 @@ public final class StringsPlume {
   @Deprecated // deprecated 2021-02-27
   public static class NullableStringComparator
       implements Comparator<@Nullable String>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -883,6 +884,7 @@ public final class StringsPlume {
    * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
 
     /**

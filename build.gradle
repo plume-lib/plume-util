@@ -87,6 +87,9 @@ checkerFramework {
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnUnneededSuppressions',
   ]
+  if (JavaVersion.current() == JavaVersion.VERSION_16) {
+    skipCheckerFramework = true
+  }
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty("cfLocal")) {

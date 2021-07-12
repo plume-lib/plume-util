@@ -1,7 +1,7 @@
 /**
  *
  *
- * <h3>Plume-lib Util: Utility libraries for Java</h3>
+ * <h2>Plume-lib Util: Utility libraries for Java</h2>
  *
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *
