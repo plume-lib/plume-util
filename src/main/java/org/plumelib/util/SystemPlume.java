@@ -135,6 +135,22 @@ public final class SystemPlume {
     return result;
   }
 
+  /**
+   * Returns the cumulative garbage collection time in milliseconds, across all threads.
+   *
+   * @return the cumulative garbage collection time in milliseconds
+   */
+  private static long getCollectionTime() {
+    long result = 0;
+    for (GarbageCollectorMXBean b : ManagementFactory.getGarbageCollectorMXBeans()) {
+      long time = b.getCollectionTime();
+      if (time != -1) {
+        result += time;
+      }
+    }
+    return result;
+  }
+
   // This should probably be a deque, so that it can be pruned.
   // A problem is that a deque cannot be iterated through; it does not implement `get()`.
   /**
@@ -213,21 +229,5 @@ public final class SystemPlume {
       }
     }
     return 0;
-  }
-
-  /**
-   * Returns the cumulative garbage collection time in milliseconds, across all threads.
-   *
-   * @return the cumulative garbage collection time in milliseconds
-   */
-  private static long getCollectionTime() {
-    long result = 0;
-    for (GarbageCollectorMXBean b : ManagementFactory.getGarbageCollectorMXBeans()) {
-      long time = b.getCollectionTime();
-      if (time != -1) {
-        result += time;
-      }
-    }
-    return result;
   }
 }
