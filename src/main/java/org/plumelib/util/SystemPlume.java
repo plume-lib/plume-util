@@ -180,7 +180,8 @@ public final class SystemPlume {
 
   static {
     gcHistory = new ArrayDeque<>();
-    gcHistory.add(new GcHistoryItem(0, 0));
+    // Add a dummy element so the queue is never empty.
+    gcHistory.add(new GcHistoryItem(Instant.now().getEpochSecond(), getCollectionTime()));
   }
 
   /**
@@ -239,22 +240,34 @@ public final class SystemPlume {
    * @return the percentage of time spent garbage collecting, in the past {@code seconds} seconds
    */
   public static double gcPercentage(int seconds) {
+    GcHistoryItem newest = gcHistory.getLast();
     long now = Instant.now().getEpochSecond(); // in seconds
-    long collectionTime = getCollectionTime(); // in milliseconds
-    gcHistory.getLast().subsequentTimestamp = now;
-    gcHistory.add(new GcHistoryItem(now, collectionTime));
-
-    for (int i = gcHistory.size() - 1; i >= 0; i--) {
-      Pair<Long, Long> p = gcHistory.get(i);
-      long historyTimestamp = p.a; // in seconds
-      long elapsed = now - historyTimestamp; // in seconds
-      if (elapsed >= seconds) {
-        long historyCollectionTime = p.b; // in milliseconds
-        double elapsedCollectionTime =
-            (collectionTime - historyCollectionTime) / 1000.0; // in seconds
-        return elapsedCollectionTime / elapsed;
-      }
+    long collectionTime; // in milliseconds
+    if (now == newest.timestamp) {
+      // For efficiency, don't add another entry with the same timestamp as the newest one, even
+      // though the collectionTime field would differ slightly.
+      collectionTime = newest.collectionTime;
+    } else {
+      gcHistory.getLast().subsequentTimestamp = now;
+      collectionTime = getCollectionTime();
+      gcHistory.add(new GcHistoryItem(now, collectionTime));
     }
-    return 0;
+
+    GcHistoryItem oldest = gcHistory.getFirst();
+    while (now - oldest.subsequentTimestamp > seconds) {
+      // The second-oldest history item can also be used, so don't use the oldest one.
+      gcHistory.removeFirst();
+      oldest = gcHistory.getFirst();
+    }
+    // At this point, the second-oldest history item is too recent to use.
+
+    long elapsed = now - oldest.timestamp; // in seconds
+    if (elapsed < seconds) {
+      // The oldest history item is too recent to use.
+      return 0;
+    }
+
+    double elapsedCollectionTime = (collectionTime - oldest.collectionTime) / 1000.0; // in seconds
+    return elapsedCollectionTime / elapsed;
   }
 }
