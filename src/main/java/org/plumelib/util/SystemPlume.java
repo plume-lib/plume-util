@@ -5,8 +5,8 @@ package org.plumelib.util;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
@@ -143,13 +143,15 @@ public final class SystemPlume {
    *
    * <p>The list is not currently pruned.
    */
-  private static List<Pair<Long, Long>> gcHistory = new ArrayList<>();
+  private static Deque<Pair<Long, Long>> gcHistory = new ArrayDeque<>();
 
   /**
    * Returns the fraction of time spent garbage collecting, in the past minute. This is generally a
    * value between 0 and 1. This method might return a value greater than 1 if multiple threads are
    * spending all their time collecting. Returns 0 if {@code gcPercentage} was not first called more
    * than 1 minute ago.
+   *
+   * <p>This method also discards all GC history older than one minute.
    *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
@@ -178,6 +180,8 @@ public final class SystemPlume {
    * multiple threads are spending all their time collecting. Returns 0 if {@code gcPercentage} was
    * not first called more than {@code seconds} seconds ago.
    *
+   * <p>This method also discards all GC history older than {@code seconds} seconds.
+   *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
    *
@@ -200,6 +204,13 @@ public final class SystemPlume {
     long now = Instant.now().getEpochSecond(); // in seconds
     long collectionTime = getCollectionTime(); // in milliseconds
     gcHistory.add(Pair.of(now, collectionTime));
+    // I wish to prune so that the first element is more than `seconds` seconds old, but the second
+    // is less than `seconds` seconds old.  My options are:
+    //  * implement a peek2 method via reflection
+    //  * implement a peek2 method via side effects
+    //  * code a similar loop here.
+    //  * when adding an element to the end, side-effect the current end element with information
+    //    about the next element.  Maybe this is best??
 
     for (int i = gcHistory.size() - 1; i >= 0; i--) {
       Pair<Long, Long> p = gcHistory.get(i);
