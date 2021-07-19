@@ -135,15 +135,53 @@ public final class SystemPlume {
     return result;
   }
 
-  // This should probably be a deque, so that it can be pruned.
-  // A problem is that a deque cannot be iterated through; it does not implement `get()`.
   /**
-   * A list of pairs of (timestamp, cumulative collection time). The timestamp is an epoch second,
-   * and the collection time is in milliseconds. New items are added to the end.
+   * Returns the cumulative garbage collection time in milliseconds, across all threads.
    *
-   * <p>The list is not currently pruned.
+   * @return the cumulative garbage collection time in milliseconds
    */
-  private static Deque<Pair<Long, Long>> gcHistory = new ArrayDeque<>();
+  private static long getCollectionTime() {
+    long result = 0;
+    for (GarbageCollectorMXBean b : ManagementFactory.getGarbageCollectorMXBeans()) {
+      long time = b.getCollectionTime();
+      if (time != -1) {
+        result += time;
+      }
+    }
+    return result;
+  }
+
+  /** A triple of (timestamp, collection time, subsequent timestamp). */
+  private static class GcHistoryItem {
+    /** When the collection happened. An epoch second. */
+    long timestamp;
+    /** The cumulative collection time in milliseconds. */
+    long collectionTime;
+    /**
+     * When the subsequent collection happened. It is 0 until after the subsequent collection
+     * occurs. The purpose of this field is to avoid the need for a {@code peek2()} method on deque.
+     */
+    long subsequentTimestamp = 0;
+
+    /**
+     * Creates a new GcHistoryItem.
+     *
+     * @param timestamp when the collection happened; an epoch second
+     * @param collectionTime the collection time in milliseconds
+     */
+    GcHistoryItem(long timestamp, long collectionTime) {
+      this.timestamp = timestamp;
+      this.collectionTime = collectionTime;
+    }
+  }
+
+  /** The history of recent garbage collection runs. The queue is never empty. */
+  private static Deque<GcHistoryItem> gcHistory;
+
+  static {
+    gcHistory = new ArrayDeque<>();
+    gcHistory.add(new GcHistoryItem(0, 0));
+  }
 
   /**
    * Returns the fraction of time spent garbage collecting, in the past minute. This is generally a
@@ -203,14 +241,8 @@ public final class SystemPlume {
   public static double gcPercentage(int seconds) {
     long now = Instant.now().getEpochSecond(); // in seconds
     long collectionTime = getCollectionTime(); // in milliseconds
-    gcHistory.add(Pair.of(now, collectionTime));
-    // I wish to prune so that the first element is more than `seconds` seconds old, but the second
-    // is less than `seconds` seconds old.  My options are:
-    //  * implement a peek2 method via reflection
-    //  * implement a peek2 method via side effects
-    //  * code a similar loop here.
-    //  * when adding an element to the end, side-effect the current end element with information
-    //    about the next element.  Maybe this is best??
+    gcHistory.getLast().subsequentTimestamp = now;
+    gcHistory.add(new GcHistoryItem(now, collectionTime));
 
     for (int i = gcHistory.size() - 1; i >= 0; i--) {
       Pair<Long, Long> p = gcHistory.get(i);
@@ -224,21 +256,5 @@ public final class SystemPlume {
       }
     }
     return 0;
-  }
-
-  /**
-   * Returns the cumulative garbage collection time in milliseconds, across all threads.
-   *
-   * @return the cumulative garbage collection time in milliseconds
-   */
-  private static long getCollectionTime() {
-    long result = 0;
-    for (GarbageCollectorMXBean b : ManagementFactory.getGarbageCollectorMXBeans()) {
-      long time = b.getCollectionTime();
-      if (time != -1) {
-        result += time;
-      }
-    }
-    return result;
   }
 }
