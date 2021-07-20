@@ -248,14 +248,15 @@ public final class SystemPlume {
       // though the collectionTime field would differ slightly.
       collectionTime = newest.collectionTime;
     } else {
-      gcHistory.getLast().subsequentTimestamp = now;
+      newest.subsequentTimestamp = now;
       collectionTime = getCollectionTime();
-      gcHistory.add(new GcHistoryItem(now, collectionTime));
+      newest = new GcHistoryItem(now, collectionTime);
+      gcHistory.add(newest);
     }
 
     GcHistoryItem oldest = gcHistory.getFirst();
     while (now - oldest.subsequentTimestamp > seconds) {
-      // The second-oldest history item can also be used, so don't use the oldest one.
+      // The second-oldest history item can be used, so don't use the oldest one.
       gcHistory.removeFirst();
       oldest = gcHistory.getFirst();
     }
