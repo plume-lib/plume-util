@@ -7,6 +7,7 @@ import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
@@ -185,29 +186,10 @@ public final class SystemPlume {
   }
 
   /**
-   * Returns the fraction of time spent garbage collecting, in the past minute. This is generally a
-   * value between 0 and 1. This method might return a value greater than 1 if multiple threads are
-   * spending all their time collecting. Returns 0 if {@code gcPercentage} was not first called more
-   * than 1 minute ago.
-   *
-   * <p>This method also discards all GC history older than one minute.
-   *
-   * <p>A typical use is to put the following in an outer loop that takes a significant amount of
-   * time (more than a second) to execute:
-   *
-   * <pre>{@code
-   * if (GC.gcPercentage() > .25) {
-   *   String message = String.format(
-   *     "Garbage collection consumed over 25% of CPU during the past minute."
-   *     + " Perhaps increase max heap size (max memory = %d, total memory = %d, free memory = %d).",
-   *     Runtime.getRuntime().maxMemory(),
-   *     Runtime.getRuntime().totalMemory(),
-   *     Runtime.getRuntime().freeMemory());
-   *   System.err.println(message);
-   * }
-   * }</pre>
+   * Calls `gcPercentage(60)`.
    *
    * @return the percentage of time spent garbage collecting, in the past minute
+   * @see #gcPercentage()
    */
   public static double gcPercentage() {
     return gcPercentage(60);
@@ -221,20 +203,8 @@ public final class SystemPlume {
    *
    * <p>This method also discards all GC history older than {@code seconds} seconds.
    *
-   * <p>A typical use is to put the following in an outer loop that takes a significant amount of
-   * time (more than a second) to execute:
-   *
-   * <pre>{@code
-   * if (GC.gcPercentage(10) > .25) {
-   *   String message = String.format(
-   *     "Garbage collection consumed over 25% of CPU during the past 10 seconds."
-   *     + " Perhaps increase max heap size (max memory = %d, total memory = %d, free memory = %d).",
-   *     Runtime.getRuntime().maxMemory(),
-   *     Runtime.getRuntime().totalMemory(),
-   *     Runtime.getRuntime().freeMemory());
-   *   System.err.println(message);
-   * }
-   * }</pre>
+   * <p>Instead of calling this method directly, a client program might call {@link
+   * #gcUsageMessage}.
    *
    * @param seconds the size of the time window, in seconds
    * @return the percentage of time spent garbage collecting, in the past {@code seconds} seconds
@@ -270,5 +240,44 @@ public final class SystemPlume {
 
     double elapsedCollectionTime = (collectionTime - oldest.collectionTime) / 1000.0; // in seconds
     return elapsedCollectionTime / elapsed;
+  }
+
+  /**
+   * If the fraction of time spent garbage collecting in the past {@code seconds} seconds is less
+   * than {@code cpuThreshold}, returns null. Otherwise, returns a string indicating garbage
+   * collection CPU usage and memory statistics. The string is multiple lines long, but does not end
+   * with a line separator.
+   *
+   * <p>A typical use is to put the following in an outer loop that takes a significant amount of
+   * time (more than a second) to execute:
+   *
+   * <pre>{@code
+   * String message = gcUsageMessage(.25, 60);
+   * if (message != null) {
+   *   System.err.println(message);
+   * }
+   * }</pre>
+   *
+   * @param cpuThreshold the maximum fraction of CPU that should be spent garbage collecting; a
+   *     number between 0 and 1
+   * @param seconds the time window in which to compute the garbage collection CPU usage
+   * @return a GC usage message string, or null
+   */
+  public @Nullable String gcUsageMessage(double cpuThreshold, int seconds) {
+    double gcPercentage = SystemPlume.gcPercentage(seconds);
+    if (gcPercentage < cpuThreshold) {
+      return null;
+    } else {
+      return String.join(
+          System.lineSeparator(),
+          "Garbage collection consumed "
+              + Math.round(gcPercentage * 100)
+              + "% of CPU during the past "
+              + seconds
+              + " seconds.",
+          "  max memory = " + Runtime.getRuntime().maxMemory(),
+          "total memory = " + Runtime.getRuntime().totalMemory(),
+          " free memory = " + Runtime.getRuntime().freeMemory());
+    }
   }
 }
