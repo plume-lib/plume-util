@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.5.6 (forthcoming)
+
+- Method `SystemPlume.gcPercentage` is more efficient.
+
 ## 1.5.5 (2021-06-08)
 
 - Fix bug where `.gz` files were read and written uncompressed.

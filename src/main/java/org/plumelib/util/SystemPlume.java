@@ -5,8 +5,8 @@ package org.plumelib.util;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
@@ -151,21 +151,46 @@ public final class SystemPlume {
     return result;
   }
 
-  // This should probably be a deque, so that it can be pruned.
-  // A problem is that a deque cannot be iterated through; it does not implement `get()`.
-  /**
-   * A list of pairs of (timestamp, cumulative collection time). The timestamp is an epoch second,
-   * and the collection time is in milliseconds. New items are added to the end.
-   *
-   * <p>The list is not currently pruned.
-   */
-  private static List<Pair<Long, Long>> gcHistory = new ArrayList<>();
+  /** A triple of (timestamp, collection time, subsequent timestamp). */
+  private static class GcHistoryItem {
+    /** When the collection happened. An epoch second. */
+    long timestamp;
+    /** The cumulative collection time in milliseconds. */
+    long collectionTime;
+    /**
+     * When the subsequent collection happened. It is 0 until after the subsequent collection
+     * occurs. The purpose of this field is to avoid the need for a {@code peek2()} method on deque.
+     */
+    long subsequentTimestamp = 0;
+
+    /**
+     * Creates a new GcHistoryItem.
+     *
+     * @param timestamp when the collection happened; an epoch second
+     * @param collectionTime the collection time in milliseconds
+     */
+    GcHistoryItem(long timestamp, long collectionTime) {
+      this.timestamp = timestamp;
+      this.collectionTime = collectionTime;
+    }
+  }
+
+  /** The history of recent garbage collection runs. The queue is never empty. */
+  private static Deque<GcHistoryItem> gcHistory;
+
+  static {
+    gcHistory = new ArrayDeque<>();
+    // Add a dummy element so the queue is never empty.
+    gcHistory.add(new GcHistoryItem(Instant.now().getEpochSecond(), getCollectionTime()));
+  }
 
   /**
    * Returns the fraction of time spent garbage collecting, in the past minute. This is generally a
    * value between 0 and 1. This method might return a value greater than 1 if multiple threads are
    * spending all their time collecting. Returns 0 if {@code gcPercentage} was not first called more
    * than 1 minute ago.
+   *
+   * <p>This method also discards all GC history older than one minute.
    *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
@@ -194,6 +219,8 @@ public final class SystemPlume {
    * multiple threads are spending all their time collecting. Returns 0 if {@code gcPercentage} was
    * not first called more than {@code seconds} seconds ago.
    *
+   * <p>This method also discards all GC history older than {@code seconds} seconds.
+   *
    * <p>A typical use is to put the following in an outer loop that takes a significant amount of
    * time (more than a second) to execute:
    *
@@ -213,21 +240,35 @@ public final class SystemPlume {
    * @return the percentage of time spent garbage collecting, in the past {@code seconds} seconds
    */
   public static double gcPercentage(int seconds) {
+    GcHistoryItem newest = gcHistory.getLast();
     long now = Instant.now().getEpochSecond(); // in seconds
-    long collectionTime = getCollectionTime(); // in milliseconds
-    gcHistory.add(Pair.of(now, collectionTime));
-
-    for (int i = gcHistory.size() - 1; i >= 0; i--) {
-      Pair<Long, Long> p = gcHistory.get(i);
-      long historyTimestamp = p.a; // in seconds
-      long elapsed = now - historyTimestamp; // in seconds
-      if (elapsed >= seconds) {
-        long historyCollectionTime = p.b; // in milliseconds
-        double elapsedCollectionTime =
-            (collectionTime - historyCollectionTime) / 1000.0; // in seconds
-        return elapsedCollectionTime / elapsed;
-      }
+    long collectionTime; // in milliseconds
+    if (now == newest.timestamp) {
+      // For efficiency, don't add another entry with the same timestamp as the newest one, even
+      // though the collectionTime field would differ slightly.
+      collectionTime = newest.collectionTime;
+    } else {
+      newest.subsequentTimestamp = now;
+      collectionTime = getCollectionTime();
+      newest = new GcHistoryItem(now, collectionTime);
+      gcHistory.add(newest);
     }
-    return 0;
+
+    GcHistoryItem oldest = gcHistory.getFirst();
+    while (now - oldest.subsequentTimestamp > seconds) {
+      // The second-oldest history item can be used, so don't use the oldest one.
+      gcHistory.removeFirst();
+      oldest = gcHistory.getFirst();
+    }
+    // At this point, the second-oldest history item is too recent to use.
+
+    long elapsed = now - oldest.timestamp; // in seconds
+    if (elapsed < seconds) {
+      // The oldest history item is too recent to use.
+      return 0;
+    }
+
+    double elapsedCollectionTime = (collectionTime - oldest.collectionTime) / 1000.0; // in seconds
+    return elapsedCollectionTime / elapsed;
   }
 }
