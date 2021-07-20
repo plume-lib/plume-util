@@ -2,7 +2,8 @@
 
 ## 1.5.6 (forthcoming)
 
-- Method `SystemPlume.gcPercentage` is more efficient.
+- New method `System.gcUsageMessage` is easier to use than `gcPercentage`.
+- Method `SystemPlume.gcPercentage` is now more efficient.
 
 ## 1.5.5 (2021-06-08)
 
