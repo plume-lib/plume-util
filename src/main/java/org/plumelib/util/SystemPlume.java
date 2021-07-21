@@ -225,12 +225,12 @@ public final class SystemPlume {
     }
 
     GcHistoryItem oldest = gcHistory.getFirst();
-    while (now - oldest.subsequentTimestamp > seconds) {
+    while (oldest.subsequentTimestamp != 0 && now - oldest.subsequentTimestamp > seconds) {
       // The second-oldest history item can be used, so don't use the oldest one.
       gcHistory.removeFirst();
       oldest = gcHistory.getFirst();
     }
-    // At this point, the second-oldest history item is too recent to use.
+    // At this point, the second-oldest history item is too recent to use (or it does not exist).
 
     long elapsed = now - oldest.timestamp; // in seconds
     if (elapsed < seconds) {
