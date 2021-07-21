@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'org.plumelib:reflection-util:1.0.3'
+  implementation 'org.plumelib:reflection-util:1.0.4'
 
   errorprone 'com.google.errorprone:error_prone_core:2.7.1'
 
