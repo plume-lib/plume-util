@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.5.6 (forthcoming)
+## 1.5.6 (2021-07-20)
 
 - New method `System.gcUsageMessage` is easier to use than `gcPercentage`.
 - Method `SystemPlume.gcPercentage` is now more efficient.
