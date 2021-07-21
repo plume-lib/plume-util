@@ -2,6 +2,10 @@
 
 ## 1.5.7 (2021-07-20)
 
+- Bug fix in `System.gcPercentage`.
+
+## 1.5.7 (2021-07-20)
+
 - Bug fix: make `System.gcUsageMessage` static.
 
 ## 1.5.6 (2021-07-20)
