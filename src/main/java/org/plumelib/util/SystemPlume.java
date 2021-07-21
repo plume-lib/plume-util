@@ -263,7 +263,7 @@ public final class SystemPlume {
    * @param seconds the time window in which to compute the garbage collection CPU usage
    * @return a GC usage message string, or null
    */
-  public @Nullable String gcUsageMessage(double cpuThreshold, int seconds) {
+  public static @Nullable String gcUsageMessage(double cpuThreshold, int seconds) {
     double gcPercentage = SystemPlume.gcPercentage(seconds);
     if (gcPercentage < cpuThreshold) {
       return null;

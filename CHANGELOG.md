@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.5.7 (2021-07-20)
+
+- Bug fix: make `System.gcUsageMessage` static.
+
 ## 1.5.6 (2021-07-20)
 
 - New method `System.gcUsageMessage` is easier to use than `gcPercentage`.
