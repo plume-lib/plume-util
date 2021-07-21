@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.5.7 (2021-07-20)
+## 1.5.8 (2021-07-20)
 
 - Bug fix in `System.gcPercentage`.
 
