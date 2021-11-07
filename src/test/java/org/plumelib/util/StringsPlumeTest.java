@@ -146,7 +146,6 @@ public final class StringsPlumeTest {
     assertEquals("(1", StringsPlume.unescapeJava("\501"));
     assertEquals("?7", StringsPlume.unescapeJava("\0777")); // '?' = \077
     assertEquals("?7", StringsPlume.unescapeJava("\777")); // '?' = \077
-    assertEquals(" M ", StringsPlume.unescapeJava(" \uuu004D "));
 
     // public static String escapeNonASCII(String orig)
 
