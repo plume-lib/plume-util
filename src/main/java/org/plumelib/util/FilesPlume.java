@@ -1004,7 +1004,9 @@ public final class FilesPlume {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    return baos.toString(UTF_8);
+    @SuppressWarnings("DefaultCharset") // JDK 8 version does not accept UTF_8 argument
+    String result = baos.toString();
+    return result;
   }
 
   /**
