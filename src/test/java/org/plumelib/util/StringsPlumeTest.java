@@ -98,6 +98,7 @@ public final class StringsPlumeTest {
     assertEquals(s, StringsPlume.unescapeJava(escaped));
   }
 
+  @SuppressWarnings("UnicodeEscape")
   @Test
   public void test_escapeJava() {
 
