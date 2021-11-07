@@ -579,7 +579,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     // System.out.printf ("Returning [%d] '%s'%n", readers.size(), line);
-    return (line);
+    return line;
   }
 
   /**
@@ -669,7 +669,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       line = readLine();
     }
     if (line == null) {
-      return (null);
+      return null;
     }
 
     StringBuilder body = new StringBuilder(10000);
@@ -742,7 +742,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       entry = new Entry(description, body.toString(), filename, lineNumber, true);
     }
 
-    return (entry);
+    return entry;
   }
 
   /**
@@ -755,7 +755,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   private @Nullable String getNextLine(@GuardSatisfied EntryReader this) throws IOException {
 
     if (readers.size() == 0) {
-      return (null);
+      return null;
     }
 
     FlnReader ri1 = readers.getFirst();
@@ -763,12 +763,12 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     while (line == null) {
       readers.removeFirst();
       if (readers.isEmpty()) {
-        return (null);
+        return null;
       }
       FlnReader ri2 = readers.peekFirst();
       line = ri2.readLine();
     }
-    return (line);
+    return line;
   }
 
   /**

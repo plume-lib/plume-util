@@ -85,19 +85,19 @@ public class FuzzyFloat {
 
     // NaNs are not considered equal.
     if (Double.isNaN(d1) && Double.isNaN(d2)) {
-      return (false);
+      return false;
     }
 
     // if zero was specified for a ratio, don't do the divide.  You might
     // get slightly different answers.  And this should be faster.
     if (exactComparisons) {
-      return (d1 == d2);
+      return d1 == d2;
     }
 
     // slightly more efficient for matches and catches positive and negative
     // infinity (which match in this test, but not below)
     if (d1 == d2) {
-      return (true);
+      return true;
     }
 
     // When one number is 0, require that the other is less than the square of the fuzzy ratio.
@@ -109,16 +109,16 @@ public class FuzzyFloat {
 
       if (d1 == 0.0) {
 
-        return (Math.abs(d2) < zeroTolerance);
+        return Math.abs(d2) < zeroTolerance;
 
       } else {
 
-        return (Math.abs(d1) < zeroTolerance);
+        return Math.abs(d1) < zeroTolerance;
       }
     }
 
     double ratio = d1 / d2;
-    return ((ratio >= minRatio) && (ratio <= maxRatio));
+    return (ratio >= minRatio) && (ratio <= maxRatio);
   }
 
   /**
@@ -131,7 +131,7 @@ public class FuzzyFloat {
    */
   @Pure
   public boolean ne(double d1, double d2) {
-    return (!eq(d1, d2));
+    return !eq(d1, d2);
   }
 
   /**
@@ -145,7 +145,7 @@ public class FuzzyFloat {
    */
   @Pure
   public boolean lt(double d1, double d2) {
-    return ((d1 < d2) && ne(d1, d2));
+    return (d1 < d2) && ne(d1, d2);
   }
 
   /**
@@ -159,7 +159,7 @@ public class FuzzyFloat {
    */
   @Pure
   public boolean lte(double d1, double d2) {
-    return ((d1 <= d2) || eq(d1, d2));
+    return (d1 <= d2) || eq(d1, d2);
   }
 
   /**
@@ -173,7 +173,7 @@ public class FuzzyFloat {
    */
   @Pure
   public boolean gt(double d1, double d2) {
-    return ((d1 > d2) && ne(d1, d2));
+    return (d1 > d2) && ne(d1, d2);
   }
 
   /**
@@ -187,7 +187,7 @@ public class FuzzyFloat {
    */
   @Pure
   public boolean gte(double d1, double d2) {
-    return ((d1 >= d2) || eq(d1, d2));
+    return (d1 >= d2) || eq(d1, d2);
   }
 
   /**
@@ -233,9 +233,9 @@ public class FuzzyFloat {
           continue outer;
         }
       }
-      return (i);
+      return i;
     }
-    return (-1);
+    return -1;
   }
 
   /**
@@ -272,11 +272,11 @@ public class FuzzyFloat {
         }
         if (val < a1[j]) {
           // System.out.println ("isElemMatch: " + val + " " + a1[j]);
-          return (false);
+          return false;
         }
       }
       // System.out.println ("isElemMatch: " + i);
-      return (false);
+      return false;
     }
 
     // look for elements of a1 in a2
@@ -291,14 +291,14 @@ public class FuzzyFloat {
         }
         if (val < a2[j]) {
           // System.out.println ("isElemMatch: " + val + " " + a2[j]);
-          return (false);
+          return false;
         }
       }
       // System.out.println ("isElemMatch: " + i);
-      return (false);
+      return false;
     }
 
-    return (true);
+    return true;
   }
 
   // Slightly more efficient method that will miss some matches
@@ -307,7 +307,7 @@ public class FuzzyFloat {
   //     while (i < a1.length && j < a2.length) {
   //       if (ne (a1[i], a2[j])) {
   //         System.out.println ("isElemMatch: " + a1[i] + " " + a2[j]);
-  //         return (false);
+  //         return false;
   //       }
   //       double val = a1[i];
   //       i++;
@@ -323,10 +323,10 @@ public class FuzzyFloat {
   //     // if there are any elements left, then they don't match.
   //     if ((i != a1.length) || (j != a2.length)) {
   //       System.out.println ("isElemMatch: " + i + " " + j);
-  //       return (false);
+  //       return false;
   //     }
 
-  //     return (true);
+  //     return true;
   //     }
 
   /** Lexically compares two double arrays. */
@@ -350,7 +350,7 @@ public class FuzzyFloat {
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
         if (ne(a1[i], a2[i])) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return a1.length - a2.length;
@@ -390,12 +390,12 @@ public class FuzzyFloat {
           continue outer1;
         }
         if (val < bigger[j]) {
-          return (false);
+          return false;
         }
       }
-      return (false);
+      return false;
     }
 
-    return (true);
+    return true;
   }
 }
