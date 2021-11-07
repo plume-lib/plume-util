@@ -3089,7 +3089,7 @@ public final class ArraysPlume {
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return a1.length - a2.length;
@@ -3125,7 +3125,7 @@ public final class ArraysPlume {
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return a1.length - a2.length;
@@ -3163,7 +3163,7 @@ public final class ArraysPlume {
       for (int i = 0; i < len; i++) {
         int result = Double.compare(a1[i], a2[i]);
         if (result != 0) {
-          return (result);
+          return result;
         }
       }
       return a1.length - a2.length;
@@ -3214,7 +3214,7 @@ public final class ArraysPlume {
           tmp = a1[i].compareTo(a2[i]);
         }
         if (tmp != 0) {
-          return (tmp);
+          return tmp;
         }
       }
       return a1.length - a2.length;
@@ -3355,7 +3355,7 @@ public final class ArraysPlume {
       }
       for (int i = 0; i < a1.length; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return 0;
@@ -3394,7 +3394,7 @@ public final class ArraysPlume {
       }
       for (int i = 0; i < a1.length; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return 0;

@@ -579,7 +579,7 @@ public final class CollectionsPlume {
       }
     }
 
-    return (results);
+    return results;
   }
 
   /**
@@ -618,7 +618,7 @@ public final class CollectionsPlume {
     // Return a list with one zero length element if arity is zero
     if (arity == 0) {
       results.add(new ArrayList<Integer>());
-      return (results);
+      return results;
     }
 
     for (int i = start; i <= cnt; i++) {
@@ -753,7 +753,7 @@ public final class CollectionsPlume {
 
     @Override
     public boolean hasNext(@GuardSatisfied MergedIterator2<T> this) {
-      return (itor1.hasNext() || itor2.hasNext());
+      return itor1.hasNext() || itor2.hasNext();
     }
 
     @Override
@@ -1233,7 +1233,7 @@ public final class CollectionsPlume {
         return true;
       }
     }
-    return (intersectionCardinality(a, b) >= i);
+    return intersectionCardinality(a, b) >= i;
   }
 
   /**
@@ -1265,7 +1265,7 @@ public final class CollectionsPlume {
         return true;
       }
     }
-    return (intersectionCardinality(a, b, c) >= i);
+    return intersectionCardinality(a, b, c) >= i;
   }
 
   /**

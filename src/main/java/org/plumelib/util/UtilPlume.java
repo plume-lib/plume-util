@@ -396,7 +396,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(File file)
       throws FileNotFoundException, IOException {
-    return (bufferedFileReader(file, null));
+    return bufferedFileReader(file, null);
   }
 
   /**
@@ -908,7 +908,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static String expandFilename(String name) {
     if (name.contains("~")) {
-      return (name.replace("~", userHome));
+      return name.replace("~", userHome);
     } else {
       return name;
     }
@@ -1464,7 +1464,9 @@ public final class UtilPlume {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    return baos.toString();
+    @SuppressWarnings("DefaultCharset") // JDK 8 version does not accept UTF_8 argument
+    String result = baos.toString();
+    return result;
   }
 
   /**

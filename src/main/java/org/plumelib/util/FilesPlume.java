@@ -839,7 +839,7 @@ public final class FilesPlume {
    */
   public static String expandFilename(String name) {
     if (name.contains("~")) {
-      return (name.replace("~", userHome));
+      return name.replace("~", userHome);
     } else {
       return name;
     }
@@ -1004,7 +1004,9 @@ public final class FilesPlume {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    return baos.toString();
+    @SuppressWarnings("DefaultCharset") // JDK 8 version does not accept UTF_8 argument
+    String result = baos.toString();
+    return result;
   }
 
   /**

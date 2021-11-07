@@ -81,23 +81,23 @@ public final class Intern {
       // nothing to do
       return true;
     } else if (value instanceof String) {
-      return (value == ((String) value).intern());
+      return value == ((String) value).intern();
     } else if (value instanceof String[]) {
-      return (value == intern((String[]) value));
+      return value == intern((String[]) value);
     } else if (value instanceof Integer) {
-      return (value == intern((Integer) value));
+      return value == intern((Integer) value);
     } else if (value instanceof Long) {
-      return (value == intern((Long) value));
+      return value == intern((Long) value);
     } else if (value instanceof int[]) {
-      return (value == intern((int[]) value));
+      return value == intern((int[]) value);
     } else if (value instanceof long[]) {
-      return (value == intern((long[]) value));
+      return value == intern((long[]) value);
     } else if (value instanceof Double) {
-      return (value == intern((Double) value));
+      return value == intern((Double) value);
     } else if (value instanceof double[]) {
-      return (value == intern((double[]) value));
+      return value == intern((double[]) value);
     } else if (value instanceof Object[]) {
-      return (value == intern((Object[]) value));
+      return value == intern((Object[]) value);
     } else {
       // Nothing to do, because we don't intern other types.
       // System.out.println("What type? " + value.getClass().getName());
