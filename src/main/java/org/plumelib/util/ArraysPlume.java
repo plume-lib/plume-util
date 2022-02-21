@@ -80,6 +80,25 @@ public final class ArraysPlume {
     return result;
   }
 
+  // /**
+  //  * Concatenates an element and an array into a new array.
+  //  *
+  //  * @param <T> the type of the array elements
+  //  * @param firstElt the new first elemeent
+  //  * @param array the array
+  //  * @return a new array containing the first element and the array elements, in that order
+  //  */
+  // @SuppressWarnings({
+  //   "unchecked",
+  //   "index:array.access.unsafe.high" // addition in array length
+  // })
+  // public static <T> T[] prepend(T firstElt, T[] array) {
+  //   @SuppressWarnings({"unchecked", "nullness:assignment"})
+  //   T[] result = Arrays.copyOf(array, array.length + 1, 1, array.length + 1);
+  //   result[0] = firstElt;
+  //   return result;
+  // }
+
   ///////////////////////////////////////////////////////////////////////////
   /// min, max
   ///
