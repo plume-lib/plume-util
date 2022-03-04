@@ -2679,7 +2679,7 @@ public final class UtilPlume {
 
   /**
    * Returns a String representation of the backtrace of the given Throwable. To see a backtrace at
-   * the the current location, do {@code backtrace(new Throwable())}.
+   * the current location, do {@code backtrace(new Throwable())}.
    *
    * @param t the Throwable to obtain a backtrace of
    * @return a String representation of the backtrace of the given Throwable
@@ -2692,7 +2692,7 @@ public final class UtilPlume {
 
   /**
    * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For
-   * a stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
+   * a stack trace at the current location, do {@code stackTraceToString(new Throwable())}.
    *
    * @param t the Throwable to obtain a stack trace of
    * @return a String representation of the stack trace of the given Throwable

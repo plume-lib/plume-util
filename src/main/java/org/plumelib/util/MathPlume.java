@@ -1834,7 +1834,7 @@ public final class MathPlume {
   }
 
   /**
-   * @param rm an an array containing two elements
+   * @param rm an array containing two elements
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This
    *     iterator has already been iterated all the way to its end.
    * @return true if the first and last elements are equal to r (mod m)
