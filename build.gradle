@@ -48,7 +48,7 @@ test {
 /// Error Prone linter
 
 dependencies {
-  errorprone("com.google.errorprone:error_prone_core:2.12.0")
+  errorprone("com.google.errorprone:error_prone_core:2.12.1")
 }
 tasks.withType(JavaCompile).configureEach {
   options.compilerArgs << "-Xlint:all,-processing" << "-Werror"
