@@ -1836,6 +1836,7 @@ public final class ArraysPlume {
      *
      * @return a verbose representation of this, for debugging
      */
+    @SuppressWarnings("UnusedMethod")
     public String toStringDebug() {
       String theArrayString;
       if (theArray == null) {
