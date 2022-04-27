@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, ArrayList, Iterator, and Map. */
@@ -306,8 +307,8 @@ public final class CollectionsPlume {
     }
 
     if (o1 instanceof List<?> && o2 instanceof List<?>) {
-      List<?> l1 = (List<?>) o1;
-      List<?> l2 = (List<?>) o2;
+      List<? extends @Signed Object> l1 = (List<? extends @Signed Object>) o1;
+      List<? extends @Signed Object> l2 = (List<? extends @Signed Object>) o2;
       if (l1.size() != l2.size()) {
         return false;
       }
@@ -1077,7 +1078,8 @@ public final class CollectionsPlume {
    * @param m map to be converted to a string
    * @return a multi-line string representation of m
    */
-  public static <K, V> String mapToString(Map<K, V> m) {
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToString(Map<K, V> m) {
     StringBuilder sb = new StringBuilder();
     mapToString(sb, m, "");
     return sb.toString();
@@ -1093,7 +1095,8 @@ public final class CollectionsPlume {
    * @param m map to be converted to a string
    * @param linePrefix prefix to write at the beginning of each line
    */
-  public static <K, V> void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
     try {
       for (Map.Entry<K, V> entry : m.entrySet()) {
         sb.append(linePrefix);

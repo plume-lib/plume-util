@@ -7,15 +7,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import org.checkerframework.checker.signedness.qual.Signed;
 
 /** Defines a static method {@link #dumpHeap} that dumps the heap to an .hprof file. */
+@SuppressWarnings("signedness") // lack of annotations on ManagementFactory and reflection
 public class DumpHeap {
 
   /**
    * The HotSpot Diagnostic MBean. Its type is Object, in case HotSpotDiagnosticMXBean is not
    * available at compile time.
    */
-  private static volatile @MonotonicNonNull Object hotspotMBean;
+  private static volatile @MonotonicNonNull @Signed Object hotspotMBean;
 
   /** The method com.sun.management.HotSpotDiagnosticMXBean#dumpHeap. */
   private static @MonotonicNonNull Method dumpHeapMethod;

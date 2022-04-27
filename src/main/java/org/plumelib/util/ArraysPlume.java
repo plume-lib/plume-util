@@ -928,7 +928,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(
-      List<? extends @PolySigned Object> a, @PolyNull @PolySigned Object[] sub) {
+      List<? extends @PolyNull @PolySigned Object> a, @PolyNull @PolySigned Object[] sub) {
     int aIndexMax = a.size() - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -2357,7 +2357,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toString(@Nullable Collection<? extends @Signed Object> a) {
+  public static String toString(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
     return toString(a, false);
   }
 
@@ -2370,7 +2370,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toStringQuoted(@Nullable Collection<? extends @Signed Object> a) {
+  public static String toStringQuoted(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
     return toString(a, true);
   }
 
@@ -2385,7 +2385,8 @@ public final class ArraysPlume {
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
-  public static String toString(@Nullable Collection<? extends @Signed Object> a, boolean quoted) {
+  public static String toString(
+      @Nullable Collection<? extends @Signed @PolyNull Object> a, boolean quoted) {
     if (a == null) {
       return "null";
     }

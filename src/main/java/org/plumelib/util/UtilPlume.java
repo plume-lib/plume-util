@@ -52,6 +52,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.regex.qual.Regex;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
@@ -1274,7 +1275,8 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#mapToStringAndClass}
    */
   @Deprecated // use StringsPlume.mapToStringAndClass; deprecated 2020-12-02
-  public static String mapToStringAndClass(Map<?, ?> m) {
+  public static String mapToStringAndClass(
+      Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
     return StringsPlume.mapToStringAndClass(m);
   }
 
@@ -1743,7 +1745,7 @@ public final class UtilPlume {
    */
   @Deprecated // use join(CharSequence, Object...) which has the arguments in the other order;
   // deprecated 2020-02-20
-  public static <T extends @Signed Object> String join(T[] a, CharSequence delim) {
+  public static <T> String join(@Signed T[] a, CharSequence delim) {
     if (a.length == 0) {
       return "";
     }
@@ -1800,7 +1802,7 @@ public final class UtilPlume {
   @SafeVarargs
   @SuppressWarnings("varargs")
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
-  public static <T extends @Signed Object> String joinLines(T... a) {
+  public static <T> String joinLines(@Signed T... a) {
     return join(lineSep, a);
   }
 
@@ -1820,10 +1822,10 @@ public final class UtilPlume {
    */
   @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order;
   // deprecated 2020-12-02
-  public static String join(Iterable<? extends @Signed Object> v, CharSequence delim) {
+  public static String join(Iterable<? extends @Signed @PolyNull Object> v, CharSequence delim) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<? extends @Signed Object> itor = v.iterator();
+    Iterator<? extends @Signed @PolyNull Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1849,10 +1851,10 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#join}
    */
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
-  public static String join(CharSequence delim, Iterable<? extends @Signed Object> v) {
+  public static String join(CharSequence delim, Iterable<? extends @Signed @PolyNull Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<? extends @Signed Object> itor = v.iterator();
+    Iterator<? extends @Signed @PolyNull Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1874,7 +1876,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#joinLines}
    */
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
-  public static String joinLines(Iterable<? extends @Signed Object> v) {
+  public static String joinLines(Iterable<? extends @Signed @PolyNull Object> v) {
     return join(lineSep, v);
   }
 
