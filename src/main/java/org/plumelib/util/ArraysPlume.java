@@ -27,6 +27,8 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -925,7 +927,8 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(List<?> a, @PolyNull Object[] sub) {
+  public static int indexOf(
+      List<? extends @PolySigned Object> a, @PolyNull @PolySigned Object[] sub) {
     int aIndexMax = a.size() - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -969,7 +972,8 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(@PolyNull Object[] a, List<?> sub) {
+  public static int indexOf(
+      @PolyNull @PolySigned Object[] a, List<? extends @PolyNull @PolySigned Object> sub) {
     int aIndexMax = a.length - sub.size() + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -1368,7 +1372,9 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean isSubarray(
-      @PolyNull Object[] a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+      @PolyNull @PolySigned Object[] a,
+      @PolyNull @PolySigned Object[] sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -1415,7 +1421,10 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(@PolyNull Object[] a, List<?> sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(
+      @PolyNull @PolySigned Object[] a,
+      List<? extends @PolyNull @PolySigned Object> sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.length) {
       return false;
     }
@@ -1461,7 +1470,10 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(List<?> a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(
+      List<? extends @PolyNull @PolySigned Object> a,
+      @PolyNull @PolySigned Object[] sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.length > a.size()) {
       return false;
     }
@@ -2344,7 +2356,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toString(@Nullable Collection<?> a) {
+  public static String toString(@Nullable Collection<? extends @Signed Object> a) {
     return toString(a, false);
   }
 
@@ -2357,7 +2369,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toStringQuoted(@Nullable Collection<?> a) {
+  public static String toStringQuoted(@Nullable Collection<? extends @Signed Object> a) {
     return toString(a, true);
   }
 
@@ -2372,7 +2384,7 @@ public final class ArraysPlume {
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
-  public static String toString(@Nullable Collection<?> a, boolean quoted) {
+  public static String toString(@Nullable Collection<? extends @Signed Object> a, boolean quoted) {
     if (a == null) {
       return "null";
     }
@@ -2898,7 +2910,7 @@ public final class ArraysPlume {
   @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
     int[] result = new int[arange];
-    Arrays.fill(result, -1);
+    Arrays.fill(result, (@Signed int) -1);
     for (int i = 0; i < a.length; i++) {
       int ai = a[i];
       if (ai < -1 || ai >= arange) {

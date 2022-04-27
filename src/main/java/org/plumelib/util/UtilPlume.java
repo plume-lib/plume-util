@@ -53,6 +53,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -1742,7 +1743,7 @@ public final class UtilPlume {
    */
   @Deprecated // use join(CharSequence, Object...) which has the arguments in the other order;
   // deprecated 2020-02-20
-  public static <T> String join(T[] a, CharSequence delim) {
+  public static <T extends @Signed Object> String join(T[] a, CharSequence delim) {
     if (a.length == 0) {
       return "";
     }
@@ -1773,7 +1774,7 @@ public final class UtilPlume {
    */
   @SafeVarargs
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
-  public static <T> String join(CharSequence delim, T... a) {
+  public static <T extends @Nullable @Signed Object> String join(CharSequence delim, T... a) {
     if (a.length == 0) {
       return "";
     }
@@ -1799,7 +1800,7 @@ public final class UtilPlume {
   @SafeVarargs
   @SuppressWarnings("varargs")
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
-  public static <T> String joinLines(T... a) {
+  public static <T extends @Signed Object> String joinLines(T... a) {
     return join(lineSep, a);
   }
 
@@ -1819,10 +1820,10 @@ public final class UtilPlume {
    */
   @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order;
   // deprecated 2020-12-02
-  public static String join(Iterable<?> v, CharSequence delim) {
+  public static String join(Iterable<? extends @Signed Object> v, CharSequence delim) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<?> itor = v.iterator();
+    Iterator<? extends @Signed Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1848,10 +1849,10 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#join}
    */
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
-  public static String join(CharSequence delim, Iterable<?> v) {
+  public static String join(CharSequence delim, Iterable<? extends @Signed Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<?> itor = v.iterator();
+    Iterator<? extends @Signed Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1873,7 +1874,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#joinLines}
    */
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
-  public static String joinLines(Iterable<?> v) {
+  public static String joinLines(Iterable<? extends @Signed Object> v) {
     return join(lineSep, v);
   }
 

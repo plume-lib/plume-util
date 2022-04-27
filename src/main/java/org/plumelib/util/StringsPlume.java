@@ -19,6 +19,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -220,7 +221,7 @@ public final class StringsPlume {
   })
   @SafeVarargs
   @SideEffectFree
-  public static <T> String join(CharSequence delim, T... a) {
+  public static <T extends @Signed Object> String join(CharSequence delim, T... a) {
     if (a.length == 0) {
       return "";
     }
@@ -266,10 +267,10 @@ public final class StringsPlume {
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
   })
   @SideEffectFree
-  public static String join(CharSequence delim, Iterable<?> v) {
+  public static String join(CharSequence delim, Iterable<? extends @Signed Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<?> itor = v.iterator();
+    Iterator<? extends @Signed Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1060,7 +1061,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String listToString(@Nullable List<?> lst) {
+  public static String listToString(@Nullable List<? extends @Signed Object> lst) {
     if (lst == null) {
       return "null";
     }
@@ -1133,9 +1134,10 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String mapToStringAndClass(Map<?, ?> m) {
+  public static String mapToStringAndClass(
+      Map<? extends @Signed Object, ? extends @Signed Object> m) {
     StringJoiner result = new StringJoiner(System.lineSeparator());
-    for (Map.Entry<?, ?> e : m.entrySet()) {
+    for (Map.Entry<? extends @Signed Object, ? extends @Signed Object> e : m.entrySet()) {
       result.add("    " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
     }
     return result.toString();
@@ -1192,7 +1194,7 @@ public final class StringsPlume {
    * @param elements the elements of the conjunction or disjunction
    * @return a conjunction or disjunction string
    */
-  public static String conjunction(String conjunction, List<?> elements) {
+  public static String conjunction(String conjunction, List<? extends @Signed Object> elements) {
     int size = elements.size();
     if (size == 0) {
       throw new IllegalArgumentException("no elements passed to conjunction()");
