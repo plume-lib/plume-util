@@ -1776,7 +1776,7 @@ public final class UtilPlume {
    */
   @SafeVarargs
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
-  public static <T extends @Nullable @Signed Object> String join(CharSequence delim, T... a) {
+  public static <T> String join(CharSequence delim, @Signed T... a) {
     if (a.length == 0) {
       return "";
     }
