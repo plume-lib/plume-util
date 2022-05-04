@@ -19,8 +19,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -336,7 +338,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    */
   @Pure
   @Override
-  public @Nullable V get(@Nullable Object key) {
+  public @Nullable V get(@Nullable @UnknownSignedness @GuardSatisfied Object key) {
     Object k = maskNull(key);
     int h = hasher(k);
     @Nullable Entry<K, V>[] tab = getTable();

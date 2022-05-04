@@ -18,7 +18,9 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.regex.qual.Regex;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -220,7 +222,7 @@ public final class StringsPlume {
   })
   @SafeVarargs
   @SideEffectFree
-  public static <T> String join(CharSequence delim, T... a) {
+  public static <T> String join(CharSequence delim, @Signed T... a) {
     if (a.length == 0) {
       return "";
     }
@@ -245,7 +247,7 @@ public final class StringsPlume {
   @SafeVarargs
   @SuppressWarnings("varargs")
   @SideEffectFree
-  public static <T> String joinLines(T... a) {
+  public static <T> String joinLines(@Signed T... a) {
     return join(lineSep, a);
   }
 
@@ -266,10 +268,10 @@ public final class StringsPlume {
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
   })
   @SideEffectFree
-  public static String join(CharSequence delim, Iterable<?> v) {
+  public static String join(CharSequence delim, Iterable<? extends @Signed @PolyNull Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<?> itor = v.iterator();
+    Iterator<? extends @Signed @PolyNull Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -290,7 +292,7 @@ public final class StringsPlume {
    * @return the concatenation of the string representations of the values, each on its own line
    */
   @SideEffectFree
-  public static String joinLines(Iterable<?> v) {
+  public static String joinLines(Iterable<? extends @Signed @PolyNull Object> v) {
     return join(lineSep, v);
   }
 
@@ -1019,10 +1021,11 @@ public final class StringsPlume {
         return arrayToStringAndClass(v);
       }
       if (v instanceof List) {
-        return listToStringAndClass((List<?>) v);
+        return listToStringAndClass((List<? extends @PolyNull @Signed Object>) v);
       }
       if (v instanceof Map) {
-        return mapToStringAndClass((Map<?, ?>) v);
+        return mapToStringAndClass(
+            (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) v);
       }
     }
     try {
@@ -1040,7 +1043,8 @@ public final class StringsPlume {
    * @return the value's toString and its class
    */
   @SideEffectFree
-  public static String listToStringAndClass(@Nullable List<?> lst) {
+  public static String listToStringAndClass(
+      @Nullable List<? extends @Signed @PolyNull Object> lst) {
     if (lst == null) {
       return "null";
     } else {
@@ -1060,7 +1064,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String listToString(@Nullable List<?> lst) {
+  public static String listToString(@Nullable List<? extends @Signed @PolyNull Object> lst) {
     if (lst == null) {
       return "null";
     }
@@ -1133,9 +1137,11 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String mapToStringAndClass(Map<?, ?> m) {
+  public static String mapToStringAndClass(
+      Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
     StringJoiner result = new StringJoiner(System.lineSeparator());
-    for (Map.Entry<?, ?> e : m.entrySet()) {
+    for (Map.Entry<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> e :
+        m.entrySet()) {
       result.add("    " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
     }
     return result.toString();
@@ -1192,7 +1198,8 @@ public final class StringsPlume {
    * @param elements the elements of the conjunction or disjunction
    * @return a conjunction or disjunction string
    */
-  public static String conjunction(String conjunction, List<?> elements) {
+  public static String conjunction(
+      String conjunction, List<? extends @Signed @PolyNull Object> elements) {
     int size = elements.size();
     if (size == 0) {
       throw new IllegalArgumentException("no elements passed to conjunction()");

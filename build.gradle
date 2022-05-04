@@ -76,7 +76,9 @@ checkerFramework {
     'org.checkerframework.checker.nullness.NullnessChecker',
     'org.checkerframework.checker.regex.RegexChecker',
     'org.checkerframework.checker.signature.SignatureChecker',
-    'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
+    'org.checkerframework.checker.signedness.SignednessChecker',
+    // Error Prone crashes if InitializedfieldsChecker is included!
+    // 'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
   ]
   extraJavacArgs = [
     '-Werror',
