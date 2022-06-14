@@ -323,7 +323,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       return removeIndex(index);
     }
 
-    @SuppressWarnings("nullness:return.type.incompatible") // polymorphism problem
+    @SuppressWarnings("nullness:return") // polymorphism problem
     @SideEffectFree
     @Override
     public Object[] toArray() {
@@ -465,8 +465,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
     // toArray() and toArray(T[] a) are inherited.
 
     @SuppressWarnings({
-      "interning:argument.type.incompatible", // TODO: investigate later
-      "signature:argument.type.incompatible", // TODO: investigate later
+      "interning:argument", // TODO: investigate later
+      "signature:argument", // TODO: investigate later
     })
     @Override
     public final void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
@@ -522,8 +522,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       if (initialModificationCount != modificationCount) {
         throw new ConcurrentModificationException();
       }
-      @SuppressWarnings(
-          "lowerbound:assignment.type.incompatible") // If removed==false, then index>0.
+      @SuppressWarnings("lowerbound:assignment") // If removed==false, then index>0.
       @NonNegative int newIndex = index - 1;
       index = newIndex;
       ArrayMap.this.removeIndex(index);
