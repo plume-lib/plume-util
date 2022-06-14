@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, ArrayList, Iterator, and Map. */
@@ -113,7 +114,7 @@ public final class CollectionsPlume {
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
    * @return a copy of the list with duplicates removed
-   * @deprecated use {@link withoutDuplicates}
+   * @deprecated use {@link withoutDuplicates} or {@link withoutDuplicatesComparable}
    */
   @Deprecated // 2021-03-28
   public static <T> List<T> removeDuplicates(List<T> l) {
@@ -123,14 +124,37 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a list with the same contents as its argument, but without duplicates. May return its
+   * Returns a copy of the list with duplicates removed. Retains the original order. May return its
    * argument if its argument has no duplicates, but is not guaranteed to do so.
+   *
+   * <p>If the element type implements {@link Comparable}, use {@link #withoutDuplicatesComparable}.
    *
    * @param <T> the type of elements in {@code values}
    * @param values a list of values
    * @return the values, with duplicates removed
    */
-  public static <T extends Comparable<T>> List<T> withoutDuplicates(List<T> values) {
+  public static <T> List<T> withoutDuplicates(List<T> values) {
+    HashSet<T> hs = new LinkedHashSet<>(values);
+    if (values.size() == hs.size()) {
+      return values;
+    } else {
+      return new ArrayList<>(hs);
+    }
+  }
+
+  /**
+   * Returns a list with the same contents as its argument, but without duplicates. May return its
+   * argument if its argument has no duplicates, but is not guaranteed to do so.
+   *
+   * <p>This is like {@link #withoutDuplicates}, but requires the list elements to implement {@link
+   * Comparable}, and thus can be more efficient. Also, this does not retain the original order; the
+   * result is sorted.
+   *
+   * @param <T> the type of elements in {@code values}
+   * @param values a list of values
+   * @return the values, with duplicates removed
+   */
+  public static <T extends Comparable<T>> List<T> withoutDuplicatesComparable(List<T> values) {
     // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
     if (isSortedNoDuplicates(values)) {
       return values;
@@ -283,8 +307,8 @@ public final class CollectionsPlume {
     }
 
     if (o1 instanceof List<?> && o2 instanceof List<?>) {
-      List<?> l1 = (List<?>) o1;
-      List<?> l2 = (List<?>) o2;
+      List<? extends @Signed Object> l1 = (List<? extends @Signed Object>) o1;
+      List<? extends @Signed Object> l2 = (List<? extends @Signed Object>) o2;
       if (l1.size() != l2.size()) {
         return false;
       }
@@ -556,7 +580,7 @@ public final class CollectionsPlume {
       }
     }
 
-    return (results);
+    return results;
   }
 
   /**
@@ -595,7 +619,7 @@ public final class CollectionsPlume {
     // Return a list with one zero length element if arity is zero
     if (arity == 0) {
       results.add(new ArrayList<Integer>());
-      return (results);
+      return results;
     }
 
     for (int i = start; i <= cnt; i++) {
@@ -730,7 +754,7 @@ public final class CollectionsPlume {
 
     @Override
     public boolean hasNext(@GuardSatisfied MergedIterator2<T> this) {
-      return (itor1.hasNext() || itor2.hasNext());
+      return itor1.hasNext() || itor2.hasNext();
     }
 
     @Override
@@ -785,7 +809,9 @@ public final class CollectionsPlume {
 
     @Override
     public T next(@GuardSatisfied MergedIterator<T> this) {
-      hasNext(); // for side effect
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       return current.next();
     }
 
@@ -1052,7 +1078,8 @@ public final class CollectionsPlume {
    * @param m map to be converted to a string
    * @return a multi-line string representation of m
    */
-  public static <K, V> String mapToString(Map<K, V> m) {
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToString(Map<K, V> m) {
     StringBuilder sb = new StringBuilder();
     mapToString(sb, m, "");
     return sb.toString();
@@ -1068,7 +1095,8 @@ public final class CollectionsPlume {
    * @param m map to be converted to a string
    * @param linePrefix prefix to write at the beginning of each line
    */
-  public static <K, V> void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
     try {
       for (Map.Entry<K, V> entry : m.entrySet()) {
         sb.append(linePrefix);
@@ -1148,17 +1176,6 @@ public final class CollectionsPlume {
     return mapCapacity(m.size());
   }
 
-  /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
-   *
-   * @param s a set whose size is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   */
-  public static int mapCapacity(Set<?> s) {
-    return mapCapacity(s.size());
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Set
   ///
@@ -1219,7 +1236,7 @@ public final class CollectionsPlume {
         return true;
       }
     }
-    return (intersectionCardinality(a, b) >= i);
+    return intersectionCardinality(a, b) >= i;
   }
 
   /**
@@ -1251,7 +1268,7 @@ public final class CollectionsPlume {
         return true;
       }
     }
-    return (intersectionCardinality(a, b, c) >= i);
+    return intersectionCardinality(a, b, c) >= i;
   }
 
   /**

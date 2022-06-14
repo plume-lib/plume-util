@@ -74,6 +74,7 @@ public class ClassDeterministic {
    * @param c the Class whose enum constants to return
    * @return the class's enum constants
    */
+  @SuppressWarnings("signedness") // ToStringComparator problem
   public static <T> T @Nullable [] getEnumConstants(Class<T> c) {
     @NonNull T[] result = c.getEnumConstants();
     if (result == null) {
@@ -223,7 +224,7 @@ public class ClassDeterministic {
       }
       assert ptypes1.length == ptypes2.length
           : "@AssumeAssertion(index): difference of lengths is 0;"
-                + " https://github.com/kelloggm/checker-framework/issues/231";
+              + " https://github.com/kelloggm/checker-framework/issues/231";
       for (int i = 0; i < ptypes1.length; i++) {
         result = classComparator.compare(ptypes1[i], ptypes2[i]);
         if (result != 0) {
@@ -272,7 +273,7 @@ public class ClassDeterministic {
       }
       assert ptypes1.length == ptypes2.length
           : "@AssumeAssertion(index): difference of lengths is 0;"
-                + " https://github.com/kelloggm/checker-framework/issues/231";
+              + " https://github.com/kelloggm/checker-framework/issues/231";
       for (int i = 0; i < ptypes1.length; i++) {
         result = classComparator.compare(ptypes1[i], ptypes2[i]);
         if (result != 0) {

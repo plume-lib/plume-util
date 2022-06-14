@@ -1,5 +1,28 @@
 # Plume-Util change log
 
+## 1.5.8 (2021-07-20)
+
+- Bug fix in `System.gcPercentage`.
+
+## 1.5.7 (2021-07-20)
+
+- Bug fix: make `System.gcUsageMessage` static.
+
+## 1.5.6 (2021-07-20)
+
+- New method `System.gcUsageMessage` is easier to use than `gcPercentage`.
+- Method `SystemPlume.gcPercentage` is now more efficient.
+
+## 1.5.5 (2021-06-08)
+
+- Fix bug where `.gz` files were read and written uncompressed.
+- Fix nullness type of class `StringsPlume.NullableStringComparator`.
+
+## 1.5.4 (2021-06-08)
+
+- Expand the contract of `CollectionsPlume.withoutDuplicates`.
+- Add `withoutDuplicatesComparable` which is more efficient.
+
 ## 1.5.3 (2021-05-04)
 
 - Fix problem with .jar file in previous release.
@@ -79,7 +102,7 @@
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
 - Moved string methods from `UtilPlume` to new class `StringsPlume`;
-  the old versions still work but are are deprecated.
+  the old versions still work but are deprecated.
 
 ## 1.2.0
 

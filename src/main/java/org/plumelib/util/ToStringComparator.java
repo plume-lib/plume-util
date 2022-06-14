@@ -11,8 +11,9 @@ import java.util.Objects;
  * <p>It handles null values, sorting them according to their printed representation "null".
  */
 // Once https://github.com/typetools/checker-framework/issues/1970 is fixed, Comparator's type
-// argument should be marked as @Covariant and this should be declared as "extends
+// argument should be marked as @Contravariant and this should be declared as "extends
 // Comparator<@Nullable Object>".
+@SuppressWarnings("signedness:argument") // not sure what the problem is
 public class ToStringComparator implements Comparator<Object> {
   /** The unique instance (this class is a singleton). */
   public static ToStringComparator instance = new ToStringComparator();
@@ -32,6 +33,7 @@ public class ToStringComparator implements Comparator<Object> {
    * @param in a set of elements
    * @return the elements, sorted according to {@code toString()}
    */
+  @SuppressWarnings("nullness:argument") // Comparator should be @Contravariant.
   public static <T> List<T> sorted(Iterable<T> in) {
     List<T> result = new ArrayList<T>();
     for (T object : in) {

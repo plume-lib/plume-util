@@ -27,6 +27,8 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -79,6 +81,25 @@ public final class ArraysPlume {
     result[array.length] = lastElt;
     return result;
   }
+
+  // /**
+  //  * Concatenates an element and an array into a new array.
+  //  *
+  //  * @param <T> the type of the array elements
+  //  * @param firstElt the new first elemeent
+  //  * @param array the array
+  //  * @return a new array containing the first element and the array elements, in that order
+  //  */
+  // @SuppressWarnings({
+  //   "unchecked",
+  //   "index:array.access.unsafe.high" // addition in array length
+  // })
+  // public static <T> T[] prepend(T firstElt, T[] array) {
+  //   @SuppressWarnings({"unchecked", "nullness:assignment"})
+  //   T[] result = Arrays.copyOf(array, array.length + 1, 1, array.length + 1);
+  //   result[0] = firstElt;
+  //   return result;
+  // }
 
   ///////////////////////////////////////////////////////////////////////////
   /// min, max
@@ -906,7 +927,8 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(List<?> a, @PolyNull Object[] sub) {
+  public static int indexOf(
+      List<? extends @PolyNull @PolySigned Object> a, @PolyNull @PolySigned Object[] sub) {
     int aIndexMax = a.size() - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -950,7 +972,8 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(@PolyNull Object[] a, List<?> sub) {
+  public static int indexOf(
+      @PolyNull @PolySigned Object[] a, List<? extends @PolyNull @PolySigned Object> sub) {
     int aIndexMax = a.length - sub.size() + 1;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -1349,7 +1372,9 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean isSubarray(
-      @PolyNull Object[] a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+      @PolyNull @PolySigned Object[] a,
+      @PolyNull @PolySigned Object[] sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -1396,7 +1421,10 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(@PolyNull Object[] a, List<?> sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(
+      @PolyNull @PolySigned Object[] a,
+      List<? extends @PolyNull @PolySigned Object> sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.length) {
       return false;
     }
@@ -1442,7 +1470,10 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(List<?> a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(
+      List<? extends @PolyNull @PolySigned Object> a,
+      @PolyNull @PolySigned Object[] sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.length > a.size()) {
       return false;
     }
@@ -1805,6 +1836,7 @@ public final class ArraysPlume {
      *
      * @return a verbose representation of this, for debugging
      */
+    @SuppressWarnings("UnusedMethod")
     public String toStringDebug() {
       String theArrayString;
       if (theArray == null) {
@@ -2325,7 +2357,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toString(@Nullable Collection<?> a) {
+  public static String toString(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
     return toString(a, false);
   }
 
@@ -2338,7 +2370,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toStringQuoted(@Nullable Collection<?> a) {
+  public static String toStringQuoted(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
     return toString(a, true);
   }
 
@@ -2353,7 +2385,8 @@ public final class ArraysPlume {
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
-  public static String toString(@Nullable Collection<?> a, boolean quoted) {
+  public static String toString(
+      @Nullable Collection<? extends @Signed @PolyNull Object> a, boolean quoted) {
     if (a == null) {
       return "null";
     }
@@ -2879,7 +2912,7 @@ public final class ArraysPlume {
   @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
     int[] result = new int[arange];
-    Arrays.fill(result, -1);
+    Arrays.fill(result, (@Signed int) -1);
     for (int i = 0; i < a.length; i++) {
       int ai = a[i];
       if (ai < -1 || ai >= arange) {
@@ -3069,6 +3102,7 @@ public final class ArraysPlume {
    * {@code equals()} (which tests reference equality).
    */
   public static final class IntArrayComparatorLexical implements Comparator<int[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3088,7 +3122,7 @@ public final class ArraysPlume {
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return a1.length - a2.length;
@@ -3104,6 +3138,7 @@ public final class ArraysPlume {
    * {@code equals()} (which tests reference equality).
    */
   public static final class LongArrayComparatorLexical implements Comparator<long[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3123,7 +3158,7 @@ public final class ArraysPlume {
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return a1.length - a2.length;
@@ -3140,6 +3175,7 @@ public final class ArraysPlume {
    */
   public static final class DoubleArrayComparatorLexical
       implements Comparator<double[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3160,7 +3196,7 @@ public final class ArraysPlume {
       for (int i = 0; i < len; i++) {
         int result = Double.compare(a1[i], a2[i]);
         if (result != 0) {
-          return (result);
+          return result;
         }
       }
       return a1.length - a2.length;
@@ -3177,6 +3213,7 @@ public final class ArraysPlume {
    */
   public static final class StringArrayComparatorLexical
       implements Comparator<String[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3210,7 +3247,7 @@ public final class ArraysPlume {
           tmp = a1[i].compareTo(a2[i]);
         }
         if (tmp != 0) {
-          return (tmp);
+          return tmp;
         }
       }
       return a1.length - a2.length;
@@ -3227,6 +3264,7 @@ public final class ArraysPlume {
    */
   public static final class ComparableArrayComparatorLexical<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3286,6 +3324,7 @@ public final class ArraysPlume {
    */
   public static final class ObjectArrayComparatorLexical
       implements Comparator<Object[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3327,6 +3366,7 @@ public final class ArraysPlume {
    */
   public static final class IntArrayComparatorLengthFirst
       implements Comparator<int[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3348,7 +3388,7 @@ public final class ArraysPlume {
       }
       for (int i = 0; i < a1.length; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return 0;
@@ -3365,6 +3405,7 @@ public final class ArraysPlume {
    */
   public static final class LongArrayComparatorLengthFirst
       implements Comparator<long[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3386,7 +3427,7 @@ public final class ArraysPlume {
       }
       for (int i = 0; i < a1.length; i++) {
         if (a1[i] != a2[i]) {
-          return ((a1[i] > a2[i]) ? 1 : -1);
+          return (a1[i] > a2[i]) ? 1 : -1;
         }
       }
       return 0;
@@ -3403,6 +3444,7 @@ public final class ArraysPlume {
    */
   public static final class ComparableArrayComparatorLengthFirst<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3468,6 +3510,7 @@ public final class ArraysPlume {
    */
   public static final class ObjectArrayComparatorLengthFirst
       implements Comparator<Object[]>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     /**
@@ -3668,6 +3711,7 @@ public final class ArraysPlume {
   /** A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}. */
   static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
 
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170418;
 
     /** Empty constructor. */

@@ -67,7 +67,7 @@ public final class FilesPlume {
   public static InputStream newFileInputStream(Path path) throws IOException {
     FileInputStream fis = new FileInputStream(path.toFile());
     InputStream in;
-    if (path.endsWith(".gz")) {
+    if (path.toString().endsWith(".gz")) {
       try {
         in = new GZIPInputStream(fis);
       } catch (IOException e) {
@@ -348,7 +348,7 @@ public final class FilesPlume {
   public static OutputStream newFileOutputStream(Path path, boolean append) throws IOException {
     FileOutputStream fis = new FileOutputStream(path.toFile(), append);
     OutputStream in;
-    if (path.endsWith(".gz")) {
+    if (path.toString().endsWith(".gz")) {
       try {
         in = new GZIPOutputStream(fis);
       } catch (IOException e) {
@@ -839,7 +839,7 @@ public final class FilesPlume {
    */
   public static String expandFilename(String name) {
     if (name.contains("~")) {
-      return (name.replace("~", userHome));
+      return name.replace("~", userHome);
     } else {
       return name;
     }
@@ -1004,7 +1004,9 @@ public final class FilesPlume {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    return baos.toString();
+    @SuppressWarnings("DefaultCharset") // JDK 8 version does not accept UTF_8 argument
+    String result = baos.toString();
+    return result;
   }
 
   /**

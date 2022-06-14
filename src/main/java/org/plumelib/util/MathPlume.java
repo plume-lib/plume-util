@@ -12,6 +12,7 @@ import org.checkerframework.checker.index.qual.PolyUpperBound;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.Unsigned;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
@@ -255,7 +256,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  public static int rshiftUnsigned(int x, int y) {
+  public static @Unsigned int rshiftUnsigned(@Unsigned int x, int y) {
     return x >>> y;
   }
 
@@ -268,7 +269,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  public static long rshiftUnsigned(long x, long y) {
+  public static @Unsigned long rshiftUnsigned(@Unsigned long x, long y) {
     return x >>> y;
   }
 
@@ -1834,7 +1835,7 @@ public final class MathPlume {
   }
 
   /**
-   * @param rm an an array containing two elements
+   * @param rm an array containing two elements
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This
    *     iterator has already been iterated all the way to its end.
    * @return true if the first and last elements are equal to r (mod m)

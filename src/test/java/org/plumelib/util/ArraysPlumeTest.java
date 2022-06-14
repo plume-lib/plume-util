@@ -131,9 +131,10 @@ public final class ArraysPlumeTest {
   }
 
   @SuppressWarnings({
-    "deprecation", // in Java 9+, use Integer.valueOf instead of `new Integer(...)`
-    "BoxedPrimitiveConstructor" // == comparisons on Integers, need new values
-  })
+    "deprecation",
+    "removal",
+    "BoxedPrimitiveConstructor"
+  }) // test performs == comparisons
   @Test
   public void testIndexOf_array() {
 
@@ -226,9 +227,10 @@ public final class ArraysPlumeTest {
   }
 
   @SuppressWarnings({
-    "deprecation", // in Java 9+, use Integer.valueOf instead of `new Integer(...)`
-    "BoxedPrimitiveConstructor" // == comparisons on Integers, need new values
-  })
+    "deprecation",
+    "removal",
+    "BoxedPrimitiveConstructor"
+  }) // test performs == comparisons
   @Test
   public void testIndexOf_array_array() {
 

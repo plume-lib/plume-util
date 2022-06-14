@@ -52,7 +52,9 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.regex.qual.Regex;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -396,7 +398,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(File file)
       throws FileNotFoundException, IOException {
-    return (bufferedFileReader(file, null));
+    return bufferedFileReader(file, null);
   }
 
   /**
@@ -908,7 +910,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static String expandFilename(String name) {
     if (name.contains("~")) {
-      return (name.replace("~", userHome));
+      return name.replace("~", userHome);
     } else {
       return name;
     }
@@ -1273,7 +1275,8 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#mapToStringAndClass}
    */
   @Deprecated // use StringsPlume.mapToStringAndClass; deprecated 2020-12-02
-  public static String mapToStringAndClass(Map<?, ?> m) {
+  public static String mapToStringAndClass(
+      Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
     return StringsPlume.mapToStringAndClass(m);
   }
 
@@ -1464,7 +1467,9 @@ public final class UtilPlume {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    return baos.toString();
+    @SuppressWarnings("DefaultCharset") // JDK 8 version does not accept UTF_8 argument
+    String result = baos.toString();
+    return result;
   }
 
   /**
@@ -1740,7 +1745,7 @@ public final class UtilPlume {
    */
   @Deprecated // use join(CharSequence, Object...) which has the arguments in the other order;
   // deprecated 2020-02-20
-  public static <T> String join(T[] a, CharSequence delim) {
+  public static <T> String join(@Signed T[] a, CharSequence delim) {
     if (a.length == 0) {
       return "";
     }
@@ -1771,7 +1776,7 @@ public final class UtilPlume {
    */
   @SafeVarargs
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
-  public static <T> String join(CharSequence delim, T... a) {
+  public static <T> String join(CharSequence delim, @Signed T... a) {
     if (a.length == 0) {
       return "";
     }
@@ -1797,7 +1802,7 @@ public final class UtilPlume {
   @SafeVarargs
   @SuppressWarnings("varargs")
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
-  public static <T> String joinLines(T... a) {
+  public static <T> String joinLines(@Signed T... a) {
     return join(lineSep, a);
   }
 
@@ -1817,10 +1822,10 @@ public final class UtilPlume {
    */
   @Deprecated // use join(CharSequence, Iterable) which has the arguments in the other order;
   // deprecated 2020-12-02
-  public static String join(Iterable<?> v, CharSequence delim) {
+  public static String join(Iterable<? extends @Signed @PolyNull Object> v, CharSequence delim) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<?> itor = v.iterator();
+    Iterator<? extends @Signed @PolyNull Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1846,10 +1851,10 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#join}
    */
   @Deprecated // use StringsPlume.join; deprecated 2020-12-02
-  public static String join(CharSequence delim, Iterable<?> v) {
+  public static String join(CharSequence delim, Iterable<? extends @Signed @PolyNull Object> v) {
     StringBuilder sb = new StringBuilder();
     boolean first = true;
-    Iterator<?> itor = v.iterator();
+    Iterator<? extends @Signed @PolyNull Object> itor = v.iterator();
     while (itor.hasNext()) {
       if (first) {
         first = false;
@@ -1871,7 +1876,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#joinLines}
    */
   @Deprecated // use StringsPlume.joinLines; deprecated 2020-12-02
-  public static String joinLines(Iterable<?> v) {
+  public static String joinLines(Iterable<? extends @Signed @PolyNull Object> v) {
     return join(lineSep, v);
   }
 
@@ -2383,19 +2388,22 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume.NullableStringComparator}
    */
   @Deprecated // use StringsPlume.NullableStringComparator; deprecated 2020-12-02
-  public static class NullableStringComparator implements Comparator<String>, Serializable {
+  public static class NullableStringComparator
+      implements Comparator<@Nullable String>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
     @Pure
     @Override
-    public int compare(String s1, String s2) {
-      if (s1 == null && s2 == null) {
-        return 0;
+    public int compare(@Nullable String s1, @Nullable String s2) {
+      if (s1 == null) {
+        if (s2 == null) {
+          return 0;
+        } else {
+          return 1;
+        }
       }
-      if (s1 == null && s2 != null) {
-        return 1;
-      }
-      if (s1 != null && s2 == null) {
+      if (s2 == null) {
         return -1;
       }
       return s1.compareTo(s2);
@@ -2416,6 +2424,7 @@ public final class UtilPlume {
    */
   @Deprecated // use StringsPlume.ObjectComparator; deprecated 2020-12-02
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
+    /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
 
     @SuppressWarnings({
@@ -2673,7 +2682,7 @@ public final class UtilPlume {
 
   /**
    * Returns a String representation of the backtrace of the given Throwable. To see a backtrace at
-   * the the current location, do {@code backtrace(new Throwable())}.
+   * the current location, do {@code backtrace(new Throwable())}.
    *
    * @param t the Throwable to obtain a backtrace of
    * @return a String representation of the backtrace of the given Throwable
@@ -2686,7 +2695,7 @@ public final class UtilPlume {
 
   /**
    * Returns a String representation of the stack trace (the backtrace) of the given Throwable. For
-   * a stack trace at the the current location, do {@code stackTraceToString(new Throwable())}.
+   * a stack trace at the current location, do {@code stackTraceToString(new Throwable())}.
    *
    * @param t the Throwable to obtain a stack trace of
    * @return a String representation of the stack trace of the given Throwable
