@@ -96,7 +96,7 @@
 
 ## 1.3.0
 
-- New class `ToStringComparator`
+- New class `ToStringComparator` compares two objects according to the result of `toString`
 - New methods:
    - `UtilPlume.usedMemory` with no formal parameter
    - `UtilPlume.mapList`
