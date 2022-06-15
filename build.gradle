@@ -76,6 +76,7 @@ checkerFramework {
     'org.checkerframework.checker.lock.LockChecker',
     'org.checkerframework.checker.nullness.NullnessChecker',
     'org.checkerframework.checker.regex.RegexChecker',
+    'org.checkerframework.checker.resourceleak.ResourceLeakChecker',
     'org.checkerframework.checker.signature.SignatureChecker',
     'org.checkerframework.checker.signedness.SignednessChecker',
     // Error Prone crashes if InitializedfieldsChecker is included!
