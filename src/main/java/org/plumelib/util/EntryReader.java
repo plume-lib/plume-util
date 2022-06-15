@@ -21,6 +21,7 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -105,7 +106,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   ///
 
   /** Stack of readers. Used to support include files. */
-  private final ArrayDeque<FlnReader> readers = new ArrayDeque<>();
+  private final ArrayDeque<@MustCall("close") FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
   @Nullable String pushbackLine = null;
@@ -222,7 +223,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    */
   public EntryReader(
-      InputStream in,
+      @MustCall("close") InputStream in,
       String charsetName,
       String filename,
       @Nullable @Regex String commentRegexString,
@@ -240,7 +241,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(InputStream in, String charsetName, String filename)
+  public EntryReader(@MustCall("close") InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
     this(in, charsetName, filename, null, null);
   }
@@ -258,7 +259,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    */
   public EntryReader(
-      InputStream in,
+      @MustCall("close") InputStream in,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -273,7 +274,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename the file name
    * @see #EntryReader(InputStream,String,String,String,String)
    */
-  public EntryReader(InputStream in, String filename) {
+  public EntryReader(@MustCall("close") InputStream in, String filename) {
     this(in, filename, null, null);
   }
 
@@ -283,7 +284,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in the InputStream
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(InputStream in) {
+  public EntryReader(@MustCall("close") InputStream in) {
     this(in, "(InputStream)", null, null);
   }
 
@@ -352,8 +353,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
    */
+  @SuppressWarnings("builder:required.method.not.called") // storing into a collection
   public EntryReader(
-      Reader reader,
+      @MustCall("close") Reader reader,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -379,7 +381,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param reader source from which to read entries
    * @see #EntryReader(Reader,String,String,String)
    */
-  public EntryReader(Reader reader) {
+  public EntryReader(@MustCall("close") Reader reader) {
     this(reader, reader.toString(), null, null);
   }
 

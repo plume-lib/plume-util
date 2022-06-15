@@ -3,36 +3,26 @@
 package org.plumelib.util;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -45,11 +35,10 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -204,18 +193,8 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
   @Deprecated // deprecated 2020-02-20
-  public static InputStream fileInputStream(Path path) throws IOException {
-    InputStream in;
-    if (path.endsWith(".gz")) {
-      try {
-        in = new GZIPInputStream(new FileInputStream(path.toFile()));
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + path, e);
-      }
-    } else {
-      in = new FileInputStream(path.toFile());
-    }
-    return in;
+  public static @MustCall("close") InputStream fileInputStream(Path path) throws IOException {
+    return FilesPlume.newFileInputStream(path);
   }
 
   /**
@@ -232,18 +211,8 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
   @Deprecated // deprecated 2021-02-25
-  public static InputStream fileInputStream(File file) throws IOException {
-    InputStream in;
-    if (file.getName().endsWith(".gz")) {
-      try {
-        in = new GZIPInputStream(new FileInputStream(file));
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + file, e);
-      }
-    } else {
-      in = new FileInputStream(file);
-    }
-    return in;
+  public static @MustCall("close") InputStream fileInputStream(File file) throws IOException {
+    return FilesPlume.newFileInputStream(file);
   }
 
   /**
@@ -263,8 +232,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(String filename)
       throws FileNotFoundException, IOException {
-    // return fileReader(filename, "ISO-8859-1");
-    return fileReader(new File(filename), null);
+    return FilesPlume.newFileReader(filename);
   }
 
   /**
@@ -283,7 +251,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(Path path) throws FileNotFoundException, IOException {
-    return fileReader(path.toFile(), null);
+    return FilesPlume.newFileReader(path);
   }
 
   /**
@@ -304,14 +272,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    InputStream in = new FileInputStream(path.toFile());
-    InputStreamReader fileReader;
-    if (charsetName == null) {
-      fileReader = new InputStreamReader(in, UTF_8);
-    } else {
-      fileReader = new InputStreamReader(in, charsetName);
-    }
-    return fileReader;
+    return FilesPlume.newFileReader(path, charsetName);
   }
 
   /**
@@ -330,7 +291,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(File file) throws FileNotFoundException, IOException {
-    return fileReader(file, null);
+    return FilesPlume.newFileReader(file);
   }
 
   /**
@@ -351,14 +312,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static InputStreamReader fileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    InputStream in = new FileInputStream(file);
-    InputStreamReader fileReader;
-    if (charsetName == null) {
-      fileReader = new InputStreamReader(in, UTF_8);
-    } else {
-      fileReader = new InputStreamReader(in, charsetName);
-    }
-    return fileReader;
+    return FilesPlume.newFileReader(file, charsetName);
   }
 
   /**
@@ -378,7 +332,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return bufferedFileReader(new File(filename));
+    return FilesPlume.newBufferedFileReader(filename);
   }
 
   /**
@@ -398,7 +352,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(File file)
       throws FileNotFoundException, IOException {
-    return bufferedFileReader(file, null);
+    return FilesPlume.newBufferedFileReader(file);
   }
 
   /**
@@ -419,7 +373,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(String filename, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    return bufferedFileReader(new File(filename), charsetName);
+    return FilesPlume.newBufferedFileReader(filename);
   }
 
   /**
@@ -440,8 +394,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static BufferedReader bufferedFileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    Reader fileReader = fileReader(file, charsetName);
-    return new BufferedReader(fileReader);
+    return FilesPlume.newBufferedFileReader(file, charsetName);
   }
 
   /**
@@ -461,7 +414,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   public static LineNumberReader lineNumberFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return lineNumberFileReader(new File(filename));
+    return FilesPlume.newLineNumberFileReader(filename);
   }
 
   /**
@@ -479,20 +432,9 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newLineNumberFileReader}
    */
   @Deprecated // deprecated 2021-02-25
-  public static LineNumberReader lineNumberFileReader(File file)
+  public static @MustCall("close") LineNumberReader lineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
-    Reader fileReader;
-    if (file.getName().endsWith(".gz")) {
-      try {
-        fileReader =
-            new InputStreamReader(new GZIPInputStream(new FileInputStream(file)), "ISO-8859-1");
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + file, e);
-      }
-    } else {
-      fileReader = new InputStreamReader(new FileInputStream(file), "ISO-8859-1");
-    }
-    return new LineNumberReader(fileReader);
+    return FilesPlume.newLineNumberFileReader(file);
   }
 
   /**
@@ -510,7 +452,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static BufferedWriter bufferedFileWriter(String filename) throws IOException {
-    return bufferedFileWriter(filename, false);
+    return FilesPlume.newBufferedFileWriter(filename);
   }
 
   /**
@@ -529,19 +471,9 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
   @Deprecated // deprecated 2021-02-25
-  // Question:  should this be rewritten as a wrapper around bufferedFileOutputStream?
-  public static BufferedWriter bufferedFileWriter(String filename, boolean append)
-      throws IOException {
-    if (filename.endsWith(".gz")) {
-      return new BufferedWriter(
-          new OutputStreamWriter(
-              new GZIPOutputStream(new FileOutputStream(filename, append)), UTF_8));
-    } else {
-      return Files.newBufferedWriter(
-          Paths.get(filename),
-          UTF_8,
-          append ? new StandardOpenOption[] {CREATE, APPEND} : new StandardOpenOption[] {CREATE});
-    }
+  public static @MustCall("close") BufferedWriter bufferedFileWriter(
+      String filename, boolean append) throws IOException {
+    return FilesPlume.newBufferedFileWriter(filename, append);
   }
 
   /**
@@ -560,13 +492,9 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newBufferedFileOutputStream}
    */
   @Deprecated // deprecated 2021-02-25
-  public static BufferedOutputStream bufferedFileOutputStream(String filename, boolean append)
-      throws IOException {
-    OutputStream os = new FileOutputStream(filename, append);
-    if (filename.endsWith(".gz")) {
-      os = new GZIPOutputStream(os);
-    }
-    return new BufferedOutputStream(os);
+  public static @MustCall("close") BufferedOutputStream bufferedFileOutputStream(
+      String filename, boolean append) throws IOException {
+    return FilesPlume.newBufferedFileOutputStream(filename, append);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -948,14 +876,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static void writeObject(Object o, File file) throws IOException {
-    // 8192 is the buffer size in BufferedReader
-    OutputStream bytes = new BufferedOutputStream(new FileOutputStream(file), 8192);
-    if (file.getName().endsWith(".gz")) {
-      bytes = new GZIPOutputStream(bytes);
-    }
-    ObjectOutputStream objs = new ObjectOutputStream(bytes);
-    objs.writeObject(o);
-    objs.close();
+    FilesPlume.writeObject(o, file);
   }
 
   /**
@@ -972,17 +893,7 @@ public final class UtilPlume {
   @Deprecated // deprecated 2021-02-25
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
-    // 8192 is the buffer size in BufferedReader
-    InputStream istream = new BufferedInputStream(new FileInputStream(file), 8192);
-    if (file.getName().endsWith(".gz")) {
-      try {
-        istream = new GZIPInputStream(istream);
-      } catch (IOException e) {
-        throw new IOException("Problem while reading " + file, e);
-      }
-    }
-    ObjectInputStream objs = new ObjectInputStream(istream);
-    return objs.readObject();
+    return FilesPlume.readObject(file);
   }
 
   /**
@@ -1022,22 +933,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static String readFile(File file) {
-
-    try {
-      BufferedReader reader = UtilPlume.bufferedFileReader(file);
-      StringBuilder contents = new StringBuilder();
-      String line = reader.readLine();
-      while (line != null) {
-        contents.append(line);
-        // Note that this converts line terminators!
-        contents.append(lineSep);
-        line = reader.readLine();
-      }
-      reader.close();
-      return contents.toString();
-    } catch (Exception e) {
-      throw new Error("Unexpected error in readFile(" + file + ")", e);
-    }
+    return FilesPlume.readFile(file);
   }
 
   /**
@@ -1051,14 +947,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static void writeFile(File file, String contents) {
-
-    try {
-      Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8);
-      writer.write(contents, 0, contents.length());
-      writer.close();
-    } catch (Exception e) {
-      throw new Error("Unexpected error in writeFile(" + file + ")", e);
-    }
+    FilesPlume.writeFile(file, contents);
   }
 
   ///////////////////////////////////////////////////////////////////////////
