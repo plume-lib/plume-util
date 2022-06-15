@@ -69,7 +69,8 @@ apply plugin: 'org.checkerframework'
 
 checkerFramework {
   checkers = [
-    'org.checkerframework.checker.calledmethods.CalledMethodsChecker',
+    // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
+    // 'org.checkerframework.checker.calledmethods.CalledMethodsChecker',
     'org.checkerframework.checker.formatter.FormatterChecker',
     'org.checkerframework.checker.index.IndexChecker',
     'org.checkerframework.checker.interning.InterningChecker',
