@@ -1,3 +1,5 @@
+- New class `ArrayMap` is an efficient representation for very small maps
+
 # Plume-Util change log
 
 ## 1.5.8 (2021-07-20)
@@ -29,7 +31,6 @@
 
 ## 1.5.2 (2021-04-28)
 
-- New class `ArrayMap` is an efficient representation for very small maps
 - New methods `CollectionsPlume.mapCapacity` to compute the size for a newly-allocated map.
 - New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
 - Renamed methods (the old versions still work but are deprecated):
