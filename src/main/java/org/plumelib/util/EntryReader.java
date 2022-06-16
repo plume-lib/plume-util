@@ -21,7 +21,7 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.mustcall.qual.MustCall;
+import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -69,7 +69,10 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * @see #getEntry() and @see #setEntryStartStop(String,String)
  */
-@SuppressWarnings({"IterableAndIterator"})
+@SuppressWarnings({
+  "IterableAndIterator",
+  "builder:required.method.not.called" // Collection `readers` has eleement type @MustCall("close")
+})
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
   ///
@@ -106,7 +109,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   ///
 
   /** Stack of readers. Used to support include files. */
-  private final ArrayDeque<@MustCall("close") FlnReader> readers = new ArrayDeque<>();
+  private final ArrayDeque<FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
   @Nullable String pushbackLine = null;
@@ -223,7 +226,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    */
   public EntryReader(
-      @MustCall("close") InputStream in,
+      InputStream in,
       String charsetName,
       String filename,
       @Nullable @Regex String commentRegexString,
@@ -241,7 +244,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(@MustCall("close") InputStream in, String charsetName, String filename)
+  public EntryReader(InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
     this(in, charsetName, filename, null, null);
   }
@@ -259,7 +262,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    */
   public EntryReader(
-      @MustCall("close") InputStream in,
+      InputStream in,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -274,7 +277,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename the file name
    * @see #EntryReader(InputStream,String,String,String,String)
    */
-  public EntryReader(@MustCall("close") InputStream in, String filename) {
+  public EntryReader(InputStream in, String filename) {
     this(in, filename, null, null);
   }
 
@@ -284,7 +287,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in the InputStream
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(@MustCall("close") InputStream in) {
+  public EntryReader(InputStream in) {
     this(in, "(InputStream)", null, null);
   }
 
@@ -355,7 +358,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   @SuppressWarnings("builder:required.method.not.called") // storing into a collection
   public EntryReader(
-      @MustCall("close") Reader reader,
+      Reader reader,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -381,7 +384,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param reader source from which to read entries
    * @see #EntryReader(Reader,String,String,String)
    */
-  public EntryReader(@MustCall("close") Reader reader) {
+  public EntryReader(Reader reader) {
     this(reader, reader.toString(), null, null);
   }
 
@@ -575,7 +578,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           // System.out.printf ("absolute filename = %s %s %s%n",
           //                     currentFilename, currentParent, filename);
         }
-        readers.addFirst(new FlnReader(filename.getAbsolutePath()));
+        FlnReader reader = new FlnReader(filename.getAbsolutePath());
+        readers.addFirst(reader);
         return readLine();
       }
     }
@@ -593,8 +597,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @return a line-by-line iterator for this file
    */
+  @SuppressWarnings("mustcall:override.return")
   @Override
-  public Iterator<String> iterator(EntryReader this) {
+  public @MustCallAlias Iterator<String> iterator(@MustCallAlias EntryReader this) {
     return this;
   }
 
@@ -763,7 +768,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     FlnReader ri1 = readers.getFirst();
     String line = ri1.readLine();
     while (line == null) {
-      readers.removeFirst();
+      readers.removeFirst().close();
       if (readers.isEmpty()) {
         return null;
       }
@@ -922,12 +927,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         System.exit(1);
       }
     }
-    EntryReader reader = new EntryReader(filename, commentRegex, includeRegex);
+    try (EntryReader reader = new EntryReader(filename, commentRegex, includeRegex)) {
 
-    String line = reader.readLine();
-    while (line != null) {
-      System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);
-      line = reader.readLine();
+      String line = reader.readLine();
+      while (line != null) {
+        System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);
+        line = reader.readLine();
+      }
     }
   }
 }

@@ -906,17 +906,7 @@ public final class UtilPlume {
    */
   @Deprecated // deprecated 2021-02-25
   public static String readerContents(Reader r) {
-    try {
-      StringBuilder contents = new StringBuilder();
-      int ch;
-      while ((ch = r.read()) != -1) {
-        contents.append((char) ch);
-      }
-      r.close();
-      return contents.toString();
-    } catch (Exception e) {
-      throw new Error("Unexpected error in readerContents(" + r + ")", e);
-    }
+    return FilesPlume.readerContents(r);
   }
 
   // an alternate name would be "fileContents".
