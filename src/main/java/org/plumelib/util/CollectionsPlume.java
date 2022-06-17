@@ -1065,8 +1065,7 @@ public final class CollectionsPlume {
    */
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
-    Integer old = m.get(key);
-    Integer newTotal = (old == null) ? count : old.intValue() + count;
+    Integer newTotal = m.getOrDefault(key, 0) + count;
     return m.put(key, newTotal);
   }
 
