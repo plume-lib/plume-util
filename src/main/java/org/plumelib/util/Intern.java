@@ -518,11 +518,7 @@ public final class Intern {
   @Pure
   public static @Interned @PolyNull @PolyValue @SameLen("#1") String intern(
       @PolyNull @PolyValue String a) {
-    // Checker Framework cannot typecheck:  return (a == null) ? null : a.intern();
-    if (a == null) {
-      return null;
-    }
-    return a.intern();
+    return (a == null) ? null : a.intern();
   }
 
   /**
