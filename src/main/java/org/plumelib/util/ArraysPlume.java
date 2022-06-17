@@ -25,7 +25,6 @@ import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
-import org.checkerframework.checker.mustcall.qual.NotOwning;
 import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -1824,7 +1823,7 @@ public final class ArraysPlume {
     }
 
     @Override
-    public String toString(@NotOwning @GuardSatisfied ListOrArray<T> this) {
+    public String toString(@GuardSatisfied ListOrArray<T> this) {
       if (theArray != null) {
         return Arrays.toString(theArray);
       } else if (theList != null) {
