@@ -210,7 +210,7 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") InputStream fileInputStream(File file) throws IOException {
+  public static InputStream fileInputStream(File file) throws IOException {
     return FilesPlume.newFileInputStream(file);
   }
 
@@ -470,8 +470,8 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") BufferedWriter bufferedFileWriter(
-      String filename, boolean append) throws IOException {
+  public static BufferedWriter bufferedFileWriter(String filename, boolean append)
+      throws IOException {
     return FilesPlume.newBufferedFileWriter(filename, append);
   }
 
@@ -491,8 +491,8 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newBufferedFileOutputStream}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") BufferedOutputStream bufferedFileOutputStream(
-      String filename, boolean append) throws IOException {
+  public static BufferedOutputStream bufferedFileOutputStream(String filename, boolean append)
+      throws IOException {
     return FilesPlume.newBufferedFileOutputStream(filename, append);
   }
 
