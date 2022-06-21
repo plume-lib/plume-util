@@ -225,8 +225,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(
-      InputStream in,
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
       String charsetName,
       String filename,
       @Nullable @Regex String commentRegexString,
@@ -244,7 +244,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(InputStream in, String charsetName, String filename)
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
     this(in, charsetName, filename, null, null);
   }
@@ -261,8 +262,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    */
-  public EntryReader(
-      InputStream in,
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -277,7 +278,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename the file name
    * @see #EntryReader(InputStream,String,String,String,String)
    */
-  public EntryReader(InputStream in, String filename) {
+  public @MustCallAlias EntryReader(@MustCallAlias InputStream in, String filename) {
     this(in, filename, null, null);
   }
 
@@ -287,7 +288,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in the InputStream
    * @see #EntryReader(InputStream,String,String,String)
    */
-  public EntryReader(InputStream in) {
+  public @MustCallAlias EntryReader(@MustCallAlias InputStream in) {
     this(in, "(InputStream)", null, null);
   }
 
@@ -356,9 +357,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
    */
-  @SuppressWarnings("builder:required.method.not.called") // storing into a collection
-  public EntryReader(
-      Reader reader,
+  @SuppressWarnings("builder") // storing into a collection
+  public @MustCallAlias EntryReader(
+      @MustCallAlias Reader reader,
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
@@ -384,7 +385,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param reader source from which to read entries
    * @see #EntryReader(Reader,String,String,String)
    */
-  public EntryReader(Reader reader) {
+  public @MustCallAlias EntryReader(@MustCallAlias Reader reader) {
     this(reader, reader.toString(), null, null);
   }
 

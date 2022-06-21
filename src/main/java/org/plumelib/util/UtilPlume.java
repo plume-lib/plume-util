@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -193,7 +192,7 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
   @Deprecated // deprecated 2020-02-20
-  public static @MustCall("close") InputStream fileInputStream(Path path) throws IOException {
+  public static InputStream fileInputStream(Path path) throws IOException {
     return FilesPlume.newFileInputStream(path);
   }
 
@@ -211,7 +210,7 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") InputStream fileInputStream(File file) throws IOException {
+  public static InputStream fileInputStream(File file) throws IOException {
     return FilesPlume.newFileInputStream(file);
   }
 
@@ -432,7 +431,7 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newLineNumberFileReader}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") LineNumberReader lineNumberFileReader(File file)
+  public static LineNumberReader lineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
     return FilesPlume.newLineNumberFileReader(file);
   }
@@ -471,8 +470,8 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") BufferedWriter bufferedFileWriter(
-      String filename, boolean append) throws IOException {
+  public static BufferedWriter bufferedFileWriter(String filename, boolean append)
+      throws IOException {
     return FilesPlume.newBufferedFileWriter(filename, append);
   }
 
@@ -492,8 +491,8 @@ public final class UtilPlume {
    * @deprecated use {@link FilesPlume#newBufferedFileOutputStream}
    */
   @Deprecated // deprecated 2021-02-25
-  public static @MustCall("close") BufferedOutputStream bufferedFileOutputStream(
-      String filename, boolean append) throws IOException {
+  public static BufferedOutputStream bufferedFileOutputStream(String filename, boolean append)
+      throws IOException {
     return FilesPlume.newBufferedFileOutputStream(filename, append);
   }
 
