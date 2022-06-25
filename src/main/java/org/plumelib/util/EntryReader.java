@@ -71,7 +71,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  */
 @SuppressWarnings({
   "IterableAndIterator",
-  "builder:required.method.not.called" // Collection `readers` has eleement type @MustCall("close")
+  "builder:required.method.not.called" // Collection `readers` has element type @MustCall("close")
 })
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
