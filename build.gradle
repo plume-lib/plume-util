@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'org.plumelib:reflection-util:1.0.4'
+  implementation 'org.plumelib:reflection-util:1.0.5'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
