@@ -24,6 +24,8 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
+import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -1695,7 +1697,7 @@ public final class ArraysPlume {
    *
    * @param <T> the type of array or list elements
    */
-  private static class ListOrArray<T extends @Nullable Object> {
+  private static class ListOrArray<T extends @MustCallUnknown @Nullable Object> {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
@@ -2357,7 +2359,8 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toString(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
+  public static String toString(
+      @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
     return toString(a, false);
   }
 
@@ -2370,7 +2373,8 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toStringQuoted(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
+  public static String toStringQuoted(
+      @MustCallUnknown @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
     return toString(a, true);
   }
 
@@ -2386,7 +2390,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
   public static String toString(
-      @Nullable Collection<? extends @Signed @PolyNull Object> a, boolean quoted) {
+      @Nullable Collection<? extends @MustCallUnknown @Signed @PolyNull Object> a, boolean quoted) {
     if (a == null) {
       return "null";
     }
