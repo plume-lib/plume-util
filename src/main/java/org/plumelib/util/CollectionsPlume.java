@@ -955,7 +955,7 @@ public final class CollectionsPlume {
      * <p>Throws an error unless the RemoveFirstAndLastIterator has already been iterated all the
      * way to its end (so the delegate is pointing to the last element).
      *
-     * @return the last element of the iterator that was used to construct this.
+     * @return the last element of the iterator that was used to construct this
      */
     // TODO: This is buggy when the delegate is empty.
     @Pure

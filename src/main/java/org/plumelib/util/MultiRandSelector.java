@@ -56,7 +56,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
   /**
    * Create a MultiRandSelector that chooses each element with probability {@code keepProbability}.
    *
-   * @param keepProbability the likelihood to select each element.
+   * @param keepProbability the likelihood to select each element
    * @param eq partioner that determines how to partition the objects
    */
   public MultiRandSelector(double keepProbability, Partitioner<T, T> eq) {

@@ -366,7 +366,7 @@ public final class Intern {
   /**
    * Returns the number of interned integers. For testing only.
    *
-   * @return the number of interned integers.
+   * @return the number of interned integers
    */
   static int numIntegers() {
     return internedIntegers.size();
@@ -375,7 +375,7 @@ public final class Intern {
   /**
    * Returns the number of interned longs. For testing only.
    *
-   * @return the number of interned longs.
+   * @return the number of interned longs
    */
   static int numLongs() {
     return internedLongs.size();
@@ -384,7 +384,7 @@ public final class Intern {
   /**
    * Returns the number of interned int arrays. For testing only.
    *
-   * @return the number of interned int arrays.
+   * @return the number of interned int arrays
    */
   static int numIntArrays() {
     return internedIntArrays.size();
@@ -393,7 +393,7 @@ public final class Intern {
   /**
    * Returns the number of interned long arrays. For testing only.
    *
-   * @return the number of interned long arrays.
+   * @return the number of interned long arrays
    */
   static int numLongArrays() {
     return internedLongArrays.size();
@@ -402,7 +402,7 @@ public final class Intern {
   /**
    * Returns the number of interned doubles. For testing only.
    *
-   * @return the number of interned doubles.
+   * @return the number of interned doubles
    */
   static int numDoubles() {
     return internedDoubles.size();
@@ -411,7 +411,7 @@ public final class Intern {
   /**
    * Returns the number of interned double arrays. For testing only.
    *
-   * @return the number of interned double arrays.
+   * @return the number of interned double arrays
    */
   static int numDoubleArrays() {
     return internedDoubleArrays.size();
@@ -420,7 +420,7 @@ public final class Intern {
   /**
    * Returns the number of interned string arrays. For testing only.
    *
-   * @return the number of interned string arrays.
+   * @return the number of interned string arrays
    */
   static int numStringArrays() {
     return internedStringArrays.size();
@@ -429,7 +429,7 @@ public final class Intern {
   /**
    * Returns the number of interned object arrays. For testing only.
    *
-   * @return the number of interned object arrays.
+   * @return the number of interned object arrays
    */
   static int numObjectArrays() {
     return internedObjectArrays.size();

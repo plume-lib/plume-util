@@ -6,7 +6,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Interface for things that make boolean decisions. This is inspired by {@code
  * java.io.FilenameFilter}.
  *
- * @param <T> the type of arguments to {@link #accept}.
+ * @param <T> the type of arguments to {@link #accept}
  */
 public interface Filter<T extends @Nullable Object> {
   /**

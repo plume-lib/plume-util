@@ -85,8 +85,7 @@ public class RandomSelector<T> {
 
   /**
    * @param numElts the number of elements intended to be selected from the input elements
-   * @param r the seed to give for random number generation.
-   *     <p>Sets 'numElts' = numElts.
+   * @param r the seed to give for random number generation
    */
   public RandomSelector(int numElts, Random r) {
     coinTossMode = false;
