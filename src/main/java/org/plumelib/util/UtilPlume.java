@@ -2579,11 +2579,12 @@ public final class UtilPlume {
    * @return a String representation of the stack trace of the given Throwable
    */
   public static String stackTraceToString(Throwable t) {
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw);
-    t.printStackTrace(pw);
-    pw.close();
-    String result = sw.toString();
-    return result;
+    try (StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw)) {
+      t.printStackTrace(pw);
+      return sw.toString();
+    } catch (IOException e) {
+      throw new Error(e);
+    }
   }
 }

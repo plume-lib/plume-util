@@ -875,12 +875,9 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   public static void writeObject(Object o, File file) throws IOException {
-    OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
-    try (ObjectOutputStream objs = new ObjectOutputStream(bytes)) {
+    try (OutputStream bytes = newBufferedFileOutputStream(file.toString(), false);
+        ObjectOutputStream objs = new ObjectOutputStream(bytes)) {
       objs.writeObject(o);
-    } finally {
-      // In case objs was never set.
-      bytes.close();
     }
   }
 
@@ -908,7 +905,7 @@ public final class FilesPlume {
    * Reads the entire contents of the reader and returns it as a string. Any IOException encountered
    * will be turned into an Error.
    *
-   * @param r the Reader to read
+   * @param r the Reader to read; this method exhausts it and closes it
    * @return the entire contents of the reader, as a string
    */
   public static String readerContents(Reader r) {
