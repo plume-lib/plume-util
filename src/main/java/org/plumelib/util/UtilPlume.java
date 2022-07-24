@@ -2583,6 +2583,8 @@ public final class UtilPlume {
         PrintWriter pw = new PrintWriter(sw)) {
       t.printStackTrace(pw);
       return sw.toString();
+    } catch (IOException e) {
+      throw new Error(e);
     }
   }
 }
