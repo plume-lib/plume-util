@@ -2,6 +2,7 @@
 
 ## 1.6.0 (??)
 
+- Some constructors are deprecated, for efficiency.
 - Support Java 18.
 
 ## 1.5.8 (2021-07-20)
