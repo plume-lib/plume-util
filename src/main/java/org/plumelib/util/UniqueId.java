@@ -48,6 +48,7 @@ public interface UniqueId {
    *
    * @return the simple name of the class and the unique ID of this object
    */
+  @SuppressWarnings("nullness:method.invocation") // TODO: required under JDK 18.  Why?
   public default String getClassAndUid(@UnknownInitialization(UniqueId.class) UniqueId this) {
     return this.getClass().getSimpleName() + "#" + getUid();
   }

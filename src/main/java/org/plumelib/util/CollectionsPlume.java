@@ -1187,6 +1187,7 @@ public final class CollectionsPlume {
    * @param key the value to look up in the set
    * @return the object in this set that is equal to key, or null
    */
+  @SuppressWarnings({"mustcall:return", "signedness:return"}) // TODO: required on JDK 18.  Why?
   public static @Nullable Object getFromSet(Set<? extends @Nullable Object> set, Object key) {
     if (key == null) {
       return null;

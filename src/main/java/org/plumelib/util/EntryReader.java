@@ -294,6 +294,18 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   /** A dummy Reader to be used when null is not acceptable. */
   private static class DummyReader extends Reader {
+
+    /** The canonical DummyReader. */
+    public static final DummyReader it = new DummyReader();
+
+    /**
+     * Create a new DummyReader.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public DummyReader() {}
+
     @Override
     public void close(@GuardSatisfied DummyReader this) {
       // No error, because closing is OK if it appears in try-with-resources.
@@ -365,7 +377,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex(1) String includeRegexString) {
     // we won't use superclass methods, but passing null as an argument
     // leads to a NullPointerException.
-    super(new DummyReader());
+    super(DummyReader.it);
     readers.addFirst(new FlnReader(reader, filename));
     if (commentRegexString == null) {
       commentRegex = null;
