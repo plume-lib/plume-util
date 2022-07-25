@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.6.0 (??)
+
+- Some constructors are deprecated, for efficiency.
+
 ## 1.5.8 (2021-07-20)
 
 - Bug fix in `System.gcPercentage`.

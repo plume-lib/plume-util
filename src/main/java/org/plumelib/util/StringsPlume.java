@@ -886,6 +886,18 @@ public final class StringsPlume {
    * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
+
+    /** The canonical ObjectComparator. */
+    public static final ObjectComparator it = new ObjectComparator();
+
+    /**
+     * Create a new ObjectComparator.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public ObjectComparator() {}
+
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
 

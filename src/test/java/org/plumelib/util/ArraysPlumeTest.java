@@ -587,8 +587,8 @@ public final class ArraysPlumeTest {
     // public static class IntArrayComparatorLexical implements Comparator
     // public static class IntArrayComparatorLengthFirst implements Comparator
 
-    Comparator<int[]> iacl = new ArraysPlume.IntArrayComparatorLexical();
-    Comparator<int[]> iaclf = new ArraysPlume.IntArrayComparatorLengthFirst();
+    Comparator<int[]> iacl = ArraysPlume.IntArrayComparatorLexical.it;
+    Comparator<int[]> iaclf = ArraysPlume.IntArrayComparatorLengthFirst.it;
 
     int[] a0 = new int[] {};
     int[] a1 = new int[] {};
@@ -657,8 +657,8 @@ public final class ArraysPlumeTest {
     // public static class LongArrayComparatorLexical implements Comparator
     // public static class LongArrayComparatorLengthFirst implements Comparator
 
-    Comparator<long[]> lacl = new ArraysPlume.LongArrayComparatorLexical();
-    Comparator<long[]> laclf = new ArraysPlume.LongArrayComparatorLengthFirst();
+    Comparator<long[]> lacl = ArraysPlume.LongArrayComparatorLexical.it;
+    Comparator<long[]> laclf = ArraysPlume.LongArrayComparatorLengthFirst.it;
     long[] a0 = new long[] {};
     long[] a1 = new long[] {};
     long[] a2 = new long[] {0, 1, 2, 3};
@@ -725,7 +725,7 @@ public final class ArraysPlumeTest {
 
     // public static class DoubleArrayComparatorLexical implements Comparator
 
-    Comparator<double[]> dacl = new ArraysPlume.DoubleArrayComparatorLexical();
+    Comparator<double[]> dacl = ArraysPlume.DoubleArrayComparatorLexical.it;
     double[] a0 = new double[] {};
     double[] a1 = new double[] {};
     double[] a2 = new double[] {0, 1, 2, 3};
