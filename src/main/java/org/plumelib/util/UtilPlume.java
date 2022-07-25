@@ -2271,6 +2271,9 @@ public final class UtilPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** Create a new NullableStringComparator. */
+    public NullableStringComparator() {}
+
     @Pure
     @Override
     public int compare(@Nullable String s1, @Nullable String s2) {
@@ -2304,6 +2307,9 @@ public final class UtilPlume {
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
+
+    /** Create a new ObjectComparator. */
+    public ObjectComparator() {}
 
     @SuppressWarnings({
       "allcheckers:purity.not.deterministic.call",

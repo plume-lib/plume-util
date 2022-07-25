@@ -116,6 +116,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class IntegerHasher implements Hasher {
+    /** Create a new IntegerHasher. */
+    public IntegerHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return a1.equals(a2);
@@ -135,6 +138,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class LongHasher implements Hasher {
+    /** Create a new LongHasher. */
+    public LongHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return a1.equals(a2);
@@ -154,6 +160,9 @@ public final class Intern {
    * @see Arrays#equals(int[], int[])
    */
   private static final class IntArrayHasher implements Hasher {
+    /** Create a new IntArrayHasher. */
+    public IntArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((int[]) a1, (int[]) a2);
@@ -172,6 +181,9 @@ public final class Intern {
    * @see Arrays#equals (long[], long[])
    */
   private static final class LongArrayHasher implements Hasher {
+    /** Create a new LongArrayHasher. */
+    public LongArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((long[]) a1, (long[]) a2);
@@ -194,6 +206,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class DoubleHasher implements Hasher {
+    /** Create a new DoubleHasher. */
+    public DoubleHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return a1.equals(a2);
@@ -213,6 +228,9 @@ public final class Intern {
    * @see Arrays#equals(Object[],Object[])
    */
   private static final class DoubleArrayHasher implements Hasher {
+    /** Create a new DoubleArrayHasher. */
+    public DoubleArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       // "Arrays.equals" considers +0.0 != -0.0.
@@ -254,6 +272,9 @@ public final class Intern {
    * @see Arrays#equals
    */
   private static final class StringArrayHasher implements Hasher {
+    /** Create a new StringArrayHasher. */
+    public StringArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((String[]) a1, (String[]) a2);
@@ -272,6 +293,9 @@ public final class Intern {
    * @see Arrays#equals(Object[], Object[])
    */
   private static final class ObjectArrayHasher implements Hasher {
+    /** Create a new ObjectArrayHasher. */
+    public ObjectArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((@Nullable Object[]) a1, (@Nullable Object[]) a2);
@@ -1152,6 +1176,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class SubsequenceHasher<T extends @Interned Object> implements Hasher {
+    /** Create a new SubsequenceHasher. */
+    public SubsequenceHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       @SuppressWarnings("unchecked")

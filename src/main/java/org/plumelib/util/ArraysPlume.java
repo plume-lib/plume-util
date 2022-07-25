@@ -3315,6 +3315,9 @@ public final class ArraysPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** Create a new ComparableArrayComparatorLexical. */
+    public ComparableArrayComparatorLexical() {}
+
     /**
      * Compare two arrays lexically (element-by-element).
      *
@@ -3527,6 +3530,9 @@ public final class ArraysPlume {
       implements Comparator<T[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
+
+    /** Create a new ComparableArrayComparatorLengthFirst. */
+    public ComparableArrayComparatorLengthFirst() {}
 
     /**
      * Compare two arrays by length, then lexically (element-by-element).

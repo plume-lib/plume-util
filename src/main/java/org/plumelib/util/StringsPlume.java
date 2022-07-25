@@ -849,6 +849,9 @@ public final class StringsPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** Create a new NullableStringComparator. */
+    public NullableStringComparator() {}
+
     /**
      * Compare two Strings lexicographically. Null is considered less than any non-null String.
      *

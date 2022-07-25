@@ -334,6 +334,9 @@ public class FuzzyFloat {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** Create a new DoubleArrayComparatorLexical. */
+    public DoubleArrayComparatorLexical() {}
+
     /**
      * Lexically compares o1 and o2 as double arrays.
      *
