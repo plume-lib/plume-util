@@ -2265,7 +2265,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link StringsPlume.NullableStringComparator}
    */
-  @Deprecated // use StringsPlume.NullableStringComparator; deprecated 2020-12-02
+  @Deprecated // 2020-12-02
   public static class NullableStringComparator
       implements Comparator<@Nullable String>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -2300,7 +2300,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link StringsPlume.ObjectComparator}
    */
-  @Deprecated // use StringsPlume.ObjectComparator; deprecated 2020-12-02
+  @Deprecated // 2020-12-02
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
