@@ -1483,7 +1483,7 @@ public final class MathPlume {
    *
    * @param missing the missing integers; modified by this method
    * @return value to be returned by {@link #nonmodulusStrict(int[])}: a tuple of (r,m) where all
-   *     numbers in {@code missing} are equal to r (ood m)
+   *     numbers in {@code missing} are equal to r (mod m)
    */
   private static int @Nullable @ArrayLen(2) [] nonmodulusStrictIntInternal(
       Iterator<Integer> missing) {
@@ -1504,6 +1504,8 @@ public final class MathPlume {
   }
 
   /**
+   * Return true if the first and last elements are not equal to r (mod m).
+   *
    * @param rm a tuple of (r,m)
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This
    *     iterator has already been iterated all the way to its end.
@@ -1835,6 +1837,8 @@ public final class MathPlume {
   }
 
   /**
+   * Return true if the first and last elements are equal to r (mod m).
+   *
    * @param rm an array containing two elements
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This
    *     iterator has already been iterated all the way to its end.

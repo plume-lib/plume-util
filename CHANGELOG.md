@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.6.0 (??)
+
+- Some constructors are deprecated, for efficiency.
+
 ## 1.5.9 (2022-07-12)
 
 - Java 17 is supported.

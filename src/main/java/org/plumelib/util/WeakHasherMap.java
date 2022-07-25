@@ -485,6 +485,9 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
     /** hashEntrySet. */
     Set<Map.Entry<WeakKey, V>> hashEntrySet = hash.entrySet();
 
+    /** Create a new EntrySet. */
+    public EntrySet() {}
+
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
 

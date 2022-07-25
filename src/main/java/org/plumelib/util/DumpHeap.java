@@ -12,6 +12,11 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 @SuppressWarnings("signedness") // lack of annotations on ManagementFactory and reflection
 public class DumpHeap {
 
+  /** Do not instantiate. */
+  private DumpHeap() {
+    throw new Error("Do not instantiate");
+  }
+
   /**
    * The HotSpot Diagnostic MBean. Its type is Object, in case HotSpotDiagnosticMXBean is not
    * available at compile time.

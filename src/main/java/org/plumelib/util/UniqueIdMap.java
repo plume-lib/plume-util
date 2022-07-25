@@ -22,6 +22,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class UniqueIdMap<E> {
 
+  /** Create a new UniqueIdMap. */
+  public UniqueIdMap() {}
+
   /** The unique ID for the next-created object. */
   private final AtomicLong nextUid = new AtomicLong(0);
 
