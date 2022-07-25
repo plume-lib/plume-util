@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.5.9 (2022-07-12)
+
+- Java 17 is supported.
+
 ## 1.5.8 (2021-07-20)
 
 - Bug fix in `System.gcPercentage`.
