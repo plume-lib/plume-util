@@ -13,7 +13,7 @@ plugins {
   id("net.ltgt.errorprone") version "2.0.2"
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.14'
+  id 'org.checkerframework' version '0.6.15'
 }
 
 repositories {
@@ -23,7 +23,7 @@ repositories {
 dependencies {
   implementation 'org.plumelib:reflection-util:1.0.5'
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
