@@ -48,7 +48,7 @@ test {
 /// Error Prone linter
 
 dependencies {
-  errorprone("com.google.errorprone:error_prone_core:2.14.0")
+  errorprone("com.google.errorprone:error_prone_core:2.15.0")
 }
 tasks.withType(JavaCompile).configureEach {
   options.compilerArgs << "-Xlint:all,-processing" << "-Werror"
@@ -59,6 +59,9 @@ tasks.withType(JavaCompile).configureEach {
     disable(
         // The suggestion recommends an Error-Prone-specific annotation
         "InlineMeSuggester")
+    disable(
+        // Incorrect when using the Checker Framework
+        "ExtendsObject")
   }
   options.forkOptions.jvmArgs += "-Xmx2g"
 }
