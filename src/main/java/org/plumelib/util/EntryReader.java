@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.CharBuffer;
 import java.nio.file.Path;
@@ -636,7 +637,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     try {
       line = readLine();
     } catch (IOException e) {
-      throw new Error("unexpected IOException: ", e);
+      throw new UncheckedIOException(e);
     }
 
     if (line == null) {
@@ -663,7 +664,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         throw new NoSuchElementException();
       }
     } catch (IOException e) {
-      throw new Error("unexpected IOException", e);
+      throw new UncheckedIOException(e);
     }
   }
 
