@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -2590,7 +2591,7 @@ public final class UtilPlume {
       t.printStackTrace(pw);
       return sw.toString();
     } catch (IOException e) {
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
   }
 }
