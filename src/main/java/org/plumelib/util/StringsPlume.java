@@ -1213,7 +1213,6 @@ public final class StringsPlume {
    * @param elements the elements of the conjunction or disjunction
    * @return a conjunction or disjunction string
    */
-  @SuppressWarnings({"mustcall:return"}) // TODO: required under JDK 18.  Why?
   public static String conjunction(
       String conjunction, List<? extends @Signed @PolyNull Object> elements) {
     int size = elements.size();
