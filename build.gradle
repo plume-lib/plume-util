@@ -114,7 +114,7 @@ javadoc {
   // How can I generate Javadoc for it while still being strict for all other files?
   exclude '**/WeakIdentityHashMap.java'
   if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
-      options.addStringOption("-release", "8");
+    options.addStringOption('source', '8')
   }
   doLast {
     if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
@@ -133,7 +133,7 @@ task javadocWeb(type: Javadoc) {
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
   if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
-      options.addStringOption("-release", "8");
+    options.addStringOption('source', '8')
   }
   doLast {
     if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
