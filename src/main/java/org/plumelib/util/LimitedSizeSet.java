@@ -33,6 +33,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
    * If null, then at least {@link #numValues} distinct values have been seen (and {@link
    * #numValues} equals the {@code maxValues} argument to the constructor).
    */
+  @SuppressWarnings("serial") // don't serialize this if element type is not serializable
   protected @Nullable T @Nullable @MinLen(1) [] values;
   /** The number of active elements (equivalently, the first unused index). */
   // The Index Checker annotation is not @IndexOrHigh("values"), because the invariant is broken
