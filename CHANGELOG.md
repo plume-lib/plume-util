@@ -2,6 +2,7 @@
 
 ## 1.6.0 (??)
 
+- New methods `FilesPlume.createTempFile()`, which create sequential file names.
 - Some constructors are deprecated, for efficiency.
 
 ## 1.5.9 (2022-07-12)
