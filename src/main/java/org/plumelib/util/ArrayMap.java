@@ -297,6 +297,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   /** Represents a view of the keys. */
   final class KeySet extends AbstractSet<@KeyFor("this") K> {
+
+    /** Creates a new AbstractSet. */
+    public AbstractSet() {}
+
     @Pure
     @Override
     public final @NonNegative int size() {
@@ -363,6 +367,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   /** Represents a view of the values. */
   final class Values extends AbstractCollection<V> {
+
+    /** Creates a new Values. */
+    public Values() {}
+
     @Pure
     @Override
     public final @NonNegative int size() {
@@ -424,6 +432,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   /** Represents a view of the entries. */
   final class EntrySet extends AbstractSet<Map.Entry<@KeyFor("this") K, V>> {
+
+    /** Creates a new EntrySet. */
+    public EntrySet() {}
+
     @Pure
     @Override
     public final @NonNegative int size() {
