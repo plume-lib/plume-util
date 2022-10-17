@@ -298,8 +298,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** Represents a view of the keys. */
   final class KeySet extends AbstractSet<@KeyFor("this") K> {
 
-    /** Creates a new AbstractSet. */
-    public AbstractSet() {}
+    /** Creates a new KeySet. */
+    public KeySet() {}
 
     @Pure
     @Override
