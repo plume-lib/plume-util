@@ -343,7 +343,7 @@ public final class RegexUtil {
    * @param regexes a collection of regular expressions
    * @return the strings such that any one of the regexes matches it
    */
-  public static List<String> anyMatches(
+  public static List<String> matchesSomeRegex(
       Collection<String> strings, Collection<@Regex String> regexes) {
     List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
     List<String> result = new ArrayList<String>(strings.size());
@@ -365,7 +365,8 @@ public final class RegexUtil {
    * @param regexes a collection of regular expressions
    * @return true if every string is matched by at least one regex
    */
-  public static boolean allMatch(Collection<String> strings, Collection<@Regex String> regexes) {
+  public static boolean everyStringMatchesSomeRegex(
+      Collection<String> strings, Collection<@Regex String> regexes) {
     List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
     outer:
     for (String s : strings) {
@@ -384,9 +385,9 @@ public final class RegexUtil {
    *
    * @param strings a collection of strings
    * @param regexes a collection of regular expressions
-   * @return the strings such that none one of the regexes matches it
+   * @return the strings such that none of the regexes matches it
    */
-  public static List<String> noneMatches(
+  public static List<String> matchesNoRegex(
       Collection<String> strings, Collection<@Regex String> regexes) {
     List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
     List<String> result = new ArrayList<String>(strings.size());
@@ -409,7 +410,8 @@ public final class RegexUtil {
    * @param regexes a collection of regular expressions
    * @return true if no string is matched by any regex
    */
-  public static boolean noneMatch(Collection<String> strings, Collection<@Regex String> regexes) {
+  public static boolean noStringMatchesAnyRegex(
+      Collection<String> strings, Collection<@Regex String> regexes) {
     for (String regex : regexes) {
       Pattern p = Pattern.compile(regex);
       for (String s : strings) {
