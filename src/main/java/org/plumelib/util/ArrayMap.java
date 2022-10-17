@@ -23,6 +23,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -42,9 +43,11 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  */
 @SuppressWarnings({
   "lock", // not yet annotated for the Lock Checker
-  "keyfor" // https://tinyurl.com/cfissue/4558
+  "keyfor", // https://tinyurl.com/cfissue/4558
+  "signedness:argument" // unannotated JDK methods
 })
-public class ArrayMap<K, V> extends AbstractMap<K, V> {
+public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
+    extends AbstractMap<K, V> {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
   // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  It would make some
@@ -123,7 +126,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
     "lock:method.guarantee.violated", // initializes `this`
-    "nullness:method.invocation.invalid", // inference failure
+    "nullness:method.invocation", // inference failure
   })
   @SideEffectFree
   public ArrayMap(Map<? extends K, ? extends V> m) {
@@ -144,7 +147,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
    */
   @SuppressWarnings({
     "InvalidParam", // Error Prone stupidly warns about field `keys`
-    "keyfor:contracts.postcondition.not.satisfied" // insertion in keys array suffices
+    "keyfor:contracts.postcondition" // insertion in keys array suffices
   })
   @EnsuresKeyFor(value = "#2", map = "this")
   private void put(@GTENegativeOne int index, K key, V value) {
@@ -190,8 +193,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
   @Pure
   @Override
-  @SuppressWarnings(
-      "keyfor:contracts.conditional.postcondition.not.satisfied") // delegate test to `keys` field
+  @SuppressWarnings("keyfor:contracts.conditional.postcondition") // delegate test to `keys` field
   public boolean containsKey(@Nullable Object key) {
     return keys.contains(key);
   }
@@ -217,7 +219,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
 
   @Pure
   @Override
-  public @Nullable V get(@Nullable Object key) {
+  public @Nullable V get(@Nullable @UnknownSignedness Object key) {
     int index = keys.indexOf(key);
     return getOrNull(index);
   }
@@ -323,14 +325,13 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       return removeIndex(index);
     }
 
-    @SuppressWarnings("nullness:return") // polymorphism problem
     @SideEffectFree
     @Override
     public Object[] toArray() {
       return keys.toArray(new Object[keys.size()]);
     }
 
-    @SuppressWarnings("nullness:override.param.invalid") // Nullness Checker special-cases toArray
+    @SuppressWarnings("nullness") // Nullness Checker special-cases toArray
     @SideEffectFree
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
@@ -384,14 +385,14 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
       return containsValue(o);
     }
 
-    @SuppressWarnings("nullness:override.return.invalid") // polymorphism problem
+    @SuppressWarnings("nullness:override.return") // polymorphism problem
     @SideEffectFree
     @Override
     public @Nullable Object[] toArray() {
       return values.toArray(new Object[values.size()]);
     }
 
-    @SuppressWarnings("nullness:override.param.invalid") // Nullness Checker special-cases toArray
+    @SuppressWarnings("nullness") // Nullness Checker special-cases toArray
     @SideEffectFree
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
@@ -795,8 +796,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public @Nullable V computeIfAbsent(
-      K key, Function<? super K, ? extends @Nullable V> mappingFunction) {
+  public @PolyNull V computeIfAbsent(
+      K key, Function<? super K, ? extends @PolyNull V> mappingFunction) {
     Objects.requireNonNull(mappingFunction);
     int index = keys.indexOf(key);
     V currentValue;
@@ -818,16 +819,20 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> {
   }
 
   @Override
-  public @Nullable V computeIfPresent(
-      K key, BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
+  public @PolyNull V computeIfPresent(
+      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     int index = keys.indexOf(key);
     if (index == -1) {
-      return null;
+      @SuppressWarnings("nullness:assignment")
+      @PolyNull V result = null;
+      return result;
     }
     V oldValue = values.get(index);
     if (oldValue == null) {
-      return null;
+      @SuppressWarnings("nullness:assignment")
+      @PolyNull V result = null;
+      return result;
     }
     int oldModificationCount = modificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
