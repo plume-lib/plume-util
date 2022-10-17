@@ -3,6 +3,9 @@
 
 package org.plumelib.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
@@ -331,5 +334,92 @@ public final class RegexUtil {
   @Pure
   private static int getGroupCount(Pattern p) {
     return p.matcher("").groupCount();
+  }
+
+  /**
+   * Return the strings such that any one of the regexes matches it.
+   *
+   * @param strings a collection of strings
+   * @param regexes a collection of regular expressions
+   * @return the strings such that any one of the regexes matches it
+   */
+  public static List<String> matchesSomeRegex(
+      Collection<String> strings, Collection<@Regex String> regexes) {
+    List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
+    List<String> result = new ArrayList<String>(strings.size());
+    for (String s : strings) {
+      for (Pattern p : patterns) {
+        if (p.matcher(s).matches()) {
+          result.add(s);
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Return true if every string is matched by at least one regex.
+   *
+   * @param strings a collection of strings
+   * @param regexes a collection of regular expressions
+   * @return true if every string is matched by at least one regex
+   */
+  public static boolean everyStringMatchesSomeRegex(
+      Collection<String> strings, Collection<@Regex String> regexes) {
+    List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
+    outer:
+    for (String s : strings) {
+      for (Pattern p : patterns) {
+        if (p.matcher(s).matches()) {
+          continue outer;
+        }
+      }
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Return the strings that are matched by no regex.
+   *
+   * @param strings a collection of strings
+   * @param regexes a collection of regular expressions
+   * @return the strings such that none of the regexes matches it
+   */
+  public static List<String> matchesNoRegex(
+      Collection<String> strings, Collection<@Regex String> regexes) {
+    List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
+    List<String> result = new ArrayList<String>(strings.size());
+    outer:
+    for (String s : strings) {
+      for (Pattern p : patterns) {
+        if (p.matcher(s).matches()) {
+          continue outer;
+        }
+      }
+      result.add(s);
+    }
+    return result;
+  }
+
+  /**
+   * Return true if no string is matched by any regex.
+   *
+   * @param strings a collection of strings
+   * @param regexes a collection of regular expressions
+   * @return true if no string is matched by any regex
+   */
+  public static boolean noStringMatchesAnyRegex(
+      Collection<String> strings, Collection<@Regex String> regexes) {
+    for (String regex : regexes) {
+      Pattern p = Pattern.compile(regex);
+      for (String s : strings) {
+        if (p.matcher(s).matches()) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

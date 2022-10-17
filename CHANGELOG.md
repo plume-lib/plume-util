@@ -3,6 +3,7 @@
 ## 1.6.0 (??)
 
 - New methods `FilesPlume.createTempFile()`, which create sequential file names.
+- New methods in `RegexUtil`: `matchesSomeRegex`, `everyStringMatchesSomeRegex`, `matchesNoRegex`, `noStringMatchesAnyRegex`.
 - Some constructors are deprecated, for efficiency.
 - Support Java 18.
 
