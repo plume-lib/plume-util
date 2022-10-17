@@ -74,7 +74,10 @@ public class ClassDeterministic {
    * @param c the Class whose enum constants to return
    * @return the class's enum constants
    */
-  @SuppressWarnings("signedness") // ToStringComparator problem
+  @SuppressWarnings({
+    "signedness", // ToStringComparator problem
+    "mustcall:argument" // not sure; generics inference problem?
+  })
   public static <T> T @Nullable [] getEnumConstants(Class<T> c) {
     @NonNull T[] result = c.getEnumConstants();
     if (result == null) {
@@ -179,6 +182,9 @@ public class ClassDeterministic {
   /** Compares Annotation objects by type name. */
   private static class AnnotationComparator implements Comparator<Annotation> {
 
+    /** Create a new AnnotationComparator. */
+    public AnnotationComparator() {}
+
     @Override
     public int compare(Annotation a1, Annotation a2) {
       return classComparator.compare(a1.annotationType(), a2.annotationType());
@@ -190,6 +196,9 @@ public class ClassDeterministic {
 
   /** Compares Class objects by fully-qualified name. */
   private static class ClassComparator implements Comparator<Class<?>> {
+
+    /** Create a new ClassComparator. */
+    public ClassComparator() {}
 
     @Override
     public int compare(Class<?> c1, Class<?> c2) {
@@ -208,6 +217,9 @@ public class ClassDeterministic {
    * names, declaring class, and return type (which is necessary to distinguish bridge methods).
    */
   private static class MethodComparator implements Comparator<Method> {
+
+    /** Create a new MethodComparator. */
+    public MethodComparator() {}
 
     @Override
     public int compare(Method m1, Method m2) {
@@ -259,6 +271,9 @@ public class ClassDeterministic {
    */
   private static class ConstructorComparator implements Comparator<Constructor<?>> {
 
+    /** Create a new ConstructorComparator. */
+    public ConstructorComparator() {}
+
     @Override
     public int compare(Constructor<?> c1, Constructor<?> c2) {
       int result = classComparator.compare(c1.getDeclaringClass(), c2.getDeclaringClass());
@@ -290,6 +305,9 @@ public class ClassDeterministic {
   /** Compares Field objects by name. */
   private static class FieldComparator implements Comparator<Field> {
 
+    /** Create a new FieldComparator. */
+    public FieldComparator() {}
+
     @Override
     public int compare(Field f1, Field f2) {
       int result = classComparator.compare(f1.getDeclaringClass(), f2.getDeclaringClass());
@@ -305,6 +323,9 @@ public class ClassDeterministic {
 
   /** Compares objects by the result of toString(). */
   private static class ToStringComparator implements Comparator<Object> {
+
+    /** Create a new ToStringComparator. */
+    public ToStringComparator() {}
 
     @Override
     public int compare(Object o1, Object o2) {

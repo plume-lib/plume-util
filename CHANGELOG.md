@@ -2,6 +2,17 @@
 
 # Plume-Util change log
 
+## 1.6.0 (2022-10-17)
+
+- New methods `FilesPlume.createTempFile(...)`, which create sequential file names.
+- New methods in `RegexUtil`: `matchesSomeRegex`, `everyStringMatchesSomeRegex`, `matchesNoRegex`, `noStringMatchesAnyRegex`.
+- Some constructors are deprecated, for efficiency.
+- Support Java 18.
+
+## 1.5.9 (2022-07-12)
+
+- Java 17 is supported.
+
 ## 1.5.8 (2021-07-20)
 
 - Bug fix in `System.gcPercentage`.

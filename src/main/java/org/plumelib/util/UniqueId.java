@@ -38,7 +38,7 @@ public interface UniqueId {
   /**
    * Returns the unique ID of this object.
    *
-   * @return the unique ID of this object.
+   * @return the unique ID of this object
    */
   public long getUid(@UnknownInitialization(UniqueId.class) UniqueId this);
 

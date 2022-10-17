@@ -24,6 +24,8 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
+import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -1695,7 +1697,7 @@ public final class ArraysPlume {
    *
    * @param <T> the type of array or list elements
    */
-  private static class ListOrArray<T extends @Nullable Object> {
+  private static class ListOrArray<T extends @MustCallUnknown @Nullable Object> {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
@@ -2357,7 +2359,8 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toString(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
+  public static String toString(
+      @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
     return toString(a, false);
   }
 
@@ -2370,7 +2373,8 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#toString
    */
   @SideEffectFree
-  public static String toStringQuoted(@Nullable Collection<? extends @Signed @PolyNull Object> a) {
+  public static String toStringQuoted(
+      @MustCallUnknown @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
     return toString(a, true);
   }
 
@@ -2386,7 +2390,7 @@ public final class ArraysPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (string creation)
   @SideEffectFree
   public static String toString(
-      @Nullable Collection<? extends @Signed @PolyNull Object> a, boolean quoted) {
+      @Nullable Collection<? extends @MustCallUnknown @Signed @PolyNull Object> a, boolean quoted) {
     if (a == null) {
       return "null";
     }
@@ -3105,6 +3109,17 @@ public final class ArraysPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** The canonical IntArrayComparatorLexical. */
+    public static final IntArrayComparatorLexical it = new IntArrayComparatorLexical();
+
+    /**
+     * Create a new IntArrayComparatorLexical.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public IntArrayComparatorLexical() {}
+
     /**
      * Compare two arrays lexically (element-by-element).
      *
@@ -3140,6 +3155,17 @@ public final class ArraysPlume {
   public static final class LongArrayComparatorLexical implements Comparator<long[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
+
+    /** The canonical LongArrayComparatorLexical. */
+    public static final LongArrayComparatorLexical it = new LongArrayComparatorLexical();
+
+    /**
+     * Create a new LongArrayComparatorLexical.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public LongArrayComparatorLexical() {}
 
     /**
      * Compare two arrays lexically (element-by-element).
@@ -3178,6 +3204,17 @@ public final class ArraysPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** The canonical DoubleArrayComparatorLexical. */
+    public static final DoubleArrayComparatorLexical it = new DoubleArrayComparatorLexical();
+
+    /**
+     * Create a new DoubleArrayComparatorLexical.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public DoubleArrayComparatorLexical() {}
+
     /**
      * Compare two arrays lexically (element-by-element).
      *
@@ -3215,6 +3252,17 @@ public final class ArraysPlume {
       implements Comparator<String[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
+
+    /** The canonical StringArrayComparatorLexical. */
+    public static final StringArrayComparatorLexical it = new StringArrayComparatorLexical();
+
+    /**
+     * Create a new StringArrayComparatorLexical.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public StringArrayComparatorLexical() {}
 
     /**
      * Compare two arrays lexically (element-by-element).
@@ -3266,6 +3314,9 @@ public final class ArraysPlume {
       implements Comparator<T[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
+
+    /** Create a new ComparableArrayComparatorLexical. */
+    public ComparableArrayComparatorLexical() {}
 
     /**
      * Compare two arrays lexically (element-by-element).
@@ -3327,6 +3378,17 @@ public final class ArraysPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** The canonical ObjectArrayComparatorLexical. */
+    public static final ObjectArrayComparatorLexical it = new ObjectArrayComparatorLexical();
+
+    /**
+     * Create a new ObjectArrayComparatorLexical.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public ObjectArrayComparatorLexical() {}
+
     /**
      * Compare two arrays lexically (element-by-element).
      *
@@ -3369,6 +3431,17 @@ public final class ArraysPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** The canonical IntArrayComparatorLengthFirst. */
+    public static final IntArrayComparatorLengthFirst it = new IntArrayComparatorLengthFirst();
+
+    /**
+     * Create a new IntArrayComparatorLengthFirst.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public IntArrayComparatorLengthFirst() {}
+
     /**
      * Compare two arrays by length, then lexically (element-by-element).
      *
@@ -3408,6 +3481,17 @@ public final class ArraysPlume {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
 
+    /** The canonical LongArrayComparatorLengthFirst. */
+    public static final LongArrayComparatorLengthFirst it = new LongArrayComparatorLengthFirst();
+
+    /**
+     * Create a new LongArrayComparatorLengthFirst.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public LongArrayComparatorLengthFirst() {}
+
     /**
      * Compare two arrays by length, then lexically (element-by-element).
      *
@@ -3446,6 +3530,9 @@ public final class ArraysPlume {
       implements Comparator<T[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
+
+    /** Create a new ComparableArrayComparatorLengthFirst. */
+    public ComparableArrayComparatorLengthFirst() {}
 
     /**
      * Compare two arrays by length, then lexically (element-by-element).
@@ -3494,7 +3581,7 @@ public final class ArraysPlume {
 
   /** Sorts arbitrary objects; used to determine equal. */
   private static final StringsPlume.ObjectComparator objectComparator =
-      new StringsPlume.ObjectComparator();
+      StringsPlume.ObjectComparator.it;
 
   /**
    * Compare two arrays first by length (a shorter array is considered less), and if of equal length
@@ -3512,6 +3599,18 @@ public final class ArraysPlume {
       implements Comparator<Object[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20150812L;
+
+    /** The canonical ObjectArrayComparatorLengthFirst. */
+    public static final ObjectArrayComparatorLengthFirst it =
+        new ObjectArrayComparatorLengthFirst();
+
+    /**
+     * Create a new ObjectArrayComparatorLengthFirst.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public ObjectArrayComparatorLengthFirst() {}
 
     /**
      * Compare two arrays by length, then lexically (element-by-element). Null elements are

@@ -18,7 +18,7 @@ public final class FileWriterWithName extends FileWriter {
   /**
    * Constructs a FileWriterWithName object given a file name.
    *
-   * @param fileName String The system-dependent filename.
+   * @param fileName the system-dependent filename
    * @throws IOException if the named file exists but is a directory rather than a regular file,
    *     does not exist but cannot be created, or cannot be opened for any other reason
    */
@@ -31,7 +31,7 @@ public final class FileWriterWithName extends FileWriter {
    * Constructs a FileWriterWithName object given a file name with a boolean indicating whether or
    * not to append the data written.
    *
-   * @param fileName String The system-dependent filename.
+   * @param fileName the system-dependent filename
    * @param append boolean if {@code true}, then data will be written to the end of the file rather
    *     than the beginning.
    * @throws IOException if the named file exists but is a directory rather than a regular file,
@@ -45,7 +45,7 @@ public final class FileWriterWithName extends FileWriter {
   /**
    * Constructs a FileWriterWithName object given a File object.
    *
-   * @param file a File object to write to.
+   * @param file a File object to write to
    * @throws IOException if the file exists but is a directory rather than a regular file, does not
    *     exist but cannot be created, or cannot be opened for any other reason
    */

@@ -116,6 +116,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class IntegerHasher implements Hasher {
+    /** Create a new IntegerHasher. */
+    public IntegerHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return a1.equals(a2);
@@ -135,6 +138,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class LongHasher implements Hasher {
+    /** Create a new LongHasher. */
+    public LongHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return a1.equals(a2);
@@ -154,6 +160,9 @@ public final class Intern {
    * @see Arrays#equals(int[], int[])
    */
   private static final class IntArrayHasher implements Hasher {
+    /** Create a new IntArrayHasher. */
+    public IntArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((int[]) a1, (int[]) a2);
@@ -172,6 +181,9 @@ public final class Intern {
    * @see Arrays#equals (long[], long[])
    */
   private static final class LongArrayHasher implements Hasher {
+    /** Create a new LongArrayHasher. */
+    public LongArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((long[]) a1, (long[]) a2);
@@ -194,6 +206,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class DoubleHasher implements Hasher {
+    /** Create a new DoubleHasher. */
+    public DoubleHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return a1.equals(a2);
@@ -213,6 +228,9 @@ public final class Intern {
    * @see Arrays#equals(Object[],Object[])
    */
   private static final class DoubleArrayHasher implements Hasher {
+    /** Create a new DoubleArrayHasher. */
+    public DoubleArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       // "Arrays.equals" considers +0.0 != -0.0.
@@ -254,6 +272,9 @@ public final class Intern {
    * @see Arrays#equals
    */
   private static final class StringArrayHasher implements Hasher {
+    /** Create a new StringArrayHasher. */
+    public StringArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((String[]) a1, (String[]) a2);
@@ -272,6 +293,9 @@ public final class Intern {
    * @see Arrays#equals(Object[], Object[])
    */
   private static final class ObjectArrayHasher implements Hasher {
+    /** Create a new ObjectArrayHasher. */
+    public ObjectArrayHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       return Arrays.equals((@Nullable Object[]) a1, (@Nullable Object[]) a2);
@@ -366,7 +390,7 @@ public final class Intern {
   /**
    * Returns the number of interned integers. For testing only.
    *
-   * @return the number of interned integers.
+   * @return the number of interned integers
    */
   static int numIntegers() {
     return internedIntegers.size();
@@ -375,7 +399,7 @@ public final class Intern {
   /**
    * Returns the number of interned longs. For testing only.
    *
-   * @return the number of interned longs.
+   * @return the number of interned longs
    */
   static int numLongs() {
     return internedLongs.size();
@@ -384,7 +408,7 @@ public final class Intern {
   /**
    * Returns the number of interned int arrays. For testing only.
    *
-   * @return the number of interned int arrays.
+   * @return the number of interned int arrays
    */
   static int numIntArrays() {
     return internedIntArrays.size();
@@ -393,7 +417,7 @@ public final class Intern {
   /**
    * Returns the number of interned long arrays. For testing only.
    *
-   * @return the number of interned long arrays.
+   * @return the number of interned long arrays
    */
   static int numLongArrays() {
     return internedLongArrays.size();
@@ -402,7 +426,7 @@ public final class Intern {
   /**
    * Returns the number of interned doubles. For testing only.
    *
-   * @return the number of interned doubles.
+   * @return the number of interned doubles
    */
   static int numDoubles() {
     return internedDoubles.size();
@@ -411,7 +435,7 @@ public final class Intern {
   /**
    * Returns the number of interned double arrays. For testing only.
    *
-   * @return the number of interned double arrays.
+   * @return the number of interned double arrays
    */
   static int numDoubleArrays() {
     return internedDoubleArrays.size();
@@ -420,7 +444,7 @@ public final class Intern {
   /**
    * Returns the number of interned string arrays. For testing only.
    *
-   * @return the number of interned string arrays.
+   * @return the number of interned string arrays
    */
   static int numStringArrays() {
     return internedStringArrays.size();
@@ -429,7 +453,7 @@ public final class Intern {
   /**
    * Returns the number of interned object arrays. For testing only.
    *
-   * @return the number of interned object arrays.
+   * @return the number of interned object arrays
    */
   static int numObjectArrays() {
     return internedObjectArrays.size();
@@ -518,11 +542,7 @@ public final class Intern {
   @Pure
   public static @Interned @PolyNull @PolyValue @SameLen("#1") String intern(
       @PolyNull @PolyValue String a) {
-    // Checker Framework cannot typecheck:  return (a == null) ? null : a.intern();
-    if (a == null) {
-      return null;
-    }
-    return a.intern();
+    return (a == null) ? null : a.intern();
   }
 
   /**
@@ -1156,6 +1176,9 @@ public final class Intern {
    * @see Hasher
    */
   private static final class SubsequenceHasher<T extends @Interned Object> implements Hasher {
+    /** Create a new SubsequenceHasher. */
+    public SubsequenceHasher() {}
+
     @Override
     public boolean equals(Object a1, Object a2) {
       @SuppressWarnings("unchecked")

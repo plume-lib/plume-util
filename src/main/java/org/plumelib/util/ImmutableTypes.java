@@ -6,6 +6,11 @@ import java.util.Set;
 /** Records all the immutable types in the JDK, and can be queried. */
 public class ImmutableTypes {
 
+  /** Do not instantiate. */
+  private ImmutableTypes() {
+    throw new Error("Do not instantiate");
+  }
+
   /**
    * The names of the immutable types. This is public so that clients can extend it with bug fixes
    * or application-specific types. (Or, make a pull request to add more types to this file.)

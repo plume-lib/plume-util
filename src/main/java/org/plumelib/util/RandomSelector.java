@@ -76,17 +76,19 @@ public class RandomSelector<T> {
   private ArrayList<T> values = new ArrayList<>();
 
   /**
+   * Creates a new RandomSelector.
+   *
    * @param numElts the number of elements intended to be selected from the input elements
-   *     <p>Sets 'numElts' = numElts
    */
   public RandomSelector(int numElts) {
     this(numElts, new Random());
   }
 
   /**
+   * Creates a new RandomSelector.
+   *
    * @param numElts the number of elements intended to be selected from the input elements
-   * @param r the seed to give for random number generation.
-   *     <p>Sets 'numElts' = numElts.
+   * @param r the seed to give for random number generation
    */
   public RandomSelector(int numElts, Random r) {
     coinTossMode = false;
@@ -96,6 +98,8 @@ public class RandomSelector<T> {
   }
 
   /**
+   * Creates a new RandomSelector.
+   *
    * @param keepProbability the probability that each element is selected from the oncoming
    *     Iteration
    * @param r the seed to give for random number generation
