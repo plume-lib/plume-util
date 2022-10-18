@@ -46,6 +46,7 @@ import org.junit.jupiter.api.Test;
   "rawtypes",
   "unchecked",
   "deprecation",
+  "removal",
   "nullness", // contains intentional misuses; exceptions are caught in catch statments
   "index", // contains intentional misuses; exceptions are caught in catch statments
   "interning", // ad hoc equality tests
