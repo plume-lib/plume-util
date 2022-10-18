@@ -309,7 +309,7 @@ public class ArrayMapTestApache {
     map.put(new Integer(203), "203");
     Iterator it = map.keySet().iterator();
     Integer remove1 = (Integer) it.next();
-    it.hasNext();
+    assertTrue(it.hasNext());
     it.remove();
     Integer remove2 = (Integer) it.next();
     it.remove();
@@ -331,7 +331,7 @@ public class ArrayMapTestApache {
     Integer next;
     if (remove3.intValue() == 1) next = new Integer(4);
     else next = new Integer(1);
-    it2.hasNext();
+    assertTrue(it2.hasNext());
     it2.remove();
     assertTrue(it2.next().equals(next));
     assertEquals(1, map2.size());
