@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -44,7 +45,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 @SuppressWarnings({
   "lock", // not yet annotated for the Lock Checker
   "keyfor", // https://tinyurl.com/cfissue/4558
-  "signedness:argument" // unannotated JDK methods
+  "signedness:argument", // unannotated JDK methods; TODO: remove after CF release 3.26.1
+  "signedness:unneeded.suppression" // unannotated JDK methods; TODO: remove after CF release 3.26.1
 })
 public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
     extends AbstractMap<K, V> {
@@ -194,13 +196,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Pure
   @Override
   @SuppressWarnings("keyfor:contracts.conditional.postcondition") // delegate test to `keys` field
-  public boolean containsKey(@Nullable Object key) {
+  public boolean containsKey(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
     return keys.contains(key);
   }
 
   @Pure
   @Override
-  public boolean containsValue(@Nullable Object value) {
+  public boolean containsValue(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
     return values.contains(value);
   }
 
@@ -212,14 +214,16 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @return true if this map contains the given mapping
    */
   @Pure
-  private boolean containsEntry(@Nullable Object key, @Nullable Object value) {
+  private boolean containsEntry(
+      @GuardSatisfied @Nullable @UnknownSignedness Object key,
+      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
     int index = keys.indexOf(key);
     return index != -1 && Objects.equals(value, values.get(index));
   }
 
   @Pure
   @Override
-  public @Nullable V get(@Nullable @UnknownSignedness Object key) {
+  public @Nullable V get(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
     int index = keys.indexOf(key);
     return getOrNull(index);
   }
@@ -246,7 +250,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   @Override
-  public @Nullable V remove(@Nullable Object key) {
+  public @Nullable V remove(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
     int index = keys.indexOf(key);
     // cannot use removeIndex because it has the wrong return type
     if (index == -1) {
@@ -319,12 +323,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Pure
     @Override
-    public final boolean contains(Object o) {
+    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       return containsKey(o);
     }
 
     @Override
-    public final boolean remove(Object o) {
+    public final boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       int index = keys.indexOf(o);
       return removeIndex(index);
     }
@@ -389,7 +393,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Pure
     @Override
-    public final boolean contains(Object o) {
+    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       return containsValue(o);
     }
 
@@ -454,7 +458,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Pure
     @Override
-    public final boolean contains(Object o) {
+    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       if (!(o instanceof Map.Entry)) {
         return false;
       }
@@ -465,7 +469,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
 
     @Override
-    public final boolean remove(Object o) {
+    public final boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       if (o instanceof Map.Entry) {
         Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
         Object key = e.getKey();
@@ -653,7 +657,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     // Per the specification of Map.Entry, this does not compare the underlying list and index.
     @Pure
     @Override
-    public boolean equals(@Nullable Object o) {
+    public boolean equals(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       if (this == o) {
         return true;
       }
@@ -700,7 +704,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   @SideEffectFree
   @Override
-  public V getOrDefault(@Nullable Object key, V defaultValue) {
+  public V getOrDefault(@GuardSatisfied @Nullable @UnknownSignedness Object key, V defaultValue) {
     int index = keys.indexOf(key);
     if (index != -1) {
       return values.get(index);
@@ -767,7 +771,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   @Override
-  public boolean remove(@Nullable Object key, @Nullable Object value) {
+  public boolean remove(
+      @GuardSatisfied @Nullable @UnknownSignedness Object key,
+      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
     int index = keys.indexOf(key);
     if (index == -1) {
       return false;
