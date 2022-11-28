@@ -168,15 +168,14 @@ public final class MathPlumeTest {
     assertTrue(MathPlume.gcdDifferences(new int[] {5, 5, 5, 5}) == 0);
   }
 
-  @SuppressWarnings("deprecation")
   @Test
   public void test_mod() {
 
-    // int modPositive(int x, int y)
-    assertTrue(MathPlume.modPositive(33, 5) == 3);
-    assertTrue(MathPlume.modPositive(-33, 5) == 2);
-    assertTrue(MathPlume.modPositive(33, -5) == 3);
-    assertTrue(MathPlume.modPositive(-33, -5) == 2);
+    // int modNonnegative(int x, int y)
+    assertTrue(MathPlume.modNonnegative(33, 5) == 3);
+    assertTrue(MathPlume.modNonnegative(-33, 5) == 2);
+    assertTrue(MathPlume.modNonnegative(33, -5) == 3);
+    assertTrue(MathPlume.modNonnegative(-33, -5) == 2);
   }
 
   static class TestMissingNumbersIteratorInt {

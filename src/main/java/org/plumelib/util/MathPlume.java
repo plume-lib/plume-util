@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import com.google.errorprone.annotations.InlineMe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -800,7 +801,8 @@ public final class MathPlume {
    * @return x % y, where the result is constrained to be non-negative
    * @deprecated use {@link #modNonnegative(int, int)}
    */
-  @Deprecated // use modNonnegative(); deprecated 2020-02-20
+  @Deprecated // 2020-02-20
+  @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports = "org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modPositive(
@@ -900,7 +902,7 @@ public final class MathPlume {
     if (count < 3) {
       return null;
     }
-    return new int[] {MathPlume.modPositive(avalue, modulus), modulus};
+    return new int[] {MathPlume.modNonnegative(avalue, modulus), modulus};
   }
 
   /**
@@ -954,10 +956,10 @@ public final class MathPlume {
       }
     }
 
-    int r = modPositive(nums[firstIndex], modulus);
+    int r = MathPlume.modNonnegative(nums[firstIndex], modulus);
     if (nonstrictEnds) {
-      if ((r != modPositive(firstNonstrict, modulus))
-          || (r != modPositive(lastNonstrict, modulus))) {
+      if ((r != modNonnegative(firstNonstrict, modulus))
+          || (r != modNonnegative(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -1017,10 +1019,10 @@ public final class MathPlume {
       return null;
     }
 
-    int r = MathPlume.modPositive(next, modulus);
+    int r = MathPlume.modNonnegative(next, modulus);
     if (nonstrictEnds) {
-      if ((r != modPositive(firstNonstrict, modulus))
-          || (r != modPositive(lastNonstrict, modulus))) {
+      if ((r != modNonnegative(firstNonstrict, modulus))
+          || (r != modNonnegative(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -1039,7 +1041,8 @@ public final class MathPlume {
    * @return x % y, where the result is constrained to be non-negative
    * @deprecated use {@link #modNonnegative(long, long)}
    */
-  @Deprecated // use modNonnegative(); deprecated 2020-02-20
+  @Deprecated // 2020-02-20
+  @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports = "org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound long modPositive(
@@ -1139,7 +1142,7 @@ public final class MathPlume {
     if (count < 3) {
       return null;
     }
-    return new long[] {MathPlume.modPositive(avalue, modulus), modulus};
+    return new long[] {MathPlume.modNonnegative(avalue, modulus), modulus};
   }
 
   /**
@@ -1193,10 +1196,10 @@ public final class MathPlume {
       }
     }
 
-    long r = modPositive(nums[firstIndex], modulus);
+    long r = modNonnegative(nums[firstIndex], modulus);
     if (nonstrictEnds) {
-      if ((r != modPositive(firstNonstrict, modulus))
-          || (r != modPositive(lastNonstrict, modulus))) {
+      if ((r != modNonnegative(firstNonstrict, modulus))
+          || (r != modNonnegative(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -1256,10 +1259,10 @@ public final class MathPlume {
       return null;
     }
 
-    long r = MathPlume.modPositive(next, modulus);
+    long r = MathPlume.modNonnegative(next, modulus);
     if (nonstrictEnds) {
-      if ((r != modPositive(firstNonstrict, modulus))
-          || (r != modPositive(lastNonstrict, modulus))) {
+      if ((r != modNonnegative(firstNonstrict, modulus))
+          || (r != modNonnegative(lastNonstrict, modulus))) {
         return null;
       }
     }
@@ -1517,7 +1520,7 @@ public final class MathPlume {
     int m = rm[1];
     int first = rfali.getFirst().intValue();
     int last = rfali.getLast().intValue();
-    return ((r != modPositive(first, m)) && (r != modPositive(last, m)));
+    return ((r != modNonnegative(first, m)) && (r != modNonnegative(last, m)));
   }
 
   /**
@@ -1580,7 +1583,7 @@ public final class MathPlume {
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
       for (int i = 0; i < nums.length; i++) {
-        @IndexFor("hasModulus") int rem = modPositive(nums[i], m);
+        @IndexFor("hasModulus") int rem = modNonnegative(nums[i], m);
         if (!hasModulus[rem]) {
           hasModulus[rem] = true;
           numNonmodulus--;
@@ -1851,7 +1854,7 @@ public final class MathPlume {
     long m = rm[1];
     long first = rfali.getFirst().longValue();
     long last = rfali.getLast().longValue();
-    return ((r != modPositive(first, m)) && (r != modPositive(last, m)));
+    return ((r != modNonnegative(first, m)) && (r != modNonnegative(last, m)));
   }
 
   /**
@@ -1914,7 +1917,7 @@ public final class MathPlume {
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
       for (int i = 0; i < nums.length; i++) {
-        @IndexFor("hasModulus") int rem = (int) modPositive(nums[i], m);
+        @IndexFor("hasModulus") int rem = (int) modNonnegative(nums[i], m);
         if (!hasModulus[rem]) {
           hasModulus[rem] = true;
           numNonmodulus--;

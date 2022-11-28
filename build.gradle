@@ -18,8 +18,11 @@ repositories {
   mavenCentral()
 }
 
+ext.errorproneVersion = '2.16'
+
 dependencies {
   implementation 'org.plumelib:reflection-util:1.0.5'
+    implementation "com.google.errorprone:error_prone_core:${errorproneVersion}"
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -63,7 +66,7 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  errorprone("com.google.errorprone:error_prone_core:2.16")
+  errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
 }
 tasks.withType(JavaCompile).configureEach {
   options.compilerArgs << "-Xlint:all,-processing" << "-Werror"
@@ -71,12 +74,8 @@ tasks.withType(JavaCompile).configureEach {
     enabled = JavaVersion.current() != JavaVersion.VERSION_1_8
     // Code copied from the JDK that we don't want to change gratuitously.
     excludedPaths = ".*/Weak.*Hash(er)?Map.java"
-    disable(
-        // The suggestion recommends an Error-Prone-specific annotation
-        "InlineMeSuggester")
-    disable(
-        // Incorrect when using the Checker Framework
-        "ExtendsObject")
+    disable("ExtendsObject")  // Incorrect when using the Checker Framework
+
   }
   options.forkOptions.jvmArgs += "-Xmx2g"
 }
