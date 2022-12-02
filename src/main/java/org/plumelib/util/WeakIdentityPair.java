@@ -12,6 +12,9 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * <p>Differs from {@code Pair} in the following ways: is immutable, cannot hold null, holds its
  * elements with weak pointers, and its equals() method uses object equality to compare its
  * elements.
+ *
+ * @param <T1> the type of the pair's first element
+ * @param <T2> the type of the pair's second element
  */
 public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
 
