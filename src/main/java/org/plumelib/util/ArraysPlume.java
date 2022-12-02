@@ -3525,6 +3525,8 @@ public final class ArraysPlume {
    * <p>Note: this comparator imposes orderings that are inconsistent with {@link Object#equals}.
    * That is, it may return 0 if the arrays contain identical objects but are not equal according to
    * {@code equals()}.
+   *
+   * @param <T> the type of the array elements
    */
   public static final class ComparableArrayComparatorLengthFirst<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
