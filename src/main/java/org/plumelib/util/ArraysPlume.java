@@ -3807,7 +3807,11 @@ public final class ArraysPlume {
     return result;
   }
 
-  /** A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}. */
+  /**
+   * A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}.
+   *
+   * @param <T> the type of the elements of the sets
+   */
   static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
