@@ -27,6 +27,8 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *   ["a2", "b1", "c2"]
  *   ["a2", "b1", "c3"]
  * </pre>
+ *
+ * @param <T> the type of the elements of the collections
  */
 public class CombinationIterator<T> implements Iterator<List<T>> {
 

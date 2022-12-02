@@ -1104,6 +1104,8 @@ public final class Intern {
    * A subsequence view on a sequence. Actually, this imposes no semantics. It just has 3 fields: an
    * interned sequence, a start index, and an end index. Requires that the sequence be interned.
    * Used for interning the repeated finding of subsequences on the same sequence.
+   *
+   * @param <T> the type of elements of the sequence
    */
   private static final class Subsequence<T extends @Interned Object> {
     /** The full sequence. The Subsequence object represents part of this sequence. */
@@ -1171,8 +1173,9 @@ public final class Intern {
   }
 
   /**
-   * Hasher object which hashes and compares String[] objects according to their contents.
+   * Hasher object which hashes and compares sequences according to their contents.
    *
+   * @param <T> the type of the elements of the sequences
    * @see Hasher
    */
   private static final class SubsequenceHasher<T extends @Interned Object> implements Hasher {

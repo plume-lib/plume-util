@@ -3309,6 +3309,8 @@ public final class ArraysPlume {
    * <p>Note: this comparator imposes orderings that are inconsistent with {@link Object#equals}.
    * That is, it may return 0 if the arrays contain identical elements but are not equal according
    * to {@code equals()} (which tests reference equality).
+   *
+   * @param <T> the type of the array elements
    */
   public static final class ComparableArrayComparatorLexical<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
@@ -3525,6 +3527,8 @@ public final class ArraysPlume {
    * <p>Note: this comparator imposes orderings that are inconsistent with {@link Object#equals}.
    * That is, it may return 0 if the arrays contain identical objects but are not equal according to
    * {@code equals()}.
+   *
+   * @param <T> the type of the array elements
    */
   public static final class ComparableArrayComparatorLengthFirst<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
@@ -3807,7 +3811,11 @@ public final class ArraysPlume {
     return result;
   }
 
-  /** A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}. */
+  /**
+   * A partitioning is a set of sets. It adds a few methods to {@code ArrayList<ArrayList<T>>}.
+   *
+   * @param <T> the type of the elements of the sets
+   */
   static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */

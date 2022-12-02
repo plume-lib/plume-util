@@ -676,7 +676,11 @@ public final class CollectionsPlume {
   // Making these classes into functions didn't work because I couldn't get
   // their arguments into a scope that Java was happy with.
 
-  /** Converts an Enumeration into an Iterator. */
+  /**
+   * Converts an Enumeration into an Iterator.
+   *
+   * @param <T> the type of elements of the enumeration and iterator
+   */
   public static final class EnumerationIterator<T> implements Iterator<T> {
     /** The enumeration that this object wraps. */
     Enumeration<T> e;
@@ -708,7 +712,11 @@ public final class CollectionsPlume {
     }
   }
 
-  /** Converts an Iterator into an Enumeration. */
+  /**
+   * Converts an Iterator into an Enumeration.
+   *
+   * @param <T> the type of elements of the enumeration and iterator
+   */
   @SuppressWarnings("JdkObsolete")
   public static final class IteratorEnumeration<T> implements Enumeration<T> {
     /** The iterator that this object wraps. */
@@ -739,6 +747,8 @@ public final class CollectionsPlume {
    * An Iterator that returns first the elements returned by its first argument, then the elements
    * returned by its second argument. Like {@link MergedIterator}, but specialized for the case of
    * two arguments.
+   *
+   * @param <T> the type of elements of the iterator
    */
   public static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
@@ -784,6 +794,8 @@ public final class CollectionsPlume {
    * An Iterator that returns the elements in each of its argument Iterators, in turn. The argument
    * is an Iterator of Iterators. Like {@link MergedIterator2}, but generalized to arbitrary number
    * of iterators.
+   *
+   * @param <T> the type of elements of the iterator
    */
   public static final class MergedIterator<T> implements Iterator<T> {
     /** The iterators that this object merges. */
@@ -826,7 +838,11 @@ public final class CollectionsPlume {
     }
   }
 
-  /** An iterator that only returns elements that match the given Filter. */
+  /**
+   * An iterator that only returns elements that match the given Filter.
+   *
+   * @param <T> the type of elements of the iterator
+   */
   public static final class FilteredIterator<T extends @Nullable Object> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
@@ -891,6 +907,8 @@ public final class CollectionsPlume {
   /**
    * Returns an iterator just like its argument, except that the first and last elements are
    * removed. They can be accessed via the {@link #getFirst} and {@link #getLast} methods.
+   *
+   * @param <T> the type of elements of the iterator
    */
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
