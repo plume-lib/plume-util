@@ -684,6 +684,18 @@ public final class StringsPlume {
   ///
 
   /**
+   * Returns true if the string contains only white space codepoints, otherwise false.
+   *
+   * <p>In Java 11, use {@code String.isBlank()} instead.
+   *
+   * @param s a string
+   * @return true if the string contains only white space codepoints, otherwise false
+   */
+  static boolean isBlank(String s) {
+    return s.chars().allMatch(Character::isWhitespace);
+  }
+
+  /**
    * Remove all whitespace before or after instances of delimiter.
    *
    * @param arg string to remove whitespace in

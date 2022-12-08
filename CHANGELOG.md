@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.6.1 (??)
+
+- New method `StringsPlume.isBlank()`.
+
 ## 1.6.0 (2022-10-17)
 
 - New class `ArrayMap` is an efficient representation for very small maps.
