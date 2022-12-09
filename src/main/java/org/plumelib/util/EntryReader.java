@@ -53,7 +53,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *   <li>multi-line entries (paragraphs).
  * </ul>
  *
- * The syntax of each of these is customizable.
+ * <p>The syntax of each of these is customizable.
  *
  * <p>Example use:
  *
@@ -216,7 +216,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /**
    * Create an EntryReader that uses the given character set.
    *
-   * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @param in source from which to read entries
    * @param charsetName the character set to use
    * @param filename non-null file name for stream being read
@@ -224,6 +223,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
+   * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
    */
   public @MustCallAlias EntryReader(

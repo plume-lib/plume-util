@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
+/** Test the Intern class. */
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests
 })
@@ -55,8 +56,8 @@ public final class InternTest {
       }
       for (int i = 10; i < arrays.length; i++) {
         @SuppressWarnings("nullness") // test code: permit garbage collection to test interning
-        int @NonNull [] reset_value = null;
-        arrays[i] = reset_value;
+        int @NonNull [] resetValue = null;
+        arrays[i] = resetValue;
       }
       System.gc();
       if (Intern.numIntArrays() != size2) {
@@ -253,6 +254,7 @@ public final class InternTest {
       Intern.intern((Object) pOrig); // performed for side effect
       throw new Error("Didn't throw IllegalArgumentException");
     } catch (IllegalArgumentException e) {
+      // test succeeded
     }
   }
 

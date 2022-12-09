@@ -7,6 +7,7 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
+/** Test the LimitedSizeSet class. */
 @SuppressWarnings({
   "UseCorrectAssertInTests" // `assert` works fine in tests
 })

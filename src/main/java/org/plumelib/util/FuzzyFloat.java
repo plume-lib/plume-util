@@ -21,7 +21,7 @@ import org.checkerframework.dataflow.qual.Pure;
 public class FuzzyFloat {
 
   /** Default relative difference between two values such that this class considers them equal. */
-  double DEFAULT_RELATIVE_RATIO = .0001;
+  static final double DEFAULT_RELATIVE_RATIO = .0001;
 
   /** Minimum ratio between two floats, such that this class considers them equal. */
   double minRatio;

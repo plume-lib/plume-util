@@ -1398,8 +1398,8 @@ public final class MathPlume {
               "index:assignment" // This breaks the invariant, but it's checked right below and the
           // function exits.
           )
-          @IndexFor("nums") int currentIndex_temp = currentIndex + 1;
-          currentIndex = currentIndex_temp;
+          @IndexFor("nums") int currentIndexTmp = currentIndex + 1;
+          currentIndex = currentIndexTmp;
           if (currentIndex >= nums.length) {
             if (addEnds) {
               currentMissing++;
@@ -1732,8 +1732,8 @@ public final class MathPlume {
               "index:assignment" // This breaks the invariant, but it's checked right below and the
           // function exits.
           )
-          @IndexFor("nums") int currentIndex_temp = currentIndex + 1;
-          currentIndex = currentIndex_temp;
+          @IndexFor("nums") int currentIndexTmp = currentIndex + 1;
+          currentIndex = currentIndexTmp;
           if (currentIndex >= nums.length) {
             if (addEnds) {
               currentMissing++;

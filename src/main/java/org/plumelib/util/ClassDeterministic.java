@@ -68,7 +68,8 @@ public class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getEnumConstants()}, but returns the methods in deterministic order.
+   * Like {@link Class#getEnumConstants()}, but returns the methods in deterministic order. Returns
+   * null if the argument is not an enum class.
    *
    * @param <T> the class's type parameter
    * @param c the Class whose enum constants to return

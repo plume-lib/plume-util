@@ -2222,6 +2222,41 @@ public final class ArraysPlume {
   ///
 
   /**
+   * Returns the length of the argument array.
+   *
+   * @param a an array
+   * @return the length of the array
+   * @throws IllegalArgumentException if obj is null or is not an array
+   */
+  @Pure
+  public static @NonNegative int length(@Nullable Object a) throws IllegalArgumentException {
+    if (a == null) {
+      throw new IllegalArgumentException("Argument is null");
+    } else if (a instanceof boolean[]) {
+      return ((boolean[]) a).length;
+    } else if (a instanceof byte[]) {
+      return ((byte[]) a).length;
+    } else if (a instanceof char[]) {
+      return ((char[]) a).length;
+    } else if (a instanceof double[]) {
+      return ((double[]) a).length;
+    } else if (a instanceof float[]) {
+      return ((float[]) a).length;
+    } else if (a instanceof int[]) {
+      return ((int[]) a).length;
+    } else if (a instanceof long[]) {
+      return ((long[]) a).length;
+    } else if (a instanceof short[]) {
+      return ((short[]) a).length;
+    } else if (a instanceof Object[]) {
+      return ((Object[]) a).length;
+    } else {
+      throw new IllegalArgumentException(
+          "Argument is not an array, but has class " + a.getClass().getName());
+    }
+  }
+
+  /**
    * Returns a string representation of the contents of the specified array. The argument must be an
    * array or null. This just dispatches one of the 9 overloaded versions of {@code
    * java.util.Arrays.toString()}.
@@ -2262,41 +2297,6 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns the length of the argument array.
-   *
-   * @param a an array
-   * @return the length of the array
-   * @throws IllegalArgumentException if obj is null or is not an array
-   */
-  @Pure
-  public static @NonNegative int length(@Nullable Object a) throws IllegalArgumentException {
-    if (a == null) {
-      throw new IllegalArgumentException("Argument is null");
-    } else if (a instanceof boolean[]) {
-      return ((boolean[]) a).length;
-    } else if (a instanceof byte[]) {
-      return ((byte[]) a).length;
-    } else if (a instanceof char[]) {
-      return ((char[]) a).length;
-    } else if (a instanceof double[]) {
-      return ((double[]) a).length;
-    } else if (a instanceof float[]) {
-      return ((float[]) a).length;
-    } else if (a instanceof int[]) {
-      return ((int[]) a).length;
-    } else if (a instanceof long[]) {
-      return ((long[]) a).length;
-    } else if (a instanceof short[]) {
-      return ((short[]) a).length;
-    } else if (a instanceof Object[]) {
-      return ((Object[]) a).length;
-    } else {
-      throw new IllegalArgumentException(
-          "Argument is not an array, but has class " + a.getClass().getName());
-    }
-  }
-
-  /**
    * Returns a string representation of the array. The representation is patterned after that of
    * java.util.ArrayList.
    *
@@ -2307,19 +2307,6 @@ public final class ArraysPlume {
   @SideEffectFree
   public static String toString(@PolyNull Object @Nullable [] a) {
     return toString(a, false);
-  }
-
-  /**
-   * Returns a string representation of the array. The representation is patterned after that of
-   * java.util.ArrayList. Furthermore, each element is quoted like a Java String.
-   *
-   * @param a an array
-   * @return a string representation of the array, with the elements quoted
-   * @see java.util.ArrayList#toString
-   */
-  @SideEffectFree
-  public static String toStringQuoted(@PolyNull Object @Nullable [] a) {
-    return toString(a, true);
   }
 
   /**
@@ -2366,20 +2353,6 @@ public final class ArraysPlume {
 
   /**
    * Returns a string representation of the collection. The representation is patterned after that
-   * of java.util.ArrayList.
-   *
-   * @param a a collection
-   * @return a string representation of the collection, with the elements quoted
-   * @see java.util.ArrayList#toString
-   */
-  @SideEffectFree
-  public static String toStringQuoted(
-      @MustCallUnknown @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
-    return toString(a, true);
-  }
-
-  /**
-   * Returns a string representation of the collection. The representation is patterned after that
    * of java.util.ArrayList. The representation permits quoting (or not) of strings.
    *
    * @param a a collection
@@ -2403,6 +2376,33 @@ public final class ArraysPlume {
       }
     }
     return sj.toString();
+  }
+
+  /**
+   * Returns a string representation of the array. The representation is patterned after that of
+   * java.util.ArrayList. Furthermore, each element is quoted like a Java String.
+   *
+   * @param a an array
+   * @return a string representation of the array, with the elements quoted
+   * @see java.util.ArrayList#toString
+   */
+  @SideEffectFree
+  public static String toStringQuoted(@PolyNull Object @Nullable [] a) {
+    return toString(a, true);
+  }
+
+  /**
+   * Returns a string representation of the collection. The representation is patterned after that
+   * of java.util.ArrayList.
+   *
+   * @param a a collection
+   * @return a string representation of the collection, with the elements quoted
+   * @see java.util.ArrayList#toString
+   */
+  @SideEffectFree
+  public static String toStringQuoted(
+      @MustCallUnknown @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
+    return toString(a, true);
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -2690,6 +2690,7 @@ public final class ArraysPlume {
     }
     return false;
   }
+
   /**
    * Returns true iff a does not contain duplicate elements. Equality checking uses {@link
    * Double#equals}.

@@ -988,8 +988,8 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      long[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
-      long @Interned [] subseq = Intern.intern(subseq_uninterned);
+      long[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      long @Interned [] subseq = Intern.intern(subseqUninterned);
       internedLongSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -1019,8 +1019,8 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      double[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
-      double @Interned [] subseq = Intern.intern(subseq_uninterned);
+      double[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      double @Interned [] subseq = Intern.intern(subseqUninterned);
       internedDoubleSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -1053,8 +1053,8 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @PolyNull @Interned Object[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
-      @PolyNull @Interned Object @Interned [] subseq = Intern.intern(subseq_uninterned);
+      @PolyNull @Interned Object[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      @PolyNull @Interned Object @Interned [] subseq = Intern.intern(subseqUninterned);
       @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
@@ -1090,8 +1090,8 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @PolyNull @Interned String[] subseq_uninterned = ArraysPlume.subarray(seq, start, end - start);
-      @PolyNull @Interned String @Interned [] subseq = Intern.intern(subseq_uninterned);
+      @PolyNull @Interned String[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      @PolyNull @Interned String @Interned [] subseq = Intern.intern(subseqUninterned);
       @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation

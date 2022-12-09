@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *   [1, 3, 5, 7, 9].
  * </pre>
  *
- * Then the output is
+ * <p>Then the output is
  *
  * <pre>
  *   [(1,1), (2,null), (3,3), (5,5), (null,7), (null, 9)].
@@ -81,16 +81,19 @@ public class OrderedPairIterator<T extends @Nullable Object>
     this(itor1, itor2);
     this.comparator = comparator;
   }
+
   /** Set the next1 variable. */
   @RequiresNonNull("itor1")
   private void setnext1(@GuardSatisfied @UnknownInitialization OrderedPairIterator<T> this) {
     next1 = itor1.hasNext() ? itor1.next() : null;
   }
+
   /** Set the next2 variable. */
   @RequiresNonNull("itor2")
   private void setnext2(@GuardSatisfied @UnknownInitialization OrderedPairIterator<T> this) {
     next2 = itor2.hasNext() ? itor2.next() : null;
   }
+
   // Have the caller do this directly, probably.
   // public OrderedPairIterator(Set s1, Set s2) {
   //   this((new TreeSet(s1)).iterator(), (new TreeSet(s2)).iterator());
@@ -99,6 +102,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
   public boolean hasNext(@GuardSatisfied OrderedPairIterator<T> this) {
     return ((next1 != null) || (next2 != null));
   }
+
   /**
    * Returns an element of the first iterator, paired with null.
    *
@@ -110,6 +114,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
     setnext1();
     return result;
   }
+
   /**
    * Returns a pair of null and an element of the second iterator.
    *
@@ -121,6 +126,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
     setnext2();
     return result;
   }
+
   /**
    * Returns a pair containing an element from each iterator.
    *
