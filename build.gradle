@@ -1,7 +1,7 @@
 plugins {
   id 'java-library'
 
-  // To create a fat jar build/libs/plume-util-all.jar, run: ./gradlew shadowJar
+  // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
   id 'com.github.johnrengelman.shadow' version '7.1.2'
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
@@ -22,28 +22,29 @@ ext.errorproneVersion = '2.16'
 
 dependencies {
   implementation 'org.plumelib:reflection-util:1.0.5'
-    implementation "com.google.errorprone:error_prone_core:${errorproneVersion}"
+  // For annotations such as @InlineMe.
+  implementation "com.google.errorprone:error_prone_core:${errorproneVersion}"
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
-test {
-    useJUnitPlatform {
-        includeEngines 'junit-jupiter'
-        excludeEngines 'junit-vintage'
-    }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-    testLogging {
-        outputs.upToDateWhen{false}
-        showStandardStreams = true
-    }
+test {
+  useJUnitPlatform {
+    includeEngines 'junit-jupiter'
+    excludeEngines 'junit-vintage'
+  }
+
+  testLogging {
+    outputs.upToDateWhen{false}
+    showStandardStreams = true
+  }
 }
 
 spotless {
@@ -69,6 +70,7 @@ dependencies {
   errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
 }
 tasks.withType(JavaCompile).configureEach {
+  // "-processing" avoids javac warning "No processor claimed any of these annotations".
   options.compilerArgs << "-Xlint:all,-processing" << "-Werror"
   options.errorprone {
     enabled = JavaVersion.current() != JavaVersion.VERSION_1_8

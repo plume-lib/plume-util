@@ -500,26 +500,6 @@ public final class FilesPlume {
   }
 
   /**
-   * Returns a BufferedOutputStream for the file, accounting for the possibility that the file is
-   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
-   *
-   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
-   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
-   * files) after the first gzipped file.
-   *
-   * @param filename the possibly-compressed file to write
-   * @param append if true, the resulting BufferedOutputStream appends to the end of the file
-   *     instead of the beginning
-   * @return a BufferedOutputStream for filename
-   * @throws IOException if there is trouble writing the file
-   */
-  public static @Owning BufferedOutputStream newBufferedFileOutputStream(
-      String filename, boolean append) throws IOException {
-    OutputStream os = newFileOutputStream(new File(filename).toPath(), append);
-    return new BufferedOutputStream(os);
-  }
-
-  /**
    * Returns a BufferedWriter for the file, accounting for the possibility that the file is
    * compressed. (A file whose name ends with ".gz" is treated as compressed.)
    *
@@ -545,6 +525,26 @@ public final class FilesPlume {
           UTF_8,
           append ? new StandardOpenOption[] {CREATE, APPEND} : new StandardOpenOption[] {CREATE});
     }
+  }
+
+  /**
+   * Returns a BufferedOutputStream for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param filename the possibly-compressed file to write
+   * @param append if true, the resulting BufferedOutputStream appends to the end of the file
+   *     instead of the beginning
+   * @return a BufferedOutputStream for filename
+   * @throws IOException if there is trouble writing the file
+   */
+  public static @Owning BufferedOutputStream newBufferedFileOutputStream(
+      String filename, boolean append) throws IOException {
+    OutputStream os = newFileOutputStream(new File(filename).toPath(), append);
+    return new BufferedOutputStream(os);
   }
 
   ///////////////////////////////////////////////////////////////////////////

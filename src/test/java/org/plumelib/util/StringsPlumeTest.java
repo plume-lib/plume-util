@@ -9,9 +9,7 @@ import java.util.regex.Pattern;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
+/** Test the stringsPlume class. */
 public final class StringsPlumeTest {
 
   @Test
