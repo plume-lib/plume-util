@@ -1172,7 +1172,7 @@ public final class CollectionsPlume {
    */
   public static int mapCapacity(int numElements) {
     // Equivalent to: (int) (numElements / 0.75) + 1
-    // where 0.75 is the default load factor.
+    // where 0.75 is the default load factor used throughout the JDK.
     return (numElements * 4 / 3) + 1;
   }
 
