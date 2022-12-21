@@ -131,11 +131,9 @@ javadoc {
     options.addStringOption('source', '8')
   }
   doLast {
-    if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-      ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
-        flags:'g', byline:true) {
-        fileset(dir: destinationDir)
-      }
+    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
+      flags:'g', byline:true) {
+      fileset(dir: destinationDir)
     }
   }
 }
@@ -150,11 +148,9 @@ task javadocWeb(type: Javadoc) {
     options.addStringOption('source', '8')
   }
   doLast {
-    if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-      ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
-        flags:'g', byline:true) {
-        fileset(dir: destinationDir)
-      }
+    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
+      flags:'g', byline:true) {
+      fileset(dir: destinationDir)
     }
   }
 }
