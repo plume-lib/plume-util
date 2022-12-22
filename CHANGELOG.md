@@ -3,7 +3,7 @@
 ## 1.6.1 (??)
 
 - New method `StringsPlume.isBlank()`.
-- New methods in `CollecitonsPlume`: `adjoin`, `adjoinAll`, `listUnion`, `listIntersection`.
+- New methods in `CollectionsPlume`: `adjoin`, `adjoinAll`, `listUnion`, `listIntersection`.
 
 ## 1.6.0 (2022-10-17)
 
