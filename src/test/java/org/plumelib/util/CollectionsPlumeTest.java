@@ -10,11 +10,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
+import java.util.Set;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.jupiter.api.Test;
@@ -464,5 +466,55 @@ public final class CollectionsPlumeTest {
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i11, i11})));
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i11, i12})));
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i12, i12})));
+  }
+
+  @Test
+  public void testGetFromSet() {
+    Integer i2 = 2;
+    Integer i10 = 10;
+    Set<Integer> iota5 = new HashSet<>(Arrays.asList(0, 1, 2, 3, 4));
+    assertEquals(i2, CollectionsPlume.getFromSet(iota5, i2));
+    assertEquals(null, CollectionsPlume.getFromSet(iota5, i10));
+  }
+
+  @Test
+  public void testAdjoin() {
+    Integer i2 = 2;
+    Integer i5 = 5;
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> iota6 = Arrays.asList(0, 1, 2, 3, 4, 5);
+    List<Integer> myList = new ArrayList<>(iota5);
+    assertFalse(CollectionsPlume.adjoin(myList, i2));
+    assertEquals(iota5, myList);
+    assertTrue(CollectionsPlume.adjoin(myList, i5));
+    assertEquals(iota6, myList);
+  }
+
+  @Test
+  public void testAdjoinAll() {
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
+    List<Integer> result = Arrays.asList(0, 1, 2, 3, 4, 8, 7, 6, 5);
+    List<Integer> myList = new ArrayList<>(iota5);
+    assertTrue(CollectionsPlume.adjoinAll(myList, countdown));
+    assertEquals(result, myList);
+  }
+
+  @Test
+  public void testListUnion() {
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
+    List<Integer> result = Arrays.asList(0, 1, 2, 3, 4, 8, 7, 6, 5);
+    List<Integer> myList = CollectionsPlume.listUnion(iota5, countdown);
+    assertEquals(result, myList);
+  }
+
+  @Test
+  public void testListIntersection() {
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
+    List<Integer> result = Arrays.asList(3, 4);
+    List<Integer> myList = CollectionsPlume.listIntersection(iota5, countdown);
+    assertEquals(result, myList);
   }
 }

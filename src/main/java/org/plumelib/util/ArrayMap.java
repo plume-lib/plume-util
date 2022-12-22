@@ -29,15 +29,31 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A map backed by a list. It permits null keys and values.
+ * A map backed by two lists. It permits null keys and values.
  *
  * <p>Compared to a HashMap or LinkedHashMap: For very small maps, this uses much less space, has
- * comparable performance, and (like a LinkedHashMap) is deterministic. For large maps, this is
- * significantly less performant than other map implementations.
+ * comparable performance, and (like a LinkedHashMap) is deterministic, with elements returned in
+ * the order their keys were inserted. For large maps, this is significantly less performant than
+ * other map implementations.
  *
  * <p>Compared to a TreeMap: This uses somewhat less space, and it does not require defining a
  * comparator. This isn't sorted. For large maps, this is significantly less performant than other
  * map implementations.
+ *
+ * <p>A number of other ArrayMap implementations exist, including
+ *
+ * <ul>
+ *   <li>android.util.ArrayMap
+ *   <li>com.google.api.client.util.ArrayMap
+ *   <li>it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap
+ *   <li>oracle.dss.util.ArrayMap
+ *   <li>org.apache.myfaces.trinidad.util.ArrayMap
+ * </ul>
+ *
+ * All of those use the Apache License, version 2.0, whereas this implementation is licensed under
+ * the more libral MIT License. In addition, some of those implementations forbid nulls or
+ * nondeterministically reorder the contents, and others don't specify their behavior regarding
+ * nulls and ordering.
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
@@ -154,10 +170,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @EnsuresKeyFor(value = "#2", map = "this")
   private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
+      // Add a new mapping.
       keys.add(key);
       values.add(value);
       modificationCount++;
     } else {
+      // Replace an existing mapping.
       values.set(index, value);
     }
   }

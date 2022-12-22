@@ -1203,12 +1203,13 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Returns the object in this set that is equal to key. The Set abstraction doesn't provide this;
-   * it only provides "contains". Returns null if the argument is null, or if it isn't in the set.
+   * Returns the object in the given set that is equal to key. The Set abstraction doesn't provide
+   * this; it only provides "contains". Returns null if the argument is null, or if it isn't in the
+   * set.
    *
    * @param set a set in which to look up the value
    * @param key the value to look up in the set
-   * @return the object in this set that is equal to key, or null
+   * @return the object in the given set that is equal to key, or null
    */
   public static @Nullable Object getFromSet(Set<? extends @Nullable Object> set, Object key) {
     if (key == null) {
@@ -1220,6 +1221,80 @@ public final class CollectionsPlume {
       }
     }
     return null;
+  }
+
+  /**
+   * Adds an element to the given collection, but only if it is not already present.
+   *
+   * @param <T> the type of the collection elements
+   * @param c a collection to be added to; is side-effected by this method
+   * @param e an element to add to the collection
+   * @return true if the collection c changed (that is, if an element was added)
+   */
+  @SuppressWarnings("nullness:argument") // c might forbid null
+  public static <T> boolean adjoin(Collection<T> c, T e) {
+    if (!c.contains(e)) {
+      c.add(e);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Adds elements to the given collection, but only ones that are not already present.
+   *
+   * <p>This method could alternately be named "union".
+   *
+   * @param <T> the type of the collection elements
+   * @param c a collection to be added to; is side-effected by this method
+   * @param toAdd elements to add to the collection, if they are not already present
+   * @return true if the collection c changed (that is, if an element was added)
+   */
+  @SuppressWarnings("nullness:argument") // c might forbid null
+  public static <T> boolean adjoinAll(Collection<T> c, Collection<? extends T> toAdd) {
+    boolean result = false;
+    for (T e : toAdd) {
+      if (!c.contains(e)) {
+        c.add(e);
+        result = true;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Returns a new list that is the union of the given collections. The given lists should be small,
+   * since the cost of this method is O(c1.size() * c2.size()). For small lists, this is more
+   * efficient than creating and using a Set.
+   *
+   * @param <T> the type of the collection elements
+   * @param c1 the first collection
+   * @param c2 the second collection
+   * @return a duplicate-free list that is the union of the given collections
+   */
+  public static <T> List<T> listUnion(Collection<T> c1, Collection<T> c2) {
+    List<T> result = new ArrayList<>(c1.size() + c2.size());
+    adjoinAll(result, c1);
+    adjoinAll(result, c2);
+    return result;
+  }
+
+  /**
+   * Returns a new list that is the intersection of the given collections. The given lists should be
+   * small, since the cost of this method is O(c1.size() * c2.size()). For small lists, this is more
+   * efficient than creating and using a Set.
+   *
+   * @param <T> the type of the collection elements
+   * @param c1 the first collection
+   * @param c2 the second collection
+   * @return a duplicate-free list that is the union of the given collections
+   */
+  public static <T> List<T> listIntersection(Collection<T> c1, Collection<T> c2) {
+    List<T> result = new ArrayList<>(c1.size());
+    adjoinAll(result, c1);
+    result.retainAll(c2);
+    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
