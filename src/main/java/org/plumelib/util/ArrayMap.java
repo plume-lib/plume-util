@@ -85,7 +85,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * or removing an element; changing the value associated with a key does not count as a change).
    * This field is used to make view iterators fail-fast.
    */
-  transient int modificationCount = 0;
+  transient int sizeModificationCount = 0;
 
   // Constructors
 
@@ -173,7 +173,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       // Add a new mapping.
       keys.add(key);
       values.add(value);
-      modificationCount++;
+      sizeModificationCount++;
     } else {
       // Replace an existing mapping.
       values.set(index, value);
@@ -190,7 +190,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (index != -1) {
       keys.remove(index);
       values.remove(index);
-      modificationCount++;
+      sizeModificationCount++;
       return true;
     } else {
       return false;
@@ -294,7 +294,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public void clear() {
     if (size() != 0) {
-      modificationCount++;
+      sizeModificationCount++;
     }
     keys.clear();
     values.clear();
@@ -366,9 +366,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public final void forEach(Consumer<? super K> action) {
-      int oldModificationCount = modificationCount;
+      int oldSizeModificationCount = sizeModificationCount;
       keys.forEach(action);
-      if (oldModificationCount != modificationCount) {
+      if (oldSizeModificationCount != sizeModificationCount) {
         throw new ConcurrentModificationException();
       }
     }
@@ -431,9 +431,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public final void forEach(Consumer<? super V> action) {
-      int oldModificationCount = modificationCount;
+      int oldSizeModificationCount = sizeModificationCount;
       values.forEach(action);
-      if (oldModificationCount != modificationCount) {
+      if (oldSizeModificationCount != sizeModificationCount) {
         throw new ConcurrentModificationException();
       }
     }
@@ -505,11 +505,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     })
     @Override
     public final void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
-      int oldModificationCount = modificationCount;
+      int oldSizeModificationCount = sizeModificationCount;
       for (int index = 0; index < size(); index++) {
         action.accept(new Entry(index));
       }
-      if (oldModificationCount != modificationCount) {
+      if (oldSizeModificationCount != sizeModificationCount) {
         throw new ConcurrentModificationException();
       }
     }
@@ -526,7 +526,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     /** True if remove() has been called since the last call to next(). */
     boolean removed;
     /** The modification count when the iterator is created, for fail-fast. */
-    int initialModificationCount;
+    int initialSizeModificationCount;
 
     /** Creates a new ArrayMapIterator. */
     @SuppressWarnings("allcheckers:purity") // initializes `this`
@@ -534,7 +534,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     ArrayMapIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
-      initialModificationCount = modificationCount;
+      initialSizeModificationCount = sizeModificationCount;
     }
 
     /**
@@ -554,14 +554,14 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       if (removed) {
         throw new IllegalStateException();
       }
-      if (initialModificationCount != modificationCount) {
+      if (initialSizeModificationCount != sizeModificationCount) {
         throw new ConcurrentModificationException();
       }
       @SuppressWarnings("lowerbound:assignment") // If removed==false, then index>0.
       @NonNegative int newIndex = index - 1;
       index = newIndex;
       ArrayMap.this.removeIndex(index);
-      initialModificationCount = modificationCount;
+      initialSizeModificationCount = sizeModificationCount;
       removed = true;
     }
   }
@@ -658,7 +658,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public V setValue(V value) {
-      // Do not increment modificationCount.
+      // Do not increment sizeModificationCount.
       return values.set(index, value);
     }
 
@@ -734,7 +734,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     Objects.requireNonNull(action);
-    int oldModificationCount = modificationCount;
+    int oldSizeModificationCount = sizeModificationCount;
     int size = size();
     for (int index = 0; index < size; index++) {
       K k;
@@ -747,7 +747,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       }
       action.accept(k, v);
     }
-    if (oldModificationCount != modificationCount) {
+    if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
     }
   }
@@ -755,7 +755,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
     Objects.requireNonNull(function);
-    int oldModificationCount = modificationCount;
+    int oldSizeModificationCount = sizeModificationCount;
     int size = size();
     for (int index = 0; index < size; index++) {
       K k;
@@ -770,12 +770,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
       try {
         values.set(index, v);
-        // Do not increment modificationCount.
+        // Do not increment sizeModificationCount.
       } catch (IndexOutOfBoundsException e) {
         throw new ConcurrentModificationException(e);
       }
     }
-    if (oldModificationCount != modificationCount) {
+    if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
     }
   }
@@ -815,7 +815,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return false;
     }
     values.set(index, newValue);
-    // Do not increment modificationCount.
+    // Do not increment sizeModificationCount.
     return true;
   }
 
@@ -827,7 +827,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
     V currentValue = values.get(index);
     values.set(index, value);
-    // Do not increment modificationCount.
+    // Do not increment sizeModificationCount.
     return currentValue;
   }
 
@@ -843,9 +843,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
         return currentValue;
       }
     }
-    int oldModificationCount = modificationCount;
+    int oldSizeModificationCount = sizeModificationCount;
     V newValue = mappingFunction.apply(key);
-    if (oldModificationCount != modificationCount) {
+    if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
     }
     if (newValue != null) {
@@ -870,14 +870,14 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       @PolyNull V result = null;
       return result;
     }
-    int oldModificationCount = modificationCount;
+    int oldSizeModificationCount = sizeModificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
-    if (oldModificationCount != modificationCount) {
+    if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
     }
     if (newValue != null) {
       values.set(index, newValue);
-      // Do not increment modificationCount.
+      // Do not increment sizeModificationCount.
       return newValue;
     } else {
       removeIndex(index);
@@ -891,9 +891,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     Objects.requireNonNull(remappingFunction);
     int index = keys.indexOf(key);
     V oldValue = getOrNull(index);
-    int oldModificationCount = modificationCount;
+    int oldSizeModificationCount = sizeModificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
-    if (oldModificationCount != modificationCount) {
+    if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
     }
     if (newValue == null) {
@@ -914,14 +914,14 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     Objects.requireNonNull(value);
     int index = keys.indexOf(key);
     V oldValue = getOrNull(index);
-    int oldModificationCount = modificationCount;
+    int oldSizeModificationCount = sizeModificationCount;
     @PolyNull V newValue;
     if (oldValue == null) {
       newValue = value;
     } else {
       newValue = remappingFunction.apply(oldValue, value);
     }
-    if (oldModificationCount != modificationCount) {
+    if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
     }
     if (newValue == null) {
