@@ -149,7 +149,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     this.values = values;
     this.size = size;
     this.capacity = keys.length;
-    assert capacity == values.length;
   }
 
   /**
@@ -189,7 +188,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       // Add a new mapping.
       if (size == capacity) {
         grow();
-        assert size < capacity;
       }
       keys[size] = key;
       values[size] = value;
@@ -204,7 +202,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** Increases the capacity of the arrays. */
   private void grow() {
     int newCapacity = (capacity == 0) ? 4 : 2 * capacity;
-    assert newCapacity > capacity;
     keys = Arrays.copyOf(keys, newCapacity);
     values = Arrays.copyOf(values, newCapacity);
     capacity = newCapacity;
