@@ -86,10 +86,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /** The values. */
   private @Nullable V @SameLen("keys") [] values;
   // Perhaps remove this from the representation and use keys.length, to save space.
-  /** The total number of mappings in the representation of this. */
-  private @NonNegative @LengthOf({"keys", "values"}) int capacity;
   /** The number of used mappings in the representation of this. */
-  private @NonNegative @LessThan("capacity + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
+  private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
   // An alternate representation would also store the hash code of each key, for quicker querying.
 
   /**
@@ -116,7 +114,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   public ArrayMap(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
-    this.capacity = initialCapacity;
     // As a special case, if capacity == 0, could leave these fields null.
     this.keys = (K[]) new Object[initialCapacity];
     this.values = (V[]) new Object[initialCapacity];
@@ -148,7 +145,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     this.keys = keys;
     this.values = values;
     this.size = size;
-    this.capacity = keys.length;
   }
 
   /**
@@ -186,7 +182,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       // Add a new mapping.
-      if (size == capacity) {
+      if (size == keys.length) {
         grow();
       }
       keys[size] = key;
@@ -201,10 +197,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   /** Increases the capacity of the arrays. */
   private void grow() {
-    int newCapacity = (capacity == 0) ? 4 : 2 * capacity;
+    int newCapacity = (keys.length == 0) ? 4 : 2 * keys.length;
     keys = Arrays.copyOf(keys, newCapacity);
     values = Arrays.copyOf(values, newCapacity);
-    capacity = newCapacity;
   }
 
   /**
@@ -1041,7 +1036,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SideEffectFree
   @Override
   public ArrayMap<K, V> clone() {
-    // Should these calls use `capacity` rather than `size`?
     return new ArrayMap<K, V>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
   }
 
@@ -1054,6 +1048,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /* package-private */ String repr() {
     return String.format(
         "size=%d capacity=%d %s %s",
-        size, capacity, Arrays.toString(keys), Arrays.toString(values));
+        size, keys.length, Arrays.toString(keys), Arrays.toString(values));
   }
 }
