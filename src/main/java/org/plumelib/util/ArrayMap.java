@@ -81,9 +81,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // representation of ArrayList.  That would be slightly more performant, at the cost of increased
   // implementation complexity.
 
-  /** The keys. */
+  /** The keys. Null if capacity=0. */
   private @Nullable K @SameLen("values") [] keys;
-  /** The values. */
+  /** The values. Null if capacity=0. */
   private @Nullable V @SameLen("keys") [] values;
   // Perhaps remove this from the representation and use keys.length, to save space.
   /** The number of used mappings in the representation of this. */
@@ -114,9 +114,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   public ArrayMap(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
-    // As a special case, if capacity == 0, could leave these fields null.
-    this.keys = (K[]) new Object[initialCapacity];
-    this.values = (V[]) new Object[initialCapacity];
+    if (initialCapacity == 0) {
+      this.keys = null;
+      this.values = null;
+    } else {
+      this.keys = (K[]) new Object[initialCapacity];
+      this.values = (V[]) new Object[initialCapacity];
+    }
   }
 
   /** Constructs an empty {@code ArrayMap} with the default initial capacity. */
@@ -182,7 +186,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       // Add a new mapping.
-      if (size == keys.length) {
+      if ((size == 0 && keys == null) || (size == keys.length)) {
         grow();
       }
       keys[size] = key;
@@ -196,10 +200,18 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Increases the capacity of the arrays. */
+  @SuppressWarnings({
+    "unchecked", // generic array cast
+  })
   private void grow() {
-    int newCapacity = (keys.length == 0) ? 4 : 2 * keys.length;
-    keys = Arrays.copyOf(keys, newCapacity);
-    values = Arrays.copyOf(values, newCapacity);
+    if (keys == null) {
+      this.keys = (K[]) new Object[4];
+      this.values = (V[]) new Object[4];
+    } else {
+      int newCapacity = 2 * keys.length;
+      keys = Arrays.copyOf(keys, newCapacity);
+      values = Arrays.copyOf(values, newCapacity);
+    }
   }
 
   /**
@@ -242,6 +254,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    */
   @Pure
   private int indexOfKey(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
+    if (keys == null) {
+      return -1;
+    }
     for (int i = 0; i < size; i++) {
       if (Objects.equals(key, keys[i])) {
         return i;
@@ -259,6 +274,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    */
   @Pure
   private int indexOfValue(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+    if (keys == null) {
+      return -1;
+    }
     for (int i = 0; i < size; i++) {
       if (Objects.equals(value, values[i])) {
         return i;
@@ -438,6 +456,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public final void forEach(Consumer<? super K> action) {
+      if (keys == null) {
+        return;
+      }
       int oldSizeModificationCount = sizeModificationCount;
       for (int i = 0; i < size; i++) {
         K key = keys[i];
@@ -522,6 +543,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public final void forEach(Consumer<? super V> action) {
+      if (keys == null) {
+        return;
+      }
       int oldSizeModificationCount = sizeModificationCount;
       for (int i = 0; i < size; i++) {
         action.accept(values[i]);
@@ -829,6 +853,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     Objects.requireNonNull(action);
+    if (keys == null) {
+      return;
+    }
     int oldSizeModificationCount = sizeModificationCount;
     int size = size();
     for (int index = 0; index < size; index++) {
@@ -850,6 +877,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
     Objects.requireNonNull(function);
+    if (keys == null) {
+      return;
+    }
     int oldSizeModificationCount = sizeModificationCount;
     int size = size();
     for (int index = 0; index < size; index++) {
@@ -1048,6 +1078,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   /* package-private */ String repr() {
     return String.format(
         "size=%d capacity=%d %s %s",
-        size, keys.length, Arrays.toString(keys), Arrays.toString(values));
+        size, (keys == null ? 0 : keys.length), Arrays.toString(keys), Arrays.toString(values));
   }
 }
