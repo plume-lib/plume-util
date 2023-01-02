@@ -18,7 +18,7 @@ repositories {
   mavenCentral()
 }
 
-ext.errorproneVersion = '2.16'
+ext.errorproneVersion = '2.17.0'
 
 dependencies {
   implementation "com.google.errorprone:error_prone_core:${errorproneVersion}" // For @InlineMe.
