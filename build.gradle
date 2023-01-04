@@ -5,7 +5,7 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '7.1.2'
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  id 'com.diffplug.spotless' version '6.12.0'
+  id 'com.diffplug.spotless' version '6.12.1'
 
   // Error Prone linter
   id('net.ltgt.errorprone') version '3.0.1'
@@ -16,9 +16,12 @@ plugins {
 
 repositories {
   mavenCentral()
+  maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+
 }
 
-ext.errorproneVersion = '2.16'
+ext.errorproneVersion = '2.17.0'
+ext.checkerFrameworkVersion = '3.28.1-SNAPSHOT'
 
 dependencies {
   implementation "com.google.errorprone:error_prone_core:${errorproneVersion}" // For @InlineMe.
@@ -67,6 +70,9 @@ spotless {
 
 dependencies {
   errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
+  compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+  testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+  checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
