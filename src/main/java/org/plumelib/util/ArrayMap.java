@@ -74,12 +74,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     extends AbstractMap<K, V> {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
-  // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  It would make some
-  // operations more expensive.
-
-  // An alternate internal representation would be two arrays, similar to the internal
-  // representation of ArrayList.  That would be slightly more performant, at the cost of increased
-  // implementation complexity.
+  // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  That is a bad idea
+  // because it both uses more memory and makes some operations more expensive.
 
   /** The keys. Null if capacity=0. */
   private @Nullable K @SameLen("values") [] keys;
