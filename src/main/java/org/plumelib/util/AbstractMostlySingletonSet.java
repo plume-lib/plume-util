@@ -21,6 +21,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *
  * <p>This class exists because it has multiple subclasses (currently {@link MostlySingletonSet} and
  * {@link IdentityMostlySingletonSet}).
+ *
+ * @param <T> the type of elements of the set
  */
 public abstract class AbstractMostlySingletonSet<T extends Object> implements Set<T> {
 
