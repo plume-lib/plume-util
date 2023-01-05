@@ -7,7 +7,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -15,25 +14,24 @@ import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A map backed by two lists. It permits null values.
+ * A set backed by an array. It permits null values.
  *
- * <p>Compared to a HashSet or LinkedHashSet: For very small maps, this uses much less space, has
+ * <p>Compared to a HashSet or LinkedHashSet: For very small sets, this uses much less space, has
  * comparable performance, and (like a LinkedHashSet) is deterministic, with elements returned in
- * the order they were inserted. For large maps, this is significantly less performant than other
- * map implementations.
+ * the order they were inserted. For large sets, this is significantly less performant than other
+ * set implementations.
  *
  * <p>Compared to a TreeSet: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted. For large maps, this is significantly less performant than other
- * map implementations.
+ * comparator. This isn't sorted. For large sets, this is significantly less performant than other
+ * set implementations.
  *
- * <p>Other ArraySet implementations are
+ * <p>Other ArraySet implementations include:
  *
  * <ul>
  *   <li>https://docs.oracle.com/en/database/oracle/oracle-database/19/olapi/oracle/olapi/ArraySet.html
@@ -122,10 +120,10 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   /**
-   * Constructs a new {@code ArraySet} with the same mappings as the specified {@code Set}.
+   * Constructs a new {@code ArraySet} with the same elements as the specified {@code Set}.
    *
-   * @param m the map whose mappings are to be placed in this map
-   * @throws NullPointerException if the specified map is null
+   * @param m the collection whose elements are to be placed in the new set
+   * @throws NullPointerException if the given set is null
    */
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
@@ -133,7 +131,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "nullness:method.invocation", // inference failure
   })
   @SideEffectFree
-  public ArraySet(Set<? extends E> m) {
+  public ArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
   }
@@ -141,18 +139,14 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   // Private helper functions
 
   /**
-   * Adds the (key, value) mapping to this.
+   * Adds an element to this set.
    *
-   * @param index the index of {@code key} in {@code keys}. If -1, add a new mapping. Otherwise,
-   *     replace the mapping at {@code index}.
+   * @param index the index of {@code value} in {@code values}. If -1, add a new element. Otherwise,
+   *     do nothing.
    * @param value the value
    * @return true if the method modified this set
    */
-  @SuppressWarnings({
-    "InvalidParam", // Error Prone stupidly warns about field `keys`
-    "keyfor:contracts.postcondition" // insertion in keys array suffices
-  })
-  @EnsuresKeyFor(value = "#2", map = "this")
+  @SuppressWarnings({"InvalidParam"}) // Error Prone stupidly warns about field `values`
   private boolean add(@GTENegativeOne int index, E value) {
     if (index == -1) {
       return false;
@@ -182,10 +176,10 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   /**
-   * Remove the mapping at the given index. Does nothing if index is -1.
+   * Remove the element at the given index. Does nothing if index is -1.
    *
-   * @param index the index of the mapping to remove
-   * @return true if this map was modified
+   * @param index the index of the element to remove
+   * @return true if this set was modified
    */
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
