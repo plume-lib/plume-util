@@ -429,7 +429,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public @PolySigned Object[] toArray() {
       // toArray must return a new array because clients are permitted to modify it.
-      return Arrays.copyOf(keys, size);
+      return (@PolySigned Object[]) Arrays.copyOf(keys, size);
     }
 
     @SuppressWarnings({
@@ -516,7 +516,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public @Nullable @PolySigned Object[] toArray() {
       // toArray must return a new array because clients are permitted to modify it.
-      return Arrays.copyOf(values, size);
+      return (@Nullable @PolySigned Object[]) Arrays.copyOf(values, size);
     }
 
     @SuppressWarnings({
