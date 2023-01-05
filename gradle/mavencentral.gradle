@@ -7,6 +7,7 @@
 // To make a release:
 //  * Use JDK 8
 //  * git pull
+//  * In build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
 //    Ensure the version number in this file does not contain "-SNAPSHOT".
 //  * Update ../CHANGELOG.md .
