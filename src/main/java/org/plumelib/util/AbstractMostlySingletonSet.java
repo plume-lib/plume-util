@@ -5,8 +5,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
  * Base class for arbitrary-size sets that very efficient (more efficient than HashSet) for 0 and 1
@@ -49,7 +53,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public int size() {
+  public @NonNegative int size(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
     switch (state) {
       case EMPTY:
         return 0;
@@ -64,12 +68,15 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public boolean isEmpty() {
+  public boolean isEmpty(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
     return size() == 0;
   }
 
   @Override
-  @SuppressWarnings("formatter:purity.not.sideeffectfree.assign.field")
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree",
+    "lock:override.receiver" // cannot specify the anonymous receiver type
+  })
   public Iterator<T> iterator() {
     switch (state) {
       case EMPTY:
@@ -79,12 +86,12 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
           private boolean hasNext = true;
 
           @Override
-          public boolean hasNext() {
+          public boolean hasNext(/*@GuardedBy Iterator<T> this*/ ) {
             return hasNext;
           }
 
           @Override
-          public T next() {
+          public T next(/*@GuardedBy Iterator<T> this*/ ) {
             if (hasNext) {
               hasNext = false;
               assert value != null : "@AssumeAssertion(nullness): previous add is non-null";
@@ -94,7 +101,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
           }
 
           @Override
-          public void remove() {
+          public void remove(/*@GuardedBy Iterator<T> this*/ ) {
             state = State.EMPTY;
             value = null;
           }
@@ -108,7 +115,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public String toString() {
+  public String toString(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
     switch (state) {
       case EMPTY:
         return "[]";
@@ -123,7 +130,8 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public boolean addAll(Collection<? extends T> c) {
+  public boolean addAll(
+      @GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<? extends T> c) {
     boolean res = false;
     for (T elem : c) {
       res |= add(elem);
@@ -132,7 +140,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public Object[] toArray() {
+  public @PolySigned Object[] toArray() {
     throw new UnsupportedOperationException();
   }
 
@@ -142,27 +150,29 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   }
 
   @Override
-  public boolean remove(@Nullable Object o) {
+  public boolean remove(
+      @GuardSatisfied AbstractMostlySingletonSet<T> this, @Nullable @UnknownSignedness Object o) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean containsAll(Collection<?> c) {
+  public boolean containsAll(
+      @GuardSatisfied AbstractMostlySingletonSet<T> this, @GuardSatisfied Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean retainAll(Collection<?> c) {
+  public boolean retainAll(@GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean removeAll(Collection<?> c) {
+  public boolean removeAll(@GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void clear() {
+  public void clear(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
     throw new UnsupportedOperationException();
   }
 }
