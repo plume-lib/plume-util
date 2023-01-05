@@ -28,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -426,7 +427,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     })
     @SideEffectFree
     @Override
-    public @UnknownSignedness @Nullable Object[] toArray() {
+    public @PolySigned Object[] toArray() {
       // toArray must return a new array because clients are permitted to modify it.
       return Arrays.copyOf(keys, size);
     }
@@ -513,7 +514,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     })
     @SideEffectFree
     @Override
-    public @UnknownSignedness @Nullable Object[] toArray() {
+    public @Nullable @PolySigned Object[] toArray() {
       // toArray must return a new array because clients are permitted to modify it.
       return Arrays.copyOf(values, size);
     }

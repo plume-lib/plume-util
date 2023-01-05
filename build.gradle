@@ -109,6 +109,13 @@ checkerFramework {
     '-AwarnUnneededSuppressions',
   ]
 }
+// To use a snapshot version of the Checker Framework.
+ext.checkerFrameworkVersion = '3.28.1-SNAPSHOT'
+dependencies {
+  compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+  testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+  checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
+}
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty('cfLocal')) {
   def cfHome = String.valueOf(System.getenv('CHECKERFRAMEWORK'))
@@ -118,15 +125,6 @@ if (project.hasProperty('cfLocal')) {
     checkerFramework files(cfHome + '/checker/dist/checker.jar')
   }
 }
-
-// To use a snapshot version of the Checker Framework.
-ext.checkerFrameworkVersion = '3.28.1-SNAPSHOT'
-dependencies {
-  compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-  testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-  checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
-}
-
 
 /// Javadoc
 
