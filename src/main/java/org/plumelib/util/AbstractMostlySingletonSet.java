@@ -14,8 +14,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * Base class for arbitrary-size sets that very efficient (more efficient than HashSet) for 0 and 1
- * elements.
+ * Base class for arbitrary-size sets that is very efficient (more efficient than HashSet) for 0 and
+ * 1 elements.
  *
  * <p>Does not support storing {@code null}.
  *
