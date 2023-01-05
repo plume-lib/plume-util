@@ -34,7 +34,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A map backed by two lists. It permits null keys and values.
+ * A map backed by two arrays. It permits null keys and values.
  *
  * <p>Compared to a HashMap or LinkedHashMap: For very small maps, this uses much less space, has
  * comparable performance, and (like a LinkedHashMap) is deterministic, with elements returned in
@@ -151,7 +151,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * Constructs a new {@code ArrayMap} with the same mappings as the specified {@code Map}.
    *
    * @param m the map whose mappings are to be placed in this map
-   * @throws NullPointerException if the specified map is null
+   * @throws NullPointerException if the given map is null
    */
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
