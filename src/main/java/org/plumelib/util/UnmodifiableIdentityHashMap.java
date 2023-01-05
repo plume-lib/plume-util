@@ -22,6 +22,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * <p>This class extends {@link IdentityHashMap} only so it is assignable to variables / fields of
  * static type {@link IdentityHashMap}. All valid operations are delegated to the wrapped map, and
  * any inherited state from the superclass is unused.
+ *
+ * @param <K> the type of keys of the map
+ * @param <V> the type of values of the map
  */
 @SuppressWarnings("keyfor") // Keys for `this` are also keys for `this.map`
 public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
