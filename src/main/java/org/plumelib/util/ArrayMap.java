@@ -82,7 +82,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private @Nullable K @SameLen("values") [] keys;
   /** The values. Null if capacity=0. */
   private @Nullable V @SameLen("keys") [] values;
-  // Perhaps remove this from the representation and use keys.length, to save space.
   /** The number of used mappings in the representation of this. */
   private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
   // An alternate representation would also store the hash code of each key, for quicker querying.
