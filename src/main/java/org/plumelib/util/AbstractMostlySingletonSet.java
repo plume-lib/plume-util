@@ -40,16 +40,35 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
   /** The wrapped set, non-null when the state is ANY. */
   protected @Nullable Set<T> set;
 
-  /** Create an AbstractMostlySingletonSet. */
+  /**
+   * Create an AbstractMostlySingletonSet.
+   *
+   * @param s the state
+   */
   protected AbstractMostlySingletonSet(State s) {
     this.state = s;
     this.value = null;
   }
 
-  /** Create an AbstractMostlySingletonSet. */
+  /**
+   * Create an AbstractMostlySingletonSet.
+   *
+   * @param s the state
+   * @param v the value
+   */
   protected AbstractMostlySingletonSet(State s, T v) {
     this.state = s;
     this.value = v;
+  }
+
+  /** Throw an exception if the internal representation is corrupted. */
+  protected void checkRep() {
+    if ((state == State.EMPTY && (value != null || set != null))
+        || (state == State.SINGLETON && (value == null || set != null))
+        || (state == State.ANY && (value != null || set == null))) {
+      throw new IllegalStateException(
+          String.format("Bad set: state=%s, value=%s, set=%s", state, value, set));
+    }
   }
 
   @Override
@@ -83,6 +102,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
         return Collections.emptyIterator();
       case SINGLETON:
         return new Iterator<T>() {
+          /** True if the iterator has a next element. */
           private boolean hasNext = true;
 
           @Override

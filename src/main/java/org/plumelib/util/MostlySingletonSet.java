@@ -1,6 +1,8 @@
 package org.plumelib.util;
 
 import java.util.LinkedHashSet;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
  * A set that is more efficient than HashSet for 0 and 1 elements. Uses {@code Objects.equals} for
@@ -13,13 +15,21 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
     super(State.EMPTY);
   }
 
-  /** Create a MostlySingletonSet. */
+  /**
+   * Create a MostlySingletonSet containing one value.
+   *
+   * @param value the single element of the set
+   */
   public MostlySingletonSet(T value) {
     super(State.SINGLETON, value);
   }
 
   @Override
-  public boolean add(T e) {
+  @SuppressWarnings({
+    "fallthrough",
+    "lock:method.invocation" // #979?
+  })
+  public boolean add(@GuardSatisfied MostlySingletonSet<T> this, T e) {
     switch (state) {
       case EMPTY:
         state = State.SINGLETON;
@@ -50,7 +60,8 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
   }
 
   @Override
-  public boolean contains(Object o) {
+  public boolean contains(
+      @GuardSatisfied MostlySingletonSet<T> this, @GuardSatisfied @UnknownSignedness Object o) {
     switch (state) {
       case EMPTY:
         return false;
