@@ -96,6 +96,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
     "allcheckers:purity.not.sideeffectfree",
     "lock:override.receiver" // cannot specify the anonymous receiver type
   })
+  @SideEffectFree
   public Iterator<T> iterator() {
     switch (state) {
       case EMPTY:
