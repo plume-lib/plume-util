@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.6.1 (??)
+## 1.6.1 (2022-01-06)
 
 - New method `StringsPlume.isBlank()`.
 - New methods in `CollectionsPlume`: `adjoin`, `adjoinAll`, `listUnion`, `listIntersection`.
