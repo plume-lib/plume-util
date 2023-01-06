@@ -1,8 +1,11 @@
 # Plume-Util change log
 
-## 1.6.1 (2022-01-06)
+## 1.6.2 (??)
 
 - New method `StringsPlume.isBlank()`.
+
+## 1.6.1 (2022-01-06)
+
 - New methods in `CollectionsPlume`: `adjoin`, `adjoinAll`, `listUnion`, `listIntersection`.
 - New classes `ArraySet` and `IdentityArraySet` for very small sets.
 - New classes `MostlySingletonSet`, `AbstractMostlySingletonSet`, and `IdentityMostlySingletonSet`.

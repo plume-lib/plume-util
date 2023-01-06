@@ -691,7 +691,7 @@ public final class StringsPlume {
    * @param s a string
    * @return true if the string contains only white space codepoints, otherwise false
    */
-  static boolean isBlank(String s) {
+  public static boolean isBlank(String s) {
     return s.chars().allMatch(Character::isWhitespace);
   }
 
