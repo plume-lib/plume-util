@@ -5,6 +5,8 @@
 - New method `StringsPlume.isBlank()`.
 - New methods in `CollectionsPlume`: `adjoin`, `adjoinAll`, `listUnion`, `listIntersection`.
 - New class `ArraySet` for very small sets.
+- New classes `MostlySingletonSet`, `AbstractMostlySingletonSet`, and `IdentityMostlySingletonSet`
+- New class `UnmodifiableIdentityHashMap`
 
 ## 1.6.0 (2022-10-17)
 
