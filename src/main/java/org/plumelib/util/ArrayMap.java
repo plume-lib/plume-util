@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
-import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
@@ -34,7 +34,8 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A map backed by two arrays. It permits null keys and values.
+ * A map backed by two arrays. It permits null keys and values, and its iterator has deterministic
+ * ordering.
  *
  * <p>Compared to a HashMap or LinkedHashMap: For very small maps, this uses much less space, has
  * comparable performance, and (like a LinkedHashMap) is deterministic, with elements returned in
@@ -42,8 +43,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * other map implementations.
  *
  * <p>Compared to a TreeMap: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted. For large maps, this is significantly less performant than other
- * map implementations.
+ * comparator. This isn't sorted but does have deteriministic ordering. For large maps, this is
+ * significantly less performant than other map implementations.
  *
  * <p>A number of other ArrayMap implementations exist, including
  *
@@ -85,9 +86,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // An alternate representation would also store the hash code of each key, for quicker querying.
 
   /**
-   * The number of times this HashMap has been modified (a change to the list lengths due to adding
-   * or removing an element; changing the value associated with a key does not count as a change).
-   * This field is used to make view iterators fail-fast.
+   * The number of times this map's size has been modified by adding or removing an element
+   * (changing the value associated with a key does not count as a change). This field is used to
+   * make view iterators fail-fast.
    */
   transient int sizeModificationCount = 0;
 
@@ -139,14 +140,14 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private ArrayMap(
       K @SameLen("values") [] keys,
       V @SameLen("keys") [] values,
-      @LengthOf({"keys", "values"}) int size) {
+      @LTEqLengthOf({"keys", "values"}) int size) {
     this.keys = keys;
     this.values = values;
     this.size = size;
   }
 
   /**
-   * Constructs a new {@code ArrayMap} with the same mappings as the specified {@code Map}.
+   * Constructs a new {@code ArrayMap} with the same mappings as the given {@code Map}.
    *
    * @param m the map whose mappings are to be placed in this map
    * @throws NullPointerException if the given map is null
@@ -154,7 +155,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
     "lock:method.guarantee.violated", // initializes `this`
-    "nullness:method.invocation", // inference failure
+    "nullness:method.invocation", // inference failure;
+    // https://github.com/typetools/checker-framework/issues/979 ?
   })
   @SideEffectFree
   public ArrayMap(Map<? extends K, ? extends V> m) {
@@ -194,9 +196,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Increases the capacity of the arrays. */
-  @SuppressWarnings({
-    "unchecked", // generic array cast
-  })
+  @SuppressWarnings({"unchecked"}) // generic array cast
   private void grow() {
     if (keys == null) {
       this.keys = (K[]) new Object[4];
@@ -809,15 +809,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   ///////////////////////////////////////////////////////////////////////////
 
-  // Comparison and hashing
-
-  //   public boolean equals(Object other) equals() is inherited
-
-  @Pure
-  @Override
-  public int hashCode() {
-    return Objects.hash(Arrays.hashCode(keys), Arrays.hashCode(values));
-  }
+  // Comparison and hashing:  equals and hashCode are inherited from AbstractSet.
 
   // Defaultable methods
 
@@ -839,7 +831,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return;
     }
     int oldSizeModificationCount = sizeModificationCount;
-    int size = size();
     for (int index = 0; index < size; index++) {
       K k;
       V v;

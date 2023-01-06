@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
-import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -20,7 +20,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A set backed by an array. It permits null values.
+ * A set backed by an array. It permits null values and its iterator has deterministic ordering.
  *
  * <p>Compared to a HashSet or LinkedHashSet: For very small sets, this uses much less space, has
  * comparable performance, and (like a LinkedHashSet) is deterministic, with elements returned in
@@ -28,8 +28,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * set implementations.
  *
  * <p>Compared to a TreeSet: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted. For large sets, this is significantly less performant than other
- * set implementations.
+ * comparator. This isn't sorted but does have deteriministic ordering. For large sets, this is
+ * significantly less performant than other set implementations.
  *
  * <p>Other ArraySet implementations include:
  *
@@ -62,9 +62,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   // An alternate representation would also store the hash code of each key, for quicker querying.
 
   /**
-   * The number of times this HashSet has been modified (a change to the list lengths due to adding
-   * or removing an element; changing the value associated with a key does not count as a change).
-   * This field is used to make view iterators fail-fast.
+   * The number of times this set's size has been modified by adding or removing an element. This
+   * field is used to make view iterators fail-fast.
    */
   transient int sizeModificationCount = 0;
 
@@ -104,7 +103,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * defensive copies.
    *
    * @param values the values
-   * @param size the number of used items in the arrays; may be less than their lengths
+   * @param size the number of used items in the array; may be less than its length
    */
   @SuppressWarnings({
     "samelen:assignment", // initialization
@@ -112,13 +111,13 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
   @SideEffectFree
-  private ArraySet(E[] values, @LengthOf({"values"}) int size) {
+  private ArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
     this.values = values;
     this.size = size;
   }
 
   /**
-   * Constructs a new {@code ArraySet} with the same elements as the specified {@code Set}.
+   * Constructs a new {@code ArraySet} with the same elements as the given collection.
    *
    * @param m the collection whose elements are to be placed in the new set
    * @throws NullPointerException if the given set is null
@@ -126,7 +125,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
     "lock:method.guarantee.violated", // initializes `this`
-    "nullness:method.invocation", // inference failure
+    "nullness:method.invocation", // inference failure;
+    // https://github.com/typetools/checker-framework/issues/979 ?
   })
   @SideEffectFree
   public ArraySet(Collection<? extends E> m) {
@@ -160,10 +160,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     return true;
   }
 
-  /** Increases the capacity of the arrays. */
-  @SuppressWarnings({
-    "unchecked", // generic array cast
-  })
+  /** Increases the capacity of the array. */
+  @SuppressWarnings({"unchecked"}) // generic array cast
   private void grow() {
     if (values == null) {
       this.values = (E[]) new Object[4];
@@ -265,7 +263,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     boolean changed = false;
     for (Object e : c) {
       // If more than one element is removed, there are more efficient implementations that iterate
-      // over the array; but such cleverness is not needed for such small sets.
+      // over the array; but such cleverness is not needed for small sets.
       changed = changed || remove(e);
     }
     return changed;
@@ -350,15 +348,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
 
   ///////////////////////////////////////////////////////////////////////////
 
-  // Comparison and hashing
-
-  //   public boolean equals(Object other) equals() is inherited
-
-  @Pure
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(values);
-  }
+  // Comparison and hashing:  equals and hashCode are inherited from AbstractSet.
 
   // Defaultable methods
 
@@ -369,7 +359,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
       return;
     }
     int oldSizeModificationCount = sizeModificationCount;
-    int size = size();
     for (int index = 0; index < size; index++) {
       E e;
       try {
