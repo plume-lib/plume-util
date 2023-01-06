@@ -20,30 +20,13 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A set backed by an array. It permits null values and its iterator has deterministic ordering.
+ * A set backed by an array. It uses object identity (==) for comparison. It permits null values and
+ * its iterator has deterministic ordering.
  *
- * <p>Compared to a HashSet or LinkedHashSet: For very small sets, this uses much less space, has
- * comparable performance, and (like a LinkedHashSet) is deterministic, with elements returned in
- * the order they were inserted. For large sets, this is significantly less performant than other
+ * <p>Compared to a set built on IdentityHashMap: For very small sets, this uses much less space,
+ * has comparable performance, and (like a LinkedHashSet) is deterministic, with elements returned
+ * in the order they were inserted. For large sets, this is significantly less performant than other
  * set implementations.
- *
- * <p>Compared to a TreeSet: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted but does have deteriministic ordering. For large sets, this is
- * significantly less performant than other set implementations.
- *
- * <p>Other ArraySet implementations include:
- *
- * <ul>
- *   <li>https://docs.oracle.com/en/database/oracle/oracle-database/19/olapi/oracle/olapi/ArraySet.html
- *   <li>https://developer.android.com/reference/android/util/ArraySet
- *   <li>https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CopyOnWriteArraySet.html
- * </ul>
- *
- * All of those use the GPL or the Apache License, version 2.0, whereas this implementation is
- * licensed under the more libral MIT License. In addition, some of those implementations forbid
- * nulls or nondeterministically reorder the contents, and others don't specify their behavior
- * regarding nulls and ordering. CopyOnWriteArraySet uses an ArrayList, not an array, as its
- * representation.
  *
  * @param <E> the type of the set elements
  */
@@ -53,7 +36,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -70,7 +53,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   // Constructors
 
   /**
-   * Constructs an empty {@code ArraySet} with the specified initial capacity.
+   * Constructs an empty {@code IdentityArraySet} with the specified initial capacity.
    *
    * @param initialCapacity the initial capacity
    * @throws IllegalArgumentException if the initial capacity is negative
@@ -82,7 +65,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
   @SideEffectFree
-  public ArraySet(int initialCapacity) {
+  public IdentityArraySet(int initialCapacity) {
     if (initialCapacity < 0)
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
     if (initialCapacity == 0) {
@@ -92,9 +75,9 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     }
   }
 
-  /** Constructs an empty {@code ArraySet} with the default initial capacity. */
+  /** Constructs an empty {@code IdentityArraySet} with the default initial capacity. */
   @SideEffectFree
-  public ArraySet() {
+  public IdentityArraySet() {
     this(4);
   }
 
@@ -111,13 +94,13 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
   @SideEffectFree
-  private ArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
+  private IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
     this.values = values;
     this.size = size;
   }
 
   /**
-   * Constructs a new {@code ArraySet} with the same elements as the given collection.
+   * Constructs a new {@code IdentityArraySet} with the same elements as the given collection.
    *
    * @param m the collection whose elements are to be placed in the new set
    * @throws NullPointerException if the given set is null
@@ -129,7 +112,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     // https://github.com/typetools/checker-framework/issues/979 ?
   })
   @SideEffectFree
-  public ArraySet(Collection<? extends E> m) {
+  public IdentityArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
   }
@@ -202,19 +185,20 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   /**
-   * Returns the index of the given value, or -1 if it does not appear. Uses {@code Objects.equals}
-   * for comparison.
+   * Returns the index of the given value, or -1 if it does not appear. Uses {@code ==} for
+   * comparison.
    *
    * @param value a value to find
    * @return the index of the given value, or -1 if it does not appear
    */
+  @SuppressWarnings("interning:not.interned") // object identity comparison
   @Pure
   private int indexOf(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
     if (values == null) {
       return -1;
     }
     for (int i = 0; i < size; i++) {
-      if (Objects.equals(value, values[i])) {
+      if (value == values[i]) {
         return i;
       }
     }
@@ -288,7 +272,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     return new ArraySetIterator();
   }
 
-  /** An iterator over the ArraySet. */
+  /** An iterator over the IdentityArraySet. */
   private class ArraySetIterator implements Iterator<E> {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
@@ -340,7 +324,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
       @SuppressWarnings("lowerbound:assignment") // removed==false, so index>0.
       @NonNegative int newIndex = index - 1;
       index = newIndex;
-      ArraySet.this.removeIndex(index);
+      IdentityArraySet.this.removeIndex(index);
       initialSizeModificationCount = sizeModificationCount;
       removed = true;
     }
@@ -381,8 +365,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   @SuppressWarnings("unchecked")
   @SideEffectFree
   @Override
-  public ArraySet<E> clone() {
-    return new ArraySet<E>(Arrays.copyOf(values, size), size);
+  public IdentityArraySet<E> clone() {
+    return new IdentityArraySet<E>(Arrays.copyOf(values, size), size);
   }
 
   /**

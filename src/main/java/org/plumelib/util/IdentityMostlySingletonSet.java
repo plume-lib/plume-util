@@ -10,6 +10,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * An arbitrary-size set that is very efficient (more efficient than HashSet) for 0 and 1 elements.
  * Uses object identity for object comparison.
  *
+ * <p>Usually, you should use {@link IdentityArraySet} instead. The advantage of this over {@link
+ * IdentityArraySet} is that this is efficient for large sets.
+ *
  * @param <T> the type of elements of the set
  */
 public final class IdentityMostlySingletonSet<T extends Object>

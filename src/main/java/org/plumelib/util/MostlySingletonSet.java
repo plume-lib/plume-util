@@ -8,6 +8,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * A set that is more efficient than HashSet for 0 and 1 elements. Uses {@code Objects.equals} for
  * object comparison and a {@link LinkedHashSet} for backing storage.
  *
+ * <p>Usually, you should use {@link ArraySet} instead. The advantage of this over {@link ArraySet}
+ * is that this is efficient for large sets.
+ *
  * @param <T> the type of elements of the set
  */
 public final class MostlySingletonSet<T extends Object> extends AbstractMostlySingletonSet<T> {
