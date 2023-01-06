@@ -67,9 +67,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "index", // TODO
   "keyfor", // https://tinyurl.com/cfissue/4558
   "lock", // not yet annotated for the Lock Checker
-  "nullness", // temporary; nullness is tricky because of null-padded arrays
-  "signedness:argument", // unannotated JDK methods; TODO: remove after CF release 3.26.1
-  "signedness:unneeded.suppression" // unannotated JDK methods; TODO: remove after CF release 3.26.1
+  "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
 public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
     extends AbstractMap<K, V> {
@@ -420,10 +418,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return removeIndex(index);
     }
 
-    @SuppressWarnings({
-      "nullness:return", // array isn't padded with null, before index `size`
-      "signedness:override.return" // @PolySigned wrt outer class type parameter not expressible
-    })
+    @SuppressWarnings({"nullness:return"}) // array isn't padded with null, before index `size`
     @SideEffectFree
     @Override
     public @PolySigned Object[] toArray() {
@@ -433,9 +428,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @SuppressWarnings({
       "unchecked", // generic array cast
-      "nullness", // Nullness Checker special-cases toArray
-      "signedness:override.return", // @PolySigned wrt outer class type parameter not expressible
-      "signedness:override.param" // @PolySigned wrt outer class type parameter not expressible
+      "nullness" // Nullness Checker special-cases toArray
     })
     @SideEffectFree
     @Override
@@ -507,10 +500,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return containsValue(o);
     }
 
-    @SuppressWarnings({
-      "nullness:override.return", // polymorphism problem
-      "signedness:override.return" // @PolySigned wrt outer class type parameter not expressible
-    })
+    @SuppressWarnings({"nullness:override.return"}) // polymorphism problem
     @SideEffectFree
     @Override
     public @Nullable @PolySigned Object[] toArray() {
@@ -520,9 +510,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @SuppressWarnings({
       "unchecked", // generic array cast
-      "nullness", // Nullness Checker special-cases toArray
-      "signedness:override.return", // @PolySigned wrt outer class type parameter not expressible
-      "signedness:override.param" // @PolySigned wrt outer class type parameter not expressible
+      "nullness" // Nullness Checker special-cases toArray
     })
     @SideEffectFree
     @Override
@@ -660,8 +648,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return index < size();
     }
 
-    // TODO: This should only return a single element.  Calling it twice in a row should throw
-    // IllegalStateException.
     /** Removes the previously-returned element. */
     public final void remove() {
       if (removed) {

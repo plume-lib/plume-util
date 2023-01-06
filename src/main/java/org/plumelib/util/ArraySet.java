@@ -51,9 +51,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "index", // TODO
   "keyfor", // https://tinyurl.com/cfissue/4558
   "lock", // not yet annotated for the Lock Checker
-  "nullness", // temporary; nullness is tricky because of null-padded arrays
-  "signedness:argument", // unannotated JDK methods; TODO: remove after CF release 3.26.1
-  "signedness:unneeded.suppression" // unannotated JDK methods; TODO: remove after CF release 3.26.1
+  "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
 public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
 
@@ -330,8 +328,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
       return values[index++];
     }
 
-    // TODO: This should only return a single element.  Calling it twice in a row should throw
-    // IllegalStateException.
     /** Removes the previously-returned element. */
     @Override
     public final void remove() {
