@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.6.3 (2022-01-07)
+
+- Fix bug in `Set.add()` methods.
+
 ## 1.6.2 (2022-01-07)
 
 - New method `StringsPlume.isBlank()`.
