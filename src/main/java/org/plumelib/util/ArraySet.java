@@ -146,7 +146,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    */
   @SuppressWarnings({"InvalidParam"}) // Error Prone stupidly warns about field `values`
   private boolean add(@GTENegativeOne int index, E value) {
-    if (index == -1) {
+    if (index != -1) {
       return false;
     }
 

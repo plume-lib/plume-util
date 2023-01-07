@@ -129,7 +129,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    */
   @SuppressWarnings({"InvalidParam"}) // Error Prone stupidly warns about field `values`
   private boolean add(@GTENegativeOne int index, E value) {
-    if (index == -1) {
+    if (index != -1) {
       return false;
     }
 
