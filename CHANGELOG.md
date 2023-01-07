@@ -1,8 +1,9 @@
 # Plume-Util change log
 
-## 1.6.2 (??)
+## 1.6.2 (2022-01-07)
 
 - New method `StringsPlume.isBlank()`.
+- Don't use `@InlineMe`, which breaks javac in some clients.
 
 ## 1.6.1 (2022-01-06)
 
