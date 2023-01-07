@@ -1,6 +1,5 @@
 package org.plumelib.util;
 
-import com.google.errorprone.annotations.InlineMe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -802,7 +801,7 @@ public final class MathPlume {
    * @deprecated use {@link #modNonnegative(int, int)}
    */
   @Deprecated // 2020-02-20
-  @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports = "org.plumelib.util.MathPlume")
+  // @InlineMe(replacement="MathPlume.modNonnegative(x, y)", imports="org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modPositive(
@@ -1042,7 +1041,7 @@ public final class MathPlume {
    * @deprecated use {@link #modNonnegative(long, long)}
    */
   @Deprecated // 2020-02-20
-  @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports = "org.plumelib.util.MathPlume")
+  // @InlineMe(replacement="MathPlume.modNonnegative(x, y)", imports="org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound long modPositive(
