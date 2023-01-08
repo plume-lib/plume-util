@@ -248,11 +248,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     if (c.isEmpty()) {
       return false;
     }
-    boolean changed = false;
-    for (E e : c) {
-      changed = changed || add(e);
-    }
-    return changed;
+    return super.addAll(c);
   }
 
   @Override
@@ -260,13 +256,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     if (c.isEmpty()) {
       return false;
     }
-    boolean changed = false;
-    for (Object e : c) {
-      // If more than one element is removed, there are more efficient implementations that iterate
-      // over the array; but such cleverness is not needed for small sets.
-      changed = changed || remove(e);
-    }
-    return changed;
+    return super.removeAll(c);
   }
 
   // Inherit retainAll() from AbstractCollection.
