@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.6.4 (2022-01-08)
+
+- Fix bug in `Set.addAll()` and `Set.removeAll()` methods.
+
 ## 1.6.3 (2022-01-07)
 
 - Fix bug in `Set.add()` methods.
