@@ -4,9 +4,12 @@ import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -132,6 +135,72 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   public ArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
+  }
+
+  // Factory (constructor) methods
+
+  /**
+   * Returns a new ArraySet or HashSet with the given capacity. Uses an ArraySet if the capacity is
+   * small, and a HashSet otherwise.
+   *
+   * @param <E> the type of the elements
+   * @param capacity the expected maximum number of elements in the set
+   * @return a new ArraySet or HashSet with the given capacity
+   */
+  public static <E> Set<E> newArraySetOrHashSet(int capacity) {
+    if (capacity <= 4) {
+      return new ArraySet<>(capacity);
+    } else {
+      return new HashSet<>(CollectionsPlume.mapCapacity(capacity));
+    }
+  }
+
+  /**
+   * Returns a new ArraySet or HashSet with the given elements. Uses an ArraySet if the capacity is
+   * small, and a HashSet otherwise.
+   *
+   * @param <E> the type of the elements
+   * @param s the elements to put in the returned set
+   * @return a new ArraySet or HashSet with the given elements
+   */
+  public static <E> Set<E> newArraySetOrHashSet(Set<E> s) {
+    if (s.size() <= 4) {
+      return new ArraySet<>(s);
+    } else {
+      return new HashSet<>(s);
+    }
+  }
+
+  /**
+   * Returns a new ArraySet or LinkedHashSet with the given capacity. Uses an ArraySet if the
+   * capacity is small, and a LinkedHashSet otherwise.
+   *
+   * @param <E> the type of the elements
+   * @param capacity the expected maximum number of elements in the set
+   * @return a new ArraySet or LinkedHashSet with the given capacity
+   */
+  public static <E> Set<E> newArraySetOrLinkedHashSet(int capacity) {
+    if (capacity <= 4) {
+      return new ArraySet<>(capacity);
+    } else {
+      return new LinkedHashSet<>(CollectionsPlume.mapCapacity(capacity));
+    }
+  }
+
+  /**
+   * Returns a new ArraySet or LinkedHashSet with the given elements. Uses an ArraySet if the
+   * capacity is small, and a LinkedHashSet otherwise.
+   *
+   * @param <E> the type of the elements
+   * @param s the elements to put in the returned set
+   * @return a new ArraySet or LinkedHashSet with the given elements
+   */
+  public static <E> Set<E> newArraySetOrLinkedHashSet(Set<E> s) {
+    if (s.size() <= 4) {
+      return new ArraySet<>(s);
+    } else {
+      return new LinkedHashSet<>(s);
+    }
   }
 
   // Private helper functions

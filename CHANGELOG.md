@@ -1,12 +1,10 @@
 # Plume-Util change log
 
-## 1.6.4 (2022-01-08)
+## 1.6.5 (2022-01-08)
 
-- Fix bug in `Set.addAll()` and `Set.removeAll()` methods.
-
-## 1.6.3 (2022-01-07)
-
-- Fix bug in `Set.add()` methods.
+- New methods `newArrayMapOrHashMap`, `newArrayMapOrLinkedHashMap`,
+  `newArraySetOrHashSet`, and `newArraySetOrLinkedHashSet`.
+- Bug fixes in collection methods.
 
 ## 1.6.2 (2022-01-07)
 

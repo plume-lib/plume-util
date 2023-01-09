@@ -6,7 +6,9 @@ import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -162,6 +164,76 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   public ArrayMap(Map<? extends K, ? extends V> m) {
     this(m.size());
     putAll(m);
+  }
+
+  // Factory (constructor) methods
+
+  /**
+   * Returns a new ArrayMap or HashMap with the given capacity. Uses an ArrayMap if the capacity is
+   * small, and a HashMap otherwise.
+   *
+   * @param <K> the type of the keys
+   * @param <V> the type of the values
+   * @param capacity the expected maximum number of elements in the set
+   * @return a new ArrayMap or HashMap with the given capacity
+   */
+  public static <K, V> Map<K, V> newArrayMapOrHashMap(int capacity) {
+    if (capacity <= 4) {
+      return new ArrayMap<>(capacity);
+    } else {
+      return new HashMap<>(CollectionsPlume.mapCapacity(capacity));
+    }
+  }
+
+  /**
+   * Returns a new ArrayMap or HashMap with the given elements. Uses an ArrayMap if the capacity is
+   * small, and a HashMap otherwise.
+   *
+   * @param <K> the type of the keys
+   * @param <V> the type of the values
+   * @param m the elements to put in the returned set
+   * @return a new ArrayMap or HashMap with the given elements
+   */
+  public static <K, V> Map<K, V> newArrayMapOrHashMap(Map<K, V> m) {
+    if (m.size() <= 4) {
+      return new ArrayMap<>(m);
+    } else {
+      return new HashMap<>(m);
+    }
+  }
+
+  /**
+   * Returns a new ArrayMap or LinkedHashMap with the given capacity. Uses an ArrayMap if the
+   * capacity is small, and a LinkedHashMap otherwise.
+   *
+   * @param <K> the type of the keys
+   * @param <V> the type of the values
+   * @param capacity the expected maximum number of elements in the set
+   * @return a new ArrayMap or LinkedHashMap with the given capacity
+   */
+  public static <K, V> Map<K, V> newArrayMapOrLinkedHashMap(int capacity) {
+    if (capacity <= 4) {
+      return new ArrayMap<>(capacity);
+    } else {
+      return new LinkedHashMap<>(CollectionsPlume.mapCapacity(capacity));
+    }
+  }
+
+  /**
+   * Returns a new ArrayMap or LinkedHashMap with the given elements. Uses an ArrayMap if the
+   * capacity is small, and a LinkedHashMap otherwise.
+   *
+   * @param <K> the type of the keys
+   * @param <V> the type of the values
+   * @param m the elements to put in the returned set
+   * @return a new ArrayMap or LinkedHashMap with the given elements
+   */
+  public static <K, V> Map<K, V> newArrayMapOrLinkedHashMap(Map<K, V> m) {
+    if (m.size() <= 4) {
+      return new ArrayMap<>(m);
+    } else {
+      return new LinkedHashMap<>(m);
+    }
   }
 
   // Private helper functions
