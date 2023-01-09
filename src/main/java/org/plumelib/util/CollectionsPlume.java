@@ -1274,6 +1274,7 @@ public final class CollectionsPlume {
    * @return a duplicate-free list that is the union of the given collections
    */
   public static <T> List<T> listUnion(Collection<T> c1, Collection<T> c2) {
+    // TODO: use a set if the collection sizes are big enough, to avoid quadratic time complexity.
     List<T> result = new ArrayList<>(c1.size() + c2.size());
     adjoinAll(result, c1);
     adjoinAll(result, c2);
@@ -1291,6 +1292,7 @@ public final class CollectionsPlume {
    * @return a duplicate-free list that is the union of the given collections
    */
   public static <T> List<T> listIntersection(Collection<T> c1, Collection<T> c2) {
+    // TODO: use a set if the collection sizes are big enough, to avoid quadratic time complexity.
     List<T> result = new ArrayList<>(c1.size());
     adjoinAll(result, c1);
     result.retainAll(c2);

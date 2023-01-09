@@ -881,9 +881,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public @Nullable V putIfAbsent(K key, V value) {
     int index = indexOfKey(key);
-    V currentValue = getOrNull(index);
-    put(index, key, value);
-    return currentValue;
+    if (index == -1 || values[index] == null) {
+      put(index, key, value);
+      return null;
+    } else {
+      return values[index];
+    }
   }
 
   @Override
@@ -934,13 +937,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       K key, Function<? super K, ? extends @PolyNull V> mappingFunction) {
     Objects.requireNonNull(mappingFunction);
     int index = indexOfKey(key);
-    V currentValue;
     if (index != -1) {
-      currentValue = values[index];
+      V currentValue = values[index];
       if (currentValue != null) {
         return currentValue;
       }
     }
+    // either index == -1, or values[index]==null.
     int oldSizeModificationCount = sizeModificationCount;
     V newValue = mappingFunction.apply(key);
     if (oldSizeModificationCount != sizeModificationCount) {
@@ -968,6 +971,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       @PolyNull V result = null;
       return result;
     }
+    // index != -1  and  values[index] != null.
     int oldSizeModificationCount = sizeModificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
     if (oldSizeModificationCount != sizeModificationCount) {
