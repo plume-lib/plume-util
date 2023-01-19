@@ -3,6 +3,7 @@ package org.plumelib.util;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -163,7 +164,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param s the elements to put in the returned set
    * @return a new ArraySet or HashSet with the given elements
    */
-  public static <E> Set<E> newArraySetOrHashSet(Set<E> s) {
+  public static <E> Set<E> newArraySetOrHashSet(Collection<E> s) {
     if (s.size() <= 4) {
       return new ArraySet<>(s);
     } else {
@@ -195,7 +196,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param s the elements to put in the returned set
    * @return a new ArraySet or LinkedHashSet with the given elements
    */
-  public static <E> Set<E> newArraySetOrLinkedHashSet(Set<E> s) {
+  public static <E> Set<E> newArraySetOrLinkedHashSet(Collection<E> s) {
     if (s.size() <= 4) {
       return new ArraySet<>(s);
     } else {
@@ -444,6 +445,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     return new ArraySet<E>(Arrays.copyOf(values, size), size);
   }
 
+  // Extra methods, not specified by `Set`.
+
   /**
    * Returns the internal representation, printed.
    *
@@ -454,5 +457,26 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     return String.format(
         "size=%d capacity=%s %s",
         size, (values == null ? 0 : values.length), Arrays.toString(values));
+  }
+
+  /**
+   * Sorts the internal representation of this. Side-effects the representation, but not the
+   * abstract value, of this. Requires that the elements of this are comparable.
+   */
+  @SuppressWarnings(
+      "signedness:argument" // unsigned values (forbidden by precondiditon) cannot be sorted
+  )
+  public void sort() {
+    Arrays.sort(values, 0, size);
+  }
+
+  /**
+   * Sorts the internal representation of this, using the given comparator. Side-effects the
+   * representation, but not the abstract value, of this.
+   *
+   * @param comparator imposes an ordering on the elements of this
+   */
+  public void sort(Comparator<? super E> comparator) {
+    Arrays.sort(values, 0, size, comparator);
   }
 }

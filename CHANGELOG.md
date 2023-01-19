@@ -1,5 +1,11 @@
 # Plume-Util change log
 
+## 1.6.6 (??)
+
+- New method `CollectionsPlume.withoutDuplicatesSorted`.
+- New method `ArraySet.sort`.
+- Widened the formal type of `ArraySet.newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
+
 ## 1.6.5 (2022-01-08)
 
 - New methods `newArrayMapOrHashMap`, `newArrayMapOrLinkedHashMap`,
