@@ -81,16 +81,17 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
     return nextValue != null;
   }
 
-  /** Advance {@code nextValue} to the next value, or to null if there are no more values. */
+  /** Advance {@code #nextValue} to the next value, or to null if there are no more values. */
   @RequiresNonNull("nextValue")
   private void advanceNext(@GuardSatisfied CombinationIterator<T> this) {
+    List<T> nnNextValue = nextValue;
     for (int i = combinationSize - 1; i >= 0; i--) {
       if (iterators[i].hasNext()) {
-        nextValue.set(i, iterators[i].next());
+        nnNextValue.set(i, iterators[i].next());
         return;
       } else {
         iterators[i] = listsOfCandidates[i].iterator();
-        nextValue.set(i, iterators[i].next());
+        nnNextValue.set(i, iterators[i].next());
       }
     }
     nextValue = null;
