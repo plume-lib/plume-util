@@ -125,7 +125,7 @@ if (false) {
   repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
   }
-  ext.checkerFrameworkVersion = '3.28.1-SNAPSHOT'
+  ext.checkerFrameworkVersion = '3.30.0'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
