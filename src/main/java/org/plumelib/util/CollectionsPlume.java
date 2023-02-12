@@ -489,8 +489,7 @@ public final class CollectionsPlume {
       return false;
     }
     for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor1.hasNext(); ) {
-      boolean same = Objects.equals(itor1.next(), itor2.next());
-      if (!same) {
+      if (!Objects.equals(itor1.next(), itor2.next())) {
         return false;
       }
     }
