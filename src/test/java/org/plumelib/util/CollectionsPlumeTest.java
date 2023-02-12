@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.jupiter.api.Test;
@@ -285,6 +286,9 @@ public final class CollectionsPlumeTest {
   List<Object> lo1123 = Arrays.asList(object1, object1, object2, object3);
   List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
 
+  // TODO:
+  // public static List sortList (List l, Comparator c)
+
   @SuppressWarnings("JdkObsolete") // test of List that does not implement RandomAccess
   @Test
   public void test_hasDuplicates() {
@@ -305,7 +309,6 @@ public final class CollectionsPlumeTest {
   @Test
   public void test_withoutDuplicates() {
 
-    // public static List sortList (List l, Comparator c)
     // public static <T> List<T> withoutDuplicates(List<T> l) {
 
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l123));
@@ -325,7 +328,6 @@ public final class CollectionsPlumeTest {
   @Test
   public void test_withoutDuplicatesComparable() {
 
-    // public static List sortList (List l, Comparator c)
     // public static <T> List<T> withoutDuplicates(List<T> l) {
 
     assertEquals(l123, CollectionsPlume.withoutDuplicatesComparable(l123));
@@ -399,6 +401,19 @@ public final class CollectionsPlumeTest {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.transform(in, Object::toString));
+  }
+
+  @Test
+  public void testSortedSetEquals() {
+    TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
+    TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
+    TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
+    TreeSet<Integer> s4 = new TreeSet<>(Arrays.asList(1, 2, 3, 4));
+
+    assertTrue(CollectionsPlume.sortedSetEquals(s3, s3));
+    assertTrue(CollectionsPlume.sortedSetEquals(s3, s3a));
+    assertFalse(CollectionsPlume.sortedSetEquals(s3, s2));
+    assertFalse(CollectionsPlume.sortedSetEquals(s3, s4));
   }
 
   /** Tests UtilPlume createCombinations routines. */
