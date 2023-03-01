@@ -7,6 +7,7 @@
 
 package org.plumelib.util;
 
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.AbstractCollection;
@@ -338,7 +339,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    */
   @Pure
   @Override
-  public @Nullable V get(@Nullable @UnknownSignedness @GuardSatisfied Object key) {
+  public @Nullable V get(@GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object key) {
     Object k = maskNull(key);
     int h = hasher(k);
     @Nullable Entry<K, V>[] tab = getTable();

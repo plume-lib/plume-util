@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -350,7 +351,7 @@ public final class WeakHasherMap<K, V> extends AbstractMap<K, V> implements Map<
   @Pure
   @Override
   public @Nullable V get(
-      @UnknownSignedness @GuardSatisfied Object key) { // type of argument is Object, not K
+          @GuardSatisfied @MustCallUnknown @UnknownSignedness Object key) { // type of argument is Object, not K
     @SuppressWarnings("unchecked")
     K kkey = (K) key;
     return hash.get(WeakKeyCreate(kkey));

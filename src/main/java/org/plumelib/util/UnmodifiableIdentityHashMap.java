@@ -10,6 +10,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -74,21 +75,21 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   @Override
   public @Nullable V get(
       @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object key) {
+      @GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object key) {
     return map.get(key);
   }
 
   @Override
   public boolean containsKey(
       @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object key) {
+      @GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object key) {
     return map.containsKey(key);
   }
 
   @Override
   public boolean containsValue(
       @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
+      @GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object value) {
     return map.containsValue(value);
   }
 
@@ -106,7 +107,7 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   @Override
   public @Nullable V remove(
       @GuardSatisfied UnmodifiableIdentityHashMap<K, V> this,
-      @GuardSatisfied @Nullable @UnknownSignedness Object key) {
+      @GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object key) {
     throw new UnsupportedOperationException();
   }
 
@@ -159,7 +160,8 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public V getOrDefault(@GuardSatisfied @UnknownSignedness Object key, V defaultValue) {
+  public V getOrDefault(
+      @GuardSatisfied @MustCallUnknown @UnknownSignedness Object key, V defaultValue) {
     return map.getOrDefault(key, defaultValue);
   }
 
@@ -170,8 +172,8 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
 
   @Override
   public boolean remove(
-      @GuardSatisfied @UnknownSignedness Object key,
-      @GuardSatisfied @UnknownSignedness Object value) {
+      @GuardSatisfied @MustCallUnknown @UnknownSignedness Object key,
+      @GuardSatisfied @MustCallUnknown @UnknownSignedness Object value) {
     throw new UnsupportedOperationException();
   }
 

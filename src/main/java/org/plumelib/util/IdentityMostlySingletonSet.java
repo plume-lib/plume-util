@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import org.checkerframework.checker.interning.qual.FindDistinct;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -67,7 +68,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
   @Override
   public boolean contains(
       @GuardSatisfied IdentityMostlySingletonSet<T> this,
-      @GuardSatisfied @UnknownSignedness Object o) {
+      @GuardSatisfied @MustCallUnknown @UnknownSignedness Object o) {
     switch (state) {
       case EMPTY:
         return false;

@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import java.util.LinkedHashSet;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -66,7 +67,8 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
 
   @Override
   public boolean contains(
-      @GuardSatisfied MostlySingletonSet<T> this, @GuardSatisfied @UnknownSignedness Object o) {
+      @GuardSatisfied MostlySingletonSet<T> this,
+      @GuardSatisfied @MustCallUnknown @UnknownSignedness Object o) {
     switch (state) {
       case EMPTY:
         return false;

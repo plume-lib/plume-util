@@ -18,6 +18,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -57,7 +58,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class ArraySet<E extends @MustCallUnknown @UnknownSignedness Object> extends AbstractSet<E> {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -279,7 +280,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @return the index of the given value, or -1 if it does not appear
    */
   @Pure
-  private int indexOf(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  private int indexOf(@GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object value) {
     if (values == null) {
       return -1;
     }
@@ -293,7 +294,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
 
   @Pure
   @Override
-  public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean contains(
+      @GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object value) {
     return indexOf(value) != -1;
   }
 
@@ -306,7 +308,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   @Override
-  public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean remove(
+      @GuardSatisfied @MustCallUnknown @Nullable @UnknownSignedness Object value) {
     int index = indexOf(value);
     return removeIndex(index);
   }

@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
@@ -175,7 +176,8 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
 
   @Override
   public boolean remove(
-      @GuardSatisfied AbstractMostlySingletonSet<T> this, @Nullable @UnknownSignedness Object o) {
+      @GuardSatisfied AbstractMostlySingletonSet<T> this,
+      @MustCallUnknown @Nullable @UnknownSignedness Object o) {
     throw new UnsupportedOperationException();
   }
 
