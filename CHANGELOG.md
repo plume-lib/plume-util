@@ -2,9 +2,10 @@
 
 ## 1.6.6 (??)
 
-- New method `CollectionsPlume.withoutDuplicatesSorted`.
 - New method `ArraySet.sort`.
-- Widened the formal type of `ArraySet.newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
+- New method `CollectionsPlume.sortedSetEquals`.
+- New method `CollectionsPlume.withoutDuplicatesSorted`.
+- Widened the formal parameter type of `ArraySet.newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
 
 ## 1.6.5 (2022-01-08)
 

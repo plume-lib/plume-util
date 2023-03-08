@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -463,6 +464,36 @@ public final class CollectionsPlume {
       List<TO> transform(
           Iterable<FROM> iterable, Function<@MustCallUnknown ? super FROM, ? extends TO> f) {
     return mapList(f, iterable);
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// SortedSet
+  ///
+
+  /**
+   * Returns true if the two sets contain the same elements in the same order. This is faster than
+   * regular {@code equals()}, for sets with the same ordering operator.
+   *
+   * @param <T> the type of elements in the sets
+   * @param set1 the first set to compare
+   * @param set2 the first set to compare
+   * @return true if the two sets contain the same elements in the same order
+   */
+  public static <T> boolean sortedSetEquals(SortedSet<T> set1, SortedSet<T> set2) {
+    @SuppressWarnings("interning:not.interned")
+    boolean sameObject = set1 == set2;
+    if (sameObject) {
+      return true;
+    }
+    if (set1.size() != set2.size()) {
+      return false;
+    }
+    for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor1.hasNext(); ) {
+      if (!Objects.equals(itor1.next(), itor2.next())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   ///////////////////////////////////////////////////////////////////////////
