@@ -416,6 +416,34 @@ public final class CollectionsPlumeTest {
     assertFalse(CollectionsPlume.sortedSetEquals(s3, s4));
   }
 
+  @Test
+  public void testSortedSetContainsAll() {
+    TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
+    TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
+    TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
+    TreeSet<Integer> s4 = new TreeSet<>(Arrays.asList(1, 2, 3, 4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s2, s2));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s2, s3));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s2, s3a));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s2, s4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3, s2));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3, s3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3, s3a));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s3, s4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3a, s2));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3a, s3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3a, s3a));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s3a, s4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s2));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s3a));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s4));
+  }
+
   /** Tests UtilPlume createCombinations routines. */
   @Test
   public void test_createCombinations() {
