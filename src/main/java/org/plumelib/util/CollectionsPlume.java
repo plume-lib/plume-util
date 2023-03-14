@@ -472,7 +472,8 @@ public final class CollectionsPlume {
 
   /**
    * Returns true if the two sets contain the same elements in the same order. This is faster than
-   * regular {@code equals()}, for sets with the same ordering operator.
+   * regular {@code equals()}, for sets with the same ordering operator, especially for sets that
+   * are not extremely small.
    *
    * @param <T> the type of elements in the sets
    * @param set1 the first set to compare
@@ -488,6 +489,12 @@ public final class CollectionsPlume {
     if (set1.size() != set2.size()) {
       return false;
     }
+    Comparator<? super T> comparator1 = set1.comparator();
+    Comparator<? super T> comparator2 = set2.comparator();
+    if (!Objects.equals(comparator1, comparator2)) {
+      // Fall back to regular `equals`.
+      return set1.equals(set2);
+    }
     for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor1.hasNext(); ) {
       if (!Objects.equals(itor1.next(), itor2.next())) {
         return false;
@@ -498,10 +505,8 @@ public final class CollectionsPlume {
 
   /**
    * Returns true if the two sets contain the same elements in the same order. This is faster than
-   * regular {@code equals()}, for sets with the same ordering operator.
-   *
-   * <p>Java's SortedSet class does not special-case containsAll. This should be faster, especially
-   * for sets that are not extremely small.
+   * regular {@code containsAll()}, for sets with the same ordering operator, especially for sets
+   * that are not extremely small.
    *
    * @param <T> the type of elements in the sets
    * @param set1 the first set to compare
@@ -520,6 +525,7 @@ public final class CollectionsPlume {
     Comparator<? super T> comparator1 = set1.comparator();
     Comparator<? super T> comparator2 = set2.comparator();
     if (!Objects.equals(comparator1, comparator2)) {
+      // Fall back to regular `containsAll`.
       return set1.containsAll(set2);
     }
     if (comparator1 == null) {
