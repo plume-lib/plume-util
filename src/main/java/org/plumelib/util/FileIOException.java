@@ -140,7 +140,7 @@ public class FileIOException extends IOException {
    * @param cause the exception that occurred
    */
   public FileIOException(@Nullable LineNumberReader reader, @Nullable Throwable cause) {
-    this(reader, /*fileName=*/ (@Nullable String) null, cause);
+    this(reader, /* fileName= */ (@Nullable String) null, cause);
   }
 
   /**
@@ -151,7 +151,7 @@ public class FileIOException extends IOException {
    *     name
    */
   public FileIOException(@Nullable String message, @Nullable LineNumberReader reader) {
-    this(message, reader, /*fileName=*/ (@Nullable String) null);
+    this(message, reader, /* fileName= */ (@Nullable String) null);
   }
 
   /**
@@ -163,7 +163,7 @@ public class FileIOException extends IOException {
    */
   public FileIOException(
       @Nullable String message, @Nullable LineNumberReader reader, @Nullable Throwable cause) {
-    this(message, reader, /*fileName=*/ (@Nullable String) null, cause);
+    this(message, reader, /* fileName= */ (@Nullable String) null, cause);
   }
 
   ///////////////////////////////////////////////////////////////////////////
