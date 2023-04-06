@@ -585,6 +585,7 @@ public class ArrayMapTestApache {
       return "ONE";
     }
 
+    @SuppressWarnings("mustcall:override.param") // #979: new type inference failure in CF 3.33.0
     @Override
     public Object setValue(@GuardSatisfied MockEntry this, Object object) {
       return null;
