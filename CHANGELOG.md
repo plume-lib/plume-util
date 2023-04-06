@@ -3,7 +3,7 @@
 ## 1.6.6 (??)
 
 - New method `ArraySet.sort`.
-- New method `CollectionsPlume.sortedSetEquals`.
+- New methods `CollectionsPlume.sortedSetContainsAll` and `CollectionsPlume.sortedSetEquals`.
 - New method `CollectionsPlume.withoutDuplicatesSorted`.
 - Widened the formal parameter type of `ArraySet.newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
 

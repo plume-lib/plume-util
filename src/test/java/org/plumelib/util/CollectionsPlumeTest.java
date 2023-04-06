@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -414,6 +415,86 @@ public final class CollectionsPlumeTest {
     assertTrue(CollectionsPlume.sortedSetEquals(s3, s3a));
     assertFalse(CollectionsPlume.sortedSetEquals(s3, s2));
     assertFalse(CollectionsPlume.sortedSetEquals(s3, s4));
+  }
+
+  @Test
+  public void testSortedSetContainsAll() {
+    TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
+    TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
+    TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
+    TreeSet<Integer> s4 = new TreeSet<>(Arrays.asList(1, 2, 3, 4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s2, s2));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s2, s3));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s2, s3a));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s2, s4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3, s2));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3, s3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3, s3a));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s3, s4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3a, s2));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3a, s3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s3a, s3a));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(s3a, s4));
+
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s2));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s3a));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s4));
+  }
+
+  // Median of 5 runs with size=4: ratio = .90, meaning 10% speedup.
+  // @Test
+  @SuppressWarnings("ReturnValueIgnored")
+  void testSortedSetTime() {
+    int size = 4;
+    int iterations = 100000;
+    long sortedTime = 0;
+    long unsortedTime = 0;
+    Random random = new Random(0);
+    for (int i = 0; i < iterations; i++) {
+      SortedSet<Integer> s1 = new TreeSet<Integer>();
+      SortedSet<Integer> s2 = new TreeSet<Integer>();
+      SortedSet<Integer> s3 = new TreeSet<Integer>();
+      for (int j = 0; j < size; j++) {
+        int elt1 = random.nextInt(10);
+        int elt2 = random.nextInt(10);
+        s1.add(elt1);
+        s2.add(elt1);
+        s3.add(elt2);
+      }
+      s3.add(random.nextInt(10));
+      long sortedStart = System.nanoTime();
+      for (int k = 0; k < 10; k++) {
+        CollectionsPlume.sortedSetEquals(s1, s2);
+        CollectionsPlume.sortedSetEquals(s2, s1);
+        CollectionsPlume.sortedSetEquals(s2, s3);
+        CollectionsPlume.sortedSetEquals(s3, s2);
+        CollectionsPlume.sortedSetContainsAll(s1, s2);
+        CollectionsPlume.sortedSetContainsAll(s2, s1);
+        CollectionsPlume.sortedSetContainsAll(s2, s3);
+        CollectionsPlume.sortedSetContainsAll(s3, s2);
+      }
+      sortedTime += (System.nanoTime() - sortedStart);
+      long unsortedStart = System.nanoTime();
+      for (int k = 0; k < 10; k++) {
+        s1.equals(s2);
+        s2.equals(s1);
+        s2.equals(s3);
+        s3.equals(s2);
+        s1.containsAll(s2);
+        s2.containsAll(s1);
+        s2.containsAll(s3);
+        s3.containsAll(s2);
+      }
+      unsortedTime += (System.nanoTime() - unsortedStart);
+    }
+    System.out.printf("testSortedSetTime: size = %s, iterations = %s%n", size, iterations);
+    System.out.printf("  CollectionsPlume: time = %s%n", sortedTime);
+    System.out.printf("  JDK             : time = %s%n", unsortedTime);
+    System.out.printf("  ratio = %s%n", 1.0 * sortedTime / unsortedTime);
   }
 
   /** Tests UtilPlume createCombinations routines. */

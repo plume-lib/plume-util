@@ -472,7 +472,8 @@ public final class CollectionsPlume {
 
   /**
    * Returns true if the two sets contain the same elements in the same order. This is faster than
-   * regular {@code equals()}, for sets with the same ordering operator.
+   * regular {@code equals()}, for sets with the same ordering operator, especially for sets that
+   * are not extremely small.
    *
    * @param <T> the type of elements in the sets
    * @param set1 the first set to compare
@@ -488,8 +489,84 @@ public final class CollectionsPlume {
     if (set1.size() != set2.size()) {
       return false;
     }
+    Comparator<? super T> comparator1 = set1.comparator();
+    Comparator<? super T> comparator2 = set2.comparator();
+    if (!Objects.equals(comparator1, comparator2)) {
+      // Fall back to regular `equals`.
+      return set1.equals(set2);
+    }
     for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor1.hasNext(); ) {
       if (!Objects.equals(itor1.next(), itor2.next())) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if the two sets contain the same elements in the same order. This is faster than
+   * regular {@code containsAll()}, for sets with the same ordering operator, especially for sets
+   * that are not extremely small.
+   *
+   * @param <T> the type of elements in the sets
+   * @param set1 the first set to compare
+   * @param set2 the first set to compare
+   * @return true if the first set contains all the elements of the second set
+   */
+  public static <T> boolean sortedSetContainsAll(SortedSet<T> set1, SortedSet<T> set2) {
+    @SuppressWarnings("interning:not.interned")
+    boolean sameObject = set1 == set2;
+    if (sameObject) {
+      return true;
+    }
+    if (set1.size() < set2.size()) {
+      return false;
+    }
+    Comparator<? super T> comparator1 = set1.comparator();
+    Comparator<? super T> comparator2 = set2.comparator();
+    if (!Objects.equals(comparator1, comparator2)) {
+      // Fall back to regular `containsAll`.
+      return set1.containsAll(set2);
+    }
+    if (comparator1 == null) {
+      outerloopNaturalOrder:
+      for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor2.hasNext(); ) {
+        T elt2 = itor2.next();
+        if (elt2 == null) {
+          throw new IllegalArgumentException("null element in set 2: " + set2);
+        }
+        while (itor1.hasNext()) {
+          T elt1 = itor1.next();
+          if (elt2 == null) {
+            throw new IllegalArgumentException("null element in set 2: " + set2);
+          }
+          @SuppressWarnings({
+            "unchecked", // Java warning about generic cast
+            "nullness:dereference", // next() has side effects, so elt1 isn't know to be non-null
+            "signedness:method.invocation" // generics problem; #979?
+          })
+          int comparison = ((Comparable<T>) elt1).compareTo(elt2);
+          if (comparison == 0) {
+            continue outerloopNaturalOrder;
+          } else if (comparison < 0) {
+            return false;
+          }
+        }
+        return false;
+      }
+    } else {
+      outerloopComparator:
+      for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor2.hasNext(); ) {
+        T elt2 = itor2.next();
+        while (itor1.hasNext()) {
+          T elt1 = itor1.next();
+          int comparison = comparator1.compare(elt1, elt2);
+          if (comparison == 0) {
+            continue outerloopComparator;
+          } else if (comparison < 0) {
+            return false;
+          }
+        }
         return false;
       }
     }
