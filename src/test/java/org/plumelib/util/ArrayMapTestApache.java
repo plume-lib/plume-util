@@ -50,6 +50,7 @@ import org.junit.jupiter.api.Test;
   "nullness", // contains intentional misuses; exceptions are caught in catch statments
   "index", // contains intentional misuses; exceptions are caught in catch statments
   "interning", // ad hoc equality tests
+  "signedness", // raw collection types
   "BoxedPrimitiveConstructor",
   "BoxedPrimitiveEquality",
   "CatchAndPrintStackTrace",
@@ -585,6 +586,7 @@ public class ArrayMapTestApache {
       return "ONE";
     }
 
+    @SuppressWarnings("mustcall:override.param") // #979: new type inference failure in CF 3.33.0
     @Override
     public Object setValue(@GuardSatisfied MockEntry this, Object object) {
       return null;
