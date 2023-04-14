@@ -17,6 +17,7 @@ plugins {
 
 repositories {
   mavenCentral()
+  maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 ext.errorproneVersion = '2.18.0'
@@ -119,11 +120,8 @@ checkerFramework {
   ]
 }
 // To use a snapshot version of the Checker Framework.
-if (false) {
-  repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-  }
-  ext.checkerFrameworkVersion = '3.33.0'
+if (true) { // TODO: change to false when CF 3.34.0 is released
+  ext.checkerFrameworkVersion = '3.33.1-SNAPSHOT'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
