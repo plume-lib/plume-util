@@ -1376,7 +1376,6 @@ public final class MathPlume {
         currentMissing = currentNonmissing;
       }
       this.numsItor = numsItor;
-      @SuppressWarnings("lowerbound:assignment") // unused variable, so value doesn't matter
       @IndexFor("nums") int unused = Integer.MIN_VALUE;
       currentIndex = unused;
     }
@@ -1710,7 +1709,6 @@ public final class MathPlume {
         currentMissing = currentNonmissing;
       }
       this.numsItor = numsItor;
-      @SuppressWarnings("lowerbound:assignment") // unused variable, so value doesn't matter
       @IndexFor("nums") int unused = Integer.MIN_VALUE;
       currentIndex = unused;
     }
