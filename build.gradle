@@ -114,7 +114,8 @@ checkerFramework {
   ]
   extraJavacArgs = [
     '-Werror',
-    '-Aversion', // temporary
+    '-Aversion',
+    // temporary
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnRedundantAnnotations',
