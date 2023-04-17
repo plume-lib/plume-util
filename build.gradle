@@ -131,6 +131,9 @@ if (true) {
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
   }
+  configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+  }
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty('cfLocal')) {
