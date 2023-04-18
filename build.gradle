@@ -32,8 +32,13 @@ dependencies {
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_20) < 0) {
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+} else {
+  sourceCompatibility = 11
+  targetCompatibility = 11
+}
 
 test {
   useJUnitPlatform {
