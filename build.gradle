@@ -95,6 +95,7 @@ tasks.withType(JavaCompile).configureEach {
     excludedPaths = '.*/Weak.*Hash(er)?Map.java'
   }
   options.forkOptions.jvmArgs += '-Xmx2g'
+  options.release = 8
 }
 
 /// Checker Framework pluggable type-checking
