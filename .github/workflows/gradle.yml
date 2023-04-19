@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: ./gradlew build javadoc
-      run: git rev-parse HEAD && javac -version && ./gradlew build
+      run: ./gradlew build
     - name: ./gradlew requireJavadoc
       run: ./gradlew requireJavadoc
     - name: ./gradlew spotlessCheck
