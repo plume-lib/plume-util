@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -48,6 +50,34 @@ public final class UtilPlume {
   /** This class is a collection of methods; it does not represent anything. */
   private UtilPlume() {
     throw new Error("do not instantiate");
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  /// Object
+  ///
+
+  /**
+   * Clones the given object by calling {@code clone()} reflectively. It is not possible to call
+   * {@code Object.clone()} directly because it has protected visibility.
+   *
+   * @param <T> the type of the object to clone
+   * @param data the object to clone
+   * @return a clone of the object
+   */
+  @SuppressWarnings({
+    "nullness:return", // result of clone() is non-null
+    "signedness", // signedness is not relevant
+    "unchecked"
+  })
+  public static <T> @PolyNull @PolySigned T clone(@PolyNull @PolySigned T data) {
+    if (data == null) {
+      return null;
+    }
+    try {
+      return (T) data.getClass().getMethod("clone").invoke(data);
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      throw new Error(e);
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////

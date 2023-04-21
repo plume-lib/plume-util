@@ -2,10 +2,13 @@
 
 ## 1.6.6 (??)
 
-- New method `ArraySet.sort`.
-- New methods `CollectionsPlume.sortedSetContainsAll` and `CollectionsPlume.sortedSetEquals`.
-- New method `CollectionsPlume.withoutDuplicatesSorted`.
-- Widened the formal parameter type of `ArraySet.newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
+- In `ArraySet`:
+   * new methods `ArraySet.deepCopy` and `ArraySet.sort`.
+   * widened the formal parameter type of `newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
+- New methodsin `CollectionsPlume`:
+   * `sortedSetContainsAll`, `sortedSetEquals`, and `withoutDuplicatesSorted`.
+   * `deepCopy(List)`, `deepCopy(TreeSet)`, `deepCopy(Map)`, and `deepCopyValues(Map)`.
+- New method `UtilPlume.clone(Object)`.
 
 ## 1.6.5 (2022-01-08)
 

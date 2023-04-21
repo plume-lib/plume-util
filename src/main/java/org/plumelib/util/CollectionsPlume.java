@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -32,6 +33,7 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
@@ -779,6 +781,46 @@ public final class CollectionsPlume {
     return results;
   }
 
+  /**
+   * Returns a copy of {@code orig}, where each element of the result is a clone of the
+   * corresponding element of {@code orig}.
+   *
+   * @param <T> the type of elements of the list
+   * @param orig a list
+   * @return a deep copy of {@code orig}
+   */
+  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
+  public static <@Nullable T> @PolyNull List<T> deepCopy(@PolyNull List<T> orig) {
+    if (orig == null) {
+      return null;
+    }
+    List<T> result = new ArrayList<>(orig.size());
+    for (T elt : orig) {
+      result.add(UtilPlume.clone(elt));
+    }
+    return result;
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each element of the result is a clone of the
+   * corresponding element of {@code orig}.
+   *
+   * @param <T> the type of elements of the list
+   * @param orig a list
+   * @return a deep copy of {@code orig}
+   */
+  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
+  public static <@Nullable T> @PolyNull TreeSet<T> deepCopy(@PolyNull TreeSet<T> orig) {
+    if (orig == null) {
+      return null;
+    }
+    TreeSet<T> result = new TreeSet<>(orig.comparator());
+    for (T elt : orig) {
+      result.add(UtilPlume.clone(elt));
+    }
+    return result;
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// Iterator
   ///
@@ -1335,6 +1377,48 @@ public final class CollectionsPlume {
    */
   public static int mapCapacity(Map<?, ?> m) {
     return mapCapacity(m.size());
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each element of the result is a clone of the
+   * corresponding element of {@code orig}.
+   *
+   * @param <K> the type of keys of the map
+   * @param <V> the type of values of the map
+   * @param orig a map
+   * @return a deep copy of {@code orig}
+   */
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with UtilPlume.clone
+  public static <K, V> @PolyNull Map<K, V> deepCopy(@PolyNull Map<K, V> orig) {
+    if (orig == null) {
+      return null;
+    }
+    Map<K, V> result = new HashMap<>(orig.size());
+    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
+      result.put(UtilPlume.clone(mapEntry.getKey()), UtilPlume.clone(mapEntry.getValue()));
+    }
+    return result;
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each value of the result is a clone of the corresponding
+   * value of {@code orig}, but the keys are the same objects.
+   *
+   * @param <K> the type of keys of the map
+   * @param <V> the type of values of the map
+   * @param orig a map
+   * @return a deep copy of {@code orig}
+   */
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with UtilPlume.clone
+  public static <K, V> @PolyNull Map<K, V> deepCopyValues(@PolyNull Map<K, V> orig) {
+    if (orig == null) {
+      return null;
+    }
+    Map<K, V> result = new HashMap<>(orig.size());
+    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
+      result.put(mapEntry.getKey(), UtilPlume.clone(mapEntry.getValue()));
+    }
+    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
