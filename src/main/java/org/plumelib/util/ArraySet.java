@@ -445,6 +445,24 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     return new ArraySet<E>(Arrays.copyOf(values, size), size);
   }
 
+  /**
+   * Returns a copy of this, where each element of the result is a clone of the corresponding
+   * element of this.
+   *
+   * @return a deep copy of this
+   */
+  @SuppressWarnings({
+    "nullness:type.argument",
+    "signedness:argument"
+  }) // problem with UtilPlume.clone()
+  public ArraySet<E> deepCopy() {
+    ArraySet<E> result = new ArraySet<>(this.size());
+    for (E elt : this) {
+      result.add(UtilPlume.clone(elt));
+    }
+    return result;
+  }
+
   // Extra methods, not specified by `Set`.
 
   /**
