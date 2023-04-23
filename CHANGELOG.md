@@ -3,7 +3,7 @@
 ## 1.6.6 (??)
 
 - In `ArraySet`:
-   * new methods `ArraySet.deepCopy` and `ArraySet.sort`.
+   * new method `ArraySet.sort`.
    * widened the formal parameter type of `newArraySetOrHashSet` and `newArraySetOrLinkedHashSet`.
 - New methodsin `CollectionsPlume`:
    * `sortedSetContainsAll`, `sortedSetEquals`, and `withoutDuplicatesSorted`.
