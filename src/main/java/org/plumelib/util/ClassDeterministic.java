@@ -78,7 +78,7 @@ public class ClassDeterministic {
    */
   @SuppressWarnings({
     "signedness", // ToStringComparator problem
-    "mustcall:argument" // not sure; generics inference problem?
+    "mustcall:type.arguments.not.inferred" // not sure; generics inference problem?
   })
   public static <@Interned T> T @Nullable [] getEnumConstants(Class<T> c) {
     @NonNull T[] result = c.getEnumConstants();
