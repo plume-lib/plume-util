@@ -83,7 +83,8 @@ dependencies {
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  options.compilerArgs << '-Xlint:all,-processing' << '-Werror'
+  // "-options" is because starting in JDK 20, javac warns about using -source 8.
+  options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
   options.errorprone {
     enabled = JavaVersion.current() != JavaVersion.VERSION_1_8
     // Recommends @InlineMe, which isn't in the error_prone_annotations jar file.  An `implementation`
@@ -94,6 +95,7 @@ tasks.withType(JavaCompile).configureEach {
     excludedPaths = '.*/Weak.*Hash(er)?Map.java'
   }
   options.forkOptions.jvmArgs += '-Xmx2g'
+  options.release = 8
 }
 
 /// Checker Framework pluggable type-checking
@@ -118,6 +120,8 @@ checkerFramework {
   ]
   extraJavacArgs = [
     '-Werror',
+    // '-Aversion',
+    // '-verbose',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnRedundantAnnotations',
@@ -132,6 +136,9 @@ if (true) {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
+  }
+  configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
   }
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
