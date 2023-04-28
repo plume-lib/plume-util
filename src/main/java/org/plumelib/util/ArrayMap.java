@@ -45,7 +45,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * other map implementations.
  *
  * <p>Compared to a TreeMap: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted but does have deteriministic ordering. For large maps, this is
+ * comparator. This isn't sorted but does have deterministic ordering. For large maps, this is
  * significantly less performant than other map implementations.
  *
  * <p>A number of other ArrayMap implementations exist, including
