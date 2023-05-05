@@ -9,6 +9,7 @@
    * `sortedSetContainsAll`, `sortedSetEquals`, and `withoutDuplicatesSorted`.
    * `deepCopy(List)`, `deepCopy(TreeSet)`, `deepCopy(Map)`, and `deepCopyValues(Map)`.
 - New method `UtilPlume.clone(Object)`.
+- New method `StringsPlume.toStringTruncated(Object, int)`.
 
 ## 1.6.5 (2022-01-08)
 

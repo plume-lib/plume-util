@@ -1370,4 +1370,24 @@ public final class StringsPlume {
     }
     return Math.max(maxIndex, result);
   }
+
+  /**
+   * If the string representation of the given object is greater than the given length, truncate it
+   * to that length.
+   *
+   * @param o an object
+   * @param length the maximum length for the string representation
+   * @return the string representation of the object, no more than the given length
+   */
+  String toStringTruncated(Object o, int length) {
+    String result = o.toString();
+    if (result.length() <= length) {
+      return result;
+    } else {
+      // The quoting increases the likelihood that all delimiters are balanced in the result.
+      // That makes it easier to manipulate the result (such as skipping over it) in an
+      // editor.  The quoting also makes clear that the value is truncated.
+      return "\"" + result.substring(0, length - 5) + "...\"";
+    }
+  }
 }
