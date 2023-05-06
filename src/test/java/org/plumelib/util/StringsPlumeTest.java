@@ -401,4 +401,15 @@ public final class StringsPlumeTest {
     assertEquals("", sa[9]);
     assertEquals("", sa[10]);
   }
+
+  @Test
+  public void testToStringTruncated() {
+    assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 100));
+    assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 10));
+    assertEquals("\"012...\"", StringsPlume.toStringTruncated("0123456789", 8));
+    assertEquals("\"0...\"", StringsPlume.toStringTruncated("0123456789", 6));
+    assertEquals("\"0...\"", StringsPlume.toStringTruncated("0123456", 6));
+    assertEquals("012345", StringsPlume.toStringTruncated("012345", 6));
+    assertEquals("01234", StringsPlume.toStringTruncated("01234", 6));
+  }
 }
