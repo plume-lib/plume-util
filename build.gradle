@@ -20,7 +20,7 @@ repositories {
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
-ext.errorproneVersion = '2.18.0'
+ext.errorproneVersion = '2.19.0'
 
 dependencies {
   implementation 'org.plumelib:reflection-util:1.0.6'
