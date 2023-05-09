@@ -8,9 +8,6 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the OrderedPairIterator class. */
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class OrderedPairIteratorTest {
 
   @Test

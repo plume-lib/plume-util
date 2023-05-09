@@ -12,9 +12,6 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the Intern class. */
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class InternTest {
 
   static class InternTestHelper {

@@ -8,9 +8,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
 /** Test the LimitedSizeSet class. */
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class LimitedSizeSetTest {
 
   // Add 100 elements randomly selected from the range 0..limit-1 to the set.
@@ -27,10 +24,12 @@ public final class LimitedSizeSetTest {
     for (int i = 1; i < 2 * maxSize; i++) {
       lsisAddElts(i, s);
       int size = s.size();
-      assert ((i <= maxSize) ? (size == i) : (size == maxSize + 1))
-          : String.format(
-              "(%d<=%d) ? (%d==%d) : (%d==%d+1)   size=%d, i=%d, maxSize=%d, s=%s",
-              i, maxSize, size, i, size, maxSize, size, i, maxSize, s);
+      if (!((i <= maxSize) ? (size == i) : (size == maxSize + 1))) {
+        throw new Error(
+            String.format(
+                "(%d<=%d) ? (%d==%d) : (%d==%d+1)   size=%d, i=%d, maxSize=%d, s=%s",
+                i, maxSize, size, i, size, maxSize, size, i, maxSize, s));
+      }
     }
   }
 
