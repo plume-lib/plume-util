@@ -38,6 +38,7 @@ import java.util.TreeMap;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.lock.qual.GuardedBy;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -398,7 +399,7 @@ public class ArrayMapTestApache {
     }
 
     @Override
-    public int hashCode(@GuardSatisfied MyKey this) {
+    public int hashCode(@GuardSatisfied @UnknownSignedness MyKey this) {
       return 0;
     }
   }
@@ -528,7 +529,7 @@ public class ArrayMapTestApache {
     }
 
     @Override
-    public int hashCode(@GuardSatisfied ReusableKey this) {
+    public int hashCode(@GuardSatisfied @UnknownSignedness ReusableKey this) {
       return key;
     }
 
