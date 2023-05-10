@@ -5,7 +5,7 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release:
-//  * Use JDK 8
+//  * Use JDK 11
 //  * git pull
 //  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
