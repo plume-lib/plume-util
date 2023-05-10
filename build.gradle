@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+  implementation 'org.plumelib:hashmap-util:0.0.1'
   implementation 'org.plumelib:reflection-util:1.0.6'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
@@ -195,7 +196,7 @@ task requireJavadoc(type: JavaExec) {
   description = 'Ensures that Javadoc documentation exists.'
   mainClass = 'org.plumelib.javadoc.RequireJavadoc'
   classpath = configurations.requireJavadoc
-  args 'src/main/java', '--dont-require=WeakHasherMap|WeakIdentityHashMap'
+  args 'src/main/java'
 }
 check.dependsOn requireJavadoc
 javadocWeb.dependsOn requireJavadoc
