@@ -358,7 +358,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     int initialSizeModificationCount;
 
     /** Creates a new ArraySetIterator. */
-    @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
     ArraySetIterator() {
       index = 0;
