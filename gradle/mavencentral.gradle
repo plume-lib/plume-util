@@ -5,7 +5,7 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release:
-//  * Use JDK 8
+//  * Use JDK 11
 //  * git pull
 //  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
@@ -18,15 +18,15 @@
 //      ./gradlew -PcfLocal clean publish && ./gradlew -PcfLocal javadocWeb
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
-//    VER=1.6.5 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.6.5", use the text from ../CHANGELOG.md as the description, attach the .jar file from ../build/libs/
+//    VER=1.7.0 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.7.0", use the text from ../CHANGELOG.md as the description, attach the .jar file from ../build/libs/
 
 
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.6.5'
+version '1.7.0'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
