@@ -105,7 +105,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SuppressWarnings({
     "unchecked", // generic array cast
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field" // initializes `this`
   })
   @SideEffectFree
   public ArrayMap(int initialCapacity) {
@@ -134,10 +133,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param values the values
    * @param size the number of used items in the arrays; may be less than their lengths
    */
-  @SuppressWarnings({
-    "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field" // initializes `this`
-  })
+  @SuppressWarnings("samelen:assignment") // initialization
   @SideEffectFree
   private ArrayMap(
       K @SameLen("values") [] keys,
@@ -702,7 +698,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     int initialSizeModificationCount;
 
     /** Creates a new ArrayMapIterator. */
-    @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
     ArrayMapIterator() {
       index = 0;
