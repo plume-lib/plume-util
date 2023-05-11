@@ -78,7 +78,7 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  errorprone('com.google.errorprone:error_prone_core:2.18.0')
+  errorprone('com.google.errorprone:error_prone_core:2.19.1')
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
@@ -128,7 +128,7 @@ checkerFramework {
 }
 // To use a snapshot version of the Checker Framework.
 if (true) {
-  // TODO: change the above test to false when CF is released
+  // TODO: Change the above test to false when CF is released.
   ext.checkerFrameworkVersion = '3.34.1-SNAPSHOT'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
