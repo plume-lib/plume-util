@@ -537,7 +537,8 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static <T extends @Nullable Object> int indexOf(T[] a, @Nullable Object elt) {
+  public static <T extends @Nullable Object> int indexOf(
+      @PolySigned T[] a, @Nullable @PolySigned Object elt) {
     if (elt == null) {
       return indexOfEq(a, elt);
     }
@@ -564,8 +565,8 @@ public final class ArraysPlume {
    */
   @Pure
   public static <T extends @Nullable Object> int indexOf(
-      T[] a,
-      @Nullable Object elt,
+      @PolySigned T[] a,
+      @Nullable @PolySigned Object elt,
       @IndexFor("#1") int minindex,
       @IndexOrHigh("#1") int indexlimit) {
     if (elt == null) {
@@ -590,7 +591,8 @@ public final class ArraysPlume {
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOf(List<? extends @PolyNull Object> a, Object elt) {
+  public static int indexOf(
+      List<? extends @PolyNull @PolySigned Object> a, @PolySigned Object elt) {
     return a.indexOf(elt);
   }
 
@@ -608,8 +610,8 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(
-      List<? extends @PolyNull Object> a,
-      @Nullable Object elt,
+      List<? extends @PolyNull @PolySigned Object> a,
+      @Nullable @PolySigned Object elt,
       @IndexFor("#1") @NonNegative int minindex,
       @IndexOrHigh("#1") int indexlimit) {
     if (elt == null) {
@@ -634,7 +636,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOfEq(@PolyNull Object[] a, @Nullable Object elt) {
+  public static int indexOfEq(@PolyNull @PolySigned Object[] a, @Nullable @PolySigned Object elt) {
     for (int i = 0; i < a.length; i++) {
       if (elt == a[i]) {
         return i;
@@ -657,8 +659,8 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOfEq(
-      @PolyNull Object[] a,
-      @Nullable Object elt,
+      @PolyNull @PolySigned Object[] a,
+      @Nullable @PolySigned Object elt,
       @IndexFor("#1") int minindex,
       @IndexOrHigh("#1") int indexlimit) {
     for (int i = minindex; i < indexlimit; i++) {
@@ -680,7 +682,8 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOfEq(List<? extends @PolyNull Object> a, @Nullable Object elt) {
+  public static int indexOfEq(
+      List<? extends @PolyNull @PolySigned Object> a, @Nullable @PolySigned Object elt) {
     for (int i = 0; i < a.size(); i++) {
       if (elt == a.get(i)) {
         return i;
@@ -703,8 +706,8 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOfEq(
-      List<? extends @PolyNull Object> a,
-      @Nullable Object elt,
+      List<? extends @PolyNull @PolySigned Object> a,
+      @Nullable @PolySigned Object elt,
       @IndexFor("#1") @NonNegative int minindex,
       @IndexOrHigh("#1") int indexlimit) {
     for (int i = minindex; i < indexlimit; i++) {
@@ -725,7 +728,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOf(int[] a, int elt) {
+  public static int indexOf(@PolySigned int[] a, @PolySigned int elt) {
     for (int i = 0; i < a.length; i++) {
       if (elt == a[i]) {
         return i;
@@ -744,7 +747,7 @@ public final class ArraysPlume {
    * @see java.util.ArrayList#indexOf(java.lang.Object)
    */
   @Pure
-  public static int indexOf(long[] a, long elt) {
+  public static int indexOf(@PolySigned long[] a, @PolySigned long elt) {
     for (int i = 0; i < a.length; i++) {
       if (elt == a[i]) {
         return i;
@@ -767,7 +770,10 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(
-      int[] a, int elt, @IndexFor("#1") int minindex, @IndexOrHigh("#1") int indexlimit) {
+      @PolySigned int[] a,
+      @PolySigned int elt,
+      @IndexFor("#1") int minindex,
+      @IndexOrHigh("#1") int indexlimit) {
     for (int i = minindex; i < indexlimit; i++) {
       if (elt == a[i]) {
         return i;
@@ -790,7 +796,10 @@ public final class ArraysPlume {
    */
   @Pure
   public static int indexOf(
-      long[] a, long elt, @IndexFor("#1") int minindex, @IndexOrHigh("#1") int indexlimit) {
+      @PolySigned long[] a,
+      @PolySigned long elt,
+      @IndexFor("#1") int minindex,
+      @IndexOrHigh("#1") int indexlimit) {
     for (int i = minindex; i < indexlimit; i++) {
       if (elt == a[i]) {
         return i;
@@ -881,7 +890,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(@PolyNull Object[] a, @PolyNull Object[] sub) {
+  public static int indexOf(@PolyNull @PolySigned Object[] a, @PolyNull @PolySigned Object[] sub) {
     int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -907,7 +916,8 @@ public final class ArraysPlume {
   // be indexOfEq(@PolyNull(1) Object[], @PolyNull(2) Object[]), but the
   // @PolyNull qualifier does not yet take an argument.
   @Pure
-  public static int indexOfEq(@PolyNull Object[] a, @PolyNull Object[] sub) {
+  public static int indexOfEq(
+      @PolyNull @PolySigned Object[] a, @PolyNull @PolySigned Object[] sub) {
     int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -944,6 +954,7 @@ public final class ArraysPlume {
    * Searches for the first subsequence of the list that matches the given array elementwise,
    * testing for equality using == (not the equals method).
    *
+   * @param <T> the type of list/array elements
    * @param a a list
    * @param sub subsequence to search for
    * @return the first index at which the second array starts in the first list, or -1 if the
@@ -952,7 +963,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOfEq(List<?> a, @PolyNull Object[] sub) {
+  public static <T> int indexOfEq(List<@PolySigned T> a, @PolyNull @PolySigned Object[] sub) {
     int aIndexMax = a.size() - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -989,6 +1000,7 @@ public final class ArraysPlume {
    * Searches for the first subsequence of the array that matches the given list elementwise,
    * testing for equality using == (not the equals method).
    *
+   * @param <T> the type of list/array elements
    * @param a an array
    * @param sub subsequence to search for
    * @return the first index at which the second list starts in the first array, or -1 if the
@@ -997,7 +1009,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOfEq(@PolyNull Object[] a, List<?> sub) {
+  public static <T> int indexOfEq(@PolyNull @PolySigned Object[] a, List<@PolySigned T> sub) {
     int aIndexMax = a.length - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -1011,6 +1023,7 @@ public final class ArraysPlume {
    * Searches for the first subsequence of the list that matches the given list elementwise, testing
    * for equality using the equals method.
    *
+   * @param <T> the type of list elements
    * @param a a list
    * @param sub subsequence to search for
    * @return the first index at which the second list starts in the first list, or -1 if no such
@@ -1019,7 +1032,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(List<?> a, List<?> sub) {
+  public static <T> int indexOf(List<T> a, List<T> sub) {
     int aIndexMax = a.size() - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -1033,6 +1046,7 @@ public final class ArraysPlume {
    * Searches for the first subsequence of the list that matches the given list elementwise, testing
    * for equality using == (not the equals method).
    *
+   * @param <T> the type of list elements
    * @param a a list
    * @param sub subsequence to search for
    * @return the first index at which the second list starts in the first list, or -1 if the element
@@ -1041,7 +1055,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOfEq(List<?> a, List<?> sub) {
+  public static <T> int indexOfEq(List<T> a, List<T> sub) {
     int aIndexMax = a.size() - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarrayEq(a, sub, i)) {
@@ -1062,7 +1076,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(int[] a, int[] sub) {
+  public static int indexOf(@PolySigned int[] a, @PolySigned int[] sub) {
     int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -1104,7 +1118,7 @@ public final class ArraysPlume {
    * @see java.lang.String#indexOf(java.lang.String)
    */
   @Pure
-  public static int indexOf(long[] a, long[] sub) {
+  public static int indexOf(@PolySigned long[] a, @PolySigned long[] sub) {
     int aIndexMax = a.length - sub.length;
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
@@ -1400,7 +1414,9 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean isSubarrayEq(
-      @PolyNull Object[] a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+      @PolyNull @PolySigned Object[] a,
+      @PolyNull @PolySigned Object[] sub,
+      @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -1442,6 +1458,7 @@ public final class ArraysPlume {
    * Determines whether the second array is a subarray of the first, starting at the specified index
    * of the first, testing for equality using == (not the equals method).
    *
+   * @param <T> the type of list/array elements
    * @param a an array
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
@@ -1449,7 +1466,8 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarrayEq(@PolyNull Object[] a, List<?> sub, @NonNegative int aOffset) {
+  public static <T> boolean isSubarrayEq(
+      @PolyNull @PolySigned Object[] a, List<@PolySigned T> sub, @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.length) {
       return false;
     }
@@ -1491,6 +1509,7 @@ public final class ArraysPlume {
    * Determines whether the second array is a subarray of the first, starting at the specified index
    * of the first, testing for equality using == (not the equals method).
    *
+   * @param <T> the type of list/array elements
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
@@ -1498,7 +1517,8 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarrayEq(List<?> a, @PolyNull Object[] sub, @NonNegative int aOffset) {
+  public static <T> boolean isSubarrayEq(
+      List<@PolySigned T> a, @PolyNull @PolySigned Object[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.size()) {
       return false;
     }
@@ -1514,6 +1534,7 @@ public final class ArraysPlume {
    * Determines whether the second array is a subarray of the first, starting at the specified index
    * of the first, testing for equality using the equals method.
    *
+   * @param <T> the type of list elements
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
@@ -1521,7 +1542,7 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(List<?> a, List<?> sub, @NonNegative int aOffset) {
+  public static <T> boolean isSubarray(List<T> a, List<T> sub, @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.size()) {
       return false;
     }
@@ -1537,6 +1558,7 @@ public final class ArraysPlume {
    * Determines whether the second array is a subarray of the first, starting at the specified index
    * of the first, testing for equality using == (not the equals method).
    *
+   * @param <T> the type of list elements
    * @param a a list
    * @param sub subsequence to search for
    * @param aOffset first index in {@code a} at which to search. Must be non-negative. The routine
@@ -1544,7 +1566,7 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarrayEq(List<?> a, List<?> sub, @NonNegative int aOffset) {
+  public static <T> boolean isSubarrayEq(List<T> a, List<T> sub, @NonNegative int aOffset) {
     if (aOffset + sub.size() > a.size()) {
       return false;
     }
@@ -1567,7 +1589,8 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(int[] a, int[] sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(
+      @PolySigned int[] a, @PolySigned int[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -1590,7 +1613,8 @@ public final class ArraysPlume {
    * @return true iff sub is a contiguous subarray of a
    */
   @Pure
-  public static boolean isSubarray(long[] a, long[] sub, @NonNegative int aOffset) {
+  public static boolean isSubarray(
+      @PolySigned long[] a, @PolySigned long[] sub, @NonNegative int aOffset) {
     if (aOffset + sub.length > a.length) {
       return false;
     }
@@ -2995,8 +3019,8 @@ public final class ArraysPlume {
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static boolean isSubset(long[] smaller, long[] bigger) {
-    Set<Long> setBigger = new HashSet<>();
+  public static boolean isSubset(@PolySigned long[] smaller, @PolySigned long[] bigger) {
+    Set<@PolySigned Long> setBigger = new HashSet<>();
 
     for (int i = 0; i < bigger.length; i++) {
       setBigger.add(bigger[i]);
@@ -3660,7 +3684,7 @@ public final class ArraysPlume {
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
-  public static boolean anyNull(@PolyNull Object[] a) {
+  public static boolean anyNull(@PolyNull @PolySigned Object[] a) {
     if (a.length == 0) {
       return false;
     }

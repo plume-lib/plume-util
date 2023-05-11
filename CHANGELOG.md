@@ -12,6 +12,8 @@
    * `deepCopy(List)`, `deepCopy(TreeSet)`, `deepCopy(Map)`, and `deepCopyValues(Map)`.
 - New method `UtilPlume.clone(Object)`.
 - New method `StringsPlume.toStringTruncated(Object, int)`.
+- In `ArraysPlume`, the generic signatures of `isSubarrayEq` and `indexOfEq`
+  have changed.  Let us know if this causes a problem.
 
 ## 1.6.5 (2023-01-08)
 

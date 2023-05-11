@@ -872,9 +872,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return false;
     }
 
+    @SuppressWarnings("signedness:method.invocation")
     @Pure
     @Override
-    public int hashCode() {
+    public int hashCode(ArrayMap<K, V>.@UnknownSignedness Entry this) {
       return Objects.hash(getKey(), getValue());
     }
   }

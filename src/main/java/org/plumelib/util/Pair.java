@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -67,7 +68,7 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   // But then the class would not be useful for mutable pairs.
   @Override
   @Pure
-  public int hashCode(@GuardSatisfied Pair<T1, T2> this) {
+  public int hashCode(@GuardSatisfied @UnknownSignedness Pair<T1, T2> this) {
     return (((a == null) ? 0 : a.hashCode()) + ((b == null) ? 0 : b.hashCode()));
   }
 }
