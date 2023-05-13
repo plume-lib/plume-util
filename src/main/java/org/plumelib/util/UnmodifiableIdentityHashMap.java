@@ -123,7 +123,7 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public int hashCode(@GuardSatisfied @UnknownSignedness UnmodifiableIdentityHashMap<K, V> this) {
+  public int hashCode(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
     return map.hashCode();
   }
 
