@@ -27,12 +27,6 @@
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
  *       their respective sort orders. (This operation is sometimes called "zipping".)
- *   <dt>{@link org.plumelib.util.WeakHasherMap WeakHasherMap}
- *   <dd>WeakHashMap is a modified version of WeakHashMap from JDK 1.2.2, that adds a constructor
- *       that takes a {@link org.plumelib.util.Hasher Hasher} argument.
- *   <dt>{@link org.plumelib.util.WeakIdentityHashMap WeakIdentityHashMap}
- *   <dd>WeakIdentityHashMap is a modified version of WeakHashMap from JDK 1.5, that uses
- *       System.identityHashCode() rather than the object's hash code.
  * </dl>
  *
  * <h3 id="Text_processing">Text processing</h3>
