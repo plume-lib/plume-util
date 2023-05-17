@@ -1164,7 +1164,7 @@ public final class Intern {
 
     @Pure
     @Override
-    public int hashCode(@GuardSatisfied @UnknownSignedness Subsequence<T> this) {
+    public int hashCode(@GuardSatisfied Subsequence<T> this) {
       return seq.hashCode() + start * 30 - end * 2;
     }
 

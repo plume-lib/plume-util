@@ -3,7 +3,6 @@ package org.plumelib.util;
 import java.lang.ref.WeakReference;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -125,7 +124,7 @@ public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
 
   @Override
   @Pure
-  public int hashCode(@GuardSatisfied @UnknownSignedness WeakIdentityPair<T1, T2> this) {
+  public int hashCode(@GuardSatisfied WeakIdentityPair<T1, T2> this) {
     return hashCode;
   }
 }

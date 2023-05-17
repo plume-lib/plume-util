@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.junit.jupiter.api.Test;
 
 public final class ArraysPlumeTest {
@@ -125,7 +124,7 @@ public final class ArraysPlumeTest {
     }
 
     @Override
-    public int hashCode(@GuardSatisfied @UnknownSignedness MyInteger this) {
+    public int hashCode(@GuardSatisfied MyInteger this) {
       return value;
     }
   }
