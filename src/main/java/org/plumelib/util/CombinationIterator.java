@@ -51,6 +51,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
   public CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
     int size = collectionsOfCandidates.size();
     // Just like collectionsOfCandidates, but indexable.
+    @SuppressWarnings("keyfor:argument") // #979?
     ArrayList<? extends Collection<T>> listOfCollectionsOfCanditates =
         new ArrayList<>(collectionsOfCandidates);
     listsOfCandidates = new ArrayList[size];
