@@ -2,7 +2,6 @@ package org.plumelib.util;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
-import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
  * This is a deterministic version of the {@link Object} class. To remove one source of
@@ -35,8 +34,9 @@ public class DeterministicObject {
    * <p>Returns a unique ID for the object. The first object created has the id (and hash code) 0,
    * the second one has 1, and so forth.
    */
+  @SuppressWarnings("signedness:override.receiver") // temporary
   @Override
-  public int hashCode(@GuardSatisfied @UnknownSignedness DeterministicObject this) {
+  public int hashCode(@GuardSatisfied DeterministicObject this) {
     return uid;
   }
 }

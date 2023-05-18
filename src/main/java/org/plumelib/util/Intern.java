@@ -1162,9 +1162,10 @@ public final class Intern {
       return ((this.seq == other.seq) && this.start == other.start && this.end == other.end);
     }
 
+    @SuppressWarnings("signedness:override.receiver") // temporary
     @Pure
     @Override
-    public int hashCode(@GuardSatisfied @UnknownSignedness Subsequence<T> this) {
+    public int hashCode(@GuardSatisfied Subsequence<T> this) {
       return seq.hashCode() + start * 30 - end * 2;
     }
 

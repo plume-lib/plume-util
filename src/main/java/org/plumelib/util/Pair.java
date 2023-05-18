@@ -2,7 +2,6 @@ package org.plumelib.util;
 
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -66,9 +65,10 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   // If fields a and b were made final, then the hashcode could be cached.
   // (And if they aren't final, it's a bit odd to be calling hashCode.)
   // But then the class would not be useful for mutable pairs.
+  @SuppressWarnings("signedness:override.receiver") // temporary
   @Override
   @Pure
-  public int hashCode(@GuardSatisfied @UnknownSignedness Pair<T1, T2> this) {
+  public int hashCode(@GuardSatisfied Pair<T1, T2> this) {
     return (((a == null) ? 0 : a.hashCode()) + ((b == null) ? 0 : b.hashCode()));
   }
 }
