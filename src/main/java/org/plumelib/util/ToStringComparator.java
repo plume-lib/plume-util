@@ -33,6 +33,7 @@ public class ToStringComparator implements Comparator<Object> {
    * @return the elements, sorted according to {@code toString()}
    */
   @SuppressWarnings({
+    "signedness:argument", // temporary
     "nullness:argument", // Comparator should be @Contravariant.
     "mustcall:argument" // not sure; Java generics inference?
   })
