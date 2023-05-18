@@ -168,7 +168,7 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
     throw new UnsupportedOperationException();
   }
 
-  @SuppressWarnings("keyfor:unneeded.suppression", "keyfor:override.return") // temporary
+  @SuppressWarnings({"keyfor:unneeded.suppression", "keyfor:override.return"}) // temporary
   @Override
   public <S> @Nullable S[] toArray(@PolyNull S[] a) {
     throw new UnsupportedOperationException();
