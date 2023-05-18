@@ -122,6 +122,7 @@ public class WeakIdentityPair<T1 extends Object, T2 extends Object> {
     return a == oa && b == ob;
   }
 
+  @SuppressWarnings("signedness:override.receiver") // temporary
   @Override
   @Pure
   public int hashCode(@GuardSatisfied WeakIdentityPair<T1, T2> this) {

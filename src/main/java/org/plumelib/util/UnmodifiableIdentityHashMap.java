@@ -122,6 +122,7 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
     return map.equals(o);
   }
 
+  @SuppressWarnings("signedness:override.receiver") // temporary
   @Override
   public int hashCode(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
     return map.hashCode();
