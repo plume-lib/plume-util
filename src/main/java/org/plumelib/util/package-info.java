@@ -3,6 +3,10 @@
  *
  * <h2>Plume-lib Util: Utility libraries for Java</h2>
  *
+ * <p>Note that <a
+ * href="http://plumelib.org/hashmap-util/api/org/plumelib/util/package-summary.html#package.description">HashMap
+ * Util</a> defines other classes in the <code>org.plumelib.util</code> package.
+ *
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *
  * <dl>
@@ -27,6 +31,17 @@
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
  *       their respective sort orders. (This operation is sometimes called "zipping".)
+ *   <dt>{@link org.plumelib.util.Hasher Hasher}
+ *   <dd>See <a href="http://plumelib.org/hashmap-util/api/org/plumelib/util/Hasher.html">HashMap
+ *       Util</a>.
+ *   <dt>{@code WeakHasherMap}
+ *   <dd>See <a
+ *       href="http://plumelib.org/hashmap-util/api/org/plumelib/util/WeakHasherMap.html">HashMap
+ *       Util</a>.
+ *   <dt>{@code WeakIdentityHashMap}
+ *   <dd>See <a
+ *       href="http://plumelib.org/hashmap-util/api/org/plumelib/util/WeakIdentityHashMap.html">HashMap
+ *       Util</a>.
  * </dl>
  *
  * <h3 id="Text_processing">Text processing</h3>
