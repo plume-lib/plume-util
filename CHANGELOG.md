@@ -3,6 +3,7 @@
 ## 1.8.0 (2023-??-??)
 
 - Deprecated `Pair` class for mutable pairs; use `MPair` instead.
+  `OrderedPairIterator` uses `MPair` instead of `Pair`.
 - New class `IPair` for immutable pairs.
 - The `WeakIdentityPair` constructor is deprecated in favor of the `of()` method.
 - New interface `DeepCopyable`.
