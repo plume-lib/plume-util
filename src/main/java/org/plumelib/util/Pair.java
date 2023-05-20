@@ -7,12 +7,14 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * Mutable pair class: type-safely holds two objects of possibly-different types. Defines
- * toString(), equals(), and hashCode() routines. It is also used by OrderedPairIterator. If you
- * don't need these features, you are better off defining your own tiny class.
+ * toString(), equals(), and hashCode() routines. If you don't need these features, or if you want
+ * an immutable pair, you are better off defining your own tiny class.
  *
  * @param <T1> the type of the first element of the pair
  * @param <T2> the type of the second element of the pair
+ * @deprecated use MPair instead
  */
+@Deprecated // 2023-05-20
 public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   /** The first element of the pair. */
   public T1 a;
