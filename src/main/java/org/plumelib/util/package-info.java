@@ -3,6 +3,10 @@
  *
  * <h2>Plume-lib Util: Utility libraries for Java</h2>
  *
+ * <p>Note that <a
+ * href="http://plumelib.org/hashmap-util/api/org/plumelib/util/package-summary.html#package.description">HashMap
+ * Util</a> defines other classes in the <code>org.plumelib.util</code> package.
+ *
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *
  * <dl>
