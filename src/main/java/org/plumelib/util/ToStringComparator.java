@@ -13,7 +13,6 @@ import java.util.Objects;
 // Once https://github.com/typetools/checker-framework/issues/1970 is fixed, Comparator's type
 // argument should be marked as @Contravariant and this should be declared as "extends
 // Comparator<@Nullable Object>".
-@SuppressWarnings("signedness:argument") // not sure what the problem is
 public class ToStringComparator implements Comparator<Object> {
   /** The unique instance (this class is a singleton). */
   public static ToStringComparator instance = new ToStringComparator();
@@ -34,6 +33,7 @@ public class ToStringComparator implements Comparator<Object> {
    * @return the elements, sorted according to {@code toString()}
    */
   @SuppressWarnings({
+    "signedness:argument", // temporary
     "nullness:argument", // Comparator should be @Contravariant.
     "mustcall:argument" // not sure; Java generics inference?
   })

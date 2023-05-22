@@ -12,8 +12,7 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "keyfor", // https://github.com/typetools/checker-framework/issues/2358 and maybe other issues
-  "nullness",
-  "UseCorrectAssertInTests" // `assert` works fine in tests
+  "nullness"
 })
 public final class GraphPlumeTest {
 

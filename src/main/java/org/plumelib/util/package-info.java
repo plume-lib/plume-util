@@ -3,6 +3,10 @@
  *
  * <h2>Plume-lib Util: Utility libraries for Java</h2>
  *
+ * <p>Note that <a
+ * href="http://plumelib.org/hashmap-util/api/org/plumelib/util/package-summary.html#package.description">HashMap
+ * Util</a> defines other classes in the <code>org.plumelib.util</code> package.
+ *
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *
  * <dl>
@@ -27,12 +31,17 @@
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
  *       their respective sort orders. (This operation is sometimes called "zipping".)
- *   <dt>{@link org.plumelib.util.WeakHasherMap WeakHasherMap}
- *   <dd>WeakHashMap is a modified version of WeakHashMap from JDK 1.2.2, that adds a constructor
- *       that takes a {@link org.plumelib.util.Hasher Hasher} argument.
- *   <dt>{@link org.plumelib.util.WeakIdentityHashMap WeakIdentityHashMap}
- *   <dd>WeakIdentityHashMap is a modified version of WeakHashMap from JDK 1.5, that uses
- *       System.identityHashCode() rather than the object's hash code.
+ *   <dt>{@link org.plumelib.util.Hasher Hasher}
+ *   <dd>See <a href="http://plumelib.org/hashmap-util/api/org/plumelib/util/Hasher.html">HashMap
+ *       Util</a>.
+ *   <dt>{@code WeakHasherMap}
+ *   <dd>See <a
+ *       href="http://plumelib.org/hashmap-util/api/org/plumelib/util/WeakHasherMap.html">HashMap
+ *       Util</a>.
+ *   <dt>{@code WeakIdentityHashMap}
+ *   <dd>See <a
+ *       href="http://plumelib.org/hashmap-util/api/org/plumelib/util/WeakIdentityHashMap.html">HashMap
+ *       Util</a>.
  * </dl>
  *
  * <h3 id="Text_processing">Text processing</h3>
@@ -139,12 +148,15 @@
  *   <dd>Utilities for interning objects. Interning is also known as canonicalization or
  *       hash-consing: it returns a single representative object that {@code .equals()} the object,
  *       and the client discards the argument and uses the result instead.
- *   <dt>{@link org.plumelib.util.Pair Pair}
+ *   <dt>{@link org.plumelib.util.IPair IPair}
+ *   <dd>Immutable pair class: type-safely holds two objects of possibly-different types.
+ *   <dt>{@link org.plumelib.util.MPair MPair}
  *   <dd>Mutable pair class: type-safely holds two objects of possibly-different types.
  *   <dt>{@link org.plumelib.util.WeakIdentityPair WeakIdentityPair}
- *   <dd>Immutable pair class: type-safely holds two objects of possibly-different types. Differs
- *       from {@code Pair} in the following ways: is immutable, cannot hold null, holds its elements
- *       with weak pointers, and its equals() method uses object equality to compare its elements.
+ *   <dd>Immutable pair class with weakly-held values. Differs from {@code IPair} in the following
+ *       ways: cannot hold null, holds its elements with weak pointers, clients must use getter
+ *       methods rather than accessing the fields, and its {@code equals()} method uses object
+ *       equality to compare its elements.
  *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
  *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
  *       directories; file names; reading and writing; hashing; ProcessBuilder; properties; Stream;

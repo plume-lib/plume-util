@@ -23,9 +23,6 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class CollectionsPlumeTest {
 
   // If true, do 100 instead of 100000 iterations when testing randomElements.
@@ -132,20 +129,23 @@ public final class CollectionsPlumeTest {
     // public static class IteratorEnumeration implements Enumeration
 
     assertTrue(iota0.equals(toArrayList(iota0.iterator())));
-    assert iota0.equals(
-        toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota0.iterator())));
+    assertEquals(
+        iota0, toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota0.iterator())));
     assertTrue(iota10.equals(toArrayList(iota10.iterator())));
-    assert iota10.equals(
-        toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
+    assertEquals(
+        iota10, toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
 
     // public static class MergedIterator2 implements Iterator {
-    assert iota10Twice.equals(
+    assertEquals(
+        iota10Twice,
         toArrayList(
             new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota10.iterator())));
-    assert iota10.equals(
+    assertEquals(
+        iota10,
         toArrayList(
             new CollectionsPlume.MergedIterator2<Integer>(iota0.iterator(), iota10.iterator())));
-    assert iota10.equals(
+    assertEquals(
+        iota10,
         toArrayList(
             new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota0.iterator())));
 
@@ -154,7 +154,8 @@ public final class CollectionsPlumeTest {
     iota10IteratorThrice.add(iota10.iterator());
     iota10IteratorThrice.add(iota10.iterator());
     iota10IteratorThrice.add(iota10.iterator());
-    assert iota10Thrice.equals(
+    assertEquals(
+        iota10Thrice,
         toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorThrice.iterator())));
     ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<>();
     iota10IteratorTwice1.add(iota0.iterator());
@@ -168,11 +169,14 @@ public final class CollectionsPlumeTest {
     iota10IteratorTwice3.add(iota10.iterator());
     iota10IteratorTwice3.add(iota10.iterator());
     iota10IteratorTwice3.add(iota0.iterator());
-    assert iota10Twice.equals(
+    assertEquals(
+        iota10Twice,
         toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice1.iterator())));
-    assert iota10Twice.equals(
+    assertEquals(
+        iota10Twice,
         toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice2.iterator())));
-    assert iota10Twice.equals(
+    assertEquals(
+        iota10Twice,
         toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice3.iterator())));
   }
 
@@ -187,7 +191,8 @@ public final class CollectionsPlumeTest {
         iota10Odd.add(i);
       }
     }
-    assert iota10Odd.equals(
+    assertEquals(
+        iota10Odd,
         toArrayList(
             new CollectionsPlume.FilteredIterator<Integer>(iota10.iterator(), new OddFilter())));
   }

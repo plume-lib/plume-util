@@ -12,6 +12,8 @@ import org.checkerframework.checker.interning.qual.Interned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.signedness.qual.Signed;
+import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.PolyValue;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -125,8 +127,9 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
-      Integer i = (Integer) o;
+    public int hashCode(@UnknownSignedness Object o) {
+      @SuppressWarnings("signedness:cast.unsafe") // Signedness doesn't matter for hashCode().
+      Integer i = (@Signed Integer) o;
       return i.intValue();
     }
   }
@@ -147,8 +150,9 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
-      Long i = (Long) o;
+    public int hashCode(@UnknownSignedness Object o) {
+      @SuppressWarnings("signedness:cast.unsafe") // Signedness doesn't matter for hashCode().
+      Long i = (@Signed Long) o;
       return i.intValue();
     }
   }
@@ -169,7 +173,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       return Arrays.hashCode((int[]) o);
     }
   }
@@ -190,7 +194,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       return Arrays.hashCode((long[]) o);
     }
   }
@@ -215,7 +219,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       Double d = (Double) o;
       return d.hashCode();
     }
@@ -250,7 +254,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       double[] a = (double[]) o;
       // Not Arrays.hashCode(a), for consistency with equals method
       // immediately above.
@@ -281,7 +285,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       return Arrays.hashCode((String[]) o);
     }
   }
@@ -302,7 +306,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       return Arrays.hashCode((Object[]) o);
     }
   }
@@ -1158,6 +1162,7 @@ public final class Intern {
       return ((this.seq == other.seq) && this.start == other.start && this.end == other.end);
     }
 
+    @SuppressWarnings("signedness:override.receiver") // temporary
     @Pure
     @Override
     public int hashCode(@GuardSatisfied Subsequence<T> this) {
@@ -1193,7 +1198,7 @@ public final class Intern {
     }
 
     @Override
-    public int hashCode(Object o) {
+    public int hashCode(@UnknownSignedness Object o) {
       return o.hashCode();
     }
   }

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -1215,7 +1216,7 @@ public final class UtilPlume {
     if (pvalue == null) {
       return defaultValue;
     }
-    switch (pvalue.toLowerCase()) {
+    switch (pvalue.toLowerCase(Locale.getDefault())) {
       case "true":
       case "yes":
       case "1":

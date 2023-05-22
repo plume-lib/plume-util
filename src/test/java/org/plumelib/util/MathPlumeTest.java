@@ -9,9 +9,6 @@ import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class MathPlumeTest {
 
   ///////////////////////////////////////////////////////////////////////////

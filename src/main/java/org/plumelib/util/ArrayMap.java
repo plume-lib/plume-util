@@ -45,7 +45,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * other map implementations.
  *
  * <p>Compared to a TreeMap: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted but does have deteriministic ordering. For large maps, this is
+ * comparator. This isn't sorted but does have deterministic ordering. For large maps, this is
  * significantly less performant than other map implementations.
  *
  * <p>A number of other ArrayMap implementations exist, including
@@ -106,7 +106,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SuppressWarnings({
     "unchecked", // generic array cast
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field" // initializes `this`
   })
   @SideEffectFree
   public ArrayMap(int initialCapacity) {
@@ -135,10 +134,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param values the values
    * @param size the number of used items in the arrays; may be less than their lengths
    */
-  @SuppressWarnings({
-    "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field" // initializes `this`
-  })
+  @SuppressWarnings("samelen:assignment") // initialization
   @SideEffectFree
   private ArrayMap(
       K @SameLen("values") [] keys,
@@ -703,7 +699,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     int initialSizeModificationCount;
 
     /** Creates a new ArrayMapIterator. */
-    @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
     ArrayMapIterator() {
       index = 0;
@@ -873,9 +868,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return false;
     }
 
+    @SuppressWarnings("signedness:override.receiver") // temporary
     @Pure
     @Override
-    public int hashCode() {
+    public int hashCode(ArrayMap<K, V>.Entry this) {
       return Objects.hash(getKey(), getValue());
     }
   }

@@ -272,7 +272,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     int initialSizeModificationCount;
 
     /** Creates a new ArraySetIterator. */
-    @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
     ArraySetIterator() {
       index = 0;

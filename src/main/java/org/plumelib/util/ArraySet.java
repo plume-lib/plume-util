@@ -32,7 +32,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * set implementations.
  *
  * <p>Compared to a TreeSet: This uses somewhat less space, and it does not require defining a
- * comparator. This isn't sorted but does have deteriministic ordering. For large sets, this is
+ * comparator. This isn't sorted but does have deterministic ordering. For large sets, this is
  * significantly less performant than other set implementations.
  *
  * <p>Other ArraySet implementations include:
@@ -359,7 +359,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     int initialSizeModificationCount;
 
     /** Creates a new ArraySetIterator. */
-    @SuppressWarnings("allcheckers:purity") // initializes `this`
     @SideEffectFree
     ArraySetIterator() {
       index = 0;

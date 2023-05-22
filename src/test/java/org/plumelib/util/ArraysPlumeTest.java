@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,9 +15,6 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings({
-  "UseCorrectAssertInTests" // `assert` works fine in tests
-})
 public final class ArraysPlumeTest {
 
   @Test
@@ -95,8 +93,9 @@ public final class ArraysPlumeTest {
 
     // public static double sum(double[][] a)
     assertTrue(0 == ArraysPlume.sum(new double[0][0]));
-    assert 79.5
-        == ArraysPlume.sum(new double[][] {{1.1, 2.2, 3.3, 4.4}, {5.5, 6, 7, 8}, {9, 10, 11, 12}});
+    assertEquals(
+        79.5,
+        ArraysPlume.sum(new double[][] {{1.1, 2.2, 3.3, 4.4}, {5.5, 6, 7, 8}, {9, 10, 11, 12}}));
   }
 
   /**
@@ -124,6 +123,7 @@ public final class ArraysPlumeTest {
       return this.value == that.value;
     }
 
+    @SuppressWarnings("signedness:override.receiver") // temporary
     @Override
     public int hashCode(@GuardSatisfied MyInteger this) {
       return value;
@@ -443,16 +443,16 @@ public final class ArraysPlumeTest {
   @Test
   public void test_fnIsTotal() {
     // public static boolean fnIsTotal(int[] a)
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}) == true);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}) == true);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {3, 2, 1, 0}) == true);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 2}) == true);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {-1, 0, 2, 3}) == false);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, -1, 2, 3}) == false);
-    assert ArraysPlume.fnIsTotal(new int[] {0, -2, 1, 3}) == true; // weird
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 2, 3, -1}) == false);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 4}) == true);
-    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}) == true);
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}));
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}));
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {3, 2, 1, 0}));
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 2}));
+    assertFalse(ArraysPlume.fnIsTotal(new int[] {-1, 0, 2, 3}));
+    assertFalse(ArraysPlume.fnIsTotal(new int[] {0, -1, 2, 3}));
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, -2, 1, 3})); // weird
+    assertFalse(ArraysPlume.fnIsTotal(new int[] {0, 2, 3, -1}));
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 4}));
+    assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}));
   }
 
   @SuppressWarnings({
@@ -872,8 +872,8 @@ public final class ArraysPlumeTest {
     // Extraneous @Nullable on the following lines are due to https://tinyurl.com/cfissue/599
     assertTrue(ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}}) == false);
     assertTrue(ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, null}) == true);
-    assert ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
-        == false;
+    assertFalse(
+        ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
   }
 
   @Test
@@ -896,8 +896,8 @@ public final class ArraysPlumeTest {
     assertTrue(ArraysPlume.allNull(new Object[][] {null, null}) == true);
     assertTrue(ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}}) == false);
     assertTrue(ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, null}) == false);
-    assert ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}})
-        == false;
+    assertFalse(
+        ArraysPlume.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
   }
 
   /** Returns true if the toString of each element in elts equals the corresponding string. */
@@ -916,35 +916,42 @@ public final class ArraysPlumeTest {
   @Test
   public void testPartitioning() {
 
-    assert equalElementStrings(
-        ArraysPlume.partitionInto(Arrays.asList("a"), 1), Arrays.asList("[[a]]"));
-    assert equalElementStrings(
-        ArraysPlume.partitionInto(Arrays.asList("a", "b"), 1), Arrays.asList("[[a, b]]"));
-    assert equalElementStrings(
-        ArraysPlume.partitionInto(Arrays.asList("a", "b"), 2), Arrays.asList("[[a], [b]]"));
-    assert equalElementStrings(
-        ArraysPlume.partitionInto(Arrays.asList("a", "b", "c"), 1), Arrays.asList("[[a, b, c]]"));
-    assert equalElementStrings(
-        ArraysPlume.partitionInto(Arrays.asList("a", "b", "c"), 2),
-        Arrays.asList("[[a, b], [c]]", "[[a, c], [b]]", "[[a], [b, c]]"));
-    assert equalElementStrings(
-        ArraysPlume.partitionInto(Arrays.asList("a", "b", "c", "d", "e"), 2),
-        Arrays.asList(
-            "[[a, b, c, d], [e]]",
-            "[[a, b, c, e], [d]]",
-            "[[a, b, c], [d, e]]",
-            "[[a, b, d, e], [c]]",
-            "[[a, b, e], [c, d]]",
-            "[[a, b, d], [c, e]]",
-            "[[a, b], [c, d, e]]",
-            "[[a, c, d, e], [b]]",
-            "[[a, d, e], [b, c]]",
-            "[[a, c, e], [b, d]]",
-            "[[a, e], [b, c, d]]",
-            "[[a, c, d], [b, e]]",
-            "[[a, d], [b, c, e]]",
-            "[[a, c], [b, d, e]]",
-            "[[a], [b, c, d, e]]"));
+    assertTrue(
+        equalElementStrings(
+            ArraysPlume.partitionInto(Arrays.asList("a"), 1), Arrays.asList("[[a]]")));
+    assertTrue(
+        equalElementStrings(
+            ArraysPlume.partitionInto(Arrays.asList("a", "b"), 1), Arrays.asList("[[a, b]]")));
+    assertTrue(
+        equalElementStrings(
+            ArraysPlume.partitionInto(Arrays.asList("a", "b"), 2), Arrays.asList("[[a], [b]]")));
+    assertTrue(
+        equalElementStrings(
+            ArraysPlume.partitionInto(Arrays.asList("a", "b", "c"), 1),
+            Arrays.asList("[[a, b, c]]")));
+    assertTrue(
+        equalElementStrings(
+            ArraysPlume.partitionInto(Arrays.asList("a", "b", "c"), 2),
+            Arrays.asList("[[a, b], [c]]", "[[a, c], [b]]", "[[a], [b, c]]")));
+    assertTrue(
+        equalElementStrings(
+            ArraysPlume.partitionInto(Arrays.asList("a", "b", "c", "d", "e"), 2),
+            Arrays.asList(
+                "[[a, b, c, d], [e]]",
+                "[[a, b, c, e], [d]]",
+                "[[a, b, c], [d, e]]",
+                "[[a, b, d, e], [c]]",
+                "[[a, b, e], [c, d]]",
+                "[[a, b, d], [c, e]]",
+                "[[a, b], [c, d, e]]",
+                "[[a, c, d, e], [b]]",
+                "[[a, d, e], [b, c]]",
+                "[[a, c, e], [b, d]]",
+                "[[a, e], [b, c, d]]",
+                "[[a, c, d], [b, e]]",
+                "[[a, d], [b, c, e]]",
+                "[[a, c], [b, d, e]]",
+                "[[a], [b, c, d, e]]")));
   }
 
   List<String> abcdefList = Arrays.asList("a", "b", "c", "d", "e", "f");
