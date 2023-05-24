@@ -40,8 +40,10 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
+
   /** The number of used slots in the representation of this. */
   private @NonNegative @LessThan("values.length + 1") @IndexOrHigh({"values"}) int size = 0;
+
   // An alternate representation would also store the hash code of each key, for quicker querying.
 
   /**
@@ -266,8 +268,10 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   private class ArraySetIterator implements Iterator<E> {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
+
     /** True if remove() has been called since the last call to next(). */
     boolean removed;
+
     /** The modification count when the iterator is created, for fail-fast. */
     int initialSizeModificationCount;
 

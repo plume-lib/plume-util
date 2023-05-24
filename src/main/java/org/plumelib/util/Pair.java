@@ -18,6 +18,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   /** The first element of the pair. */
   public T1 a;
+
   /** The second element of the pair. */
   public T2 b;
 

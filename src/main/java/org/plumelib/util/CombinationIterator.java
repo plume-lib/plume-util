@@ -34,10 +34,13 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
 
   /** Lists of candidate values for each position in generated lists. */
   private final List<T>[] listsOfCandidates;
+
   /** Iterators for each list of candidate values. */
   private final Iterator<T>[] iterators;
+
   /** The size of each returned result; the length of listsOfCandidates. */
   private final @LengthOf({"listsOfCandidates", "iterators"}) int combinationSize;
+
   /** The next value to return, or null if to more values. */
   private @Nullable List<T> nextValue;
 
