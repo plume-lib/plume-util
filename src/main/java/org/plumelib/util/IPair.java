@@ -17,6 +17,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 public class IPair<V1, V2> {
   /** The first element of the pair. */
   public final V1 a;
+
   /** The second element of the pair. */
   public final V2 b;
 

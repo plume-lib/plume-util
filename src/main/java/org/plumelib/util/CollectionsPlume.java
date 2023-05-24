@@ -983,6 +983,7 @@ public final class CollectionsPlume {
   public static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
     Iterator<T> itor1;
+
     /** The second of the two iterators that this object merges. */
     Iterator<T> itor2;
 
@@ -1076,6 +1077,7 @@ public final class CollectionsPlume {
   public static final class FilteredIterator<T extends @Nullable Object> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
+
     /** The predicate that determines which elements to retain. */
     Filter<T> filter;
 
@@ -1099,6 +1101,7 @@ public final class CollectionsPlume {
      * is false.
      */
     T current = invalidT;
+
     /** True iff {@link #current} is an object from the wrapped iterator. */
     boolean currentValid = false;
 
@@ -1143,14 +1146,17 @@ public final class CollectionsPlume {
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
     Iterator<T> itor;
+
     /** A marker object, distinct from any object that the iterator can return. */
     @SuppressWarnings("unchecked")
     T nothing = (T) new Object();
+
     // I don't think this works, because the iterator might itself return null
     // @Nullable T nothing = (@Nullable T) null;
 
     /** The first object yielded by the wrapped iterator. */
     T first = nothing;
+
     /** The next object that this iterator will return. */
     T current = nothing;
 
@@ -1487,6 +1493,9 @@ public final class CollectionsPlume {
 
   /**
    * Creates a LRU cache.
+   *
+   * <p>You might want to consider using a {@code WeakHashMap} or {@code WeakIdentityHashMap}
+   * instead
    *
    * @param <K> the type of keys
    * @param <V> the type of values

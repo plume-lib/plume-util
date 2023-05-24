@@ -729,6 +729,7 @@ public final class UtilPlume {
   public static final class WildcardFilter implements FilenameFilter {
     /** The text before the wildcard. */
     String prefix;
+
     /** The text after the wildcard. */
     String suffix;
 

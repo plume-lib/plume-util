@@ -39,8 +39,10 @@ public abstract class AbstractMostlySingletonSet<T extends Object> implements Se
 
   /** The current state. */
   protected State state;
+
   /** The current value, non-null when the state is SINGLETON. */
   protected @Nullable T value;
+
   /** The wrapped set, non-null when the state is ANY. */
   protected @Nullable Set<T> set;
 
