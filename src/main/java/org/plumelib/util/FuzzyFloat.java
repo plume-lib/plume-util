@@ -25,6 +25,7 @@ public class FuzzyFloat {
 
   /** Minimum ratio between two floats, such that this class considers them equal. */
   double minRatio;
+
   /** Maximum ratio between two floats, such that this class considers them equal. */
   double maxRatio;
 

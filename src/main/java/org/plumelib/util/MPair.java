@@ -16,6 +16,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 public class MPair<V1 extends @Nullable Object, V2 extends @Nullable Object> {
   /** The first element of the pair. */
   public V1 a;
+
   /** The second element of the pair. */
   public V2 b;
 

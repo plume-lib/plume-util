@@ -36,6 +36,7 @@ public class LimitedSizeLongSet implements Serializable, Cloneable {
    * stored, because that would take extra space.
    */
   protected long @Nullable @MinLen(1) [] values;
+
   /** The number of active elements (equivalently, the first unused index). */
   // Not exactly @IndexOrHigh("values"), because the invariant is broken when
   // the values field is set to null. Warnings are suppressed when breaking the invariant.

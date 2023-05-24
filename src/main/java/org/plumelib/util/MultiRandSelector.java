@@ -30,10 +30,13 @@ public class MultiRandSelector<T extends @Nullable Object> {
 
   /** Whether to toss a coin or select a given number of elements. */
   private boolean coinTossMode;
+
   /** Number of elements to select. -1 if coinTossMode==true. */
   private int numElts = -1;
+
   /** Likelihood to select each element. -1.0 if coinTossMode=false. */
   private double keepProbability = -1.0;
+
   /** The Random instance to use. Is not a seed. Gets side-effected. */
   private Random r;
 

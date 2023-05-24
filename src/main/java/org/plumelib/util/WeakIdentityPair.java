@@ -23,6 +23,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
 
   /** The first element of the pair. */
   private final WeakReference<V1> a;
+
   /** The second element of the pair. */
   private final WeakReference<V2> b;
 

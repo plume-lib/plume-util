@@ -1725,6 +1725,7 @@ public final class ArraysPlume {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
     T @Nullable [] theArray = null;
+
     /** The list that this object wraps, or null. */
     @Nullable List<T> theList = null;
 

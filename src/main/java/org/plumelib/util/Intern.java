@@ -201,6 +201,7 @@ public final class Intern {
 
   /** Multiplicative constant for use in hashing function. */
   private static final int FACTOR = 23;
+
   /** Another multiplicative constant for use in hashing function. */
   private static final double DOUBLE_FACTOR = 263;
 
@@ -320,46 +321,60 @@ public final class Intern {
   /** All the interned Integers. */
   private static WeakHasherMap<@Interned Integer, WeakReference<@Interned Integer>>
       internedIntegers;
+
   /** All the interned Longs. */
   private static WeakHasherMap<@Interned Long, WeakReference<@Interned Long>> internedLongs;
+
   /** All the interned Int arrays. */
   private static WeakHasherMap<int @Interned [], WeakReference<int @Interned []>> internedIntArrays;
+
   /** All the interned Long arrays. */
   private static WeakHasherMap<long @Interned [], WeakReference<long @Interned []>>
       internedLongArrays;
+
   /** All the interned Doubles. */
   private static WeakHasherMap<@Interned Double, WeakReference<@Interned Double>> internedDoubles;
+
   /** The interned NaN. */
   private static @Interned Double internedDoubleNaN;
+
   /** The interned Double zero. */
   private static @Interned Double internedDoubleZero;
+
   /** All the interned Double arrays. */
   private static WeakHasherMap<double @Interned [], WeakReference<double @Interned []>>
       internedDoubleArrays;
+
   /** All the interned String arrays. */
   private static WeakHasherMap<
           @Nullable @Interned String @Interned [],
           WeakReference<@Nullable @Interned String @Interned []>>
       internedStringArrays;
+
   /** All the interned Object arrays. */
   private static WeakHasherMap<
           @Nullable @Interned Object @Interned [],
           WeakReference<@Nullable @Interned Object @Interned []>>
       internedObjectArrays;
+
   /** All the interned Int subsequences. */
   private static WeakHasherMap<Subsequence<int @Interned []>, WeakReference<int @Interned []>>
       internedIntSubsequence;
+
   /** All the interned Long subsequences. */
   private static WeakHasherMap<Subsequence<long @Interned []>, WeakReference<long @Interned []>>
       internedLongSubsequence;
+
   /** All the interned Double subsequences. */
   private static WeakHasherMap<Subsequence<double @Interned []>, WeakReference<double @Interned []>>
       internedDoubleSubsequence;
+
   /** All the interned Object subsequences. */
   private static WeakHasherMap<
           Subsequence<@Nullable @Interned Object @Interned []>,
           WeakReference<@Nullable @Interned Object @Interned []>>
       internedObjectSubsequence;
+
   /** All the interned String subsequences. */
   private static WeakHasherMap<
           Subsequence<@Nullable @Interned String @Interned []>,
@@ -1114,8 +1129,10 @@ public final class Intern {
   private static final class Subsequence<T extends @Interned Object> {
     /** The full sequence. The Subsequence object represents part of this sequence. */
     public T seq;
+
     /** The start index, inclusive. */
     public @NonNegative int start;
+
     // TODO: inclusive or exclusive?
     /** The end index. */
     public int end;

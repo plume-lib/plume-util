@@ -62,10 +62,13 @@ public class RandomSelector<T> {
 
   /** If true, numElts and observers are -1. If false, keepProbability = -1. */
   private boolean coinTossMode;
+
   /** The percentage of elements to keep. */
   private double keepProbability = -1.0;
+
   /** The number of objects to choose, or -1. */
   private int numElts = -1;
+
   /** The number of objects observed. */
   private int observed = -1;
 

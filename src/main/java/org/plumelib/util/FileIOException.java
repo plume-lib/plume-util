@@ -24,6 +24,7 @@ public class FileIOException extends IOException {
 
   /** The file being read when the IOException occurred. */
   public final @Nullable String fileName;
+
   /** The line being read when the IOException occurred. */
   public final int lineNumber;
 
