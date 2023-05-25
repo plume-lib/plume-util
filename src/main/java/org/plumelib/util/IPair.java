@@ -41,7 +41,7 @@ public class IPair<V1, V2> {
    * @param b second argument
    * @return a pair of the values (a, b)
    */
-  public static <T1 extends @Nullable Object, T2 extends @Nullable Object> IPair<T1, T2> of(
+  public static <T1, T2> IPair<T1, T2> of(
       T1 a, T2 b) {
     return new IPair<>(a, b);
   }
@@ -61,7 +61,7 @@ public class IPair<V1, V2> {
    */
   @SuppressWarnings({
     "nullness", // generics problem with deepCopy()
-    "signedness:return" // generics problem with lower bound
+    "signedness" // generics problem with lower bound
   })
   public static <T1 extends Cloneable, T2 extends Cloneable> IPair<T1, T2> cloneElements(
       IPair<T1, T2> orig) {
