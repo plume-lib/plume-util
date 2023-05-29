@@ -8,6 +8,7 @@
 - The `WeakIdentityPair` constructor is deprecated in favor of the `of()` method.
 - New interface `DeepCopyable`.
 - New methods in `UtilPlume`:
+   * `firstNonNull()`
 - New methods in `CollectionsPlume`:
    * for `Collection`s: `cloneElements()`, `deepCopy()`
    * for `Map`s: `cloneElements()`, `cloneValues()`, `createLruCache()`
