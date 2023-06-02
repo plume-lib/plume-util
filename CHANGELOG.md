@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 1.8.0 (2023-??-??)
+## 1.8.0 (2023-06-02)
 
 - Deprecated `Pair` class for mutable pairs; use `MPair` instead.
   `OrderedPairIterator` uses `MPair` instead of `Pair`.
