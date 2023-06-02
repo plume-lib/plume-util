@@ -830,46 +830,6 @@ public final class CollectionsPlume {
     return results;
   }
 
-  /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <T> the type of elements of the list
-   * @param orig a list
-   * @return a deep copy of {@code orig}
-   */
-  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
-  public static <@Nullable T> @PolyNull List<T> deepCopy(@PolyNull List<T> orig) {
-    if (orig == null) {
-      return null;
-    }
-    List<T> result = new ArrayList<>(orig.size());
-    for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
-    }
-    return result;
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <T> the type of elements of the list
-   * @param orig a list
-   * @return a deep copy of {@code orig}
-   */
-  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
-  public static <@Nullable T> @PolyNull TreeSet<T> deepCopy(@PolyNull TreeSet<T> orig) {
-    if (orig == null) {
-      return null;
-    }
-    TreeSet<T> result = new TreeSet<>(orig.comparator());
-    for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
-    }
-    return result;
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Iterator
   ///

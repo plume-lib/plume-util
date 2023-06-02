@@ -4,6 +4,7 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release (run on any filesystem, except the last step):
+//  * Make a local snapshot release and test it on some clients.
 //  * git pull
 //  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
@@ -21,7 +22,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.8.0'
+version '1.8.1-SNAPSHOT'
 
 final isSnapshot = version.contains('SNAPSHOT')
 

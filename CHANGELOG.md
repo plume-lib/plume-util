@@ -1,5 +1,11 @@
 # Plume-Util change log
 
+## 1.8.1 (2023-06-02)
+
+- `CollectionsPlume`: remove conflicting overrides of `deepCopy()`
+- `IPair` and `MPair`: rename fields from `a` and `b` to `first` and `second`
+- `MPair`: new methods `cloneElements()`, `deepCopy()`, `deepCopyFirst()`, `deepCopySecond()`
+
 ## 1.8.0 (2023-06-02)
 
 - Deprecated `Pair` class for mutable pairs; use `MPair` instead.
