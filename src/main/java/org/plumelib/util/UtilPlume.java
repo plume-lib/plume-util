@@ -81,6 +81,25 @@ public final class UtilPlume {
     }
   }
 
+  /**
+   * Return the first argument if it is non-null, otherwise return the second argument. Throws an
+   * exception if both arguments are null.
+   *
+   * @param <T> the type of the arguments
+   * @param first a reference
+   * @param second a reference
+   * @return the first argument that is non-null
+   */
+  public static <T> T firstNonNull(T first, T second) {
+    if (first != null) {
+      return first;
+    } else if (second != null) {
+      return second;
+    } else {
+      throw new NullPointerException();
+    }
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// BitSet (this section is deprecated in favor of CollectionsPlume)
   ///
@@ -729,6 +748,7 @@ public final class UtilPlume {
   public static final class WildcardFilter implements FilenameFilter {
     /** The text before the wildcard. */
     String prefix;
+
     /** The text after the wildcard. */
     String suffix;
 

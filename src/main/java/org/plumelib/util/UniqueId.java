@@ -18,9 +18,9 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  *
  * <pre><code>
  * /** The unique ID for the next-created object. *&#47;
- * static final AtomicLong nextUid = new AtomicLong(0);
+ * private static final AtomicLong nextUid = new AtomicLong(0);
  * /** The unique ID of this object. *&#47;
- * final transient long uid = nextUid.getAndIncrement();
+ * private final transient long uid = nextUid.getAndIncrement();
  * &#064;Override
  * public long getUid() {
  *   return uid;

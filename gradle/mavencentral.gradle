@@ -1,32 +1,29 @@
 // REQUIREMENTS to make a release:
-//  * Perform work on a machine connected to the CSE filesystem.
 //  * Your ~/.gradle/gradle.properties file must contain:
 //     ossrhUsername=YOUR_USER_NAME_HERE
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
-// To make a release:
-//  * Use JDK 11
+// To make a release (run on any filesystem, except the last step):
+//  * Make a local snapshot release and test it on some clients,
+//    such as both the Checker Framework and Daikon.
 //  * git pull
 //  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
 //    Ensure the version number in this file does not contain "-SNAPSHOT".
 //  * Update ../CHANGELOG.md .
 //  * Save files and stage changes.
-//  * Run in the top-level directory:
-//      ./gradlew clean publish && ./gradlew javadocWeb
-//    or, to use a locally-built Checker Framework:
-//      ./gradlew -PcfLocal clean publish && ./gradlew -PcfLocal javadocWeb
+//  * Run in the top-level directory:  ./gradlew clean publish
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
-//    VER=1.7.0 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.7.0", use the text from ../CHANGELOG.md as the description, attach the .jar file from ../build/libs/
-
+//    VER=1.8.1 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.8.1", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+//  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.7.0'
+version '1.8.1'
 
 final isSnapshot = version.contains('SNAPSHOT')
 

@@ -158,12 +158,16 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public static class Entry {
     /** First line of the entry. */
     public final String firstLine;
+
     /** Complete body of the entry including the first line. */
     public final String body;
+
     /** True if this is a short entry (blank-line-separated). */
     public final boolean shortEntry;
+
     /** Filename in which the entry was found. */
     public final String filename;
+
     /** Line number of first line of entry. */
     public final long lineNumber;
 

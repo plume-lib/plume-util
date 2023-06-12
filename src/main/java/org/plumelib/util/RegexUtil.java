@@ -156,9 +156,9 @@ public final class RegexUtil {
    * @return true iff s is a regular expression with {@code groups} groups
    */
   @SuppressWarnings({
-    "regex",
-    "allcheckers:deterministic"
-  }) // RegexUtil; for purity, catches an exception
+    "regex", // RegexUtil
+    "allcheckers:purity.not.deterministic.catch" // catch block returns boolean
+  })
   @Pure
   // @EnsuresQualifierIf annotation is extraneous because this method is special-cased
   // in RegexTransfer.

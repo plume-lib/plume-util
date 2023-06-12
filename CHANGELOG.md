@@ -1,5 +1,24 @@
 # Plume-Util change log
 
+## 1.8.1 (2023-06-02)
+
+- `CollectionsPlume`: remove conflicting overrides of `deepCopy()`
+- `IPair` and `MPair`: rename fields from `a` and `b` to `first` and `second`
+- `MPair`: new methods `cloneElements()`, `deepCopy()`, `deepCopyFirst()`, `deepCopySecond()`
+
+## 1.8.0 (2023-06-02)
+
+- Deprecated `Pair` class for mutable pairs; use `MPair` instead.
+  `OrderedPairIterator` uses `MPair` instead of `Pair`.
+- New class `IPair` for immutable pairs.
+- The `WeakIdentityPair` constructor is deprecated in favor of the `of()` method.
+- New interface `DeepCopyable`.
+- New methods in `UtilPlume`:
+   * `firstNonNull()`
+- New methods in `CollectionsPlume`:
+   * for `Collection`s: `cloneElements()`, `deepCopy()`
+   * for `Map`s: `cloneElements()`, `cloneValues()`, `createLruCache()`
+
 ## 1.7.0 (2023-05-10)
 
 - Moved classes `Hasher`, `WeakHasherMap`, and `WeakIdentityHashMap`

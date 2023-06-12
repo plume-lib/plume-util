@@ -35,6 +35,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
    */
   @SuppressWarnings("serial") // don't serialize this if element type is not serializable
   protected @Nullable T @Nullable @MinLen(1) [] values;
+
   /** The number of active elements (equivalently, the first unused index). */
   // The Index Checker annotation is not @IndexOrHigh("values"), because the invariant is broken
   // when the values field is set to null. Warnings are suppressed when breaking the invariant.

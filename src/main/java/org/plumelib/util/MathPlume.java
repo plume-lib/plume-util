@@ -1320,14 +1320,19 @@ public final class MathPlume {
     // Exactly one of nums and numsItor is non-null.
     /** The numbers not to include in the iterator. */
     int @MonotonicNonNull @MinLen(1) [] nums;
+
     /** The numbers not to include in the iterator. */
     @MonotonicNonNull Iterator<Integer> numsItor;
+
     /** The current element of the numbers not to include in the iterator. */
     int currentNonmissing;
+
     /** The next element to be returned by the iterator. */
     int currentMissing;
+
     /** Used only if nums != null, in which case it is an index into nums. */
     @IndexFor("nums") int currentIndex;
+
     /**
      * If true, include the value just before the minimum excluded element and the value just after
      * the maximum excluded element.
@@ -1652,14 +1657,19 @@ public final class MathPlume {
     // Exactly one of nums and numsItor is non-null.
     /** The numbers not to include in the iterator. */
     long @MonotonicNonNull @MinLen(1) [] nums;
+
     /** The numbers not to include in the iterator. */
     @MonotonicNonNull Iterator<Long> numsItor;
+
     /** The current element of the numbers not to include in the iterator. */
     long currentNonmissing;
+
     /** The next element to be returned by the iterator. */
     long currentMissing;
+
     /** Used only if nums != null, in which case it is an index into nums. */
     @IndexFor("nums") int currentIndex;
+
     /**
      * If true, include the value just before the minimum excluded element and the value just after
      * the maximum excluded element.

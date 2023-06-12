@@ -156,8 +156,10 @@ public final class SystemPlume {
   private static class GcHistoryItem {
     /** When the collection happened. An epoch second. */
     long timestamp;
+
     /** The cumulative collection time in milliseconds. */
     long collectionTime;
+
     /**
      * When the subsequent collection happened. It is 0 until after the subsequent collection
      * occurs. The purpose of this field is to avoid the need for a {@code peek2()} method on deque.

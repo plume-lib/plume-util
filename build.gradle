@@ -6,13 +6,13 @@ plugins {
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
   // Requires JDK 11 or higher; the plugin crashes under JDK 8.
-  id 'com.diffplug.spotless' version '6.18.0'
+  id 'com.diffplug.spotless' version '6.19.0'
 
   // Error Prone linter
   id('net.ltgt.errorprone') version '3.1.0'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.27'
+  id 'org.checkerframework' version '0.6.28'
 }
 
 repositories {
@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
   implementation 'org.plumelib:hashmap-util:0.0.1'
-  implementation 'org.plumelib:reflection-util:1.0.6'
+  implementation 'org.plumelib:reflection-util:1.1.0'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -118,26 +118,13 @@ checkerFramework {
   ]
   extraJavacArgs = [
     '-Werror',
-    // '-Aversion',
+    '-Aversion',
     // '-verbose',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
     '-AwarnRedundantAnnotations',
     '-AwarnUnneededSuppressions',
   ]
-}
-// To use a snapshot version of the Checker Framework.
-if (true) {
-  // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.34.1-SNAPSHOT'
-  dependencies {
-    compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-    testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-    checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
-  }
-  configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
-  }
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty('cfLocal')) {
@@ -147,6 +134,18 @@ if (project.hasProperty('cfLocal')) {
     testCompileOnly files(cfHome + '/checker/dist/checker-qual.jar')
     checkerFramework files(cfHome + '/checker/dist/checker.jar')
   }
+} else if (false) {
+  // To use a snapshot version of the Checker Framework.
+  // TODO: Change the above test to false when CF is released.
+  ext.checkerFrameworkVersion = '3.35.0'
+  dependencies {
+    compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+    testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
+    checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
+  }
+  configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
+  }
 }
 
 /// Javadoc
@@ -155,9 +154,6 @@ if (project.hasProperty('cfLocal')) {
 javadoc {
   options.addStringOption('Xwerror', '-Xdoclint:all')
   options.addStringOption('private', '-quiet')
-  // WeakIdentityHashMap leads to lots of Javadoc warnings due to missing Javadoc.
-  // How can I generate Javadoc for it while still being strict for all other files?
-  exclude '**/WeakIdentityHashMap.java'
   if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
     options.addStringOption('source', '8')
   }

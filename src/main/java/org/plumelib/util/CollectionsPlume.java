@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -332,7 +332,7 @@ public final class CollectionsPlume {
       return Arrays.equals((short[]) o1, (short[]) o2);
     }
 
-    WeakIdentityPair<Object, Object> mypair = new WeakIdentityPair<>(o1, o2);
+    WeakIdentityPair<Object, Object> mypair = WeakIdentityPair.of(o1, o2);
     if (deepEqualsUnderway.contains(mypair)) {
       return true;
     }
@@ -466,6 +466,55 @@ public final class CollectionsPlume {
       List<TO> transform(
           Iterable<FROM> iterable, Function<@MustCallUnknown ? super FROM, ? extends TO> f) {
     return mapList(f, iterable);
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each element of the result is a clone of the
+   * corresponding element of {@code orig}.
+   *
+   * @param <T> the type of elements of the collection
+   * @param <C> the type of the collection
+   * @param orig a collection
+   * @return a copy of {@code orig}, as described above
+   */
+  @SuppressWarnings({
+    "signedness", // problem with clone()
+    "nullness" // generics problem
+  })
+  public static <T extends @Nullable Object, C extends @Nullable Collection<T>> @PolyNull C cloneElements(@PolyNull C orig) {
+    if (orig == null) {
+      return null;
+    }
+    C result = UtilPlume.clone(orig);
+    result.clear();
+    for (T elt : orig) {
+      result.add(UtilPlume.clone(elt));
+    }
+    return result;
+  }
+
+  // A "deep copy" uses the deepCopy() method of the DeepCopyable interface.
+
+  /**
+   * Returns a copy of {@code orig}, where each element of the result is a deep copy (according to
+   * the {@code DeepCopyable} interface) of the corresponding element of {@code orig}.
+   *
+   * @param <T> the type of elements of the collection
+   * @param <C> the type of the collection
+   * @param orig a collection
+   * @return a copy of {@code orig}, as described above
+   */
+  @SuppressWarnings({"signedness", "nullness:argument"}) // problem with clone()
+  public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>> @PolyNull C deepCopy(@PolyNull C orig) {
+    if (orig == null) {
+      return null;
+    }
+    C result = UtilPlume.clone(orig);
+    result.clear();
+    for (T elt : orig) {
+      result.add(DeepCopyable.deepCopyOrNull(elt));
+    }
+    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -781,46 +830,6 @@ public final class CollectionsPlume {
     return results;
   }
 
-  /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <T> the type of elements of the list
-   * @param orig a list
-   * @return a deep copy of {@code orig}
-   */
-  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
-  public static <@Nullable T> @PolyNull List<T> deepCopy(@PolyNull List<T> orig) {
-    if (orig == null) {
-      return null;
-    }
-    List<T> result = new ArrayList<>(orig.size());
-    for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
-    }
-    return result;
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <T> the type of elements of the list
-   * @param orig a list
-   * @return a deep copy of {@code orig}
-   */
-  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
-  public static <@Nullable T> @PolyNull TreeSet<T> deepCopy(@PolyNull TreeSet<T> orig) {
-    if (orig == null) {
-      return null;
-    }
-    TreeSet<T> result = new TreeSet<>(orig.comparator());
-    for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
-    }
-    return result;
-  }
-
   ///////////////////////////////////////////////////////////////////////////
   /// Iterator
   ///
@@ -934,6 +943,7 @@ public final class CollectionsPlume {
   public static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
     Iterator<T> itor1;
+
     /** The second of the two iterators that this object merges. */
     Iterator<T> itor2;
 
@@ -1027,6 +1037,7 @@ public final class CollectionsPlume {
   public static final class FilteredIterator<T extends @Nullable Object> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
+
     /** The predicate that determines which elements to retain. */
     Filter<T> filter;
 
@@ -1050,6 +1061,7 @@ public final class CollectionsPlume {
      * is false.
      */
     T current = invalidT;
+
     /** True iff {@link #current} is an object from the wrapped iterator. */
     boolean currentValid = false;
 
@@ -1094,14 +1106,17 @@ public final class CollectionsPlume {
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
     Iterator<T> itor;
+
     /** A marker object, distinct from any object that the iterator can return. */
     @SuppressWarnings("unchecked")
     T nothing = (T) new Object();
+
     // I don't think this works, because the iterator might itself return null
     // @Nullable T nothing = (@Nullable T) null;
 
     /** The first object yielded by the wrapped iterator. */
     T first = nothing;
+
     /** The next object that this iterator will return. */
     T current = nothing;
 
@@ -1379,25 +1394,101 @@ public final class CollectionsPlume {
     return mapCapacity(m.size());
   }
 
+  // The following two methods cannot share an implementation because their generic bounds differ.
+
   /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
+   * Returns a copy of {@code orig}, where each key and value in the result is a deep copy
+   * (according to the {@code DeepCopyable} interface) of the corresponding element of {@code orig}.
+   *
+   * @param <K> the type of keys of the map
+   * @param <V> the type of values of the map
+   * @param <M> the type of the map
+   * @param orig a map
+   * @return a copy of {@code orig}, as described above
+   */
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  public static <
+          K extends @Nullable DeepCopyable<K>,
+          V extends @Nullable DeepCopyable<V>,
+          M extends @Nullable Map<K, V>>
+      @PolyNull M deepCopy(@PolyNull M orig) {
+    if (orig == null) {
+      return null;
+    }
+    M result = UtilPlume.clone(orig);
+    result.clear();
+    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
+      K oldKey = mapEntry.getKey();
+      V oldValue = mapEntry.getValue();
+      result.put(DeepCopyable.deepCopyOrNull(oldKey), DeepCopyable.deepCopyOrNull(oldValue));
+    }
+    return result;
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each value of the result is a deep copy (according to the
+   * {@code DeepCopyable} interface) of the corresponding value of {@code orig}, but the keys are
+   * the same objects.
+   *
+   * @param <K> the type of keys of the map
+   * @param <V> the type of values of the map
+   * @param <M> the type of the map
+   * @param orig a map
+   * @return a copy of {@code orig}, as described above
+   */
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>> @PolyNull M deepCopyValues(@PolyNull M orig) {
+    if (orig == null) {
+      return null;
+    }
+    M result = UtilPlume.clone(orig);
+    result.clear();
+    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
+      K oldKey = mapEntry.getKey();
+      V oldValue = mapEntry.getValue();
+      result.put(oldKey, DeepCopyable.deepCopyOrNull(oldValue));
+    }
+    return result;
+  }
+
+  /**
+   * Creates a LRU cache.
+   *
+   * <p>You might want to consider using a {@code WeakHashMap} or {@code WeakIdentityHashMap}
+   * instead
+   *
+   * @param <K> the type of keys
+   * @param <V> the type of values
+   * @param size size of the cache
+   * @return a new cache with the provided size
+   */
+  public static <K, V> Map<K, V> createLruCache(@Positive int size) {
+    return new LinkedHashMap<K, V>(size, .75F, true) {
+
+      private static final long serialVersionUID = 5261489276168775084L;
+
+      @SuppressWarnings(
+          "lock:override.receiver") // cannot write receiver parameter within an anonymous class
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return size() > size;
+      }
+    };
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each key and value in the result is a clone of the
    * corresponding element of {@code orig}.
    *
    * @param <K> the type of keys of the map
    * @param <V> the type of values of the map
+   * @param <M> the type of the map
    * @param orig a map
-   * @return a deep copy of {@code orig}
+   * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with UtilPlume.clone
-  public static <K, V> @PolyNull Map<K, V> deepCopy(@PolyNull Map<K, V> orig) {
-    if (orig == null) {
-      return null;
-    }
-    Map<K, V> result = new HashMap<>(orig.size());
-    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
-      result.put(UtilPlume.clone(mapEntry.getKey()), UtilPlume.clone(mapEntry.getValue()));
-    }
-    return result;
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(@PolyNull M orig) {
+    return cloneElements(orig, true);
   }
 
   /**
@@ -1406,17 +1497,38 @@ public final class CollectionsPlume {
    *
    * @param <K> the type of keys of the map
    * @param <V> the type of values of the map
+   * @param <M> the type of the map
    * @param orig a map
-   * @return a deep copy of {@code orig}
+   * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with UtilPlume.clone
-  public static <K, V> @PolyNull Map<K, V> deepCopyValues(@PolyNull Map<K, V> orig) {
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneValues(@PolyNull M orig) {
+    return cloneElements(orig, false);
+  }
+
+  /**
+   * Returns a copy of {@code orig}, where each key and value in the result is a clone of the
+   * corresponding element of {@code orig}.
+   *
+   * @param <K> the type of keys of the map
+   * @param <V> the type of values of the map
+   * @param <M> the type of the map
+   * @param orig a map
+   * @param cloneKeys if true, clone keys; otherwise, re-use them
+   * @return a copy of {@code orig}, as described above
+   */
+  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  private static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(
+      @PolyNull M orig, boolean cloneKeys) {
     if (orig == null) {
       return null;
     }
-    Map<K, V> result = new HashMap<>(orig.size());
+    M result = UtilPlume.clone(orig);
+    result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
-      result.put(mapEntry.getKey(), UtilPlume.clone(mapEntry.getValue()));
+      K oldKey = mapEntry.getKey();
+      K newKey = cloneKeys ? UtilPlume.clone(oldKey) : oldKey;
+      result.put(newKey, UtilPlume.clone(mapEntry.getValue()));
     }
     return result;
   }
