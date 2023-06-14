@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.Signed;
 
 /**
  * A comparator that orders values based on the lexicographic ordering of their toString().
@@ -36,7 +39,8 @@ public class ToStringComparator implements Comparator<Object> {
     "nullness:argument", // Comparator should be @Contravariant.
     "mustcall:argument" // not sure; Java generics inference?
   })
-  public static <T> List<T> sorted(Iterable<T> in) {
+  public static <T extends @MustCallUnknown @Nullable @Signed Object> List<T> sorted(
+      Iterable<T> in) {
     List<T> result = new ArrayList<T>();
     for (T object : in) {
       result.add(object);
