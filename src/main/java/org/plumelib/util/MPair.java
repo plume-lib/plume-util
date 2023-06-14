@@ -58,10 +58,7 @@ public class MPair<V1, V2> {
    * @return a copy of {@code orig}, with all elements cloned
    */
   // This method is static so that the pair element types can be constrained to be Cloneable.
-  @SuppressWarnings({
-    "nullness", // generics problem with deepCopy()
-    "signedness:return" // generics problem with lower bound
-  })
+  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1 extends Cloneable, T2 extends Cloneable> MPair<T1, T2> cloneElements(
       MPair<T1, T2> orig) {
     T1 oldFirst = orig.first;
@@ -131,7 +128,6 @@ public class MPair<V1, V2> {
     return Objects.equals(this.first, other.first) && Objects.equals(this.second, other.second);
   }
 
-  @SuppressWarnings("signedness:override.receiver") // temporary
   @Pure
   @Override
   public int hashCode(@GuardSatisfied MPair<V1, V2> this) {
