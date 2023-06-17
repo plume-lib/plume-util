@@ -3865,7 +3865,7 @@ public final class ArraysPlume {
      *
      * @return all the elements in any part of the Partitioning
      */
-    ArrayList<T> partitionedSet() {
+    List<T> partitionedSet() {
       ArrayList<T> result = new ArrayList<>();
       for (List<T> part : this) {
         result.addAll(part);
@@ -3881,7 +3881,7 @@ public final class ArraysPlume {
      */
     boolean isPartitioningFor(List<T> elts) {
       // Inefficient O(n^2) implementation.  We can do O(n log n) if desired.
-      ArrayList<T> ps = partitionedSet();
+      List<T> ps = partitionedSet();
       return ps.size() == elts.size() && ps.containsAll(elts);
     }
 
@@ -3913,6 +3913,7 @@ public final class ArraysPlume {
    * @param elt the element to put in the ArrayList
    * @return a singleton ArrayList containing {@code elt}
    */
+  @SuppressWarnings("NonApiType")
   private static <T> ArrayList<T> newArrayList(T elt) {
     ArrayList<T> result = new ArrayList<>(1);
     result.add(elt);

@@ -3,7 +3,6 @@
 package org.plumelib.util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -980,7 +979,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static ArrayList<Object> tokens(String str, String delim, boolean returnDelims) {
+  public static List<Object> tokens(String str, String delim, boolean returnDelims) {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim, returnDelims));
   }
 
@@ -997,7 +996,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static ArrayList<Object> tokens(String str, String delim) {
+  public static List<Object> tokens(String str, String delim) {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim));
   }
 
@@ -1013,7 +1012,7 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static ArrayList<Object> tokens(String str) {
+  public static List<Object> tokens(String str) {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str));
   }
 

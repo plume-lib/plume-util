@@ -2077,12 +2077,13 @@ public final class UtilPlume {
    * @return vector of strings resulting from tokenization
    * @deprecated use {@link StringsPlume#tokens}
    */
+  @SuppressWarnings("NonApiType")
   @Deprecated // 2020-12-02
   // @InlineMe(
   //     replacement = "StringsPlume.tokens(str, delim, returnDelims)",
   //     imports = "org.plumelib.util.StringsPlume")
   public static ArrayList<Object> tokens(String str, String delim, boolean returnDelims) {
-    return StringsPlume.tokens(str, delim, returnDelims);
+    return (ArrayList<Object>) StringsPlume.tokens(str, delim, returnDelims);
   }
 
   /**
@@ -2094,12 +2095,13 @@ public final class UtilPlume {
    * @return vector of strings resulting from tokenization
    * @deprecated use {@link StringsPlume#tokens}
    */
+  @SuppressWarnings("NonApiType")
   @Deprecated // 2020-12-02
   // @InlineMe(
   //     replacement = "StringsPlume.tokens(str, delim)",
   //     imports = "org.plumelib.util.StringsPlume")
   public static ArrayList<Object> tokens(String str, String delim) {
-    return StringsPlume.tokens(str, delim);
+    return (ArrayList<Object>) StringsPlume.tokens(str, delim);
   }
 
   /**
@@ -2110,10 +2112,11 @@ public final class UtilPlume {
    * @return vector of strings resulting from tokenization
    * @deprecated use {@link StringsPlume#tokens}
    */
+  @SuppressWarnings("NonApiType")
   @Deprecated // 2020-12-02
   // @InlineMe(replacement = "StringsPlume.tokens(str)", imports = "org.plumelib.util.StringsPlume")
   public static ArrayList<Object> tokens(String str) {
-    return StringsPlume.tokens(str);
+    return (ArrayList<Object>) StringsPlume.tokens(str);
   }
 
   ///////////////////////////////////////////////////////////////////////////
