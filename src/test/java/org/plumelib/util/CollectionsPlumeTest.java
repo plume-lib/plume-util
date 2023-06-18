@@ -34,6 +34,7 @@ public final class CollectionsPlumeTest {
   /// Helper functions
   ///
 
+  @SuppressWarnings("NonApiType")
   public static <T> ArrayList<T> toArrayList(Iterator<T> itor) {
     ArrayList<T> v = new ArrayList<>();
     while (itor.hasNext()) {
@@ -42,7 +43,7 @@ public final class CollectionsPlumeTest {
     return v;
   }
 
-  @SuppressWarnings("JdkObsolete")
+  @SuppressWarnings({"JdkObsolete", "NonApiType"})
   public static <T> ArrayList<T> toArrayList(Enumeration<T> e) {
     ArrayList<T> v = new ArrayList<>();
     while (e.hasMoreElements()) {
