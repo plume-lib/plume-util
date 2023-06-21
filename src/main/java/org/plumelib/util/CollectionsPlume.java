@@ -386,8 +386,7 @@ public final class CollectionsPlume {
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
-      List<TO> mapList(Function<? super FROM, ? extends TO> f,
-          Iterable<FROM> iterable) {
+      List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
     List<TO> result;
 
     if (iterable instanceof RandomAccess) {
@@ -1336,8 +1335,8 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
    */
-  public static <K extends Comparable<? super K>, V>
-      Collection<@KeyFor("#1") K> sortedKeySet(Map<K, V> m) {
+  public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
+      Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys);
     return theKeys;
