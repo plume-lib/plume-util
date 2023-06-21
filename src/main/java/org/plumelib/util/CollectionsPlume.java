@@ -384,10 +384,9 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
   public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor @MustCallUnknown Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor @MustCallUnknown Object>
-      List<TO> mapList(
-          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f,
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<TO> mapList(Function<? super FROM, ? extends TO> f,
           Iterable<FROM> iterable) {
     List<TO> result;
 
@@ -1337,7 +1336,7 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
    */
-  public static <K extends Comparable<@MustCallUnknown ? super K>, V>
+  public static <K extends Comparable<? super K>, V>
       Collection<@KeyFor("#1") K> sortedKeySet(Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys);
