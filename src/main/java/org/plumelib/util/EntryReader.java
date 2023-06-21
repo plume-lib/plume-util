@@ -22,6 +22,7 @@ import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -109,8 +110,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /// Internal implementation variables
   ///
 
+  // @MustCall({}) because the RLC does not (yet) support verifying collections of resources.
   /** Stack of readers. Used to support include files. */
-  private final ArrayDeque<FlnReader> readers = new ArrayDeque<>();
+  private final ArrayDeque<@MustCall({}) FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
   @Nullable String pushbackLine = null;

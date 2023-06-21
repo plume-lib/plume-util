@@ -76,10 +76,7 @@ public class ClassDeterministic {
    * @param c the Class whose enum constants to return
    * @return the class's enum constants
    */
-  @SuppressWarnings({
-    "signedness", // ToStringComparator problem
-    "mustcall:argument" // not sure; generics inference problem?
-  })
+  @SuppressWarnings("signedness") // ToStringComparator problem
   public static <@Interned T> T @Nullable [] getEnumConstants(Class<T> c) {
     @NonNull T[] result = c.getEnumConstants();
     if (result == null) {
