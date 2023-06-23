@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 
 /**
  * A comparator that orders values based on the lexicographic ordering of their toString().
@@ -13,7 +14,7 @@ import java.util.Objects;
 // Once https://github.com/typetools/checker-framework/issues/1970 is fixed, Comparator's type
 // argument should be marked as @Contravariant and this should be declared as "extends
 // Comparator<@Nullable Object>".
-public class ToStringComparator implements Comparator<Object> {
+public class ToStringComparator implements Comparator<@MustCallUnknown Object> {
   /** The unique instance (this class is a singleton). */
   public static ToStringComparator instance = new ToStringComparator();
 
@@ -21,7 +22,7 @@ public class ToStringComparator implements Comparator<Object> {
   private ToStringComparator() {}
 
   @Override
-  public int compare(Object o1, Object o2) {
+  public int compare(@MustCallUnknown Object o1, @MustCallUnknown Object o2) {
     return Objects.toString(o1).compareTo(Objects.toString(o2));
   }
 
