@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import org.checkerframework.checker.interning.qual.Interned;
+import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -76,10 +77,7 @@ public class ClassDeterministic {
    * @param c the Class whose enum constants to return
    * @return the class's enum constants
    */
-  @SuppressWarnings({
-    "signedness", // ToStringComparator problem
-    "mustcall:argument" // not sure; generics inference problem?
-  })
+  @SuppressWarnings("signedness") // ToStringComparator problem
   public static <@Interned T> T @Nullable [] getEnumConstants(Class<T> c) {
     @NonNull T[] result = c.getEnumConstants();
     if (result == null) {
@@ -324,13 +322,13 @@ public class ClassDeterministic {
   static ToStringComparator toStringComparator = new ToStringComparator();
 
   /** Compares objects by the result of toString(). */
-  private static class ToStringComparator implements Comparator<Object> {
+  private static class ToStringComparator implements Comparator<@MustCallUnknown Object> {
 
     /** Create a new ToStringComparator. */
     public ToStringComparator() {}
 
     @Override
-    public int compare(Object o1, Object o2) {
+    public int compare(@MustCallUnknown Object o1, @MustCallUnknown Object o2) {
       return o1.toString().compareTo(o2.toString());
     }
   }

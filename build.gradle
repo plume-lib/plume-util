@@ -78,7 +78,7 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  errorprone('com.google.errorprone:error_prone_core:2.19.1')
+  errorprone('com.google.errorprone:error_prone_core:2.20.0')
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
@@ -134,10 +134,10 @@ if (project.hasProperty('cfLocal')) {
     testCompileOnly files(cfHome + '/checker/dist/checker-qual.jar')
     checkerFramework files(cfHome + '/checker/dist/checker.jar')
   }
-} else if (false) {
+} else if (true) {
   // To use a snapshot version of the Checker Framework.
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.35.0'
+  ext.checkerFrameworkVersion = '3.35.1-SNAPSHOT'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"

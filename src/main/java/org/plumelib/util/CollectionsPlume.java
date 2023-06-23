@@ -384,11 +384,9 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
   public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor @MustCallUnknown Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor @MustCallUnknown Object>
-      List<TO> mapList(
-          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f,
-          Iterable<FROM> iterable) {
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
     List<TO> result;
 
     if (iterable instanceof RandomAccess) {
@@ -635,7 +633,7 @@ public final class CollectionsPlume {
    * @param e an enumeration to convert to a ArrayList
    * @return a vector containing the elements of the enumeration
    */
-  @SuppressWarnings("JdkObsolete")
+  @SuppressWarnings({"JdkObsolete", "NonApiType"})
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
@@ -801,6 +799,7 @@ public final class CollectionsPlume {
    * @param cnt maximum element value
    * @return list of lists of length arity, each of which combines integers from start to cnt
    */
+  @SuppressWarnings("NonApiType")
   public static ArrayList<ArrayList<Integer>> createCombinations(
       int arity, @NonNegative int start, int cnt) {
 
@@ -1336,8 +1335,8 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
    */
-  public static <K extends Comparable<@MustCallUnknown ? super K>, V>
-      Collection<@KeyFor("#1") K> sortedKeySet(Map<K, V> m) {
+  public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
+      Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys);
     return theKeys;
