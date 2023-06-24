@@ -14,7 +14,7 @@ import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 // Once https://github.com/typetools/checker-framework/issues/1970 is fixed, Comparator's type
 // argument should be marked as @Contravariant and this should be declared as "extends
 // Comparator<@Nullable Object>".
-public class ToStringComparator implements Comparator<@MustCallUnknown Object> {
+public class ToStringComparator implements Comparator<Object> {
   /** The unique instance (this class is a singleton). */
   public static ToStringComparator instance = new ToStringComparator();
 
