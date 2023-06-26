@@ -35,12 +35,8 @@ public class ToStringComparator implements Comparator<Object> {
    * @param in a set of elements
    * @return the elements, sorted according to {@code toString()}
    */
-  @SuppressWarnings({
-    "signedness:argument", // temporary
-    "nullness:argument" // Comparator should be @Contravariant.
-  })
-  public static <T extends @MustCallUnknown @Nullable @Signed Object> List<T> sorted(
-      Iterable<T> in) {
+  @SuppressWarnings("nullness:argument") // Comparator should be @Contravariant.
+  public static <T extends @Nullable @Signed Object> List<T> sorted(Iterable<T> in) {
     List<T> result = new ArrayList<T>();
     for (T object : in) {
       result.add(object);
