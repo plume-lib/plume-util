@@ -5,6 +5,7 @@
 - `CollectionsPlume`: remove conflicting overrides of `deepCopy()`
 - `IPair` and `MPair`: rename fields from `a` and `b` to `first` and `second`
 - `MPair`: new methods `cloneElements()`, `deepCopy()`, `deepCopyFirst()`, `deepCopySecond()`
+- `StirngsPlume`: add `rpad` that pads with an arbitrary character
 
 ## 1.8.0 (2023-06-02)
 
