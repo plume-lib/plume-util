@@ -5,9 +5,8 @@
 - `CollectionsPlume`: remove conflicting overrides of `deepCopy()`
 - `IPair` and `MPair`: rename fields from `a` and `b` to `first` and `second`
 - `MPair`: new methods `cloneElements()`, `deepCopy()`, `deepCopyFirst()`, `deepCopySecond()`
+- `StringsPlume`: add `rpad` that pads with an arbitrary character
 - `FilesPlume`: new `InputStream` methods `available()`, `isWhitespaceOnly()`, `readCodePoint()`
-
-src/main/java/org/plumelib/util/
 
 ## 1.8.0 (2023-06-02)
 
