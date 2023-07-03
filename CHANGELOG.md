@@ -1,5 +1,9 @@
 # Plume-Util change log
 
+## 1.8.2
+- `StringsPlume`: add `rpad` that pads with an arbitrary character
+- TODO: FilesPlume changes.
+
 ## 1.8.1 (2023-06-02)
 
 - `CollectionsPlume`: remove conflicting overrides of `deepCopy()`
