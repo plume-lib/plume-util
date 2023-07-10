@@ -1372,8 +1372,20 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
+   * Given an array, returns the capacity that should be passed to a HashMap or HashSet constructor,
+   * so that the set or map will not resize.
+   *
+   * @param <T> the type of elements of the array
+   * @param a an array whose length is the maximum expected number of elements in the map or set
+   * @return the initial capacity to pass to a HashMap or HashSet constructor
+   */
+  public static <T> int mapCapacity(T[] a) {
+    return mapCapacity(a.length);
+  }
+
+  /**
+   * Given a collection, returns the capacity that should be passed to a HashMap or HashSet
+   * constructor, so that the set or map will not resize.
    *
    * @param c a collection whose size is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
@@ -1383,8 +1395,8 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
+   * Given a map, returns the capacity that should be passed to a HashMap or HashSet constructor, so
+   * that the set or map will not resize.
    *
    * @param m a map whose size is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor

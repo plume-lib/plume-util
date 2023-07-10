@@ -1,10 +1,17 @@
 # Plume-Util change log
 
+## 1.8.2
+- `StringsPlume`: add `rpad` that pads with an arbitrary character
+- `CollectionsPlume`: add an overload for `mapCapacity()`
+- TODO: FilesPlume changes.
+
 ## 1.8.1 (2023-06-02)
 
 - `CollectionsPlume`: remove conflicting overrides of `deepCopy()`
 - `IPair` and `MPair`: rename fields from `a` and `b` to `first` and `second`
 - `MPair`: new methods `cloneElements()`, `deepCopy()`, `deepCopyFirst()`, `deepCopySecond()`
+- `StringsPlume`: add `rpad` that pads with an arbitrary character
+- `FilesPlume`: new `InputStream` methods `available()`, `isWhitespaceOnly()`, `readCodePoint()`
 
 ## 1.8.0 (2023-06-02)
 

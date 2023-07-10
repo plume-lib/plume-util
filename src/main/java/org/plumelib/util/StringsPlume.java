@@ -782,7 +782,7 @@ public final class StringsPlume {
    *
    * @param s string to truncate or pad
    * @param length goal length
-   * @return s truncated or padded to length characters
+   * @return {@code s} truncated or padded to {@code length} characters
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
@@ -802,23 +802,24 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns a string of the specified length, truncated if necessary, and padded with spaces to the
-   * right if necessary.
+   * Returns a string of the specified length, truncated if necessary, and padded with the given
+   * character to the right if necessary.
    *
    * @param s string to truncate or pad
    * @param length goal length
-   * @return s truncated or padded to length characters
+   * @param c character to use for padding
+   * @return {@code s} truncated or padded to {@code length} characters
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String rpad(String s, @NonNegative int length) {
+  public static String rpad(String s, @NonNegative int length, char c) {
     if (s.length() < length) {
       StringBuilder buf = new StringBuilder(s);
       for (int i = s.length(); i < length; i++) {
-        buf.append(' ');
+        buf.append(c);
       }
       return buf.toString();
     } else {
@@ -827,11 +828,24 @@ public final class StringsPlume {
   }
 
   /**
+   * Returns a string of the specified length, truncated if necessary, and padded with spaces to the
+   * right if necessary.
+   *
+   * @param s string to truncate or pad
+   * @param length goal length
+   * @return {@code s} truncated or padded to {@code length} characters
+   */
+  @SideEffectFree
+  public static String rpad(String s, @NonNegative int length) {
+    return rpad(s, length, ' ');
+  }
+
+  /**
    * Converts the int to a String, then formats it using {@link #rpad(String,int)}.
    *
    * @param num int whose string representation to truncate or pad
    * @param length goal length
-   * @return a string representation of num truncated or padded to length characters
+   * @return a string representation of {@code num} truncated or padded to {@code length} characters
    */
   @SideEffectFree
   public static String rpad(int num, @NonNegative int length) {
@@ -843,7 +857,7 @@ public final class StringsPlume {
    *
    * @param num double whose string representation to truncate or pad
    * @param length goal length
-   * @return a string representation of num truncated or padded to length characters
+   * @return a string representation of {@code num} truncated or padded to {@code length} characters
    */
   @SideEffectFree
   public static String rpad(double num, @NonNegative int length) {
