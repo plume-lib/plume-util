@@ -872,7 +872,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return false;
     }
 
-    @SuppressWarnings("signedness:override.receiver") // temporary
     @Pure
     @Override
     public int hashCode(ArrayMap<K, V>.Entry this) {
