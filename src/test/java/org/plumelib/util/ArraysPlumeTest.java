@@ -123,7 +123,6 @@ public final class ArraysPlumeTest {
       return this.value == that.value;
     }
 
-    @SuppressWarnings("signedness:override.receiver") // temporary
     @Override
     public int hashCode(@GuardSatisfied MyInteger this) {
       return value;
