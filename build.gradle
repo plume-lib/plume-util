@@ -6,13 +6,13 @@ plugins {
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
   // Requires JDK 11 or higher; the plugin crashes under JDK 8.
-  id 'com.diffplug.spotless' version '6.19.0'
+  id 'com.diffplug.spotless' version '6.20.0'
 
   // Error Prone linter
   id('net.ltgt.errorprone') version '3.1.0'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.27'
+  id 'org.checkerframework' version '0.6.30'
 }
 
 repositories {
@@ -22,9 +22,9 @@ repositories {
 
 dependencies {
   implementation 'org.plumelib:hashmap-util:0.0.1'
-  implementation 'org.plumelib:reflection-util:1.0.6'
+  implementation 'org.plumelib:reflection-util:1.1.0'
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
@@ -78,7 +78,7 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  errorprone('com.google.errorprone:error_prone_core:2.19.1')
+  errorprone('com.google.errorprone:error_prone_core:2.21.1')
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
@@ -118,7 +118,7 @@ checkerFramework {
   ]
   extraJavacArgs = [
     '-Werror',
-    // '-Aversion',
+    '-Aversion',
     // '-verbose',
     '-AcheckPurityAnnotations',
     '-ArequirePrefixInWarningSuppressions',
@@ -135,9 +135,9 @@ if (project.hasProperty('cfLocal')) {
     checkerFramework files(cfHome + '/checker/dist/checker.jar')
   }
 } else if (true) {
-  // use a snapshot version of the Checker Framework.
+  // To use a snapshot version of the Checker Framework.
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.34.1-SNAPSHOT'
+  ext.checkerFrameworkVersion = '3.37.0'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"

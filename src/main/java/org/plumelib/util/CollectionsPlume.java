@@ -367,9 +367,19 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Applies the function to each element of the given iterable, producing a list of the results.
+   * Applies the function to each element of the given iterable, producing a new list of the
+   * results. The point of this method is to make mapping operations more concise. You can write
    *
-   * <p>The point of this method is to make mapping operations more concise. Import it with
+   * <pre>{@code   return mapList(LemmaAnnotation::get, tokens);}</pre>
+   *
+   * instead of
+   *
+   * <pre>{@code   return tokens
+   *            .stream()
+   *            .map(LemmaAnnotation::get)
+   *            .collect(Collectors.toList());}</pre>
+   *
+   * Import this method with
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
@@ -384,11 +394,9 @@ public final class CollectionsPlume {
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
   public static <
-          @KeyForBottom FROM extends @Nullable @UnknownKeyFor @MustCallUnknown Object,
-          @KeyForBottom TO extends @Nullable @UnknownKeyFor @MustCallUnknown Object>
-      List<TO> mapList(
-          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f,
-          Iterable<FROM> iterable) {
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
     List<TO> result;
 
     if (iterable instanceof RandomAccess) {
@@ -443,11 +451,19 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Applies the function to each element of the given iterable, producing a list of the results.
-   * This is just like {@link #mapList(Function, Iterable)}, but with the arguments in the opposite
-   * order.
+   * Applies the function to each element of the given iterable, producing a new list of the
+   * results. The point of this method is to make mapping operations more concise. You can write
    *
-   * <p>The point of this method is to make mapping operations more concise. Import it with
+   * <pre>{@code   return transform(tokens, LemmaAnnotation::get);}</pre>
+   *
+   * instead of
+   *
+   * <pre>{@code   return tokens
+   *            .stream()
+   *            .map(LemmaAnnotation::get)
+   *            .collect(Collectors.toList());}</pre>
+   *
+   * Import this method with
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.transform;</pre>
    *
@@ -635,7 +651,7 @@ public final class CollectionsPlume {
    * @param e an enumeration to convert to a ArrayList
    * @return a vector containing the elements of the enumeration
    */
-  @SuppressWarnings("JdkObsolete")
+  @SuppressWarnings({"JdkObsolete", "NonApiType"})
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
@@ -801,6 +817,7 @@ public final class CollectionsPlume {
    * @param cnt maximum element value
    * @return list of lists of length arity, each of which combines integers from start to cnt
    */
+  @SuppressWarnings("NonApiType")
   public static ArrayList<ArrayList<Integer>> createCombinations(
       int arity, @NonNegative int start, int cnt) {
 
@@ -828,46 +845,6 @@ public final class CollectionsPlume {
     }
 
     return results;
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <T> the type of elements of the list
-   * @param orig a list
-   * @return a deep copy of {@code orig}
-   */
-  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
-  public static <@Nullable T> @PolyNull List<T> deepCopy(@PolyNull List<T> orig) {
-    if (orig == null) {
-      return null;
-    }
-    List<T> result = new ArrayList<>(orig.size());
-    for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
-    }
-    return result;
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each element of the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <T> the type of elements of the list
-   * @param orig a list
-   * @return a deep copy of {@code orig}
-   */
-  @SuppressWarnings("signedness") // problem with UtilPlume.clone()
-  public static <@Nullable T> @PolyNull TreeSet<T> deepCopy(@PolyNull TreeSet<T> orig) {
-    if (orig == null) {
-      return null;
-    }
-    TreeSet<T> result = new TreeSet<>(orig.comparator());
-    for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
-    }
-    return result;
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -1376,8 +1353,8 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
    */
-  public static <K extends Comparable<@MustCallUnknown ? super K>, V>
-      Collection<@KeyFor("#1") K> sortedKeySet(Map<K, V> m) {
+  public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
+      Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
     Collections.sort(theKeys);
     return theKeys;
@@ -1413,8 +1390,20 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
+   * Given an array, returns the capacity that should be passed to a HashMap or HashSet constructor,
+   * so that the set or map will not resize.
+   *
+   * @param <T> the type of elements of the array
+   * @param a an array whose length is the maximum expected number of elements in the map or set
+   * @return the initial capacity to pass to a HashMap or HashSet constructor
+   */
+  public static <T> int mapCapacity(T[] a) {
+    return mapCapacity(a.length);
+  }
+
+  /**
+   * Given a collection, returns the capacity that should be passed to a HashMap or HashSet
+   * constructor, so that the set or map will not resize.
    *
    * @param c a collection whose size is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
@@ -1424,8 +1413,8 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
+   * Given a map, returns the capacity that should be passed to a HashMap or HashSet constructor, so
+   * that the set or map will not resize.
    *
    * @param m a map whose size is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
