@@ -1,9 +1,10 @@
 # Plume-Util change log
 
-## 1.8.2
+## 1.8.2 (????-??-??)
+
 - `StringsPlume`: add `rpad` that pads with an arbitrary character
 - `CollectionsPlume`: add an overload for `mapCapacity()`
-- TODO: FilesPlume changes.
+- `FilesPlume`: new `InputStream` methods `available()`, `isWhitespaceOnly()`, `readCodePoint()`
 
 ## 1.8.1 (2023-06-02)
 
