@@ -1512,7 +1512,7 @@ public final class UtilPlume {
    *
    * <p>Consider using the built-in <a
    * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
-   * method, method, which takes a regular expression whereas this method takes string
+   * method, method, which takes a regular expression whereas this method takes string.
    *
    * @see #split(String s, char delim)
    * @param s the string to split
