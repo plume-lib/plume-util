@@ -31,13 +31,8 @@ dependencies {
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
-if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_20) < 0) {
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-} else {
-  sourceCompatibility = 11
-  targetCompatibility = 11
-}
+sourceCompatibility = 11
+targetCompatibility = 11
 
 test {
   useJUnitPlatform {
@@ -85,7 +80,6 @@ tasks.withType(JavaCompile).configureEach {
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
   options.errorprone {
-    enabled = JavaVersion.current() != JavaVersion.VERSION_1_8
     // Recommends @InlineMe, which isn't in the error_prone_annotations jar file.  An `implementation`
     // dependency on the error_prone_core jar file breaks javac in clients of plume-util.
     disable("InlineMeSuggester")
@@ -94,7 +88,7 @@ tasks.withType(JavaCompile).configureEach {
     excludedPaths = '.*/Weak.*Hash(er)?Map.java'
   }
   options.forkOptions.jvmArgs += '-Xmx2g'
-  options.release = 8
+  options.release = 11
 }
 
 /// Checker Framework pluggable type-checking
@@ -154,9 +148,7 @@ if (project.hasProperty('cfLocal')) {
 javadoc {
   options.addStringOption('Xwerror', '-Xdoclint:all')
   options.addStringOption('private', '-quiet')
-  if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
-    options.addStringOption('source', '8')
-  }
+  options.addStringOption('source', '11')
   doLast {
     ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
     flags:'g', byline:true) {
@@ -171,9 +163,7 @@ task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
-  if (JavaVersion.current().compareTo(org.gradle.api.JavaVersion.VERSION_1_9) >= 0) {
-    options.addStringOption('source', '8')
-  }
+  options.addStringOption('source', '11')
   doLast {
     ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
     flags:'g', byline:true) {
