@@ -20,6 +20,10 @@ repositories {
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
+ext {
+  isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
+}
+
 dependencies {
   implementation 'org.plumelib:hashmap-util:0.0.1'
   implementation 'org.plumelib:reflection-util:1.1.0'
@@ -79,6 +83,9 @@ tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
+  if (isJava21orHigher) {
+    options.compilerArgs << '-Xlint:-this-escape'
+  }
   options.errorprone {
     // Recommends @InlineMe, which isn't in the error_prone_annotations jar file.  An `implementation`
     // dependency on the error_prone_core jar file breaks javac in clients of plume-util.
