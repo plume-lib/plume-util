@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -360,6 +361,15 @@ public final class CollectionsPlumeTest {
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l12223));
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l1123));
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l1233));
+  }
+
+  @Test
+  void testDuplicates() {
+    assertEquals(Collections.emptyList(), new ArrayList<>(CollectionsPlume.duplicates(l123)));
+    assertEquals(l123, new ArrayList<>(CollectionsPlume.duplicates(l123123)));
+    assertEquals(Arrays.asList(2), new ArrayList<>(CollectionsPlume.duplicates(l12223)));
+    assertEquals(Arrays.asList(1), new ArrayList<>(CollectionsPlume.duplicates(l1123)));
+    assertEquals(Arrays.asList(3), new ArrayList<>(CollectionsPlume.duplicates(l1233)));
   }
 
   @Test
