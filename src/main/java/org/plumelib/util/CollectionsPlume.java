@@ -273,6 +273,25 @@ public final class CollectionsPlume {
     }
   }
 
+  /**
+   * Returns the elements (once each) that appear more than once in the given collection.
+   *
+   * @param <T> the type of elements
+   * @param c a collection
+   * @return the elements (once each) that appear more than once in the given collection
+   */
+  public static <T> Collection<T> duplicates(Collection<T> c) {
+    // Inefficient (because of streams) but simple implementation.
+    Set<T> withoutDuplicates = new HashSet<>();
+    Set<T> duplicates = new LinkedHashSet<>();
+    for (T elt : c) {
+      if (!withoutDuplicates.add(elt)) {
+        duplicates.add(elt);
+      }
+    }
+    return duplicates;
+  }
+
   /** All calls to deepEquals that are currently underway. */
   private static HashSet<WeakIdentityPair<Object, Object>> deepEqualsUnderway =
       new HashSet<WeakIdentityPair<Object, Object>>();

@@ -6,18 +6,22 @@ plugins {
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
   // Requires JDK 11 or higher; the plugin crashes under JDK 8.
-  id 'com.diffplug.spotless' version '6.21.0'
+  id 'com.diffplug.spotless' version '6.22.0'
 
   // Error Prone linter
   id('net.ltgt.errorprone') version '3.1.0'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.33'
+  id 'org.checkerframework' version '0.6.34'
 }
 
 repositories {
   mavenCentral()
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+ext {
+  isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
 
 dependencies {
@@ -73,12 +77,15 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  errorprone('com.google.errorprone:error_prone_core:2.21.1')
+  errorprone('com.google.errorprone:error_prone_core:2.22.0')
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
+  if (isJava21orHigher) {
+    options.compilerArgs << '-Xlint:-this-escape'
+  }
   options.errorprone {
     // Recommends @InlineMe, which isn't in the error_prone_annotations jar file.  An `implementation`
     // dependency on the error_prone_core jar file breaks javac in clients of plume-util.
@@ -131,7 +138,7 @@ if (project.hasProperty('cfLocal')) {
 } else if (true) {
   // To use a snapshot version of the Checker Framework.
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.38.0'
+  ext.checkerFrameworkVersion = '3.39.0'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
