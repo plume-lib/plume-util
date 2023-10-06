@@ -5,7 +5,7 @@
 - Require Java 11
 - `StringsPlume`: add `rpad` that pads with an arbitrary character
 - `CollectionsPlume`:
-   * add method `duplicates()`
+   * add methods `duplicates()` and `listFilter()`
    * add an overload for `mapCapacity()`
 
 ## 1.8.1 (2023-06-02)

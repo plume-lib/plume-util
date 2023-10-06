@@ -25,6 +25,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -548,6 +549,31 @@ public final class CollectionsPlume {
     result.clear();
     for (T elt : orig) {
       result.add(DeepCopyable.deepCopyOrNull(elt));
+    }
+    return result;
+  }
+
+  /**
+   * Returns a new list containing only the elements for which the filter returns true. To modify
+   * the collection in place, use {@code Collection#removeIf}.
+   *
+   * <p>Using streams gives an equivalent list but is less efficient and more verbose:
+   *
+   * <pre>{@code
+   * coll.stream().filter(filter).collect(Collectors.toList());
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param filter a predicate
+   * @return a new list with the elements for which the filter returns true
+   */
+  public static <T> List<T> listFilter(Collection<T> coll, Predicate<? super T> filter) {
+    List<T> result = new ArrayList<>();
+    for (T elt : coll) {
+      if (filter.test(elt)) {
+        result.add(elt);
+      }
     }
     return result;
   }
