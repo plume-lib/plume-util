@@ -924,16 +924,33 @@ public final class StringsPlume {
    * @param length goal length
    * @return a string representation of {@code num} padded to {@code length} characters
    */
+  @SuppressWarnings({
+    "lock:method.guarantee.violated", // side effect to local state
+    "allcheckers:purity.not.sideeffectfree.call"
+  }) // side effect to local state
   @SideEffectFree
   public static String rpad(double num, @NonNegative int length) {
+    if (length == 0) {
+      throw new IllegalArgumentException(String.format("rpad(%s, %s)", num, length));
+    }
     String numString = String.valueOf(num);
     int dotIndex = numString.indexOf('.');
-    if (dotIndex > length) {
+    if (dotIndex >= length) {
       return numString.substring(0, dotIndex);
-    } else if (dotIndex == length) {
-      return rpad(numString.substring(0, dotIndex), length);
+    } else if (dotIndex == length - 1) {
+      // Pad instead of having the last character in the output be the decimal period.
+      return numString.substring(0, dotIndex) + " ";
+    } else
+    // now: dotIndex < length - 1
+    if (length < numString.length()) {
+      return numString.substring(0, length);
     } else {
-      return rpad(numString, length, ' ');
+      // This is guaranteed to pad only, so inline rather than calling a method.
+      StringBuilder result = new StringBuilder(numString);
+      for (int i = numString.length(); i < length; i++) {
+        result.append(' ');
+      }
+      return result.toString();
     }
   }
 
