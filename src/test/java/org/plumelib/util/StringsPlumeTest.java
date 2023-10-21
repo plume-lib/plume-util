@@ -303,7 +303,7 @@ public final class StringsPlumeTest {
     assertEquals("ab...", StringsPlume.rpad("abcde ghij", 5));
     assertEquals("10   ", StringsPlume.rpad(10, 5));
     assertEquals("3.14 ", StringsPlume.rpad(3.14, 5));
-    assertEquals("3.141592", StringsPlume.rpad(3.141592, 5));
+    assertEquals("3.141", StringsPlume.rpad(3.141592, 5));
     assertEquals("3141592", StringsPlume.rpad(3141592, 5));
     assertEquals("12", StringsPlume.rpad(12.34567, 1));
     assertEquals("12", StringsPlume.rpad(12.34567, 2));
