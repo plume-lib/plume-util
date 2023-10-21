@@ -3,7 +3,12 @@
 ## 1.9.0 (????-??-??)
 
 - Require Java 11
-- `StringsPlume`: add `rpad` that pads with an arbitrary character
+- `StringsPlume`:
+    * `rpad` and `lpad` add an ellipsis ("...") if it truncates
+    * `rpad(double, ...)` does not truncate values before the decimal point
+    * add `rpad` that pads with an arbitrary character
+    * add `rpad` that never truncates
+    * add `lpad` that never truncates
 - `CollectionsPlume`:
    * add method `duplicates()`
    * add an overload for `mapCapacity()`
