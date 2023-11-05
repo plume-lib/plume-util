@@ -28,7 +28,7 @@ dependencies {
   implementation 'org.plumelib:hashmap-util:0.0.1'
   implementation 'org.plumelib:reflection-util:1.1.0'
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
