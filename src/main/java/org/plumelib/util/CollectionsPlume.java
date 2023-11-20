@@ -451,6 +451,8 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
+   * This method is just like {@link #transform}, but with the arguments in the other order.
+   *
    * @param <FROM> the type of elements of the given array
    * @param <TO> the type of elements of the result list
    * @param f a function
