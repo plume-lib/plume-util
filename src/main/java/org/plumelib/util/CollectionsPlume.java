@@ -108,7 +108,7 @@ public final class CollectionsPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@link hasNoDuplicates} instead
    */
-  @deprecated // 2023-11-30
+  @Deprecated // 2023-11-30
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
     return hasNoDuplicates(a);
