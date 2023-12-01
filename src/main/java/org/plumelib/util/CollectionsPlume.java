@@ -55,21 +55,6 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
-   * Collections.sort(List<T>, Comparator<? super T>)}.
-   *
-   * @return a sorted version of the list
-   * @param <T> type of elements of the list
-   * @param l a list to sort
-   * @param c a sorted version of the list
-   */
-  public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
-    List<T> result = new ArrayList<>(l);
-    Collections.sort(result, c);
-    return result;
-  }
-
-  /**
    * Returns true iff the list does not contain duplicate elements.
    *
    * <p>The implementation uses O(n) time and O(n) space.
@@ -109,8 +94,24 @@ public final class CollectionsPlume {
    * @return true iff a does not contain duplicate elements
    */
   @Pure
-  public static <T> boolean noDuplicates(List<T> a) {
+  public static <T> boolean hasNoDuplicates(List<T> a) {
     return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff the list does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param <T> the type of the elements
+   * @param a a list
+   * @return true iff a does not contain duplicate elements
+   * @deprecated use {@link hasNoDuplicates} instead
+   */
+  @deprecated // 2023-11-30
+  @Pure
+  public static <T> boolean noDuplicates(List<T> a) {
+    return hasNoDuplicates(a);
   }
 
   /**
@@ -202,6 +203,21 @@ public final class CollectionsPlume {
     } else {
       return new ArrayList<>(set);
     }
+  }
+
+  /**
+   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
+   * Collections.sort(List<T>, Comparator<? super T>)}.
+   *
+   * @return a sorted version of the list
+   * @param <T> type of elements of the list
+   * @param l a list to sort
+   * @param c a sorted version of the list
+   */
+  public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
+    List<T> result = new ArrayList<>(l);
+    Collections.sort(result, c);
+    return result;
   }
 
   /**
@@ -519,7 +535,8 @@ public final class CollectionsPlume {
     "signedness", // problem with clone()
     "nullness" // generics problem
   })
-  public static <T extends @Nullable Object, C extends @Nullable Collection<T>> @PolyNull C cloneElements(@PolyNull C orig) {
+  public static <T extends @Nullable Object, C extends @Nullable Collection<T>>
+      @PolyNull C cloneElements(@PolyNull C orig) {
     if (orig == null) {
       return null;
     }
@@ -543,7 +560,8 @@ public final class CollectionsPlume {
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings({"signedness", "nullness:argument"}) // problem with clone()
-  public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>> @PolyNull C deepCopy(@PolyNull C orig) {
+  public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>>
+      @PolyNull C deepCopy(@PolyNull C orig) {
     if (orig == null) {
       return null;
     }
@@ -557,7 +575,30 @@ public final class CollectionsPlume {
 
   /**
    * Returns a new list containing only the elements for which the filter returns true. To modify
-   * the collection in place, use {@code Collection#removeIf}.
+   * the collection in place, use {@code Collection#removeIf} instead of this method.
+   *
+   * <p>Using streams gives an equivalent list but is less efficient and more verbose:
+   *
+   * <pre>{@code
+   * coll.stream().filter(filter).collect(Collectors.toList());
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param filter a predicate
+   * @return a new list with the elements for which the filter returns true
+   * @deprecated use {@link #filter} instead
+   */
+  @Deprecated // 2023-11-30
+  public static <T> List<T> listFilter(Collection<T> coll, Predicate<? super T> filter) {
+    return filter(coll, filter);
+  }
+
+  // TODO: This should return a collection of the same type as the input.  Currently it always
+  // returns a list.
+  /**
+   * Returns a new list containing only the elements for which the filter returns true. To modify
+   * the collection in place, use {@code Collection#removeIf} instead of this method.
    *
    * <p>Using streams gives an equivalent list but is less efficient and more verbose:
    *
@@ -570,7 +611,7 @@ public final class CollectionsPlume {
    * @param filter a predicate
    * @return a new list with the elements for which the filter returns true
    */
-  public static <T> List<T> listFilter(Collection<T> coll, Predicate<? super T> filter) {
+  public static <T> List<T> filter(Collection<T> coll, Predicate<? super T> filter) {
     List<T> result = new ArrayList<>();
     for (T elt : coll) {
       if (filter.test(elt)) {
@@ -1513,7 +1554,8 @@ public final class CollectionsPlume {
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>> @PolyNull M deepCopyValues(@PolyNull M orig) {
+  public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>>
+      @PolyNull M deepCopyValues(@PolyNull M orig) {
     if (orig == null) {
       return null;
     }

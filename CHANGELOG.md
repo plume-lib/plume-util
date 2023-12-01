@@ -12,6 +12,8 @@
 - `CollectionsPlume`:
    * add methods `duplicates()` and `listFilter()`
    * add an overload for `mapCapacity()`
+   * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
+   * deprecated `listFilter()`; use `filter()` instead
 
 ## 1.8.1 (2023-06-02)
 
