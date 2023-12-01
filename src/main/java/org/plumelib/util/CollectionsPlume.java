@@ -106,7 +106,7 @@ public final class CollectionsPlume {
    * @param <T> the type of the elements
    * @param a a list
    * @return true iff a does not contain duplicate elements
-   * @deprecated use {@link hasNoDuplicates} instead
+   * @deprecated use {@link #hasNoDuplicates(List)}
    */
   @Deprecated // 2023-11-30
   @Pure

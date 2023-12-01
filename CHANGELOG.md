@@ -14,6 +14,8 @@
    * add an overload for `mapCapacity()`
    * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
    * deprecated `listFilter()`; use `filter()` instead
+- `ArraysPlume`:
+   * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
 
 ## 1.8.1 (2023-06-02)
 
