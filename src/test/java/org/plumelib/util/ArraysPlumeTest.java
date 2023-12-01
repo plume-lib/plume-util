@@ -389,42 +389,42 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_noDuplicates() {
-    // public static int noDuplicates(int[] a)
-    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 0}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 100}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {2, 2, 3, 5, 4, 0}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, 3, 5, 4, 1}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, -3, -5, 4, 0}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {1, 2, -2, -2, 4, 100}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new int[] {42}) == true);
+  public void test_hasNoDuplicates() {
+    // public static int hasNoDuplicates(int[] a)
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, 3, 5, 4, 0}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, 3, 5, 4, 100}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {2, 2, 3, 5, 4, 0}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, 3, 5, 4, 1}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, -3, -5, 4, 0}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, -2, -2, 4, 100}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new int[] {42}) == true);
 
-    // public static int noDuplicates(long[] a)
-    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 0}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 100}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {2, 2, 3, 5, 4, 0}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, 3, 5, 4, 1}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, -3, -5, 4, 0}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {1, 2, -2, -2, 4, 100}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new long[] {42}) == true);
+    // public static int hasNoDuplicates(long[] a)
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {1, 2, 3, 5, 4, 0}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {1, 2, 3, 5, 4, 100}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {2, 2, 3, 5, 4, 0}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {1, 2, 3, 5, 4, 1}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {1, 2, -3, -5, 4, 0}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {1, 2, -2, -2, 4, 100}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new long[] {42}) == true);
 
-    // public static int noDuplicates(double[] a)
-    assertTrue(ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 0}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 100}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {2, 2, 3, 5, 4, 0}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {1, 2, 3, 5, 4, 1}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {1., 1.001, -3, -5, 4, 0}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {1., 2, -2.00, -2, 4, 100}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new double[] {42}) == true);
+    // public static int hasNoDuplicates(double[] a)
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {1, 2, 3, 5, 4, 0}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {1, 2, 3, 5, 4, 100}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {2, 2, 3, 5, 4, 0}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {1, 2, 3, 5, 4, 1}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {1., 1.001, -3, -5, 4, 0}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {1., 2, -2.00, -2, 4, 100}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new double[] {42}) == true);
 
-    // public static int noDuplicates(String[] a)
-    assertTrue(ArraysPlume.noDuplicates(new String[] {"1", "2", "3", "5", "4", "0"}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new String[] {"A", "a", "foo", "Foo", ""}) == true);
-    assertTrue(ArraysPlume.noDuplicates(new String[] {" ", " "}) == false);
-    assertTrue(ArraysPlume.noDuplicates(new String[] {"  ", " "}) == true);
+    // public static int hasNoDuplicates(String[] a)
+    assertTrue(ArraysPlume.hasNoDuplicates(new String[] {"1", "2", "3", "5", "4", "0"}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new String[] {"A", "a", "foo", "Foo", ""}) == true);
+    assertTrue(ArraysPlume.hasNoDuplicates(new String[] {" ", " "}) == false);
+    assertTrue(ArraysPlume.hasNoDuplicates(new String[] {"  ", " "}) == true);
   }
 
   @Test

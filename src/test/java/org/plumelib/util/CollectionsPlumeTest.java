@@ -425,8 +425,8 @@ public final class CollectionsPlumeTest {
     List<Integer> in = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
     List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
     List<Integer> even = Arrays.asList(new Integer[] {2, 4});
-    assertEquals(odd, CollectionsPlume.listFilter(in, i -> i % 2 == 1));
-    assertEquals(even, CollectionsPlume.listFilter(in, i -> i % 2 == 0));
+    assertEquals(odd, CollectionsPlume.filter(in, i -> i % 2 == 1));
+    assertEquals(even, CollectionsPlume.filter(in, i -> i % 2 == 0));
   }
 
   @Test
