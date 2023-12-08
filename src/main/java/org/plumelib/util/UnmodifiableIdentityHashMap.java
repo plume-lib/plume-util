@@ -168,7 +168,6 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  @SuppressWarnings("lock:override.param") // to fix when the Checker Framework requires Java 11
   @Override
   public boolean remove(
       @GuardSatisfied @UnknownSignedness Object key,
