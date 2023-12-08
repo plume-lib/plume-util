@@ -1,8 +1,2 @@
-buildscript {
-  if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
-    throw new Error("Use Java 11 or later.")
-  }
-}
-
 // Project name is read-only in build scripts, and defaults to directory name.
 rootProject.name = "plume-util"
