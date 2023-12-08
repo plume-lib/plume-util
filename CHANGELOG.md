@@ -1,8 +1,11 @@
 # Plume-Util change log
 
-## 1.9.0 (????-??-??)
+## 2.0.0 (????-??-??)
 
 - Require Java 11
+
+## 1.9.0 (2023-12-08)
+
 - `StringsPlume`:
     * `rpad` and `lpad` add an ellipsis ("...") if it truncates
     * `rpad(double, ...)` does not truncate values before the decimal point
