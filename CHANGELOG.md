@@ -19,7 +19,6 @@
    * deprecated `listFilter()`; use `filter()` instead
 - `ArraysPlume`:
    * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
-- Tested under Java 21.
 
 ## 1.8.1 (2023-06-02)
 
