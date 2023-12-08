@@ -5,8 +5,7 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '8.1.1'
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  // Version 6.14.0 and later requires JRE 11+.
-  id 'com.diffplug.spotless' version '6.13.0'
+  id 'com.diffplug.spotless' version '6.23.3'
 
   // Error Prone linter
   id('net.ltgt.errorprone') version '3.1.0'
@@ -35,8 +34,8 @@ dependencies {
 // To upload to Maven Central, see instructions in the file.
 apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
-sourceCompatibility = 8
-targetCompatibility = 8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 test {
   useJUnitPlatform {
@@ -77,9 +76,7 @@ spotless {
 /// Error Prone linter
 
 dependencies {
-  // Error Prone versions later than 2.10.0 require JDK 11.
-  // errorprone('com.google.errorprone:error_prone_core:2.23.0')
-  errorprone('com.google.errorprone:error_prone_core:2.10.0')
+  errorprone('com.google.errorprone:error_prone_core:2.23.0')
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
@@ -92,11 +89,12 @@ tasks.withType(JavaCompile).configureEach {
     // Recommends @InlineMe, which isn't in the error_prone_annotations jar file.  An `implementation`
     // dependency on the error_prone_core jar file breaks javac in clients of plume-util.
     disable("InlineMeSuggester")
-    // For Java 11: disable('ExtendsObject')  // Incorrect when using the Checker Framework
+    disable('ExtendsObject')  // Incorrect when using the Checker Framework
     // Code copied from the JDK that we don't want to change gratuitously.
     excludedPaths = '.*/Weak.*Hash(er)?Map.java'
   }
   options.forkOptions.jvmArgs += '-Xmx2g'
+  options.release = 11
 }
 
 /// Checker Framework pluggable type-checking
@@ -156,7 +154,7 @@ if (project.hasProperty('cfLocal')) {
 javadoc {
   options.addStringOption('Xwerror', '-Xdoclint:all')
   options.addStringOption('private', '-quiet')
-  options.addStringOption('source', '8')
+  options.addStringOption('source', '11')
   doLast {
     ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
     flags:'g', byline:true) {
@@ -171,7 +169,7 @@ task javadocWeb(type: Javadoc) {
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
-  options.addStringOption('source', '8')
+  options.addStringOption('source', '11')
   doLast {
     ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
     flags:'g', byline:true) {

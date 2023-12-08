@@ -25,7 +25,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -1054,13 +1053,7 @@ public final class FilesPlume {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    // In Java 11: String result = baos.toString(UTF_8);
-    String result;
-    try {
-      result = baos.toString("UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new Error(e);
-    }
+    String result = baos.toString(UTF_8);
     return result;
   }
 
