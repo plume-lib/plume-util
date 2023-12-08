@@ -9,18 +9,21 @@ jobs:
 
     strategy:
       matrix:
-        java: [ '11', '17', '21' ]
+        java: [ '8', '11', '17', '20' ]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
+    - name: java -version
+      run: java -version
     - name: ./gradlew build javadoc
       run: ./gradlew build
     - name: ./gradlew requireJavadoc
       run: ./gradlew requireJavadoc
+    # TODO: This might be done by "./gradlew build"
     - name: ./gradlew spotlessCheck
       run: ./gradlew spotlessCheck
