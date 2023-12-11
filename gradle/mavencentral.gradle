@@ -6,8 +6,15 @@
 // To make a release (run on any filesystem, except the last step):
 //  * Make a snapshot release to Maven Central and test it on some clients:
 //     * Set "version" below.
-//     * ...
-//     * In the clients' build.gradle: set version number and use ...
+//     * git pull && ./gradlew javadocWeb
+//     * In the clients' build.gradle: set version number and use:
+//         repositories {
+//           ...
+//           maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+//         }
+//         configurations.all {
+//           resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//         }
 //    For the Checker Framework:
 //     * usecf THE-BRANCH-THAT-USES-THE-SNAPSHOT
 //     * checker/bin-devel/test-cftests-all.sh && checker/bin-devel/test-typecheck.sh && checker/bin-devel/test-plume-lib.sh
