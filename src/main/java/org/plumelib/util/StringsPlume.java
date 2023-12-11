@@ -777,11 +777,14 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns a string of the specified length, truncated if necessary, and padded with spaces to the
-   * left if necessary.
+   * Returns a string of the specified length, truncated if necessary (in which case the last 3
+   * non-truncated characters are replaced by "..."), and padded with spaces to the left if
+   * necessary.
    *
    * @param s string to truncate or pad
    * @param length goal length
+   * @param c the character to use for padding
+   * @param truncate if false, no truncation is done, only padding
    * @return {@code s} truncated or padded to {@code length} characters
    */
   @SuppressWarnings({
@@ -789,47 +792,108 @@ public final class StringsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String lpad(String s, @NonNegative int length) {
-    if (s.length() < length) {
+  public static String lpad(String s, @NonNegative int length, char c, boolean truncate) {
+    int sLength = s.length();
+    if (sLength == length) {
+      return s;
+    } else if (sLength < length) {
       StringBuilder buf = new StringBuilder();
-      for (int i = s.length(); i < length; i++) {
-        buf.append(' ');
+      for (int i = sLength; i < length; i++) {
+        buf.append(c);
       }
-      return buf.toString() + s;
+      buf.append(s);
+      return buf.toString();
     } else {
-      return s.substring(0, length);
+      if (truncate && length > 3) {
+        return s.substring(0, length - 3) + "...";
+      } else {
+        return s;
+      }
     }
   }
 
   /**
-   * Returns a string of the specified length, truncated if necessary, and padded with the given
-   * character to the right if necessary.
+   * Returns a string of the specified length, truncated if necessary (in which case the last 3
+   * non-truncated characters are replaced by "..."), and padded with `c` to the left if necessary.
    *
    * @param s string to truncate or pad
    * @param length goal length
    * @param c character to use for padding
    * @return {@code s} truncated or padded to {@code length} characters
    */
+  @SideEffectFree
+  public static String lpad(String s, @NonNegative int length, char c) {
+    return lpad(s, length, c, true);
+  }
+
+  /**
+   * Returns a string of the specified length, truncated if necessary (in which case the last 3
+   * non-truncated characters are replaced by "..."), and padded with spaces to the left if
+   * necessary.
+   *
+   * @param s string to truncate or pad
+   * @param length goal length
+   * @return {@code s} truncated or padded to {@code length} characters
+   */
+  @SideEffectFree
+  public static String lpad(String s, @NonNegative int length) {
+    return lpad(s, length, ' ', true);
+  }
+
+  /**
+   * Returns a string of the specified length, truncated if necessary (in which case the last 3
+   * non-truncated characters are replaced by "..."), and padded with the given character to the
+   * right if necessary.
+   *
+   * @param s string to truncate or pad
+   * @param length goal length
+   * @param c character to use for padding
+   * @param truncate if false, no truncation is done, only padding
+   * @return {@code s} truncated or padded to {@code length} characters
+   */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String rpad(String s, @NonNegative int length, char c) {
-    if (s.length() < length) {
+  public static String rpad(String s, @NonNegative int length, char c, boolean truncate) {
+    int sLength = s.length();
+    if (sLength == length) {
+      return s;
+    } else if (sLength < length) {
       StringBuilder buf = new StringBuilder(s);
-      for (int i = s.length(); i < length; i++) {
+      for (int i = sLength; i < length; i++) {
         buf.append(c);
       }
       return buf.toString();
     } else {
-      return s.substring(0, length);
+      if (truncate && length > 3) {
+        return s.substring(0, length - 3) + "...";
+      } else {
+        return s;
+      }
     }
   }
 
   /**
-   * Returns a string of the specified length, truncated if necessary, and padded with spaces to the
+   * Returns a string of the specified length, truncated if necessary (in which case the last 3
+   * non-truncated characters are replaced by "..."), and padded with the given character to the
    * right if necessary.
+   *
+   * @param s string to truncate or pad
+   * @param length goal length
+   * @param c character to use for padding
+   * @return {@code s} truncated or padded to {@code length} characters
+   */
+  @SideEffectFree
+  public static String rpad(String s, @NonNegative int length, char c) {
+    return rpad(s, length, c, true);
+  }
+
+  /**
+   * Returns a string of the specified length, truncated if necessary (in which case the last 3
+   * non-truncated characters are replaced by "..."), and padded with spaces to the right if
+   * necessary.
    *
    * @param s string to truncate or pad
    * @param length goal length
@@ -845,23 +909,49 @@ public final class StringsPlume {
    *
    * @param num int whose string representation to truncate or pad
    * @param length goal length
-   * @return a string representation of {@code num} truncated or padded to {@code length} characters
+   * @return a string representation of {@code num} padded to {@code length} characters
    */
   @SideEffectFree
   public static String rpad(int num, @NonNegative int length) {
-    return rpad(String.valueOf(num), length);
+    return rpad(String.valueOf(num), length, ' ', /* truncate= */ false);
   }
 
   /**
-   * Converts the double to a String, then formats it using {@link #rpad(String,int)}.
+   * Converts the double to a String, then formats it using {@link #rpad(String,int)}. Does not do
+   * truncation that is after a decimal point.
    *
    * @param num double whose string representation to truncate or pad
    * @param length goal length
-   * @return a string representation of {@code num} truncated or padded to {@code length} characters
+   * @return a string representation of {@code num} padded to {@code length} characters
    */
+  @SuppressWarnings({
+    "lock:method.guarantee.violated", // side effect to local state
+    "allcheckers:purity.not.sideeffectfree.call"
+  }) // side effect to local state
   @SideEffectFree
   public static String rpad(double num, @NonNegative int length) {
-    return rpad(String.valueOf(num), length);
+    if (length == 0) {
+      throw new IllegalArgumentException(String.format("rpad(%s, %s)", num, length));
+    }
+    String numString = String.valueOf(num);
+    int dotIndex = numString.indexOf('.');
+    if (dotIndex >= length) {
+      return numString.substring(0, dotIndex);
+    } else if (dotIndex == length - 1) {
+      // Pad instead of having the last character in the output be the decimal period.
+      return numString.substring(0, dotIndex) + " ";
+    } else
+    // now: dotIndex < length - 1
+    if (length < numString.length()) {
+      return numString.substring(0, length);
+    } else {
+      // This is guaranteed to pad only, so inline rather than calling a method.
+      StringBuilder result = new StringBuilder(numString);
+      for (int i = numString.length(); i < length; i++) {
+        result.append(' ');
+      }
+      return result.toString();
+    }
   }
 
   ///////////////////////////////////////////////////////////////////////////

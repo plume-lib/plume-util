@@ -1,12 +1,24 @@
 # Plume-Util change log
 
-## 1.9.0 (????-??-??)
+## 2.0.0 (????-??-??)
 
 - Require Java 11
-- `StringsPlume`: add `rpad` that pads with an arbitrary character
+
+## 1.9.0 (2023-12-08)
+
+- `StringsPlume`:
+    * `rpad` and `lpad` add an ellipsis ("...") if it truncates
+    * `rpad(double, ...)` does not truncate values before the decimal point
+    * add `rpad` that pads with an arbitrary character
+    * add `rpad` that never truncates
+    * add `lpad` that never truncates
 - `CollectionsPlume`:
-   * add method `duplicates()`
+   * add methods `duplicates()` and `listFilter()`
    * add an overload for `mapCapacity()`
+   * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
+   * deprecated `listFilter()`; use `filter()` instead
+- `ArraysPlume`:
+   * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
 
 ## 1.8.1 (2023-06-02)
 

@@ -25,6 +25,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -52,21 +53,6 @@ public final class CollectionsPlume {
   ///////////////////////////////////////////////////////////////////////////
   /// Collections
   ///
-
-  /**
-   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
-   * Collections.sort(List<T>, Comparator<? super T>)}.
-   *
-   * @return a sorted version of the list
-   * @param <T> type of elements of the list
-   * @param l a list to sort
-   * @param c a sorted version of the list
-   */
-  public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
-    List<T> result = new ArrayList<>(l);
-    Collections.sort(result, c);
-    return result;
-  }
 
   /**
    * Returns true iff the list does not contain duplicate elements.
@@ -108,8 +94,24 @@ public final class CollectionsPlume {
    * @return true iff a does not contain duplicate elements
    */
   @Pure
-  public static <T> boolean noDuplicates(List<T> a) {
+  public static <T> boolean hasNoDuplicates(List<T> a) {
     return !hasDuplicates(a);
+  }
+
+  /**
+   * Returns true iff the list does not contain duplicate elements.
+   *
+   * <p>The implementation uses O(n) time and O(n) space.
+   *
+   * @param <T> the type of the elements
+   * @param a a list
+   * @return true iff a does not contain duplicate elements
+   * @deprecated use {@link #hasNoDuplicates(List)}
+   */
+  @Deprecated // 2023-11-30
+  @Pure
+  public static <T> boolean noDuplicates(List<T> a) {
+    return hasNoDuplicates(a);
   }
 
   /**
@@ -201,6 +203,21 @@ public final class CollectionsPlume {
     } else {
       return new ArrayList<>(set);
     }
+  }
+
+  /**
+   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
+   * Collections.sort(List<T>, Comparator<? super T>)}.
+   *
+   * @return a sorted version of the list
+   * @param <T> type of elements of the list
+   * @param l a list to sort
+   * @param c a sorted version of the list
+   */
+  public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
+    List<T> result = new ArrayList<>(l);
+    Collections.sort(result, c);
+    return result;
   }
 
   /**
@@ -450,6 +467,8 @@ public final class CollectionsPlume {
    *
    * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
    *
+   * This method is just like {@link #transform}, but with the arguments in the other order.
+   *
    * @param <FROM> the type of elements of the given array
    * @param <TO> the type of elements of the result list
    * @param f a function
@@ -548,6 +567,54 @@ public final class CollectionsPlume {
     result.clear();
     for (T elt : orig) {
       result.add(DeepCopyable.deepCopyOrNull(elt));
+    }
+    return result;
+  }
+
+  /**
+   * Returns a new list containing only the elements for which the filter returns true. To modify
+   * the collection in place, use {@code Collection#removeIf} instead of this method.
+   *
+   * <p>Using streams gives an equivalent list but is less efficient and more verbose:
+   *
+   * <pre>{@code
+   * coll.stream().filter(filter).collect(Collectors.toList());
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param filter a predicate
+   * @return a new list with the elements for which the filter returns true
+   * @deprecated use {@link #filter} instead
+   */
+  @Deprecated // 2023-11-30
+  public static <T> List<T> listFilter(Collection<T> coll, Predicate<? super T> filter) {
+    return filter(coll, filter);
+  }
+
+  // TODO: This should return a collection of the same type as the input.  Currently it always
+  // returns a list.
+  /**
+   * Returns a new list containing only the elements for which the filter returns true. To modify
+   * the collection in place, use {@code Collection#removeIf} instead of this method.
+   *
+   * <p>Using streams gives an equivalent list but is less efficient and more verbose:
+   *
+   * <pre>{@code
+   * coll.stream().filter(filter).collect(Collectors.toList());
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param filter a predicate
+   * @return a new list with the elements for which the filter returns true
+   */
+  public static <T> List<T> filter(Collection<T> coll, Predicate<? super T> filter) {
+    List<T> result = new ArrayList<>();
+    for (T elt : coll) {
+      if (filter.test(elt)) {
+        result.add(elt);
+      }
     }
     return result;
   }

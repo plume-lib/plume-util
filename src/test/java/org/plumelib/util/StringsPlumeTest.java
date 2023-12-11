@@ -299,10 +299,18 @@ public final class StringsPlumeTest {
     assertEquals("     ", StringsPlume.rpad("", 5));
     assertEquals("abcd ", StringsPlume.rpad("abcd", 5));
     assertEquals("abcde", StringsPlume.rpad("abcde", 5));
-    assertEquals("abcde", StringsPlume.rpad("abcdef", 5));
-    assertEquals("abcde", StringsPlume.rpad("abcde ghij", 5));
+    assertEquals("ab...", StringsPlume.rpad("abcdef", 5));
+    assertEquals("ab...", StringsPlume.rpad("abcde ghij", 5));
     assertEquals("10   ", StringsPlume.rpad(10, 5));
     assertEquals("3.14 ", StringsPlume.rpad(3.14, 5));
+    assertEquals("3.141", StringsPlume.rpad(3.141592, 5));
+    assertEquals("3141592", StringsPlume.rpad(3141592, 5));
+    assertEquals("12", StringsPlume.rpad(12.34567, 1));
+    assertEquals("12", StringsPlume.rpad(12.34567, 2));
+    assertEquals("12 ", StringsPlume.rpad(12.34567, 3));
+    assertEquals("12.3", StringsPlume.rpad(12.34567, 4));
+    assertEquals("12.34", StringsPlume.rpad(12.34567, 5));
+    assertEquals("12.345", StringsPlume.rpad(12.34567, 6));
 
     // public static class NullableStringComparator
     //   public int compare(Object o1, Object o2)
