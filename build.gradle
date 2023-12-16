@@ -136,10 +136,10 @@ if (project.hasProperty('cfLocal')) {
     testCompileOnly files(cfHome + '/checker/dist/checker-qual.jar')
     checkerFramework files(cfHome + '/checker/dist/checker.jar')
   }
-} else if (false) {
+} else if (true) {
   // To use a specific version of the Checker Framework, such as a snapshot.
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.42.0'
+  ext.checkerFrameworkVersion = '3.43.0-SNAPSHOT'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
