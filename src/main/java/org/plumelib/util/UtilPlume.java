@@ -1564,7 +1564,7 @@ public final class UtilPlume {
    */
   @Deprecated // 2020-02-20
   // @InlineMe(replacement="StringsPlume.join(delim, a)", imports="org.plumelib.util.StringsPlume")
-  @SuppressWarnings("nullness:type.argument")
+  @SuppressWarnings("nullness:type.arguments.not.inferred")
   public static <T> String join(@Signed T[] a, CharSequence delim) {
     return StringsPlume.join(delim, a);
   }
@@ -1587,7 +1587,7 @@ public final class UtilPlume {
   @Deprecated // 2020-12-02
   // @InlineMe(replacement="StringsPlume.join(delim, a)", imports="org.plumelib.util.StringsPlume")
   @SafeVarargs
-  @SuppressWarnings({"varargs", "nullness:type.argument"})
+  @SuppressWarnings({"varargs", "nullness:type.arguments.not.inferred"})
   public static <T> String join(CharSequence delim, @Signed T... a) {
     return StringsPlume.join(delim, a);
   }
@@ -1602,7 +1602,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#joinLines}
    */
   @SafeVarargs
-  @SuppressWarnings({"varargs", "nullness:type.argument"})
+  @SuppressWarnings({"varargs", "nullness:type.arguments.not.inferred"})
   @Deprecated // 2020-12-02
   // @InlineMe(replacement="StringsPlume.joinLines(a)", imports="org.plumelib.util.StringsPlume")
   public static <T> String joinLines(@Signed T... a) {

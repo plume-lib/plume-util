@@ -27,7 +27,11 @@ public class DumpHeap {
   private static @MonotonicNonNull Method dumpHeapMethod;
 
   /** Initialize the fields of this class. */
-  @SuppressWarnings({"nullness:assignment", "nullness:contracts.postcondition"}) // reflection
+  @SuppressWarnings({
+    "nullness:type.arguments.not.inferred",
+    "nullness:assignment",
+    "nullness:contracts.postcondition"
+  }) // reflection
   @EnsuresNonNull({"hotspotMBean", "dumpHeapMethod"})
   private static synchronized void initializeFields() {
     try {

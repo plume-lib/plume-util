@@ -2426,7 +2426,7 @@ public final class ArraysPlume {
    */
   @SideEffectFree
   public static String toStringQuoted(
-      @MustCallUnknown @Nullable Collection<? extends @PolyMustCall @Signed @PolyNull Object> a) {
+      @MustCallUnknown @Nullable Collection<? extends @PolyMustCall @Signed @Nullable Object> a) {
     return toString(a, true);
   }
 
