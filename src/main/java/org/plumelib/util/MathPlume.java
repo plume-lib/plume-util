@@ -1231,6 +1231,10 @@ public final class MathPlume {
       firstNonstrict = itor.next().longValue();
     }
 
+    if (!itor.hasNext()) {
+      return null;
+    }
+
     long prev = itor.next().longValue();
     if (!itor.hasNext()) {
       return null;
