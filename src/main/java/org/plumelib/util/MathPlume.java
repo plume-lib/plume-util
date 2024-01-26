@@ -1229,6 +1229,9 @@ public final class MathPlume {
     long lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
       firstNonstrict = itor.next().longValue();
+      if (!itor.hasNext()) {
+        return null;
+      }
     }
 
     long prev = itor.next().longValue();
@@ -1237,7 +1240,7 @@ public final class MathPlume {
     }
     long next = itor.next().longValue();
     long modulus = next - prev;
-    if (modulus == 1) {
+    if (modulus == 1 || modulus == 0) {
       return null;
     }
     int count = 2;
