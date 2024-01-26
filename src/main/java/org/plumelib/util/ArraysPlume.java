@@ -58,7 +58,7 @@ public final class ArraysPlume {
    * @param o the element to appear repeatedly in the returned array; must not be null
    * @return an array consisting of n copies of the specified object
    */
-  public static <T extends Object> T[] nCopies(@NonNegative int n, T o) {
+  public static <T extends @Signed Object> T[] nCopies(@NonNegative int n, T o) {
     @SuppressWarnings("unchecked")
     T[] result = (T[]) Array.newInstance(o.getClass(), n);
     Arrays.fill(result, o);
