@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 public final class MathPlumeTest {
@@ -294,6 +297,43 @@ public final class MathPlumeTest {
     void checkIterator(long[] nums, long @Nullable [] goalRm) {
       check(Arrays.stream(nums).iterator(), goalRm);
     }
+
+    void checkStrict(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
+      long[] rm = MathPlume.modulusStrictLong(Arrays.stream(nums).iterator(), false);
+      if (goalRm == null) {
+        assertNull(rm);
+      } else {
+        assertArraysEquals(goalRm, rm);
+        long modulus = goalRm[1];
+        if (nums.length == 0) {
+          throw new Error("this can't happen, because goalRm is not null");
+        }
+        long first = nums[0];
+        for (int i = 0; i < nums.length; i++) {
+          assertEquals(nums[i], first + i * modulus);
+        }
+      }
+    }
+
+    void checkStrictNonStrictEnds(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
+      long[] rm = MathPlume.modulusStrictLong(Arrays.stream(nums).iterator(), true);
+      if (goalRm == null) {
+        assertNull(rm);
+      } else {
+        assertArraysEquals(goalRm, rm);
+        long remainder = goalRm[0];
+        long modulus = goalRm[1];
+        if (nums.length < 3) {
+          throw new Error("this can't happen, because goalRm is not null");
+        }
+        assertEquals(remainder, nums[0] % modulus);
+        assertEquals(remainder, nums[nums.length - 1] % modulus);
+        long first = nums[1];
+        for (int i = 1; i < nums.length - 1; i++) {
+          assertEquals(nums[i], first + (i - 1) * modulus);
+        }
+      }
+    }
   }
 
   static class TestNonModulus {
@@ -374,6 +414,39 @@ public final class MathPlumeTest {
     testModulusLong.check(new long[] {2, 3, 5, 7}, null);
     testModulusLong.check(new long[] {2, 19, 101}, null);
     testModulusLong.check(new long[] {5, 5, 5, 5, 5}, null);
+
+    testModulusLong.checkStrict(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    testModulusLong.checkStrict(new long[] {3, 11, 19, 27}, new long[] {3, 8});
+    testModulusLong.checkStrict(new long[] {27, 3, 11, 19, 27, -5}, null);
+    testModulusLong.checkStrict(new long[] {3, 11}, null);
+    testModulusLong.checkStrict(new long[] {3}, null);
+    testModulusLong.checkStrict(new long[] {2383, 4015, -81, 463, -689}, null);
+    testModulusLong.checkStrict(new long[] {}, null);
+    testModulusLong.checkStrict(new long[] {1}, null);
+    testModulusLong.checkStrict(new long[] {3, 7}, null);
+    testModulusLong.checkStrict(new long[] {2, 3, 5, 7}, null);
+    testModulusLong.checkStrict(new long[] {2, 19, 101}, null);
+    testModulusLong.checkStrict(new long[] {5, 5, 5, 5, 5}, null);
+
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15, 19}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27, 35}, new long[] {3, 8});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27}, new long[] {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(
+        new long[] {27, 3, 11, 19, 27, 203}, new long[] {3, 8});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {27, 3, 11, 19, 27, -5}, new long[]
+    // {3, 8});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11}, new long[] {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2383, 4015, -81, 463, -689}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {1}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2, 3, 5, 7}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2, 19, 101}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {5, 5, 5, 5, 5}, null);
 
     testModulusLong.checkIterator(new long[] {}, null);
     testModulusLong.checkIterator(new long[] {1}, null);
