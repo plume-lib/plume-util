@@ -1258,6 +1258,14 @@ public final class MathPlume {
       count++;
     }
     if (count < 3) {
+      if (nonstrictEnds) {
+        if (count == 2) {
+          return modulusLong(
+              Arrays.stream(new Long[] {firstNonstrict, prev - modulus, prev, next}).iterator());
+        } else if (count == 1) {
+          return modulusLong(Arrays.stream(new Long[] {firstNonstrict, prev, next}).iterator());
+        }
+      }
       return null;
     }
 

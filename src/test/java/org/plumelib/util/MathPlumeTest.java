@@ -430,15 +430,15 @@ public final class MathPlumeTest {
 
     testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15, 19}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27, 35}, new long[] {3, 8});
-    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15}, new long[] {3, 4});
-    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27}, new long[] {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27}, new long[] {3, 8});
     testModulusLong.checkStrictNonStrictEnds(
         new long[] {27, 3, 11, 19, 27, 203}, new long[] {3, 8});
     // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {27, 3, 11, 19, 27, -5}, new long[]
     // {3, 8});
-    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
-    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
-    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11}, new long[] {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11}, null);
     testModulusLong.checkStrictNonStrictEnds(new long[] {3}, null);
     testModulusLong.checkStrictNonStrictEnds(new long[] {2383, 4015, -81, 463, -689}, null);
     testModulusLong.checkStrictNonStrictEnds(new long[] {}, null);
