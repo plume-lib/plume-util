@@ -989,6 +989,9 @@ public final class MathPlume {
     int lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
       firstNonstrict = itor.next().intValue();
+      if (!itor.hasNext()) {
+        return null;
+      }
     }
 
     int prev = itor.next().intValue();

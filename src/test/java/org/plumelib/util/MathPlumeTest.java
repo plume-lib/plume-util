@@ -462,6 +462,7 @@ public final class MathPlumeTest {
 
     TestNonModulus testNonModulus = new TestNonModulus();
 
+    testNonModulus.checkStrict(new int[] {1}, null);
     testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 9}, null);
     testNonModulus.checkStrict(new int[] {-1, 1, 2, 3, 5, 6, 7, 9}, new int[] {0, 4});
     testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11}, null);
