@@ -973,7 +973,22 @@ public final class FilesPlume {
     }
   }
 
-  // an alternate name would be "fileContents".
+  /**
+   * Reads the entire contents of the file and returns it as a string. Any IOException encountered
+   * will be turned into an Error.
+   *
+   * <p>You could use {@code new String(Files.readAllBytes(...))}, but it requires a Path rather
+   * than a File, and it can throw IOException which has to be caught.
+   *
+   * @param file the file to read
+   * @return the entire contents of the reader, as a string
+   * @deprecated use {@link #fileContents}
+   */
+  @Deprecated // 2023-03-02
+  public static String readFile(File file) {
+    return fileContents(file);
+  }
+
   /**
    * Reads the entire contents of the file and returns it as a string. Any IOException encountered
    * will be turned into an Error.
@@ -984,8 +999,7 @@ public final class FilesPlume {
    * @param file the file to read
    * @return the entire contents of the reader, as a string
    */
-  public static String readFile(File file) {
-
+  public static String fileContents(File file) {
     try (BufferedReader reader = newBufferedFileReader(file)) {
       StringBuilder contents = new StringBuilder();
       String line = reader.readLine();
@@ -997,7 +1011,7 @@ public final class FilesPlume {
       }
       return contents.toString();
     } catch (Exception e) {
-      throw new Error("Unexpected error in readFile(" + file + ")", e);
+      throw new Error("Unexpected error in fileContents(" + file + ")", e);
     }
   }
 

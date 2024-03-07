@@ -2,7 +2,14 @@
 
 ## 2.0.0 (????-??-??)
 
-- Require Java 11
+- Require Java 11.
+- Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
+- Removed all deprecated classes and mehods.
+
+## 1.9.1 (????-??-??)
+
+- `FilesPlume`:
+    * deprecate `readFile()` in favor of `fileContents()`
 
 ## 1.9.0 (2023-12-08)
 
