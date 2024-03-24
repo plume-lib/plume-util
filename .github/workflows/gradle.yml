@@ -9,7 +9,8 @@ jobs:
 
     strategy:
       matrix:
-        java: [ '8', '11', '17', '21' ]
+        # No version of spotles works on both JRE 8 and JRE 21.
+        java: [ '8', '11', '17', '20' ]
 
     steps:
     - uses: actions/checkout@v4
