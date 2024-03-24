@@ -79,7 +79,7 @@ spotless {
 dependencies {
   // Error Prone versions later than 2.10.0 require JDK 11.
   // errorprone('com.google.errorprone:error_prone_core:2.24.1')
-  errorprone('com.google.errorprone:error_prone_core:2.10.0')
+  errorprone('com.google.errorprone:error_prone_core:2.26.1')
 }
 tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
