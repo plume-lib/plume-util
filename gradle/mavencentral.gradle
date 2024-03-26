@@ -20,7 +20,7 @@
 //     * checker/bin-devel/test-cftests-all.sh && checker/bin-devel/test-typecheck.sh && checker/bin-devel/test-plume-lib.sh
 //    For Daikon: make compile junit test
 //  * git pull
-//  * In ../build.gradle, ensure that "To use a specific version" is not enabled.
+//  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
 //    Ensure the version number in this file does not contain "-SNAPSHOT".
 //  * Update ../CHANGELOG.md .
@@ -56,7 +56,7 @@ publishing {
       from components.java
 
       pom {
-        name = 'Plume-lib Util'
+        name = 'Plume Util'
         description = 'Utility libraries for Java.'
         url = 'https://github.com/plume-lib/plume-util'
 
