@@ -94,7 +94,8 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:-this-escape'
   }
   options.errorprone {
-    disable('ExtendsObject')  // Incorrect when using the Checker Framework
+    // ExtendsObject does not yet exist in Error Prone 2.10.0.
+    // disable('ExtendsObject')  // Incorrect when using the Checker Framework
     disable('ReferenceEquality') // Use Interning Checker instead.
     disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
   }
