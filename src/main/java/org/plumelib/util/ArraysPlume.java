@@ -2,6 +2,7 @@
 
 package org.plumelib.util;
 
+import com.google.errorprone.annotations.InlineMe;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
@@ -2528,6 +2529,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(boolean[] a) {
     return !hasDuplicates(a);
@@ -2576,6 +2580,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(byte[] a) {
     return !hasDuplicates(a);
@@ -2624,6 +2631,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(char[] a) {
     return !hasDuplicates(a);
@@ -2672,6 +2682,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(float[] a) {
     return !hasDuplicates(a);
@@ -2720,6 +2733,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(short[] a) {
     return !hasDuplicates(a);
@@ -2768,6 +2784,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(int[] a) {
     return !hasDuplicates(a);
@@ -2817,6 +2836,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(double[] a) {
     return !hasDuplicates(a);
@@ -2866,6 +2888,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(long[] a) {
     return !hasDuplicates(a);
@@ -2914,6 +2939,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(String[] a) {
     return !hasDuplicates(a);
@@ -2962,6 +2990,9 @@ public final class ArraysPlume {
    * @deprecated use {@code hasNoDuplicates}
    */
   @Deprecated // 2023-12-01
+  @InlineMe(
+      replacement = "!ArraysPlume.hasDuplicates(a)",
+      imports = "org.plumelib.util.ArraysPlume")
   @Pure
   public static boolean noDuplicates(Object[] a) {
     return !hasDuplicates(a);

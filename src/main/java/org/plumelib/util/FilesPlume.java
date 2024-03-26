@@ -6,6 +6,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
+import com.google.errorprone.annotations.InlineMe;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -984,6 +985,7 @@ public final class FilesPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link #fileContents}
    */
+  @InlineMe(replacement = "FilesPlume.fileContents(file)", imports = "org.plumelib.util.FilesPlume")
   @Deprecated // 2023-03-02
   public static String readFile(File file) {
     return fileContents(file);
