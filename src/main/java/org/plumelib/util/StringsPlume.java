@@ -217,7 +217,8 @@ public final class StringsPlume {
    * @param s a string
    * @return the first line separator in the given string
    */
-  public static String firstLineSeparator(String s) {
+  @SuppressWarnings("regex:return") // all matches of allLineSeparators are regexes
+  public static @Regex String firstLineSeparator(String s) {
     Matcher m = allLineSeparators.matcher(s);
     if (m.find()) {
       return m.group();
