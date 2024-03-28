@@ -186,20 +186,44 @@ public final class StringsPlume {
   /// Splitting and joining
   ///
 
+  /** A pattern that matches all common line separators: lf, cr, cr-lf. */
+  private static Pattern allLineSeparators = Pattern.compile("\n|\r\n?");
+
   /**
    * Returns an array of Strings, one for each line in the argument. Always returns an array of
-   * length at least 1 (it might contain only the empty string). All common line separators (cr, lf,
-   * cr-lf, or lf-cr) are supported. Note that a string that ends with a line separator will return
-   * an empty string as the last element of the array.
+   * length at least 1 (it might contain only the empty string). All common line separators (lf, cr,
+   * cr-lf) are supported. Note that a string that ends with a line separator will return an empty
+   * string as the last element of the array.
+   *
+   * <p>Alternately, you could use {@link #firstLineSeparator} and split on its return value.
    *
    * @param s the string to split
    * @return an array of Strings, one for each line in the argument
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
+  @SuppressWarnings({
+    "value:statically.executable.not.pure", // pure wrt `equals()` but not `==`
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotation
+    "lock:method.guarantee.violated" // needs JDK annotation
+  })
   @SideEffectFree
   @StaticallyExecutable
   public static String[] splitLines(String s) {
-    return s.split("\r\n?|\n\r?", -1);
+    return allLineSeparators.split(s, -1);
+  }
+
+  /**
+   * Returns the first line separator in the given string, or "\n" if the string contains none.
+   *
+   * @param s a string
+   * @return the first line separator in the given string
+   */
+  public static String firstLineSeparator(String s) {
+    Matcher m = allLineSeparators.matcher(s);
+    if (m.find()) {
+      return m.group();
+    } else {
+      return "\n";
+    }
   }
 
   /**

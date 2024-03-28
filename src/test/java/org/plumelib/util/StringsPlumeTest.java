@@ -390,24 +390,41 @@ public final class StringsPlumeTest {
 
   @Test
   public void testSplitLines() {
-
     String str = "one\ntwo\n\rthree\r\nfour\rfive\n\n\nsix\r\n\r\n\r\n";
     @SuppressWarnings("value") // method that returns an array is not StaticallyExecutable
-    String @ArrayLen(11) [] sa = StringsPlume.splitLines(str);
+    String @ArrayLen(12) [] sa = StringsPlume.splitLines(str);
     // for (String s : sa)
     //   System.out.printf ("'%s'%n", s);
-    assertEquals(11, sa.length);
+    assertEquals(12, sa.length);
     assertEquals("one", sa[0]);
     assertEquals("two", sa[1]);
-    assertEquals("three", sa[2]);
-    assertEquals("four", sa[3]);
-    assertEquals("five", sa[4]);
-    assertEquals("", sa[5]);
+    assertEquals("", sa[2]);
+    assertEquals("three", sa[3]);
+    assertEquals("four", sa[4]);
+    assertEquals("five", sa[5]);
     assertEquals("", sa[6]);
-    assertEquals("six", sa[7]);
-    assertEquals("", sa[8]);
+    assertEquals("", sa[7]);
+    assertEquals("six", sa[8]);
     assertEquals("", sa[9]);
     assertEquals("", sa[10]);
+    assertEquals("", sa[11]);
+  }
+
+  @Test
+  public void testFirstLineSeparator() {
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\n\rgoodbye\rau revior\r\nWindows"));
+
+    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye"));
+    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye\nau revior"));
+    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye\nau revior\r\nWindows"));
+
+    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye"));
+    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior"));
+    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior\rold MacOS"));
   }
 
   @Test

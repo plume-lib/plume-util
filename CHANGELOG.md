@@ -10,6 +10,9 @@
 
 - `FilesPlume`:
     * deprecate `readFile()` in favor of `fileContents()`
+- `StringsPlume`:
+   * new method `firstLineSeparator(String)`
+   * improved behavior of `splitLines(String)`
 
 ## 1.9.0 (2023-12-08)
 
