@@ -16,6 +16,7 @@ plugins {
 }
 
 repositories {
+  mavenLocal()
   mavenCentral()
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
@@ -56,6 +57,7 @@ test {
   }
 }
 
+if (! isJava21orHigher) {
 spotless {
   format 'misc', {
     // define the files to apply `misc` to
@@ -78,6 +80,7 @@ spotless {
     trimTrailingWhitespace()
     // endWithNewline() // Don't want to end empty files with a newline
   }
+}
 }
 
 /// Error Prone linter
