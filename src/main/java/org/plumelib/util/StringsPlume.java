@@ -200,11 +200,7 @@ public final class StringsPlume {
    * @param s the string to split
    * @return an array of Strings, one for each line in the argument
    */
-  @SuppressWarnings({
-    "value:statically.executable.not.pure", // pure wrt `equals()` but not `==`
-    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotation
-    "lock:method.guarantee.violated" // needs JDK annotation
-  })
+  @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
   @SideEffectFree
   @StaticallyExecutable
   public static String[] splitLines(String s) {
