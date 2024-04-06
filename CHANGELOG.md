@@ -13,6 +13,8 @@
 - `StringsPlume`:
    * new method `firstLineSeparator(String)`
    * improved behavior of `splitLines(String)`
+- `CollectionsPlume`:
+   * new method `indexOf(list, value, startIndex)`
 
 ## 1.9.0 (2023-12-08)
 

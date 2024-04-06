@@ -431,6 +431,15 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
+  public void testIndexOf() {
+    List<Integer> nums = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 0, 1, 2});
+    assertEquals(3, CollectionsPlume.indexOf(nums, 3, 0));
+    assertEquals(-1, CollectionsPlume.indexOf(nums, 3, 5));
+    assertEquals(7, CollectionsPlume.indexOf(nums, 1, 3));
+    assertEquals(-1, CollectionsPlume.indexOf(nums, 100, 0));
+  }
+
+  @Test
   public void testSortedSetEquals() {
     TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
     TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
