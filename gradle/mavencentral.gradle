@@ -36,8 +36,8 @@
 //  * Run in the top-level directory:  ./gradlew clean publish
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
-//    VER=1.9.1 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.9.1", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+//    VER=1.9.2 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.9.2", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
 //  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 //  * Update clients and test, so that if it's broken we can re-release.
 
@@ -45,7 +45,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.9.1'
+version '1.9.2'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
