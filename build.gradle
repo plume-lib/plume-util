@@ -31,7 +31,10 @@ ext {
 dependencies {
   implementation 'org.plumelib:hashmap-util:0.0.1'
   implementation 'org.plumelib:reflection-util:1.1.3'
-  implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
+  // Including error_prone_annotations leads to javac warnings (not errors, but
+  // annoying nonetheless) when a client of plume-util doesn't itself depend on
+  // error_prone_annotations.  (Even if the dependency is "compileOnly".)
+  // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -98,6 +101,7 @@ tasks.withType(JavaCompile).configureEach {
   options.errorprone {
     // ExtendsObject does not yet exist in Error Prone 2.10.0.
     // disable('ExtendsObject')  // Incorrect when using the Checker Framework
+    disable('InlineMeSuggester') // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations
     disable('ReferenceEquality') // Use Interning Checker instead.
     disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
   }

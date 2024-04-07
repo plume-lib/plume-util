@@ -6,6 +6,10 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
+## 1.9.2 (2024-04-07)
+
+- Don't use `@InlineMe`, which breaks javac in some clients.
+
 ## 1.9.1 (2024-04-06)
 
 - `FilesPlume`:

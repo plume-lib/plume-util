@@ -2,7 +2,6 @@
 
 package org.plumelib.util;
 
-import com.google.errorprone.annotations.InlineMe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,9 +109,9 @@ public final class CollectionsPlume {
    * @deprecated use {@link #hasNoDuplicates(List)}
    */
   @Deprecated // 2023-11-30
-  @InlineMe(
-      replacement = "CollectionsPlume.hasNoDuplicates(a)",
-      imports = "org.plumelib.util.CollectionsPlume")
+  // @InlineMe(
+  //     replacement = "CollectionsPlume.hasNoDuplicates(a)",
+  //     imports = "org.plumelib.util.CollectionsPlume")
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
     return hasNoDuplicates(a);
@@ -592,9 +591,9 @@ public final class CollectionsPlume {
    * @deprecated use {@link #filter} instead
    */
   @Deprecated // 2023-11-30
-  @InlineMe(
-      replacement = "CollectionsPlume.filter(coll, filter)",
-      imports = "org.plumelib.util.CollectionsPlume")
+  // @InlineMe(
+  //     replacement = "CollectionsPlume.filter(coll, filter)",
+  //     imports = "org.plumelib.util.CollectionsPlume")
   public static <T> List<T> listFilter(Collection<T> coll, Predicate<? super T> filter) {
     return filter(coll, filter);
   }
