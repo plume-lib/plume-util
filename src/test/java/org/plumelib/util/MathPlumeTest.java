@@ -1,5 +1,7 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 public final class MathPlumeTest {
@@ -16,6 +19,16 @@ public final class MathPlumeTest {
   ///
 
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
+    boolean result = Arrays.equals(a1, a2);
+    if (!result) {
+      System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
+    }
+    assertTrue(result);
+    //      assert(Arrays.equals(a1, a2),
+    //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+  }
+
+  private static void assertArraysEquals(long @Nullable [] a1, long @Nullable [] a2) {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
       System.out.println("Arrays differ: " + Arrays.toString(a1) + ", " + Arrays.toString(a2));
@@ -251,6 +264,78 @@ public final class MathPlumeTest {
     }
   }
 
+  static class TestModulusLong {
+    void check(long[] nums, long @Nullable [] goalRm) {
+      long[] rm = MathPlume.modulusLong(Arrays.stream(nums).iterator());
+      if (!Arrays.equals(rm, goalRm)) {
+        throw new Error(
+            "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
+      }
+      if (rm == null) {
+        return;
+      }
+      long goalR = rm[0];
+      long m = rm[1];
+      for (int i = 0; i < nums.length; i++) {
+        long r = nums[i] % m;
+        if (r < 0) {
+          r += m;
+        }
+        if (r != goalR) {
+          throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
+        }
+      }
+    }
+
+    void check(Iterator<Long> itor, long @Nullable [] goalRm) {
+      // There would be no point to this:  it's testing
+      // longIteratorArray, not the iterator version!
+      // return check(longIteratorArray(itor), goalRm);
+      assertArraysEquals(MathPlume.modulusLong(itor), goalRm);
+    }
+
+    void checkIterator(long[] nums, long @Nullable [] goalRm) {
+      check(Arrays.stream(nums).iterator(), goalRm);
+    }
+
+    void checkStrict(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
+      long[] rm = MathPlume.modulusStrictLong(Arrays.stream(nums).iterator(), false);
+      if (goalRm == null) {
+        assertNull(rm);
+      } else {
+        assertArraysEquals(goalRm, rm);
+        long modulus = goalRm[1];
+        if (nums.length == 0) {
+          throw new Error("this can't happen, because goalRm is not null");
+        }
+        long first = nums[0];
+        for (int i = 0; i < nums.length; i++) {
+          assertEquals(nums[i], first + i * modulus);
+        }
+      }
+    }
+
+    void checkStrictNonStrictEnds(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
+      long[] rm = MathPlume.modulusStrictLong(Arrays.stream(nums).iterator(), true);
+      if (goalRm == null) {
+        assertNull(rm);
+      } else {
+        assertArraysEquals(goalRm, rm);
+        long remainder = goalRm[0];
+        long modulus = goalRm[1];
+        if (nums.length < 3) {
+          throw new Error("this can't happen, because goalRm is not null");
+        }
+        assertEquals(remainder, nums[0] % modulus);
+        assertEquals(remainder, nums[nums.length - 1] % modulus);
+        long first = nums[1];
+        for (int i = 1; i < nums.length - 1; i++) {
+          assertEquals(nums[i], first + (i - 1) * modulus);
+        }
+      }
+    }
+  }
+
   static class TestNonModulus {
     void checkStrict(int[] nums, int @Nullable [] goalRm) {
       check(nums, goalRm, true);
@@ -317,12 +402,67 @@ public final class MathPlumeTest {
     testModulus.checkIterator(new int[] {2383, 4015, -81, 463, -689}, new int[] {15, 32});
     testModulus.checkIterator(new int[] {5, 5, 5, 5, 5}, null);
 
+    TestModulusLong testModulusLong = new TestModulusLong();
+
+    testModulusLong.check(new long[] {3, 7, 47, 51}, new long[] {3, 4});
+    testModulusLong.check(new long[] {3, 11, 43, 51}, new long[] {3, 8});
+    testModulusLong.check(new long[] {3, 11, 47, 55}, new long[] {3, 4});
+    testModulusLong.check(new long[] {2383, 4015, -81, 463, -689}, new long[] {15, 32});
+    testModulusLong.check(new long[] {}, null);
+    testModulusLong.check(new long[] {1}, null);
+    testModulusLong.check(new long[] {3, 7}, null);
+    testModulusLong.check(new long[] {2, 3, 5, 7}, null);
+    testModulusLong.check(new long[] {2, 19, 101}, null);
+    testModulusLong.check(new long[] {5, 5, 5, 5, 5}, null);
+
+    testModulusLong.checkStrict(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    testModulusLong.checkStrict(new long[] {3, 11, 19, 27}, new long[] {3, 8});
+    testModulusLong.checkStrict(new long[] {27, 3, 11, 19, 27, -5}, null);
+    testModulusLong.checkStrict(new long[] {3, 11}, null);
+    testModulusLong.checkStrict(new long[] {3}, null);
+    testModulusLong.checkStrict(new long[] {2383, 4015, -81, 463, -689}, null);
+    testModulusLong.checkStrict(new long[] {}, null);
+    testModulusLong.checkStrict(new long[] {1}, null);
+    testModulusLong.checkStrict(new long[] {3, 7}, null);
+    testModulusLong.checkStrict(new long[] {2, 3, 5, 7}, null);
+    testModulusLong.checkStrict(new long[] {2, 19, 101}, null);
+    testModulusLong.checkStrict(new long[] {5, 5, 5, 5, 5}, null);
+
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15, 19}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27, 35}, new long[] {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11, 19, 27}, new long[] {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(
+        new long[] {27, 3, 11, 19, 27, 203}, new long[] {3, 8});
+    // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {27, 3, 11, 19, 27, -5}, new long[]
+    // {3, 8});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2383, 4015, -81, 463, -689}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {1}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2, 3, 5, 7}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2, 19, 101}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {5, 5, 5, 5, 5}, null);
+
+    testModulusLong.checkIterator(new long[] {}, null);
+    testModulusLong.checkIterator(new long[] {1}, null);
+    testModulusLong.checkIterator(new long[] {3, 7, 47, 51}, new long[] {3, 4});
+    testModulusLong.checkIterator(new long[] {3, 11, 43, 51}, new long[] {3, 8});
+    testModulusLong.checkIterator(new long[] {3, 11, 47, 55}, new long[] {3, 4});
+    testModulusLong.checkIterator(new long[] {2383, 4015, -81, 463, -689}, new long[] {15, 32});
+    testModulusLong.checkIterator(new long[] {5, 5, 5, 5, 5}, null);
+
     // int[] nonmodulusStrict(int[] nums)
     // int[] nonmodulusNonstrict(int[] nums)
     // int[] nonmodulusStrict(Iterator nums)
 
     TestNonModulus testNonModulus = new TestNonModulus();
 
+    testNonModulus.checkStrict(new int[] {1}, null);
     testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 9}, null);
     testNonModulus.checkStrict(new int[] {-1, 1, 2, 3, 5, 6, 7, 9}, new int[] {0, 4});
     testNonModulus.checkStrict(new int[] {1, 2, 3, 5, 6, 7, 9, 11}, null);

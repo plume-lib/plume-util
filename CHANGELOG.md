@@ -2,7 +2,23 @@
 
 ## 2.0.0 (????-??-??)
 
-- Require Java 11
+- Require Java 11.
+- Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
+- Removed all deprecated classes and mehods.
+
+## 1.9.2 (2024-04-07)
+
+- Don't use `@InlineMe`, which breaks javac in some clients.
+
+## 1.9.1 (2024-04-06)
+
+- `FilesPlume`:
+    * deprecate `readFile()` in favor of `fileContents()`
+- `StringsPlume`:
+   * new method `firstLineSeparator(String)`
+   * improved behavior of `splitLines(String)`
+- `CollectionsPlume`:
+   * new method `indexOf(list, value, startIndex)`
 
 ## 1.9.0 (2023-12-08)
 
@@ -19,7 +35,6 @@
    * deprecated `listFilter()`; use `filter()` instead
 - `ArraysPlume`:
    * deprecated `noDuplicates()`; use `hasNoDuplicates()` instead
-- Tested under Java 21.
 
 ## 1.8.1 (2023-06-02)
 

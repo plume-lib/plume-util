@@ -11,6 +11,7 @@ import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
@@ -25,7 +26,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *
  * @param <T> the type of elements of the set
  */
-public abstract class AbstractMostlySingletonSet<T extends Object> implements Set<T> {
+public abstract class AbstractMostlySingletonSet<T extends @Signed Object> implements Set<T> {
 
   /** The possible states of this set. */
   public enum State {

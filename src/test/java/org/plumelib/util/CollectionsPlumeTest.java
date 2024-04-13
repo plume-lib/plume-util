@@ -243,6 +243,7 @@ public final class CollectionsPlumeTest {
           }
         }
         @SuppressWarnings({
+          "index:type.arguments.not.inferred",
           "lowerbound:assignment",
           "index:assignment",
           "value"
@@ -405,7 +406,7 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
-  @SuppressWarnings("lock:methodref.receiver")
+  @SuppressWarnings("lock:type.arguments.not.inferred")
   public void testMapList() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
@@ -413,7 +414,7 @@ public final class CollectionsPlumeTest {
   }
 
   @Test
-  @SuppressWarnings("lock:methodref.receiver")
+  @SuppressWarnings("lock:type.arguments.not.inferred")
   public void testTransform() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
@@ -427,6 +428,15 @@ public final class CollectionsPlumeTest {
     List<Integer> even = Arrays.asList(new Integer[] {2, 4});
     assertEquals(odd, CollectionsPlume.filter(in, i -> i % 2 == 1));
     assertEquals(even, CollectionsPlume.filter(in, i -> i % 2 == 0));
+  }
+
+  @Test
+  public void testIndexOf() {
+    List<Integer> nums = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 0, 1, 2});
+    assertEquals(3, CollectionsPlume.indexOf(nums, 3, 0));
+    assertEquals(-1, CollectionsPlume.indexOf(nums, 3, 5));
+    assertEquals(7, CollectionsPlume.indexOf(nums, 1, 3));
+    assertEquals(-1, CollectionsPlume.indexOf(nums, 100, 0));
   }
 
   @Test

@@ -4,8 +4,29 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release (run on any filesystem, except the last step):
-//  * Make a local snapshot release and test it on some clients,
-//    such as both the Checker Framework and Daikon.
+//  * Make a snapshot release to Maven Central and test it on some clients:
+//     * Approach 1:
+//        * Set "version" below.
+//        * git pull && ./gradlew clean publish
+//        * In the clients' build.gradle: set version number and use:
+//            repositories {
+//              ...
+//              maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+//            }
+//            configurations.all {
+//              resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//            }
+//     * Approach 2:
+//        * Set "version" below.
+//        * git pull && ./gradlew clean PublishToMavenLocal
+//        * In the clients' build.gradle: set version number and use:
+//            repositories {
+//              mavenLocal()
+//            }
+//    For the Checker Framework:
+//     * usecf THE-BRANCH-THAT-USES-THE-SNAPSHOT
+//     * checker/bin-devel/test-cftests-all.sh && checker/bin-devel/test-typecheck.sh && checker/bin-devel/test-plume-lib.sh
+//    For Daikon: make compile junit test
 //  * git pull
 //  * In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
 //  * Update the version number in ../README.md and in this file (multiple times in each).
@@ -15,15 +36,16 @@
 //  * Run in the top-level directory:  ./gradlew clean publish
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
-//    VER=1.8.1 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.8.1", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+//    VER=1.9.2 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.9.2", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
 //  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
+//  * Update clients and test, so that if it's broken we can re-release.
 
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.8.1'
+version '1.9.2'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
@@ -42,7 +64,7 @@ publishing {
       from components.java
 
       pom {
-        name = 'Plume-lib Util'
+        name = 'Plume Util'
         description = 'Utility libraries for Java.'
         url = 'https://github.com/plume-lib/plume-util'
 

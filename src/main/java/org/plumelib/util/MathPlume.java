@@ -801,7 +801,8 @@ public final class MathPlume {
    * @deprecated use {@link #modNonnegative(int, int)}
    */
   @Deprecated // 2020-02-20
-  // @InlineMe(replacement="MathPlume.modNonnegative(x, y)", imports="org.plumelib.util.MathPlume")
+  // @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports =
+  // "org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modPositive(
@@ -989,6 +990,9 @@ public final class MathPlume {
     int lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
       firstNonstrict = itor.next().intValue();
+      if (!itor.hasNext()) {
+        return null;
+      }
     }
 
     int prev = itor.next().intValue();
@@ -1041,7 +1045,8 @@ public final class MathPlume {
    * @deprecated use {@link #modNonnegative(long, long)}
    */
   @Deprecated // 2020-02-20
-  // @InlineMe(replacement="MathPlume.modNonnegative(x, y)", imports="org.plumelib.util.MathPlume")
+  // @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports =
+  // "org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound long modPositive(
@@ -1229,6 +1234,9 @@ public final class MathPlume {
     long lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
       firstNonstrict = itor.next().longValue();
+      if (!itor.hasNext()) {
+        return null;
+      }
     }
 
     long prev = itor.next().longValue();
@@ -1237,7 +1245,7 @@ public final class MathPlume {
     }
     long next = itor.next().longValue();
     long modulus = next - prev;
-    if (modulus == 1) {
+    if (modulus == 1 || modulus == 0) {
       return null;
     }
     int count = 2;
@@ -1255,6 +1263,14 @@ public final class MathPlume {
       count++;
     }
     if (count < 3) {
+      if (nonstrictEnds) {
+        if (count == 2) {
+          return modulusLong(
+              Arrays.stream(new Long[] {firstNonstrict, prev - modulus, prev, next}).iterator());
+        } else if (count == 1) {
+          return modulusLong(Arrays.stream(new Long[] {firstNonstrict, prev, next}).iterator());
+        }
+      }
       return null;
     }
 
