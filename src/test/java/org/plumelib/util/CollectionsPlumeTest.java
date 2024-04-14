@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.jupiter.api.Test;
+import org.plumelib.util.CollectionsPlume.Replacement;
 
 public final class CollectionsPlumeTest {
 
@@ -437,6 +438,135 @@ public final class CollectionsPlumeTest {
     assertEquals(-1, CollectionsPlume.indexOf(nums, 3, 5));
     assertEquals(7, CollectionsPlume.indexOf(nums, 1, 3));
     assertEquals(-1, CollectionsPlume.indexOf(nums, 100, 0));
+  }
+
+  @Test
+  public void testReplace() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    List<Integer> empty = Arrays.asList(new Integer[] {});
+    List<Integer> l_101_103 = Arrays.asList(new Integer[] {101, 102, 103});
+    List<Integer> l_201_205 = Arrays.asList(new Integer[] {201, 202, 203, 204, 205});
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(Replacement.of(1, 3, l_101_103), Replacement.of(5, 6, l_201_205));
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {0, 101, 102, 103, 4, 201, 202, 203, 204, 205, 7, 8, 9});
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(1, 1, Arrays.asList(new Integer[] {101, 102, 103})),
+              Replacement.of(5, 5, Arrays.asList(new Integer[] {201, 202, 203, 204, 205})));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(
+              new Integer[] {0, 101, 102, 103, 2, 3, 4, 201, 202, 203, 204, 205, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(1, 0, Arrays.asList(new Integer[] {101, 102, 103})),
+              Replacement.of(5, 4, Arrays.asList(new Integer[] {201, 202, 203, 204, 205})));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(
+              new Integer[] {0, 101, 102, 103, 1, 2, 3, 4, 201, 202, 203, 204, 205, 5, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(0, 4, Arrays.asList(new Integer[] {101, 102, 103})),
+              Replacement.of(5, 5, Arrays.asList(new Integer[] {201, 202, 203, 204, 205})));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 201, 202, 203, 204, 205, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, 9, empty));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected = empty;
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(1, 8, empty));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected = Arrays.asList(new Integer[] {0, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(Replacement.of(0, 5, l_101_103), Replacement.of(5, 8, l_201_205));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 201, 202, 203, 204, 205, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(9, 9, l_101_103));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 101, 102, 103});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(9, 8, l_101_103));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 101, 102, 103, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, 0, l_101_103));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, -1, l_101_103));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(0, 4, l_101_103),
+              Replacement.of(5, 4, l_201_205),
+              Replacement.of(5, 4, l_201_205));
+      List<Integer> replaced = CollectionsPlume.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(
+              new Integer[] {
+                101, 102, 103, 201, 202, 203, 204, 205, 201, 202, 203, 204, 205, 5, 6, 7, 8, 9
+              });
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, -1, l_101_103));
+      List<Integer> replaced = CollectionsPlume.replace(empty, replacements);
+      List<Integer> expected = l_101_103;
+      assertEquals(expected, replaced);
+    }
   }
 
   @Test

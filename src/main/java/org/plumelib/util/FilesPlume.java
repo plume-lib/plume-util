@@ -992,8 +992,10 @@ public final class FilesPlume {
   }
 
   /**
-   * Reads the entire contents of the file and returns it as a string. Any IOException encountered
-   * will be turned into an Error.
+   * Reads the entire contents of the file and returns it as a string.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
    *
    * <p>You could use {@code new String(Files.readAllBytes(...))}, but it requires a Path rather
    * than a File, and it can throw IOException which has to be caught.
@@ -1019,8 +1021,10 @@ public final class FilesPlume {
 
   /**
    * Creates a file with the given name and writes the specified string to it. If the file currently
-   * exists (and is writable) it is overwritten Any IOException encountered will be turned into an
-   * Error.
+   * exists (and is writable) it is overwritten.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
    *
    * @param file the file to write to
    * @param contents the text to put in the file

@@ -639,6 +639,99 @@ public final class CollectionsPlume {
     return idx == -1 ? -1 : idx + start;
   }
 
+  /** Represents a replacement of one range of a collection by another collection. */
+  public static class Replacement<T> {
+    /** The first line to replace, inclusive. */
+    public final int start;
+
+    /** The last line to replace, <em>inclusive</em>. May be equal to {@code start}-1. */
+    public final int end;
+
+    /** The new (replacement) elements. */
+    final Collection<T> elements;
+
+    /**
+     * Creates a new Replacement.
+     *
+     * @param start the first line to replace, inclusive
+     * @param end the last line to replace, exclusive
+     * @param elements the new (replacement) elements
+     */
+    private Replacement(int start, int end, Collection<T> elements) {
+      this.start = start;
+      this.end = end;
+      this.elements = elements;
+      if (end < start - 1) {
+        throw new Error("Invalid <start,end> pair: " + this);
+      }
+    }
+
+    /**
+     * Creates a new Replacement.
+     *
+     * @param <T> the type of elements of the list
+     * @param start the first line to replace, inclusive
+     * @param end the last line to replace, exclusive
+     * @param elements the new (replacement) elements
+     * @return a new Replacement
+     */
+    public static <T> Replacement<T> of(int start, int end, Collection<T> elements) {
+      return new Replacement<T>(start, end, elements);
+    }
+
+    @Override
+    public String toString(@GuardSatisfied Replacement<T> this) {
+      return "Replacement{" + start + ", " + end + ", " + elements + "}";
+    }
+  }
+
+  /**
+   * Performs a set of replacements on the given collection, returning the transformed result (as a
+   * list).
+   *
+   * @param <T> the type of collection elements
+   * @param c a collection
+   * @param replacements the replacements to perform on the collection, in order from the beginning
+   *     of the collection to the end
+   * @return the transformed collection, as a new list (even if no changes were made)
+   */
+  public static <T> List<T> replace(Iterable<T> c, Iterable<Replacement<T>> replacements) {
+    List<T> result = new ArrayList<>();
+    Iterator<T> cItor = c.iterator();
+    int cIndex = -1; // the index into c
+    Iterator<Replacement<T>> replacementItor = replacements.iterator();
+    while (replacementItor.hasNext()) {
+      Replacement<T> replacement = replacementItor.next();
+      while (cIndex < replacement.start - 1) {
+        result.add(cItor.next());
+        cIndex++;
+      }
+      result.addAll(replacement.elements);
+      while (cIndex < replacement.end) {
+        cItor.next();
+        cIndex++;
+      }
+    }
+    while (cItor.hasNext()) {
+      result.add(cItor.next());
+    }
+    return result;
+  }
+
+  /**
+   * Performs a set of replacements on the given array, returning the transformed result (as a
+   * list).
+   *
+   * @param <T> the type of collection elements
+   * @param c an array
+   * @param replacements the replacements to perform on the arary, in order from the beginning of
+   *     the list to the end
+   * @return the transformed collection, as a list
+   */
+  public static <T> List<T> replace(T[] c, Collection<Replacement<T>> replacements) {
+    return replace(Arrays.asList(c), replacements);
+  }
+
   ///////////////////////////////////////////////////////////////////////////
   /// SortedSet
   ///
