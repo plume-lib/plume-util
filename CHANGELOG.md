@@ -6,10 +6,12 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
-## 1.9.3 (2024-04-12)
+## 1.9.3 (2024-??-??)
 
 - `CollectionsPlume`:
     * new method `replace(Collection<T> c, Collection<Replacement<T>> replacements)`
+- `StringsPlume`:
+    * new methods `splitRetainSeparators()` and `splitLinesRetainSeparators()`
 
 ## 1.9.2 (2024-04-07)
 

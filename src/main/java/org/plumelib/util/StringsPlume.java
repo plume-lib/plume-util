@@ -3,6 +3,7 @@
 package org.plumelib.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -187,13 +188,15 @@ public final class StringsPlume {
   ///
 
   /** A pattern that matches all common line separators: lf, cr, cr-lf. */
-  private static Pattern allLineSeparators = Pattern.compile("\n|\r\n?");
+  private static Pattern allLineSeparators = Pattern.compile("\\R");
 
   /**
-   * Returns an array of Strings, one for each line in the argument. Always returns an array of
-   * length at least 1 (it might contain only the empty string). All common line separators (lf, cr,
-   * cr-lf) are supported. Note that a string that ends with a line separator will return an empty
-   * string as the last element of the array.
+   * Returns an array of Strings, one for each line in the argument. The strings do <b>not</b> end
+   * with line separators. Always returns an array of length at least 1 (it might contain only the
+   * empty string). All common line separators (lf, cr, cr-lf) are supported. Note that a string
+   * that ends with a line separator will return an empty string as the last element of the array.
+   *
+   * <p>It is probably better to use {@code String.lines()} rather than this method.
    *
    * <p>Alternately, you could use {@link #firstLineSeparator} and split on its return value.
    *
@@ -221,6 +224,49 @@ public final class StringsPlume {
     } else {
       return "\n";
     }
+  }
+
+  /**
+   * Splits a String into lines, keeping the line separator at the end of each substring.
+   *
+   * @param input the input String
+   * @return the split string
+   */
+  static List<String> splitLinesRetainSeparators(String input) {
+    return splitRetainSeparators(input, allLineSeparators);
+  }
+
+  /**
+   * Splits a String according to a regex, keeping the separator at the end of each substring.
+   *
+   * @param input the input String
+   * @param regex the regular expression upon which to split the input
+   * @return the split string
+   */
+  static List<String> splitRetainSeparators(String input, @Regex String regex) {
+    return splitRetainSeparators(input, Pattern.compile(regex));
+  }
+
+  /**
+   * Splits a String according to a pattern, keeping the separator at the end of each substring.
+   *
+   * @param input the input String
+   * @param p the pattern upon which to split the input
+   * @return the split string
+   */
+  @SuppressWarnings("index:argument") // m.end is @LTLengthOf("index")
+  static List<String> splitRetainSeparators(String input, Pattern p) {
+    List<String> result = new ArrayList<String>();
+    Matcher m = p.matcher(input);
+    int pos = 0;
+    while (m.find()) {
+      result.add(input.substring(pos, m.end()));
+      pos = m.end();
+    }
+    if (pos < input.length()) {
+      result.add(input.substring(pos));
+    }
+    return result;
   }
 
   /**
