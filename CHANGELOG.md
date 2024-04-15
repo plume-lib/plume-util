@@ -12,6 +12,9 @@
     * new method `replace(Collection<T> c, Collection<Replacement<T>> replacements)`
 - `StringsPlume`:
     * new methods `splitRetainSeparators()` and `splitLinesRetainSeparators()`
+- `FilesPlume`:
+    * deprecate `fileContents()` in favor of new method `readString()`
+    * new method `readLinesRetainingSeparators()`
 
 ## 1.9.2 (2024-04-07)
 

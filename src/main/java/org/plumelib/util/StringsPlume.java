@@ -232,7 +232,7 @@ public final class StringsPlume {
    * @param input the input String
    * @return the split string
    */
-  static List<String> splitLinesRetainSeparators(String input) {
+  public static List<String> splitLinesRetainSeparators(String input) {
     return splitRetainSeparators(input, allLineSeparators);
   }
 
@@ -243,7 +243,7 @@ public final class StringsPlume {
    * @param regex the regular expression upon which to split the input
    * @return the split string
    */
-  static List<String> splitRetainSeparators(String input, @Regex String regex) {
+  public static List<String> splitRetainSeparators(String input, @Regex String regex) {
     return splitRetainSeparators(input, Pattern.compile(regex));
   }
 
@@ -255,7 +255,7 @@ public final class StringsPlume {
    * @return the split string
    */
   @SuppressWarnings("index:argument") // m.end is @LTLengthOf("index")
-  static List<String> splitRetainSeparators(String input, Pattern p) {
+  public static List<String> splitRetainSeparators(String input, Pattern p) {
     List<String> result = new ArrayList<String>();
     Matcher m = p.matcher(input);
     int pos = 0;

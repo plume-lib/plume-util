@@ -982,7 +982,7 @@ public final class FilesPlume {
    *
    * @param file the file to read
    * @return the entire contents of the reader, as a string
-   * @deprecated use {@link #fileContents}
+   * @deprecated use {@link #readString}
    */
   // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
   // "org.plumelib.util.FilesPlume")
@@ -997,12 +997,42 @@ public final class FilesPlume {
    * <p>The point of this method is that it does not throw any checked exception: any IOException
    * encountered will be turned into an Error.
    *
+   * @param path the path to the file
+   * @return a String containing the content read from the file
+   */
+  public static String readString(Path path) {
+    try {
+      return Files.readString(path, UTF_8);
+    } catch (IOException e) {
+      throw new Error(e);
+    }
+  }
+
+  /**
+   * Read the entire contents of the file and return it as a list of lines. Each line ends with a
+   * line separator (except perhaps the last line).
+   *
+   * @param path the path to the file
+   * @return the lines of the file
+   */
+  public static List<String> readLinesRetainingSeparators(Path path) {
+    return StringsPlume.splitLinesRetainSeparators(readString(path));
+  }
+
+  /**
+   * Reads the entire contents of the file and returns it as a string.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
    * <p>You could use {@code new String(Files.readAllBytes(...))}, but it requires a Path rather
    * than a File, and it can throw IOException which has to be caught.
    *
    * @param file the file to read
    * @return the entire contents of the reader, as a string
+   * @deprecated use {@link #readString}
    */
+  @Deprecated // 2024-04-14
   public static String fileContents(File file) {
     try (BufferedReader reader = newBufferedFileReader(file)) {
       StringBuilder contents = new StringBuilder();
