@@ -15,6 +15,7 @@
 - `FilesPlume`:
     * deprecate `fileContents()` in favor of new method `readString()`
     * new method `readLinesRetainingSeparators()`
+    * new method `writeFile(Path, String)`
 
 ## 1.9.2 (2024-04-07)
 

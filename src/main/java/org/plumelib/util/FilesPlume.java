@@ -1060,11 +1060,25 @@ public final class FilesPlume {
    * @param contents the text to put in the file
    */
   public static void writeFile(File file, String contents) {
+    writeFile(file.toPath(), contents);
+  }
 
-    try (Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8)) {
+  /**
+   * Creates a file with the given name and writes the specified string to it. If the file currently
+   * exists (and is writable) it is overwritten Any IOException encountered will be turned into an
+   * Error.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
+   * @param path the path to write to
+   * @param contents the text to put in the file
+   */
+  public static void writeFile(Path path, String contents) {
+    try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
       writer.write(contents, 0, contents.length());
     } catch (Exception e) {
-      throw new Error("Unexpected error in writeFile(" + file + ")", e);
+      throw new Error("Unexpected error in writeFile(" + path + ")", e);
     }
   }
 
