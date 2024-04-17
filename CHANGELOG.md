@@ -14,8 +14,9 @@
     * new methods `splitRetainSeparators()` and `splitLinesRetainSeparators()`
 - `FilesPlume`:
     * deprecate `fileContents()` in favor of new method `readString()`
+    * deprecate `writeFile()` in favor of new method `writeString()`
     * new method `readLinesRetainingSeparators()`
-    * new method `writeFile(Path, String)`
+    * new method `writeString(Path, String)`
 
 ## 1.9.2 (2024-04-07)
 

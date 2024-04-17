@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1058,9 +1057,25 @@ public final class FilesPlume {
    *
    * @param file the file to write to
    * @param contents the text to put in the file
+   * @deprecated use {@link #writeString(File, String)}
    */
+  @Deprecated // 2024-04-16
   public static void writeFile(File file, String contents) {
-    writeFile(file.toPath(), contents);
+    writeString(file.toPath(), contents);
+  }
+
+  /**
+   * Creates a file with the given name and writes the specified string to it. If the file currently
+   * exists (and is writable) it is overwritten.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
+   * @param file the file to write to
+   * @param contents the text to put in the file
+   */
+  public static void writeString(File file, String contents) {
+    writeString(file.toPath(), contents);
   }
 
   /**
@@ -1074,9 +1089,9 @@ public final class FilesPlume {
    * @param path the path to write to
    * @param contents the text to put in the file
    */
-  public static void writeFile(Path path, String contents) {
-    try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
-      writer.write(contents, 0, contents.length());
+  public static void writeString(Path path, String contents) {
+    try {
+      Files.writeString(path, contents, StandardCharsets.UTF_8);
     } catch (Exception e) {
       throw new Error("Unexpected error in writeFile(" + path + ")", e);
     }
