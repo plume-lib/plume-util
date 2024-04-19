@@ -55,7 +55,7 @@ public final class CollectionsPlume {
   ///
 
   /**
-   * Returns true iff the list does not contain duplicate elements.
+   * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
@@ -85,7 +85,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns true iff the list does not contain duplicate elements.
+   * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
@@ -99,7 +99,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns true iff the list does not contain duplicate elements.
+   * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
@@ -118,8 +118,8 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a copy of the list (never the original list) with duplicates removed, but retaining the
-   * original order.
+   * Returns a copy of the list (never the original list) with duplicates (according to {@code
+   * equals()}) removed, but retaining the original order. The argument is not modified.
    *
    * @param <T> type of elements of the list
    * @param l a list to remove duplicates from
@@ -134,9 +134,9 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a copy of the list with duplicates removed, but retaining the original order. May
-   * return its argument if its argument has no duplicates, but is not guaranteed to do so. The
-   * argument is not modified.
+   * Returns a copy of the list with duplicates (according to {@code equals()}) removed, but
+   * retaining the original order. May return its argument if its argument has no duplicates, but is
+   * not guaranteed to do so. The argument is not modified.
    *
    * <p>If the element type implements {@link Comparable}, use {@link #withoutDuplicatesSorted} or
    * {@link #withoutDuplicatesComparable}.
@@ -155,9 +155,9 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a list with the same contents as its argument, but sorted and without duplicates. May
-   * return its argument if its argument is sorted and has no duplicates, but is not guaranteed to
-   * do so. The argument is not modified.
+   * Returns a list with the same contents as its argument, but sorted and without duplicates
+   * (according to {@code equals()}). May return its argument if its argument is sorted and has no
+   * duplicates, but is not guaranteed to do so. The argument is not modified.
    *
    * <p>This is like {@link #withoutDuplicates}, but requires the list elements to implement {@link
    * Comparable}, and thus can be more efficient.
@@ -210,7 +210,7 @@ public final class CollectionsPlume {
 
   /**
    * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
-   * Collections.sort(List<T>, Comparator<? super T>)}.
+   * Collections.sort(List<T>, Comparator<? super T>)} on a copy.
    *
    * @return a sorted version of the list
    * @param <T> type of elements of the list
@@ -594,7 +594,7 @@ public final class CollectionsPlume {
   // @InlineMe(
   //     replacement = "CollectionsPlume.filter(coll, filter)",
   //     imports = "org.plumelib.util.CollectionsPlume")
-  public static <T> List<T> listFilter(Collection<T> coll, Predicate<? super T> filter) {
+  public static <T> List<T> listFilter(Iterable<T> coll, Predicate<? super T> filter) {
     return filter(coll, filter);
   }
 
@@ -615,7 +615,7 @@ public final class CollectionsPlume {
    * @param filter a predicate
    * @return a new list with the elements for which the filter returns true
    */
-  public static <T> List<T> filter(Collection<T> coll, Predicate<? super T> filter) {
+  public static <T> List<T> filter(Iterable<T> coll, Predicate<? super T> filter) {
     List<T> result = new ArrayList<>();
     for (T elt : coll) {
       if (filter.test(elt)) {
@@ -623,6 +623,76 @@ public final class CollectionsPlume {
       }
     }
     return result;
+  }
+
+  /**
+   * Returns true if any element of the collection matches the predicate.
+   *
+   * <p>Using streams gives an equivalent result but is less efficient:
+   *
+   * <pre>{@code
+   * coll.stream().anyMatch(predicate);
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param predicate a non-interfering, stateless predicate
+   * @return true if any element of the collection matches the predicate
+   */
+  public static <T> boolean anyMatch(Iterable<T> coll, Predicate<? super T> predicate) {
+    for (T elt : coll) {
+      if (predicate.test(elt)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns true if all elements of the collection match the predicate.
+   *
+   * <p>Using streams gives an equivalent result but is less efficient:
+   *
+   * <pre>{@code
+   * coll.stream().allMatch(predicate);
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param predicate a non-interfering, stateless predicate
+   * @return true if all elements of the collection match the predicate
+   */
+  public static <T> boolean allMatch(Iterable<T> coll, Predicate<? super T> predicate) {
+    for (T elt : coll) {
+      if (!predicate.test(elt)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if no element of the collection matches the predicate.
+   *
+   * <p>Using streams gives an equivalent result but is less efficient:
+   *
+   * <pre>{@code
+   * coll.stream().noneMatch(predicate);
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param predicate a non-interfering, stateless predicate
+   * @return true if no element of the collection matches the predicate
+   */
+  public static <T> boolean noneMatch(Iterable<T> coll, Predicate<? super T> predicate) {
+
+    for (T elt : coll) {
+      if (predicate.test(elt)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -730,6 +800,34 @@ public final class CollectionsPlume {
    */
   public static <T> List<T> replace(T[] c, Collection<Replacement<T>> replacements) {
     return replace(Arrays.asList(c), replacements);
+  }
+
+  /**
+   * Returns true if the second list is a subsequence (not necessarily contiguous) of the first.
+   *
+   * @param <T> the type of elements of the list
+   * @param longer a list
+   * @param shorter a list
+   * @return true if the second list is a subsequence (not necessarily contiguous) of the first
+   */
+  // TODO: This could take as input a RandomAccess.
+  @SuppressWarnings("signedness")
+  public static <T> boolean isSubsequenceMaybeNonContiguous(
+      Iterable<T> longer, Iterable<T> shorter) {
+    Iterator<T> itorLonger = longer.iterator();
+    Iterator<T> itorShorter = shorter.iterator();
+    outerLoop:
+    while (itorShorter.hasNext()) {
+      T eltShorter = itorShorter.next();
+      while (itorLonger.hasNext()) {
+        T eltLonger = itorLonger.next();
+        if (Objects.equals(eltShorter, eltLonger)) {
+          continue outerLoop;
+        }
+      }
+      return false;
+    }
+    return true;
   }
 
   ///////////////////////////////////////////////////////////////////////////
@@ -1246,7 +1344,7 @@ public final class CollectionsPlume {
   }
 
   /**
-   * An iterator that only returns elements that match the given Filter.
+   * An iterator that only returns elements that match the given predicate.
    *
    * @param <T> the type of elements of the iterator
    */
@@ -1255,17 +1353,17 @@ public final class CollectionsPlume {
     Iterator<T> itor;
 
     /** The predicate that determines which elements to retain. */
-    Filter<T> filter;
+    Predicate<T> predicate;
 
     /**
-     * Create an iterator that only returns elements of {@code itor} that match the given Filter.
+     * Create an iterator that only returns elements of {@code itor} that match the given predicate.
      *
      * @param itor the Iterator to filter
-     * @param filter the predicate that determines which elements to retain
+     * @param predicate the predicate that determines which elements to retain
      */
-    public FilteredIterator(Iterator<T> itor, Filter<T> filter) {
+    public FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
       this.itor = itor;
-      this.filter = filter;
+      this.predicate = predicate;
     }
 
     /** A marker object, distinct from any object that the iterator can return. */
@@ -1289,7 +1387,7 @@ public final class CollectionsPlume {
     public boolean hasNext(@GuardSatisfied FilteredIterator<T> this) {
       while (!currentValid && itor.hasNext()) {
         current = itor.next();
-        currentValid = filter.accept(current);
+        currentValid = predicate.test(current);
       }
       return currentValid;
     }

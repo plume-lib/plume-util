@@ -9,7 +9,9 @@
 ## 1.9.3 (2024-??-??)
 
 - `CollectionsPlume`:
+    * deprecated `Filter`; use `java.util.function.Predicate` instead
     * new method `replace(Collection<T> c, Collection<Replacement<T>> replacements)`
+    * new method `isSubsequenceMaybeNonContiguous(Iterable<T>, Iterable<T>)`
 - `StringsPlume`:
     * new methods `splitRetainSeparators()` and `splitLinesRetainSeparators()`
 - `FilesPlume`:
