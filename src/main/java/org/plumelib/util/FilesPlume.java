@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1000,10 +1001,25 @@ public final class FilesPlume {
    * @return a String containing the content read from the file
    */
   public static String readString(Path path) {
-    try {
-      return Files.readString(path, UTF_8);
-    } catch (IOException e) {
-      throw new Error(e);
+    // In Java 11:
+    // try {
+    //   return Files.readString(path, UTF_8);
+    // } catch (IOException e) {
+    //   throw new Error(e);
+    // }
+
+    try (BufferedReader reader = newBufferedFileReader(path.toFile())) {
+      StringBuilder contents = new StringBuilder();
+      String line = reader.readLine();
+      while (line != null) {
+        contents.append(line);
+        // Note that this converts line terminators!
+        contents.append(lineSep);
+        line = reader.readLine();
+      }
+      return contents.toString();
+    } catch (Exception e) {
+      throw new Error("Unexpected error in readString(" + path + ")", e);
     }
   }
 
@@ -1033,19 +1049,7 @@ public final class FilesPlume {
    */
   @Deprecated // 2024-04-14
   public static String fileContents(File file) {
-    try (BufferedReader reader = newBufferedFileReader(file)) {
-      StringBuilder contents = new StringBuilder();
-      String line = reader.readLine();
-      while (line != null) {
-        contents.append(line);
-        // Note that this converts line terminators!
-        contents.append(lineSep);
-        line = reader.readLine();
-      }
-      return contents.toString();
-    } catch (Exception e) {
-      throw new Error("Unexpected error in fileContents(" + file + ")", e);
-    }
+    return readString(file.toPath());
   }
 
   /**
@@ -1090,10 +1094,17 @@ public final class FilesPlume {
    * @param contents the text to put in the file
    */
   public static void writeString(Path path, String contents) {
-    try {
-      Files.writeString(path, contents, StandardCharsets.UTF_8);
+    // In Java 11:
+    // try {
+    //   Files.writeString(path, contents, StandardCharsets.UTF_8);
+    // } catch (Exception e) {
+    //   throw new Error("Unexpected error in writeFile(" + path + ")", e);
+    // }
+
+    try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
+      writer.write(contents, 0, contents.length());
     } catch (Exception e) {
-      throw new Error("Unexpected error in writeFile(" + path + ")", e);
+      throw new Error("Unexpected error in writeString(" + path + ")", e);
     }
   }
 
