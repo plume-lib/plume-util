@@ -123,9 +123,6 @@
  * <h3 id="interfaces">Utility interfaces</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.Filter Filter}
- *   <dd>Interface for things that make boolean decisions. This is inspired by {@code
- *       java.io.FilenameFilter}.
  *   <dt>{@link org.plumelib.util.Partitioner Partitioner}
  *   <dd>A Partitioner accepts Objects and assigns them to an equivalence class.
  * </dl>

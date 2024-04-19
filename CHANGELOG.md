@@ -6,6 +6,20 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
+## 1.9.3 (2024-04-19)
+
+- `CollectionsPlume`:
+    * deprecated `Filter`; use `java.util.function.Predicate` instead
+    * new method `replace(Collection<T> c, Collection<Replacement<T>> replacements)`
+    * new method `isSubsequenceMaybeNonContiguous(Iterable<T>, Iterable<T>)`
+- `StringsPlume`:
+    * new methods `splitRetainSeparators()` and `splitLinesRetainSeparators()`
+- `FilesPlume`:
+    * deprecate `fileContents()` in favor of new method `readString()`
+    * deprecate `writeFile()` in favor of new method `writeString()`
+    * new method `readLinesRetainingSeparators()`
+    * new method `writeString(Path, String)`
+
 ## 1.9.2 (2024-04-07)
 
 - Don't use `@InlineMe`, which breaks javac in some clients.

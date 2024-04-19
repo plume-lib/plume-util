@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import org.checkerframework.common.value.qual.ArrayLen;
@@ -425,6 +426,20 @@ public final class StringsPlumeTest {
     assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye"));
     assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior"));
     assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior\rold MacOS"));
+  }
+
+  @Test
+  void testSplitLinesRetainSeparators() {
+    String text = "hello\rworld\nhello\r\nworld\n\rfoo";
+    List<String> result = StringsPlume.splitLinesRetainSeparators(text);
+    List<String> expected =
+        Arrays.asList(new String[] {"hello\r", "world\n", "hello\r\n", "world\n", "\r", "foo"});
+    assertEquals(expected, result);
+  }
+
+  @Test
+  void testSplitRetainSeparators() {
+    // There are two overloaded methods to test here.
   }
 
   @Test

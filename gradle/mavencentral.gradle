@@ -45,7 +45,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.9.2'
+version '1.9.3'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
@@ -65,7 +65,7 @@ publishing {
 
       pom {
         name = 'Plume Util'
-        description = 'Utility libraries for Java.'
+        description = 'Utility libraries for Java.  Complements Guava, Apache Commons, etc.'
         url = 'https://github.com/plume-lib/plume-util'
 
         scm {
