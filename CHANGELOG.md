@@ -6,7 +6,7 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
-## 1.9.3 (2024-??-??)
+## 1.9.3 (2024-04-19)
 
 - `CollectionsPlume`:
     * deprecated `Filter`; use `java.util.function.Predicate` instead

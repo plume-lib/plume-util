@@ -45,7 +45,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.9.3-SNAPSHOT'
+version '1.9.3'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
