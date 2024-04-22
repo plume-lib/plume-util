@@ -2439,9 +2439,22 @@ public final class ArraysPlume {
    *
    * @param a an array
    * @return true iff the array is sorted
+   * @deprecated use {@link #isSorted(int[])}
    */
+  @Deprecated // 2024-04-21
   @Pure
   public static boolean sorted(int[] a) {
+    return isSorted(a);
+  }
+
+  /**
+   * Returns whether the array is sorted.
+   *
+   * @param a an array
+   * @return true iff the array is sorted
+   */
+  @Pure
+  public static boolean isSorted(int[] a) {
     for (int i = 0; i < a.length - 1; i++) {
       if (a[i + 1] < a[i]) {
         return false;
@@ -2455,9 +2468,21 @@ public final class ArraysPlume {
    *
    * @param a an array
    * @return true iff the array is sorted
+   * @deprecated use {@link #isSorted(long[])}
+   */
+  @Deprecated // 2024-04-21
+  public static boolean sorted(long[] a) {
+    return isSorted(a);
+  }
+
+  /**
+   * Returns whether the array is sorted.
+   *
+   * @param a an array
+   * @return true iff the array is sorted
    */
   @Pure
-  public static boolean sorted(long[] a) {
+  public static boolean isSorted(long[] a) {
     for (int i = 0; i < a.length - 1; i++) {
       if (a[i + 1] < a[i]) {
         return false;
