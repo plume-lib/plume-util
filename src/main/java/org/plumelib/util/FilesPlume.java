@@ -981,7 +981,7 @@ public final class FilesPlume {
    *
    * @param file the file to read
    * @return the entire contents of the reader, as a string
-   * @deprecated use {@link #fileContents}
+   * @deprecated use {@link #readString}
    */
   // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
   // "org.plumelib.util.FilesPlume")
@@ -991,17 +991,23 @@ public final class FilesPlume {
   }
 
   /**
-   * Reads the entire contents of the file and returns it as a string. Any IOException encountered
-   * will be turned into an Error.
+   * Reads the entire contents of the file and returns it as a string.
    *
-   * <p>You could use {@code new String(Files.readAllBytes(...))}, but it requires a Path rather
-   * than a File, and it can throw IOException which has to be caught.
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
    *
-   * @param file the file to read
-   * @return the entire contents of the reader, as a string
+   * @param path the path to the file
+   * @return a String containing the content read from the file
    */
-  public static String fileContents(File file) {
-    try (BufferedReader reader = newBufferedFileReader(file)) {
+  public static String readString(Path path) {
+    // In Java 11:
+    // try {
+    //   return Files.readString(path, UTF_8);
+    // } catch (IOException e) {
+    //   throw new Error(e);
+    // }
+
+    try (BufferedReader reader = newBufferedFileReader(path.toFile())) {
       StringBuilder contents = new StringBuilder();
       String line = reader.readLine();
       while (line != null) {
@@ -1012,8 +1018,67 @@ public final class FilesPlume {
       }
       return contents.toString();
     } catch (Exception e) {
-      throw new Error("Unexpected error in fileContents(" + file + ")", e);
+      throw new Error("Unexpected error in readString(" + path + ")", e);
     }
+  }
+
+  /**
+   * Read the entire contents of the file and return it as a list of lines. Each line ends with a
+   * line separator (except perhaps the last line).
+   *
+   * @param path the path to the file
+   * @return the lines of the file
+   */
+  public static List<String> readLinesRetainingSeparators(Path path) {
+    return StringsPlume.splitLinesRetainSeparators(readString(path));
+  }
+
+  /**
+   * Reads the entire contents of the file and returns it as a string.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
+   * <p>You could use {@code new String(Files.readAllBytes(...))}, but it requires a Path rather
+   * than a File, and it can throw IOException which has to be caught.
+   *
+   * @param file the file to read
+   * @return the entire contents of the reader, as a string
+   * @deprecated use {@link #readString}
+   */
+  @Deprecated // 2024-04-14
+  public static String fileContents(File file) {
+    return readString(file.toPath());
+  }
+
+  /**
+   * Creates a file with the given name and writes the specified string to it. If the file currently
+   * exists (and is writable) it is overwritten.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
+   * @param file the file to write to
+   * @param contents the text to put in the file
+   * @deprecated use {@link #writeString(File, String)}
+   */
+  @Deprecated // 2024-04-16
+  public static void writeFile(File file, String contents) {
+    writeString(file.toPath(), contents);
+  }
+
+  /**
+   * Creates a file with the given name and writes the specified string to it. If the file currently
+   * exists (and is writable) it is overwritten.
+   *
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
+   * @param file the file to write to
+   * @param contents the text to put in the file
+   */
+  public static void writeString(File file, String contents) {
+    writeString(file.toPath(), contents);
   }
 
   /**
@@ -1021,15 +1086,27 @@ public final class FilesPlume {
    * exists (and is writable) it is overwritten Any IOException encountered will be turned into an
    * Error.
    *
-   * @param file the file to write to
+   * <p>The point of this method is that it does not throw any checked exception: any IOException
+   * encountered will be turned into an Error.
+   *
+   * @param path the path to write to
    * @param contents the text to put in the file
    */
-  public static void writeFile(File file, String contents) {
+  public static void writeString(Path path, String contents) {
+    // In Java 11:
+    // try {
+    //   Files.writeString(path, contents, StandardCharsets.UTF_8);
+    // } catch (Exception e) {
+    //   throw new Error("Unexpected error in writeFile(" + path + ")", e);
+    // }
 
-    try (Writer writer = Files.newBufferedWriter(file.toPath(), UTF_8)) {
+    try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
       writer.write(contents, 0, contents.length());
     } catch (Exception e) {
-      throw new Error("Unexpected error in writeFile(" + file + ")", e);
+      Error newError = new Error("Unexpected error in writeString(" + path + ")", e);
+      newError.printStackTrace(System.out);
+      newError.printStackTrace(System.err);
+      throw newError;
     }
   }
 

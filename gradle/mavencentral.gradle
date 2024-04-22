@@ -4,8 +4,8 @@
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
 // To make a release (run on any filesystem, except the last step):
-//  * Make a snapshot release to Maven Central and test it on some clients:
-//     * Approach 1:
+//  * Make a snapshot release and test it on some clients:
+//     * Approach 1:  to Maven Central
 //        * Set "version" below.
 //        * git pull && ./gradlew clean publish
 //        * In the clients' build.gradle: set version number and use:
@@ -16,9 +16,9 @@
 //            configurations.all {
 //              resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 //            }
-//     * Approach 2:
+//     * Approach 2:  to Maven Local
 //        * Set "version" below.
-//        * git pull && ./gradlew clean PublishToMavenLocal
+//        * git pull && ./gradlew PublishToMavenLocal
 //        * In the clients' build.gradle: set version number and use:
 //            repositories {
 //              mavenLocal()
@@ -36,8 +36,8 @@
 //  * Run in the top-level directory:  ./gradlew clean publish
 //  * Browse to https://oss.sonatype.org/#stagingRepositories, complete the Maven Central release.
 //  * Add a git tag:
-//    VER=1.9.2 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.9.2", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+//    VER=1.9.3 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.9.3", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
 //  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 //  * Update clients and test, so that if it's broken we can re-release.
 
@@ -45,7 +45,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.9.2'
+version '1.9.3'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
@@ -65,7 +65,7 @@ publishing {
 
       pom {
         name = 'Plume Util'
-        description = 'Utility libraries for Java.'
+        description = 'Utility libraries for Java.  Complements Guava, Apache Commons, etc.'
         url = 'https://github.com/plume-lib/plume-util'
 
         scm {
