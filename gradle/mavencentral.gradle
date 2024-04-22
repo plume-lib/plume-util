@@ -18,7 +18,7 @@
 //            }
 //     * Approach 2:  to Maven Local
 //        * Set "version" below.
-//        * git pull && ./gradlew clean PublishToMavenLocal
+//        * git pull && ./gradlew PublishToMavenLocal
 //        * In the clients' build.gradle: set version number and use:
 //            repositories {
 //              mavenLocal()

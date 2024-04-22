@@ -301,7 +301,6 @@ public final class CollectionsPlume {
    * @return the elements (once each) that appear more than once in the given collection
    */
   public static <T> Collection<T> duplicates(Collection<T> c) {
-    // Inefficient (because of streams) but simple implementation.
     Set<T> withoutDuplicates = new HashSet<>();
     Set<T> duplicates = new LinkedHashSet<>();
     for (T elt : c) {

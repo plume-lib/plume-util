@@ -1104,7 +1104,10 @@ public final class FilesPlume {
     try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
       writer.write(contents, 0, contents.length());
     } catch (Exception e) {
-      throw new Error("Unexpected error in writeString(" + path + ")", e);
+      Error newError = new Error("Unexpected error in writeString(" + path + ")", e);
+      newError.printStackTrace(System.out);
+      newError.printStackTrace(System.err);
+      throw newError;
     }
   }
 
