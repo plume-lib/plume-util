@@ -32,12 +32,12 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  * set intersection/difference instead.
  *
  * @param <T> the element type of each component iterator; this OrderedPairIterator has elements of
- *     type {@code MPair<T,T>}
+ *     type {@code IPair<T,T>}
  */
 // T need not extend Comparable<T>, because a comparator can be passed in.
 // TODO: Make this use IPair instead?
 public class OrderedPairIterator<T extends @Nullable Object>
-    implements java.util.Iterator<MPair<@Nullable T, @Nullable T>> {
+    implements java.util.Iterator<IPair<@Nullable T, @Nullable T>> {
 
   /** The iterator for first elements of pairs. */
   Iterator<T> itor1;
@@ -112,9 +112,9 @@ public class OrderedPairIterator<T extends @Nullable Object>
    *
    * @return an element of the first iterator, paired with null
    */
-  private MPair<@Nullable T, @Nullable T> return1(@GuardSatisfied OrderedPairIterator<T> this) {
-    MPair<@Nullable T, @Nullable T> result =
-        MPair.<@Nullable T, @Nullable T>of(next1, (@Nullable T) null);
+  private IPair<@Nullable T, @Nullable T> return1(@GuardSatisfied OrderedPairIterator<T> this) {
+    IPair<@Nullable T, @Nullable T> result =
+        IPair.<@Nullable T, @Nullable T>of(next1, (@Nullable T) null);
     setnext1();
     return result;
   }
@@ -124,9 +124,9 @@ public class OrderedPairIterator<T extends @Nullable Object>
    *
    * @return a pair of null and an element of the second iterator
    */
-  private MPair<@Nullable T, @Nullable T> return2(@GuardSatisfied OrderedPairIterator<T> this) {
-    MPair<@Nullable T, @Nullable T> result =
-        MPair.<@Nullable T, @Nullable T>of((@Nullable T) null, next2);
+  private IPair<@Nullable T, @Nullable T> return2(@GuardSatisfied OrderedPairIterator<T> this) {
+    IPair<@Nullable T, @Nullable T> result =
+        IPair.<@Nullable T, @Nullable T>of((@Nullable T) null, next2);
     setnext2();
     return result;
   }
@@ -136,15 +136,15 @@ public class OrderedPairIterator<T extends @Nullable Object>
    *
    * @return a pair containing an element from each iterator
    */
-  private MPair<@Nullable T, @Nullable T> returnboth(@GuardSatisfied OrderedPairIterator<T> this) {
-    MPair<@Nullable T, @Nullable T> result = MPair.<@Nullable T, @Nullable T>of(next1, next2);
+  private IPair<@Nullable T, @Nullable T> returnboth(@GuardSatisfied OrderedPairIterator<T> this) {
+    IPair<@Nullable T, @Nullable T> result = IPair.<@Nullable T, @Nullable T>of(next1, next2);
     setnext1();
     setnext2();
     return result;
   }
 
   @Override
-  public MPair<@Nullable T, @Nullable T> next(@GuardSatisfied OrderedPairIterator<T> this) {
+  public IPair<@Nullable T, @Nullable T> next(@GuardSatisfied OrderedPairIterator<T> this) {
     if (next1 == null) {
       if (next2 == null) {
         throw new NoSuchElementException();

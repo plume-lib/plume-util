@@ -214,9 +214,10 @@ public final class CollectionsPlume {
    *
    * @return a sorted version of the list
    * @param <T> type of elements of the list
-   * @param l a list to sort
+   * @param l a list to sort; is not side-effected
    * @param c a sorted version of the list
    */
+  // TODO: rename to "sorted()".
   public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
     List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);

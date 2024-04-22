@@ -183,7 +183,7 @@ public final class OrderedPairIteratorTest {
       OrderedPairIterator<Integer> opi, int[] @ArrayLen(2) [] ints) {
     int pairno = 0;
     while (opi.hasNext()) {
-      MPair<@Nullable Integer, @Nullable Integer> pair = opi.next();
+      IPair<@Nullable Integer, @Nullable Integer> pair = opi.next();
       if (false) {
         System.out.printf(
             "Iterator: <%s,%s>, array: <%s,%s>%n",
