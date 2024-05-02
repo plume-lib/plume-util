@@ -413,7 +413,7 @@ public final class StringsPlumeTest {
 
   @Test
   public void testFirstLineSeparator() {
-    assertEquals("\n", StringsPlume.firstLineSeparator("hello"));
+    assertEquals(null, StringsPlume.firstLineSeparator("hello"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));

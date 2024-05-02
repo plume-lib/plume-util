@@ -11,6 +11,7 @@
 - `OrderedPairIterator`: uses `IPair` instead of `MPair`
 - `ArraysPlume`:
    * deprecated `sorted()` in favor of `isSorted()`
+- `StringsPlume`: `firstLineSeparator()` can return null
 
 ## 1.9.3 (2024-04-19)
 

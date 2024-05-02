@@ -211,18 +211,18 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the first line separator in the given string, or "\n" if the string contains none.
+   * Returns the first line separator in the given string, or null if the string contains none.
    *
    * @param s a string
    * @return the first line separator in the given string
    */
   @SuppressWarnings("regex:return") // all matches of allLineSeparators are regexes
-  public static @Regex String firstLineSeparator(String s) {
+  public static @Nullable @Regex String firstLineSeparator(String s) {
     Matcher m = allLineSeparators.matcher(s);
     if (m.find()) {
       return m.group();
     } else {
-      return "\n";
+      return null;
     }
   }
 
