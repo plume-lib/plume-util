@@ -686,7 +686,6 @@ public final class CollectionsPlume {
    * @return true if no element of the collection matches the predicate
    */
   public static <T> boolean noneMatch(Iterable<T> coll, Predicate<? super T> predicate) {
-
     for (T elt : coll) {
       if (predicate.test(elt)) {
         return false;

@@ -9,9 +9,9 @@
 ## 1.10.0 (2024-??-??)
 
 - `OrderedPairIterator`: uses `IPair` instead of `MPair`
-- `ArraysPlume`:
-   * deprecated `sorted()` in favor of `isSorted()`
+- `ArraysPlume`:  deprecated `sorted()` in favor of `isSorted()`
 - `StringsPlume`: `firstLineSeparator()` can return null
+- `CollectionsPlume`:  new methods `anyMatch()`, `allMatch()`, `noneMatch`
 
 ## 1.9.3 (2024-04-19)
 
