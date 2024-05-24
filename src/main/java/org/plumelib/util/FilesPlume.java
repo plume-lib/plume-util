@@ -71,6 +71,10 @@ public final class FilesPlume {
    * @return an InputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
   @SideEffectFree
   public static @Owning InputStream newFileInputStream(Path path) throws IOException {
     FileInputStream fis = new FileInputStream(path.toFile());
@@ -157,6 +161,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   public static @Owning InputStreamReader newFileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
@@ -285,6 +290,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   public static @Owning BufferedReader newBufferedFileReader(
       File file, @Nullable String charsetName) throws FileNotFoundException, IOException {
@@ -324,6 +330,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   public static @Owning LineNumberReader newLineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
@@ -366,6 +373,10 @@ public final class FilesPlume {
    * @return an OutputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
   @SideEffectFree
   public static @Owning OutputStream newFileOutputStream(Path path, boolean append)
       throws IOException {
@@ -453,6 +464,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   public static @Owning OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
@@ -541,6 +553,10 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   // Question:  should this be rewritten as a wrapper around newBufferedFileOutputStream?
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
   @SideEffectFree
   public static @Owning BufferedWriter newBufferedFileWriter(String filename, boolean append)
       throws IOException {
@@ -569,6 +585,7 @@ public final class FilesPlume {
    * @return a BufferedOutputStream for filename
    * @throws IOException if there is trouble writing the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   public static @Owning BufferedOutputStream newBufferedFileOutputStream(
       String filename, boolean append) throws IOException {
@@ -587,6 +604,12 @@ public final class FilesPlume {
    * @return number of lines in filename
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call",
+    "allcheckers:purity.not.deterministic.call",
+    "allcheckers:purity.not.deterministic.not.sideeffectfree.call",
+    "lock:method.guarantee.violated"
+  }) // side effect to local state
   @Pure
   public static long countLines(String filename) throws IOException {
     long count = 0;
@@ -605,6 +628,10 @@ public final class FilesPlume {
    * @return the inferred line separator used in filename
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.not.deterministic.object.creation" // create local state
+  })
   @Pure
   public static String inferLineSeparator(String filename) throws IOException {
     return inferLineSeparator(new File(filename));
@@ -617,6 +644,11 @@ public final class FilesPlume {
    * @return the inferred line separator used in filename
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.deterministic.call", // side effect to local state
+    "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
   @Pure
   public static String inferLineSeparator(File file) throws IOException {
     try (BufferedReader r = newBufferedFileReader(file)) {
@@ -707,7 +739,7 @@ public final class FilesPlume {
    * @param file the file to create and write
    * @return true iff the file can be created and written
    */
-  @Pure
+  @SideEffectFree
   public static boolean canCreateAndWrite(File file) {
     if (file.exists()) {
       return file.canWrite();
@@ -941,7 +973,7 @@ public final class FilesPlume {
    * @param name file whose name to quote
    * @return a string version of the name that can be used in Java source
    */
-  @Pure
+  @SideEffectFree
   public static String javaSource(File name) {
     return name.getPath().replace("\\", "\\\\");
   }
@@ -974,7 +1006,11 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @throws ClassNotFoundException if the object's class cannot be found
    */
-  @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
+  @SuppressWarnings({
+    "BanSerializableRead", // wrapper around dangerous API
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
   @SideEffectFree
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
     try (InputStream fis = newFileInputStream(file);
@@ -1034,6 +1070,10 @@ public final class FilesPlume {
    * @param path the path to the file
    * @return a String containing the content read from the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
   @SideEffectFree
   public static String readString(Path path) {
     // In Java 11:

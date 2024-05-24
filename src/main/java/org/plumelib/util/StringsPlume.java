@@ -109,6 +109,11 @@ public final class StringsPlume {
    * @param replacement the replacement for each match of the regular expression
    * @return the string, with each match for the regex replaced
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "lock:method.guarantee.violated" // needs JDK annotations
+  })
+  @SideEffectFree
   public static String replaceAll(String s, Pattern regex, String replacement) {
     Matcher m = regex.matcher(s);
     return m.replaceAll(replacement);
@@ -216,7 +221,12 @@ public final class StringsPlume {
    * @param s a string
    * @return the first line separator in the given string
    */
-  @SuppressWarnings("regex:return") // all matches of allLineSeparators are regexes
+  @SuppressWarnings({
+    "regex:return", // all matches of allLineSeparators are regexes
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
   public static @Nullable @Regex String firstLineSeparator(String s) {
     Matcher m = allLineSeparators.matcher(s);
     if (m.find()) {
@@ -232,6 +242,7 @@ public final class StringsPlume {
    * @param input the input String
    * @return the split string
    */
+  @SideEffectFree
   public static List<String> splitLinesRetainSeparators(String input) {
     return splitRetainSeparators(input, allLineSeparators);
   }
@@ -243,6 +254,7 @@ public final class StringsPlume {
    * @param regex the regular expression upon which to split the input
    * @return the split string
    */
+  @SideEffectFree
   public static List<String> splitRetainSeparators(String input, @Regex String regex) {
     return splitRetainSeparators(input, Pattern.compile(regex));
   }
@@ -254,7 +266,12 @@ public final class StringsPlume {
    * @param p the pattern upon which to split the input
    * @return the split string
    */
-  @SuppressWarnings("index:argument") // m.end is @LTLengthOf("index")
+  @SuppressWarnings({
+    "index:argument", // m.end is @LTLengthOf("index")
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // needs JDK annotations
+  })
+  @SideEffectFree
   public static List<String> splitRetainSeparators(String input, Pattern p) {
     List<String> result = new ArrayList<String>();
     Matcher m = p.matcher(input);
@@ -588,6 +605,7 @@ public final class StringsPlume {
    * @param c character to quote
    * @return quoted version of c
    */
+  @SideEffectFree
   private static String escapeNonASCII(char c) {
     if (c == '"') {
       return "\\\"";
@@ -757,6 +775,12 @@ public final class StringsPlume {
    * @param s a string
    * @return true if the string contains only white space codepoints, otherwise false
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @Pure
   public static boolean isBlank(String s) {
     return s.chars().allMatch(Character::isWhitespace);
   }
@@ -1037,6 +1061,7 @@ public final class StringsPlume {
     static final long serialVersionUID = 20150812L;
 
     /** Create a new NullableStringComparator. */
+    @SideEffectFree
     public NullableStringComparator() {}
 
     /**
@@ -1400,6 +1425,11 @@ public final class StringsPlume {
    * @param elements the elements of the conjunction or disjunction
    * @return a conjunction or disjunction string
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // needs JDK annotations
+  })
+  @SideEffectFree
   public static String conjunction(
       String conjunction, List<? extends @Signed @PolyNull Object> elements) {
     int size = elements.size();
@@ -1549,10 +1579,11 @@ public final class StringsPlume {
    * @param length the maximum length for the string representation; must be 6 or more
    * @return the string representation of the object, no more than the given length
    */
+  @SideEffectFree
   public static String toStringTruncated(Object o, int length) {
     if (length < 6) {
       throw new IllegalArgumentException(
-          "toStringTruncated: length must be 6 or more, got " + length);
+          "toStringTruncated: length argument must be 6 or more, got " + length);
     }
     String result = o.toString();
     if (result.length() <= length) {
