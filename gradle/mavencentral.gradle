@@ -6,7 +6,7 @@
 // To make a release (run on any filesystem, except the `javadocWeb` step):
 //  * Make a snapshot release and test it on some clients:
 //     * Approach 1:  to Maven Central
-//        * Set "version" below.
+//        * Set "version" (below) to end in "-SNAPSHOT".
 //        * git pull && ./gradlew clean publish
 //        * In the clients' build.gradle: set version number and use:
 //            repositories {
