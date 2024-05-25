@@ -1236,6 +1236,10 @@ public final class StringsPlume {
    * numbers.
    */
   public static class VersionNumberComparator implements Comparator<String> {
+
+    /** Creates a new VersionNumberComparator. */
+    public VersionNumberComparator() {}
+
     @SuppressWarnings("StringSplitter") // OK given that the arguments are version numbers.
     @Override
     public int compare(String s1, String s2) {
