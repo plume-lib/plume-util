@@ -65,8 +65,8 @@
  *       regular expression.
  *   <dt>{@link org.plumelib.util.StringsPlume}
  *   <dd>Utility methods that manipulate Strings: replacement; prefixing and indentation; splitting
- *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging
- *       variants of toString; diagnostic output; miscellaneous.
+ *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; version
+ *       numbers; debugging variants of toString; diagnostic output; miscellaneous.
  *       <!--
  *   <dt>{link org.plumelib.util.CountingPrintWriter CountingPrintWriter}
  *   <dd>Prints formatted representations of objects to a text-output stream counting the number of

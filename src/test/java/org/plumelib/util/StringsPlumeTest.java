@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
+import org.plumelib.util.StringsPlume.VersionNumberComparator;
 
 /** Test the stringsPlume class. */
 public final class StringsPlumeTest {
@@ -234,6 +235,24 @@ public final class StringsPlumeTest {
     assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd 123 ", "123"));
     assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd123 ", "123"));
     assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd 123", "123"));
+  }
+
+  @Test
+  public void test_isVersionNumberLE() {
+
+    VersionNumberComparator vnc = new VersionNumberComparator();
+
+    assertEquals(0, vnc.compare("123.456.789", "123.456.789"));
+    assertEquals(-1, vnc.compare("113.456.789", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.416.789", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.456.719", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.456.789", "193.456.789"));
+    assertEquals(-1, vnc.compare("123.456.789", "123.496.789"));
+    assertEquals(-1, vnc.compare("123.456.789", "123.456.799"));
+    assertEquals(-1, vnc.compare("123", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.456", "123.456.789"));
+    assertEquals(1, vnc.compare("123.456.789", "123"));
+    assertEquals(1, vnc.compare("123.456.789", "123.456"));
   }
 
   @Test

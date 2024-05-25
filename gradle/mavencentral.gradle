@@ -3,7 +3,7 @@
 //     ossrhUsername=YOUR_USER_NAME_HERE
 //     ossrhPassword=YOUR_PASSWORD_HERE
 
-// To make a release (run on any filesystem, except the last step):
+// To make a release (run on any filesystem, except the `javadocWeb` step):
 //  * Make a snapshot release and test it on some clients:
 //     * Approach 1:  to Maven Central
 //        * Set "version" below.
@@ -17,7 +17,7 @@
 //              resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 //            }
 //     * Approach 2:  to Maven Local
-//        * Set "version" below.
+//        * Set "version" (below) to end in "-SNAPSHOT".
 //        * git pull && ./gradlew PublishToMavenLocal
 //        * In the clients' build.gradle: set version number and use:
 //            repositories {
@@ -45,7 +45,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 group 'org.plumelib'
-version '1.9.3'
+version '1.10.0-SNAPSHOT'
 
 final isSnapshot = version.contains('SNAPSHOT')
 
