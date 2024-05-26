@@ -1213,6 +1213,80 @@ public final class StringsPlume {
   }
 
   ///////////////////////////////////////////////////////////////////////////
+  /// Version numbers
+  ///
+
+  /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
+  public static final @Regex String versionNumberRegex = "\\d+(\\.\\d+)+";
+
+  /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
+  public static final Pattern versionNumberPattern = Pattern.compile("\\d+(\\.\\d+)+");
+
+  /**
+   * Returns true if the given text is a version number. It has the form N.N or N.N.N, etc., where
+   * each N consists of digits.
+   *
+   * @param text a string
+   * @return true if the given text is a version number
+   */
+  // "protected" to permit tests to access it.
+  public static boolean isVersionNumber(String text) {
+    return versionNumberPattern.matcher(text).matches();
+  }
+
+  /**
+   * A comparator that compares version numbers. It must only be invoked on strings that are version
+   * numbers.
+   */
+  public static class VersionNumberComparator implements Comparator<String> {
+
+    /** Creates a new VersionNumberComparator. */
+    public VersionNumberComparator() {}
+
+    @SuppressWarnings("StringSplitter") // OK given that the arguments are version numbers.
+    @Override
+    public int compare(String s1, String s2) {
+      if (s1.equals(s2)) {
+        return 0;
+      }
+      String[] components1 = s1.split("\\.");
+      String[] components2 = s2.split("\\.");
+      int len = Math.min(components1.length, components2.length);
+      for (int i = 0; i < len; i++) {
+        int int1 = Integer.valueOf(components1[i]);
+        int int2 = Integer.valueOf(components2[i]);
+        if (int1 < int2) {
+          return -1;
+        } else if (int1 > int2) {
+          return 1;
+        }
+      }
+      if (components1.length < components2.length) {
+        return -1;
+      } else {
+        assert components2.length < components1.length;
+        return 1;
+      }
+    }
+  }
+
+  /** A VersionNumberComparator. */
+  private static VersionNumberComparator vnc = new VersionNumberComparator();
+
+  /**
+   * Returns true if the first version number is less than or equal to the second version number.
+   *
+   * @param v1 a version number
+   * @param v2 a version number
+   * @return true if the given text is a version number
+   */
+  // "protected" to permit tests to access it.
+  public static boolean isVersionNumberLE(String v1, String v2) {
+    int compare = vnc.compare(v1, v2);
+    return compare <= 0;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
   /// Debugging variants of toString
   ///
 
