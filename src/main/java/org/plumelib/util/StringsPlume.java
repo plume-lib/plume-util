@@ -1217,7 +1217,10 @@ public final class StringsPlume {
   ///
 
   /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
-  private static final Pattern versionNumber = Pattern.compile("\\d+(\\.\\d+)+");
+  public static final @Regex String versionNumberRegex = "\\d+(\\.\\d+)+";
+
+  /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
+  public static final Pattern versionNumberPattern = Pattern.compile("\\d+(\\.\\d+)+");
 
   /**
    * Returns true if the given text is a version number. It has the form N.N or N.N.N, etc., where
@@ -1228,7 +1231,7 @@ public final class StringsPlume {
    */
   // "protected" to permit tests to access it.
   public static boolean isVersionNumber(String text) {
-    return versionNumber.matcher(text).matches();
+    return versionNumberPattern.matcher(text).matches();
   }
 
   /**
