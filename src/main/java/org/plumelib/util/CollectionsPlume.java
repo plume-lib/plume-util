@@ -1244,7 +1244,7 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public T nextElement() {
+    public T nextElement(@GuardSatisfied IteratorEnumeration<T> this) {
       return itor.next();
     }
   }
