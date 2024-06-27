@@ -65,7 +65,7 @@ publishing {
 
       pom {
         name = 'Plume Util'
-        description = 'Utility libraries for Java.  Complements Guava, Apache Commons, etc.'
+        description = 'Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc.'
         url = 'https://github.com/plume-lib/plume-util'
 
         scm {
