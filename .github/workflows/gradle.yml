@@ -9,8 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        # No version of Spotless works on both JRE 8 and JRE 21.
-        java: [ '8', '11', '17', '20' ]
+        java: [ '8', '11', '17', '21', '22' ]
 
     steps:
     - uses: actions/checkout@v4
