@@ -109,10 +109,6 @@ public final class StringsPlume {
    * @param replacement the replacement for each match of the regular expression
    * @return the string, with each match for the regex replaced
    */
-  @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
-    "lock:method.guarantee.violated" // needs JDK annotations
-  })
   @SideEffectFree
   public static String replaceAll(String s, Pattern regex, String replacement) {
     Matcher m = regex.matcher(s);
