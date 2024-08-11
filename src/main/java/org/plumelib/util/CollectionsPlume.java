@@ -638,6 +638,7 @@ public final class CollectionsPlume {
    * @param coll a collection
    * @param predicate a non-interfering, stateless predicate
    * @return true if any element of the collection matches the predicate
+   * @see #firstMatch
    */
   public static <T> boolean anyMatch(Iterable<T> coll, Predicate<? super T> predicate) {
     for (T elt : coll) {
@@ -692,6 +693,30 @@ public final class CollectionsPlume {
       }
     }
     return true;
+  }
+
+  /**
+   * Returns the first element of the collection that matches the predicate, or null
+   *
+   * <p>Using streams gives an equivalent result but is less efficient:
+   *
+   * <pre>{@code
+   * coll.stream().filter(predicate).firstMatch().orElse(null);
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param predicate a non-interfering, stateless predicate
+   * @return the first element of the collection that matches the predicate, or null
+   * @see #anyMatch
+   */
+  public static <T> @Nullable T firstMatch(Iterable<T> coll, Predicate<? super T> predicate) {
+    for (T elt : coll) {
+      if (predicate.test(elt)) {
+        return elt;
+      }
+    }
+    return null;
   }
 
   /**
