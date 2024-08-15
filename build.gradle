@@ -23,7 +23,7 @@ repositories {
 }
 
 // Error Prone versions later than 2.10.0 require JDK 11.
-ext.errorproneVersion = '2.29.2'
+ext.errorproneVersion = '2.30.0'
 
 ext {
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
@@ -37,8 +37,8 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.0'
 }
 
 // To upload to Maven Central, see instructions in the file.
