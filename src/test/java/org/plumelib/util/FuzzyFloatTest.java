@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 public final class FuzzyFloatTest {
 
   // //////////////////////////////////////////////////////////////////////
-  /// Helper functions
-  ///
+  // Helper functions
+  //
 
   // private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
   //   boolean result = Arrays.equals(a1, a2);
@@ -46,8 +46,8 @@ public final class FuzzyFloatTest {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// The tests themselves
-  ///
+  // The tests themselves
+  //
 
   FuzzyFloat ff = new FuzzyFloat(0.0001);
   double offset = 0.00007;

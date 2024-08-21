@@ -77,9 +77,9 @@ import org.checkerframework.checker.regex.qual.Regex;
 })
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
-  ///
-  /// User configuration variables
-  ///
+  //
+  // User configuration variables
+  //
 
   /** Regular expression that specifies an include file. */
   private final @Nullable @Regex(1) Pattern includeRegex;
@@ -106,9 +106,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public @MonotonicNonNull Pattern entryStopRegex = null;
 
-  ///
-  /// Internal implementation variables
-  ///
+  //
+  // Internal implementation variables
+  //
 
   // @MustCall({}) because the RLC does not (yet) support verifying collections of resources.
   /** Stack of readers. Used to support include files. */
@@ -120,9 +120,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
 
-  ///
-  /// Helper classes
-  ///
+  //
+  // Helper classes
+  //
 
   /**
    * Like LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename and Line
@@ -213,11 +213,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
   }
 
-  ///
-  /// Constructors
-  ///
+  //
+  // Constructors
+  //
 
-  /// Inputstream and charset constructors
+  // Inputstream and charset constructors
 
   /**
    * Create an EntryReader that uses the given character set.
@@ -257,7 +257,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(in, charsetName, filename, null, null);
   }
 
-  /// Inputstream (no charset) constructors
+  // Inputstream (no charset) constructors
 
   /**
    * Create an EntryReader.
@@ -408,7 +408,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(reader, reader.toString(), null, null);
   }
 
-  /// Path constructors
+  // Path constructors
 
   /**
    * Create an EntryReader.
@@ -449,7 +449,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(FilesPlume.newFileInputStream(path), charsetName, path.toString(), null, null);
   }
 
-  /// File constructors
+  // File constructors
 
   /**
    * Create an EntryReader.
@@ -490,7 +490,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(FilesPlume.newFileInputStream(file), charsetName, file.toString(), null, null);
   }
 
-  /// Filename constructors
+  // Filename constructors
 
   /**
    * Create a new EntryReader starting with the specified file.
@@ -534,9 +534,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(new FileInputStream(filename), charsetName, filename, null, null);
   }
 
-  ///
-  /// Methods
-  ///
+  //
+  // Methods
+  //
 
   /**
    * Read a line, ignoring comments and processing includes. Note that a line that is completely a

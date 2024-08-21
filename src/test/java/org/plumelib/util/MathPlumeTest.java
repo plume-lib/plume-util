@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 
 public final class MathPlumeTest {
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Utility functions
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // Utility functions
+  //
 
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
     boolean result = Arrays.equals(a1, a2);
@@ -74,9 +74,9 @@ public final class MathPlumeTest {
     assertArraysEquals(intIteratorArray(intArrayIterator(a)), a);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// The tests themselves
-  ///
+  // ///////////////////////////////////////////////////////////////////////////
+  // The tests themselves
+  //
 
   @Test
   public void test_negate() {

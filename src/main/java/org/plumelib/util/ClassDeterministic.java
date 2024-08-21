@@ -158,7 +158,7 @@ public class ClassDeterministic {
     return result;
   }
 
-  /// Helper routines
+  // Helper routines
 
   // /**
   //  * Creates a sorted list from an array of elements using the given classComparator.

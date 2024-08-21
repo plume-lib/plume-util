@@ -35,8 +35,8 @@ public final class CollectionsPlumeTest {
   private static final boolean shortRun = false;
 
   // //////////////////////////////////////////////////////////////////////
-  /// Helper functions
-  ///
+  // Helper functions
+  //
 
   @SuppressWarnings("NonApiType")
   public static <T> ArrayList<T> toArrayList(Iterator<T> itor) {
@@ -113,8 +113,8 @@ public final class CollectionsPlumeTest {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// The tests themselves
-  ///
+  // The tests themselves
+  //
 
   @Test
   public void testListOf() {

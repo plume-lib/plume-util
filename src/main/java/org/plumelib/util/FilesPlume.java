@@ -56,8 +56,8 @@ public final class FilesPlume {
   private static final String lineSep = System.lineSeparator();
 
   // //////////////////////////////////////////////////////////////////////
-  /// File readers
-  ///
+  // File readers
+  //
 
   /**
    * Returns an InputStream for the file, accounting for the possibility that the file is
@@ -215,8 +215,8 @@ public final class FilesPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Buffered file readers and line number readers
-  ///
+  // Buffered file readers and line number readers
+  //
 
   /**
    * Returns a BufferedReader for the file, accounting for the possibility that the file is
@@ -339,8 +339,8 @@ public final class FilesPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// File writers
-  ///
+  // File writers
+  //
 
   /**
    * Returns an OutputStream for the file, accounting for the possibility that the file is
@@ -518,8 +518,8 @@ public final class FilesPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Buffered file writers
-  ///
+  // Buffered file writers
+  //
 
   /**
    * Returns a BufferedWriter for the file, accounting for the possibility that the file is
@@ -594,8 +594,8 @@ public final class FilesPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// File
-  ///
+  // File
+  //
 
   /**
    * Count the number of lines in the specified file.
@@ -752,7 +752,7 @@ public final class FilesPlume {
       return directory.canWrite();
     }
 
-    /// Old implementation; is this equivalent to the new one, above??
+    // // Old implementation; is this equivalent to the new one, above??
     // try {
     //   if (file.exists()) {
     //     return file.canWrite();
@@ -808,9 +808,9 @@ public final class FilesPlume {
     throw new Error("every file exists");
   }
 
-  ///
-  /// Directories
-  ///
+  //
+  // Directories
+  //
 
   // TODO: Document how this differs from Files.createTempDirectory, or deprecate this.
   /**
@@ -881,9 +881,9 @@ public final class FilesPlume {
     return dir.delete();
   }
 
-  ///
-  /// File names (aka filenames)
-  ///
+  //
+  // File names (aka filenames)
+  //
 
   // Someone must have already written this.  Right?
   // There is Apache Commons IO WildcardFileFilter or, using standard Java utilities,
@@ -978,9 +978,9 @@ public final class FilesPlume {
     return name.getPath().replace("\\", "\\\\");
   }
 
-  ///
-  /// Reading and writing
-  ///
+  //
+  // Reading and writing
+  //
 
   /**
    * Writes an Object to a File.
@@ -1189,8 +1189,8 @@ public final class FilesPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Stream
-  ///
+  // Stream
+  //
 
   /**
    * Copy the contents of the input stream to the output stream.

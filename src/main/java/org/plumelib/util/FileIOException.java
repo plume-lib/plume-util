@@ -28,9 +28,9 @@ public class FileIOException extends IOException {
   /** The line being read when the IOException occurred. */
   public final int lineNumber;
 
-  ///
-  /// Empty constructor
-  ///
+  //
+  // Empty constructor
+  //
 
   /** Create a dummy FileIOException. */
   public FileIOException() {
@@ -40,8 +40,8 @@ public class FileIOException extends IOException {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Without a message (with a Throwable instead)
-  ///
+  // Without a message (with a Throwable instead)
+  //
 
   // If cause is null, the super call throws a null pointer exception.
   // This looks like a JDK bug.  -Plume 12/9/2008
@@ -59,8 +59,8 @@ public class FileIOException extends IOException {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Without a Reader
-  ///
+  // Without a Reader
+  //
 
   /**
    * Create a FileIOException with no known file name or line number (which is kind of pointless;
@@ -127,8 +127,8 @@ public class FileIOException extends IOException {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Without a filename or File
-  ///
+  // Without a filename or File
+  //
 
   // I cannot infer the filename from the reader, because LineNumberReader
   // gives no access to the underlying stream.
@@ -168,8 +168,8 @@ public class FileIOException extends IOException {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// With a filename
-  ///
+  // With a filename
+  //
 
   /**
    * Create a FileIOException.
@@ -223,8 +223,8 @@ public class FileIOException extends IOException {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// With a File
-  ///
+  // With a File
+  //
 
   /**
    * Create a FileIOException.
@@ -269,8 +269,8 @@ public class FileIOException extends IOException {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Utility and helper methods
-  ///
+  // Utility and helper methods
+  //
 
   @SuppressWarnings("lock:override.sideeffect") // temporary until after CF 3.0.1
   @SideEffectFree

@@ -54,8 +54,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Object
-  ///
+  // Object
+  //
 
   /**
    * Clones the given object by calling {@code clone()} reflectively. It is not possible to call
@@ -101,8 +101,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// BitSet (this section is deprecated in favor of CollectionsPlume)
-  ///
+  // BitSet (this section is deprecated in favor of CollectionsPlume)
+  //
 
   /**
    * Returns true if the cardinality of the intersection of the two BitSets is at least the given
@@ -181,8 +181,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// BufferedFileReader (this section is deprecated in favor of FilesPlume)
-  ///
+  // BufferedFileReader (this section is deprecated in favor of FilesPlume)
+  //
 
   // Convenience methods for creating InputStreams, Readers, BufferedReaders, and LineNumberReaders.
 
@@ -553,8 +553,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// File (this section is deprecated in favor of FilesPlume)
-  ///
+  // File (this section is deprecated in favor of FilesPlume)
+  //
 
   /**
    * Count the number of lines in the specified file.
@@ -672,9 +672,9 @@ public final class UtilPlume {
     return FilesPlume.canCreateAndWrite(file);
   }
 
-  ///
-  /// Directories (this section is deprecated in favor of FilesPlume)
-  ///
+  //
+  // Directories (this section is deprecated in favor of FilesPlume)
+  //
 
   /**
    * Creates an empty directory in the default temporary-file directory, using the given prefix and
@@ -730,9 +730,9 @@ public final class UtilPlume {
     return FilesPlume.deleteDir(dir);
   }
 
-  ///
-  /// File names (aka filenames) (this section is deprecated in favor of FilesPlume)
-  ///
+  //
+  // File names (aka filenames) (this section is deprecated in favor of FilesPlume)
+  //
 
   // Someone must have already written this.  Right?
   // There is Apache Commons IO WildcardFileFilter or, using standard Java utilities,
@@ -829,9 +829,9 @@ public final class UtilPlume {
     return FilesPlume.javaSource(name);
   }
 
-  ///
-  /// Reading and writing (this section is deprecated in favor of FilesPlume)
-  ///
+  //
+  // Reading and writing (this section is deprecated in favor of FilesPlume)
+  //
 
   /**
    * Writes an Object to a File.
@@ -920,8 +920,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Hashing
-  ///
+  // Hashing
+  //
 
   /**
    * Returns a hash of the arguments.
@@ -1129,8 +1129,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Map (this section is deprecated in favor of StringsPlume)
-  ///
+  // Map (this section is deprecated in favor of StringsPlume)
+  //
 
   /**
    * Convert a map to a string, printing the runtime class of keys and values.
@@ -1164,8 +1164,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// ProcessBuilder
-  ///
+  // ProcessBuilder
+  //
 
   /**
    * Execute the given command, and return all its output as a string.
@@ -1198,8 +1198,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Properties
-  ///
+  // Properties
+  //
 
   /**
    * Determines whether a property has value "true", "yes", or "1".
@@ -1302,8 +1302,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Stream (this section is deprecated in favor of FilesPlume)
-  ///
+  // Stream (this section is deprecated in favor of FilesPlume)
+  //
 
   /**
    * Copy the contents of the input stream to the output stream.
@@ -1351,8 +1351,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// String (these methods are all deprecated in favor of StringsPlume)
-  ///
+  // String (these methods are all deprecated in favor of StringsPlume)
+  //
 
   /**
    * Returns a new string which is the text of target with all instances of oldStr replaced by
@@ -2071,8 +2071,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// StringTokenizer (these methods are all deprecated in favor of StringsPlume)
-  ///
+  // StringTokenizer (these methods are all deprecated in favor of StringsPlume)
+  //
 
   /**
    * Returns a ArrayList of the Strings returned by {@link
@@ -2133,8 +2133,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// System (this section is deprecated in favor of SystemPlume)
-  ///
+  // System (this section is deprecated in favor of SystemPlume)
+  //
 
   /**
    * Like Thread.sleep, but does not throw any checked exceptions, so it is easier for clients to
@@ -2194,8 +2194,8 @@ public final class UtilPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  /// Throwable
-  ///
+  // Throwable
+  //
 
   /**
    * Returns a String representation of the backtrace of the given Throwable. To see a backtrace at
