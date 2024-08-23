@@ -85,9 +85,9 @@ public final class InternTest {
   @Test
   public void testHasher() {
 
-    /// To check (maybe some of these are done already).
-    /// All of these methods are in Intern; should the tests appear in
-    /// testIntern() or here?
+    // // To check (maybe some of these are done already).
+    // // All of these methods are in Intern; should the tests appear in
+    // // testIntern() or here?
     // public static void internStrings(String[] a)
     // public static boolean isInterned(Object value)
     // public static int numIntegers()

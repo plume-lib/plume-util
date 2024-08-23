@@ -42,9 +42,9 @@ public final class StringsPlume {
   /** The system-specific line separator string. */
   private static final String lineSep = System.lineSeparator();
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Replacement
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Replacement
+  //
 
   /**
    * Returns the target with an occurrence of oldStr at the start replaced by newStr. Returns the
@@ -115,9 +115,9 @@ public final class StringsPlume {
     return m.replaceAll(replacement);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Prefixing and indentation
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Prefixing and indentation
+  //
 
   /**
    * Returns the printed represenation of a value, with each line prefixed by another string.
@@ -184,9 +184,9 @@ public final class StringsPlume {
     return prefixLinesExceptFirst(prefix, o);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Splitting and joining
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Splitting and joining
+  //
 
   /** A pattern that matches all common line separators: lf, cr, cr-lf. */
   private static Pattern allLineSeparators = Pattern.compile("\\R");
@@ -380,9 +380,9 @@ public final class StringsPlume {
     return join(lineSep, v);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Quoting and escaping
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Quoting and escaping
+  //
 
   /**
    * Escapes a String so that it is expressible in a string literal in Java source code. By
@@ -759,9 +759,9 @@ public final class StringsPlume {
     return sb.toString();
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Whitespace
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Whitespace
+  //
 
   /**
    * Returns true if the string contains only white space codepoints, otherwise false.
@@ -1041,9 +1041,9 @@ public final class StringsPlume {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Comparisons
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Comparisons
+  //
 
   /**
    * Same as built-in String comparison, but accept null arguments, and place them at the beginning.
@@ -1149,9 +1149,9 @@ public final class StringsPlume {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// StringTokenizer
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // StringTokenizer
+  //
 
   /**
    * Returns a ArrayList of the Strings returned by {@link
@@ -1208,9 +1208,9 @@ public final class StringsPlume {
     return CollectionsPlume.makeArrayList(new StringTokenizer(str));
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Version numbers
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Version numbers
+  //
 
   /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
   public static final @Regex String versionNumberRegex = "\\d+(\\.\\d+)+";
@@ -1282,9 +1282,9 @@ public final class StringsPlume {
     return compare <= 0;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Debugging variants of toString
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Debugging variants of toString
+  //
 
   /**
    * Gives a string representation of the value and its class. Shows elements of collections; to
@@ -1419,9 +1419,9 @@ public final class StringsPlume {
         "Argument is not an array; its class is " + a.getClass().getName());
   }
 
-  ///
-  /// Diagnostic output
-  ///
+  //
+  // Diagnostic output
+  //
 
   /**
    * Convert a map to a string, printing the runtime class of keys and values.
@@ -1444,9 +1444,9 @@ public final class StringsPlume {
     return result.toString();
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Miscellaneous
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Miscellaneous
+  //
 
   /**
    * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on n. Adds "es" to words

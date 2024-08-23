@@ -50,9 +50,9 @@ public final class CollectionsPlume {
   /** The system-specific line separator string. */
   private static final String lineSep = System.lineSeparator();
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Collections
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Collections
+  //
 
   /**
    * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
@@ -858,9 +858,9 @@ public final class CollectionsPlume {
     return true;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// SortedSet
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // SortedSet
+  //
 
   /**
    * Returns true if the two sets contain the same elements in the same order. This is faster than
@@ -965,9 +965,9 @@ public final class CollectionsPlume {
     return true;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// ArrayList
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // ArrayList
+  //
 
   /**
    * Returns a vector containing the elements of the enumeration.
@@ -1172,9 +1172,9 @@ public final class CollectionsPlume {
     return results;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Iterator
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Iterator
+  //
 
   /**
    * Converts an Iterator to an Iterable. The resulting Iterable can be used to produce a single,
@@ -1592,9 +1592,9 @@ public final class CollectionsPlume {
     */
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Map
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Map
+  //
 
   // In Python, inlining this gave a 10x speed improvement.
   // Will the same be true for Java?
@@ -1887,9 +1887,9 @@ public final class CollectionsPlume {
     return result;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Set
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Set
+  //
 
   /**
    * Returns the object in the given set that is equal to key. The Set abstraction doesn't provide
@@ -1988,9 +1988,9 @@ public final class CollectionsPlume {
     return result;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// BitSet
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // BitSet
+  //
 
   /**
    * Returns true if the cardinality of the intersection of the two BitSets is at least the given

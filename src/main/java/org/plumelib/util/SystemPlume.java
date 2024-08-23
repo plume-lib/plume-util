@@ -21,9 +21,9 @@ public final class SystemPlume {
     throw new Error("do not instantiate");
   }
 
-  ///
-  /// Properties
-  ///
+  //
+  // Properties
+  //
 
   /**
    * Determines whether a system property has a string value that represents true: "true", "yes", or
@@ -53,9 +53,9 @@ public final class SystemPlume {
     return getBooleanSystemProperty(key, false);
   }
 
-  ///
-  /// Sleep
-  ///
+  //
+  // Sleep
+  //
 
   /**
    * Like Thread.sleep, but does not throw any checked exceptions, so it is easier for clients to
@@ -72,9 +72,9 @@ public final class SystemPlume {
     }
   }
 
-  ///
-  /// Garbage collection
-  ///
+  //
+  // Garbage collection
+  //
 
   /**
    * Returns the amount of used memory in the JVM.

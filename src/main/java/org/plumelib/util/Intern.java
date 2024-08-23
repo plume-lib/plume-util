@@ -43,9 +43,9 @@ public final class Intern {
     // Now assertsEnabled is set to the correct value
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Strings
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Strings
+  //
 
   /**
    * Replace each element of the array by its interned version. Side-effects the array, but also
@@ -66,9 +66,9 @@ public final class Intern {
     return a;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Testing interning
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Testing interning
+  //
 
   /**
    * Returns true if the argument is interned (is canonical among all objects equal to itself).
@@ -107,9 +107,9 @@ public final class Intern {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Interning objects
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Interning objects
+  //
 
   /**
    * Hasher object which hashes and compares Integers. This is the obvious implementation that uses
@@ -404,7 +404,7 @@ public final class Intern {
         new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned String @Interned []>());
   }
 
-  /// For testing only
+  // For testing only
 
   /**
    * Returns the number of interned integers. For testing only.
@@ -550,7 +550,7 @@ public final class Intern {
     return internedObjectArrays.keySet().iterator();
   }
 
-  /// End of testing methods
+  // End of testing methods
 
   /**
    * Interns a String. Delegates to the builtin String.intern() method, but handles {@code null}.
