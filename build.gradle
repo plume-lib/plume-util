@@ -26,6 +26,7 @@ repositories {
 ext.errorproneVersion = '2.31.0'
 
 ext {
+  isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
 
@@ -91,6 +92,9 @@ dependencies {
   errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
 }
 tasks.withType(JavaCompile).configureEach {
+  if (!isJava17orHigher) {
+   options.errorprone.enabled = false
+  }
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
