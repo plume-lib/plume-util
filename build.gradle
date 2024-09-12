@@ -93,7 +93,7 @@ dependencies {
 }
 tasks.withType(JavaCompile).configureEach {
   if (!isJava17orHigher) {
-   options.errorprone.enabled = false
+    options.errorprone.enabled = false
   }
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
