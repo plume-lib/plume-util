@@ -23,7 +23,9 @@ repositories {
 }
 
 // Error Prone versions later than 2.10.0 require JDK 11.
-ext.errorproneVersion = '2.31.0'
+ext.errorproneVersion = '2.32.0'
+
+ext.isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
 
 ext {
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
@@ -94,6 +96,7 @@ tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
+  options.forkOptions.jvmArgs += '-Xmx2g'
   if (isJava21orHigher) {
     options.compilerArgs << '-Xlint:-this-escape'
   }
@@ -104,7 +107,7 @@ tasks.withType(JavaCompile).configureEach {
     disable('ReferenceEquality') // Use Interning Checker instead.
     disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
   }
-  options.forkOptions.jvmArgs += '-Xmx2g'
+  options.errorprone.enabled = isJava17orHigher
 }
 
 // Checker Framework pluggable type-checking
