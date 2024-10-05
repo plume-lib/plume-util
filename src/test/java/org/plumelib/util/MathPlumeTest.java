@@ -126,6 +126,7 @@ public final class MathPlumeTest {
       MathPlume.pow(3, -3);
       throw new Error("Didn't throw ArithmeticException");
     } catch (ArithmeticException e) {
+      // This is the expected behavior, so do nothing.
     }
   }
 
