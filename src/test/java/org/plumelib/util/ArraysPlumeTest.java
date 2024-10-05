@@ -59,11 +59,13 @@ public final class ArraysPlumeTest {
       ArraysPlume.minAndMax(new int[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
     } catch (ArrayIndexOutOfBoundsException e) {
+      // This is the expected behavior, so do nothing.
     }
     try {
       ArraysPlume.minAndMax(new long[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
     } catch (ArrayIndexOutOfBoundsException e) {
+      // This is the expected behavior, so do nothing.
     }
 
     // public static int elementRange(int[] a)
