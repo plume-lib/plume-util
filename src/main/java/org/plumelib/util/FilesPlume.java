@@ -41,6 +41,7 @@ import org.checkerframework.checker.mustcall.qual.Owning;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.IntVal;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
 public final class FilesPlume {
@@ -53,9 +54,9 @@ public final class FilesPlume {
   /** The system-specific line separator string. */
   private static final String lineSep = System.lineSeparator();
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// File readers
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // File readers
+  //
 
   /**
    * Returns an InputStream for the file, accounting for the possibility that the file is
@@ -69,6 +70,11 @@ public final class FilesPlume {
    * @return an InputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
   public static @Owning InputStream newFileInputStream(Path path) throws IOException {
     FileInputStream fis = new FileInputStream(path.toFile());
     InputStream in;
@@ -97,6 +103,7 @@ public final class FilesPlume {
    * @return an InputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning InputStream newFileInputStream(File file) throws IOException {
     return newFileInputStream(file.toPath());
   }
@@ -114,6 +121,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @throws FileNotFoundException if the file is not found
    */
+  @SideEffectFree
   public static @Owning InputStreamReader newFileReader(String filename)
       throws FileNotFoundException, IOException {
     return newFileReader(new File(filename), null);
@@ -132,6 +140,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning InputStreamReader newFileReader(Path path)
       throws FileNotFoundException, IOException {
     return newFileReader(path.toFile(), null);
@@ -151,6 +160,8 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
   public static @Owning InputStreamReader newFileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = newFileInputStream(path.toFile());
@@ -176,6 +187,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning InputStreamReader newFileReader(File file)
       throws FileNotFoundException, IOException {
     return newFileReader(file, null);
@@ -195,14 +207,15 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning InputStreamReader newFileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     return newFileReader(file.toPath(), charsetName);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Buffered file readers and line number readers
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Buffered file readers and line number readers
+  //
 
   /**
    * Returns a BufferedReader for the file, accounting for the possibility that the file is
@@ -217,6 +230,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning BufferedReader newBufferedFileReader(String filename)
       throws FileNotFoundException, IOException {
     return newBufferedFileReader(filename, null);
@@ -235,6 +249,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning BufferedReader newBufferedFileReader(File file)
       throws FileNotFoundException, IOException {
     return newBufferedFileReader(file, null);
@@ -254,6 +269,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning BufferedReader newBufferedFileReader(
       String filename, @Nullable String charsetName) throws FileNotFoundException, IOException {
     return newBufferedFileReader(new File(filename), charsetName);
@@ -273,6 +289,8 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
   public static @Owning BufferedReader newBufferedFileReader(
       File file, @Nullable String charsetName) throws FileNotFoundException, IOException {
     Reader fileReader = newFileReader(file, charsetName);
@@ -292,6 +310,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning LineNumberReader newLineNumberFileReader(String filename)
       throws FileNotFoundException, IOException {
     return newLineNumberFileReader(new File(filename));
@@ -310,15 +329,17 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
   public static @Owning LineNumberReader newLineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
     Reader fileReader = newFileReader(file, null);
     return new LineNumberReader(fileReader);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// File writers
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // File writers
+  //
 
   /**
    * Returns an OutputStream for the file, accounting for the possibility that the file is
@@ -332,6 +353,7 @@ public final class FilesPlume {
    * @return an OutputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning OutputStream newFileOutputStream(Path path) throws IOException {
     return newFileOutputStream(path, false);
   }
@@ -350,6 +372,11 @@ public final class FilesPlume {
    * @return an OutputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
   public static @Owning OutputStream newFileOutputStream(Path path, boolean append)
       throws IOException {
     FileOutputStream fis = new FileOutputStream(path.toFile(), append);
@@ -379,6 +406,7 @@ public final class FilesPlume {
    * @return an OutputStream for file
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning OutputStream newFileOutputStream(File file) throws IOException {
     return newFileOutputStream(file.toPath());
   }
@@ -396,6 +424,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @throws FileNotFoundException if the file is not found
    */
+  @SideEffectFree
   public static @Owning OutputStreamWriter newFileWriter(String filename)
       throws FileNotFoundException, IOException {
     return newFileWriter(new File(filename), null);
@@ -414,6 +443,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning OutputStreamWriter newFileWriter(Path path)
       throws FileNotFoundException, IOException {
     return newFileWriter(path.toFile(), null);
@@ -433,6 +463,8 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
   public static @Owning OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     OutputStream in = newFileOutputStream(path.toFile());
@@ -458,6 +490,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning OutputStreamWriter newFileWriter(File file)
       throws FileNotFoundException, IOException {
     return newFileWriter(file, null);
@@ -477,14 +510,15 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SideEffectFree
   public static @Owning OutputStreamWriter newFileWriter(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     return newFileWriter(file.toPath(), charsetName);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Buffered file writers
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Buffered file writers
+  //
 
   /**
    * Returns a BufferedWriter for the file, accounting for the possibility that the file is
@@ -498,6 +532,7 @@ public final class FilesPlume {
    * @return a BufferedWriter for filename
    * @throws IOException if there is trouble writing the file
    */
+  @SideEffectFree
   public static @Owning BufferedWriter newBufferedFileWriter(String filename) throws IOException {
     return newBufferedFileWriter(filename, false);
   }
@@ -517,6 +552,11 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   // Question:  should this be rewritten as a wrapper around newBufferedFileOutputStream?
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
   public static @Owning BufferedWriter newBufferedFileWriter(String filename, boolean append)
       throws IOException {
     if (filename.endsWith(".gz")) {
@@ -544,15 +584,17 @@ public final class FilesPlume {
    * @return a BufferedOutputStream for filename
    * @throws IOException if there is trouble writing the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
   public static @Owning BufferedOutputStream newBufferedFileOutputStream(
       String filename, boolean append) throws IOException {
     OutputStream os = newFileOutputStream(new File(filename).toPath(), append);
     return new BufferedOutputStream(os);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// File
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // File
+  //
 
   /**
    * Count the number of lines in the specified file.
@@ -561,6 +603,13 @@ public final class FilesPlume {
    * @return number of lines in filename
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call",
+    "allcheckers:purity.not.deterministic.call",
+    "allcheckers:purity.not.deterministic.not.sideeffectfree.call",
+    "lock:method.guarantee.violated"
+  }) // side effect to local state
+  @Pure
   public static long countLines(String filename) throws IOException {
     long count = 0;
     try (LineNumberReader reader = newLineNumberFileReader(filename)) {
@@ -578,6 +627,11 @@ public final class FilesPlume {
    * @return the inferred line separator used in filename
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.not.deterministic.object.creation" // create local state
+  })
+  @Pure
   public static String inferLineSeparator(String filename) throws IOException {
     return inferLineSeparator(new File(filename));
   }
@@ -589,6 +643,12 @@ public final class FilesPlume {
    * @return the inferred line separator used in filename
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.deterministic.call", // side effect to local state
+    "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @Pure
   public static String inferLineSeparator(File file) throws IOException {
     try (BufferedReader r = newBufferedFileReader(file)) {
       int unix = 0;
@@ -678,6 +738,7 @@ public final class FilesPlume {
    * @param file the file to create and write
    * @return true iff the file can be created and written
    */
+  @SideEffectFree
   public static boolean canCreateAndWrite(File file) {
     if (file.exists()) {
       return file.canWrite();
@@ -690,7 +751,7 @@ public final class FilesPlume {
       return directory.canWrite();
     }
 
-    /// Old implementation; is this equivalent to the new one, above??
+    // // Old implementation; is this equivalent to the new one, above??
     // try {
     //   if (file.exists()) {
     //     return file.canWrite();
@@ -746,9 +807,9 @@ public final class FilesPlume {
     throw new Error("every file exists");
   }
 
-  ///
-  /// Directories
-  ///
+  //
+  // Directories
+  //
 
   // TODO: Document how this differs from Files.createTempDirectory, or deprecate this.
   /**
@@ -819,9 +880,9 @@ public final class FilesPlume {
     return dir.delete();
   }
 
-  ///
-  /// File names (aka filenames)
-  ///
+  //
+  // File names (aka filenames)
+  //
 
   // Someone must have already written this.  Right?
   // There is Apache Commons IO WildcardFileFilter or, using standard Java utilities,
@@ -843,6 +904,7 @@ public final class FilesPlume {
      *
      * @param wildcard a string that must contain exactly one "*"
      */
+    @SideEffectFree
     public WildcardFilter(String wildcard) {
       int astloc = wildcard.indexOf('*');
       if (astloc == -1) {
@@ -871,6 +933,7 @@ public final class FilesPlume {
    * @param name file whose name to expand
    * @return file with expanded file
    */
+  @SideEffectFree
   public static File expandFilename(File name) {
     String path = name.getPath();
     String newname = expandFilename(path);
@@ -889,6 +952,7 @@ public final class FilesPlume {
    * @param name filename to expand
    * @return expanded filename
    */
+  @SideEffectFree
   public static String expandFilename(String name) {
     if (name.contains("~")) {
       return name.replace("~", userHome);
@@ -903,19 +967,19 @@ public final class FilesPlume {
    * quoted itself inside the string.
    *
    * <p>The current implementation presumes that backslashes don't appear in filenames except as
-   * windows path separators. That seems like a reasonable assumption.
+   * Windows path separators. That seems like a reasonable assumption.
    *
    * @param name file whose name to quote
    * @return a string version of the name that can be used in Java source
    */
+  @SideEffectFree
   public static String javaSource(File name) {
-
     return name.getPath().replace("\\", "\\\\");
   }
 
-  ///
-  /// Reading and writing
-  ///
+  //
+  // Reading and writing
+  //
 
   /**
    * Writes an Object to a File.
@@ -941,7 +1005,12 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @throws ClassNotFoundException if the object's class cannot be found
    */
-  @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
+  @SuppressWarnings({
+    "BanSerializableRead", // wrapper around dangerous API
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
   public static Object readObject(File file) throws IOException, ClassNotFoundException {
     try (InputStream fis = newFileInputStream(file);
         // 8192 is the buffer size in BufferedReader
@@ -986,6 +1055,7 @@ public final class FilesPlume {
   // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
   // "org.plumelib.util.FilesPlume")
   @Deprecated // 2023-03-02
+  @SideEffectFree
   public static String readFile(File file) {
     return fileContents(file);
   }
@@ -999,6 +1069,11 @@ public final class FilesPlume {
    * @param path the path to the file
    * @return a String containing the content read from the file
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
   public static String readString(Path path) {
     // In Java 11:
     // try {
@@ -1029,6 +1104,7 @@ public final class FilesPlume {
    * @param path the path to the file
    * @return the lines of the file
    */
+  @SideEffectFree
   public static List<String> readLinesRetainingSeparators(Path path) {
     return StringsPlume.splitLinesRetainSeparators(readString(path));
   }
@@ -1047,6 +1123,7 @@ public final class FilesPlume {
    * @deprecated use {@link #readString}
    */
   @Deprecated // 2024-04-14
+  @SideEffectFree
   public static String fileContents(File file) {
     return readString(file.toPath());
   }
@@ -1110,9 +1187,9 @@ public final class FilesPlume {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Stream
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Stream
+  //
 
   /**
    * Copy the contents of the input stream to the output stream.

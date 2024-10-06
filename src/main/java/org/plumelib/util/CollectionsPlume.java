@@ -50,9 +50,9 @@ public final class CollectionsPlume {
   /** The system-specific line separator string. */
   private static final String lineSep = System.lineSeparator();
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Collections
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Collections
+  //
 
   /**
    * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
@@ -214,9 +214,10 @@ public final class CollectionsPlume {
    *
    * @return a sorted version of the list
    * @param <T> type of elements of the list
-   * @param l a list to sort
+   * @param l a list to sort; is not side-effected
    * @param c a sorted version of the list
    */
+  // TODO: rename to "sorted()".
   public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
     List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);
@@ -637,6 +638,7 @@ public final class CollectionsPlume {
    * @param coll a collection
    * @param predicate a non-interfering, stateless predicate
    * @return true if any element of the collection matches the predicate
+   * @see #firstMatch
    */
   public static <T> boolean anyMatch(Iterable<T> coll, Predicate<? super T> predicate) {
     for (T elt : coll) {
@@ -685,13 +687,36 @@ public final class CollectionsPlume {
    * @return true if no element of the collection matches the predicate
    */
   public static <T> boolean noneMatch(Iterable<T> coll, Predicate<? super T> predicate) {
-
     for (T elt : coll) {
       if (predicate.test(elt)) {
         return false;
       }
     }
     return true;
+  }
+
+  /**
+   * Returns the first element of the collection that matches the predicate, or null.
+   *
+   * <p>Using streams gives an equivalent result but is less efficient:
+   *
+   * <pre>{@code
+   * coll.stream().filter(predicate).firstMatch().orElse(null);
+   * }</pre>
+   *
+   * @param <T> the type of elements
+   * @param coll a collection
+   * @param predicate a non-interfering, stateless predicate
+   * @return the first element of the collection that matches the predicate, or null
+   * @see #anyMatch
+   */
+  public static <T> @Nullable T firstMatch(Iterable<T> coll, Predicate<? super T> predicate) {
+    for (T elt : coll) {
+      if (predicate.test(elt)) {
+        return elt;
+      }
+    }
+    return null;
   }
 
   /**
@@ -833,9 +858,9 @@ public final class CollectionsPlume {
     return true;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// SortedSet
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // SortedSet
+  //
 
   /**
    * Returns true if the two sets contain the same elements in the same order. This is faster than
@@ -940,9 +965,9 @@ public final class CollectionsPlume {
     return true;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// ArrayList
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // ArrayList
+  //
 
   /**
    * Returns a vector containing the elements of the enumeration.
@@ -1147,9 +1172,9 @@ public final class CollectionsPlume {
     return results;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Iterator
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Iterator
+  //
 
   /**
    * Converts an Iterator to an Iterable. The resulting Iterable can be used to produce a single,
@@ -1244,7 +1269,7 @@ public final class CollectionsPlume {
     }
 
     @Override
-    public T nextElement() {
+    public T nextElement(@GuardSatisfied IteratorEnumeration<T> this) {
       return itor.next();
     }
   }
@@ -1567,9 +1592,9 @@ public final class CollectionsPlume {
     */
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Map
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Map
+  //
 
   // In Python, inlining this gave a 10x speed improvement.
   // Will the same be true for Java?
@@ -1862,9 +1887,9 @@ public final class CollectionsPlume {
     return result;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Set
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Set
+  //
 
   /**
    * Returns the object in the given set that is equal to key. The Set abstraction doesn't provide
@@ -1963,9 +1988,9 @@ public final class CollectionsPlume {
     return result;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// BitSet
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // BitSet
+  //
 
   /**
    * Returns true if the cardinality of the intersection of the two BitSets is at least the given

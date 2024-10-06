@@ -27,9 +27,9 @@ public final class MathPlume {
     throw new Error("do not instantiate");
   }
 
-  ///
-  /// Function versions of Java operators
-  ///
+  //
+  // Function versions of Java operators
+  //
 
   /**
    * Negates its argument.
@@ -429,9 +429,9 @@ public final class MathPlume {
     return ((x != 0) || (y != 0)) ? 1 : 0;
   }
 
-  ///
-  /// sign
-  ///
+  //
+  // sign
+  //
 
   /**
    * Returns the sign of its argument. The result is always -1, 0, or 1.
@@ -451,9 +451,9 @@ public final class MathPlume {
     }
   }
 
-  ///
-  /// exponentiation
-  ///
+  //
+  // exponentiation
+  //
 
   /**
    * Returns of value of the first argument raised to the power of the second argument. The
@@ -562,9 +562,9 @@ public final class MathPlume {
   //   return result;
   // }
 
-  ///
-  /// gcd
-  ///
+  //
+  // gcd
+  //
 
   /**
    * Returns the greatest common divisor of the two arguments.
@@ -636,7 +636,7 @@ public final class MathPlume {
     return result;
   }
 
-  /// gcd -- version for manipulating long (rather than int) values
+  // gcd -- version for manipulating long (rather than int) values
 
   /**
    * Returns the greatest common divisor of the two arguments.
@@ -787,9 +787,9 @@ public final class MathPlume {
     return result;
   }
 
-  ///
-  /// Modulus
-  ///
+  //
+  // Modulus
+  //
 
   /**
    * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
@@ -1033,7 +1033,7 @@ public final class MathPlume {
     return new int[] {r, modulus};
   }
 
-  /// modulus for long (as opposed to int) values
+  // modulus for long (as opposed to int) values
 
   /**
    * Returns z such that {@code (z == x mod y) && (0 <= z < abs(y))}. This should really be named
@@ -1285,9 +1285,9 @@ public final class MathPlume {
     return new long[] {r, modulus};
   }
 
-  ///
-  /// Non-Modulus
-  ///
+  //
+  // Non-Modulus
+  //
 
   /**
    * Returns an array containing all the numbers <b>not</b> in its argument array (which must be
@@ -1623,7 +1623,7 @@ public final class MathPlume {
     return null;
   }
 
-  /// non-modulus for long (as opposed to int) values
+  // non-modulus for long (as opposed to int) values
 
   /**
    * Returns an array containing all the numbers <b>not</b> in its argument array (which must be

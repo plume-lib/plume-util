@@ -9,14 +9,14 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 // The class type variables are called V1 and V2 so that T1 and T2 can be used for method type
 // variables.
 /**
- * Mutable pair class.
+ * Mutable pair class. If mutation is not needed, use {@link IPair}.
  *
  * @param <V1> the type of the first element of the pair
  * @param <V2> the type of the second element of the pair
  */
 // This class does not implement DeepCopyable because that would require that V1 and V2 implement
 // DeepCopyable, but this class should be applicable to any types.  Therefore, deepCopy() in this
-// class is a static method that requires that the elements of the argument are DeepCopyable,
+// class is a static method that requires that the elements of the argument are DeepCopyable.
 public class MPair<V1, V2> {
   /** The first element of the pair. */
   public V1 first;

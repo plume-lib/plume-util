@@ -2,27 +2,29 @@ plugins {
   id 'java-library'
 
   // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
-  id 'com.github.johnrengelman.shadow' version '8.1.1'
+  id 'com.gradleup.shadow' version '8.3.3'
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  id 'com.diffplug.spotless' version '6.23.3'
+  // Version 6.14.0 and later requires JRE 11+, but version 6.13.0 doesn't work on JRE 21.
+  id 'com.diffplug.spotless' version '6.25.0'
 
   // Error Prone linter
-  id('net.ltgt.errorprone') version '3.1.0'
+  id('net.ltgt.errorprone') version '4.0.1'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.37'
+  id 'org.checkerframework' version '0.6.45'
 }
 
 repositories {
+  gradlePluginPortal()
   mavenLocal()
   mavenCentral()
   maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
-ext.errorproneVersion = '2.23.0'
-
 ext {
+  errorproneVersion = '2.33.0'
+  isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
 
@@ -34,8 +36,8 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.2'
 }
 
 // To upload to Maven Central, see instructions in the file.
@@ -58,33 +60,31 @@ test {
   }
 }
 
-if (! isJava21orHigher) {
-  spotless {
-    format 'misc', {
-      // define the files to apply `misc` to
-      target '*.md', '.gitignore'
+spotless {
+  format 'misc', {
+    // define the files to apply `misc` to
+    target '*.md', '.gitignore'
 
-      // define the steps to apply to those files
-      trimTrailingWhitespace()
-      indentWithSpaces(2)
-      endWithNewline()
-    }
-    java {
-      targetExclude('**/WeakIdentityHashMap.java')
-      googleJavaFormat()
-      formatAnnotations()
-    }
-    groovyGradle {
-      target '**/*.gradle'
-      greclipse()  // which formatter Spotless should use to format .gradle files.
-      indentWithSpaces(2)
-      trimTrailingWhitespace()
-      // endWithNewline() // Don't want to end empty files with a newline
-    }
+    // define the steps to apply to those files
+    trimTrailingWhitespace()
+    indentWithSpaces(2)
+    endWithNewline()
+  }
+  java {
+    targetExclude('**/WeakIdentityHashMap.java')
+    googleJavaFormat()
+    formatAnnotations()
+  }
+  groovyGradle {
+    target '**/*.gradle'
+    greclipse()  // which formatter Spotless should use to format .gradle files.
+    indentWithSpaces(2)
+    trimTrailingWhitespace()
+    // endWithNewline() // Don't want to end empty files with a newline
   }
 }
 
-/// Error Prone linter
+// Error Prone linter
 
 dependencies {
   errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
@@ -93,6 +93,7 @@ tasks.withType(JavaCompile).configureEach {
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   // "-options" is because starting in JDK 20, javac warns about using -source 8.
   options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
+  options.forkOptions.jvmArgs += '-Xmx2g'
   if (isJava21orHigher) {
     options.compilerArgs << '-Xlint:-this-escape'
   }
@@ -104,11 +105,10 @@ tasks.withType(JavaCompile).configureEach {
     // Code copied from the JDK that we don't want to change gratuitously.
     excludedPaths = '.*/Weak.*Hash(er)?Map.java'
   }
-  options.forkOptions.jvmArgs += '-Xmx2g'
-  options.release = 11
+  options.errorprone.enabled = isJava17orHigher
 }
 
-/// Checker Framework pluggable type-checking
+// Checker Framework pluggable type-checking
 
 apply plugin: 'org.checkerframework'
 
@@ -140,7 +140,7 @@ checkerFramework {
 // To use a snapshot version of the Checker Framework.
 if (true) {
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.43.0-SNAPSHOT'
+  ext.checkerFrameworkVersion = '3.48.0'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
@@ -159,7 +159,8 @@ if (project.hasProperty('cfLocal')) {
     checkerFramework files(cfHome + '/checker/dist/checker.jar')
   }
 }
-/// Javadoc
+
+// Javadoc
 
 // Turn Javadoc warnings into errors.
 javadoc {
@@ -212,7 +213,7 @@ task requireJavadoc(type: JavaExec) {
 check.dependsOn requireJavadoc
 javadocWeb.dependsOn requireJavadoc
 
-/// Emacs support
+// Emacs support
 
 /* Make Emacs TAGS table */
 task tags(type: Exec) {
@@ -221,7 +222,7 @@ task tags(type: Exec) {
 }
 
 
-/// Debugging support
+// Debugging support
 
 task printCompileClasspaths {
   description 'Print the compile-time classpaths'

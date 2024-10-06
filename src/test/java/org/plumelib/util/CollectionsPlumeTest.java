@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.DateFormat;
@@ -33,9 +34,9 @@ public final class CollectionsPlumeTest {
   // under instrumentation such as that of Chicory.
   private static final boolean shortRun = false;
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Helper functions
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Helper functions
+  //
 
   @SuppressWarnings("NonApiType")
   public static <T> ArrayList<T> toArrayList(Iterator<T> itor) {
@@ -111,9 +112,9 @@ public final class CollectionsPlumeTest {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// The tests themselves
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // The tests themselves
+  //
 
   @Test
   public void testListOf() {
@@ -445,6 +446,15 @@ public final class CollectionsPlumeTest {
     assertFalse(CollectionsPlume.noneMatch(iota, i -> i > -5));
     assertFalse(CollectionsPlume.noneMatch(iota, i -> i > 5));
     assertTrue(CollectionsPlume.noneMatch(iota, i -> i > 15));
+  }
+
+  @Test
+  @SuppressWarnings("nullness:unboxing.of.nullable")
+  public void testfirstMatch() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    assertEquals(0, (int) CollectionsPlume.firstMatch(iota, i -> i > -5));
+    assertEquals(6, (int) CollectionsPlume.firstMatch(iota, i -> i > 5));
+    assertNull(CollectionsPlume.firstMatch(iota, i -> i > 15));
   }
 
   @Test

@@ -45,9 +45,9 @@ public final class ArraysPlume {
     throw new Error("do not instantiate");
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Creation
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Creation
+  //
 
   /**
    * Returns an array consisting of n copies of the specified object.
@@ -103,9 +103,9 @@ public final class ArraysPlume {
   //   return result;
   // }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// min, max
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // min, max
+  //
 
   // Could also add linear-time orderStatistics if I liked.
 
@@ -449,9 +449,9 @@ public final class ArraysPlume {
     return minAndMax[1] - minAndMax[0];
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// sum
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // sum
+  //
 
   /**
    * Returns the sum of an array of integers.
@@ -521,9 +521,9 @@ public final class ArraysPlume {
     return sum;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// indexOf
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // indexOf
+  //
 
   /**
    * Searches for the first occurrence of the given element in the array, testing for equality using
@@ -869,9 +869,9 @@ public final class ArraysPlume {
     return -1;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// indexOf, for finding subarrays
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // indexOf, for finding subarrays
+  //
 
   // This is analogous to Common Lisp's "search" function.
 
@@ -1149,18 +1149,18 @@ public final class ArraysPlume {
     return -1;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// mismatch
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // mismatch
+  //
 
   // This is analogous to Common Lisp's "mismatch" function.
 
   // Put it off until later; for now, use the simpler subarray function,
   // which is a specialization of mismatch,
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// subarray extraction
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // subarray extraction
+  //
 
   // Note that the second argument is a length, not an end position.
   // That's to avoid confusion over whether it would be the last included
@@ -1372,9 +1372,9 @@ public final class ArraysPlume {
     return result;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// subarray testing
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // subarray testing
+  //
 
   /**
    * Determines whether the second array is a subarray of the first, starting at the specified index
@@ -1672,9 +1672,9 @@ public final class ArraysPlume {
     return true;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Concatenation
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Concatenation
+  //
 
   /**
    * Concatenates two arrays. Can be invoked varargs-style.
@@ -2242,9 +2242,9 @@ public final class ArraysPlume {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Printing
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Printing
+  //
 
   /**
    * Returns the length of the argument array.
@@ -2430,9 +2430,22 @@ public final class ArraysPlume {
     return toString(a, true);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Sortedness
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Sortedness
+  //
+
+  /**
+   * Returns whether the array is sorted.
+   *
+   * @param a an array
+   * @return true iff the array is sorted
+   * @deprecated use {@link #isSorted(int[])}
+   */
+  @Deprecated // 2024-04-21
+  @Pure
+  public static boolean sorted(int[] a) {
+    return isSorted(a);
+  }
 
   /**
    * Returns whether the array is sorted.
@@ -2441,7 +2454,7 @@ public final class ArraysPlume {
    * @return true iff the array is sorted
    */
   @Pure
-  public static boolean sorted(int[] a) {
+  public static boolean isSorted(int[] a) {
     for (int i = 0; i < a.length - 1; i++) {
       if (a[i + 1] < a[i]) {
         return false;
@@ -2455,9 +2468,21 @@ public final class ArraysPlume {
    *
    * @param a an array
    * @return true iff the array is sorted
+   * @deprecated use {@link #isSorted(long[])}
+   */
+  @Deprecated // 2024-04-21
+  public static boolean sorted(long[] a) {
+    return isSorted(a);
+  }
+
+  /**
+   * Returns whether the array is sorted.
+   *
+   * @param a an array
+   * @return true iff the array is sorted
    */
   @Pure
-  public static boolean sorted(long[] a) {
+  public static boolean isSorted(long[] a) {
     for (int i = 0; i < a.length - 1; i++) {
       if (a[i + 1] < a[i]) {
         return false;
@@ -3044,9 +3069,9 @@ public final class ArraysPlume {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Arrays as partial functions of int->int
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Arrays as partial functions of int->int
+  //
 
   /**
    * Returns true if the array is a permutation of [0..a.length).
@@ -3182,9 +3207,9 @@ public final class ArraysPlume {
     return result;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Set operations, such as subset, unions, and intersections
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Set operations, such as subset, unions, and intersections
+  //
 
   // This implementation is O(n^2) when the smaller really is a subset, but
   // might be quicker when it is not.  Sorting both sets has (minimum
@@ -3300,9 +3325,9 @@ public final class ArraysPlume {
     // return Arrays.equals(arr1, arr2);
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Array comparators
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Array comparators
+  //
 
   /**
    * Compare two arrays lexically (element-by-element). If all shared elements are the same, but the
@@ -3855,9 +3880,9 @@ public final class ArraysPlume {
     }
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// nullness
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // nullness
+  //
 
   /**
    * Returns true if a contains null.
@@ -3921,9 +3946,9 @@ public final class ArraysPlume {
     return true;
   }
 
-  ///////////////////////////////////////////////////////////////////////////
-  /// Partitioning
-  ///
+  // //////////////////////////////////////////////////////////////////////
+  // Partitioning
+  //
 
   /**
    * Partition a set of non-null elements into exactly k subsets. A partitioning is of type {@code

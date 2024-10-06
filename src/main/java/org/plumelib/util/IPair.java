@@ -9,7 +9,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 // The class type variables are called V1 and V2 so that T1 and T2 can be used for method type
 // variables.
 /**
- * Immutable pair class.
+ * Immutable pair class. If mutation is needed, use {@link MPair}.
  *
  * @param <V1> the type of the first element of the pair
  * @param <V2> the type of the second element of the pair

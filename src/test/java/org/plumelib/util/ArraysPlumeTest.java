@@ -59,11 +59,13 @@ public final class ArraysPlumeTest {
       ArraysPlume.minAndMax(new int[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
     } catch (ArrayIndexOutOfBoundsException e) {
+      // This is the expected behavior, so do nothing.
     }
     try {
       ArraysPlume.minAndMax(new long[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
     } catch (ArrayIndexOutOfBoundsException e) {
+      // This is the expected behavior, so do nothing.
     }
 
     // public static int elementRange(int[] a)
@@ -376,16 +378,16 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_sorted() {
+  public void test_isSorted() {
 
-    // public static boolean sorted(int[] a)
-    assertTrue(ArraysPlume.sorted(new int[] {0, 1, 2}));
-    assertTrue(ArraysPlume.sorted(new int[] {0, 1, 2, 2, 3, 3}));
-    assertTrue(ArraysPlume.sorted(new int[] {}));
-    assertTrue(ArraysPlume.sorted(new int[] {0}));
-    assertTrue(ArraysPlume.sorted(new int[] {0, 1}));
-    assertTrue(!ArraysPlume.sorted(new int[] {1, 0}));
-    assertTrue(!ArraysPlume.sorted(new int[] {0, 1, 2, 1, 2, 3}));
+    // public static boolean isSorted(int[] a)
+    assertTrue(ArraysPlume.isSorted(new int[] {0, 1, 2}));
+    assertTrue(ArraysPlume.isSorted(new int[] {0, 1, 2, 2, 3, 3}));
+    assertTrue(ArraysPlume.isSorted(new int[] {}));
+    assertTrue(ArraysPlume.isSorted(new int[] {0}));
+    assertTrue(ArraysPlume.isSorted(new int[] {0, 1}));
+    assertTrue(!ArraysPlume.isSorted(new int[] {1, 0}));
+    assertTrue(!ArraysPlume.isSorted(new int[] {0, 1, 2, 1, 2, 3}));
   }
 
   @Test

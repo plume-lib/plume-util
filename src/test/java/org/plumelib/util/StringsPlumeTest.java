@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
+import org.plumelib.util.StringsPlume.VersionNumberComparator;
 
 /** Test the stringsPlume class. */
 public final class StringsPlumeTest {
@@ -237,6 +238,24 @@ public final class StringsPlumeTest {
   }
 
   @Test
+  public void test_isVersionNumberLE() {
+
+    VersionNumberComparator vnc = new VersionNumberComparator();
+
+    assertEquals(0, vnc.compare("123.456.789", "123.456.789"));
+    assertEquals(-1, vnc.compare("113.456.789", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.416.789", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.456.719", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.456.789", "193.456.789"));
+    assertEquals(-1, vnc.compare("123.456.789", "123.496.789"));
+    assertEquals(-1, vnc.compare("123.456.789", "123.456.799"));
+    assertEquals(-1, vnc.compare("123", "123.456.789"));
+    assertEquals(-1, vnc.compare("123.456", "123.456.789"));
+    assertEquals(1, vnc.compare("123.456.789", "123"));
+    assertEquals(1, vnc.compare("123.456.789", "123.456"));
+  }
+
+  @Test
   public void test_nplural() {
 
     // public static String nplural(int n, String noun)
@@ -413,7 +432,7 @@ public final class StringsPlumeTest {
 
   @Test
   public void testFirstLineSeparator() {
-    assertEquals("\n", StringsPlume.firstLineSeparator("hello"));
+    assertEquals(null, StringsPlume.firstLineSeparator("hello"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));
