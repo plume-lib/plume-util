@@ -6,15 +6,16 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
-## 1.10.0 (2024-??-??)
+## 1.10.0 (2024-10-26)
 
 - `OrderedPairIterator`: uses `IPair` instead of `MPair`
 - `ArraysPlume`:  deprecated `sorted()` in favor of `isSorted()`
 - `StringsPlume`:
     * `firstLineSeparator()` can return null
+    * new method `mapToStringLinewise()`
     * new method `isVersionNumberLE()`
     * new class `VersionNumberComparator`
-- `CollectionsPlume`:  new methods `anyMatch()`, `allMatch()`, `noneMatch`
+- `CollectionsPlume`:  new methods `anyMatch()`, `allMatch()`, `noneMatch()`
 
 ## 1.9.3 (2024-04-19)
 

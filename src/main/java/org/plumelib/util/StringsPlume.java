@@ -1439,7 +1439,28 @@ public final class StringsPlume {
     StringJoiner result = new StringJoiner(System.lineSeparator());
     for (Map.Entry<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> e :
         m.entrySet()) {
-      result.add("    " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
+      result.add("  " + toStringAndClass(e.getKey()) + " => " + toStringAndClass(e.getValue()));
+    }
+    return result.toString();
+  }
+
+  /**
+   * Convert a map to a string, printing each key-value pair on its own line, with no indentation.
+   *
+   * @param m a map
+   * @return a string representation of the map
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
+  public static String mapToStringLinewise(
+      Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
+    StringJoiner result = new StringJoiner(System.lineSeparator());
+    for (Map.Entry<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> e :
+        m.entrySet()) {
+      result.add(e.getKey() + " => " + e.getValue());
     }
     return result.toString();
   }
