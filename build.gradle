@@ -36,8 +36,8 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
 }
 
 // To upload to Maven Central, see instructions in the file.
