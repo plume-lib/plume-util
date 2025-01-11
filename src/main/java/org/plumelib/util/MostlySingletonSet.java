@@ -47,7 +47,7 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
           return false;
         }
         makeNonSingleton();
-        // fall through
+      // fall through
       case ANY:
         assert set != null : "@AssumeAssertion(nullness): ANY => value != null";
         return set.add(e);

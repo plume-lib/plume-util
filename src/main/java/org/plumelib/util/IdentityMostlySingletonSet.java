@@ -46,7 +46,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
           return false;
         }
         makeNonSingleton();
-        // fall through
+      // fall through
       case ANY:
         assert set != null : "@AssumeAssertion(nullness): set initialized before";
         return set.add(e);

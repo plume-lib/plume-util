@@ -538,7 +538,8 @@ public final class CollectionsPlume {
     "signedness", // problem with clone()
     "nullness" // generics problem
   })
-  public static <T extends @Nullable Object, C extends @Nullable Collection<T>> @PolyNull C cloneElements(@PolyNull C orig) {
+  public static <T extends @Nullable Object, C extends @Nullable Collection<T>>
+      @PolyNull C cloneElements(@PolyNull C orig) {
     if (orig == null) {
       return null;
     }
@@ -562,7 +563,8 @@ public final class CollectionsPlume {
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings({"signedness", "nullness:argument"}) // problem with clone()
-  public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>> @PolyNull C deepCopy(@PolyNull C orig) {
+  public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>>
+      @PolyNull C deepCopy(@PolyNull C orig) {
     if (orig == null) {
       return null;
     }
@@ -1791,7 +1793,8 @@ public final class CollectionsPlume {
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>> @PolyNull M deepCopyValues(@PolyNull M orig) {
+  public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>>
+      @PolyNull M deepCopyValues(@PolyNull M orig) {
     if (orig == null) {
       return null;
     }
