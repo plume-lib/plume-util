@@ -46,8 +46,8 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-group 'org.plumelib'
-version '1.10.0'
+group = 'org.plumelib'
+version = '1.10.0'
 ext {
   packageName = 'plume-util'
 }

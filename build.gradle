@@ -19,7 +19,7 @@ repositories {
   gradlePluginPortal()
   mavenLocal()
   mavenCentral()
-  maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+  maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 ext {
@@ -36,8 +36,8 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+  testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 // To upload to Maven Central, see instructions in the file.
@@ -67,7 +67,7 @@ spotless {
 
     // define the steps to apply to those files
     trimTrailingWhitespace()
-    indentWithSpaces(2)
+    leadingTabsToSpaces(2)
     endWithNewline()
   }
   java {
@@ -78,7 +78,7 @@ spotless {
   groovyGradle {
     target '**/*.gradle'
     greclipse()  // which formatter Spotless should use to format .gradle files.
-    indentWithSpaces(2)
+    leadingTabsToSpaces(2)
     trimTrailingWhitespace()
     // endWithNewline() // Don't want to end empty files with a newline
   }
@@ -176,7 +176,7 @@ javadoc {
 check.dependsOn javadoc
 
 task javadocWeb(type: Javadoc) {
-  description 'Upload API documentation to website.'
+  description = 'Upload API documentation to website.'
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
@@ -216,7 +216,7 @@ javadocWeb.dependsOn requireJavadoc
 
 /* Make Emacs TAGS table */
 task tags(type: Exec) {
-  description 'Run etags to create an Emacs TAGS table'
+  description = 'Run etags to create an Emacs TAGS table'
   commandLine 'bash', '-c', "find src/ -name '*.java' | sort | xargs etags"
 }
 
@@ -224,7 +224,7 @@ task tags(type: Exec) {
 // Debugging support
 
 task printCompileClasspaths {
-  description 'Print the compile-time classpaths'
+  description = 'Print the compile-time classpaths'
   doFirst {
     println 'Compile classpath:'
     println sourceSets.main.compileClasspath.asPath
