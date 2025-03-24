@@ -6,6 +6,12 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
+- New methods in `ArraysPlume`:
+   * `contains()`
+   * `mapArray()`
+   * `replaceAll()`
+
+
 ## 1.10.0 (2024-10-26)
 
 - `OrderedPairIterator`: uses `IPair` instead of `MPair`
