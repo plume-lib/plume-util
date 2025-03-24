@@ -167,6 +167,8 @@ public final class ArraysPlumeTest {
     assertTrue(ArraysPlume.indexOfEq(a, a[9]) == 9);
   }
 
+  // No test for `contains(T[])` for now because it just calls indexOf.
+
   @Test
   public void testIndexOf_list() {
     // public static int indexOf(List<?> a, Object elt)
@@ -988,8 +990,11 @@ public final class ArraysPlumeTest {
   public void testConcat() {
     Instant[] da1 = new Instant[] {Instant.now()};
     Instant[] da2 = new Instant[] {Instant.now()};
-    @SuppressWarnings("UnusedVariable")
     Instant[] da3 = ArraysPlume.concat(da1, da2);
+    assert da3.length == 2 : "@AssumeAssertion(index)";
+    assertEquals(da3.length, 2);
+    assertSame(da1[0], da3[0]);
+    assertSame(da2[0], da3[1]);
 
     assertArrayEquals(abcdefList.toArray(), ArraysPlume.concat(abcList, defList));
 
@@ -1000,5 +1005,27 @@ public final class ArraysPlumeTest {
     assertArrayEquals(abcdefArrayObject, ArraysPlume.concat(abcArrayObject, defArrayObject));
     assertSame(abcArrayObject, ArraysPlume.concat(abcArrayObject, emptyArrayObject));
     assertSame(abcArrayObject, ArraysPlume.concat(emptyArrayObject, abcArrayObject));
+  }
+
+  @Test
+  public void testMapArray() {
+    Integer[] iota = new Integer[] {0, 1, 2, 3};
+    String[] iotaStringGoal = new String[] {"0", "1", "2", "3"};
+    String[] iotaStringActual =
+        ArraysPlume.<Integer, String>mapArray(i -> i.toString(), iota, String.class);
+    assertArrayEquals(iotaStringActual, iotaStringGoal);
+    assertEquals(iotaStringActual.getClass().getComponentType(), String.class);
+  }
+
+  @Test
+  public void testReplaceAll() {
+    Instant now = Instant.now();
+    @Nullable Instant[] da2 = new Instant[] {now, Instant.now(), null};
+    @Nullable Instant[] da3 = new Instant[] {now, Instant.now(), null};
+
+    ArraysPlume.replaceAll(da2, null, Instant.now());
+    assertFalse(ArraysPlume.anyNull(da2));
+    ArraysPlume.replaceAll(da3, now, Instant.now());
+    assertFalse(ArraysPlume.contains(da3, now));
   }
 }

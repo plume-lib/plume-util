@@ -16,6 +16,7 @@ import java.util.Queue;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Function;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
@@ -29,6 +30,7 @@ import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.common.value.qual.ArrayLen;
@@ -1148,6 +1150,28 @@ public final class ArraysPlume {
     }
     return -1;
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // contains
+  //
+
+  /**
+   * Returns true if the given array contains the specified element. More formally, returns true if
+   * and only if this array contains at least one element {@code e} such that {@code
+   * Objects.equals(o, e)}.
+   *
+   * @param <T> the type of elements of the array
+   * @param a the array in which to search
+   * @param elt element whose presence in the array is to be tested
+   * @return true if the given array contains the specified element
+   */
+  @Pure
+  public static <T extends @Nullable Object> boolean contains(
+      @PolySigned T[] a, @Nullable @PolySigned Object elt) {
+    return indexOf(a, elt) != -1;
+  }
+
+  // TODO: contains for all primitive types
 
   // //////////////////////////////////////////////////////////////////////
   // mismatch
@@ -4138,4 +4162,150 @@ public final class ArraysPlume {
   //   result.add(elt);
   //   return result;
   // }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Mapping
+  //
+
+  /**
+   * Applies the function to each element of the given iterable, producing a new array of the
+   * results, where the array's component type is {@code toClass}. The point of this method is to
+   * make mapping operations more concise and their component type more accurate. You can write
+   *
+   * <pre>{@code   return mapArray(LemmaAnnotation::get, tokens);}</pre>
+   *
+   * instead of
+   *
+   * <pre>{@code   return (T0[]) Arrays.stream(tokens)
+   *            .map(LemmaAnnotation::get)
+   *            .toArray();}</pre>
+   *
+   * which produces an array whose run-time type is {@code Object[]} even though its compile-time
+   * type is {@code TO[]}. Import this method with
+   *
+   * <pre>import static org.plumelib.util.ArraysPlume.mapArray;</pre>
+   *
+   * <p>To perform replacement in place, see {@link #replaceAll}.
+   *
+   * @param <FROM> the type of elements of the given iterable
+   * @param <TO> the type of elements of the result array
+   * @param f a function
+   * @param iterable an iterable
+   * @param toClass the Class for {@code TO}; this is necessary to return an array of run-time type
+   *     {@code TO[]} rather than one of type {@code Object[]}
+   * @return an array of the results of applying {@code f} to the elements of {@code a}
+   */
+  @SuppressWarnings("index:unary.increment") // list and array of the same size
+  public static <
+          FROM extends @Nullable @UnknownKeyFor Object, TO extends @Nullable @UnknownKeyFor Object>
+      TO[] mapArray(
+          Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable, Class<TO> toClass) {
+
+    if (iterable instanceof RandomAccess) {
+      // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
+      List<FROM> list = (List<FROM>) iterable;
+      int len = list.size();
+      @SuppressWarnings("unchecked") // reflection
+      TO[] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, len);
+      for (int i = 0; i < result.length; i++) {
+        result[i] = f.apply(list.get(i));
+      }
+      return result;
+    }
+
+    if (iterable instanceof Collection) {
+      @SuppressWarnings("unchecked") // checked just above
+      int len = ((Collection<?>) iterable).size();
+      @SuppressWarnings("unchecked") // reflection
+      TO[] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, len);
+      if (result.length == 0) {
+        return result;
+      }
+      @IndexFor("result") int i = 0;
+      for (FROM elt : iterable) {
+        result[i] = f.apply(elt);
+        i++;
+      }
+      return result;
+    }
+
+    List<TO> resultList = CollectionsPlume.mapList(f, iterable);
+    int len = ((Collection<?>) iterable).size();
+    @SuppressWarnings("unchecked") // reflection
+    TO[] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, len);
+    for (int i = 0; i < result.length; i++) {
+      result[i] = resultList.get(i);
+    }
+    return result;
+
+    // This does not work, because the underlying array has Object[] type at run time.
+    // return (TO[]) ((List<TO>) CollectionsPlume.mapList(f, a)).toArray();
+  }
+
+  /**
+   * Applies the function to each element of the given array, producing a new array of the results,
+   * where the array's component type is {@code toClass}. The point of this method is to make
+   * mapping operations more concise and their component type more accurate. You can write
+   *
+   * <pre>{@code   return mapArray(LemmaAnnotation::get, tokens);}</pre>
+   *
+   * instead of
+   *
+   * <pre>{@code   return (T0[]) Arrays.stream(tokens)
+   *            .map(LemmaAnnotation::get)
+   *            .toArray();}</pre>
+   *
+   * which produces an array whose run-time type is {@code Object[]} even though its compile-time
+   * type is {@code TO[]}. Import this method with
+   *
+   * <pre>import static org.plumelib.util.ArraysPlume.mapArray;</pre>
+   *
+   * <p>To perform replacement in place, see {@link #replaceAll}.
+   *
+   * @param <FROM> the type of elements of the given array
+   * @param <TO> the type of elements of the result array
+   * @param f a function
+   * @param a an array
+   * @param toClass the Class for {@code TO}; this is necessary to return an array of run-time type
+   *     {@code TO[]} rather than one of type {@code Object[]}
+   * @return an array of the results of applying {@code f} to the elements of {@code a}
+   */
+  @SuppressWarnings("index:array.access.unsafe.high") // I don't know why this is needed
+  public static <
+          FROM extends @Nullable @UnknownKeyFor Object, TO extends @Nullable @UnknownKeyFor Object>
+      TO[] mapArray(Function<? super FROM, ? extends TO> f, FROM[] a, Class<TO> toClass) {
+
+    @SuppressWarnings({"unchecked", "samelen:assignment"}) // reflection
+    TO @SameLen("a") [] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, a.length);
+    for (int i = 0; i < a.length; i++) {
+      result[i] = f.apply(a[i]);
+    }
+    return result;
+
+    // This does not work, because the underlying array has Object[] type at run time.
+    // return (TO[]) ((List<TO>) CollectionsPlume.mapList(f, a)).toArray();
+  }
+
+  /**
+   * Replaces all occurrences of one specified value in a array with another. More formally,
+   * replaces with newVal each element e in array such that (oldVal==null ? e==null :
+   * oldVal.equals(e)). (This method has no effect on the size of the array.)
+   *
+   * @param <T> - the class of the objects in the array
+   * @param a the array in which replacement is to occur
+   * @param oldVal the old value to be replaced
+   * @param newVal the new value with which oldVal is to be replaced.
+   * @return true if array contained one or more elements e such that (oldVal==null ? e==null :
+   *     oldVal.equals(e))
+   */
+  public static <T> boolean replaceAll(T[] a, T oldVal, T newVal) {
+    boolean result = false;
+    for (int i = 0; i < a.length; i++) {
+      if (Objects.equals(a[i], oldVal)) {
+        a[i] = newVal;
+        result = true;
+      }
+    }
+    return result;
+  }
 }
