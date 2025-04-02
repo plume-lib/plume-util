@@ -30,7 +30,7 @@ ext {
 
 dependencies {
   implementation 'org.plumelib:hashmap-util:0.0.1'
-  implementation 'org.plumelib:reflection-util:1.1.4'
+  implementation 'org.plumelib:reflection-util:1.1.5'
   // Including error_prone_annotations leads to javac warnings (not errors, but
   // annoying nonetheless) when a client of plume-util doesn't itself depend on
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
