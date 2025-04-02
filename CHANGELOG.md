@@ -14,7 +14,6 @@
    * `replaceAll()`
 - Do not require Java 11; runs under JDK 8.
 
-
 ## 1.10.0 (2024-10-26)
 
 - `OrderedPairIterator`: uses `IPair` instead of `MPair`
