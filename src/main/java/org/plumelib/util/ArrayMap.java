@@ -832,7 +832,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public V setValue(V value) {
       // Do not increment sizeModificationCount.
-      return values[index] = value;
+      values[index] = value;
+      return value;
     }
 
     /**

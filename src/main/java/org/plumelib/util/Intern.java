@@ -35,14 +35,6 @@ public final class Intern {
     throw new Error("do not instantiate");
   }
 
-  /** Whether assertions are enabled. */
-  private static boolean assertsEnabled = false;
-
-  static {
-    assert assertsEnabled = true; // Intentional side-effect!!!
-    // Now assertsEnabled is set to the correct value
-  }
-
   // //////////////////////////////////////////////////////////////////////
   // Strings
   //
@@ -827,6 +819,21 @@ public final class Intern {
   }
 
   /**
+   * Returns true if each element is interned
+   *
+   * @param a an array whose elements should already be intterned
+   * @return true if each element is interned
+   */
+  private static boolean eachElementInterned(@PolyNull @Interned String @PolyValue [] a) {
+    for (int k = 0; k < a.length; k++) {
+      if (a[k] != Intern.intern(a[k])) {
+        throw new IllegalArgumentException();
+      }
+    }
+    return true;
+  }
+
+  /**
    * Intern (canonicalize) a String[]. Return a canonical representation for the String[] array.
    * Arrays are compared according to their elements' equals() methods.
    *
@@ -848,13 +855,7 @@ public final class Intern {
       @PolyNull @Interned String @PolyValue [] a) {
 
     // Make sure each element is already interned
-    if (assertsEnabled) {
-      for (int k = 0; k < a.length; k++) {
-        if (a[k] != Intern.intern(a[k])) {
-          throw new IllegalArgumentException();
-        }
-      }
-    }
+    assert eachElementInterned(a);
 
     WeakReference<@Nullable @Interned String @Interned []> lookup = internedStringArrays.get(a);
     @Nullable @Interned String @Interned [] result = (lookup != null) ? lookup.get() : null;
@@ -967,9 +968,7 @@ public final class Intern {
       int @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    if (assertsEnabled && !Intern.isInterned(seq)) {
-      throw new IllegalArgumentException();
-    }
+    assert Intern.isInterned(seq);
     Subsequence<int @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<int @Interned []> lookup = internedIntSubsequence.get(sai);
     int[] result1 = (lookup != null) ? lookup.get() : null;
@@ -998,9 +997,7 @@ public final class Intern {
       long @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    if (assertsEnabled && !Intern.isInterned(seq)) {
-      throw new IllegalArgumentException();
-    }
+    assert Intern.isInterned(seq);
     Subsequence<long @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<long @Interned []> lookup = internedLongSubsequence.get(sai);
     long[] result1 = (lookup != null) ? lookup.get() : null;
@@ -1029,9 +1026,7 @@ public final class Intern {
       double @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    if (assertsEnabled && !Intern.isInterned(seq)) {
-      throw new IllegalArgumentException();
-    }
+    assert Intern.isInterned(seq);
     Subsequence<double @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<double @Interned []> lookup = internedDoubleSubsequence.get(sai);
     double[] result1 = (lookup != null) ? lookup.get() : null;
@@ -1060,9 +1055,7 @@ public final class Intern {
       @PolyNull @Interned Object @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    if (assertsEnabled && !Intern.isInterned(seq)) {
-      throw new IllegalArgumentException();
-    }
+    assert Intern.isInterned(seq);
     Subsequence<@PolyNull @Interned Object @Interned []> sai =
         new Subsequence<@PolyNull @Interned Object @Interned []>(seq, start, end);
     @SuppressWarnings("nullness") // same nullness as key
@@ -1097,9 +1090,7 @@ public final class Intern {
       @PolyNull @Interned String @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    if (assertsEnabled && !Intern.isInterned(seq)) {
-      throw new IllegalArgumentException();
-    }
+    assert Intern.isInterned(seq);
     Subsequence<@PolyNull @Interned String @Interned []> sai =
         new Subsequence<@PolyNull @Interned String @Interned []>(seq, start, end);
     @SuppressWarnings("nullness") // same nullness as key
@@ -1145,9 +1136,7 @@ public final class Intern {
      * @param end the end index
      */
     public Subsequence(T seq, @NonNegative int start, int end) {
-      if (assertsEnabled && !Intern.isInterned(seq)) {
-        throw new IllegalArgumentException();
-      }
+      assert Intern.isInterned(seq);
       this.seq = seq;
       this.start = start;
       this.end = end;
