@@ -41,23 +41,13 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
   // when the values field is set to null. Warnings are suppressed when breaking the invariant.
   protected @IndexOrHigh("values") int numValues;
 
-  /** Whether assertions are enabled. */
-  private static boolean assertsEnabled = false;
-
-  static {
-    assert assertsEnabled = true; // Intentional side-effect!!!
-    // Now assertsEnabled is set to the correct value
-  }
-
   /**
    * Create a new LimitedSizeSet that can hold maxValues values.
    *
    * @param maxValues the maximum number of values this set will be able to hold; must be positive
    */
   public LimitedSizeSet(@Positive int maxValues) {
-    if (assertsEnabled && !(maxValues > 0)) {
-      throw new IllegalArgumentException("maxValues should be positive, is " + maxValues);
-    }
+    assert maxValues > 0 : "maxValues should be positive, is " + maxValues;
     // this.maxValues = maxValues;
     @SuppressWarnings({
       "unchecked",
