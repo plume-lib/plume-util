@@ -11,7 +11,7 @@
 //        * In the clients' build.gradle: set version number and use:
 //            repositories {
 //              ...
-//              maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+//              maven { url = uri('https://oss.sonatype.org/content/repositories/snapshots/') }
 //            }
 //            configurations.all {
 //              resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
