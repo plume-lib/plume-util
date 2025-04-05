@@ -42,14 +42,6 @@ public class LimitedSizeLongSet implements Serializable, Cloneable {
   // the values field is set to null. Warnings are suppressed when breaking the invariant.
   @IndexOrHigh("values") int numValues;
 
-  /** Whether assertions are enabled. */
-  private static boolean assertsEnabled = false;
-
-  static {
-    assert assertsEnabled = true; // Intentional side-effect!!!
-    // Now assertsEnabled is set to the correct value
-  }
-
   /**
    * Create a new LimitedSizeLongSet that can hold maxValues values.
    *
