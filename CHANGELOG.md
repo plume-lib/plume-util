@@ -6,11 +6,13 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
+## 1.10.1 (2025-04-02)
+
 - New methods in `ArraysPlume`:
    * `contains()`
    * `mapArray()`
    * `replaceAll()`
-
+- Do not require Java 11; runs under JDK 8.
 
 ## 1.10.0 (2024-10-26)
 

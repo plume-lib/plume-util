@@ -183,8 +183,9 @@ public final class SystemPlume {
 
   static {
     gcHistory = new ArrayDeque<>();
-    // Add a dummy element so the queue is never empty.
-    gcHistory.add(new GcHistoryItem(Instant.now().getEpochSecond(), getCollectionTime()));
+    @SuppressWarnings("TimeInStaticInitializer") // Add a dummy element so the queue is never empty.
+    long epochSecond = Instant.now().getEpochSecond();
+    gcHistory.add(new GcHistoryItem(epochSecond, getCollectionTime()));
   }
 
   /**
