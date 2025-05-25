@@ -196,14 +196,14 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public @PolyNull V computeIfPresent(
-      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public @Nullable V computeIfPresent(
+      K key, BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @PolyNull V compute(
-      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public @Nullable V compute(
+      K key, BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 
