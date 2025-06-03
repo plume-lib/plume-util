@@ -12,7 +12,7 @@ plugins {
   id('net.ltgt.errorprone') version '4.2.0'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.53'
+  id 'org.checkerframework' version '0.6.55'
 }
 
 repositories {
@@ -139,7 +139,7 @@ checkerFramework {
 // To use a snapshot version of the Checker Framework.
 if (false) {
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.49.3'
+  ext.checkerFrameworkVersion = '3.49.4'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
