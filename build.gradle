@@ -36,7 +36,7 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.13.0")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.13.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
