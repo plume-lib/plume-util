@@ -55,6 +55,24 @@ public final class CollectionsPlume {
   //
 
   /**
+   * Adds all elements of the Iterable to the collection. This method is just like {@code
+   * Collection.addAll()}, but that method takes only a Collection, not any Iterable, as its
+   * arguments.
+   *
+   * @param <T> the type of elements
+   * @param c the collection into which elements are to be inserted
+   * @param elements the elements to insert into c
+   * @return true if the collection changed as a result of the call
+   */
+  public static <T> addAll(Collection<? super T> c, Iterable<? extends E> elements) {
+    boolean added = false;
+    for (E elt : elements) {
+      added = added || c.add(elt);
+    }
+    return added;
+  }
+
+  /**
    * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
