@@ -64,9 +64,9 @@ public final class CollectionsPlume {
    * @param elements the elements to insert into c
    * @return true if the collection changed as a result of the call
    */
-  public static <T> addAll(Collection<? super T> c, Iterable<? extends E> elements) {
+  public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements) {
     boolean added = false;
-    for (E elt : elements) {
+    for (T elt : elements) {
       added = added || c.add(elt);
     }
     return added;
