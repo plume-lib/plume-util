@@ -67,7 +67,9 @@ public final class CollectionsPlume {
   public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements) {
     boolean added = false;
     for (T elt : elements) {
-      added = added || c.add(elt);
+      if (c.add(elt)) {
+        added = true;
+      }
     }
     return added;
   }

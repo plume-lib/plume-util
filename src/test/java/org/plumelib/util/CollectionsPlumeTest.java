@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -115,6 +116,16 @@ public final class CollectionsPlumeTest {
   // //////////////////////////////////////////////////////////////////////
   // The tests themselves
   //
+
+  // TODO: organize in the same sections as the code in CollectionsPlume.java.
+
+  @Test
+  void testAddAllIterable() {
+    Iterable<String> itble = CollectionsPlume.listOf("a", "b");
+    Collection<String> c = new ArrayList<>();
+    CollectionsPlume.addAll(c, itble);
+    assertEquals(Arrays.asList("a", "b"), c);
+  }
 
   @Test
   public void testListOf() {
