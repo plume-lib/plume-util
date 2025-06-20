@@ -8,8 +8,10 @@
 
 ## 1.10.2 (2025-06-??)
 
-- New method in `CollectionsPlume`:
+- New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
+- New nested class in `CollectionsPlume`:
+   * `IteratorPlusOne`
 
 ## 1.10.1 (2025-04-02)
 

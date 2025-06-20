@@ -1298,6 +1298,59 @@ public final class CollectionsPlume {
 
   // This must already be implemented someplace else.  Right??
   /**
+   * An Iterator that returns first the elements returned by its first argument, then its second
+   * argument.
+   *
+   * @param <T> the type of elements of the iterator
+   */
+  public static final class IteratorPlusOne<T> implements Iterator<T> {
+    /** The iterator that this object yields first. */
+    Iterator<T> itor1;
+
+    /** The last element that this iterator returns. */
+    T lastElement;
+
+    /**
+     * True if this iterator has not yet yielded the lastElement element, and therefore is not done.
+     */
+    boolean hasPlusOne = true;
+
+    /**
+     * Create an iterator that returns the elements of {@code itor1} then {@code lastElement}.
+     *
+     * @param itor1 an Iterator
+     * @param lastElement one element
+     */
+    public IteratorPlusOne(Iterator<T> itor1, T lastElement) {
+      this.itor1 = itor1;
+      this.lastElement = lastElement;
+    }
+
+    @Override
+    public boolean hasNext(@GuardSatisfied IteratorPlusOne<T> this) {
+      return itor1.hasNext() || hasPlusOne;
+    }
+
+    @Override
+    public T next(@GuardSatisfied IteratorPlusOne<T> this) {
+      if (itor1.hasNext()) {
+        return itor1.next();
+      } else if (hasPlusOne) {
+        hasPlusOne = false;
+        return lastElement;
+      } else {
+        throw new NoSuchElementException();
+      }
+    }
+
+    @Override
+    public void remove(@GuardSatisfied IteratorPlusOne<T> this) {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  // This must already be implemented someplace else.  Right??
+  /**
    * An Iterator that returns first the elements returned by its first argument, then the elements
    * returned by its second argument. Like {@link MergedIterator}, but specialized for the case of
    * two arguments.
