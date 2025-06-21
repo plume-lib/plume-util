@@ -2008,7 +2008,9 @@ public final class CollectionsPlume {
    * @param <V2> the type of the inner map values
    * @param sb the destination for the string representation
    * @param linePrefix a prefix to put at the beginning of each line
-   * @param innerHeader what to print before each inner map
+   * @param innerHeader what to print before each key of the outer map (equivalently, before each
+   *     each inner map). If non-empty, it usually ends with a space to avoid abutting the outer map
+   *     key.
    * @param mapMap what to print
    */
   static <K1 extends @Signed Object, K2 extends @Signed Object, V2 extends @Signed Object>
@@ -2101,22 +2103,10 @@ public final class CollectionsPlume {
    * @param m a map
    * @return a string representation of the map
    */
-  @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
-  })
   @SideEffectFree
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringAndClassMultiLine(Map<K, V> m) {
-    StringJoiner result = new StringJoiner(lineSep);
-    for (Map.Entry<K, V> e : m.entrySet()) {
-      result.add(
-          "  "
-              + StringsPlume.toStringAndClass(e.getKey())
-              + " => "
-              + StringsPlume.toStringAndClass(e.getValue()));
-    }
-    return result.toString();
+    return mapToStringAndClassMultiLine(m, "");
   }
 
   /**
