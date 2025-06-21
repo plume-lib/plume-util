@@ -13,6 +13,9 @@
    * `iteratorPlusOne()`
    * `mergedIterator2()`
    * `mergedIterator()`
+   * `filteredIterator()`
+   * `removeFirstAndLastIterator()`
+- Use of nested classes in `CollectionsPlume` is deprecated.
 
 ## 1.10.1 (2025-04-02)
 

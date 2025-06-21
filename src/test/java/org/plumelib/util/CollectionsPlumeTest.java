@@ -201,10 +201,10 @@ public final class CollectionsPlumeTest {
     }
     assertEquals(
         iota10Odd,
-        toArrayList(
-            new CollectionsPlume.FilteredIterator<Integer>(iota10.iterator(), new OddPredicate())));
+        toArrayList(CollectionsPlume.filteredIterator(iota10.iterator(), new OddPredicate())));
   }
 
+  @SuppressWarnings("deprecation") // to be made package-private
   @Test
   public void testRemoveFirstAndLastIterator() {
 
