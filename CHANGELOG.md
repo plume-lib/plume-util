@@ -6,7 +6,7 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
-## 1.10.2 (2025-06-??)
+## 1.11.0 (2025-06-??)
 
 - New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
