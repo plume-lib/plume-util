@@ -154,16 +154,11 @@ public final class CollectionsPlumeTest {
     // public static class MergedIterator2 implements Iterator {
     assertEquals(
         iota10Twice,
-        toArrayList(
-            new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota10.iterator())));
+        toArrayList(CollectionsPlume.mergedIterator2(iota10.iterator(), iota10.iterator())));
     assertEquals(
-        iota10,
-        toArrayList(
-            new CollectionsPlume.MergedIterator2<Integer>(iota0.iterator(), iota10.iterator())));
+        iota10, toArrayList(CollectionsPlume.mergedIterator2(iota0.iterator(), iota10.iterator())));
     assertEquals(
-        iota10,
-        toArrayList(
-            new CollectionsPlume.MergedIterator2<Integer>(iota10.iterator(), iota0.iterator())));
+        iota10, toArrayList(CollectionsPlume.mergedIterator2(iota10.iterator(), iota0.iterator())));
 
     // public static class MergedIterator implements Iterator {
     ArrayList<Iterator<Integer>> iota10IteratorThrice = new ArrayList<>();
@@ -172,7 +167,7 @@ public final class CollectionsPlumeTest {
     iota10IteratorThrice.add(iota10.iterator());
     assertEquals(
         iota10Thrice,
-        toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorThrice.iterator())));
+        toArrayList(CollectionsPlume.mergedIterator(iota10IteratorThrice.iterator())));
     ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<>();
     iota10IteratorTwice1.add(iota0.iterator());
     iota10IteratorTwice1.add(iota10.iterator());
@@ -186,14 +181,11 @@ public final class CollectionsPlumeTest {
     iota10IteratorTwice3.add(iota10.iterator());
     iota10IteratorTwice3.add(iota0.iterator());
     assertEquals(
-        iota10Twice,
-        toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice1.iterator())));
+        iota10Twice, toArrayList(CollectionsPlume.mergedIterator(iota10IteratorTwice1.iterator())));
     assertEquals(
-        iota10Twice,
-        toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice2.iterator())));
+        iota10Twice, toArrayList(CollectionsPlume.mergedIterator(iota10IteratorTwice2.iterator())));
     assertEquals(
-        iota10Twice,
-        toArrayList(new CollectionsPlume.MergedIterator<Integer>(iota10IteratorTwice3.iterator())));
+        iota10Twice, toArrayList(CollectionsPlume.mergedIterator(iota10IteratorTwice3.iterator())));
   }
 
   @Test

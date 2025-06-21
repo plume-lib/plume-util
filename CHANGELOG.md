@@ -8,8 +8,11 @@
 
 ## 1.10.2 (2025-06-??)
 
-- New method in `CollectionsPlume`:
+- New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
+   * `iteratorPlusOne()`
+   * `mergedIterator2()`
+   * `mergedIterator()`
 
 ## 1.10.1 (2025-04-02)
 
