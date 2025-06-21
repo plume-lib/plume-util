@@ -8,7 +8,7 @@
 
 ## 1.11.0 (2025-06-??)
 
-- New method in `CollectionsPlume`:
+- New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
 
 - Moved methods from `StringsPlume` to `CollectionsPlume`:
