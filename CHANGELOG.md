@@ -10,8 +10,9 @@
 
 - New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
-- New nested class in `CollectionsPlume`:
-   * `IteratorPlusOne`
+   * `iteratorPlusOne()`
+   * `mergedIterator2()`
+   * `mergedIterator()`
 
 ## 1.10.1 (2025-04-02)
 

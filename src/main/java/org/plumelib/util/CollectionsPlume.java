@@ -1296,45 +1296,56 @@ public final class CollectionsPlume {
     }
   }
 
-  // This must already be implemented someplace else.  Right??
+  /**
+   * Returns an iterator that returns the elements of {@code itor} then {@code lastElement}.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itor an Iterator
+   * @param lastElement one element
+   * @return an iterator that returns the elements of {@code itor} then {@code lastElement}
+   */
+  public static <T> Iterator<T> iteratorPlusOne(Iterator<T> itor, T lastElement) {
+    return new IteratorPlusOne<>(itor, lastElement);
+  }
+
   /**
    * An Iterator that returns first the elements returned by its first argument, then its second
    * argument.
    *
    * @param <T> the type of elements of the iterator
    */
-  public static final class IteratorPlusOne<T> implements Iterator<T> {
+  private static final class IteratorPlusOne<T> implements Iterator<T> {
     /** The iterator that this object yields first. */
-    Iterator<T> itor1;
+    private Iterator<T> itor;
 
     /** The last element that this iterator returns. */
-    T lastElement;
+    private T lastElement;
 
     /**
      * True if this iterator has not yet yielded the lastElement element, and therefore is not done.
      */
-    boolean hasPlusOne = true;
+    private boolean hasPlusOne = true;
 
     /**
-     * Create an iterator that returns the elements of {@code itor1} then {@code lastElement}.
+     * Create an iterator that returns the elements of {@code itor} then {@code lastElement}.
      *
-     * @param itor1 an Iterator
+     * @param itor an Iterator
      * @param lastElement one element
      */
-    public IteratorPlusOne(Iterator<T> itor1, T lastElement) {
-      this.itor1 = itor1;
+    public IteratorPlusOne(Iterator<T> itor, T lastElement) {
+      this.itor = itor;
       this.lastElement = lastElement;
     }
 
     @Override
     public boolean hasNext(@GuardSatisfied IteratorPlusOne<T> this) {
-      return itor1.hasNext() || hasPlusOne;
+      return itor.hasNext() || hasPlusOne;
     }
 
     @Override
     public T next(@GuardSatisfied IteratorPlusOne<T> this) {
-      if (itor1.hasNext()) {
-        return itor1.next();
+      if (itor.hasNext()) {
+        return itor.next();
       } else if (hasPlusOne) {
         hasPlusOne = false;
         return lastElement;
@@ -1349,7 +1360,18 @@ public final class CollectionsPlume {
     }
   }
 
-  // This must already be implemented someplace else.  Right??
+  /**
+   * Returns an iterator that returns the elements of {@code itor1} then those of {@code itor2}.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itor1 an Iterator
+   * @param itor2 another Iterator
+   * @return an iterator that returns the elements of {@code itor1} then those of {@code itor2}
+   */
+  public static <T> Iterator<T> mergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
+    return new MergedIterator2<>(itor1, itor2);
+  }
+
   /**
    * An Iterator that returns first the elements returned by its first argument, then the elements
    * returned by its second argument. Like {@link MergedIterator}, but specialized for the case of
@@ -1357,7 +1379,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of elements of the iterator
    */
-  public static final class MergedIterator2<T> implements Iterator<T> {
+  private static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
     Iterator<T> itor1;
 
@@ -1397,6 +1419,28 @@ public final class CollectionsPlume {
     }
   }
 
+  /**
+   * Returns an iterator that returns the elements of the given iterators, in turn.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itbleOfItors a collection whose elements are iterators
+   * @return an iterator that returns the elements of the given iterators, in turn
+   */
+  public static <T> Iterator<T> mergedIterator(Iterable<Iterator<T>> itbleOfItors) {
+    return new MergedIterator<>(itbleOfItors.iterator());
+  }
+
+  /**
+   * Returns an iterator that returns the elements of the given iterators, in turn.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itorOfItors an iterator whose elements are iterators
+   * @return an iterator that returns the elements of the given iterators, in turn
+   */
+  public static <T> Iterator<T> mergedIterator(Iterator<Iterator<T>> itorOfItors) {
+    return new MergedIterator<>(itorOfItors);
+  }
+
   // This must already be implemented someplace else.  Right??
   /**
    * An Iterator that returns the elements in each of its argument Iterators, in turn. The argument
@@ -1405,7 +1449,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of elements of the iterator
    */
-  public static final class MergedIterator<T> implements Iterator<T> {
+  private static final class MergedIterator<T> implements Iterator<T> {
     /** The iterators that this object merges. */
     Iterator<Iterator<T>> itorOfItors;
 
