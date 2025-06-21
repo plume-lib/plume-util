@@ -22,6 +22,7 @@ import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.StringJoiner;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -38,6 +39,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility functions for Collections, ArrayList, Iterator, and Map. */
 public final class CollectionsPlume {
@@ -1653,46 +1655,6 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a multi-line string representation of a map.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m map to be converted to a string
-   * @return a multi-line string representation of m
-   */
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToString(Map<K, V> m) {
-    StringBuilder sb = new StringBuilder();
-    mapToString(sb, m, "");
-    return sb.toString();
-  }
-
-  /**
-   * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder).
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param sb an Appendable (such as StringBuilder) to which to write a multi-line string
-   *     representation of m
-   * @param m map to be converted to a string
-   * @param linePrefix prefix to write at the beginning of each line
-   */
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
-    try {
-      for (Map.Entry<K, V> entry : m.entrySet()) {
-        sb.append(linePrefix);
-        sb.append(Objects.toString(entry.getKey()));
-        sb.append(" => ");
-        sb.append(Objects.toString(entry.getValue()));
-        sb.append(lineSep);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  /**
    * Returns a sorted version of m.keySet().
    *
    * @param <K> type of the map keys
@@ -1908,6 +1870,208 @@ public final class CollectionsPlume {
       result.put(newKey, UtilPlume.clone(mapEntry.getValue()));
     }
     return result;
+  }
+
+  //
+  // Map to string
+  //
+
+  // First, versions that append to an Appendable.
+
+  /**
+   * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
+   * including a final line separator (unless the map is empty).
+   *
+   * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param sb an Appendable (such as StringBuilder) to which to write a multi-line string
+   *     representation of m
+   * @param m map to be converted to a string
+   * @param linePrefix a prefix to put at the beginning of each line
+   * @deprecated use {@link #mapToStringMultiLine(Appendable, Map, String)}
+   */
+  @Deprecated // 2026-06-21
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
+    mapToStringMultiLine(sb, m, linePrefix);
+  }
+
+  /**
+   * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
+   * including a final line separator (unless the map is empty).
+   *
+   * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param sb an Appendable (such as StringBuilder) to which to write a multi-line string
+   *     representation of m
+   * @param m map to be converted to a string
+   * @param linePrefix a prefix to put at the beginning of each line
+   */
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      void mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix) {
+    try {
+      for (Map.Entry<K, V> entry : m.entrySet()) {
+        sb.append(linePrefix);
+        sb.append(Objects.toString(entry.getKey()));
+        sb.append(" => ");
+        sb.append(Objects.toString(entry.getValue()));
+        sb.append(lineSep);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Write a multi-line representation of the map of maps into the given Appendable (e.g., a
+   * StringBuilder), including a final line separator (unless the map is empty).
+   *
+   * @param <K1> the type of the outer map keys
+   * @param <K2> the type of the inner map keys
+   * @param <V2> the type of the inner map values
+   * @param sb the destination for the string representation
+   * @param linePrefix a prefix to put at the beginning of each line
+   * @param innerHeader what to print before each inner map
+   * @param mapMap what to print
+   */
+  static <K1 extends @Signed Object, K2 extends @Signed Object, V2 extends @Signed Object>
+      void mapMapToStringMultiLine(
+          Appendable sb, String innerHeader, Map<K1, Map<K2, V2>> mapMap, String linePrefix) {
+    try {
+      for (Map.Entry<K1, Map<K2, V2>> entry : mapMap.entrySet()) {
+        sb.append(linePrefix);
+        sb.append(innerHeader);
+        sb.append(Objects.toString(entry.getKey()));
+        sb.append(lineSep);
+        mapToStringMultiLine(sb, entry.getValue(), linePrefix + "  ");
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  // Second, versions that return a String.
+
+  /**
+   * Returns a multi-line string representation of a map.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param m map to be converted to a string
+   * @return a multi-line string representation of m
+   * @deprecated use {@link #mapToStringMultiLine(Map)}
+   */
+  @Deprecated // 2025-06-21
+  @SideEffectFree
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToString(Map<K, V> m) {
+    return mapToStringMultiLine(m);
+  }
+
+  /**
+   * Returns a multi-line string representation of a map. Each key-value pair appears on its own
+   * line, with no indentation. The last line does not end with a line separator.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param m map to be converted to a string
+   * @return a multi-line string representation of the map
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToStringMultiLine(Map<K, V> m) {
+    StringJoiner result = new StringJoiner(lineSep);
+    for (Map.Entry<K, V> e : m.entrySet()) {
+      result.add(e.getKey() + " => " + e.getValue());
+    }
+    return result.toString();
+  }
+
+  /**
+   * Returns a multi-line string representation of a map. Each key-value pair appears on its own
+   * line, with no indentation. The last line does not end with a line separator.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param m map to be converted to a string
+   * @param linePrefix a prefix to put at the beginning of each line
+   * @return a multi-line string representation of the map
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToStringMultiLine(Map<K, V> m, String linePrefix) {
+    StringJoiner result = new StringJoiner(lineSep);
+    for (Map.Entry<K, V> e : m.entrySet()) {
+      result.add(linePrefix + e.getKey() + " => " + e.getValue());
+    }
+    return result.toString();
+  }
+
+  /**
+   * Convert a map to a multi-line string representation, which includes the runtime class of keys
+   * and values. The last line does not end with a line separator.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param m a map
+   * @return a string representation of the map
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToStringAndClassMultiLine(Map<K, V> m) {
+    StringJoiner result = new StringJoiner(lineSep);
+    for (Map.Entry<K, V> e : m.entrySet()) {
+      result.add(
+          "  "
+              + StringsPlume.toStringAndClass(e.getKey())
+              + " => "
+              + StringsPlume.toStringAndClass(e.getValue()));
+    }
+    return result.toString();
+  }
+
+  /**
+   * Convert a map to a multi-line string representation, which includes the runtime class of keys
+   * and values. The last line does not end with a line separator.
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param m a map
+   * @param linePrefix a prefix to put at the beginning of each line
+   * @return a string representation of the map
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated" // side effect to local state
+  })
+  @SideEffectFree
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
+    StringJoiner result = new StringJoiner(lineSep);
+    for (Map.Entry<K, V> e : m.entrySet()) {
+      result.add(
+          linePrefix
+              + StringsPlume.toStringAndClass(e.getKey())
+              + " => "
+              + StringsPlume.toStringAndClass(e.getValue()));
+    }
+    return result.toString();
   }
 
   // //////////////////////////////////////////////////////////////////////
