@@ -1507,6 +1507,7 @@ public final class MathPlume {
    * @return value to be returned by {@link #nonmodulusStrict(int[])}: a tuple of (r,m) where all
    *     numbers in {@code missing} are equal to r (mod m)
    */
+  @SuppressWarnings("deprecation") // to be made package-private
   private static int @Nullable @ArrayLen(2) [] nonmodulusStrictIntInternal(
       Iterator<Integer> missing) {
     // Must not use regular modulus:  that can produce errors, eg
@@ -1533,6 +1534,7 @@ public final class MathPlume {
    *     iterator has already been iterated all the way to its end.
    * @return true if the first and last elements are not equal to r (mod m)
    */
+  @SuppressWarnings("deprecation") // to be made package-private
   private static boolean checkFirstAndLastNonmodulus(
       int @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
@@ -1844,13 +1846,14 @@ public final class MathPlume {
    * @param missing the missing integers; modified by this method
    * @return value to be returned by {@link #nonmodulusStrict(long[])}
    */
+  @SuppressWarnings("deprecation") // to be made package-private
   private static long @Nullable @ArrayLen(2) [] nonmodulusStrictLongInternal(
       Iterator<Long> missing) {
     // Must not use regular modulus:  that can produce errors, eg
     // nonmodulusStrict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
     // modulusStrict.
     CollectionsPlume.RemoveFirstAndLastIterator<Long> missingNums =
-        new CollectionsPlume.RemoveFirstAndLastIterator<Long>(missing);
+        new CollectionsPlume.RemoveFirstAndLastIterator<>(missing);
     long[] result = modulusStrictLong(missingNums, false);
     if (result == null) {
       return result;
@@ -1870,6 +1873,7 @@ public final class MathPlume {
    *     iterator has already been iterated all the way to its end.
    * @return true if the first and last elements are equal to r (mod m)
    */
+  @SuppressWarnings("deprecation") // to be made package-private
   @Pure
   private static boolean checkFirstAndLastNonmodulus(
       long @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {

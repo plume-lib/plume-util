@@ -6,10 +6,15 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
-## 1.10.2 (2025-06-??)
+## 1.11.0 (2025-06-??)
 
-- New method in `CollectionsPlume`:
+- New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
+   * `mergedIterator2()`
+   * `mergedIterator()`
+   * `filteredIterator()`
+   * `removeFirstAndLastIterator()`
+- Use of nested classes in `CollectionsPlume` is deprecated.
 
 ## 1.10.1 (2025-04-02)
 
