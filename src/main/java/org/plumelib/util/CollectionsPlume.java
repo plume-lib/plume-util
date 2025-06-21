@@ -1298,14 +1298,27 @@ public final class CollectionsPlume {
     }
   }
 
-  // This must already be implemented someplace else.  Right??
+  /**
+   * Returns an iterator that returns the elements of {@code itor1} then those of {@code itor2}.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itor1 an Iterator
+   * @param itor2 another Iterator
+   * @return an iterator that returns the elements of {@code itor1} then those of {@code itor2}
+   */
+  public static <T> Iterator<T> mergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
+    return new MergedIterator2<>(itor1, itor2);
+  }
+
   /**
    * An Iterator that returns first the elements returned by its first argument, then the elements
    * returned by its second argument. Like {@link MergedIterator}, but specialized for the case of
    * two arguments.
    *
    * @param <T> the type of elements of the iterator
+   * @deprecated use {@link CollectionsPlume#mergedIterator2}
    */
+  @Deprecated // make package-private
   public static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
     Iterator<T> itor1;
@@ -1318,7 +1331,9 @@ public final class CollectionsPlume {
      *
      * @param itor1 an Iterator
      * @param itor2 another Iterator
+     * @deprecated use {@link CollectionsPlume#mergedIterator2}
      */
+    @Deprecated // use {@link #mergediterator2}
     public MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
       this.itor1 = itor1;
       this.itor2 = itor2;
@@ -1346,6 +1361,28 @@ public final class CollectionsPlume {
     }
   }
 
+  /**
+   * Returns an iterator that returns the elements of the given iterators, in turn.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itbleOfItors a collection whose elements are iterators
+   * @return an iterator that returns the elements of the given iterators, in turn
+   */
+  public static <T> Iterator<T> mergedIterator(Iterable<Iterator<T>> itbleOfItors) {
+    return new MergedIterator<>(itbleOfItors.iterator());
+  }
+
+  /**
+   * Returns an iterator that returns the elements of the given iterators, in turn.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itorOfItors an iterator whose elements are iterators
+   * @return an iterator that returns the elements of the given iterators, in turn
+   */
+  public static <T> Iterator<T> mergedIterator(Iterator<Iterator<T>> itorOfItors) {
+    return new MergedIterator<>(itorOfItors);
+  }
+
   // This must already be implemented someplace else.  Right??
   /**
    * An Iterator that returns the elements in each of its argument Iterators, in turn. The argument
@@ -1353,7 +1390,9 @@ public final class CollectionsPlume {
    * of iterators.
    *
    * @param <T> the type of elements of the iterator
+   * @deprecated use {@code mergediterator()}
    */
+  @Deprecated // make package-private
   public static final class MergedIterator<T> implements Iterator<T> {
     /** The iterators that this object merges. */
     Iterator<Iterator<T>> itorOfItors;
@@ -1363,7 +1402,9 @@ public final class CollectionsPlume {
      *
      * @param itorOfItors an iterator whose elements are iterators; this MergedIterator will merge
      *     them all
+     * @deprecated use {@link mergedIterator(Iterator)}
      */
+    @Deprecated // make package-private
     public MergedIterator(Iterator<Iterator<T>> itorOfItors) {
       this.itorOfItors = itorOfItors;
     }
@@ -1396,11 +1437,25 @@ public final class CollectionsPlume {
   }
 
   /**
+   * Returns an iterator that only returns elements of {@code itor} that match the given predicate.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itor the Iterator to filter
+   * @param predicate the predicate that determines which elements to retain
+   * @return an iterator that only returns elements of {@code itor} that match the given predicate
+   */
+  public static <T> Iterator<T> filteredIterator(Iterator<T> itor, Predicate<T> predicate) {
+    return new FilteredIterator<>(itor, predicate);
+  }
+
+  /**
    * An iterator that only returns elements that match the given predicate.
    *
    * @param <T> the type of elements of the iterator
+   * @deprecated use {@link #filteredIterator}
    */
-  public static final class FilteredIterator<T extends @Nullable Object> implements Iterator<T> {
+  @Deprecated // make package-private
+  public static final class FilteredIterator<T> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
 
@@ -1412,7 +1467,9 @@ public final class CollectionsPlume {
      *
      * @param itor the Iterator to filter
      * @param predicate the predicate that determines which elements to retain
+     * @deprecated use {@link #filteredIterator}
      */
+    @Deprecated // make package-private
     public FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
       this.itor = itor;
       this.predicate = predicate;
@@ -1464,11 +1521,25 @@ public final class CollectionsPlume {
   }
 
   /**
+   * Returns an iterator just like {@code itor}, except without its first and last elements.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itor an itorator whose first and last elements to discard
+   * @return an iterator just like {@code itor}, except without its first and last elements
+   */
+  public static <T extends @Nullable Object> Iterator<T> removeFirstAndLastIterator(
+      Iterator<T> itor) {
+    return new RemoveFirstAndLastIterator<>(itor);
+  }
+
+  /**
    * Returns an iterator just like its argument, except that the first and last elements are
    * removed. They can be accessed via the {@link #getFirst} and {@link #getLast} methods.
    *
    * @param <T> the type of elements of the iterator
+   * @deprecated use {@link #removeFirstAndLastIterator}
    */
+  @Deprecated // make package-private
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
     Iterator<T> itor;
@@ -1490,7 +1561,9 @@ public final class CollectionsPlume {
      * Create an iterator just like {@code itor}, except without its first and last elements.
      *
      * @param itor an itorator whose first and last elements to discard
+     * @deprecated use {@link #removeFirstAndLastIterator}
      */
+    @Deprecated // make package-private
     public RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
@@ -1567,7 +1640,7 @@ public final class CollectionsPlume {
    * @param numElts number of elements to select
    * @return list of numElts elements from itor
    */
-  public static <T> List<T> randomElements(Iterator<T> itor, int numElts) {
+  public static <T extends @Nullable Object> List<T> randomElements(Iterator<T> itor, int numElts) {
     return randomElements(itor, numElts, r);
   }
 

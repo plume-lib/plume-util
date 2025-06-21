@@ -10,6 +10,11 @@
 
 - New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
+   * `mergedIterator2()`
+   * `mergedIterator()`
+   * `filteredIterator()`
+   * `removeFirstAndLastIterator()`
+- Use of nested classes in `CollectionsPlume` is deprecated.
 
 - Moved methods from `StringsPlume` to `CollectionsPlume`:
    * `mapToStringAndClass()`
