@@ -10,6 +10,7 @@
 
 - New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
+   * `iteratorPlusOne()`
    * `mergedIterator2()`
    * `mergedIterator()`
    * `filteredIterator()`

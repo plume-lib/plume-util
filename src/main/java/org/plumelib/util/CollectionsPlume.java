@@ -1299,6 +1299,70 @@ public final class CollectionsPlume {
   }
 
   /**
+   * Returns an iterator that returns the elements of {@code itor} then {@code lastElement}.
+   *
+   * @param <T> the type of elements of the iterator
+   * @param itor an Iterator
+   * @param lastElement one element
+   * @return an iterator that returns the elements of {@code itor} then {@code lastElement}
+   */
+  public static <T> Iterator<T> iteratorPlusOne(Iterator<T> itor, T lastElement) {
+    return new IteratorPlusOne<>(itor, lastElement);
+  }
+
+  /**
+   * An Iterator that returns first the elements returned by its first argument, then its second
+   * argument.
+   *
+   * @param <T> the type of elements of the iterator
+   */
+  private static final class IteratorPlusOne<T> implements Iterator<T> {
+    /** The iterator that this object yields first. */
+    private Iterator<T> itor;
+
+    /** The last element that this iterator returns. */
+    private T lastElement;
+
+    /**
+     * True if this iterator has not yet yielded the lastElement element, and therefore is not done.
+     */
+    private boolean hasPlusOne = true;
+
+    /**
+     * Create an iterator that returns the elements of {@code itor} then {@code lastElement}.
+     *
+     * @param itor an Iterator
+     * @param lastElement one element
+     */
+    public IteratorPlusOne(Iterator<T> itor, T lastElement) {
+      this.itor = itor;
+      this.lastElement = lastElement;
+    }
+
+    @Override
+    public boolean hasNext(@GuardSatisfied IteratorPlusOne<T> this) {
+      return itor.hasNext() || hasPlusOne;
+    }
+
+    @Override
+    public T next(@GuardSatisfied IteratorPlusOne<T> this) {
+      if (itor.hasNext()) {
+        return itor.next();
+      } else if (hasPlusOne) {
+        hasPlusOne = false;
+        return lastElement;
+      } else {
+        throw new NoSuchElementException();
+      }
+    }
+
+    @Override
+    public void remove(@GuardSatisfied IteratorPlusOne<T> this) {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  /**
    * Returns an iterator that returns the elements of {@code itor1} then those of {@code itor2}.
    *
    * @param <T> the type of elements of the iterator
@@ -1394,6 +1458,7 @@ public final class CollectionsPlume {
    */
   @Deprecated // make package-private
   public static final class MergedIterator<T> implements Iterator<T> {
+
     /** The iterators that this object merges. */
     Iterator<Iterator<T>> itorOfItors;
 
