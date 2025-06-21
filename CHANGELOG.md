@@ -16,6 +16,14 @@
    * `removeFirstAndLastIterator()`
 - Use of nested classes in `CollectionsPlume` is deprecated.
 
+- Moved methods from `StringsPlume` to `CollectionsPlume`:
+   * `mapToStringAndClass()`
+   * `mapToStringLinewise()`
+   * The old versions are deprecated.
+- Renamed methods `mapToString()` and `mapToString()` to `mapToStringMultiLine()`.
+   * The old versions are deprecated.
+- Overloaded versions of `mapToStringMultiLine()` that take a line prefix as an argument.
+
 ## 1.10.1 (2025-04-02)
 
 - New methods in `ArraysPlume`:
