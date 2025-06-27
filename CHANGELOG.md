@@ -6,7 +6,7 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
-## 1.11.0 (2025-06-??)
+## 1.11.0 (2025-06-26)
 
 - New class `SIList` for immutable lists that share structure, for efficiency.
 - New methods in `CollectionsPlume`:
@@ -16,14 +16,15 @@
    * `mergedIterator()`
    * `filteredIterator()`
    * `removeFirstAndLastIterator()`
+   * overloaded versions of `mapToStringMultiLine()` that take a line prefix as an argument
 - Use of nested classes in `CollectionsPlume` is deprecated.
 - Moved methods from `StringsPlume` to `CollectionsPlume`:
    * `mapToStringAndClass()`
    * `mapToStringLinewise()`
    * The old versions are deprecated.
-- Renamed methods `mapToString()` and `mapToString()` to `mapToStringMultiLine()`.
+- Renamed methods in `CollectionsPlume`:
+   * Renamed `mapToString()` to `mapToStringMultiLine()`.
    * The old versions are deprecated.
-- Overloaded versions of `mapToStringMultiLine()` that take a line prefix as an argument.
 
 ## 1.10.1 (2025-04-02)
 

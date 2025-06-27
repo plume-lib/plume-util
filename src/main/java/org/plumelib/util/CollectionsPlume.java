@@ -1311,16 +1311,15 @@ public final class CollectionsPlume {
   }
 
   /**
-   * An Iterator that returns first the elements returned by its first argument, then its second
-   * argument.
+   * An Iterator that returns first the elements of a given iterator, then one more element.
    *
    * @param <T> the type of elements of the iterator
    */
   private static final class IteratorPlusOne<T> implements Iterator<T> {
-    /** The iterator that this object yields first. */
+    /** The iterator that this yields first. */
     private Iterator<T> itor;
 
-    /** The last element that this iterator returns. */
+    /** The last element that this returns. */
     private T lastElement;
 
     /**
