@@ -8,6 +8,7 @@
 
 ## 1.11.0 (2025-06-??)
 
+- New class `SIList` for immutable lists that share structure, for efficiency.
 - New methods in `CollectionsPlume`:
    * `addAll(Iterable)`
    * `iteratorPlusOne()`
@@ -16,7 +17,6 @@
    * `filteredIterator()`
    * `removeFirstAndLastIterator()`
 - Use of nested classes in `CollectionsPlume` is deprecated.
-
 - Moved methods from `StringsPlume` to `CollectionsPlume`:
    * `mapToStringAndClass()`
    * `mapToStringLinewise()`
