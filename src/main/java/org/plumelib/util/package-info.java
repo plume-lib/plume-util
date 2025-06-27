@@ -31,6 +31,11 @@
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
  *       their respective sort orders. (This operation is sometimes called "zipping".)
+ *   <dt>{@link org.plumelib.util.SIList SIList}
+ *   <dd>An immutable list implementation that can share substructure, for time and space
+ *       efficiency. Use this only if you will be creating many lists that share structure. Examples
+ *       are when one list is the concatenation of other lists, or one list is just like another
+ *       with a single element added.
  *   <dt>{@link org.plumelib.util.Hasher Hasher}
  *   <dd>See <a href="http://plumelib.org/hashmap-util/api/org/plumelib/util/Hasher.html">HashMap
  *       Util</a>.
