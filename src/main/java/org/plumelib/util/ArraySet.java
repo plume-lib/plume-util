@@ -154,7 +154,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     if (capacity <= 4) {
       return new ArraySet<>(capacity);
     } else {
-      return new HashSet<>(CollectionsPlume.mapCapacity(capacity));
+      return new HashSet<>(MapsP.mapCapacity(capacity));
     }
   }
 
@@ -186,7 +186,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     if (capacity <= 4) {
       return new ArraySet<>(capacity);
     } else {
-      return new LinkedHashSet<>(CollectionsPlume.mapCapacity(capacity));
+      return new LinkedHashSet<>(MapsP.mapCapacity(capacity));
     }
   }
 

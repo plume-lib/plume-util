@@ -180,7 +180,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (capacity <= 4) {
       return new ArrayMap<>(capacity);
     } else {
-      return new HashMap<>(CollectionsPlume.mapCapacity(capacity));
+      return new HashMap<>(MapsP.mapCapacity(capacity));
     }
   }
 
@@ -214,7 +214,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (capacity <= 4) {
       return new ArrayMap<>(capacity);
     } else {
-      return new LinkedHashMap<>(CollectionsPlume.mapCapacity(capacity));
+      return new LinkedHashMap<>(MapsP.mapCapacity(capacity));
     }
   }
 
