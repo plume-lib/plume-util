@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
@@ -290,6 +293,43 @@ public final class StringsPlumeTest {
     assertEquals("0 fanboys", StringsPlume.nplural(0, "fanboy"));
     assertEquals("1 fanboy", StringsPlume.nplural(1, "fanboy"));
     assertEquals("2 fanboys", StringsPlume.nplural(2, "fanboy"));
+
+    // public static String nplural(Collection c, String noun)
+
+    Collection<String> size0 = Collections.emptyList();
+    Map<Integer, Double> size1 = Collections.singletonMap(1, 2.0);
+    String[] size2 = new String[] {"a", "string"};
+
+    assertEquals("0 fusses", StringsPlume.nplural(size0, "fuss"));
+    assertEquals("1 fuss", StringsPlume.nplural(size1, "fuss"));
+    assertEquals("2 fusses", StringsPlume.nplural(size2, "fuss"));
+    assertEquals("0 foxes", StringsPlume.nplural(size0, "fox"));
+    assertEquals("1 fox", StringsPlume.nplural(size1, "fox"));
+    assertEquals("2 foxes", StringsPlume.nplural(size2, "fox"));
+    assertEquals("0 fishes", StringsPlume.nplural(size0, "fish"));
+    assertEquals("1 fish", StringsPlume.nplural(size1, "fish"));
+    assertEquals("2 fishes", StringsPlume.nplural(size2, "fish"));
+    assertEquals("0 fletches", StringsPlume.nplural(size0, "fletch"));
+    assertEquals("1 fletch", StringsPlume.nplural(size1, "fletch"));
+    assertEquals("2 fletches", StringsPlume.nplural(size2, "fletch"));
+    assertEquals("0 funds", StringsPlume.nplural(size0, "fund"));
+    assertEquals("1 fund", StringsPlume.nplural(size1, "fund"));
+    assertEquals("2 funds", StringsPlume.nplural(size2, "fund"));
+    assertEquals("0 f-stops", StringsPlume.nplural(size0, "f-stop"));
+    assertEquals("1 f-stop", StringsPlume.nplural(size1, "f-stop"));
+    assertEquals("2 f-stops", StringsPlume.nplural(size2, "f-stop"));
+    assertEquals("0 facilities", StringsPlume.nplural(size0, "facility"));
+    assertEquals("1 facility", StringsPlume.nplural(size1, "facility"));
+    assertEquals("2 facilities", StringsPlume.nplural(size2, "facility"));
+    assertEquals("0 factories", StringsPlume.nplural(size0, "factory"));
+    assertEquals("1 factory", StringsPlume.nplural(size1, "factory"));
+    assertEquals("2 factories", StringsPlume.nplural(size2, "factory"));
+    assertEquals("0 fairways", StringsPlume.nplural(size0, "fairway"));
+    assertEquals("1 fairway", StringsPlume.nplural(size1, "fairway"));
+    assertEquals("2 fairways", StringsPlume.nplural(size2, "fairway"));
+    assertEquals("0 fanboys", StringsPlume.nplural(size0, "fanboy"));
+    assertEquals("1 fanboy", StringsPlume.nplural(size1, "fanboy"));
+    assertEquals("2 fanboys", StringsPlume.nplural(size2, "fanboy"));
   }
 
   @Test

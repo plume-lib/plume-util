@@ -5,6 +5,7 @@ package org.plumelib.util;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -1480,8 +1481,8 @@ public final class StringsPlume {
    *
    * @param n count of nouns
    * @param noun word being counted; must not be the empty string
-   * @return noun, if n==1; otherwise, pluralization of noun
-   * @throws IllegalArgumentException if the length of noun is 0
+   * @return {@code noun}, if n==1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
    */
   @SideEffectFree
   public static String nplural(int n, String noun) {
@@ -1508,7 +1509,56 @@ public final class StringsPlume {
             && penultimateLetter != 'u')) {
       return n + " " + noun.substring(0, noun.length() - 1) + "ies";
     }
+    // Don't change nouns ending in "f" or "fe" to "ves" (knives, leaves, lives, wolf) because not
+    // all such nouns are irregular (roofs, fifes).
+
     return n + " " + noun + "s";
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
+   * Adds "es" to words ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y"
+   * when the previous letter is a consonant.
+   *
+   * @param c a collection whose size to test
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if {@code c} has size 1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static String nplural(Collection<?> c, String noun) {
+    return nplural(c.size(), noun);
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
+   * Adds "es" to words ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y"
+   * when the previous letter is a consonant.
+   *
+   * @param m a map whose size to test
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if {@code m} has size 1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static String nplural(Map<?, ?> m, String noun) {
+    return nplural(m.size(), noun);
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
+   * Adds "es" to words ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y"
+   * when the previous letter is a consonant.
+   *
+   * @param <T> the type of array elements
+   * @param a an array whose size to test
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if {@code a} has size 1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static <T> String nplural(T[] a, String noun) {
+    return nplural(a.length, noun);
   }
 
   /**

@@ -6,6 +6,10 @@
 - Renamed `*Plume` classes to `*P`, for brevity; for example, use `CollectionsP` instead of `CollectionsPlume`.
 - Removed all deprecated classes and mehods.
 
+## 1.12.0 (2025-??-??)
+
+- New overloads `StringsPlume.nPlural()` that use the size of a collection, map, or array.
+
 ## 1.11.0 (2025-06-26)
 
 - New class `SIList` for immutable lists that share structure, for efficiency.
