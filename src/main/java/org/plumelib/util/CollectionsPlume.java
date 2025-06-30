@@ -41,7 +41,7 @@ import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
-/** Utility functions for Collections, ArrayList, Iterator, and Map. */
+/** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
 public final class CollectionsPlume {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -1768,7 +1768,9 @@ public final class CollectionsPlume {
    * @param key the key whose value will be incremented
    * @return the old value, before it was incremented; this might be null
    * @throws Error if the key is in the Map but maps to a non-Integer
+   * @deprecated use {@link MapsP#incrementMap}
    */
+  @Deprecated // 2025-06-28
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key) {
     return incrementMap(m, key, 1);
@@ -1784,7 +1786,9 @@ public final class CollectionsPlume {
    * @param count how much to increment the value by
    * @return the old value, before it was incremented; this might be null
    * @throws Error if the key is in the Map but maps to a non-Integer
+   * @deprecated use {@link MapsP#incrementMap}
    */
+  @Deprecated // 2025-06-28
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
     Integer newTotal = m.getOrDefault(key, 0) + count;
@@ -1798,7 +1802,9 @@ public final class CollectionsPlume {
    * @param <V> type of the map values
    * @param m a map whose keyset will be sorted
    * @return a sorted version of m.keySet()
+   * @deprecated use {@link MapsP#sortedKeySet}
    */
+  @Deprecated // 2025-06-28
   public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
@@ -1814,7 +1820,9 @@ public final class CollectionsPlume {
    * @param m a map whose keyset will be sorted
    * @param comparator the Comparator to use for sorting
    * @return a sorted version of m.keySet()
+   * @deprecated use {@link MapsP#sortedKeySet}
    */
+  @Deprecated // 2025-06-28
   public static <K, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m, Comparator<K> comparator) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
@@ -1828,7 +1836,9 @@ public final class CollectionsPlume {
    *
    * @param numElements the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
+   * @deprecated use {@link MapsP#mapCapacity}
    */
+  @Deprecated // 2025-06-28
   public static int mapCapacity(int numElements) {
     // Equivalent to: (int) (numElements / 0.75) + 1
     // where 0.75 is the default load factor used throughout the JDK.
@@ -1842,7 +1852,9 @@ public final class CollectionsPlume {
    * @param <T> the type of elements of the array
    * @param a an array whose length is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
+   * @deprecated use {@link MapsP#mapCapacity}
    */
+  @Deprecated // 2025-06-28
   public static <T> int mapCapacity(T[] a) {
     return mapCapacity(a.length);
   }
@@ -1853,7 +1865,9 @@ public final class CollectionsPlume {
    *
    * @param c a collection whose size is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
+   * @deprecated use {@link MapsP#mapCapacity}
    */
+  @Deprecated // 2025-06-28
   public static int mapCapacity(Collection<?> c) {
     return mapCapacity(c.size());
   }
@@ -1864,7 +1878,9 @@ public final class CollectionsPlume {
    *
    * @param m a map whose size is the maximum expected number of elements in the map or set
    * @return the initial capacity to pass to a HashMap or HashSet constructor
+   * @deprecated use {@link MapsP#mapCapacity}
    */
+  @Deprecated // 2025-06-28
   public static int mapCapacity(Map<?, ?> m) {
     return mapCapacity(m.size());
   }
@@ -1880,8 +1896,10 @@ public final class CollectionsPlume {
    * @param <M> the type of the map
    * @param orig a map
    * @return a copy of {@code orig}, as described above
+   * @deprecated use {@link MapsP#deepCopy}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  @Deprecated // 2025-06-28
   public static <
           K extends @Nullable DeepCopyable<K>,
           V extends @Nullable DeepCopyable<V>,
@@ -1910,8 +1928,10 @@ public final class CollectionsPlume {
    * @param <M> the type of the map
    * @param orig a map
    * @return a copy of {@code orig}, as described above
+   * @deprecated use {@link MapsP#deepCopyValues}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  @Deprecated // 2025-06-28
   public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>>
       @PolyNull M deepCopyValues(@PolyNull M orig) {
     if (orig == null) {
@@ -1937,7 +1957,9 @@ public final class CollectionsPlume {
    * @param <V> the type of values
    * @param size size of the cache
    * @return a new cache with the provided size
+   * @deprecated use {@link MapsP#createLruCache}
    */
+  @Deprecated // 2025-06-28
   public static <K, V> Map<K, V> createLruCache(@Positive int size) {
     return new LinkedHashMap<K, V>(size, .75F, true) {
 
@@ -1961,8 +1983,10 @@ public final class CollectionsPlume {
    * @param <M> the type of the map
    * @param orig a map
    * @return a copy of {@code orig}, as described above
+   * @deprecated use {@link MapsP#cloneElements}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  @Deprecated // 2025-06-28
   public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(@PolyNull M orig) {
     return cloneElements(orig, true);
   }
@@ -1976,8 +2000,10 @@ public final class CollectionsPlume {
    * @param <M> the type of the map
    * @param orig a map
    * @return a copy of {@code orig}, as described above
+   * @deprecated use {@link MapsP#cloneValues}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  @Deprecated // 2025-06-28
   public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneValues(@PolyNull M orig) {
     return cloneElements(orig, false);
   }
@@ -2027,9 +2053,9 @@ public final class CollectionsPlume {
    *     representation of m
    * @param m map to be converted to a string
    * @param linePrefix a prefix to put at the beginning of each line
-   * @deprecated use {@link #mapToStringMultiLine(Appendable, Map, String)}
+   * @deprecated use {@link MapsP#mapToString}
    */
-  @Deprecated // 2026-06-21
+  @Deprecated // 2025-06-28
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
     mapToStringMultiLine(sb, m, linePrefix);
@@ -2047,7 +2073,9 @@ public final class CollectionsPlume {
    *     representation of m
    * @param m map to be converted to a string
    * @param linePrefix a prefix to put at the beginning of each line
+   * @deprecated use {@link MapsP#mapToStringMultiLine}
    */
+  @Deprecated // 2025-06-28
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       void mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix) {
     try {
@@ -2102,9 +2130,9 @@ public final class CollectionsPlume {
    * @param <V> type of map values
    * @param m map to be converted to a string
    * @return a multi-line string representation of m
-   * @deprecated use {@link #mapToStringMultiLine(Map)}
+   * @deprecated use {@link MapsP#mapToString}
    */
-  @Deprecated // 2025-06-21
+  @Deprecated // 2025-06-28
   @SideEffectFree
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToString(Map<K, V> m) {
@@ -2119,12 +2147,14 @@ public final class CollectionsPlume {
    * @param <V> type of map values
    * @param m map to be converted to a string
    * @return a multi-line string representation of the map
+   * @deprecated use {@link MapsP#mapToStringMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
+  @Deprecated // 2025-06-28
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringMultiLine(Map<K, V> m) {
     StringJoiner result = new StringJoiner(lineSep);
@@ -2143,12 +2173,14 @@ public final class CollectionsPlume {
    * @param m map to be converted to a string
    * @param linePrefix a prefix to put at the beginning of each line
    * @return a multi-line string representation of the map
+   * @deprecated use {@link MapsP#mapToStringMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
+  @Deprecated // 2025-06-28
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringMultiLine(Map<K, V> m, String linePrefix) {
     StringJoiner result = new StringJoiner(lineSep);
@@ -2166,8 +2198,10 @@ public final class CollectionsPlume {
    * @param <V> type of map values
    * @param m a map
    * @return a string representation of the map
+   * @deprecated use {@link MapsP#mapToStringAndClassMultiLine}
    */
   @SideEffectFree
+  @Deprecated // 2025-06-28
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringAndClassMultiLine(Map<K, V> m) {
     return mapToStringAndClassMultiLine(m, "");
@@ -2182,12 +2216,14 @@ public final class CollectionsPlume {
    * @param m a map
    * @param linePrefix a prefix to put at the beginning of each line
    * @return a string representation of the map
+   * @deprecated use {@link MapsP#mapToStringAndClassMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
+  @Deprecated // 2025-06-28
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
     StringJoiner result = new StringJoiner(lineSep);
