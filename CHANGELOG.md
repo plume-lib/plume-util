@@ -10,6 +10,7 @@
 
 - Move map-related methods from `CollectionsPlume` to new class `MapsP`
    * The versions in `CollectionsPlume` are deprecated.
+- New overloads `StringsPlume.nPlural()` that use the size of a collection, map, or array.
 
 ## 1.11.0 (2025-06-26)
 
