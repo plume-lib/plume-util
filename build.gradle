@@ -2,7 +2,7 @@ plugins {
   id 'java-library'
 
   // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
-  id 'com.gradleup.shadow' version '8.3.7'
+  id 'com.gradleup.shadow' version '8.3.8'
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
   // Version 6.14.0 and later requires JRE 11+, but version 6.13.0 doesn't work on JRE 21.
