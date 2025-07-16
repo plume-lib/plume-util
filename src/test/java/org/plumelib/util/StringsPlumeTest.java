@@ -345,6 +345,12 @@ public final class StringsPlumeTest {
     assertEquals("were", StringsPlume.vPlural(0, "was"));
     assertEquals("was", StringsPlume.vPlural(1, "was"));
     assertEquals("were", StringsPlume.vPlural(2, "was"));
+    assertEquals("are", StringsPlume.vPlural(0, "is"));
+    assertEquals("is", StringsPlume.vPlural(1, "is"));
+    assertEquals("are", StringsPlume.vPlural(2, "is"));
+    assertEquals("eat", StringsPlume.vPlural(0, "eat"));
+    assertEquals("eat", StringsPlume.vPlural(1, "eat"));
+    assertEquals("eat", StringsPlume.vPlural(2, "eat"));
   }
 
   @Test
