@@ -1514,6 +1514,9 @@ public final class StringsPlume {
     nPluralExceptions.put("species", "species");
     nPluralExceptions.put("squid", "squid");
     nPluralExceptions.put("trout", "trout");
+
+    // Native American tribe names
+
     nPluralExceptions.put("Cherokee", "Cherokee");
     nPluralExceptions.put("Cree", "Cree");
     nPluralExceptions.put("Comanche", "Comanche");
