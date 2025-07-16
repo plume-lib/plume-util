@@ -269,9 +269,9 @@ public final class StringsPlumeTest {
     assertEquals("0 foxes", StringsPlume.nPlural(0, "fox"));
     assertEquals("1 fox", StringsPlume.nPlural(1, "fox"));
     assertEquals("2 foxes", StringsPlume.nPlural(2, "fox"));
-    assertEquals("0 fishes", StringsPlume.nPlural(0, "fish"));
-    assertEquals("1 fish", StringsPlume.nPlural(1, "fish"));
-    assertEquals("2 fishes", StringsPlume.nPlural(2, "fish"));
+    assertEquals("0 wishes", StringsPlume.nPlural(0, "wish"));
+    assertEquals("1 wish", StringsPlume.nPlural(1, "wish"));
+    assertEquals("2 wishes", StringsPlume.nPlural(2, "wish"));
     assertEquals("0 fletches", StringsPlume.nPlural(0, "fletch"));
     assertEquals("1 fletch", StringsPlume.nPlural(1, "fletch"));
     assertEquals("2 fletches", StringsPlume.nPlural(2, "fletch"));
@@ -293,6 +293,11 @@ public final class StringsPlumeTest {
     assertEquals("0 fanboys", StringsPlume.nPlural(0, "fanboy"));
     assertEquals("1 fanboy", StringsPlume.nPlural(1, "fanboy"));
     assertEquals("2 fanboys", StringsPlume.nPlural(2, "fanboy"));
+
+    // Exceptions
+    assertEquals("0 fish", StringsPlume.nPlural(0, "fish"));
+    assertEquals("1 fish", StringsPlume.nPlural(1, "fish"));
+    assertEquals("2 fish", StringsPlume.nPlural(2, "fish"));
 
     // public static String nPlural(Collection c, String noun)
 
@@ -330,6 +335,29 @@ public final class StringsPlumeTest {
     assertEquals("0 fanboys", StringsPlume.nPlural(size0, "fanboy"));
     assertEquals("1 fanboy", StringsPlume.nPlural(size1, "fanboy"));
     assertEquals("2 fanboys", StringsPlume.nPlural(size2, "fanboy"));
+  }
+
+  @Test
+  public void test_vPlural() {
+
+    // public static String [Plural(int n, String verb)
+
+    assertEquals("were", StringsPlume.vPlural(0, "was"));
+    assertEquals("was", StringsPlume.vPlural(1, "was"));
+    assertEquals("were", StringsPlume.vPlural(2, "was"));
+  }
+
+  @Test
+  public void test_nvPlural() {
+
+    // public static String nvPlural(int n, String noun, String verb)
+
+    assertEquals("0 foxes were", StringsPlume.nvPlural(0, "fox", "was"));
+    assertEquals("1 fox was", StringsPlume.nvPlural(1, "fox", "was"));
+    assertEquals("2 foxes were", StringsPlume.nvPlural(2, "fox", "was"));
+    assertEquals("0 wishes are", StringsPlume.nvPlural(0, "wish", "is"));
+    assertEquals("1 wish is", StringsPlume.nvPlural(1, "wish", "is"));
+    assertEquals("2 wishes are", StringsPlume.nvPlural(2, "wish", "is"));
   }
 
   @Test
