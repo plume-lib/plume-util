@@ -1599,8 +1599,7 @@ public final class StringsPlume {
     }
 
     // TODO:  Change nouns ending in "f" or "fe" to "ves" (knives, leaves, lives, wolves, calves),
-    // but beware
-    // that there are exceptions (roofs, fifes).
+    // but beware that there are exceptions (roofs, fifes).
 
     // TODO:
     // Singular nouns ending in o preceded by a consonant in many cases spell the plural by adding
@@ -1667,8 +1666,10 @@ public final class StringsPlume {
 
   /**
    * Returns either the singular or plural form of the given verb, depending on {@code n}. Most
-   * English verbs have the same singular and plural form. The implementation of this method always
-   * returns its argument, unless the argument is one of a small number of hard-coded exceptions.
+   * English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
    *
    * @param n count
    * @param verb verb whose subject is one or more things, depending on {@code n}
@@ -1684,9 +1685,10 @@ public final class StringsPlume {
 
   /**
    * Returns either the singular or plural form of the given verb, depending on the size of the
-   * collection. Most English verbs have the same singular and plural form. The implementation of
-   * this method always returns its argument, unless the argument is one of a small number of
-   * hard-coded exceptions.
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
    *
    * @param c a collection
    * @param verb verb whose subject is one or more things, depending on the size of the collection
@@ -1699,9 +1701,10 @@ public final class StringsPlume {
 
   /**
    * Returns either the singular or plural form of the given verb, depending on the size of the
-   * collection. Most English verbs have the same singular and plural form. The implementation of
-   * this method always returns its argument, unless the argument is one of a small number of
-   * hard-coded exceptions.
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
    *
    * @param m a map
    * @param verb verb whose subject is one or more things, depending on the size of the collection
@@ -1714,9 +1717,10 @@ public final class StringsPlume {
 
   /**
    * Returns either the singular or plural form of the given verb, depending on the size of the
-   * collection. Most English verbs have the same singular and plural form. The implementation of
-   * this method always returns its argument, unless the argument is one of a small number of
-   * hard-coded exceptions.
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
    *
    * @param <T> the type of array elements
    * @param a an array
