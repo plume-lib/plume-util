@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1547,7 +1548,7 @@ public final class StringsPlume {
     nPluralExceptions.put("woman", "women");
 
     // Miscellaneous irregular plurals
-    nPluralExceptions("person", "people");
+    nPluralExceptions.put("person", "people");
   }
 
   /**
@@ -1679,7 +1680,7 @@ public final class StringsPlume {
    * this method always returns its argument, unless the argument is one of a small number of
    * hard-coded exceptions.
    *
-   * @param n count
+   * @param c a collection
    * @param verb verb whose subject is one or more things, depending on the size of the collection
    * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
    */
@@ -1694,7 +1695,7 @@ public final class StringsPlume {
    * this method always returns its argument, unless the argument is one of a small number of
    * hard-coded exceptions.
    *
-   * @param n count
+   * @param m a map
    * @param verb verb whose subject is one or more things, depending on the size of the collection
    * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
    */
@@ -1709,7 +1710,8 @@ public final class StringsPlume {
    * this method always returns its argument, unless the argument is one of a small number of
    * hard-coded exceptions.
    *
-   * @param n count
+   * @param <T> the type of array elements
+   * @param a an array
    * @param verb verb whose subject is one or more things, depending on the size of the collection
    * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
    */
@@ -1722,8 +1724,9 @@ public final class StringsPlume {
    * Returns either the singular or plural form of the noun and verb, depending on {@code n}.
    *
    * @param n count
+   * @param noun word being counted; must not be the empty string
    * @param verb verb whose subject is one or more things, depending on {@code n}
-   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
    * @see #nPlural(int, String)
    * @see #vPlural(int, String)
    */
@@ -1736,45 +1739,49 @@ public final class StringsPlume {
    * Returns either the singular or plural form of the given noun and verb, depending on the size of
    * the collection.
    *
-   * @param n count
+   * @param c a collection
+   * @param noun word being counted; must not be the empty string
    * @param verb verb whose subject is one or more things, depending on the size of the collection
-   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
    * @see #nPlural(int, String)
    * @see #vPlural(int, String)
    */
   @SideEffectFree
-  public static String nvPlural(Collection<?> c, String verb) {
-    return nvPlural(c.size(), verb);
+  public static String nvPlural(Collection<?> c, String noun, String verb) {
+    return nvPlural(c.size(), noun, verb);
   }
 
   /**
    * Returns either the singular or plural form of the given noun and verb, depending on the size of
    * the collection.
    *
-   * @param n count
+   * @param m a map
+   * @param noun word being counted; must not be the empty string
    * @param verb verb whose subject is one or more things, depending on the size of the collection
-   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
    * @see #nPlural(int, String)
    * @see #vPlural(int, String)
    */
   @SideEffectFree
-  public static String nvPlural(Map<?, ?> m, String verb) {
-    return nvPlural(m.size(), verb);
+  public static String nvPlural(Map<?, ?> m, String noun, String verb) {
+    return nvPlural(m.size(), noun, verb);
   }
 
   /**
    * Returns either the singular or plural form of the given noun and verb, depending on the size of
    * the collection.
    *
-   * @param n count
+   * @param <T> the type of array elements
+   * @param a an array
+   * @param noun word being counted; must not be the empty string
    * @param verb verb whose subject is one or more things, depending on the size of the collection
-   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization of
    * @see #nPlural(int, String)
    * @see #vPlural(int, String)
    */
   @SideEffectFree
-  public static <T> String nvPlural(T[] a, String verb) {
-    return nvPlural(a.length, verb);
+  public static <T> String nvPlural(T[] a, String noun, String verb) {
+    return nvPlural(a.length, noun, verb);
   }
 
   /**
