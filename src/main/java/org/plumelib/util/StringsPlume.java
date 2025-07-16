@@ -1657,6 +1657,14 @@ public final class StringsPlume {
     return nPlural(a.length, noun);
   }
 
+  /** Exceptions to the usual English verb pluralization rules. */
+  private static final Map<String, String> vPluralExceptions = new HashMap<>();
+
+  static {
+    vPluralExceptions.put("is", "are");
+    vPluralExceptions.put("was", "were");
+  }
+
   /**
    * Returns either the singular or plural form of the given verb, depending on {@code n}. Most
    * English verbs have the same singular and plural form. The implementation of this method always
@@ -1671,10 +1679,7 @@ public final class StringsPlume {
     if (n == 1) {
       return verb;
     }
-    if (verb.equals("was")) {
-      return "were";
-    }
-    return verb;
+    return vPluralExceptions.getOrDefault(verb, verb);
   }
 
   /**
