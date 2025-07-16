@@ -1483,12 +1483,29 @@ public final class StringsPlume {
    * @param noun word being counted; must not be the empty string
    * @return {@code noun}, if n==1; otherwise, pluralization of {@code noun}
    * @throws IllegalArgumentException if the length of {@code noun} is 0
+   * @deprecated use {@link #nPlural(int, String)}
    */
+  @Deprecated // 2025-07-16
   @SideEffectFree
   public static String nplural(int n, String noun) {
+    return nPlural(n, noun);
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on {@code n}. Adds "es" to
+   * words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y" when the
+   * previous letter is a consonant.
+   *
+   * @param n count of nouns
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if n==1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static String nPlural(int n, String noun) {
     if (noun.isEmpty()) {
       throw new IllegalArgumentException(
-          "The second argument to nplural must not be an empty string");
+          "The second argument to nPlural must not be an empty string");
     }
     if (n == 1) {
       return n + " " + noun;
@@ -1517,7 +1534,7 @@ public final class StringsPlume {
 
   /**
    * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
-   * Adds "es" to words ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y"
+   * Adds "es" to words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y"
    * when the previous letter is a consonant.
    *
    * @param c a collection whose size to test
@@ -1526,13 +1543,13 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if the length of {@code noun} is 0
    */
   @SideEffectFree
-  public static String nplural(Collection<?> c, String noun) {
-    return nplural(c.size(), noun);
+  public static String nPlural(Collection<?> c, String noun) {
+    return nPlural(c.size(), noun);
   }
 
   /**
    * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
-   * Adds "es" to words ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y"
+   * Adds "es" to words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y"
    * when the previous letter is a consonant.
    *
    * @param m a map whose size to test
@@ -1541,13 +1558,13 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if the length of {@code noun} is 0
    */
   @SideEffectFree
-  public static String nplural(Map<?, ?> m, String noun) {
-    return nplural(m.size(), noun);
+  public static String nPlural(Map<?, ?> m, String noun) {
+    return nPlural(m.size(), noun);
   }
 
   /**
    * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
-   * Adds "es" to words ending with "ch", "s", "sh", or "x", adds "ies" to words ending with "y"
+   * Adds "es" to words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y"
    * when the previous letter is a consonant.
    *
    * @param <T> the type of array elements
@@ -1557,8 +1574,8 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if the length of {@code noun} is 0
    */
   @SideEffectFree
-  public static <T> String nplural(T[] a, String noun) {
-    return nplural(a.length, noun);
+  public static <T> String nPlural(T[] a, String noun) {
+    return nPlural(a.length, noun);
   }
 
   /**
