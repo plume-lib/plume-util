@@ -1787,7 +1787,7 @@ public final class StringsPlume {
    * @param a an array
    * @param noun word being counted; must not be the empty string
    * @param verb verb whose subject is one or more things, depending on the size of the collection
-   * @return {@code noun verb}, if n==1; otherwise, its pluralization of
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
    * @see #nPlural(int, String)
    * @see #vPlural(int, String)
    */
