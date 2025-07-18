@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1471,7 +1472,7 @@ public final class StringsPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  // Miscellaneous
+  // English text
   //
 
   /**
@@ -1491,10 +1492,72 @@ public final class StringsPlume {
     return nPlural(n, noun);
   }
 
+  /** Exceptions to the usual English noun pluralization rules. */
+  private static final Map<String, String> nPluralExceptions = new HashMap<>();
+
+  static {
+    // No change
+    nPluralExceptions.put("bison", "bison");
+    nPluralExceptions.put("buffalo", "buffalo");
+    nPluralExceptions.put("carp", "carp");
+    nPluralExceptions.put("chassis", "chassis");
+    nPluralExceptions.put("cod", "cod");
+    nPluralExceptions.put("deer", "deer");
+    nPluralExceptions.put("fish", "fish");
+    nPluralExceptions.put("kakapo", "kakapo");
+    nPluralExceptions.put("neat", "neat");
+    nPluralExceptions.put("pike", "pike");
+    nPluralExceptions.put("salmon", "salmon");
+    nPluralExceptions.put("series", "series");
+    nPluralExceptions.put("sheep", "sheep");
+    nPluralExceptions.put("shrimp", "shrimp");
+    nPluralExceptions.put("species", "species");
+    nPluralExceptions.put("squid", "squid");
+    nPluralExceptions.put("trout", "trout");
+
+    // Native American tribe names
+
+    nPluralExceptions.put("Cherokee", "Cherokee");
+    nPluralExceptions.put("Cree", "Cree");
+    nPluralExceptions.put("Comanche", "Comanche");
+    nPluralExceptions.put("Delaware", "Delaware");
+    nPluralExceptions.put("Hopi", "Hopi");
+    nPluralExceptions.put("Iroquois", "Iroquois");
+    nPluralExceptions.put("Kiowa", "Kiowa");
+    nPluralExceptions.put("Navajo", "Navajo");
+    nPluralExceptions.put("Ojibwa", "Ojibwa");
+    nPluralExceptions.put("Sioux", "Sioux");
+    nPluralExceptions.put("Zuni", "Zuni");
+
+    // Ending in "y"
+    nPluralExceptions.put("lay-by", "lay-bys");
+    nPluralExceptions.put("stand-by", "stand-bys");
+
+    // Ending in "i"
+    nPluralExceptions.put("alkali", "alkalies");
+
+    // Plural ending in "en"
+    nPluralExceptions.put("ox", "oxen");
+    nPluralExceptions.put("child", "children");
+
+    // Apophonic plurals
+    nPluralExceptions.put("foot", "feet");
+    nPluralExceptions.put("goose", "geese");
+    nPluralExceptions.put("louse", "lice");
+    nPluralExceptions.put("dormouse", "dormice");
+    nPluralExceptions.put("man", "men");
+    nPluralExceptions.put("mouse", "mice");
+    nPluralExceptions.put("tooth", "teeth");
+    nPluralExceptions.put("woman", "women");
+
+    // Miscellaneous irregular plurals
+    nPluralExceptions.put("person", "people");
+  }
+
   /**
    * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on {@code n}. Adds "es" to
    * words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y" when the
-   * previous letter is a consonant.
+   * previous letter is a consonant. Handles some irregular nouns.
    *
    * @param n count of nouns
    * @param noun word being counted; must not be the empty string
@@ -1510,6 +1573,14 @@ public final class StringsPlume {
     if (n == 1) {
       return n + " " + noun;
     }
+    String irregular = nPluralExceptions.get(noun);
+    if (irregular != null) {
+      return n + " " + irregular;
+    }
+
+    // TODO: handle more from https://en.wikipedia.org/wiki/English_plurals ,
+    // and organize `nPluralExceptions` and the code the same as it.
+
     char lastLetter = noun.charAt(noun.length() - 1);
     char penultimateLetter = (noun.length() == 1) ? '\u0000' : noun.charAt(noun.length() - 2);
     if ((penultimateLetter == 'c' && lastLetter == 'h')
@@ -1526,8 +1597,15 @@ public final class StringsPlume {
             && penultimateLetter != 'u')) {
       return n + " " + noun.substring(0, noun.length() - 1) + "ies";
     }
-    // Don't change nouns ending in "f" or "fe" to "ves" (knives, leaves, lives, wolf) because not
-    // all such nouns are irregular (roofs, fifes).
+
+    // TODO:  Change nouns ending in "f" or "fe" to "ves" (knives, leaves, lives, wolves, calves),
+    // but beware that there are exceptions (roofs, fifes).
+
+    // TODO:
+    // Singular nouns ending in o preceded by a consonant in many cases spell the plural by adding
+    // -es: heroes,	potatoes, echoes.
+    // However, many nouns of foreign origin, including almost all Italian loanwords, add only -s:
+    // And also some other exceptions like volcanos.
 
     return n + " " + noun + "s";
   }
@@ -1578,10 +1656,150 @@ public final class StringsPlume {
     return nPlural(a.length, noun);
   }
 
+  /** Exceptions to the usual English verb pluralization rules. */
+  private static final Map<String, String> vPluralExceptions = new HashMap<>();
+
+  static {
+    vPluralExceptions.put("is", "are");
+    vPluralExceptions.put("was", "were");
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on {@code n}. Most
+   * English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param n count
+   * @param verb verb whose subject is one or more things, depending on {@code n}
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static String vPlural(int n, String verb) {
+    if (n == 1) {
+      return verb;
+    }
+    return vPluralExceptions.getOrDefault(verb, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on the size of the
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param c a collection
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static String vPlural(Collection<?> c, String verb) {
+    return vPlural(c.size(), verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on the size of the
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param m a map
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static String vPlural(Map<?, ?> m, String verb) {
+    return vPlural(m.size(), verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on the size of the
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param <T> the type of array elements
+   * @param a an array
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static <T> String vPlural(T[] a, String verb) {
+    return vPlural(a.length, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the noun and verb, depending on {@code n}.
+   *
+   * @param n count
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on {@code n}
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static String nvPlural(int n, String noun, String verb) {
+    return nPlural(n, noun) + " " + vPlural(n, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given noun and verb, depending on the size of
+   * the collection.
+   *
+   * @param c a collection
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static String nvPlural(Collection<?> c, String noun, String verb) {
+    return nvPlural(c.size(), noun, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given noun and verb, depending on the size of
+   * the collection.
+   *
+   * @param m a map
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static String nvPlural(Map<?, ?> m, String noun, String verb) {
+    return nvPlural(m.size(), noun, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given noun and verb, depending on the size of
+   * the collection.
+   *
+   * @param <T> the type of array elements
+   * @param a an array
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static <T> String nvPlural(T[] a, String noun, String verb) {
+    return nvPlural(a.length, noun, verb);
+  }
+
   /**
    * Creates a conjunction or disjunction, like "a", "a or b", and "a, b, or c". Obeys the "serial
    * comma" or "Oxford comma" rule: when the list has size 3 or larger, puts a comma after every
-   * element but the last.
+   * element (except the last one, which ends the list).
    *
    * @param conjunction the conjunction word, like "and" or "or"
    * @param elements the elements of the conjunction or disjunction
@@ -1610,6 +1828,10 @@ public final class StringsPlume {
     sj.add(conjunction + " " + elements.get(size - 1));
     return sj.toString();
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Miscellaneous
+  //
 
   /**
    * Returns the number of times the character appears in the string.

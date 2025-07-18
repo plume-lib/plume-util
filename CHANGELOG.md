@@ -10,8 +10,10 @@
 
 - Move map-related methods from `CollectionsPlume` to new class `MapsP`
    * The versions in `CollectionsPlume` are deprecated.
-- Renamed `StringsPlume.nplural()` to `StringsPlume.nPlural()`
-- New overloads `StringsPlume.nPlural()` that use the size of a collection, map, or array.
+- In `StringsPlume`:
+   * renamed `StringsPlume.nplural()` to `StringsPlume.nPlural()`
+   * new overloads of `nPlural()` that use the size of a collection, map, or array.
+   * new methods `vPlural` and `nvPlural` for pluralizing verbs
 
 ## 1.11.0 (2025-06-26)
 
