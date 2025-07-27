@@ -26,7 +26,7 @@ public final class SystemPlume {
   //
 
   /**
-   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * Returns true if a system property has a string value that represents true: "true", "yes", or
    * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
    * "1", or "0".
    *
@@ -41,7 +41,7 @@ public final class SystemPlume {
   }
 
   /**
-   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * Returns true if a system property has a string value that represents true: "true", "yes", or
    * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
    * "1", or "0".
    *

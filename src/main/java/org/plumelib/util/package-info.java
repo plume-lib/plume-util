@@ -5,7 +5,7 @@
  *
  * <p>Note that <a
  * href="http://plumelib.org/hashmap-util/api/org/plumelib/util/package-summary.html#package.description">HashMap
- * Util</a> defines other classes in the <code>org.plumelib.util</code> package.
+ * Util</a> defines other classes in the {@code org.plumelib.util} package.
  *
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *

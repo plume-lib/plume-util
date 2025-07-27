@@ -82,7 +82,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Return the first argument if it is non-null, otherwise return the second argument. Throws an
+   * Returns the first argument if it is non-null, otherwise return the second argument. Throws an
    * exception if both arguments are null.
    *
    * @param <T> the type of the arguments
@@ -1202,7 +1202,7 @@ public final class UtilPlume {
   //
 
   /**
-   * Determines whether a property has value "true", "yes", or "1".
+   * Returns true if a property has value "true", "yes", or "1".
    *
    * @see Properties#getProperty
    * @param p a Properties object in which to look up the property
@@ -1220,9 +1220,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Determines whether a property has a string value that represents true: "true", "yes", or "1".
-   * Errs if the property is set to a value that is not one of "true", "false", "yes", "no", "1", or
-   * "0".
+   * Returns true if a property has a string value that represents true: "true", "yes", or "1". Errs
+   * if the property is set to a value that is not one of "true", "false", "yes", "no", "1", or "0".
    *
    * @see Properties#getProperty
    * @param p a Properties object in which to look up the property
@@ -1254,9 +1253,8 @@ public final class UtilPlume {
   }
 
   /**
-   * Determines whether a property has a string value that represents true: "true", "yes", or "1".
-   * Errs if the property is set to a value that is not one of "true", "false", "yes", "no", "1", or
-   * "0".
+   * Returns true if a property has a string value that represents true: "true", "yes", or "1". Errs
+   * if the property is set to a value that is not one of "true", "false", "yes", "no", "1", or "0".
    *
    * @see Properties#getProperty
    * @param p a Properties object in which to look up the property
@@ -1673,6 +1671,8 @@ public final class UtilPlume {
   }
 
   /**
+   * Returns quoted version of orig.
+   *
    * @param orig string to quote
    * @return quoted version of orig
    * @deprecated use {@link #escapeJava(String)}
@@ -1707,6 +1707,8 @@ public final class UtilPlume {
   }
 
   /**
+   * Returns quoted version of ch.
+   *
    * @param ch character to quote
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(Character)}

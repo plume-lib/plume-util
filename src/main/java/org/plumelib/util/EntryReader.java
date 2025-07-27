@@ -624,10 +624,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns whether or not there is another line to read. Any IOExceptions are turned into errors
-   * (because the definition of hasNext() in Iterator doesn't throw any exceptions).
+   * Returns true if there is another line to read. Any IOExceptions are turned into errors (because
+   * the definition of hasNext() in Iterator doesn't throw any exceptions).
    *
-   * @return whether there is another line to read
+   * @return true if there is another line to read
    */
   @SuppressWarnings({
     "allcheckers:purity",

@@ -819,7 +819,7 @@ public final class Intern {
   }
 
   /**
-   * Returns true if each element is interned
+   * Returns true if each element is interned.
    *
    * @param a an array whose elements should already be intterned
    * @return true if each element is interned

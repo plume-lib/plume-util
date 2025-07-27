@@ -64,7 +64,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
   }
 
   /**
-   * Return the first element of the pair, or null if it has been garbage-collected.
+   * Returns the first element of the pair, or null if it has been garbage-collected.
    *
    * @return the first element of the pail, or null if it has been garbage-collected
    */
@@ -74,7 +74,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
   }
 
   /**
-   * Return the second element of the pair, or null if it has been garbage-collected.
+   * Returns the second element of the pair, or null if it has been garbage-collected.
    *
    * @return the second element of the pair, or null if it has been garbage-collected
    */

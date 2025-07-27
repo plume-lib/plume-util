@@ -920,7 +920,7 @@ public final class MathPlume {
    * input, or they can merely be checked for the condition without the strict density requirement.
    *
    * @param nums array of operands
-   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
@@ -975,7 +975,7 @@ public final class MathPlume {
    * <p>For documentation, see {@link #modulusStrict(int[], boolean)}.
    *
    * @param itor iterator of operands; modified by this method
-   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulusStrict(int[], boolean)
@@ -1164,7 +1164,7 @@ public final class MathPlume {
    * input, or they can merely be checked for the condition without the strict density requirement.
    *
    * @param nums array of operands
-   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the array contains fewer than 3 elements
    */
@@ -1219,7 +1219,7 @@ public final class MathPlume {
    * <p>For documentation, see {@link #modulusStrict(long[], boolean)}.
    *
    * @param itor iterator of operands; modified by this method
-   * @param nonstrictEnds whether endpoints are NOT subject to the strict density requirement
+   * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
    * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
    *     null if no such exists or the iterator contains fewer than 3 elements
    * @see #modulusStrict(int[], boolean)
@@ -1527,7 +1527,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return true if the first and last elements are not equal to r (mod m).
+   * Returns true if the first and last elements are not equal to r (mod m).
    *
    * @param rm a tuple of (r,m)
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This
@@ -1866,7 +1866,7 @@ public final class MathPlume {
   }
 
   /**
-   * Return true if the first and last elements are equal to r (mod m).
+   * Returns true if the first and last elements are equal to r (mod m).
    *
    * @param rm an array containing two elements
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This

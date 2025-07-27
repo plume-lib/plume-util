@@ -33,7 +33,7 @@ public final class MapsP {
   // In Python, inlining this gave a 10x speed improvement.
   // Will the same be true for Java?
   /**
-   * Increment the Integer which is indexed by key in the Map. Set the value to 1 if not currently
+   * Increments the Integer which is indexed by key in the Map. Sets the value to 1 if not currently
    * mapped.
    *
    * @param <K> type of keys in the map
@@ -48,8 +48,8 @@ public final class MapsP {
   }
 
   /**
-   * Increment the Integer which is indexed by key in the Map. Set the value to {@code count} if not
-   * currently mapped.
+   * Increments the Integer which is indexed by key in the Map. Sets the value to {@code count} if
+   * not currently mapped.
    *
    * @param <K> type of keys in the map
    * @param m map from K to Integer
