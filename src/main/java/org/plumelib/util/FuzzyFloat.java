@@ -127,7 +127,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 and d2 are non-equal
+   * @return true if d1 and d2 are non-equal
    * @see #eq
    */
   @Pure
@@ -141,7 +141,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &lt; d2
+   * @return true if d1 &lt; d2
    * @see #eq
    */
   @Pure
@@ -155,7 +155,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &le; d2
+   * @return true if d1 &le; d2
    * @see #eq
    */
   @Pure
@@ -169,7 +169,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &gt; d2
+   * @return true if d1 &gt; d2
    * @see #eq
    */
   @Pure
@@ -183,7 +183,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &ge; d2
+   * @return true if d1 &ge; d2
    * @see #eq
    */
   @Pure
@@ -240,8 +240,8 @@ public class FuzzyFloat {
   }
 
   /**
-   * Determines whether or not a1 and a2 are set equivalent (contain only the same elements).
-   * Element comparison uses {@link #eq}.
+   * Returns true if a1 and a2 are set equivalent (contain only the same elements). Element
+   * comparison uses {@link #eq}.
    *
    * <p>Note that this implementation is optimized for cases where the elements are actually the
    * same, since it does a sort of both arrays before starting the comparisons.
@@ -362,7 +362,7 @@ public class FuzzyFloat {
   }
 
   /**
-   * Determines whether smaller is a subset of bigger. Element comparison uses {@link #eq}.
+   * Returns true if smaller is a subset of bigger. Element comparison uses {@link #eq}.
    *
    * <p>Note that this implementation is optimized for cases where the elements are actually the
    * same, since it does a sort of both arrays before starting the comparisons.

@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class MultiRandSelector<T extends @Nullable Object> {
 
-  /** Whether to toss a coin or select a given number of elements. */
+  /** If true, toss a coin or select a given number of elements. */
   private boolean coinTossMode;
 
   /** Number of elements to select. -1 if coinTossMode==true. */

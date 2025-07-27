@@ -33,7 +33,7 @@ public final class FileWriterWithName extends FileWriter {
    *
    * @param fileName the system-dependent filename
    * @param append boolean if {@code true}, then data will be written to the end of the file rather
-   *     than the beginning.
+   *     than the beginning
    * @throws IOException if the named file exists but is a directory rather than a regular file,
    *     does not exist but cannot be created, or cannot be opened for any other reason
    */

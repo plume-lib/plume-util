@@ -34,8 +34,8 @@ public class UniqueIdMap<E> {
   private WeakIdentityHashMap<E, Long> map = new WeakIdentityHashMap<>();
 
   /**
-   * Get the unique ID for the given object. If the object's ID has not been previously requested, a
-   * new one is generated for it.
+   * Returns the unique ID for the given object. If the object's ID has not been previously
+   * requested, a new one is generated for it.
    *
    * @param object the object to get a unique ID for
    * @return the unique ID for the given object

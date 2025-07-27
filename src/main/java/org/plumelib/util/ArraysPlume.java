@@ -1401,8 +1401,8 @@ public final class ArraysPlume {
   //
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using the equals method.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using the equals method.
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -1427,8 +1427,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using == (not the equals method).
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using == (not the equals method).
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -1453,8 +1453,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using the equals method.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using the equals method.
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -1479,8 +1479,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using == (not the equals method).
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using == (not the equals method).
    *
    * @param <T> the type of list/array elements
    * @param a an array
@@ -1504,8 +1504,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using the equals method.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using the equals method.
    *
    * @param a a list
    * @param sub subsequence to search for
@@ -1530,8 +1530,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using == (not the equals method).
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using == (not the equals method).
    *
    * @param <T> the type of list/array elements
    * @param a a list
@@ -1555,8 +1555,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using the equals method.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using the equals method.
    *
    * @param <T> the type of list elements
    * @param a a list
@@ -1579,8 +1579,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first, testing for equality using == (not the equals method).
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first, testing for equality using == (not the equals method).
    *
    * @param <T> the type of list elements
    * @param a a list
@@ -1603,8 +1603,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first.
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -1627,8 +1627,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first.
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -1651,8 +1651,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first.
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -1674,8 +1674,8 @@ public final class ArraysPlume {
   }
 
   /**
-   * Determines whether the second array is a subarray of the first, starting at the specified index
-   * of the first.
+   * Returns true if the second array is a subarray of the first, starting at the specified index of
+   * the first.
    *
    * @param a an array
    * @param sub subsequence to search for
@@ -2364,7 +2364,7 @@ public final class ArraysPlume {
    * String.
    *
    * @param a an array
-   * @param quoted whether to quote the array elements
+   * @param quoted if true, quote the array elements
    * @return a string representation of the array
    * @see java.util.ArrayList#toString
    */
@@ -2405,7 +2405,7 @@ public final class ArraysPlume {
    * of java.util.ArrayList. The representation permits quoting (or not) of strings.
    *
    * @param a a collection
-   * @param quoted whether to quote the collection elements that are Java strings
+   * @param quoted if true, quote the collection elements that are Java strings
    * @return a string representation of the list
    * @see java.util.ArrayList#toString
    */
@@ -2459,7 +2459,7 @@ public final class ArraysPlume {
   //
 
   /**
-   * Returns whether the array is sorted.
+   * Returns true if the array is sorted.
    *
    * @param a an array
    * @return true iff the array is sorted
@@ -2472,7 +2472,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted.
+   * Returns true if the array is sorted.
    *
    * @param a an array
    * @return true iff the array is sorted
@@ -2488,7 +2488,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted.
+   * Returns true if the array is sorted.
    *
    * @param a an array
    * @return true iff the array is sorted
@@ -2500,7 +2500,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted.
+   * Returns true if the array is sorted.
    *
    * @param a an array
    * @return true iff the array is sorted
@@ -2516,7 +2516,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted in descending order.
+   * Returns true if the array is sorted in descending order.
    *
    * @param a an array
    * @return true iff the array is sorted in descending order
@@ -2532,7 +2532,7 @@ public final class ArraysPlume {
   }
 
   /**
-   * Returns whether the array is sorted in descending order.
+   * Returns true if the array is sorted in descending order.
    *
    * @param a an array
    * @return true iff the array is sorted in descending order
@@ -3101,7 +3101,7 @@ public final class ArraysPlume {
    * Returns true if the array is a permutation of [0..a.length).
    *
    * @param a an array, representing a function
-   * @return true iff all elements of a are in [0..a.length) and a contains no duplicates.
+   * @return true iff all elements of a are in [0..a.length) and a contains no duplicates
    */
   @SuppressWarnings("allcheckers:purity") // side effect to local state (array)
   @Pure
@@ -3213,8 +3213,7 @@ public final class ArraysPlume {
    *
    * @param a function from [0..a.length) to [-1..b.length)
    * @param b function from [0..b.length) to range R
-   * @return function from [0..a.length) to {range R} union {-1}, that is the composition of a and
-   *     b.
+   * @return function from [0..a.length) to {range R} union {-1}, that is the composition of a and b
    */
   @SuppressWarnings("allcheckers:purity") // side effect to local state
   @SideEffectFree
@@ -3239,7 +3238,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Returns whether smaller is a subset of bigger.
+   * Returns true if smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -3270,7 +3269,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Returns whether smaller is a subset of bigger.
+   * Returns true if smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -3301,7 +3300,7 @@ public final class ArraysPlume {
   // might be quicker when it is not.  Sorting both sets has (minimum
   // and maximum) running time of Theta(n log n).
   /**
-   * Returns whether smaller is a subset of bigger.
+   * Returns true if smaller is a subset of bigger.
    *
    * <p>The implementation is to use collections because we want to take advantage of HashSet's
    * constant time membership tests.
@@ -4294,7 +4293,7 @@ public final class ArraysPlume {
    * @param <T> - the class of the objects in the array
    * @param a the array in which replacement is to occur
    * @param oldVal the old value to be replaced
-   * @param newVal the new value with which oldVal is to be replaced.
+   * @param newVal the new value with which oldVal is to be replaced
    * @return true if array contained one or more elements e such that (oldVal==null ? e==null :
    *     oldVal.equals(e))
    */
