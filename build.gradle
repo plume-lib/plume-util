@@ -23,7 +23,7 @@ repositories {
 }
 
 ext {
-  errorproneVersion = '2.40.0'
+  errorproneVersion = '2.41.0'
   isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
@@ -99,10 +99,11 @@ tasks.withType(JavaCompile).configureEach {
   }
   options.errorprone {
     // ExtendsObject does not yet exist in Error Prone 2.10.0.
-    // disable('ExtendsObject')  // Incorrect when using the Checker Framework
-    disable('InlineMeSuggester') // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations
+    // disable('ExtendsObject')  // Incorrect when using the Checker Framework.
+    disable('InlineMeSuggester') // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
     disable('ReferenceEquality') // Use Interning Checker instead.
-    disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
+    disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod.
+    disable('EffectivelyPrivate') // Loses information about the abstraction.
   }
   options.errorprone.enabled = isJava17orHigher
 }
