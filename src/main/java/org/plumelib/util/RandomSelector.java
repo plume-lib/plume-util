@@ -123,6 +123,7 @@ public class RandomSelector<T> {
    *
    * @param next value to be added to this selector
    */
+  @SuppressWarnings("index:argument") // nextInt(size) produces valid index
   public void accept(T next) {
 
     // if we are in coin toss mode, then we want to keep
@@ -143,7 +144,7 @@ public class RandomSelector<T> {
       if (values.size() < numElts) {
         values.add(next);
       } else {
-        @SuppressWarnings("lowerbound:argument") // no list support
+        // nextInt(size) returns value in [0, size), making it a valid index
         int rem = generator.nextInt(values.size());
         // values should be MinLen(1), meaning that values.size() is positive.
         values.set(rem, next);

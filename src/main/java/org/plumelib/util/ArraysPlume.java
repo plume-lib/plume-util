@@ -4121,12 +4121,14 @@ public final class ArraysPlume {
      * @param elt the element to add
      * @return a new partitioning just like this one, but with elt added to the ith part
      */
+    @SuppressWarnings("index:argument") // i is either valid index or size() for new part
     Partitioning<T> addToPart(@NonNegative int i, T elt) {
       Partitioning<T> result = new Partitioning<>(this);
       if (size() == i) {
         ArrayList<T> newPart = newArrayList(elt);
         result.add(newPart);
       } else {
+        // i < size() when size() != i, so i is valid index for both get() and set()
         ArrayList<T> newPart = new ArrayList<>(result.get(i));
         newPart.add(elt);
         result.set(i, newPart);
