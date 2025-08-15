@@ -4127,9 +4127,12 @@ public final class ArraysPlume {
         ArrayList<T> newPart = newArrayList(elt);
         result.add(newPart);
       } else {
+        // In else branch: i != size() and i >= 0, therefore i < size(), so i is a valid index
+        @SuppressWarnings("index:argument")
         ArrayList<T> newPart = new ArrayList<>(result.get(i));
         newPart.add(elt);
-        result.set(i, newPart);
+        @SuppressWarnings("index:argument")
+        ArrayList<T> ignored = result.set(i, newPart);
       }
       return result;
     }

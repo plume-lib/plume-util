@@ -62,6 +62,8 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
     nextValue = (combinationSize == 0 ? null : new ArrayList<>(collectionsOfCandidates.size()));
 
     for (int i = 0; i < combinationSize; i++) {
+      // i is guaranteed to be a valid index since combinationSize == listOfCollectionsOfCanditates.size()
+      @SuppressWarnings("index:argument")
       Collection<T> userSuppliedCandidates = listOfCollectionsOfCanditates.get(i);
 
       List<T> candidates = new ArrayList<>(userSuppliedCandidates);
