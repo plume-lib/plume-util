@@ -535,7 +535,8 @@ public final class StringsPlume {
   }
 
   /**
-   * Given a character, returns a Java character literal denoting the character.
+   * Given a character, returns a Java character literal denoting the character. The return value
+   * begins and ends with a single quote mark.
    *
    * @param ch character to quote
    * @return quoted version of ch
