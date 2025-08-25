@@ -146,7 +146,9 @@ public class RandomSelector<T> {
         @SuppressWarnings("lowerbound:argument") // no list support
         int rem = generator.nextInt(values.size());
         // values should be MinLen(1), meaning that values.size() is positive.
-        values.set(rem, next);
+        if (rem < values.size()) {
+          values.set(rem, next);
+        }
       }
     }
     // do nothing if the probability condition is not met

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.index.qual.LengthOf;
+import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -32,11 +33,14 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public class CombinationIterator<T> implements Iterator<List<T>> {
 
+  /** The original, indexable list of candidate collections (one per position). */
+  private final List<Collection<T>> listOfCollectionsOfCanditates;
+
   /** Lists of candidate values for each position in generated lists. */
-  private final List<T>[] listsOfCandidates;
+  private final List<T> @SameLen("listOfCollectionsOfCanditates") [] listsOfCandidates;
 
   /** Iterators for each list of candidate values. */
-  private final Iterator<T>[] iterators;
+  private final Iterator<T> @SameLen("listOfCollectionsOfCanditates") [] iterators;
 
   /** The size of each returned result; the length of listsOfCandidates. */
   private final @LengthOf({"listsOfCandidates", "iterators"}) int combinationSize;
@@ -52,27 +56,37 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
    */
   @SuppressWarnings({"rawtypes", "unchecked"}) // for generic array creation
   public CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
-    int size = collectionsOfCandidates.size();
-    // Just like collectionsOfCandidates, but indexable.
-    ArrayList<? extends Collection<T>> listOfCollectionsOfCanditates =
-        new ArrayList<>(collectionsOfCandidates);
-    listsOfCandidates = new ArrayList[size];
-    iterators = new Iterator[size];
-    combinationSize = size;
-    nextValue = (combinationSize == 0 ? null : new ArrayList<>(collectionsOfCandidates.size()));
+    this.listOfCollectionsOfCanditates = new ArrayList<>(collectionsOfCandidates);
 
-    for (int i = 0; i < combinationSize; i++) {
-      Collection<T> userSuppliedCandidates = listOfCollectionsOfCanditates.get(i);
+    final int n = this.listOfCollectionsOfCanditates.size();
+
+    // Create arrays, then assign to fields. Suppress ONLY the cast-unsafe warnings here.
+    @SuppressWarnings("samelen:cast.unsafe")
+    List<T> @SameLen("this.listOfCollectionsOfCanditates") [] listsTmp =
+        (List<T> @SameLen("this.listOfCollectionsOfCanditates") []) new List<?>[n];
+    this.listsOfCandidates = listsTmp;
+
+    @SuppressWarnings("samelen:cast.unsafe")
+    Iterator<T> @SameLen("this.listOfCollectionsOfCanditates") [] itersTmp =
+        (Iterator<T> @SameLen("this.listOfCollectionsOfCanditates") []) new Iterator<?>[n];
+    this.iterators = itersTmp;
+
+    this.combinationSize = n;
+    this.nextValue = (n == 0 ? null : new ArrayList<>(n));
+
+    for (int i = 0; i < n; i++) {
+      Collection<T> userSuppliedCandidates = this.listOfCollectionsOfCanditates.get(i);
 
       List<T> candidates = new ArrayList<>(userSuppliedCandidates);
-      listsOfCandidates[i] = candidates;
+      this.listsOfCandidates[i] = candidates;
       Iterator<T> it = candidates.iterator();
-      iterators[i] = it;
-      if (nextValue != null) {
+      this.iterators[i] = it;
+
+      if (this.nextValue != null) {
         if (it.hasNext()) {
-          nextValue.add(it.next());
+          this.nextValue.add(it.next());
         } else {
-          nextValue = null;
+          this.nextValue = null;
         }
       }
     }

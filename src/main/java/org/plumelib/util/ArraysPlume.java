@@ -4123,13 +4123,19 @@ public final class ArraysPlume {
      */
     Partitioning<T> addToPart(@NonNegative int i, T elt) {
       Partitioning<T> result = new Partitioning<>(this);
-      if (size() == i) {
+      int n = result.size();
+
+      if (i == n) {
+        // append a new part at the high bound (i== size() is allowed)
         ArrayList<T> newPart = newArrayList(elt);
         result.add(newPart);
-      } else {
+      } else if (0 <= i && i < n) {
+        // explicit lower/upper bounds let the Index Checker prove get/set are in-bounds
         ArrayList<T> newPart = new ArrayList<>(result.get(i));
         newPart.add(elt);
         result.set(i, newPart);
+      } else {
+        throw new IndexOutOfBoundsException("i=" + i + ", size=" + n);
       }
       return result;
     }
