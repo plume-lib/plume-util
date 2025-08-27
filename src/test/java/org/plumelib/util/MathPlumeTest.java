@@ -62,7 +62,9 @@ public final class MathPlumeTest {
     }
     int[] a = new int[v.size()];
     for (int i = 0; i < a.length; i++) {
-      a[i] = v.get(i).intValue();
+      @SuppressWarnings("index:argument")
+      Integer value = v.get(i);
+      a[i] = value.intValue();
     }
     return a;
   }
