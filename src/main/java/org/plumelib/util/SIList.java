@@ -72,14 +72,13 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @param c the elements of the new list
    * @return the new list
    */
-  public static <E2> SIList<E2> from(Collection<E2> list) {
-    int size = list.size();
-    if (size == 0) {
+  public static <E2> SIList<E2> from(Collection<E2> c) {
+    if (c.isEmpty()) {
       return empty();
-    } else if (size == 1) {
-      return singleton(list.iterator().next());
+    } else if (c.size() == 1) {
+      return singleton(c.iterator().next());
     } else {
-      return new SimpleArrayList<>(list);
+      return new SimpleArrayList<>(c);
     }
   }
 
