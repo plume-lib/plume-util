@@ -8,12 +8,15 @@
 
 ## 1.12.0 (2025-??-??)
 
-- Move map-related methods from `CollectionsPlume` to new class `MapsP`
+- Move map-related methods from `CollectionsPlume` to new class `MapsP`.
    * The versions in `CollectionsPlume` are deprecated.
 - In `StringsPlume`:
-   * renamed `StringsPlume.nplural()` to `StringsPlume.nPlural()`
+   * renamed `StringsPlume.nplural()` to `StringsPlume.nPlural()`.
    * new overloads of `nPlural()` that use the size of a collection, map, or array.
-   * new methods `vPlural` and `nvPlural` for pluralizing verbs
+   * new methods `vPlural()` and `nvPlural()` for pluralizing verbs.
+- In `SIList`:
+   * new methods `from(Collection)`, `from(Iterable)`, and `from(Iterator)`.
+   * deprecated `fromList(Collection)` in favor of `from(Collection)`.
 
 ## 1.11.0 (2025-06-26)
 
