@@ -51,7 +51,9 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @param <E2> the type of list elements
    * @param list the elements of the new list
    * @return the new list
+   * @deprecated use {@link #from(Collection)}
    */
+  @Deprecated // 2025-08-30
   public static <E2> SIList<E2> fromList(Collection<E2> list) {
     int size = list.size();
     if (size == 0) {
@@ -61,6 +63,52 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
     } else {
       return new SimpleArrayList<>(list);
     }
+  }
+
+  /**
+   * Create a SIList from a JDK Collection.
+   *
+   * @param <E2> the type of list elements
+   * @param c the elements of the new list
+   * @return the new list
+   */
+  public static <E2> SIList<E2> from(Collection<E2> c) {
+    if (c.isEmpty()) {
+      return empty();
+    } else if (c.size() == 1) {
+      return singleton(c.iterator().next());
+    } else {
+      return new SimpleArrayList<>(c);
+    }
+  }
+
+  /**
+   * Create a SIList from a JDK Iterable.
+   *
+   * @param <E2> the type of list elements
+   * @param ible the elements of the new list
+   * @return the new list
+   */
+  public static <E2> SIList<E2> from(Iterable<E2> ible) {
+    return from(ible.iterator());
+  }
+
+  /**
+   * Create a SIList from a JDK Iterator.
+   *
+   * @param <E2> the type of list elements
+   * @param itor the elements of the new list
+   * @return the new list
+   */
+  public static <E2> SIList<E2> from(Iterator<E2> itor) {
+    if (!itor.hasNext()) {
+      return empty();
+    }
+    List<E2> list = new ArrayList<E2>();
+    while (itor.hasNext()) {
+      list.add(itor.next());
+    }
+    return from(list);
   }
 
   /**
