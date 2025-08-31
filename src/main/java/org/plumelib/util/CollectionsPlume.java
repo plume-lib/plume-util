@@ -61,8 +61,12 @@ public final class CollectionsPlume {
    * Collection.addAll()}, but that method takes only a Collection, not any Iterable, as its
    * arguments.
    *
+   * <p>If {@code c} has an {@code addAll()} method that can take {@code elements} as an argument,
+   * then don't call this method. Instead, just call {@code c.addAll(elements)}.
+   *
    * @param <T> the type of elements
-   * @param c the collection into which elements are to be inserted
+   * @param c the collection into which elements are to be inserted, which lacks an {@code
+   *     addAll(Iterable} method
    * @param elements the elements to insert into c
    * @return true if the collection changed as a result of the call
    */

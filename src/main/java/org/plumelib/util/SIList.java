@@ -46,11 +46,11 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
   private SIList() {}
 
   /**
-   * Create a SIList from a JDK list.
+   * Create a SIList from a JDK Collection.
    *
    * @param <E2> the type of list elements
    * @param list the elements of the new list
-   * @return the list
+   * @return the new list
    */
   public static <E2> SIList<E2> fromList(Collection<E2> list) {
     int size = list.size();
