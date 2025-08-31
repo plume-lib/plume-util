@@ -20,7 +20,7 @@ public class SIListTest {
       al.add("str" + i);
     }
 
-    SIList<String> sl = SIList.fromList(al);
+    SIList<String> sl = SIList.from(al);
 
     for (int i = 0; i < sl.size(); i++) {
       assertTrue(al.contains(sl.get(i)));
@@ -34,7 +34,7 @@ public class SIListTest {
       al.add("str" + i);
     }
 
-    SIList<String> sl = SIList.fromList(al).add("str" + 100);
+    SIList<String> sl = SIList.from(al).add("str" + 100);
 
     al.add("str" + 100);
 
@@ -58,7 +58,7 @@ public class SIListTest {
 
     for (int i = 0; i < 100; i++) {
       if (partitions.contains(i)) {
-        lists.add(SIList.fromList(sub));
+        lists.add(SIList.from(sub));
         sub = new ArrayList<>();
       }
       String str = "str" + i;
@@ -67,7 +67,7 @@ public class SIListTest {
     }
 
     if (!sub.isEmpty()) {
-      lists.add(SIList.fromList(sub));
+      lists.add(SIList.from(sub));
     }
 
     SIList<String> sl = SIList.concat(lists);
@@ -83,7 +83,7 @@ public class SIListTest {
     List<SIList<String>> lists = new ArrayList<>();
     ArrayList<String> al = new ArrayList<>();
 
-    SIList<String> base = SIList.fromList(new ArrayList<String>());
+    SIList<String> base = SIList.from(new ArrayList<String>());
 
     int i;
     for (i = 0; i < 50; i++) {
@@ -92,7 +92,7 @@ public class SIListTest {
       al.add(v);
     }
     lists.add(base);
-    lists.add(SIList.fromList(new ArrayList<String>()));
+    lists.add(SIList.from(new ArrayList<String>()));
     base = SIList.concat(lists);
     for (i = 55; i < 70; i++) {
       String v = "str" + i;
@@ -109,8 +109,7 @@ public class SIListTest {
 
   @Test
   public void emptyLOL() {
-    List<SIList<String>> lists =
-        Collections.singletonList(SIList.fromList(new ArrayList<String>()));
+    List<SIList<String>> lists = Collections.singletonList(SIList.from(new ArrayList<String>()));
     SIList<String> sl = SIList.concat(lists);
 
     assertTrue(sl.isEmpty());

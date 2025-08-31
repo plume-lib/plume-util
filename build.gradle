@@ -12,7 +12,7 @@ plugins {
   id('net.ltgt.errorprone') version '4.3.0'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.56'
+  id 'org.checkerframework' version '0.6.57'
 }
 
 repositories {
@@ -142,7 +142,7 @@ checkerFramework {
 // To use a snapshot version of the Checker Framework.
 if (false) {
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.49.5'
+  ext.checkerFrameworkVersion = '3.50.0'
   dependencies {
     compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
     testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
@@ -178,23 +178,23 @@ javadoc {
 }
 check.dependsOn javadoc
 
-task javadocWeb(type: Javadoc) {
+tasks.register('javadocWeb', Javadoc) {
   description = 'Upload API documentation to website.'
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
   options.addStringOption('source', '8')
   doLast {
-    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
-    flags:'g', byline:true) {
+    ant.replaceregexp(match: "@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace: '',
+    flags: 'g', byline: true) {
       fileset(dir: destinationDir)
     }
     // Set permissions
     project.exec {
-      commandLine('chgrp', '-R',  'plse_www', "/cse/web/research/plumelib/${project.name}/api")
+      commandLine('chgrp', '-R', 'plse_www', "/cse/web/research/plumelib/${project.name}/api")
     }
     project.exec {
-      commandLine('chmod', '-R',  'g+w', "/cse/web/research/plumelib/${project.name}/api")
+      commandLine('chmod', '-R', 'g+w', "/cse/web/research/plumelib/${project.name}/api")
     }
   }
 }
@@ -205,7 +205,7 @@ configurations {
 dependencies {
   requireJavadoc 'org.plumelib:require-javadoc:2.0.0'
 }
-task requireJavadoc(type: JavaExec) {
+tasks.register('requireJavadoc', JavaExec) {
   group = 'Documentation'
   description = 'Ensures that Javadoc documentation exists.'
   mainClass = 'org.plumelib.javadoc.RequireJavadoc'
@@ -228,7 +228,7 @@ javadocWeb.dependsOn requireJavadoc
 // Emacs support
 
 /* Make Emacs TAGS table */
-task tags(type: Exec) {
+tasks.register('tags', Exec) {
   description = 'Run etags to create an Emacs TAGS table'
   commandLine 'bash', '-c', "find src/ -name '*.java' | sort | xargs etags"
 }
@@ -236,7 +236,7 @@ task tags(type: Exec) {
 
 // Debugging support
 
-task printCompileClasspaths {
+tasks.register('printCompileClasspaths') {
   description = 'Print the compile-time classpaths'
   doFirst {
     println 'Compile classpath:'
