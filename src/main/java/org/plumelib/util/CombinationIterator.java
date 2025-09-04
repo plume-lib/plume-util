@@ -33,7 +33,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public class CombinationIterator<T> implements Iterator<List<T>> {
 
-  /** The original, indexable list of candidate collections (one per position). */
+  /** The original list of candidate collections (one per position). */
   private final List<Collection<T>> listOfCollectionsOfCanditates;
 
   /** Lists of candidate values for each position in generated lists. */
@@ -84,7 +84,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
 
       if (this.nextValue != null) {
         if (it.hasNext()) {
-          this.nextValue.add(it.next());
+          nextValue.add(it.next());
         } else {
           this.nextValue = null;
         }
