@@ -4117,25 +4117,25 @@ public final class ArraysPlume {
     /**
      * Returns a new partitioning just like this one, but with elt added to the ith part.
      *
-     * @param i the index of an existing part, or the current size (to create a new part)
+     * @param i the index of an existing part (0 <= i < size()), or the current size (to create a new part)
      * @param elt the element to add
      * @return a new partitioning just like this one, but with elt added to the ith part
      */
     Partitioning<T> addToPart(@NonNegative int i, T elt) {
       Partitioning<T> result = new Partitioning<>(this);
-      int n = result.size();
+      int partitioningSize = result.size();
 
-      if (i == n) {
+      if (i == partitioningSize) {
         // append a new part at the high bound (i== size() is allowed)
         ArrayList<T> newPart = newArrayList(elt);
         result.add(newPart);
-      } else if (0 <= i && i < n) {
+      } else if (0 <= i && i < partitioningSize) {
         // explicit lower/upper bounds let the Index Checker prove get/set are in-bounds
         ArrayList<T> newPart = new ArrayList<>(result.get(i));
         newPart.add(elt);
         result.set(i, newPart);
       } else {
-        throw new IndexOutOfBoundsException("i=" + i + ", size=" + n);
+        throw new IndexOutOfBoundsException("Invalid index: i=" + i + ", valid range=[0, " + partitioningSize + "], size=" + partitioningSize);
       }
       return result;
     }
