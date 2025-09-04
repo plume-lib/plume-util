@@ -123,7 +123,6 @@ public class RandomSelector<T> {
    *
    * @param next value to be added to this selector
    */
-  @SuppressWarnings("index:argument")
   public void accept(T next) {
 
     // if we are in coin toss mode, then we want to keep
