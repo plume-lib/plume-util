@@ -292,6 +292,8 @@ public final class MapsP {
    * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
    * including a final line separator (unless the map is empty).
    *
+   * <p>Each line has the form "{linePrefix}{key} =&gt; {value}"
+   *
    * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
    *
    * @param <K> type of map keys
@@ -311,6 +313,8 @@ public final class MapsP {
   /**
    * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
    * including a final line separator (unless the map is empty).
+   *
+   * <p>Each line has the form "{linePrefix}{key} =&gt; {value}".
    *
    * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
    *
@@ -339,6 +343,18 @@ public final class MapsP {
   /**
    * Write a multi-line representation of the map of maps into the given Appendable (e.g., a
    * StringBuilder), including a final line separator (unless the map is empty).
+   *
+   * <p>The form of the output is
+   *
+   * <pre>
+   * {outerkey1}
+   * {innermap1}
+   * {outerkey2}
+   * {innermap2}
+   * ...
+   * </pre>
+   *
+   * where each inner map is formmatted by {@link mapToStringMultiLine(Appendable, Map, String)}.
    *
    * @param <K1> the type of the outer map keys
    * @param <K2> the type of the inner map keys
@@ -369,7 +385,10 @@ public final class MapsP {
   // Second, versions that return a String.
 
   /**
-   * Returns a multi-line string representation of a map.
+   * Returns a multi-line string representation of a map. Each key-value pair appears on its own
+   * line, with no indentation. The last line does not end with a line separator.
+   *
+   * <p>Each line has the form "{linePrefix}{key} =&gt; {value}".
    *
    * @param <K> type of map keys
    * @param <V> type of map values
@@ -387,6 +406,8 @@ public final class MapsP {
   /**
    * Returns a multi-line string representation of a map. Each key-value pair appears on its own
    * line, with no indentation. The last line does not end with a line separator.
+   *
+   * <p>Each line has the form "{key} =&gt; {value}".
    *
    * @param <K> type of map keys
    * @param <V> type of map values
@@ -410,6 +431,8 @@ public final class MapsP {
   /**
    * Returns a multi-line string representation of a map. Each key-value pair appears on its own
    * line, with no indentation. The last line does not end with a line separator.
+   *
+   * <p>Each line has the form "{linePrefix}{key} =&gt; {value}".
    *
    * @param <K> type of map keys
    * @param <V> type of map values
@@ -435,6 +458,9 @@ public final class MapsP {
    * Convert a map to a multi-line string representation, which includes the runtime class of keys
    * and values. The last line does not end with a line separator.
    *
+   * <p>Each line has the form "{key} [{key.getClass()}] =&gt; {value} [{value.getClass()}]", where
+   * the "{}" characters indicate interpolation and the "[]" characters are literally present.
+   *
    * @param <K> type of map keys
    * @param <V> type of map values
    * @param m a map
@@ -449,6 +475,10 @@ public final class MapsP {
   /**
    * Convert a map to a multi-line string representation, which includes the runtime class of keys
    * and values. The last line does not end with a line separator.
+   *
+   * <p>Each line has the form "{linePrefix}{key} [{key.getClass()}] =&gt; {value}
+   * [{value.getClass()}]", where the "{}" characters indicate interpolation and the "[]" characters
+   * are literally present.
    *
    * @param <K> type of map keys
    * @param <V> type of map values
