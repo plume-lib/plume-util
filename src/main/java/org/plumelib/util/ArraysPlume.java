@@ -4117,7 +4117,8 @@ public final class ArraysPlume {
     /**
      * Returns a new partitioning just like this one, but with elt added to the ith part.
      *
-     * @param i the index of an existing part (0 <= i < size()), or the current size (to create a new part)
+     * @param i the index of an existing part ({@code 0 <= i < size()}), or the current size (to
+     *     create a new part)
      * @param elt the element to add
      * @return a new partitioning just like this one, but with elt added to the ith part
      */
@@ -4135,7 +4136,13 @@ public final class ArraysPlume {
         newPart.add(elt);
         result.set(i, newPart);
       } else {
-        throw new IndexOutOfBoundsException("Invalid index: i=" + i + ", valid range=[0, " + partitioningSize + "], size=" + partitioningSize);
+        throw new IndexOutOfBoundsException(
+            "Invalid index: i="
+                + i
+                + ", valid range=[0, "
+                + partitioningSize
+                + "], size="
+                + partitioningSize);
       }
       return result;
     }
