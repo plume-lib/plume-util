@@ -60,7 +60,7 @@ public final class MathPlumeTest {
     while (itor.hasNext()) {
       v.add(itor.next());
     }
-    @ArrayLen("v.size()") int[] a = new int[v.size()];
+    int[] a = new int[v.size()];
     for (int i = 0; i < a.length; i++) {
       Integer value = v.get(i);
       a[i] = value.intValue();
