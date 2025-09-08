@@ -3,7 +3,6 @@ package org.plumelib.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import org.checkerframework.checker.index.qual.LTLengthOf;
 
 /**
  * RandomSelector selects k elements uniformly at random from an arbitrary iterator, using O(k)
@@ -144,7 +143,11 @@ public class RandomSelector<T> {
       if (values.size() < numElts) {
         values.add(next);
       } else {
-        @LTLengthOf("this.values") int rem = generator.nextInt(values.size());
+        int size = values.size();
+        if (size <= 0) {
+          throw new IllegalStateException("values.size() must be positive");
+        }
+        int rem = generator.nextInt(size);
         // values should be MinLen(1), meaning that values.size() is positive.
         values.set(rem, next);
       }
