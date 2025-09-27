@@ -73,7 +73,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
 public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
-    extends AbstractMap<K, V> {
+    extends AbstractMap<K, V> implements Cloneable {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
   // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  That is a bad idea

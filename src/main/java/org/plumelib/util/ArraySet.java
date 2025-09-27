@@ -57,7 +57,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E>
+    implements Cloneable {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
