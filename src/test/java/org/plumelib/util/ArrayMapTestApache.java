@@ -76,7 +76,7 @@ public class ArrayMapTestApache {
   private static class MockMapNull extends AbstractMap {
     @Override
     public Set entrySet(@GuardSatisfied MockMapNull this) {
-      return Collections.emptySet();
+      return null;
     }
 
     @Override

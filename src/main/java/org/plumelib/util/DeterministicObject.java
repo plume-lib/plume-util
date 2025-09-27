@@ -41,7 +41,8 @@ public class DeterministicObject {
   }
 
   @Override
-  public boolean equals(@GuardSatisfied DeterministicObject this, @Nullable Object other) {
+  public boolean equals(
+      @GuardSatisfied DeterministicObject this, @Nullable @GuardSatisfied Object other) {
     return this == other;
   }
 }
