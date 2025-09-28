@@ -172,7 +172,7 @@ public final class CollectionsPlume {
    * @return the values, with duplicates removed
    */
   public static <T> List<T> withoutDuplicates(List<T> values) {
-    Set<T> s = ArraySet.newArraySetOrLinkedHashSet(values);
+    Set<T> s = ArraySet.<T>newArraySetOrLinkedHashSet(values);
     if (values.size() == s.size()) {
       return values;
     } else {

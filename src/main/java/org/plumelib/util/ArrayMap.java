@@ -80,10 +80,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // because it both uses more memory and makes some operations more expensive.
 
   /** The keys. Null if capacity=0. */
-  private @Nullable K @SameLen("values") [] keys;
+  private @Nullable K @Nullable @SameLen("values") [] keys;
 
   /** The values. Null if capacity=0. */
-  private @Nullable V @SameLen("keys") [] values;
+  private @Nullable V @Nullable @SameLen("keys") [] values;
 
   /** The number of used mappings in the representation of this. */
   private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
@@ -260,6 +260,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       values[size] = value;
       size++;
       sizeModificationCount++;
+    } else if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          "put(" + index + ",...) called on ArrayMap of size " + size);
     } else {
       // Replace an existing mapping.
       values[index] = value;
@@ -288,6 +291,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
       return false;
+    }
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          "removeIndex(" + index + ",...) called on ArrayMap of size " + size);
     }
     System.arraycopy(keys, index + 1, keys, index, size - index - 1);
     System.arraycopy(values, index + 1, values, index, size - index - 1);
@@ -393,7 +400,14 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    */
   @Pure
   private @Nullable V getOrNull(@GTENegativeOne int index) {
-    return (index == -1) ? null : values[index];
+    if (index == -1) {
+      return null;
+    }
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          "getOrNull(" + index + ",...) called on ArrayMap of size " + size);
+    }
+    return values[index];
   }
 
   // Modification Operations
@@ -1116,7 +1130,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SideEffectFree
   @Override
   public ArrayMap<K, V> clone() {
-    return new ArrayMap<K, V>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
+    if (keys == null) {
+      return new ArrayMap<K, V>(null, null, size);
+    } else {
+      return new ArrayMap<K, V>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
+    }
   }
 
   /**
