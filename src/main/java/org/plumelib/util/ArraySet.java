@@ -57,7 +57,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E>
+    implements Cloneable {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -89,8 +90,9 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   })
   @SideEffectFree
   public ArraySet(int initialCapacity) {
-    if (initialCapacity < 0)
+    if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+    }
     if (initialCapacity == 0) {
       this.values = null;
     } else {
@@ -445,7 +447,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   @SideEffectFree
   @Override
   public ArraySet<E> clone() {
-    return new ArraySet<E>(Arrays.copyOf(values, size), size);
+    return new ArraySet<>(Arrays.copyOf(values, size), size);
   }
 
   // Extra methods, not specified by `Set`.

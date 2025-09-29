@@ -94,7 +94,7 @@ public final class CollectionsPlume {
   public static <T> boolean hasDuplicates(List<T> a) {
     HashSet<T> hs = new HashSet<>();
     if (a instanceof RandomAccess) {
-      for (int i = 0; i < a.size(); i++) {
+      for (int i = 0; i < a.size(); i++) { // NOPMD: a foreach loop here would be less efficient
         T elt = a.get(i);
         if (!hs.add(elt)) {
           return true;
@@ -339,8 +339,7 @@ public final class CollectionsPlume {
   }
 
   /** All calls to deepEquals that are currently underway. */
-  private static HashSet<WeakIdentityPair<Object, Object>> deepEqualsUnderway =
-      new HashSet<WeakIdentityPair<Object, Object>>();
+  private static HashSet<WeakIdentityPair<Object, Object>> deepEqualsUnderway = new HashSet<>();
 
   /**
    * Determines deep equality for the elements.
@@ -802,7 +801,7 @@ public final class CollectionsPlume {
      * @return a new Replacement
      */
     public static <T> Replacement<T> of(int start, int end, Collection<T> elements) {
-      return new Replacement<T>(start, end, elements);
+      return new Replacement<>(start, end, elements);
     }
 
     @Override
@@ -1126,7 +1125,7 @@ public final class CollectionsPlume {
       throw new Error("Do you really want to create more than 100 million lists?");
     }
 
-    List<List<T>> results = new ArrayList<List<T>>();
+    List<List<T>> results = new ArrayList<>();
 
     for (int i = start; i < objs.size(); i++) {
       if (dims == 1) {
@@ -1183,7 +1182,7 @@ public final class CollectionsPlume {
 
     // Return a list with one zero length element if arity is zero
     if (arity == 0) {
-      results.add(new ArrayList<Integer>());
+      results.add(new ArrayList<>());
       return results;
     }
 

@@ -104,7 +104,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
     if (!itor.hasNext()) {
       return empty();
     }
-    List<E2> list = new ArrayList<E2>();
+    List<E2> list = new ArrayList<>();
     while (itor.hasNext()) {
       list.add(itor.next());
     }
@@ -216,7 +216,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
         return lists.get(0).add(list2elt);
       }
     }
-    return new ListOfLists<E2>(new ArrayList<>(lists));
+    return new ListOfLists<>(new ArrayList<>(lists));
   }
 
   // **************** accessors ****************
@@ -259,7 +259,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
       return singleton(get(fromIndex));
     } else {
       // TODO: ListOfLists and OneMoreElementList can sometimes do better than this.
-      return new SimpleSubList<E>(this, fromIndex, toIndex);
+      return new SimpleSubList<>(this, fromIndex, toIndex);
     }
   }
 
@@ -329,7 +329,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     /** The unique empty list. */
     @SuppressWarnings("rawtypes")
-    public static SIList it = new SimpleEmptyList();
+    public static SIList it = new SimpleEmptyList<>();
 
     /** Creates a new empty list. */
     @SuppressWarnings("value") // class annotation cannot be verified in constructor

@@ -106,7 +106,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
       throw new NoSuchElementException();
     }
 
-    List<T> result = new ArrayList<T>(nextValue);
+    List<T> result = new ArrayList<>(nextValue);
     advanceNext();
     return result;
   }

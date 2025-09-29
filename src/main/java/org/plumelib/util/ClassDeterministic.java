@@ -13,7 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted order.
  */
-public class ClassDeterministic {
+public final class ClassDeterministic {
 
   /** Do not call; this class is a collection of methods and does not represent anything. */
   private ClassDeterministic() {

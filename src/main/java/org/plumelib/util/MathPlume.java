@@ -893,7 +893,7 @@ public final class MathPlume {
       if (i == avalue) {
         continue;
       }
-      modulus = MathPlume.gcd(modulus, Math.abs(avalue - i));
+      modulus = gcd(modulus, Math.abs(avalue - i));
       count++;
       if (modulus == 1) {
         return null;
@@ -902,7 +902,7 @@ public final class MathPlume {
     if (count < 3) {
       return null;
     }
-    return new int[] {MathPlume.modNonnegative(avalue, modulus), modulus};
+    return new int[] {modNonnegative(avalue, modulus), modulus};
   }
 
   /**
@@ -956,7 +956,7 @@ public final class MathPlume {
       }
     }
 
-    int r = MathPlume.modNonnegative(nums[firstIndex], modulus);
+    int r = modNonnegative(nums[firstIndex], modulus);
     if (nonstrictEnds) {
       if ((r != modNonnegative(firstNonstrict, modulus))
           || (r != modNonnegative(lastNonstrict, modulus))) {
@@ -1022,7 +1022,7 @@ public final class MathPlume {
       return null;
     }
 
-    int r = MathPlume.modNonnegative(next, modulus);
+    int r = modNonnegative(next, modulus);
     if (nonstrictEnds) {
       if ((r != modNonnegative(firstNonstrict, modulus))
           || (r != modNonnegative(lastNonstrict, modulus))) {
@@ -1045,7 +1045,7 @@ public final class MathPlume {
    * @deprecated use {@link #modNonnegative(long, long)}
    */
   @Deprecated // 2020-02-20
-  // @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports =
+  // @InlineMe(replacement = "modNonnegative(x, y)", imports =
   // "org.plumelib.util.MathPlume")
   @Pure
   @StaticallyExecutable
@@ -1137,7 +1137,7 @@ public final class MathPlume {
       if (i == avalue) {
         continue;
       }
-      modulus = MathPlume.gcd(modulus, Math.abs(avalue - i));
+      modulus = gcd(modulus, Math.abs(avalue - i));
       count++;
       if (modulus == 1) {
         return null;
@@ -1146,7 +1146,7 @@ public final class MathPlume {
     if (count < 3) {
       return null;
     }
-    return new long[] {MathPlume.modNonnegative(avalue, modulus), modulus};
+    return new long[] {modNonnegative(avalue, modulus), modulus};
   }
 
   /**
@@ -1274,7 +1274,7 @@ public final class MathPlume {
       return null;
     }
 
-    long r = MathPlume.modNonnegative(next, modulus);
+    long r = modNonnegative(next, modulus);
     if (nonstrictEnds) {
       if ((r != modNonnegative(firstNonstrict, modulus))
           || (r != modNonnegative(lastNonstrict, modulus))) {
@@ -1309,12 +1309,12 @@ public final class MathPlume {
     int sizeEstimate = max - min + 1 - nums.length;
     List<Integer> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
     int val = min;
-    for (int i = 0; i < nums.length; i++) {
-      while (val < nums[i]) {
+    for (int elt : nums) {
+      while (val < elt) {
         resultList.add(val);
         val++;
       }
-      if (val == nums[i]) {
+      if (val == elt) {
         val++;
       }
     }
@@ -1514,7 +1514,7 @@ public final class MathPlume {
     // nonmodulusStrict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
     // modulusStrict.
     CollectionsPlume.RemoveFirstAndLastIterator<Integer> missingNums =
-        new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(missing);
+        new CollectionsPlume.RemoveFirstAndLastIterator<>(missing);
     int[] result = modulusStrictInt(missingNums, false);
     if (result == null) {
       return result;
@@ -1603,8 +1603,8 @@ public final class MathPlume {
       // System.out.println("Trying m=" + m);
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
-      for (int i = 0; i < nums.length; i++) {
-        @IndexFor("hasModulus") int rem = modNonnegative(nums[i], m);
+      for (int elt : nums) {
+        @IndexFor("hasModulus") int rem = modNonnegative(elt, m);
         if (!hasModulus[rem]) {
           hasModulus[rem] = true;
           numNonmodulus--;
@@ -1647,12 +1647,12 @@ public final class MathPlume {
     int sizeEstimate = ((int) (max - min + 1 - nums.length));
     List<Long> resultList = new ArrayList<>(sizeEstimate < 1 ? 1 : sizeEstimate);
     long val = min;
-    for (int i = 0; i < nums.length; i++) {
-      while (val < nums[i]) {
+    for (long elt : nums) {
+      while (val < elt) {
         resultList.add(val);
         val++;
       }
-      if (val == nums[i]) {
+      if (val == elt) {
         val++;
       }
     }
@@ -1943,8 +1943,8 @@ public final class MathPlume {
       // System.out.println("Trying m=" + m);
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
-      for (int i = 0; i < nums.length; i++) {
-        @IndexFor("hasModulus") int rem = (int) modNonnegative(nums[i], m);
+      for (long elt : nums) {
+        @IndexFor("hasModulus") int rem = (int) modNonnegative(elt, m);
         if (!hasModulus[rem]) {
           hasModulus[rem] = true;
           numNonmodulus--;

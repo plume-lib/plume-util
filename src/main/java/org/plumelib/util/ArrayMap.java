@@ -73,7 +73,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
 public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
-    extends AbstractMap<K, V> {
+    extends AbstractMap<K, V> implements Cloneable {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
   // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  That is a bad idea
@@ -111,8 +111,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   })
   @SideEffectFree
   public ArrayMap(int initialCapacity) {
-    if (initialCapacity < 0)
+    if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+    }
     if (initialCapacity == 0) {
       this.keys = null;
       this.values = null;
@@ -692,6 +693,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // iterators
 
   /** An iterator over the ArrayMap. */
+  @SuppressWarnings(
+      "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
+  )
   abstract class ArrayMapIterator {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
@@ -1116,7 +1120,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SideEffectFree
   @Override
   public ArrayMap<K, V> clone() {
-    return new ArrayMap<K, V>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
+    return new ArrayMap<>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
   }
 
   /**
