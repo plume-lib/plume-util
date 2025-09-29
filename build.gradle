@@ -11,6 +11,10 @@ plugins {
   // Error Prone linter
   id('net.ltgt.errorprone') version '4.3.0'
 
+  // TODO: reinstate when all PMD warnings have been addressed
+  // // PMD linter
+  // id 'pmd'
+
   // Checker Framework pluggable type-checking
   id 'org.checkerframework' version '0.6.59'
 }
@@ -111,6 +115,18 @@ tasks.withType(JavaCompile).configureEach {
   }
   options.errorprone.enabled = isJava17orHigher
 }
+
+// Temporary, until PMD is ready to merge.
+// // PMD linter
+//
+// pmd {
+//   toolVersion = "7.17.0"
+//   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
+//   consoleOutput = true
+//   ignoreFailures = false
+//   incrementalAnalysis = true
+// }
+
 
 // Checker Framework pluggable type-checking
 

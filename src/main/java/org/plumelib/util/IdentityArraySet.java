@@ -36,7 +36,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E>
+    implements Cloneable {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -359,7 +360,11 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SideEffectFree
   @Override
   public IdentityArraySet<E> clone() {
-    return new IdentityArraySet<E>(Arrays.copyOf(values, size), size);
+    if (values == null) {
+      return new IdentityArraySet<E>(null, size);
+    } else {
+      return new IdentityArraySet<E>(Arrays.copyOf(values, size), size);
+    }
   }
 
   /**
