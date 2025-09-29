@@ -74,7 +74,7 @@ public final class ClassDeterministic {
    *
    * @param <T> the class's type parameter
    * @param c the Class whose enum constants to return
-   * @return the class's enum constants
+   * @return the class's enum constants, or null if the argument is not an enum class
    */
   @SuppressWarnings("signedness") // ToStringComparator problem
   public static <@Interned T> T @Nullable [] getEnumConstants(Class<T> c) {
