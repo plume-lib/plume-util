@@ -476,7 +476,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     if (values == null) {
       return new ArraySet<>(null, 0);
     } else {
-      return new ArraySet<>(Arrays.copyOf(values, size), size);
+      return new ArraySet<E>(Arrays.copyOf(values, size), size); // NOPMD: CF cannot infer type arg
     }
   }
 
