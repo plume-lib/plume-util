@@ -116,7 +116,7 @@ tasks.withType(JavaCompile).configureEach {
   options.errorprone.enabled = isJava17orHigher
 }
 
-// Temporary, until PMD is ready to merge.
+// Temporary, until PMD warnings are addressed.kis ready to merge.
 // // PMD linter
 //
 // pmd {
