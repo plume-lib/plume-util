@@ -239,7 +239,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // Private helper functions
 
   /**
-   * Adds the (key, value) mapping to this.
+   * Adds a (key, value) mapping to this.
    *
    * @param index the index of {@code key} in {@code keys}. If -1, add a new mapping. Otherwise,
    *     replace the mapping at {@code index}.
@@ -259,11 +259,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       values[size] = value;
       size++;
       sizeModificationCount++;
-    } else if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(
-          "put(" + index + ",...) called on ArrayMap of size " + size);
     } else {
       // Replace an existing mapping.
+      assertIndexInBounds(index, "put");
       values[index] = value;
     }
   }
@@ -279,6 +277,19 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return 0;
     } else {
       return keys.length;
+    }
+  }
+
+  /**
+   * Throws an IndexOutOfBoundsException if the index is invalid.
+   *
+   * @param index an index into this
+   * @param the method that will use the index
+   */
+  private assertIndexInBounds(int index, String method) {
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          method + "(" + index + ",...) called on ArrayMap of size " + size);
     }
   }
 
@@ -306,10 +317,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (index == -1) {
       return false;
     }
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(
-          "removeIndex(" + index + ",...) called on ArrayMap of size " + size);
-    }
+    assertIndexInBounds(index, "removeIndex");
     System.arraycopy(keys, index + 1, keys, index, size - index - 1);
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
@@ -417,10 +425,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (index == -1) {
       return null;
     }
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException(
-          "getOrNull(" + index + ",...) called on ArrayMap of size " + size);
-    }
+    assertIndexInBounds(index, "getOrNull");
     return values[index];
   }
 

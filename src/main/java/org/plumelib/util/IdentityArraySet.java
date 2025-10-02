@@ -106,7 +106,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   /**
    * Constructs a new {@code IdentityArraySet} with the same elements as the given collection.
    *
-   * @param m the collection whose elements are to be placed in the new set
+   * @param c the collection whose elements are to be placed in the new set
    * @throws NullPointerException if the given set is null
    */
   @SuppressWarnings({
@@ -116,9 +116,9 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     // https://github.com/typetools/checker-framework/issues/979 ?
   })
   @SideEffectFree
-  public IdentityArraySet(Collection<? extends E> m) {
-    this(m.size());
-    addAll(m);
+  public IdentityArraySet(Collection<? extends E> c) {
+    this(c.size());
+    addAll(c);
   }
 
   // Private helper functions
@@ -138,22 +138,36 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     }
 
     // Add a new element.
-    if ((size == 0 && values == null) || (size == values.length)) {
-      grow();
-    }
+    grow();
+    assertIndexInBounds(index, "add");
+
     values[size] = value;
     size++;
     sizeModificationCount++;
     return true;
   }
 
-  /** Increases the capacity of the array. */
+  /**
+   * Throws an IndexOutOfBoundsException if the index is invalid.
+   *
+   * @param index an index into this
+   * @param the method that will use the index
+   */
+  private assertIndexInBounds(int index, String method) {
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          method + "(" + index + ",...) called on IdentityArraySet of size " + size);
+    }
+  }
+
+  /** Increases the capacity of the array, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
   private void grow() {
-    if (values == null) {
+    int capacity = capacity();
+    if (capacity == 0) {
       this.values = (E[]) new Object[4];
-    } else {
-      int newCapacity = 2 * values.length;
+    } else if (size == capacity) {
+      int newCapacity = 2 * capacity;
       values = Arrays.copyOf(values, newCapacity);
     }
   }
@@ -168,6 +182,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     if (index == -1) {
       return false;
     }
+    assertIndexInBounds(index, "removeIndex");
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
     sizeModificationCount++;
