@@ -60,7 +60,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
    */
   public static <T1 extends @NonNull Object, T2 extends @NonNull Object>
       WeakIdentityPair<T1, T2> of(T1 a, T2 b) {
-    return new WeakIdentityPair<T1, T2>(a, b);
+    return new WeakIdentityPair<>(a, b);
   }
 
   /**

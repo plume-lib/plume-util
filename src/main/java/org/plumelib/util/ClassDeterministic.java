@@ -13,7 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted order.
  */
-public class ClassDeterministic {
+public final class ClassDeterministic {
 
   /** Do not call; this class is a collection of methods and does not represent anything. */
   private ClassDeterministic() {
@@ -74,7 +74,7 @@ public class ClassDeterministic {
    *
    * @param <T> the class's type parameter
    * @param c the Class whose enum constants to return
-   * @return the class's enum constants
+   * @return the class's enum constants, or null if the argument is not an enum class
    */
   @SuppressWarnings("signedness") // ToStringComparator problem
   public static <@Interned T> T @Nullable [] getEnumConstants(Class<T> c) {

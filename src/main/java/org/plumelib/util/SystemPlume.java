@@ -267,7 +267,7 @@ public final class SystemPlume {
    * @return a GC usage message string, or null
    */
   public static @Nullable String gcUsageMessage(double cpuThreshold, int seconds) {
-    double gcPercentage = SystemPlume.gcPercentage(seconds);
+    double gcPercentage = gcPercentage(seconds);
     if (gcPercentage < cpuThreshold) {
       return null;
     } else {

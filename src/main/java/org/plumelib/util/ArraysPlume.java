@@ -465,8 +465,8 @@ public final class ArraysPlume {
   @StaticallyExecutable
   public static int sum(int[] a) {
     int sum = 0;
-    for (int i = 0; i < a.length; i++) {
-      sum += a[i];
+    for (int val : a) {
+      sum += val;
     }
     return sum;
   }
@@ -481,8 +481,8 @@ public final class ArraysPlume {
   @StaticallyExecutable
   public static int sum(int[][] a) {
     int sum = 0;
-    for (int i = 0; i < a.length; i++) {
-      for (int j = 0; j < a[i].length; j++) {
+    for (int i = 0; i < a.length; i++) { // NOPMD: foreach loop is less clear here
+      for (int j = 0; j < a[i].length; j++) { // NOPMD: foreach loop is less clear here
         sum += a[i][j];
       }
     }
@@ -499,8 +499,8 @@ public final class ArraysPlume {
   @StaticallyExecutable
   public static double sum(double[] a) {
     double sum = 0;
-    for (int i = 0; i < a.length; i++) {
-      sum += a[i];
+    for (double val : a) {
+      sum += val;
     }
     return sum;
   }
@@ -515,8 +515,8 @@ public final class ArraysPlume {
   @StaticallyExecutable
   public static double sum(double[][] a) {
     double sum = 0;
-    for (int i = 0; i < a.length; i++) {
-      for (int j = 0; j < a[i].length; j++) {
+    for (int i = 0; i < a.length; i++) { // NOPMD: foreach loop is less clear here
+      for (int j = 0; j < a[i].length; j++) { // NOPMD: foreach loop is less clear here
         sum += a[i][j];
       }
     }
@@ -1754,7 +1754,8 @@ public final class ArraysPlume {
     @Nullable List<T> theList = null;
 
     /**
-     * Creates a ListOrArray that wraps an array.
+     * Creates a ListOrArray that wraps an array. The argument is stored directly, so the client
+     * must not use it after constructing the ListOrArray.
      *
      * @param theArray the delegate that will be wrapped
      */
@@ -1763,7 +1764,8 @@ public final class ArraysPlume {
     }
 
     /**
-     * Creates a ListOrArray that wraps a list.
+     * Creates a ListOrArray that wraps a list. The argument is stored directly, so the client must
+     * not use it after constructing the ListOrArray.
      *
      * @param theList the delegate that will be wrapped
      */
@@ -1814,7 +1816,9 @@ public final class ArraysPlume {
     }
 
     /**
-     * Returns an array with the same contents as this.
+     * Returns an array with the same contents as this. The result may or may not alias the internal
+     * representation of the ListOrArray, so it should not be modified by the caller while the
+     * ListOrArray is in use.
      *
      * @return an array with the same contents as this
      */
@@ -1916,7 +1920,7 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T extends @Nullable Object> T[] concat(T @Nullable [] a, T @Nullable [] b) {
-    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
+    return concat(new ListOrArray<>(a), new ListOrArray<>(b));
   }
 
   /**
@@ -1929,7 +1933,7 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T extends @Nullable Object> T[] concat(T @Nullable [] a, @Nullable List<T> b) {
-    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
+    return concat(new ListOrArray<>(a), new ListOrArray<>(b));
   }
 
   /**
@@ -1942,7 +1946,7 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T extends @Nullable Object> T[] concat(@Nullable List<T> a, T @Nullable [] b) {
-    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
+    return concat(new ListOrArray<>(a), new ListOrArray<>(b));
   }
 
   /**
@@ -1954,7 +1958,7 @@ public final class ArraysPlume {
    * @return an array that concatenates the arguments
    */
   public static <T extends @Nullable Object> T[] concat(@Nullable List<T> a, @Nullable List<T> b) {
-    return concat(new ListOrArray<T>(a), new ListOrArray<T>(b));
+    return concat(new ListOrArray<>(a), new ListOrArray<>(b));
   }
 
   /**
@@ -2275,10 +2279,9 @@ public final class ArraysPlume {
    *
    * @param a an array
    * @return the length of the array
-   * @throws IllegalArgumentException if obj is null or is not an array
    */
   @Pure
-  public static @NonNegative int length(@Nullable Object a) throws IllegalArgumentException {
+  public static @NonNegative int length(Object a) throws IllegalArgumentException {
     if (a == null) {
       throw new IllegalArgumentException("Argument is null");
     } else if (a instanceof boolean[]) {
@@ -2375,8 +2378,7 @@ public final class ArraysPlume {
       return "null";
     }
     StringJoiner sj = new StringJoiner(", ", "[", "]");
-    for (int i = 0; i < a.length; i++) {
-      Object elt = a[i];
+    for (Object elt : a) {
       if (quoted && elt instanceof String) {
         sj.add("\"" + StringsPlume.escapeJava((String) elt) + "\"");
       } else {
@@ -2559,8 +2561,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(boolean[] a) {
     Set<Boolean> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (boolean elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2610,8 +2612,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(byte[] a) {
     Set<Byte> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (byte elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2661,8 +2663,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(char[] a) {
     Set<Character> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (char elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2712,8 +2714,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(float[] a) {
     Set<Float> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (float elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2763,8 +2765,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(short[] a) {
     Set<Short> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (short elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2814,8 +2816,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(int[] a) {
     Set<Integer> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (int elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2865,8 +2867,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(double[] a) {
     Set<Double> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (double elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2918,8 +2920,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(long[] a) {
     Set<Long> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (long elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -2969,8 +2971,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(String[] a) {
     HashSet<String> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (String elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -3020,8 +3022,8 @@ public final class ArraysPlume {
   @Pure
   public static boolean hasDuplicates(Object[] a) {
     HashSet<Object> hs = new HashSet<>();
-    for (int i = 0; i < a.length; i++) {
-      if (!hs.add(a[i])) {
+    for (Object elt : a) {
+      if (!hs.add(elt)) {
         return true;
       }
     }
@@ -3075,7 +3077,7 @@ public final class ArraysPlume {
   public static <T> boolean noDuplicates(List<T> a) {
     if (a instanceof RandomAccess) {
       HashSet<T> hs = new HashSet<>();
-      for (int i = 0; i < a.size(); i++) {
+      for (int i = 0; i < a.size(); i++) { // NOPMD: for loop is more efficient than foreach loop
         T elt = a.get(i);
         if (!hs.add(elt)) {
           return false;
@@ -3106,14 +3108,13 @@ public final class ArraysPlume {
   @SuppressWarnings("allcheckers:purity") // side effect to local state (array)
   @Pure
   public static boolean fnIsPermutation(int[] a) {
-    // In the common case we expect to succeed, so use as few loops as possible
-    boolean[] see = new boolean[a.length];
-    for (int i = 0; i < a.length; i++) {
-      int n = a[i];
-      if (n < 0 || n >= a.length || see[n]) {
+    // In the common case we expect to succeed, so use as few loops as possible.
+    boolean[] seen = new boolean[a.length];
+    for (int elt : a) {
+      if (elt < 0 || elt >= a.length || seen[elt]) {
         return false;
       }
-      see[n] = true;
+      seen[elt] = true;
     }
     return true;
   }
@@ -3252,12 +3253,12 @@ public final class ArraysPlume {
   public static boolean isSubset(@PolySigned long[] smaller, @PolySigned long[] bigger) {
     Set<@PolySigned Long> setBigger = new HashSet<>();
 
-    for (int i = 0; i < bigger.length; i++) {
-      setBigger.add(bigger[i]);
+    for (Long elt : bigger) {
+      setBigger.add(elt);
     }
 
-    for (int i = 0; i < smaller.length; i++) {
-      if (!setBigger.contains(smaller[i])) {
+    for (Long elt : smaller) {
+      if (!setBigger.contains(elt)) {
         return false;
       }
     }
@@ -3283,12 +3284,12 @@ public final class ArraysPlume {
   public static boolean isSubset(double[] smaller, double[] bigger) {
     Set<Double> setBigger = new HashSet<>();
 
-    for (int i = 0; i < bigger.length; i++) {
-      setBigger.add(bigger[i]);
+    for (double elt : bigger) {
+      setBigger.add(elt);
     }
 
-    for (int i = 0; i < smaller.length; i++) {
-      if (!setBigger.contains(smaller[i])) {
+    for (double elt : smaller) {
+      if (!setBigger.contains(elt)) {
         return false;
       }
     }
@@ -3314,12 +3315,12 @@ public final class ArraysPlume {
   public static boolean isSubset(String[] smaller, String[] bigger) {
     Set<String> setBigger = new HashSet<>();
 
-    for (int i = 0; i < bigger.length; i++) {
-      setBigger.add(bigger[i]);
+    for (String elt : bigger) {
+      setBigger.add(elt);
     }
 
-    for (int i = 0; i < smaller.length; i++) {
-      if (!setBigger.contains(smaller[i])) {
+    for (String elt : smaller) {
+      if (!setBigger.contains(elt)) {
         return false;
       }
     }
@@ -3930,8 +3931,8 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean allNull(@PolyNull Object[] a) {
-    for (int i = 0; i < a.length; i++) {
-      if (!(a[i] == null)) {
+    for (Object elt : a) {
+      if (!(elt == null)) {
         return false;
       }
     }
@@ -3961,8 +3962,8 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean allNull(List<?> a) {
-    for (int i = 0; i < a.size(); i++) {
-      if (!(a.get(i) == null)) {
+    for (Object elt : a) {
+      if (!(elt == null)) {
         return false;
       }
     }
@@ -3985,7 +3986,7 @@ public final class ArraysPlume {
    */
   public static <T extends @NonNull Object> List<Partitioning<T>> partitionInto(
       Collection<T> elts, @NonNegative int k) {
-    return partitionInto(new ArrayDeque<T>(elts), k);
+    return partitionInto(new ArrayDeque<>(elts), k);
   }
 
   /**
@@ -4003,7 +4004,7 @@ public final class ArraysPlume {
     if (elts.size() < k) {
       throw new IllegalArgumentException();
     }
-    return partitionIntoHelper(elts, Arrays.asList(new Partitioning<T>()), k, 0);
+    return partitionIntoHelper(elts, Arrays.asList(new Partitioning<>()), k, 0);
   }
 
   /**
@@ -4034,14 +4035,14 @@ public final class ArraysPlume {
       return resultSoFar;
     }
 
-    Queue<T> eltsRemaining = new ArrayDeque<T>(elts);
+    Queue<T> eltsRemaining = new ArrayDeque<>(elts);
     T elt = eltsRemaining.remove();
 
-    List<Partitioning<T>> result = new ArrayList<Partitioning<T>>();
+    List<Partitioning<T>> result = new ArrayList<>();
 
     // Put elt in an existing part in the partitioning.
     if (elts.size() > numEmptyParts) {
-      List<Partitioning<T>> resultSoFar_augmented = new ArrayList<Partitioning<T>>();
+      List<Partitioning<T>> resultSoFar_augmented = new ArrayList<>();
       for (int i = 0; i < numNonemptyParts; i++) {
         for (Partitioning<T> p : resultSoFar) {
           resultSoFar_augmented.add(p.addToPart(i, elt));
@@ -4054,7 +4055,7 @@ public final class ArraysPlume {
 
     // Put elt in a newly-created part in the partitioning.
     if (numEmptyParts > 0) {
-      List<Partitioning<T>> resultSoFar_augmented = new ArrayList<Partitioning<T>>();
+      List<Partitioning<T>> resultSoFar_augmented = new ArrayList<>();
       for (Partitioning<T> p : resultSoFar) {
         resultSoFar_augmented.add(p.addToPart(numNonemptyParts, elt));
       }
@@ -4205,7 +4206,7 @@ public final class ArraysPlume {
       List<FROM> list = (List<FROM>) iterable;
       int len = list.size();
       @SuppressWarnings("unchecked") // reflection
-      TO[] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, len);
+      TO[] result = (TO[]) Array.newInstance(toClass, len);
       for (int i = 0; i < result.length; i++) {
         result[i] = f.apply(list.get(i));
       }
@@ -4216,7 +4217,7 @@ public final class ArraysPlume {
       @SuppressWarnings("unchecked") // checked just above
       int len = ((Collection<?>) iterable).size();
       @SuppressWarnings("unchecked") // reflection
-      TO[] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, len);
+      TO[] result = (TO[]) Array.newInstance(toClass, len);
       if (result.length == 0) {
         return result;
       }
@@ -4231,7 +4232,7 @@ public final class ArraysPlume {
     List<TO> resultList = CollectionsPlume.mapList(f, iterable);
     int len = ((Collection<?>) iterable).size();
     @SuppressWarnings("unchecked") // reflection
-    TO[] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, len);
+    TO[] result = (TO[]) Array.newInstance(toClass, len);
     for (int i = 0; i < result.length; i++) {
       result[i] = resultList.get(i);
     }
@@ -4275,7 +4276,7 @@ public final class ArraysPlume {
       TO[] mapArray(Function<? super FROM, ? extends TO> f, FROM[] a, Class<TO> toClass) {
 
     @SuppressWarnings({"unchecked", "samelen:assignment"}) // reflection
-    TO @SameLen("a") [] result = (TO[]) java.lang.reflect.Array.newInstance(toClass, a.length);
+    TO @SameLen("a") [] result = (TO[]) Array.newInstance(toClass, a.length);
     for (int i = 0; i < a.length; i++) {
       result[i] = f.apply(a[i]);
     }

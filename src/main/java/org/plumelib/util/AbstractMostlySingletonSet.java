@@ -109,7 +109,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
       case EMPTY:
         return Collections.emptyIterator();
       case SINGLETON:
-        return new Iterator<T>() {
+        return new Iterator<T>() { // NOPMD: remove when upgrading to Java 9
           /** True if the iterator has a next element. */
           private boolean hasNext = true;
 

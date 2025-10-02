@@ -130,8 +130,8 @@ public class MultiRandSelector<T extends @Nullable Object> {
     if (delegation == null) {
       delegation =
           (coinTossMode
-              ? new RandomSelector<T>(keepProbability, r)
-              : new RandomSelector<T>(numElts, r));
+              ? new RandomSelector<>(keepProbability, r)
+              : new RandomSelector<>(numElts, r));
       map.put(equivClass, delegation);
     }
     delegation.accept(next);

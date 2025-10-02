@@ -75,12 +75,12 @@ public final class GraphPlume {
       if (preds.get(node).isEmpty()) {
         // This is a root.  Its only dominator is itself.
         Set<T> set = Collections.singleton(node);
-        dom.put(node, new ArrayList<T>(set));
+        dom.put(node, new ArrayList<>(set));
         roots.add(node);
       } else {
         // Initially, set all nodes as dominators;
         // will later remove nodes that aren't dominators.
-        dom.put(node, new ArrayList<T>(nodes));
+        dom.put(node, new ArrayList<>(nodes));
         nonRoots.add(node);
       }
     }
@@ -109,7 +109,7 @@ public final class GraphPlume {
           @NonNull List<T> domOfPred = dom.get(pred);
           if (newDoms == null) {
             // make copy because we may side-effect newDoms
-            newDoms = new ArrayList<T>(domOfPred);
+            newDoms = new ArrayList<>(domOfPred);
           } else {
             newDoms.retainAll(domOfPred);
           }
