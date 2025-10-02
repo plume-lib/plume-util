@@ -139,12 +139,24 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
     // Add a new element.
     grow();
-    assertIndexInBounds(index, "add");
-
     values[size] = value;
     size++;
     sizeModificationCount++;
     return true;
+  }
+
+  /**
+   * Returns the capacity of this map.
+   *
+   * @return the capacity of this map
+   */
+  @Pure
+  private int capacity() {
+    if (values == null) {
+      return 0;
+    } else {
+      return values.length;
+    }
   }
 
   /**
