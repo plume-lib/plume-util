@@ -40,6 +40,13 @@ public class DeterministicObject {
     return uid;
   }
 
+  /**
+   * Returns true if this object is the same instance as the given object. Two distinct {@code
+   * DeterministicObject} objects are never equal.
+   *
+   * @param other a value to compare to this
+   * @return true if this is the same as the given object
+   */
   @Override
   public boolean equals(
       @GuardSatisfied DeterministicObject this, @Nullable @GuardSatisfied Object other) {
