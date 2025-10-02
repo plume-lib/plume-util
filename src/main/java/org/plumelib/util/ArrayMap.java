@@ -254,9 +254,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       // Add a new mapping.
-      if ((size == 0 && keys == null) || (size == keys.length)) {
-        grow();
-      }
+      grow();
       keys[size] = key;
       values[size] = value;
       size++;
@@ -270,14 +268,29 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
   }
 
-  /** Increases the capacity of the arrays. */
+  /**
+   * Returns the capacity of this map.
+   *
+   * @return the capacity of this map
+   */
+  @Pure
+  private int capacity() {
+    if (keys == null) {
+      return 0;
+    } else {
+      return keys.length;
+    }
+  }
+
+  /** Increases the capacity of the arrays, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
   private void grow() {
-    if (keys == null) {
+    int capacity = capacity();
+    if (capacity == 0) {
       this.keys = (K[]) new Object[4];
       this.values = (V[]) new Object[4];
-    } else {
-      int newCapacity = 2 * keys.length;
+    } else if (size == capacity) {
+      int newCapacity = 2 * capacity;
       keys = Arrays.copyOf(keys, newCapacity);
       values = Arrays.copyOf(values, newCapacity);
     }
