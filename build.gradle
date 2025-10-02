@@ -11,7 +11,7 @@ plugins {
   // Error Prone linter
   id('net.ltgt.errorprone') version '4.3.0'
 
-  // TODO: reinstate when all PMD warnings have been addressed
+  // TODO: reinstate when all PMD warnings have been addressed.
   // // PMD linter
   // id 'pmd'
 
@@ -116,7 +116,7 @@ tasks.withType(JavaCompile).configureEach {
   options.errorprone.enabled = isJava17orHigher
 }
 
-// Temporary, until PMD warnings are addressed.kis ready to merge.
+// TODO: reinstate when all PMD warnings have been addressed.
 // // PMD linter
 //
 // pmd {
