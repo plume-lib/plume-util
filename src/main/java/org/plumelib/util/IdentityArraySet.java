@@ -153,7 +153,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @param index an index into this
    * @param the method that will use the index
    */
-  private assertIndexInBounds(int index, String method) {
+  private void assertIndexInBounds(int index, String method) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException(
           method + "(" + index + ",...) called on IdentityArraySet of size " + size);

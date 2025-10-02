@@ -286,7 +286,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param index an index into this
    * @param the method that will use the index
    */
-  private assertIndexInBounds(int index, String method) {
+  private void assertIndexInBounds(int index, String method) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException(
           method + "(" + index + ",...) called on ArrayMap of size " + size);
