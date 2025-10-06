@@ -163,8 +163,9 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * Throws an IndexOutOfBoundsException if the index is invalid.
    *
    * @param index an index into this
-   * @param the method that will use the index
+   * @param method the method that will use the index
    */
+  @SideEffectFree
   private void assertIndexInBounds(int index, String method) {
     if (index < 0 || index >= size) {
       throw new IndexOutOfBoundsException(
