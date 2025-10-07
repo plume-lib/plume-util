@@ -1156,7 +1156,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public ArrayMap<K, V> clone() {
     if (keys == null) {
-      return new ArrayMap<>(null, null, size);
+      return new ArrayMap<>(null, null, 0);
     } else {
       return new ArrayMap<>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
     }
