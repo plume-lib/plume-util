@@ -14,6 +14,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -175,6 +176,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   /** Increases the capacity of the array, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
+  @EnsuresNonNull("values")
   private void grow() {
     int capacity = capacity();
     if (capacity == 0) {
