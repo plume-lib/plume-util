@@ -392,7 +392,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @Override
   public IdentityArraySet<E> clone() {
     if (values == null) {
-      return new IdentityArraySet<>(null, size);
+      return new IdentityArraySet<>(null, 0);
     } else {
       return new IdentityArraySet<>(Arrays.copyOf(values, size), size);
     }
