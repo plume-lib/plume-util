@@ -146,9 +146,9 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   /**
-   * Returns the capacity of this map.
+   * Returns the capacity of this set.
    *
-   * @return the capacity of this map
+   * @return the capacity of this set
    */
   @Pure
   private int capacity() {
