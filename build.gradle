@@ -16,7 +16,7 @@ plugins {
   // id 'pmd'
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.59'
+  id 'org.checkerframework' version '0.6.60'
 }
 
 repositories {
