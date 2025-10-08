@@ -1456,7 +1456,7 @@ public final class CollectionsPlume {
    * of iterators.
    *
    * @param <T> the type of elements of the iterator
-   * @deprecated use {@code mergediterator()}
+   * @deprecated use {@link #mergedIterator(Iterable)} or {@link #mergedIterator(Iterator)}
    */
   @Deprecated // make package-private
   public static final class MergedIterator<T> implements Iterator<T> {
