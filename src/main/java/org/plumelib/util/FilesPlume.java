@@ -1325,6 +1325,7 @@ public final class FilesPlume {
         nextByte = is.read();
         utf8Bytes[i] = (byte) nextByte;
       }
+      // Cannot use just `StandardCharsets.UTF_8` because of Index Checker dependent types.
       int codePoint = new String(utf8Bytes, StandardCharsets.UTF_8).codePointAt(0);
       return codePoint;
     } catch (IOException e) {
@@ -1343,10 +1344,22 @@ public final class FilesPlume {
    * @throws IllegalArgumentException if the bit pattern is invalid
    */
   private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) throws IllegalArgumentException {
-    if ((b >= 0)) return 1; // Pattern is 0xxxxxxx.
-    if ((b >= (byte) 0b11000000) && (b <= (byte) 0b11011111)) return 2; // Pattern is 110xxxxx.
-    if ((b >= (byte) 0b11100000) && (b <= (byte) 0b11101111)) return 3; // Pattern is 1110xxxx.
-    if ((b >= (byte) 0b11110000) && (b <= (byte) 0b11110111)) return 4; // Pattern is 11110xxx.
+    if ((b >= 0)) {
+      // Pattern is 0xxxxxxx.
+      return 1;
+    }
+    if ((b >= (byte) 0b11000000) && (b <= (byte) 0b11011111)) {
+      // Pattern is 110xxxxx.
+      return 2;
+    }
+    if ((b >= (byte) 0b11100000) && (b <= (byte) 0b11101111)) {
+      // Pattern is 1110xxxx.
+      return 3;
+    }
+    if ((b >= (byte) 0b11110000) && (b <= (byte) 0b11110111)) {
+      // Pattern is 11110xxx.
+      return 4;
+    }
     throw new IllegalArgumentException(); // Invalid first byte for UTF-8 character.
   }
 }

@@ -14,6 +14,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -36,7 +37,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "lock", // not yet annotated for the Lock Checker
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
-public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E>
+    implements Cloneable {
 
   /** The values. Null if capacity=0. */
   private @Nullable E[] values;
@@ -68,8 +70,9 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   })
   @SideEffectFree
   public IdentityArraySet(int initialCapacity) {
-    if (initialCapacity < 0)
+    if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+    }
     if (initialCapacity == 0) {
       this.values = null;
     } else {
@@ -104,7 +107,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   /**
    * Constructs a new {@code IdentityArraySet} with the same elements as the given collection.
    *
-   * @param m the collection whose elements are to be placed in the new set
+   * @param c the collection whose elements are to be placed in the new set
    * @throws NullPointerException if the given set is null
    */
   @SuppressWarnings({
@@ -114,9 +117,9 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     // https://github.com/typetools/checker-framework/issues/979 ?
   })
   @SideEffectFree
-  public IdentityArraySet(Collection<? extends E> m) {
-    this(m.size());
-    addAll(m);
+  public IdentityArraySet(Collection<? extends E> c) {
+    this(c.size());
+    addAll(c);
   }
 
   // Private helper functions
@@ -136,22 +139,50 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     }
 
     // Add a new element.
-    if ((size == 0 && values == null) || (size == values.length)) {
-      grow();
-    }
+    grow();
     values[size] = value;
     size++;
     sizeModificationCount++;
     return true;
   }
 
-  /** Increases the capacity of the array. */
-  @SuppressWarnings({"unchecked"}) // generic array cast
-  private void grow() {
+  /**
+   * Returns the capacity of this set.
+   *
+   * @return the capacity of this set
+   */
+  @Pure
+  private int capacity() {
     if (values == null) {
-      this.values = (E[]) new Object[4];
+      return 0;
     } else {
-      int newCapacity = 2 * values.length;
+      return values.length;
+    }
+  }
+
+  /**
+   * Throws an IndexOutOfBoundsException if the index is invalid.
+   *
+   * @param index an index into this
+   * @param method the method that will use the index
+   */
+  @SideEffectFree
+  private void assertIndexInBounds(int index, String method) {
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          method + "(" + index + ",...) called on IdentityArraySet of size " + size);
+    }
+  }
+
+  /** Increases the capacity of the array, if necessary. */
+  @SuppressWarnings({"unchecked"}) // generic array cast
+  @EnsuresNonNull("values")
+  private void grow() {
+    int capacity = capacity();
+    if (capacity == 0) {
+      this.values = (E[]) new Object[4];
+    } else if (size == capacity) {
+      int newCapacity = 2 * capacity;
       values = Arrays.copyOf(values, newCapacity);
     }
   }
@@ -166,6 +197,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     if (index == -1) {
       return false;
     }
+    assertIndexInBounds(index, "removeIndex");
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
     sizeModificationCount++;
@@ -359,7 +391,11 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SideEffectFree
   @Override
   public IdentityArraySet<E> clone() {
-    return new IdentityArraySet<E>(Arrays.copyOf(values, size), size);
+    if (values == null) {
+      return new IdentityArraySet<>(null, 0);
+    } else {
+      return new IdentityArraySet<>(Arrays.copyOf(values, size), size);
+    }
   }
 
   /**

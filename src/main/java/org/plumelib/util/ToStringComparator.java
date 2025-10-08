@@ -37,7 +37,7 @@ public class ToStringComparator implements Comparator<Object> {
    */
   @SuppressWarnings("nullness:argument") // Comparator should be @Contravariant.
   public static <T extends @Nullable @Signed Object> List<T> sorted(Iterable<T> in) {
-    List<T> result = new ArrayList<T>();
+    List<T> result = new ArrayList<>();
     for (T object : in) {
       result.add(object);
     }

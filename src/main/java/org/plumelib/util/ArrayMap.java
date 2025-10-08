@@ -73,17 +73,17 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
   "nullness" // temporary; nullness is tricky because of null-padded arrays
 })
 public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
-    extends AbstractMap<K, V> {
+    extends AbstractMap<K, V> implements Cloneable {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
   // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  That is a bad idea
   // because it both uses more memory and makes some operations more expensive.
 
   /** The keys. Null if capacity=0. */
-  private @Nullable K @SameLen("values") [] keys;
+  private @Nullable K @Nullable @SameLen("values") [] keys;
 
   /** The values. Null if capacity=0. */
-  private @Nullable V @SameLen("keys") [] values;
+  private @Nullable V @Nullable @SameLen("keys") [] values;
 
   /** The number of used mappings in the representation of this. */
   private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
@@ -111,8 +111,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   })
   @SideEffectFree
   public ArrayMap(int initialCapacity) {
-    if (initialCapacity < 0)
+    if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+    }
     if (initialCapacity == 0) {
       this.keys = null;
       this.values = null;
@@ -238,7 +239,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // Private helper functions
 
   /**
-   * Adds the (key, value) mapping to this.
+   * Adds a (key, value) mapping to this.
    *
    * @param index the index of {@code key} in {@code keys}. If -1, add a new mapping. Otherwise,
    *     replace the mapping at {@code index}.
@@ -253,27 +254,55 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       // Add a new mapping.
-      if ((size == 0 && keys == null) || (size == keys.length)) {
-        grow();
-      }
+      grow();
       keys[size] = key;
       values[size] = value;
       size++;
       sizeModificationCount++;
     } else {
       // Replace an existing mapping.
+      assertIndexInBounds(index, "put");
       values[index] = value;
     }
   }
 
-  /** Increases the capacity of the arrays. */
+  /**
+   * Returns the capacity of this map.
+   *
+   * @return the capacity of this map
+   */
+  @Pure
+  private int capacity() {
+    if (keys == null) {
+      return 0;
+    } else {
+      return keys.length;
+    }
+  }
+
+  /**
+   * Throws an IndexOutOfBoundsException if the index is invalid.
+   *
+   * @param index an index into this
+   * @param method the method that will use the index
+   */
+  @SideEffectFree
+  private void assertIndexInBounds(int index, String method) {
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          method + "(" + index + ",...) called on ArrayMap of size " + size);
+    }
+  }
+
+  /** Increases the capacity of the arrays, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
   private void grow() {
-    if (keys == null) {
+    int capacity = capacity();
+    if (capacity == 0) {
       this.keys = (K[]) new Object[4];
       this.values = (V[]) new Object[4];
-    } else {
-      int newCapacity = 2 * keys.length;
+    } else if (size == capacity) {
+      int newCapacity = 2 * capacity;
       keys = Arrays.copyOf(keys, newCapacity);
       values = Arrays.copyOf(values, newCapacity);
     }
@@ -289,6 +318,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (index == -1) {
       return false;
     }
+    assertIndexInBounds(index, "removeIndex");
     System.arraycopy(keys, index + 1, keys, index, size - index - 1);
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
@@ -391,9 +421,15 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param index the index
    * @return the value at the given index, or null if the index is -1
    */
+  @SuppressWarnings(
+      "allcheckers:purity.not.deterministic.call") // assertIndexInBounds is side-effect-free
   @Pure
   private @Nullable V getOrNull(@GTENegativeOne int index) {
-    return (index == -1) ? null : values[index];
+    if (index == -1) {
+      return null;
+    }
+    assertIndexInBounds(index, "getOrNull");
+    return values[index];
   }
 
   // Modification Operations
@@ -692,6 +728,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // iterators
 
   /** An iterator over the ArrayMap. */
+  @SuppressWarnings(
+      "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
+  )
   abstract class ArrayMapIterator {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
@@ -1116,7 +1155,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SideEffectFree
   @Override
   public ArrayMap<K, V> clone() {
-    return new ArrayMap<K, V>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
+    if (keys == null) {
+      return new ArrayMap<>(null, null, 0);
+    } else {
+      return new ArrayMap<>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
+    }
   }
 
   /**

@@ -253,8 +253,10 @@ public final class Intern {
       // Not Arrays.hashCode(a), for consistency with equals method
       // immediately above.
       double running = 0;
-      for (int i = 0; i < a.length; i++) {
-        double elt = (Double.isNaN(a[i]) ? 0.0 : a[i]);
+      for (double elt : a) {
+        if (Double.isNaN(elt)) {
+          elt = 0.0;
+        }
         running = running * FACTOR + elt * DOUBLE_FACTOR;
       }
       // Could add "... % Integer.MAX_VALUE" here; is that good to do?
@@ -826,8 +828,8 @@ public final class Intern {
    * @return true if each element is interned
    */
   private static boolean eachElementInterned(@PolyNull @Interned String @PolyValue [] a) {
-    for (int k = 0; k < a.length; k++) {
-      if (a[k] != Intern.intern(a[k])) {
+    for (String elt : a) {
+      if (elt != intern(elt)) {
         throw new IllegalArgumentException();
       }
     }
@@ -969,7 +971,7 @@ public final class Intern {
       int @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<int @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<int @Interned []> lookup = internedIntSubsequence.get(sai);
     int[] result1 = (lookup != null) ? lookup.get() : null;
@@ -977,7 +979,7 @@ public final class Intern {
       return result1;
     } else {
       int[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      int @Interned [] subseq = Intern.intern(subseqUninterned);
+      int @Interned [] subseq = intern(subseqUninterned);
       internedIntSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -998,7 +1000,7 @@ public final class Intern {
       long @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<long @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<long @Interned []> lookup = internedLongSubsequence.get(sai);
     long[] result1 = (lookup != null) ? lookup.get() : null;
@@ -1006,7 +1008,7 @@ public final class Intern {
       return result1;
     } else {
       long[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      long @Interned [] subseq = Intern.intern(subseqUninterned);
+      long @Interned [] subseq = intern(subseqUninterned);
       internedLongSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -1027,7 +1029,7 @@ public final class Intern {
       double @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<double @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<double @Interned []> lookup = internedDoubleSubsequence.get(sai);
     double[] result1 = (lookup != null) ? lookup.get() : null;
@@ -1035,7 +1037,7 @@ public final class Intern {
       return result1;
     } else {
       double[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      double @Interned [] subseq = Intern.intern(subseqUninterned);
+      double @Interned [] subseq = intern(subseqUninterned);
       internedDoubleSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -1056,7 +1058,7 @@ public final class Intern {
       @PolyNull @Interned Object @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<@PolyNull @Interned Object @Interned []> sai =
         new Subsequence<@PolyNull @Interned Object @Interned []>(seq, start, end);
     @SuppressWarnings("nullness") // same nullness as key
@@ -1067,7 +1069,7 @@ public final class Intern {
       return result1;
     } else {
       @PolyNull @Interned Object[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      @PolyNull @Interned Object @Interned [] subseq = Intern.intern(subseqUninterned);
+      @PolyNull @Interned Object @Interned [] subseq = intern(subseqUninterned);
       @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
@@ -1091,7 +1093,7 @@ public final class Intern {
       @PolyNull @Interned String @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<@PolyNull @Interned String @Interned []> sai =
         new Subsequence<@PolyNull @Interned String @Interned []>(seq, start, end);
     @SuppressWarnings("nullness") // same nullness as key
@@ -1102,7 +1104,7 @@ public final class Intern {
       return result1;
     } else {
       @PolyNull @Interned String[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      @PolyNull @Interned String @Interned [] subseq = Intern.intern(subseqUninterned);
+      @PolyNull @Interned String @Interned [] subseq = intern(subseqUninterned);
       @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
       Object
           ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
@@ -1137,7 +1139,7 @@ public final class Intern {
      * @param end the end index
      */
     public Subsequence(T seq, @NonNegative int start, int end) {
-      assert Intern.isInterned(seq);
+      assert isInterned(seq);
       this.seq = seq;
       this.start = start;
       this.end = end;

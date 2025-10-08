@@ -271,7 +271,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<String> splitRetainSeparators(String input, Pattern p) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     Matcher m = p.matcher(input);
     int pos = 0;
     while (m.find()) {
