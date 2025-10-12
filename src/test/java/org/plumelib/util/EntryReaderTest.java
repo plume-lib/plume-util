@@ -326,6 +326,7 @@ public final class EntryReaderTest {
   }
 
   /** Test that iterator returns the same instance. */
+  @SuppressWarnings("interning:not.interned") // identity test
   @Test
   public void testIteratorReturnsSameInstance() throws IOException {
     String content = "line1\n";
