@@ -164,6 +164,34 @@ public final class EntryReaderTest {
     }
   }
 
+  /** Test getEntry() for two-blank-line-separated entries. */
+  @Test
+  public void testGetEntryTwoBlankSeparated() throws IOException {
+    String content1 = "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n";
+    try (EntryReader reader = new EntryReader(new StringReader(content1), "test", null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals(
+          "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content2 = "para1 line1\npara1 line2\n\n\npara2 line1\npara2 line2";
+    try (EntryReader reader = new EntryReader(new StringReader(content2), "test", null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
+      assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content3 = "\n\n\npara1 line1\npara1 line2\n\n\n\npara2 line1\npara2 line2\n\n\n\n";
+    try (EntryReader reader = new EntryReader(new StringReader(content3), "test", null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
+      assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+  }
+
   /** Test getEntry() with start/stop patterns. */
   @Test
   public void testGetEntryWithStartStop() throws IOException {

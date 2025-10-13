@@ -108,6 +108,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public @MonotonicNonNull Pattern entryStopRegex = null;
 
+  /** If true, then entries are separated by two blank lines rather than one. */
+  private boolean twoBlankLines = false;
+
   //
   // Internal implementation variables
   //
@@ -127,8 +130,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   //
 
   /**
-   * Like LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename and Line
-   * Number Reader".
+   * Like java.io.LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename
+   * and Line Number Reader".
    */
   private static class FlnReader extends LineNumberReader {
     /** The file being read. */
@@ -195,7 +198,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     /**
      * Returns a substring of the entry body that matches the specified regular expression. If no
-     * match is found, returns the firstLine.
+     * match is found, returns {@link #firstLine}.
      *
      * @param re regex to match
      * @return a substring that matches re
@@ -683,14 +686,19 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns the next entry (paragraph) in the file. Entries are separated by blank lines unless the
-   * entry started with {@link #entryStartRegex} (see {@link #setEntryStartStop}). If no more
-   * entries are available, returns null.
+   * Returns the next entry (paragraph) in the file. If no more entries are available, returns null.
+   *
+   * <p>Entries are separated by one or more blank lines (two or more, if {@link #twoBlankLines} is
+   * true), unless the entry started with {@link #entryStartRegex} (see {@link #setEntryStartStop}).
    *
    * @return the next entry (paragraph) in the file
    * @throws IOException if there is a problem reading the file
    */
   public @Nullable Entry getEntry(@GuardSatisfied EntryReader this) throws IOException {
+
+    if (twoBlankLines) {
+      System.out.printf("two blank lines");
+    }
 
     // Skip any preceding blank lines
     String line = readLine();
@@ -701,7 +709,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return null;
     }
 
-    StringBuilder body = new StringBuilder(10000);
+    StringBuilder body = new StringBuilder(500);
     Entry entry = null;
     String filename = getFileName();
     long lineNumber = getLineNumber();
@@ -924,9 +932,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           "EntryReader sample program requires 1-3 args: filename [commentRegex [includeRegex]]");
       System.exit(1);
     }
-    String filename = args[0];
-    String commentRegex = null;
-    String includeRegex = null;
+    final String filename = args[0];
+
+    final String commentRegex;
     if (args.length >= 2) {
       commentRegex = args[1];
       if (!RegexUtil.isRegex(commentRegex)) {
@@ -937,9 +945,15 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + RegexUtil.regexError(commentRegex));
         System.exit(1);
       }
+    } else {
+      commentRegex = null;
     }
+
+    final @Regex(1) String includeRegex;
     if (args.length >= 3) {
-      includeRegex = args[2];
+      @SuppressWarnings("regex:assignment") // about to be checked; flow isn't properly refining?
+      @Regex(1) String arg3 = args[2];
+      includeRegex = arg3;
       if (!RegexUtil.isRegex(includeRegex, 1)) {
         System.err.println(
             "Error parsing include regex \""
@@ -947,10 +961,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + "\": "
                 + RegexUtil.regexError(includeRegex));
         System.exit(1);
+        throw new Error("unreachable");
       }
+    } else {
+      includeRegex = null;
     }
-    try (EntryReader reader = new EntryReader(filename, commentRegex, includeRegex)) {
 
+    try (EntryReader reader = new EntryReader(filename, commentRegex, includeRegex)) {
       String line = reader.readLine();
       while (line != null) {
         System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);
