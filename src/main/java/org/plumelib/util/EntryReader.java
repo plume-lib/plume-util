@@ -84,7 +84,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Regular expression that specifies an include file. */
   private final @Nullable @Regex(1) Pattern includeRegex;
 
-  /** Regular expression that matches a comment. */
+  /**
+   * Regular expression that matches a comment, at the beginning of a line (not after other text).
+   */
   private final @Nullable Pattern commentRegex;
 
   /**
