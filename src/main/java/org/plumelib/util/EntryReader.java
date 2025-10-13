@@ -106,6 +106,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public @MonotonicNonNull Pattern entryStopRegex = null;
 
+  /** If true, then entries are separated by two blank lines rather than one. */
+  private boolean twoBlankLines = false;
+
   //
   // Internal implementation variables
   //
