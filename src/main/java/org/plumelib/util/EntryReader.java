@@ -686,14 +686,19 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns the next entry (paragraph) in the file. Entries are separated by blank lines unless the
-   * entry started with {@link #entryStartRegex} (see {@link #setEntryStartStop}). If no more
-   * entries are available, returns null.
+   * Returns the next entry (paragraph) in the file. If no more entries are available, returns null.
+   *
+   * <p>Entries are separated by one or more blank lines (two or more, if {@link #twoBlankLines} is
+   * true), unless the entry started with {@link #entryStartRegex} (see {@link #setEntryStartStop}).
    *
    * @return the next entry (paragraph) in the file
    * @throws IOException if there is a problem reading the file
    */
   public @Nullable Entry getEntry(@GuardSatisfied EntryReader this) throws IOException {
+
+    if (twoBlankLines) {
+      System.out.printf("two blank lines");
+    }
 
     // Skip any preceding blank lines
     String line = readLine();
@@ -944,9 +949,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       commentRegex = null;
     }
 
-    final String includeRegex;
+    final @Regex(1) String includeRegex;
     if (args.length >= 3) {
-      includeRegex = args[2];
+      @SuppressWarnings("regex:assignment") // about to be checked; flow isn't properly refining?
+      @Regex(1) String arg3 = args[2];
+      includeRegex = arg3;
       if (!RegexUtil.isRegex(includeRegex, 1)) {
         System.err.println(
             "Error parsing include regex \""
@@ -954,6 +961,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + "\": "
                 + RegexUtil.regexError(includeRegex));
         System.exit(1);
+        throw new Error("unreachable");
       }
     } else {
       includeRegex = null;
