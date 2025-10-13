@@ -709,7 +709,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return null;
     }
 
-    StringBuilder body = new StringBuilder();
+    StringBuilder body = new StringBuilder(500);
     Entry entry = null;
     String filename = getFileName();
     long lineNumber = getLineNumber();
