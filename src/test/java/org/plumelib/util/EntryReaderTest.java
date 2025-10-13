@@ -21,9 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /** Test the EntryReader class. */
+@SuppressWarnings("nullness")
 public final class EntryReaderTest {
 
-  @TempDir Path tempDir;
+  @TempDir Path tempDir = new Path(System.getProperty("java.io.tmpdir"));
 
   /** Test basic line reading without comments or includes. */
   @Test
