@@ -21,7 +21,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /** Test the EntryReader class. */
-@SuppressWarnings("nullness")
+@SuppressWarnings({
+  "nullness", // run-time errors are acceptable
+  "initializedfields:contracts.postcondition" // @TempDir causes injection
+})
 public final class EntryReaderTest {
 
   /** Do not assign; JUnit will do so, thanks to the {@code @TempDir} annotation. */
