@@ -125,8 +125,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   //
 
   /**
-   * Like LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename and Line
-   * Number Reader".
+   * Like java.io.LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename
+   * and Line Number Reader".
    */
   private static class FlnReader extends LineNumberReader {
     /** The file being read. */
@@ -193,7 +193,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     /**
      * Returns a substring of the entry body that matches the specified regular expression. If no
-     * match is found, returns the firstLine.
+     * match is found, returns {@link #firstLine}.
      *
      * @param re regex to match
      * @return a substring that matches re
@@ -699,7 +699,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return null;
     }
 
-    StringBuilder body = new StringBuilder(10000);
+    StringBuilder body = new StringBuilder();
     Entry entry = null;
     String filename = getFileName();
     long lineNumber = getLineNumber();
