@@ -24,7 +24,7 @@ import org.junit.jupiter.api.io.TempDir;
 @SuppressWarnings("nullness")
 public final class EntryReaderTest {
 
-  @TempDir Path tempDir = new Path(System.getProperty("java.io.tmpdir"));
+  @TempDir Path tempDir = Path.of(System.getProperty("java.io.tmpdir"));
 
   /** Test basic line reading without comments or includes. */
   @Test
