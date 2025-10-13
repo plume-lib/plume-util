@@ -927,9 +927,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           "EntryReader sample program requires 1-3 args: filename [commentRegex [includeRegex]]");
       System.exit(1);
     }
-    String filename = args[0];
-    String commentRegex = null;
-    String includeRegex = null;
+    final String filename = args[0];
+
+    final String commentRegex;
     if (args.length >= 2) {
       commentRegex = args[1];
       if (!RegexUtil.isRegex(commentRegex)) {
@@ -940,7 +940,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + RegexUtil.regexError(commentRegex));
         System.exit(1);
       }
+    } else {
+      commentRegex = null;
     }
+
+    final String includeRegex;
     if (args.length >= 3) {
       includeRegex = args[2];
       if (!RegexUtil.isRegex(includeRegex, 1)) {
@@ -951,9 +955,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + RegexUtil.regexError(includeRegex));
         System.exit(1);
       }
+    } else {
+      includeRegex = null;
     }
-    try (EntryReader reader = new EntryReader(filename, commentRegex, includeRegex)) {
 
+    try (EntryReader reader = new EntryReader(filename, commentRegex, includeRegex)) {
       String line = reader.readLine();
       while (line != null) {
         System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);
