@@ -8,18 +8,18 @@
 //     * Approach 1:  to Maven Central
 //        * Set "version" (below) to end in "-SNAPSHOT".
 //        * git pull && ./gradlew clean publish
-//        * In the clients' build.gradle: set version number and use:
+//        * In the clients" build.gradle: set version number and use:
 //            repositories {
 //              ...
-//              maven { url = uri('https://central.sonatype.com/repository/maven-snapshots/') }
+//              maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
 //            }
 //            configurations.all {
-//              resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//              resolutionStrategy.cacheChangingModulesFor 0, "seconds"
 //            }
 //     * Approach 2:  to Maven Local
 //        * Set "version" (below) to end in "-SNAPSHOT".
 //        * git pull && ./gradlew PublishToMavenLocal
-//        * In the clients' build.gradle: set version number and use:
+//        * In the clients" build.gradle: set version number and use:
 //            repositories {
 //              mavenLocal()
 //            }
@@ -43,16 +43,16 @@
 //  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 //  * Update clients and test, so that if it's broken we can re-release.
 
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
+apply plugin: "maven-publish"
+apply plugin: "signing"
 
-group = 'org.plumelib'
-version = '1.11.0'
+group = "org.plumelib"
+version = "1.11.0"
 ext {
-  packageName = 'plume-util'
+  packageName = "plume-util"
 }
 
-final isSnapshot = version.contains('SNAPSHOT')
+final isSnapshot = version.contains("SNAPSHOT")
 
 java {
   withJavadocJar()
@@ -69,8 +69,8 @@ publishing {
       from components.java
 
       pom {
-        name = 'Plume Util'
-        description = 'Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc.'
+        name = "Plume Util"
+        description = "Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc."
         url = "https://github.com/plume-lib/${packageName}"
 
         scm {
@@ -81,16 +81,16 @@ publishing {
 
         licenses {
           license {
-            name = 'MIT License'
-            url = 'https://opensource.org/licenses/MIT'
+            name = "MIT License"
+            url = "https://opensource.org/licenses/MIT"
           }
         }
 
         developers {
           developer {
-            id = 'mernst'
-            name = 'Michael Ernst'
-            email = 'mernst@alum.mit.edu'
+            id = "mernst"
+            name = "Michael Ernst"
+            email = "mernst@alum.mit.edu"
           }
         }
       }
@@ -100,12 +100,12 @@ publishing {
     repositories {
       maven {
         url = (isSnapshot
-            ? project.properties.getOrDefault('SNAPSHOT_REPOSITORY_URL', 'https://central.sonatype.com/repository/maven-snapshots/')
-            : project.properties.getOrDefault('RELEASE_REPOSITORY_URL', 'https://ossrh-staging-api.central.sonatype.com/service/local/')
+            ? project.properties.getOrDefault("SNAPSHOT_REPOSITORY_URL", "https://central.sonatype.com/repository/maven-snapshots/")
+            : project.properties.getOrDefault("RELEASE_REPOSITORY_URL", "https://ossrh-staging-api.central.sonatype.com/service/local/")
             )
         credentials {
-          username = project.properties.get('SONATYPE_NEXUS_USERNAME')
-          password = project.properties.get('SONATYPE_NEXUS_PASSWORD')
+          username = project.properties.get("SONATYPE_NEXUS_USERNAME")
+          password = project.properties.get("SONATYPE_NEXUS_PASSWORD")
         }
       }
     }
