@@ -60,13 +60,13 @@ java {
 }
 
 artifacts {
-  archives javadocJar, sourcesJar
+  archives(javadocJar, sourcesJar)
 }
 
 publishing {
   publications {
     maven(MavenPublication) {
-      from components.java
+      from(components.java)
 
       pom {
         name = "Plume Util"
@@ -116,7 +116,7 @@ signing {
   // If anything about signing is misconfigured, fail loudly rather than quietly continuing with
   // unsigned artifacts.
   required = true
-  sign publishing.publications.maven
+  sign(publishing.publications.maven)
 }
 
 tasks.withType(Sign).configureEach {
