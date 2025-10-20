@@ -78,9 +78,7 @@ spotless {
   }
   java {
     targetExclude("**/WeakIdentityHashMap.java")
-    // googleJavaFormat()
-    // Version number required for Java 25.
-    googleJavaFormat("1.28.0")
+    googleJavaFormat()
     formatAnnotations()
   }
   groovyGradle {
