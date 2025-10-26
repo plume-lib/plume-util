@@ -102,9 +102,7 @@ if (isJava21orHigher) {
     // "-options" is because starting in JDK 20, javac warns about using -source 8.
     options.compilerArgs << "-Xlint:all,-processing,-options" << "-Werror"
     options.forkOptions.jvmArgs += "-Xmx6g"
-    if (isJava21orHigher) {
-      options.compilerArgs << "-Xlint:-this-escape"
-    }
+    options.compilerArgs << "-Xlint:-this-escape"
     options.errorprone {
       // ExtendsObject does not yet exist in Error Prone 2.10.0.
       // disable("ExtendsObject")  // Incorrect when using the Checker Framework.
