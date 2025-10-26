@@ -92,17 +92,23 @@ spotless {
 
 // Error Prone linter
 
+tasks.withType(JavaCompile).configureEach {
+  options.forkOptions.jvmArgs += "-Xmx6g"
+  options.compilerArgs << "-Werror"
+  // "-processing" avoids javac warning "No processor claimed any of these annotations".
+  // "-options" is because starting in JDK 20, javac warns about using -source 8.
+  if (isJava21orHigher) {
+    options.compilerArgs << "-Xlint:all,-processing,-options,-this-escape"
+  } else {
+    options.compilerArgs << "-Xlint:all,-processing,-options"
+  }
+}
 if (isJava21orHigher) {
   apply plugin: "net.ltgt.errorprone"
   dependencies {
     errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
   }
   tasks.withType(JavaCompile).configureEach {
-    // "-processing" avoids javac warning "No processor claimed any of these annotations".
-    // "-options" is because starting in JDK 20, javac warns about using -source 8.
-    options.compilerArgs << "-Xlint:all,-processing,-options" << "-Werror"
-    options.forkOptions.jvmArgs += "-Xmx6g"
-    options.compilerArgs << "-Xlint:-this-escape"
     options.errorprone {
       // ExtendsObject does not yet exist in Error Prone 2.10.0.
       // disable("ExtendsObject")  // Incorrect when using the Checker Framework.
