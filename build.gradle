@@ -5,7 +5,7 @@ plugins {
   id("com.gradleup.shadow").version("9.2.2")
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  // Version 6.14.0 and later requires JRE 11+, but version 6.13.0 doesn't work on JRE 21.
+  // Version 8.0.0 and later requires Java 17+.
   id("com.diffplug.spotless").version("8.0.0")
 
   // Error Prone linter
@@ -20,10 +20,10 @@ plugins {
 }
 
 repositories {
-  gradlePluginPortal()
   mavenLocal()
   mavenCentral()
   maven { url = "https://central.sonatype.com/repository/maven-snapshots/" }
+  gradlePluginPortal()
 }
 
 ext {
@@ -96,12 +96,14 @@ tasks.withType(JavaCompile).configureEach {
   options.forkOptions.jvmArgs += "-Xmx6g"
   options.compilerArgs << "-Werror"
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  // "-options" is because starting in JDK 20, javac warns about using -source 8.
+  // "-options" is because of JDK 21 warning "source value 8 is obsolete..."
   if (isJava21orHigher) {
     options.compilerArgs << "-Xlint:all,-processing,-options,-this-escape"
   } else {
     options.compilerArgs << "-Xlint:all,-processing,-options"
   }
+  // // Only needed when debugging.
+  // options.compilerArgs << "-g"
 }
 if (isJava21orHigher) {
   apply plugin: "net.ltgt.errorprone"
@@ -110,8 +112,7 @@ if (isJava21orHigher) {
   }
   tasks.withType(JavaCompile).configureEach {
     options.errorprone {
-      // ExtendsObject does not yet exist in Error Prone 2.10.0.
-      // disable("ExtendsObject")  // Incorrect when using the Checker Framework.
+      disable("ExtendsObject")  // Incorrect when using the Checker Framework.
       disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
       disable("ReferenceEquality") // Use Interning Checker instead.
       disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
