@@ -39,21 +39,23 @@ public final class CollectionsPlumeTest {
   // Immutable variables
   //
 
-  List<Integer> l123 = Arrays.asList(1, 2, 3);
-  List<Integer> l123123 = Arrays.asList(1, 2, 3, 1, 2, 3);
-  List<Integer> l12223 = Arrays.asList(1, 2, 2, 2, 3);
-  List<Integer> l1123 = Arrays.asList(1, 1, 2, 3);
-  List<Integer> l1233 = Arrays.asList(1, 2, 3, 3);
+  private static final List<Integer> l123 = Arrays.asList(1, 2, 3);
+  private static final List<Integer> l123123 = Arrays.asList(1, 2, 3, 1, 2, 3);
+  private static final List<Integer> l12223 = Arrays.asList(1, 2, 2, 2, 3);
+  private static final List<Integer> l1123 = Arrays.asList(1, 1, 2, 3);
+  private static final List<Integer> l1233 = Arrays.asList(1, 2, 3, 3);
 
-  Object object1 = new Object();
-  Object object2 = new Object();
-  Object object3 = new Object();
+  private static final Object object1 = new Object();
+  private static final Object object2 = new Object();
+  private static final Object object3 = new Object();
 
-  List<Object> lo123 = Arrays.asList(object1, object2, object3);
-  List<Object> lo123123 = Arrays.asList(object1, object2, object3, object1, object2, object3);
-  List<Object> lo12223 = Arrays.asList(object1, object2, object2, object2, object3);
-  List<Object> lo1123 = Arrays.asList(object1, object1, object2, object3);
-  List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
+  private static final List<Object> lo123 = Arrays.asList(object1, object2, object3);
+  private static final List<Object> lo123123 =
+      Arrays.asList(object1, object2, object3, object1, object2, object3);
+  private static final List<Object> lo12223 =
+      Arrays.asList(object1, object2, object2, object2, object3);
+  private static final List<Object> lo1123 = Arrays.asList(object1, object1, object2, object3);
+  private static final List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
 
   // //////////////////////////////////////////////////////////////////////
   // Helper functions
