@@ -18,6 +18,8 @@
 * In `SIList`:
   * new methods `from(Collection)`, `from(Iterable)`, and `from(Iterator)`.
   * deprecated `fromList(Collection)` in favor of `from(Collection)`.
+* In `LimitedSizeSet`, `LimitedSizeIntSet`, and `LimitedSizeLongSet`:
+  * new method `isEmpty()`
 
 ## 1.11.0 (2025-06-26)
 
