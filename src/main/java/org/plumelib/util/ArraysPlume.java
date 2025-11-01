@@ -3947,7 +3947,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean anyNull(List<? extends @Nullable Object> a) {
-    if (a.size() == 0) {
+    if (a.isEmpty()) {
       return false;
     }
     // The cast ensures that the right version of IndexOfEq gets called.

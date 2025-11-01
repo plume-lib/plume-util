@@ -783,7 +783,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   private @Nullable String getNextLine(@GuardSatisfied EntryReader this) throws IOException {
 
-    if (readers.size() == 0) {
+    if (readers.isEmpty()) {
       return null;
     }
 
