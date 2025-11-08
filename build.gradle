@@ -16,7 +16,7 @@ plugins {
   // id("pmd")
 
   // Checker Framework pluggable type-checking
-  id("org.checkerframework").version("0.6.60")
+  id("org.checkerframework").version("0.6.61")
 }
 
 repositories {
@@ -27,7 +27,7 @@ repositories {
 }
 
 ext {
-  errorproneVersion = "2.43.0"
+  errorproneVersion = "2.44.0"
   isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
@@ -40,7 +40,7 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.14.0")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.14.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -125,7 +125,7 @@ if (isJava21orHigher) {
 // // PMD linter
 //
 // pmd {
-//   toolVersion = "7.17.0"
+//   toolVersion = "7.18.0"
 //   ruleSetFiles =(files("${rootDir}/.pmd-ruleset.xml"))
 //   consoleOutput = true
 //   ignoreFailures = false
@@ -154,7 +154,7 @@ checkerFramework {
   ]
   extraJavacArgs = [
     "-Werror",
-    "-Aversion",
+    // "-Aversion",
     // "-verbose",
     "-AcheckPurityAnnotations",
     "-ArequirePrefixInWarningSuppressions",
@@ -165,7 +165,7 @@ checkerFramework {
 // To use a snapshot version of the Checker Framework.
 if (false) {
   // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = "3.51.1"
+  ext.checkerFrameworkVersion = "3.52.0"
   dependencies {
     compileOnly("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
     testCompileOnly("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
