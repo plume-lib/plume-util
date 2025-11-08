@@ -941,6 +941,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     } else {
       commentRegex = null;
     }
+
     final @Regex(1) String includeRegex;
     if (args.length >= 3) {
       @SuppressWarnings("regex:assignment") // about to be checked; flow isn't properly refining?
