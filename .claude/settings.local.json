@@ -2,14 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(./gradlew:*)",
-      "Bash(./gradlew build:*)",
-      "Bash(./gradlew compileTestJava:*)",
-      "Bash(./gradlew --stop)",
-      "Bash(./gradlew test:*)",
       "Bash(java:*)",
       "Bash(javac:*)",
       "Bash(ls)",
-      "Bash(timeout 300 ./gradlew test --tests EntryReaderTest)"
+      "Bash(timeout 300 ./gradlew:*)"
     ],
     "deny": [],
     "ask": []
