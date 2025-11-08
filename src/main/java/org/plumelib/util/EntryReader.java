@@ -109,7 +109,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public @MonotonicNonNull Pattern entryStopRegex = null;
 
   /** If true, then entries are separated by two blank lines rather than one. */
-  private boolean twoBlankLines = false;
+  public boolean twoBlankLines = false;
 
   //
   // Internal implementation variables
@@ -130,8 +130,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   //
 
   /**
-   * Like java.io.LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename
-   * and Line Number Reader".
+   * Like LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename and Line
+   * Number Reader".
    */
   private static class FlnReader extends LineNumberReader {
     /** The file being read. */
