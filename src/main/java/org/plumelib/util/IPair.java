@@ -150,10 +150,10 @@ public final class IPair<V1, V2> {
   }
 
   @SuppressWarnings(
-      "signedness:argument") // true positive: String.valueOf() argument might be an unsigned value
+      "signedness:unsigned.concat") // true positive: argument might be an unsigned value
   @SideEffectFree
   @Override
   public String toString(@GuardSatisfied IPair<V1, V2> this) {
-    return "IPair(" + String.valueOf(first) + ", " + String.valueOf(second) + ")";
+    return "IPair(" + first + ", " + second + ")";
   }
 }

@@ -135,10 +135,10 @@ public final class MPair<V1, V2> {
   }
 
   @SuppressWarnings(
-      "signedness:argument") // true positive: String.valueOf() argument might be an unsigned value
+      "signedness:unsigned.concat") // true positive: argument might be an unsigned value
   @SideEffectFree
   @Override
   public String toString(@GuardSatisfied MPair<V1, V2> this) {
-    return "MPair(" + String.valueOf(first) + ", " + String.valueOf(second) + ")";
+    return "MPair(" + first + ", " + second + ")";
   }
 }

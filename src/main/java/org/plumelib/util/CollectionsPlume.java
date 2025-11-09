@@ -1215,7 +1215,9 @@ public final class CollectionsPlume {
    * @param <T> the element type
    * @return source, converted to Iterable
    */
-  @SuppressWarnings("PMD.XXX")
+  @SuppressWarnings(
+      "PMD.UseDiamondOperator" // '<>' with anonymous inner classes is not supported in -source 8
+  )
   public static <T> Iterable<T> iteratorToIterable(final Iterator<T> source) {
     Objects.requireNonNull(source);
     return new Iterable<T>() {
@@ -1962,6 +1964,9 @@ public final class CollectionsPlume {
    * @return a new cache with the provided size
    * @deprecated use {@link MapsP#createLruCache}
    */
+  @SuppressWarnings(
+      "PMD.UseDiamondOperator" // '<>' with anonymous inner classes is not supported in -source 8
+  )
   @Deprecated // 2025-06-28
   public static <K, V> Map<K, V> createLruCache(@Positive int size) {
     return new LinkedHashMap<K, V>(size, .75F, true) {

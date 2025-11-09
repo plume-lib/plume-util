@@ -115,6 +115,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "lock:method.guarantee.violated", // initializes `this`
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
+    "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
   public IdentityArraySet(Collection<? extends E> c) {
@@ -387,7 +388,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    *
    * @return a copy of this
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
   public IdentityArraySet<E> clone() {

@@ -1732,6 +1732,7 @@ public final class ArraysPlume {
    * @param lst the list to convert to an array
    * @return the result of lst.toArray, casted to a more precise type than Object[]
    */
+  @SuppressWarnings("PMD.ClassCastExceptionWithToArray")
   @SideEffectFree
   private static <T> T[] toTArray(List<T> lst) {
     @SuppressWarnings("unchecked")
@@ -1754,11 +1755,12 @@ public final class ArraysPlume {
     @Nullable List<T> theList = null;
 
     /**
-     * Creates a ListOrArray that wraps an array. The argument is stored directly, so the client
-     * must not use it after constructing the ListOrArray.
+     * Creates a ListOrArray that wraps an array. For efficiency, the argument is stored directly,
+     * so the client must not use it after constructing the ListOrArray.
      *
      * @param theArray the delegate that will be wrapped
      */
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     ListOrArray(T @Nullable [] theArray) {
       this.theArray = theArray;
     }
@@ -1822,6 +1824,7 @@ public final class ArraysPlume {
      *
      * @return an array with the same contents as this
      */
+    @SuppressWarnings("PMD.MethodReturnsInternalArray")
     @SideEffectFree
     T[] toArray() {
       if (theArray != null) {

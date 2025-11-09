@@ -159,6 +159,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     "lock:method.guarantee.violated", // initializes `this`
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
+    "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
   public ArrayMap(Map<? extends K, ? extends V> m) {
@@ -727,11 +728,15 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // iterators
 
-  /** An iterator over the ArrayMap. */
+  /**
+   * An iterator over the ArrayMap.
+   *
+   * @param <T> the type of the iteration value
+   */
   @SuppressWarnings(
       "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
   )
-  abstract class ArrayMapIterator {
+  abstract class ArrayMapIterator<T> implements Iterator<T> {
     /** The first unread index; the index of the next value to return. */
     @NonNegative int index;
 
@@ -755,11 +760,16 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
      * @return true if this has another element
      */
     @Pure
+    @Override
     public final boolean hasNext() {
       return index < size();
     }
 
+    @Override
+    public abstract T next();
+
     /** Removes the previously-returned element. */
+    @Override
     public final void remove() {
       if (removed) {
         throw new IllegalStateException(
@@ -779,7 +789,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** An iterator over the keys. */
-  final class KeyIterator extends ArrayMapIterator implements Iterator<@KeyFor("this") K> {
+  final class KeyIterator extends ArrayMapIterator<@KeyFor("this") K> {
     /** Creates a new KeyIterator. */
     @SideEffectFree
     KeyIterator() {}
@@ -795,7 +805,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** An iterator over the values. */
-  final class ValueIterator extends ArrayMapIterator implements Iterator<V> {
+  final class ValueIterator extends ArrayMapIterator<V> {
     /** Creates a new ValueIterator. */
     @SideEffectFree
     ValueIterator() {}
@@ -811,7 +821,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** An iterator over the entries. */
-  final class EntryIterator extends ArrayMapIterator implements Iterator<Map.Entry<K, V>> {
+  final class EntryIterator extends ArrayMapIterator<Map.Entry<K, V>> {
     /** Creates a new EntryIterator. */
     @SideEffectFree
     EntryIterator() {}
@@ -1151,7 +1161,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @return a copy of this
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
   public ArrayMap<K, V> clone() {

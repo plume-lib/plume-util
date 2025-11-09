@@ -43,6 +43,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
+@SuppressWarnings("PMD.CloseResource")
 public final class FilesPlume {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -408,7 +409,7 @@ public final class FilesPlume {
   }
 
   /** An array of options that includes only APPEND. */
-  private static final StandardOpenOption[] APPEND_OPTIONS = new StandardOpenOption[] {APPEND};
+  private static final StandardOpenOption[] APPEND_OPTIONS = {APPEND};
 
   /** An empty array of options. */
   private static final StandardOpenOption[] EMPTY_OPTIONS = new StandardOpenOption[0];
@@ -965,7 +966,7 @@ public final class FilesPlume {
   public static File expandFilename(File name) {
     String path = name.getPath();
     String newname = expandFilename(path);
-    @SuppressWarnings({"interning", "ReferenceEquality"})
+    @SuppressWarnings({"interning", "ReferenceEquality", "PMD.UseEqualsToCompareStrings"})
     boolean changed = newname != path;
     if (changed) {
       return new File(newname);
@@ -1352,7 +1353,10 @@ public final class FilesPlume {
         nextByte = is.read();
         utf8Bytes[i] = (byte) nextByte;
       }
-      // Cannot use just `StandardCharsets.UTF_8` because of Index Checker dependent types.
+      @SuppressWarnings(
+          "PMD.UnnecessaryFullyQualifiedName" // Cannot use just `StandardCharsets.UTF_8` because of
+      // Index Checker dependent types.
+      )
       int codePoint = new String(utf8Bytes, StandardCharsets.UTF_8).codePointAt(0);
       return codePoint;
     } catch (IOException e) {
@@ -1368,9 +1372,8 @@ public final class FilesPlume {
    *
    * @param b the first byte of a UTF-8 character
    * @return the number of bytes for this UTF-* character
-   * @throws IllegalArgumentException if the bit pattern is invalid
    */
-  private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) throws IllegalArgumentException {
+  private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) {
     if ((b >= 0)) {
       // Pattern is 0xxxxxxx.
       return 1;

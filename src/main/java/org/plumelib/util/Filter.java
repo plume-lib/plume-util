@@ -10,6 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @deprecated use {@code java.util.function.Predicate}
  */
 @Deprecated // 2024-04-19
+@FunctionalInterface
 public interface Filter<T extends @Nullable Object> {
   /**
    * Returns true if a specified Object satisfies the filter.

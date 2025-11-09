@@ -108,6 +108,7 @@ public final class SystemPlume {
    * Perform garbage collection. Like System.gc, but waits to return until garbage collection has
    * completed.
    */
+  @SuppressWarnings("PMD.DoNotCallGarbageCollectionExplicitly")
   public static void gc() {
     long oldCollectionCount = getCollectionCount();
     System.gc();

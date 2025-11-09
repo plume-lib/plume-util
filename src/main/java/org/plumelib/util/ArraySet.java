@@ -136,6 +136,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "lock:method.guarantee.violated", // initializes `this`
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
+    "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
   public ArraySet(@Nullable Collection<? extends E> m) {
@@ -469,7 +470,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    *
    * @return a copy of this
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
   public ArraySet<E> clone() {

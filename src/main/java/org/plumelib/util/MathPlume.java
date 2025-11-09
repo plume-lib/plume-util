@@ -466,7 +466,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  public static int pow(int base, int expt) throws ArithmeticException {
+  public static int pow(int base, int expt) {
     return powFast(base, expt);
   }
 
@@ -480,7 +480,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  public static long pow(long base, long expt) throws ArithmeticException {
+  public static long pow(long base, long expt) {
     return powFast(base, expt);
   }
 
@@ -495,7 +495,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  private static int powFast(int base, int expt) throws ArithmeticException {
+  private static int powFast(int base, int expt) {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
@@ -522,7 +522,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  private static long powFast(long base, long expt) throws ArithmeticException {
+  private static long powFast(long base, long expt) {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
@@ -550,7 +550,7 @@ public final class MathPlume {
   //  */
   // @Pure
   // @StaticallyExecutable
-  // private static int powSlow(int base, int expt) throws ArithmeticException {
+  // private static int powSlow(int base, int expt) {
   //   if (expt < 0) {
   //     throw new ArithmeticException("Negative exponent passed to pow");
   //   }
@@ -1320,7 +1320,7 @@ public final class MathPlume {
     }
     int[] resultArray = new int[resultList.size()];
     for (int i = 0; i < resultArray.length; i++) {
-      resultArray[i] = resultList.get(i).intValue();
+      resultArray[i] = resultList.get(i);
     }
     return resultArray;
   }
@@ -1390,7 +1390,7 @@ public final class MathPlume {
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
       }
-      currentNonmissing = numsItor.next().intValue();
+      currentNonmissing = numsItor.next();
       if (addEnds) {
         currentMissing = currentNonmissing - 1;
       } else {
@@ -1439,8 +1439,8 @@ public final class MathPlume {
           }
           // prevNonmissing is for testing only
           int prevNonmissing = currentNonmissing;
-          currentNonmissing = numsItor.next().intValue();
-          if (!(prevNonmissing < currentNonmissing)) {
+          currentNonmissing = numsItor.next();
+          if (prevNonmissing >= currentNonmissing) {
             throw new Error(
                 "Non-sorted Iterator supplied to MissingNumbersIteratorInt: prevNonmissing = "
                     + prevNonmissing
@@ -1494,7 +1494,7 @@ public final class MathPlume {
       return null;
     }
     int range = ArraysPlume.elementRange(nums);
-    if (range > 65536) {
+    if (range > 65_536) {
       return null;
     }
     return nonmodulusStrictIntInternal(new MissingNumbersIteratorInt(nums, true));
@@ -1539,8 +1539,8 @@ public final class MathPlume {
       int @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
     int m = rm[1];
-    int first = rfali.getFirst().intValue();
-    int last = rfali.getLast().intValue();
+    int first = rfali.getFirst();
+    int last = rfali.getLast();
     return ((r != modNonnegative(first, m)) && (r != modNonnegative(last, m)));
   }
 
@@ -1780,7 +1780,7 @@ public final class MathPlume {
           // prevNonmissing is for testing only
           long prevNonmissing = currentNonmissing;
           currentNonmissing = numsItor.next();
-          if (!(prevNonmissing < currentNonmissing)) {
+          if (prevNonmissing >= currentNonmissing) {
             throw new Error(
                 "Non-sorted Iterator supplied to MissingNumbersIteratorLong: prevNonmissing = "
                     + prevNonmissing
@@ -1834,7 +1834,7 @@ public final class MathPlume {
       return null;
     }
     long range = ArraysPlume.elementRange(nums);
-    if (range > 65536) {
+    if (range > 65_536) {
       return null;
     }
     return nonmodulusStrictLongInternal(new MissingNumbersIteratorLong(nums, true));

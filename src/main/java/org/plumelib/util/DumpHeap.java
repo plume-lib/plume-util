@@ -21,6 +21,7 @@ public final class DumpHeap {
    * The HotSpot Diagnostic MBean. Its type is Object, in case HotSpotDiagnosticMXBean is not
    * available at compile time.
    */
+  @SuppressWarnings("PMD.AvoidUsingVolatile")
   private static volatile @MonotonicNonNull Object hotspotMBean;
 
   /** The method com.sun.management.HotSpotDiagnosticMXBean#dumpHeap. */
