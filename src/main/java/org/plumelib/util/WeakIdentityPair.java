@@ -123,6 +123,6 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
   @Override
   @SideEffectFree
   public String toString(@GuardSatisfied WeakIdentityPair<V1, V2> this) {
-    return "WIPair(" + String.valueOf(a) + "," + String.valueOf(b) + ")";
+    return "WIPair(" + a + "," + b + ")";
   }
 }

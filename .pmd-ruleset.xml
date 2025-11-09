@@ -3,7 +3,7 @@
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
-    <description>Java PMD rules for plume-util.</description>
+    <description>Java PMD rules.</description>
 
     <!-- best practices rules -->
     <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod" />
@@ -31,7 +31,6 @@
     <rule ref="category/java/bestpractices.xml/NonExhaustiveSwitch" />
     <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine" />
     <rule ref="category/java/bestpractices.xml/PrimitiveWrapperInstantiation" />
-    <rule ref="category/java/bestpractices.xml/RelianceOnDefaultCharset" />
     <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator" />
     <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap" />
     <rule ref="category/java/bestpractices.xml/ReplaceVectorWithList" />
@@ -57,6 +56,8 @@
     <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons" />
     <rule ref="category/java/bestpractices.xml/LooseCoupling" />
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace" />
+    <rule ref="category/java/bestpractices.xml/RelianceOnDefaultCharset" />
+      Java 18+ uses UTF-8 as the default character encoding.
     <rule ref="category/java/bestpractices.xml/SystemPrintln" />
     <rule ref="category/java/bestpractices.xml/UnitTestAssertionsShouldIncludeMessage" />
     <rule ref="category/java/bestpractices.xml/UnitTestContainsTooManyAsserts" />
@@ -75,7 +76,11 @@
     <rule ref="category/java/codestyle.xml/AvoidUsingNativeCode" />
     <rule ref="category/java/codestyle.xml/BooleanGetMethodName" />
     <rule ref="category/java/codestyle.xml/ControlStatementBraces" />
-    <rule ref="category/java/codestyle.xml/EmptyControlStatement" />
+    <rule ref="category/java/codestyle.xml/EmptyControlStatement">
+      <properties>
+        <property name="allowCommentedBlocks" value="true" />
+      </properties>
+    </rule>
     <rule ref="category/java/codestyle.xml/EmptyMethodInAbstractClassShouldBeAbstract" />
     <rule ref="category/java/codestyle.xml/ExtendsObject" />
     <rule ref="category/java/codestyle.xml/FinalParameterInAbstractMethod" />
@@ -95,7 +100,6 @@
     <rule ref="category/java/codestyle.xml/UnnecessaryBoxing" />
     <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName" />
     <rule ref="category/java/codestyle.xml/UnnecessaryImport" />
-    <rule ref="category/java/codestyle.xml/UnnecessaryModifier" />
     <rule ref="category/java/codestyle.xml/UnnecessaryReturn" />
     <rule ref="category/java/codestyle.xml/UnnecessarySemicolon" />
     <rule ref="category/java/codestyle.xml/UseDiamondOperator" />
@@ -103,7 +107,6 @@
     <rule ref="category/java/codestyle.xml/UselessQualifiedThis" />
     <rule ref="category/java/codestyle.xml/UseShortArrayInitializer" />
     <rule ref="category/java/codestyle.xml/UseUnderscoresInNumericLiterals" />
-    <rule ref="category/java/codestyle.xml/VariableCanBeInlined" />
 
     <!-- code style rules that might be useful, but generate too much noise for now
     <rule ref="category/java/codestyle.xml/CallSuperInConstructor" />
@@ -134,6 +137,10 @@
     <rule ref="category/java/codestyle.xml/ShortMethodName" />
     <rule ref="category/java/codestyle.xml/ShortVariable" />
     <rule ref="category/java/codestyle.xml/TypeParameterNamingConventions" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryModifier" />
+      Redundant `public` can be useful.
+    <rule ref="category/java/codestyle.xml/VariableCanBeInlined" />
+      Naming a value can improve readability.
      -->
 
     <!-- design rules -->
@@ -144,8 +151,6 @@
     <rule ref="category/java/design.xml/AvoidThrowingNullPointerException" />
     <rule ref="category/java/design.xml/AvoidUncheckedExceptionsInSignatures" />
     <rule ref="category/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal" />
-    <rule ref="category/java/design.xml/CollapsibleIfStatements" />
-    <rule ref="category/java/design.xml/DataClass" />
     <rule ref="category/java/design.xml/DoNotExtendJavaLangError" />
     <rule ref="category/java/design.xml/ExceptionAsFlowControl" />
     <rule ref="category/java/design.xml/ExcessiveParameterList" />
@@ -156,24 +161,30 @@
     <rule ref="category/java/design.xml/SimplifiedTernary" />
     <rule ref="category/java/design.xml/SimplifyBooleanExpressions" />
     <rule ref="category/java/design.xml/SimplifyConditional" />
-    <rule ref="category/java/design.xml/SingularField" />
     <rule ref="category/java/design.xml/SwitchDensity" />
     <rule ref="category/java/design.xml/TooManyFields" />
     <rule ref="category/java/design.xml/UselessOverridingMethod" />
     <rule ref="category/java/design.xml/UseObjectForClearerAPI" />
     <rule ref="category/java/design.xml/UseUtilityClass" />
 
+    <!-- design rules that seem to be broken.
+    <rule ref="category/java/design.xml/SingularField" />
+      False positive in Options.java
+    -->
+
     <!-- design rules that might be useful, but generate too much noise for now
+    <rule ref="category/java/design.xml/CollapsibleIfStatements" />
     <rule ref="category/java/design.xml/ImmutableField" />
     <rule ref="category/java/design.xml/MutableStaticState" />
-     -->
-
+    -->
+    
     <!-- design rules we are not using
     <rule ref="category/java/design.xml/AvoidCatchingGenericException" />
     <rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes" />
     <rule ref="category/java/design.xml/CognitiveComplexity" />
     <rule ref="category/java/design.xml/CouplingBetweenObjects" />
     <rule ref="category/java/design.xml/CyclomaticComplexity" />
+    <rule ref="category/java/design.xml/DataClass" />
     <rule ref="category/java/design.xml/ExcessiveImports" />
     <rule ref="category/java/design.xml/ExcessivePublicCount" />
     <rule ref="category/java/design.xml/GodClass" />
@@ -183,12 +194,16 @@
     <rule ref="category/java/design.xml/NPathComplexity" />
     <rule ref="category/java/design.xml/SimplifyBooleanReturns" />
     <rule ref="category/java/design.xml/TooManyMethods" />
-     -->
+    -->
 
     <!-- documentation rules -->
     <rule ref="category/java/documentation.xml/CommentContent" />
-    <rule ref="category/java/documentation.xml/DanglingJavadoc" />
     <rule ref="category/java/documentation.xml/UncommentedEmptyMethodBody" />
+
+    <!-- documentation rules that seem to be broken
+    <rule ref="category/java/documentation.xml/DanglingJavadoc" />
+      False positive for record constructors.
+    -->
 
     <!-- documentation rules we are not using
     <rule ref="category/java/documentation.xml/CommentRequired" />
@@ -218,7 +233,6 @@
     <rule ref="category/java/errorprone.xml/CloneMethodReturnTypeMustMatchClassName" />
     <rule ref="category/java/errorprone.xml/CloseResource" />
     <rule ref="category/java/errorprone.xml/CollectionTypeMismatch" />
-    <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals" />
     <rule ref="category/java/errorprone.xml/ComparisonWithNaN" />
     <rule ref="category/java/errorprone.xml/ConfusingArgumentToVarargsMethod" />
     <rule ref="category/java/errorprone.xml/ConstructorCallsOverridableMethod" />
@@ -229,7 +243,11 @@
     <rule ref="category/java/errorprone.xml/DoNotThrowExceptionInFinally" />
     <rule ref="category/java/errorprone.xml/DontImportSun" />
     <rule ref="category/java/errorprone.xml/DontUseFloatTypeForLoopIndices" />
-    <rule ref="category/java/errorprone.xml/EmptyCatchBlock" />
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock">
+      <properties>
+        <property name="allowCommentedBlocks" value="true" />
+      </properties>
+    </rule>
     <rule ref="category/java/errorprone.xml/EmptyFinalizer" />
     <rule ref="category/java/errorprone.xml/EqualsNull" />
     <rule ref="category/java/errorprone.xml/FinalizeDoesNotCallSuperFinalize" />
@@ -269,11 +287,15 @@
     <rule ref="category/java/errorprone.xml/UnnecessaryBooleanAssertion" />
     <rule ref="category/java/errorprone.xml/UnnecessaryCaseChange" />
     <rule ref="category/java/errorprone.xml/UnnecessaryConversionTemporary" />
-    <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />
     <rule ref="category/java/errorprone.xml/UseCorrectExceptionLogging" />
     <rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings" />
     <rule ref="category/java/errorprone.xml/UselessPureMethodCall" />
     <rule ref="category/java/errorprone.xml/UseLocaleWithCaseConversions" />
+
+    <!-- error prone rules that seem to be broken
+    <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />
+      False positive in OptionsDoclet.
+    -->
 
     <!-- error prone rules we are not using
     <rule ref="category/java/errorprone.xml/AssignmentInOperand" />
@@ -282,13 +304,14 @@
     <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals" />
     <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingMethodName" />
     <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition" />
+    <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals" />
     <rule ref="category/java/errorprone.xml/DoNotTerminateVM" />
     <rule ref="category/java/errorprone.xml/NullAssignment" />
     <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashCodeOnComparable" />
     <rule ref="category/java/errorprone.xml/ReturnEmptyCollectionRatherThanNull" />
     <rule ref="category/java/errorprone.xml/TestClassWithoutTestCases" />
     <rule ref="category/java/errorprone.xml/UseProperClassLoader" />
-     -->
+    -->
 
     <!-- multithreading rules -->
     <rule ref="category/java/multithreading.xml/AvoidThreadGroup" />
@@ -313,7 +336,6 @@
     <rule ref="category/java/performance.xml/AvoidCalendarDateCreation" />
     <rule ref="category/java/performance.xml/AvoidFileStream" />
     <rule ref="category/java/performance.xml/BigIntegerInstantiation" />
-    <rule ref="category/java/performance.xml/ConsecutiveAppendsShouldReuse" />
     <rule ref="category/java/performance.xml/ConsecutiveLiteralAppends" />
     <rule ref="category/java/performance.xml/InefficientEmptyStringCheck" />
     <rule ref="category/java/performance.xml/InefficientStringBuffering" />
@@ -330,6 +352,8 @@
 
     <!-- performance rules we are not using
     <rule ref="category/java/performance.xml/AvoidInstantiatingObjectsInLoops" />
+    <rule ref="category/java/performance.xml/ConsecutiveAppendsShouldReuse" />
+      It's not clear this helps, and "fluent" appends are harder to read.
     <rule ref="category/java/performance.xml/RedundantFieldInitializer" />
     <rule ref="category/java/performance.xml/TooFewBranchesForSwitch" />
     <rule ref="category/java/performance.xml/UseStringBufferForStringAppends" />

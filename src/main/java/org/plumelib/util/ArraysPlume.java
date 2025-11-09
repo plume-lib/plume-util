@@ -181,11 +181,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to min(Integer[])");
     }
     Integer result = a[0]; // to return a value actually in the array
-    int resultInt = result.intValue(); // for faster comparison
+    int resultInt = result; // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].intValue() < resultInt) {
+      if (a[i] < resultInt) {
         result = a[i];
-        resultInt = result.intValue();
+        resultInt = result;
       }
     }
     return result;
@@ -204,11 +204,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to min(Long[])");
     }
     Long result = a[0]; // to return a value actually in the array
-    long resultLong = result.longValue(); // for faster comparison
+    long resultLong = result; // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].longValue() < resultLong) {
+      if (a[i] < resultLong) {
         result = a[i];
-        resultLong = result.longValue();
+        resultLong = result;
       }
     }
     return result;
@@ -227,11 +227,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to min(Double[])");
     }
     Double result = a[0]; // to return a value actually in the array
-    double resultDouble = result.doubleValue(); // for faster comparison
+    double resultDouble = result; // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].doubleValue() < resultDouble) {
+      if (a[i] < resultDouble) {
         result = a[i];
-        resultDouble = result.doubleValue();
+        resultDouble = result;
       }
     }
     return result;
@@ -307,11 +307,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to max(Integer[])");
     }
     Integer result = a[0]; // to return a value actually in the array
-    int resultInt = result.intValue(); // for faster comparison
+    int resultInt = result; // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].intValue() > resultInt) {
+      if (a[i] > resultInt) {
         result = a[i];
-        resultInt = result.intValue();
+        resultInt = result;
       }
     }
     return result;
@@ -330,11 +330,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to max(Long[])");
     }
     Long result = a[0]; // to return a value actually in the array
-    long resultLong = result.longValue(); // for faster comparison
+    long resultLong = result; // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].longValue() > resultLong) {
+      if (a[i] > resultLong) {
         result = a[i];
-        resultLong = result.longValue();
+        resultLong = result;
       }
     }
     return result;
@@ -353,11 +353,11 @@ public final class ArraysPlume {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to max(Double[])");
     }
     Double result = a[0]; // to return a value actually in the array
-    double resultDouble = result.doubleValue(); // for faster comparison
+    double resultDouble = result; // for faster comparison
     for (int i = 1; i < a.length; i++) {
-      if (a[i].doubleValue() > resultDouble) {
+      if (a[i] > resultDouble) {
         result = a[i];
-        resultDouble = result.doubleValue();
+        resultDouble = result;
       }
     }
     return result;
@@ -482,7 +482,7 @@ public final class ArraysPlume {
   public static int sum(int[][] a) {
     int sum = 0;
     for (int i = 0; i < a.length; i++) { // NOPMD: foreach loop is less clear here
-      for (int j = 0; j < a[i].length; j++) { // NOPMD: foreach loop is less clear here
+      for (int j = 0; j < a[i].length; j++) {
         sum += a[i][j];
       }
     }
@@ -516,7 +516,7 @@ public final class ArraysPlume {
   public static double sum(double[][] a) {
     double sum = 0;
     for (int i = 0; i < a.length; i++) { // NOPMD: foreach loop is less clear here
-      for (int j = 0; j < a[i].length; j++) { // NOPMD: foreach loop is less clear here
+      for (int j = 0; j < a[i].length; j++) {
         sum += a[i][j];
       }
     }
@@ -2281,7 +2281,7 @@ public final class ArraysPlume {
    * @return the length of the array
    */
   @Pure
-  public static @NonNegative int length(Object a) throws IllegalArgumentException {
+  public static @NonNegative int length(Object a) {
     if (a == null) {
       throw new IllegalArgumentException("Argument is null");
     } else if (a instanceof boolean[]) {
@@ -3540,18 +3540,18 @@ public final class ArraysPlume {
       }
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
-        int tmp = 0;
         if ((a1[i] == null) && (a2[i] == null)) {
-          tmp = 0;
+          // Doing nothing is the same as `continue;`.
+          // continue;
         } else if (a1[i] == null) {
-          tmp = -1;
+          return -1;
         } else if (a2[i] == null) {
-          tmp = 1;
+          return 1;
         } else {
-          tmp = a1[i].compareTo(a2[i]);
-        }
-        if (tmp != 0) {
-          return tmp;
+          int tmp = a1[i].compareTo(a2[i]);
+          if (tmp != 0) {
+            return tmp;
+          }
         }
       }
       return a1.length - a2.length;
@@ -3932,7 +3932,7 @@ public final class ArraysPlume {
   @Pure
   public static boolean allNull(@PolyNull Object[] a) {
     for (Object elt : a) {
-      if (!(elt == null)) {
+      if (elt != null) {
         return false;
       }
     }
@@ -3947,7 +3947,7 @@ public final class ArraysPlume {
    */
   @Pure
   public static boolean anyNull(List<? extends @Nullable Object> a) {
-    if (a.size() == 0) {
+    if (a.isEmpty()) {
       return false;
     }
     // The cast ensures that the right version of IndexOfEq gets called.
@@ -3963,7 +3963,7 @@ public final class ArraysPlume {
   @Pure
   public static boolean allNull(List<?> a) {
     for (Object elt : a) {
-      if (!(elt == null)) {
+      if (elt != null) {
         return false;
       }
     }

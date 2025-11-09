@@ -3,7 +3,6 @@ package org.plumelib.util;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +11,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.CharBuffer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.Iterator;
@@ -73,7 +73,8 @@ import org.checkerframework.checker.regex.qual.Regex;
  */
 @SuppressWarnings({
   "IterableAndIterator",
-  "builder:required.method.not.called" // Collection `readers` has element type @MustCall("close")
+  "builder:required.method.not.called", // Collection `readers` has element type @MustCall("close")
+  "PMD.CloseResource"
 })
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
@@ -533,7 +534,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(String,String,String)
    */
   public EntryReader(String filename, String charsetName) throws IOException {
-    this(new FileInputStream(filename), charsetName, filename, null, null);
+    this(Files.newInputStream(Path.of(filename)), charsetName, filename, null, null);
   }
 
   //
@@ -641,7 +642,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return true;
     }
 
-    String line = null;
+    String line;
     try {
       line = readLine();
     } catch (IOException e) {
@@ -694,15 +695,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     // Skip any preceding blank lines
     String line = readLine();
-    while ((line != null) && (line.trim().length() == 0)) {
+    while (line != null && line.isBlank()) {
       line = readLine();
     }
     if (line == null) {
       return null;
     }
 
-    StringBuilder body = new StringBuilder(10000);
-    Entry entry = null;
+    StringBuilder body = new StringBuilder(1000);
     String filename = getFileName();
     long lineNumber = getLineNumber();
 
@@ -711,6 +711,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     if (entryStartRegex != null) {
       entryMatch = entryStartRegex.matcher(line);
     }
+    Entry entry;
     if ((entryMatch != null) && entryMatch.find()) {
       assert entryStartRegex != null : "@AssumeAssertion(nullness): dependent: entryMatch != null";
       assert entryStopRegex != null
@@ -755,8 +756,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
       String description = line;
 
-      // Read until we find another blank line
-      while ((line != null) && (line.trim().length() != 0) && filename.equals(getFileName())) {
+      // Read until we find another blank line.
+      while (line != null && !line.isBlank() && filename.equals(getFileName())) {
         body.append(line);
         body.append(lineSep);
         line = readLine();
@@ -783,7 +784,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   private @Nullable String getNextLine(@GuardSatisfied EntryReader this) throws IOException {
 
-    if (readers.size() == 0) {
+    if (readers.isEmpty()) {
       return null;
     }
 

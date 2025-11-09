@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /** Defines a static method {@link #dumpHeap} that dumps the heap to an .hprof file. */
 @SuppressWarnings("signedness") // lack of annotations on ManagementFactory and reflection
-public class DumpHeap {
+public final class DumpHeap {
 
   /** Do not instantiate. */
   private DumpHeap() {

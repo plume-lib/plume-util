@@ -96,7 +96,7 @@ public final class UtilPlume {
     } else if (second != null) {
       return second;
     } else {
-      throw new NullPointerException();
+      throw new IllegalArgumentException();
     }
   }
 

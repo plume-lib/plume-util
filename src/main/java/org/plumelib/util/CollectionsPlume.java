@@ -42,6 +42,7 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
+@SuppressWarnings("PMD.ForLoopVariableCount")
 public final class CollectionsPlume {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -765,7 +766,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of collection elements
    */
-  public static class Replacement<T> {
+  public static final class Replacement<T> {
     /** The first line to replace, inclusive. */
     public final int start;
 
@@ -1121,7 +1122,7 @@ public final class CollectionsPlume {
     }
 
     long numResults = choose(objs.size() + dims - 1, dims);
-    if (numResults > 100000000) {
+    if (numResults > 100_000_000) {
       throw new Error("Do you really want to create more than 100 million lists?");
     }
 
@@ -1174,7 +1175,7 @@ public final class CollectionsPlume {
       int arity, @NonNegative int start, int cnt) {
 
     long numResults = choose(cnt + arity - 1, arity);
-    if (numResults > 100000000) {
+    if (numResults > 100_000_000) {
       throw new Error("Do you really want to create more than 100 million lists?");
     }
 
@@ -1214,10 +1215,9 @@ public final class CollectionsPlume {
    * @param <T> the element type
    * @return source, converted to Iterable
    */
+  @SuppressWarnings("PMD.XXX")
   public static <T> Iterable<T> iteratorToIterable(final Iterator<T> source) {
-    if (source == null) {
-      throw new NullPointerException();
-    }
+    Objects.requireNonNull(source);
     return new Iterable<T>() {
       /** True if this Iterable object has been used. */
       private AtomicBoolean used = new AtomicBoolean();
@@ -1276,7 +1276,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of elements of the enumeration and iterator
    */
-  @SuppressWarnings("JdkObsolete")
+  @SuppressWarnings({"JdkObsolete", "PMD.ReplaceEnumerationWithIterator"})
   public static final class IteratorEnumeration<T> implements Enumeration<T> {
     /** The iterator that this object wraps. */
     Iterator<T> itor;
