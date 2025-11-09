@@ -561,8 +561,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /**
    * Read a line, ignoring comments and processing includes. Returns null at end of file.
    *
-   * <p>A line that is completely a comment is completely ignored (and not returned as a blank
-   * line).
+   * <p>A line that is completely a comment is ignored (and not returned as a blank line).
    *
    * @return the string that was read, not including any line termination characters, or null at end
    *     of file
