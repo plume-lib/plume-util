@@ -144,7 +144,6 @@ public class OrderedPairIterator<T extends @Nullable Object>
   }
 
   @Override
-  @SuppressWarnings("PMD.AvoidCatchingNPE")
   public IPair<@Nullable T, @Nullable T> next(@GuardSatisfied OrderedPairIterator<T> this) {
     if (next1 == null) {
       if (next2 == null) {
