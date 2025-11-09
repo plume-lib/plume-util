@@ -592,6 +592,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           break;
         }
         line = getNextLine();
+        // System.out.printf ("getNextLine = %s%n", line);
       }
     }
 
