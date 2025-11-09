@@ -271,7 +271,7 @@ ext {
 }
 
 mavenPublishing {
-  coordinates("org.plumelib", "${packageName}", "1.12.0")
+  coordinates("org.plumelib", "${packageName}", "1.12.1")
 
   pom {
     name = "Plume Util"

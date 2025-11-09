@@ -20,21 +20,20 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 
 * Make and test a snapshot release, see below.
 * git pull
-* In ../build.gradle, ensure that "To use a snapshot version" is not enabled.
-* Update the version number in README.md, build.gradle, and in this file (multiple times in each).
-  Ensure the version number in this file does not contain "-SNAPSHOT".
-* Update ../CHANGELOG.md .
+* In `build.gradle`, ensure that "To use a snapshot version" is not enabled.
+* Update the version number in `README.md`, `build.gradle`, and in this file (multiple times in each).
+  Ensure the version number in `build.gradle` does not contain "-SNAPSHOT".
+* Update `CHANGELOG.md`.
 * Save files and stage changes.
-* Run in the top-level directory:  ./gradlew publishToMavenCentral
-  (Previously: ./gradlew clean publish)
+* ./gradlew publishToMavenCentral
 * Browse to https://central.sonatype.com/publishing/deployments, complete the Maven Central release.
 * Add a git tag and commit:
-  VER=1.12.0 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-* Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.12.0", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+  VER=1.12.1 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+* Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.12.1", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
 * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 * Update clients and test, so that if it's broken we can re-release.
 
-## Making a snapshot release
+### Making a snapshot release
 
 * git pull
 * Set version to end in "-SNAPSHOT".

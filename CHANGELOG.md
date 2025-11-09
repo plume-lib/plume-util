@@ -9,7 +9,7 @@
 
 ## 1.12.1 (2025-11-09)
 
-* Make `EntryReader` constructors more uniform
+* Make `EntryReader` constructors more uniform.
 
 ## 1.12.0 (2025-11-09)
 
