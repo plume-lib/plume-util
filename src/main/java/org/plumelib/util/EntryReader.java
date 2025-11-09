@@ -559,7 +559,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(String,boolean,String,String)
    */
   public EntryReader(String filename, String charsetName) throws IOException {
-        this(Files.newInputStream(Path.of(filename)), charsetName, filename, false, null, null);
+    this(Files.newInputStream(Path.of(filename)), charsetName, filename, false, null, null);
   }
 
   //

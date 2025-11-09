@@ -661,8 +661,9 @@ public final class Intern {
    * @param i the value to intern
    * @return an interned Integer with value i
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Long internedLong(long i) {
-    return intern(i);
+    return intern(Long.valueOf(i));
   }
 
   // Not sure whether this convenience method is really worth it.
@@ -779,8 +780,9 @@ public final class Intern {
    * @param d the value to intern
    * @return an interned Double with value d
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Double internedDouble(double d) {
-    return intern(d);
+    return intern(Double.valueOf(d));
   }
 
   // Not sure whether this convenience method is really worth it.
