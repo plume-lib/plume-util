@@ -26,10 +26,16 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * Update `CHANGELOG.md`.
 * Save files and stage changes.
 * ./gradlew publishToMavenCentral
-* Browse to https://central.sonatype.com/publishing/deployments, complete the Maven Central release.
+* Browse to https://central.sonatype.com/publishing/deployments, click "publish".
 * Add a git tag and commit:
   VER=1.12.1 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-* Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.12.1", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+* Make a GitHub release.
+  * Browse to https://github.com/plume-lib/plume-util/releases
+  * Click "draft a new release"
+  * Call it "plume-util 1.12.1"
+  * Use the text from `CHANGELOG.md` as the description
+  * Attach the .jar and -all.jar files from `build/libs/`
+  * Click "publish release"
 * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 * Update clients and test, so that if it's broken we can re-release.
 
