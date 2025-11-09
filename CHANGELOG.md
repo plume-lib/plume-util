@@ -7,7 +7,11 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
-## 1.12.0 (2025-??-??)
+## 1.12.1 (2025-11-09)
+
+* Make `EntryReader` constructors more uniform.
+
+## 1.12.0 (2025-11-09)
 
 * Move map-related methods from `CollectionsPlume` to new class `MapsP`.
   * The versions in `CollectionsPlume` are deprecated.
@@ -18,6 +22,9 @@
 * In `SIList`:
   * new methods `from(Collection)`, `from(Iterable)`, and `from(Iterator)`.
   * deprecated `fromList(Collection)` in favor of `from(Collection)`.
+* In `LimitedSizeSet`, `LimitedSizeIntSet`, and `LimitedSizeLongSet`:
+  * new method `isEmpty()`
+* `EntryReader` supports separating entries by two blank lines.
 
 ## 1.11.0 (2025-06-26)
 
