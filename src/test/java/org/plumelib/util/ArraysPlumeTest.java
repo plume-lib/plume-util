@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.signedness.qual.Signed;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.TooManyStaticImports")
@@ -370,8 +371,8 @@ final class ArraysPlumeTest {
     {
       assertEquals("null", ArraysPlume.toString((Object[]) null));
       assertEquals("null", ArraysPlume.toStringQuoted((Object[]) null));
-      assertTrue(ArraysPlume.toString((List<?>) null).equals("null"));
-      assertTrue(ArraysPlume.toStringQuoted((List<?>) null).equals("null"));
+      assertEquals("null", ArraysPlume.toString((List<? extends @Signed Object>) null));
+      assertEquals("null", ArraysPlume.toStringQuoted((List<? extends @Signed Object>) null));
       assertEquals(
           "[3.14, null, \"hello\"]",
           ArraysPlume.toStringQuoted(Arrays.asList(new Object[] {3.14, null, "hello"})));
