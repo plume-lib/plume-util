@@ -60,7 +60,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * <pre>{@code
  * // EntryReader constructor args are: filename, comment regexp, include regexp
- * try (EntryReader er = new EntryReader(filename, "^#.*", null)) {
+ * try (EntryReader er = new EntryReader(filename, false, "^#.*", null)) {
  *   for (String line : er) {
  *     ...
  *   }
@@ -451,7 +451,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param path the file to read
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(File,String,String)
+   * @see #EntryReader(File,boolean,String,String)
    */
   public EntryReader(Path path) throws IOException {
     this(path, false, null, null);
@@ -475,6 +475,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create an EntryReader.
    *
    * @param file initial file to read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
    * @param commentRegex regular expression that matches comments. Any text that matches
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
@@ -482,9 +483,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    */
   public EntryReader(
-      File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
+      File file,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegex,
+      @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(FilesPlume.newFileReader(file), file.toString(), false, commentRegex, includeRegex);
+    this(
+        FilesPlume.newFileReader(file), file.toString(), twoBlankLines, commentRegex, includeRegex);
   }
 
   /**
@@ -492,10 +497,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param file the file to read
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(File,String,String)
+   * @see #EntryReader(File,boolean,String,String)
    */
   public EntryReader(File file) throws IOException {
-    this(file, null, null);
+    this(file, false, null, null);
   }
 
   /**
@@ -504,7 +509,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param file the file to read
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(File,String,String)
+   * @see #EntryReader(File,boolean,String,String)
    */
   public EntryReader(File file, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(file), charsetName, file.toString(), false, null, null);
@@ -516,19 +521,21 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create a new EntryReader starting with the specified file.
    *
    * @param filename initial file to read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
    * @param commentRegex regular expression that matches comments. Any text that matches {@code
    *     commentRegex} is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(File,String,String)
+   * @see #EntryReader(File,boolean,String,String)
    */
   public EntryReader(
       String filename,
+      boolean twoBlankLines,
       @Nullable @Regex String commentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(new File(filename), commentRegex, includeRegex);
+    this(new File(filename), twoBlankLines, commentRegex, includeRegex);
   }
 
   /**
@@ -536,10 +543,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param filename source from which to read entries
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(String,String,String)
+   * @see #EntryReader(String,boolean,String,String)
    */
   public EntryReader(String filename) throws IOException {
-    this(filename, null, null);
+    this(filename, false, null, null);
   }
 
   /**
@@ -548,7 +555,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename source from which to read entries
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(String,String,String)
+   * @see #EntryReader(String,boolean,String,String)
    */
   public EntryReader(String filename, String charsetName) throws IOException {
     this(new FileInputStream(filename), charsetName, filename, false, null, null);
@@ -1001,7 +1008,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       includeRegex = null;
     }
 
-    try (EntryReader reader = new EntryReader(filename, commentRegex, includeRegex)) {
+    try (EntryReader reader = new EntryReader(filename, false, commentRegex, includeRegex)) {
       String line = reader.readLine();
       while (line != null) {
         System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);

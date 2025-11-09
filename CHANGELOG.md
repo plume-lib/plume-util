@@ -7,6 +7,10 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
+## 1.12.1 (2025-11-09)
+
+* Make `EntryReader` constructors more uniform
+
 ## 1.12.0 (2025-11-09)
 
 * Move map-related methods from `CollectionsPlume` to new class `MapsP`.
