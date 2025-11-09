@@ -179,7 +179,7 @@ public final class EntryReaderTest {
   public void testGetEntryTwoBlankSeparated() throws IOException {
     String content1 = "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content1), "test", false, null, null)) {
+        new EntryReader(new StringReader(content1), "test", true, null, null)) {
       reader.twoBlankLines = true;
       assertEquals(
           "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n", reader.getEntry().body);
@@ -188,7 +188,7 @@ public final class EntryReaderTest {
 
     String content1a = "para1 line1\npara1 line2\n \npara2 line1\npara2 line2\n";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content1a), "test", false, null, null)) {
+        new EntryReader(new StringReader(content1a), "test", true, null, null)) {
       reader.twoBlankLines = true;
       assertEquals(
           "para1 line1\npara1 line2\n \npara2 line1\npara2 line2\n", reader.getEntry().body);
@@ -197,7 +197,7 @@ public final class EntryReaderTest {
 
     String content2 = "para1 line1\npara1 line2\n\n\npara2 line1\npara2 line2";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content2), "test", false, null, null)) {
+        new EntryReader(new StringReader(content2), "test", true, null, null)) {
       reader.twoBlankLines = true;
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
@@ -206,7 +206,7 @@ public final class EntryReaderTest {
 
     String content2a = "para1 line1\npara1 line2\n \n\npara2 line1\npara2 line2";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content2a), "test", false, null, null)) {
+        new EntryReader(new StringReader(content2a), "test", true, null, null)) {
       reader.twoBlankLines = true;
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
@@ -215,7 +215,7 @@ public final class EntryReaderTest {
 
     String content3 = "\n\n\npara1 line1\npara1 line2\n\n\n\npara2 line1\npara2 line2\n\n\n\n";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content3), "test", false, null, null)) {
+        new EntryReader(new StringReader(content3), "test", true, null, null)) {
       reader.twoBlankLines = true;
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
@@ -225,7 +225,7 @@ public final class EntryReaderTest {
     String content3a =
         "\n \n \npara1 line1\npara1 line2\n \n \n\npara2 line1\npara2 line2\n \n \n \n";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content3a), "test", false, null, null)) {
+        new EntryReader(new StringReader(content3a), "test", true, null, null)) {
       reader.twoBlankLines = true;
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);

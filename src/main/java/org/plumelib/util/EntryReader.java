@@ -559,10 +559,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   //
 
   /**
-   * Read a line, ignoring comments and processing includes. Note that a line that is completely a
-   * comment is completely ignored (and not returned as a blank line). Returns null at end of file.
+   * Read a line, ignoring comments and processing includes. Returns null at end of file.
    *
-   * @return the string that was read, or null at end of file
+   * <p>A line that is completely a comment is completely ignored (and not returned as a blank
+   * line).
+   *
+   * @return the string that was read, not including any line termination characters, or null at end
+   *     of file
    */
   @Override
   public @Nullable String readLine(@GuardSatisfied EntryReader this) throws IOException {
@@ -589,7 +592,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           break;
         }
         line = getNextLine();
-        // System.out.printf ("getNextLine = %s%n", line);
       }
     }
 
@@ -711,10 +713,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public @Nullable Entry getEntry(@GuardSatisfied EntryReader this) throws IOException {
 
-    if (twoBlankLines) {
-      System.out.printf("two blank lines");
-    }
-
     // Skip any preceding blank lines
     String line = readLine();
     while ((line != null) && line.isBlank()) {
@@ -788,8 +786,16 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
             break;
           } else {
             blankLineFound = line;
+            line = readLine();
+            continue;
           }
-        } else {
+        }
+
+        // The line is not blank.
+
+        if (blankLineFound != null) {
+          body.append(blankLineFound);
+          body.append(lineSep);
           blankLineFound = null;
         }
 
