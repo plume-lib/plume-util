@@ -544,7 +544,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Read a line, ignoring comments and processing includes. Note that a line that is completely a
    * comment is completely ignored (and not returned as a blank line). Returns null at end of file.
    *
-   * @return the string that was read, or null at end of file
+   * @return the string that was read, not including any line termination characters, or null at end
+   *     of file
    */
   @Override
   public @Nullable String readLine(@GuardSatisfied EntryReader this) throws IOException {
@@ -695,7 +696,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     // Skip any preceding blank lines
     String line = readLine();
-    while ((line != null) && (line.trim().length() == 0)) {
+    while ((line != null) && line.isBlank()) {
       line = readLine();
     }
     if (line == null) {
@@ -764,7 +765,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
 
       // If this entry was terminated by the start of a new input file
-      // put that line back
+      // put that line back.
       if ((line != null) && !filename.equals(getFileName())) {
         putback(line);
       }
