@@ -34,7 +34,8 @@ public final class EntryReaderTest {
   @Test
   public void testBasicLineReading() throws IOException {
     String content = "line1\nline2\nline3\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
       assertEquals("line3", reader.readLine());
@@ -72,7 +73,8 @@ public final class EntryReaderTest {
   @Test
   public void testCommentRemoval() throws IOException {
     String content = "line1\n% comment line\nline2 % inline comment\nline3\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", "^%.*", null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, "^%.*", null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2 % inline comment", reader.readLine()); // no inline comment removal
       assertEquals("line3", reader.readLine());
@@ -84,7 +86,8 @@ public final class EntryReaderTest {
   @Test
   public void testFullLineCommentSkipped() throws IOException {
     String content = "line1\n% full comment\nline2\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", "^%.*", null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, "^%.*", null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
       assertNull(reader.readLine());
@@ -95,7 +98,8 @@ public final class EntryReaderTest {
   @Test
   public void testIterator() throws IOException {
     String content = "line1\nline2\nline3\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       List<String> lines = new ArrayList<>();
       for (String line : reader) {
         lines.add(line);
@@ -111,7 +115,8 @@ public final class EntryReaderTest {
   @Test
   public void testHasNext() throws IOException {
     String content = "line1\nline2\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       assertTrue(reader.hasNext());
       reader.next();
       assertTrue(reader.hasNext());
@@ -124,7 +129,8 @@ public final class EntryReaderTest {
   @Test
   public void testNextThrowsAtEnd() throws IOException {
     String content = "line1\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       reader.next();
       assertThrows(NoSuchElementException.class, reader::next);
     }
@@ -134,7 +140,8 @@ public final class EntryReaderTest {
   @Test
   public void testRemoveNotSupported() throws IOException {
     String content = "line1\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       assertThrows(UnsupportedOperationException.class, reader::remove);
     }
   }
@@ -143,21 +150,83 @@ public final class EntryReaderTest {
   @Test
   public void testGetEntryBlankSeparated() throws IOException {
     String content1 = "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content1), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content1), "test", false, null, null)) {
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
       assertNull(reader.getEntry());
     }
 
     String content2 = "para1 line1\npara1 line2\n\n\npara2 line1\npara2 line2";
-    try (EntryReader reader = new EntryReader(new StringReader(content2), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content2), "test", false, null, null)) {
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
       assertNull(reader.getEntry());
     }
 
     String content3 = "\n\n\npara1 line1\npara1 line2\n\npara2 line1\npara2 line2\n\n\n\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content3), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content3), "test", false, null, null)) {
+      assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
+      assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+  }
+
+  /** Test getEntry() for two-blank-line-separated entries. */
+  @Test
+  public void testGetEntryTwoBlankSeparated() throws IOException {
+    String content1 = "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n";
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content1), "test", true, null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals(
+          "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content1a = "para1 line1\npara1 line2\n \npara2 line1\npara2 line2\n";
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content1a), "test", true, null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals(
+          "para1 line1\npara1 line2\n \npara2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content2 = "para1 line1\npara1 line2\n\n\npara2 line1\npara2 line2";
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content2), "test", true, null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
+      assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content2a = "para1 line1\npara1 line2\n \n\npara2 line1\npara2 line2";
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content2a), "test", true, null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
+      assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content3 = "\n\n\npara1 line1\npara1 line2\n\n\n\npara2 line1\npara2 line2\n\n\n\n";
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content3), "test", true, null, null)) {
+      reader.twoBlankLines = true;
+      assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
+      assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
+      assertNull(reader.getEntry());
+    }
+
+    String content3a =
+        "\n \n \npara1 line1\npara1 line2\n \n \n\npara2 line1\npara2 line2\n \n \n \n";
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content3a), "test", true, null, null)) {
+      reader.twoBlankLines = true;
       assertEquals("para1 line1\npara1 line2\n", reader.getEntry().body);
       assertEquals("para2 line1\npara2 line2\n", reader.getEntry().body);
       assertNull(reader.getEntry());
@@ -169,7 +238,8 @@ public final class EntryReaderTest {
   public void testGetEntryWithStartStop() throws IOException {
     String content =
         "START entry1\nentry1 line2\nentry1 line3\nEND\nSTART entry2\nentry2 line2\nEND\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       reader.setEntryStartStop("^START (.*)$", "^END$");
 
       EntryReader.Entry entry1 = reader.getEntry();
@@ -194,7 +264,8 @@ public final class EntryReaderTest {
   @Test
   public void testLineNumberTracking() throws IOException {
     String content = "line1\nline2\nline3\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       reader.readLine();
       assertEquals(1, reader.getLineNumber());
       reader.readLine();
@@ -208,7 +279,8 @@ public final class EntryReaderTest {
   @Test
   public void testSetLineNumber() throws IOException {
     String content = "line1\nline2\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       reader.readLine();
       reader.setLineNumber(10);
       assertEquals(10, reader.getLineNumber());
@@ -220,7 +292,7 @@ public final class EntryReaderTest {
   public void testGetFileName() throws IOException {
     String content = "line1\n";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content), "myfile.txt", null, null)) {
+        new EntryReader(new StringReader(content), "myfile.txt", false, null, null)) {
       assertEquals("myfile.txt", reader.getFileName());
     }
   }
@@ -229,7 +301,8 @@ public final class EntryReaderTest {
   @Test
   public void testPutback() throws IOException {
     String content = "line1\nline2\nline3\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       String line1 = reader.readLine();
       assertEquals("line1", line1);
       reader.putback(line1);
@@ -242,7 +315,8 @@ public final class EntryReaderTest {
   @Test
   public void testPutbackTwiceThrows() throws IOException {
     String content = "line1\nline2\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       String line1 = reader.readLine();
       reader.putback(line1);
       assertThrows(Error.class, () -> reader.putback("line2"));
@@ -253,7 +327,8 @@ public final class EntryReaderTest {
   @Test
   public void testEntryGetDescriptionNoRegex() throws IOException {
     String content = "first line\nsecond line\n\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       EntryReader.Entry entry = reader.getEntry();
       assertNotNull(entry);
       assertEquals("first line", entry.getDescription(null));
@@ -264,7 +339,8 @@ public final class EntryReaderTest {
   @Test
   public void testEntryGetDescriptionWithRegex() throws IOException {
     String content = "Some text with [DESCRIPTION] in body\nmore text\n\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       EntryReader.Entry entry = reader.getEntry();
       assertNotNull(entry);
       String description = entry.getDescription(java.util.regex.Pattern.compile("\\[.*?\\]"));
@@ -276,7 +352,8 @@ public final class EntryReaderTest {
   @Test
   public void testEntryGetDescriptionNoMatch() throws IOException {
     String content = "first line\nsecond line\n\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       EntryReader.Entry entry = reader.getEntry();
       assertNotNull(entry);
       String description = entry.getDescription(java.util.regex.Pattern.compile("NOMATCH"));
@@ -288,7 +365,8 @@ public final class EntryReaderTest {
   @Test
   public void testEmptyInput() throws IOException {
     String content = "";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       assertNull(reader.readLine());
       assertFalse(reader.hasNext());
       assertNull(reader.getEntry());
@@ -299,7 +377,8 @@ public final class EntryReaderTest {
   @Test
   public void testOnlyBlankLines() throws IOException {
     String content = "\n\n\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       assertNull(reader.getEntry()); // blank lines are skipped
     }
   }
@@ -335,7 +414,8 @@ public final class EntryReaderTest {
   @Test
   public void testIteratorReturnsSameInstance() throws IOException {
     String content = "line1\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       assertTrue(reader.iterator() == reader);
     }
   }
@@ -344,7 +424,8 @@ public final class EntryReaderTest {
   @Test
   public void testMixedCommentsAndContent() throws IOException {
     String content = "# comment1\nline1\n# comment2\n# comment3\nline2\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", "^#.*", null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, "^#.*", null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
       assertNull(reader.readLine());
@@ -355,7 +436,8 @@ public final class EntryReaderTest {
   @Test
   public void testGetEntryWithLeadingBlankLines() throws IOException {
     String content = "\n\nline1\nline2\n\n";
-    try (EntryReader reader = new EntryReader(new StringReader(content), "test", null, null)) {
+    try (EntryReader reader =
+        new EntryReader(new StringReader(content), "test", false, null, null)) {
       EntryReader.Entry entry = reader.getEntry();
       assertNotNull(entry);
       assertEquals("line1", entry.firstLine);
@@ -368,7 +450,7 @@ public final class EntryReaderTest {
   public void testEntryMetadata() throws IOException {
     String content = "\nline1\nline2\n\n";
     try (EntryReader reader =
-        new EntryReader(new StringReader(content), "testfile.txt", null, null)) {
+        new EntryReader(new StringReader(content), "testfile.txt", false, null, null)) {
       EntryReader.Entry entry = reader.getEntry();
       assertNotNull(entry);
       assertEquals("testfile.txt", entry.filename);
