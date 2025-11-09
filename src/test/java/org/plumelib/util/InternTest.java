@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the Intern class. */
+@SuppressWarnings({"PMD.SimplifiableTestAssertion"})
 final class InternTest {
 
   static class InternTestHelper {
@@ -124,17 +126,17 @@ final class InternTest {
   void testIntern() {
     Integer i = Intern.internedInteger("1234");
     assertTrue(Intern.isInterned(i));
-    assertTrue(i.intValue() == 1234);
+    assertEquals(1234, i.intValue());
     i = Intern.internedInteger("0x12ab");
     assertTrue(Intern.isInterned(i));
-    assertTrue(i.intValue() == 0x12ab);
+    assertEquals(0x12ab, i.intValue());
 
     Long l = Intern.internedLong("12345678");
     assertTrue(Intern.isInterned(l));
-    assertTrue(l.intValue() == 12345678);
+    assertEquals(12_345_678, l.intValue());
     l = Intern.internedLong("0x1234abcd");
     assertTrue(Intern.isInterned(l));
-    assertTrue(l.intValue() == 0x1234abcd);
+    assertEquals(0x1234abcd, l.intValue());
   }
 
   // Tests the method "Object intern(Object)" in Intern.java
@@ -165,11 +167,11 @@ final class InternTest {
     Object iOtherIntern = Intern.intern((Object) new Integer(1));
     assertTrue(iIntern == iOtherIntern);
 
-    Long lOrig = new Long(12345678901234L);
+    Long lOrig = new Long(12_345_678_901_234L);
     Long lIntern = Intern.intern(lOrig);
     Object lObjIntern = Intern.intern((Object) lOrig);
     assertTrue(lIntern == lObjIntern);
-    Object lOtherIntern = Intern.intern((Object) new Long(12345678901234L));
+    Object lOtherIntern = Intern.intern((Object) new Long(12_345_678_901_234L));
     assertTrue(lIntern == lOtherIntern);
 
     int[] iaOrig = new int[] {1, 2, 3};
@@ -179,11 +181,12 @@ final class InternTest {
     Object iaOtherIntern = Intern.intern((Object) new int[] {1, 2, 3});
     assertTrue(iaIntern == iaOtherIntern);
 
-    long[] laOrig = new long[] {12345678901234L, 98765432109876L};
+    long[] laOrig = new long[] {12_345_678_901_234L, 98_765_432_109_876L};
     long[] laIntern = Intern.intern(laOrig);
     Object laObjIntern = Intern.intern((Object) laOrig);
     assertTrue(laIntern == laObjIntern);
-    Object laOtherIntern = Intern.intern((Object) new long[] {12345678901234L, 98765432109876L});
+    Object laOtherIntern =
+        Intern.intern((Object) new long[] {12_345_678_901_234L, 98_765_432_109_876L});
     assertTrue(laIntern == laOtherIntern);
 
     // Need to test positive and negative zeros, infinities.

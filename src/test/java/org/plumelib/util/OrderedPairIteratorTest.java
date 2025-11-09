@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -193,6 +194,6 @@ final class OrderedPairIteratorTest {
       assertTrue((pair.second == null) || (pair.second.intValue() == ints[pairno][1]));
       pairno++;
     }
-    assertTrue(pairno == ints.length);
+    assertEquals(ints.length, pairno);
   }
 }

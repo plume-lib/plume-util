@@ -170,8 +170,8 @@ final class StringsPlumeTest {
 
     // Unfortunately, there isn't yet a unescapeNonASCII function.
     // If implemented, it should have the following behavior:
-    // assertTrue(StringsPlume.unescapeNonASCII("\\115").equals("M"));
-    // assertTrue(StringsPlume.unescapeNonASCII("\\115\\111\\124").equals("MIT"));
+    // assertEquals("M", StringsPlume.unescapeNonASCII("\\115")));
+    // assertEquals("MIT", StringsPlume.unescapeNonASCII("\\115\\111\\124")));
   }
 
   @Test
@@ -303,7 +303,7 @@ final class StringsPlumeTest {
 
     Collection<String> size0 = Collections.emptyList();
     Map<Integer, Double> size1 = Collections.singletonMap(1, 2.0);
-    String[] size2 = new String[] {"a", "string"};
+    String[] size2 = {"a", "string"};
 
     assertEquals("0 fusses", StringsPlume.nPlural(size0, "fuss"));
     assertEquals("1 fuss", StringsPlume.nPlural(size1, "fuss"));
@@ -376,14 +376,14 @@ final class StringsPlumeTest {
     assertEquals("ab...", StringsPlume.rpad("abcde ghij", 5));
     assertEquals("10   ", StringsPlume.rpad(10, 5));
     assertEquals("3.14 ", StringsPlume.rpad(3.14, 5));
-    assertEquals("3.141", StringsPlume.rpad(3.141592, 5));
-    assertEquals("3141592", StringsPlume.rpad(3141592, 5));
-    assertEquals("12", StringsPlume.rpad(12.34567, 1));
-    assertEquals("12", StringsPlume.rpad(12.34567, 2));
-    assertEquals("12 ", StringsPlume.rpad(12.34567, 3));
-    assertEquals("12.3", StringsPlume.rpad(12.34567, 4));
-    assertEquals("12.34", StringsPlume.rpad(12.34567, 5));
-    assertEquals("12.345", StringsPlume.rpad(12.34567, 6));
+    assertEquals("3.141", StringsPlume.rpad(3.141_592, 5));
+    assertEquals("3141592", StringsPlume.rpad(3_141_592, 5));
+    assertEquals("12", StringsPlume.rpad(12.345_67, 1));
+    assertEquals("12", StringsPlume.rpad(12.345_67, 2));
+    assertEquals("12 ", StringsPlume.rpad(12.345_67, 3));
+    assertEquals("12.3", StringsPlume.rpad(12.345_67, 4));
+    assertEquals("12.34", StringsPlume.rpad(12.345_67, 5));
+    assertEquals("12.345", StringsPlume.rpad(12.345_67, 6));
 
     // public static class NullableStringComparator
     //   public int compare(Object o1, Object o2)
@@ -419,28 +419,28 @@ final class StringsPlumeTest {
     Locale.setDefault(Locale.US);
     assertEquals("5.00", StringsPlume.abbreviateNumber(5));
     assertEquals("5.00K", StringsPlume.abbreviateNumber(5000));
-    assertEquals("5.00M", StringsPlume.abbreviateNumber(5000000));
-    assertEquals("1.00G", StringsPlume.abbreviateNumber(1000000000));
+    assertEquals("5.00M", StringsPlume.abbreviateNumber(5_000_000));
+    assertEquals("1.00G", StringsPlume.abbreviateNumber(1_000_000_000));
     assertEquals("1.00", StringsPlume.abbreviateNumber(1));
     assertEquals("12.0", StringsPlume.abbreviateNumber(12));
     assertEquals("123", StringsPlume.abbreviateNumber(123));
     assertEquals("1.23K", StringsPlume.abbreviateNumber(1234));
-    assertEquals("12.3K", StringsPlume.abbreviateNumber(12345));
-    assertEquals("123K", StringsPlume.abbreviateNumber(123456));
-    assertEquals("1.23M", StringsPlume.abbreviateNumber(1234567));
-    assertEquals("12.3M", StringsPlume.abbreviateNumber(12345678));
-    assertEquals("123M", StringsPlume.abbreviateNumber(123456789));
-    assertEquals("1.23G", StringsPlume.abbreviateNumber(1234567890));
+    assertEquals("12.3K", StringsPlume.abbreviateNumber(12_345));
+    assertEquals("123K", StringsPlume.abbreviateNumber(123_456));
+    assertEquals("1.23M", StringsPlume.abbreviateNumber(1_234_567));
+    assertEquals("12.3M", StringsPlume.abbreviateNumber(12_345_678));
+    assertEquals("123M", StringsPlume.abbreviateNumber(123_456_789));
+    assertEquals("1.23G", StringsPlume.abbreviateNumber(1_234_567_890));
     assertEquals("9.00", StringsPlume.abbreviateNumber(9));
     assertEquals("98.0", StringsPlume.abbreviateNumber(98));
     assertEquals("987", StringsPlume.abbreviateNumber(987));
     assertEquals("9.88K", StringsPlume.abbreviateNumber(9876));
-    assertEquals("98.8K", StringsPlume.abbreviateNumber(98765));
-    assertEquals("988K", StringsPlume.abbreviateNumber(987654));
-    assertEquals("9.88M", StringsPlume.abbreviateNumber(9876543));
-    assertEquals("98.8M", StringsPlume.abbreviateNumber(98765432));
-    assertEquals("988M", StringsPlume.abbreviateNumber(987654321));
-    assertEquals("9.88G", StringsPlume.abbreviateNumber(9876543210L));
+    assertEquals("98.8K", StringsPlume.abbreviateNumber(98_765));
+    assertEquals("988K", StringsPlume.abbreviateNumber(987_654));
+    assertEquals("9.88M", StringsPlume.abbreviateNumber(9_876_543));
+    assertEquals("98.8M", StringsPlume.abbreviateNumber(98_765_432));
+    assertEquals("988M", StringsPlume.abbreviateNumber(987_654_321));
+    assertEquals("9.88G", StringsPlume.abbreviateNumber(9_876_543_210L));
   }
 
   @Test

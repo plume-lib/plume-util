@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -258,13 +259,13 @@ final class CollectionsPlumeTest {
 
     // public boolean deepEquals(Object o1, Object o2)
 
-    boolean[] zatft1 = new boolean[] {true, false, true};
-    boolean[] zatft2 = new boolean[] {true, false, true};
-    boolean[] zatff = new boolean[] {true, false, false};
-    assertTrue(!zatft1.equals(zatft2)); // regular equals returns false
+    boolean[] zatft1 = {true, false, true};
+    boolean[] zatft2 = {true, false, true};
+    boolean[] zatff = {true, false, false};
+    assertNotEquals(zatft1, zatft2); // regular equals returns false
     assertTrue(CollectionsPlume.deepEquals(zatft1, zatft2));
-    assertTrue(!zatft1.equals(zatff)); // regular equals returns false
-    assertTrue(!CollectionsPlume.deepEquals(zatft1, zatff));
+    assertNotEquals(zatft1, zatff); // regular equals returns false
+    assertFalse(CollectionsPlume.deepEquals(zatft1, zatff));
 
     List<Object> l1 = new ArrayList<>();
     List<Object> l2 = new ArrayList<>();
@@ -276,12 +277,12 @@ final class CollectionsPlumeTest {
     l2.add(zatft2);
     l3.add(zatff);
     // Don't test .equals because it suffers infinite recursion.
-    // assertTrue(! l1.equals(l2));
-    // assertTrue(! l1.equals(l3));
-    // assertTrue(! l2.equals(l3));
+    // assertFalse( l1.equals(l2));
+    // assertFalse( l1.equals(l3));
+    // assertFalse( l2.equals(l3));
     assertTrue(CollectionsPlume.deepEquals(l1, l2));
-    assertTrue(!CollectionsPlume.deepEquals(l1, l3));
-    assertTrue(!CollectionsPlume.deepEquals(l2, l3));
+    assertFalse(CollectionsPlume.deepEquals(l1, l3));
+    assertFalse(CollectionsPlume.deepEquals(l2, l3));
   }
 
   // public static <List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM>
@@ -590,7 +591,7 @@ final class CollectionsPlumeTest {
   @SuppressWarnings("ReturnValueIgnored")
   void testSortedSetTime() {
     int size = 4;
-    int iterations = 100000;
+    int iterations = 100_000;
     long sortedTime = 0;
     long unsortedTime = 0;
     Random random = new Random(0);
@@ -685,13 +686,13 @@ final class CollectionsPlumeTest {
 
     List<Object> abc = Arrays.asList(a, b, c);
     List<List<Object>> combo1 = CollectionsPlume.createCombinations(1, 0, abc);
-    assertTrue(combo1.size() == 3);
+    assertEquals(3, combo1.size());
     assertTrue(combo1.contains(aList));
     assertTrue(combo1.contains(bList));
     assertTrue(combo1.contains(cList));
 
     List<List<Object>> combo2 = CollectionsPlume.createCombinations(2, 0, abc);
-    assertTrue(combo2.size() == 6);
+    assertEquals(6, combo2.size());
     assertTrue(combo2.contains(aa));
     assertTrue(combo2.contains(ab));
     assertTrue(combo2.contains(ac));
@@ -708,13 +709,13 @@ final class CollectionsPlumeTest {
     Integer i12 = 12;
 
     List<ArrayList<Integer>> combo3 = CollectionsPlume.createCombinations(1, 0, 2);
-    assertTrue(combo3.size() == 3);
+    assertEquals(3, combo3.size());
     assertTrue(combo3.contains(Arrays.asList(new Integer[] {i0})));
     assertTrue(combo3.contains(Arrays.asList(new Integer[] {i1})));
     assertTrue(combo3.contains(Arrays.asList(new Integer[] {i2})));
 
     List<ArrayList<Integer>> combo4 = CollectionsPlume.createCombinations(2, 0, 2);
-    assertTrue(combo4.size() == 6);
+    assertEquals(6, combo4.size());
     assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i0})));
     assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i1})));
     assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i2})));
@@ -723,7 +724,7 @@ final class CollectionsPlumeTest {
     assertTrue(combo4.contains(Arrays.asList(new Integer[] {i2, i2})));
 
     List<ArrayList<Integer>> combo5 = CollectionsPlume.createCombinations(2, 10, 12);
-    assertTrue(combo5.size() == 6);
+    assertEquals(6, combo5.size());
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i10})));
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i11})));
     assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i12})));
@@ -760,10 +761,10 @@ final class CollectionsPlumeTest {
     // public static class EnumerationIterator implements Iterator
     // public static class IteratorEnumeration implements Enumeration
 
-    assertTrue(iota0.equals(toArrayList(iota0.iterator())));
+    assertEquals(iota0, toArrayList(iota0.iterator()));
     assertEquals(
         iota0, toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota0.iterator())));
-    assertTrue(iota10.equals(toArrayList(iota10.iterator())));
+    assertEquals(iota10, toArrayList(iota10.iterator()));
     assertEquals(
         iota10, toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
 
@@ -838,9 +839,9 @@ final class CollectionsPlumeTest {
     CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali =
         new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(iota5.iterator());
     ArrayList<Integer> rfali_vector = toArrayList(rfali);
-    assertTrue(iota5middle.equals(rfali_vector));
-    assertTrue(rfali.getFirst().equals(0));
-    assertTrue(rfali.getLast().equals(4));
+    assertEquals(iota5middle, rfali_vector);
+    assertEquals(0, rfali.getFirst());
+    assertEquals(4, rfali.getLast());
   }
 
   // public static <T extends @Nullable Object> List<T> randomElements(Iterator<T> itor, int
@@ -862,9 +863,9 @@ final class CollectionsPlumeTest {
 
     int itorSize = 10;
     int numEltsLimit = 12;
-    int tries = shortRun ? 100 : 100000;
+    int tries = shortRun ? 100 : 100_000;
     double ratioLimit = .02;
-    Random r = new Random(20020311);
+    Random r = new Random(20_020_311);
     // "i++" instead of "i+=3" here works, but is slow
     for (int i = 1; i < numEltsLimit; i += 3) {
       int[] totals = new int[numEltsLimit];
@@ -901,7 +902,7 @@ final class CollectionsPlumeTest {
       }
       int iTruncated = Math.min(itorSize, i);
       int grandTotal = tries * iTruncated;
-      assertTrue(ArraysPlume.sum(totals) == grandTotal); // "Totals = " + ArraysPlume.sum(totals))
+      assertEquals(grandTotal, ArraysPlume.sum(totals)); // "Totals = " + ArraysPlume.sum(totals))
       // System.out.print("chosen:\t");
       for (int k = 0; k < numEltsLimit; k++) {
         int thisTotal = totals[k];

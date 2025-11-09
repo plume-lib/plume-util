@@ -1,6 +1,6 @@
 package org.plumelib.util;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -57,24 +57,24 @@ final class GraphPlumeTest {
     initializePreds1AndSucc1();
 
     Map<Integer, List<Integer>> dom1post = GraphPlume.dominators(succs1);
-    assertTrue(dom1post.get(0).toString().equals("[7, 1, 0]"));
-    assertTrue(dom1post.get(1).toString().equals("[7, 1]"));
-    assertTrue(dom1post.get(2).toString().equals("[7, 2]"));
-    assertTrue(dom1post.get(3).toString().equals("[7, 5, 4, 3]"));
-    assertTrue(dom1post.get(4).toString().equals("[7, 5, 4]"));
-    assertTrue(dom1post.get(5).toString().equals("[7, 5]"));
-    assertTrue(dom1post.get(6).toString().equals("[7, 5, 4, 6]"));
-    assertTrue(dom1post.get(7).toString().equals("[7]"));
+    assertEquals("[7, 1, 0]", dom1post.get(0).toString());
+    assertEquals("[7, 1]", dom1post.get(1).toString());
+    assertEquals("[7, 2]", dom1post.get(2).toString());
+    assertEquals("[7, 5, 4, 3]", dom1post.get(3).toString());
+    assertEquals("[7, 5, 4]", dom1post.get(4).toString());
+    assertEquals("[7, 5]", dom1post.get(5).toString());
+    assertEquals("[7, 5, 4, 6]", dom1post.get(6).toString());
+    assertEquals("[7]", dom1post.get(7).toString());
 
     Map<Integer, List<Integer>> dom1pre = GraphPlume.dominators(preds1);
-    assertTrue(dom1pre.get(0).toString().equals("[0]"));
-    assertTrue(dom1pre.get(1).toString().equals("[0, 1]"));
-    assertTrue(dom1pre.get(2).toString().equals("[0, 1, 2]"));
-    assertTrue(dom1pre.get(3).toString().equals("[0, 1, 3]"));
-    assertTrue(dom1pre.get(4).toString().equals("[0, 1, 3, 4]"));
-    assertTrue(dom1pre.get(5).toString().equals("[0, 1, 3, 4, 5]"));
-    assertTrue(dom1pre.get(6).toString().equals("[0, 1, 3, 4, 6]"));
-    assertTrue(dom1pre.get(7).toString().equals("[0, 1, 7]"));
+    assertEquals("[0]", dom1pre.get(0).toString());
+    assertEquals("[0, 1]", dom1pre.get(1).toString());
+    assertEquals("[0, 1, 2]", dom1pre.get(2).toString());
+    assertEquals("[0, 1, 3]", dom1pre.get(3).toString());
+    assertEquals("[0, 1, 3, 4]", dom1pre.get(4).toString());
+    assertEquals("[0, 1, 3, 4, 5]", dom1pre.get(5).toString());
+    assertEquals("[0, 1, 3, 4, 6]", dom1pre.get(6).toString());
+    assertEquals("[0, 1, 7]", dom1pre.get(7).toString());
 
     // I should add more tests.
 

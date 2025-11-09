@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
@@ -12,7 +13,7 @@ final class LimitedSizeSetTest {
 
   // Add 100 elements randomly selected from the range 0..limit-1 to the set.
   private static void lsisAddElts(@Positive int limit, LimitedSizeSet<Integer> s) {
-    Random r = new Random(20140613);
+    Random r = new Random(20_140_613);
     for (int i = 0; i < 100; i++) {
       s.add(r.nextInt(limit));
     }
@@ -38,11 +39,11 @@ final class LimitedSizeSetTest {
     s.add(1);
     s.add(2);
     s.add(null);
-    assertTrue(s.size() == 3);
+    assertEquals(3, s.size());
     assertTrue(s.contains(1));
     assertTrue(s.contains(null));
     s.add(3);
-    assertTrue(s.size() == 4);
+    assertEquals(4, s.size());
     assertTrue(s.contains(1));
     assertTrue(s.contains(null));
     assertTrue(s.contains(3));

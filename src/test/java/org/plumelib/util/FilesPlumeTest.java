@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -37,12 +38,12 @@ final class FilesPlumeTest {
         File readOnly = new File("temp");
         readOnly.createNewFile();
         readOnly.setReadOnly();
-        assertTrue(!FilesPlume.canCreateAndWrite(readOnly));
+        assertFalse(FilesPlume.canCreateAndWrite(readOnly));
         readOnly.delete();
       }
 
       assertTrue(FilesPlume.canCreateAndWrite(new File("temp")));
-      assertTrue(!FilesPlume.canCreateAndWrite(new File("temp/temp")));
+      assertFalse(FilesPlume.canCreateAndWrite(new File("temp/temp")));
     } catch (IOException e) {
       e.printStackTrace();
       fail("failure while testing FilesPlume.canCreateAndWrite(): " + e.toString());
