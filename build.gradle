@@ -17,6 +17,9 @@ plugins {
 
   // Checker Framework pluggable type-checking
   id("org.checkerframework").version("0.6.61")
+
+  // Publishing to Maven Central.
+  id("com.vanniktech.maven.publish").version("0.34.0")
 }
 
 repositories {
@@ -43,9 +46,6 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter:5.14.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
-
-// To upload to Maven Central, see instructions in the file.
-apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_1_8
@@ -247,6 +247,52 @@ tasks.register("requireJavadoc", JavaExec) {
 }
 check.dependsOn(requireJavadoc)
 javadocWeb.dependsOn(requireJavadoc)
+
+
+// Publishing
+
+// // To upload to Maven Central, see instructions in the file.
+// // apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
+
+// To upload to Maven Central:
+// * ./gradlew publishToMavenCentral
+// * browse to https://central.sonatype.com/publishing/deployments
+
+ext {
+  packageName = "plume-util"
+}
+
+mavenPublishing {
+  coordinates("org.plumelib", "${packageName}", "1.12.0")
+
+  pom {
+    name = "Plume Util"
+    description = "Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc."
+    url = "https://github.com/plume-lib/${packageName}"
+
+    scm {
+      url = "https://github.com:plume-lib/${packageName}/"
+      connection = "scm:git:git://github.com/plume-lib/${packageName}.git"
+      developerConnection = "scm:git:ssh://git@github.com/plume-lib/${packageName}.git"
+    }
+
+    licenses {
+      license {
+        name = "MIT License"
+        url = "https://opensource.org/licenses/MIT"
+      }
+    }
+
+    developers {
+      developer {
+        id = "mernst"
+        name = "Michael Ernst"
+        email = "mernst@alum.mit.edu"
+      }
+    }
+  }
+}
+
 
 // Emacs support
 

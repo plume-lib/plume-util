@@ -8,7 +8,7 @@
 //     * Approach 1:  to Maven Central
 //        * Set "version" (below) to end in "-SNAPSHOT".
 //        * git pull && ./gradlew clean publish
-//        * In the clients" build.gradle: set version number and use:
+//        * In the clients' build.gradle: set version number and use:
 //            repositories {
 //              ...
 //              maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
@@ -19,7 +19,7 @@
 //     * Approach 2:  to Maven Local
 //        * Set "version" (below) to end in "-SNAPSHOT".
 //        * git pull && ./gradlew PublishToMavenLocal
-//        * In the clients" build.gradle: set version number and use:
+//        * In the clients' build.gradle: set version number and use:
 //            repositories {
 //              mavenLocal()
 //            }
@@ -35,11 +35,12 @@
 //    Ensure the version number in this file does not contain "-SNAPSHOT".
 //  * Update ../CHANGELOG.md .
 //  * Save files and stage changes.
-//  * Run in the top-level directory:  ./gradlew clean publish
+//  * Run in the top-level directory:  ./gradlew clean publishToMavenCentral
+//    (Previously: ./gradlew clean publish)     
 //  * Browse to https://central.sonatype.com/publishing/deployments, complete the Maven Central release.
 //  * Add a git tag and commit:
-//    VER=1.11.0 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
-//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.11.0", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
+//    VER=1.12.0 && git commit -m "Version $VER" && git push && git tag -a v$VER -m "Version $VER" && git push && git push --tags
+//  * Make a GitHub release. Go to the GitHub releases page, make a release, call it "plume-util 1.12.0", use the text from ../CHANGELOG.md as the description, attach the .jar and -all.jar files from ../build/libs/ .
 //  * Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
 //  * Update clients and test, so that if it's broken we can re-release.
 
@@ -47,7 +48,7 @@ apply plugin: "maven-publish"
 apply plugin: "signing"
 
 group = "org.plumelib"
-version = "1.11.0"
+version = "1.12.0"
 ext {
   packageName = "plume-util"
 }
