@@ -67,4 +67,3 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     checker/bin-devel/test-cftests-all.sh && checker/bin-devel/test-typecheck.sh && checker/bin-devel/test-plume-lib.sh
     ```
  * For Daikon: make compile junit test
-
