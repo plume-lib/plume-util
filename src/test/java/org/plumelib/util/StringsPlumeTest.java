@@ -76,6 +76,7 @@ final class StringsPlumeTest {
         StringsPlume.indentLines(2, StringsPlume.joinLines("", "1", "", "2", "")));
   }
 
+  @SuppressWarnings("PMD.UnnecessaryVarargsArrayCreation") // testing with & without varargs array
   @Test
   void test_join() {
 

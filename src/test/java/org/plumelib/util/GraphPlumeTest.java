@@ -30,8 +30,8 @@ final class GraphPlumeTest {
     preds1.clear();
     succs1.clear();
     for (int i = 0; i <= 7; i++) {
-      preds1.put(i, new ArrayList<Integer>());
-      succs1.put(i, new ArrayList<Integer>());
+      preds1.put(i, new ArrayList<>());
+      succs1.put(i, new ArrayList<>());
     }
     succs1.get(0).add(1);
     preds1.get(1).add(0);

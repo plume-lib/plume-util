@@ -57,7 +57,6 @@ final class MathPlumeTest {
     return asList.iterator();
   }
 
-  @SuppressWarnings("PMD.ForLoopCanBeForeach") // PMD bug: index is used in two different ways
   private static int[] intIteratorArray(Iterator<Integer> itor) {
     ArrayList<Integer> v = new ArrayList<>();
     while (itor.hasNext()) {

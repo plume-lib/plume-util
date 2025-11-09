@@ -599,9 +599,9 @@ final class CollectionsPlumeTest {
     long unsortedTime = 0;
     Random random = new Random(0);
     for (int i = 0; i < iterations; i++) {
-      SortedSet<Integer> s1 = new TreeSet<Integer>();
-      SortedSet<Integer> s2 = new TreeSet<Integer>();
-      SortedSet<Integer> s3 = new TreeSet<Integer>();
+      SortedSet<Integer> s1 = new TreeSet<>();
+      SortedSet<Integer> s2 = new TreeSet<>();
+      SortedSet<Integer> s3 = new TreeSet<>();
       for (int j = 0; j < size; j++) {
         int elt1 = random.nextInt(10);
         int elt2 = random.nextInt(10);
@@ -765,11 +765,10 @@ final class CollectionsPlumeTest {
     // public static class IteratorEnumeration implements Enumeration
 
     assertEquals(iota0, toArrayList(iota0.iterator()));
-    assertEquals(
-        iota0, toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota0.iterator())));
+    assertEquals(iota0, toArrayList(new CollectionsPlume.IteratorEnumeration<>(iota0.iterator())));
     assertEquals(iota10, toArrayList(iota10.iterator()));
     assertEquals(
-        iota10, toArrayList(new CollectionsPlume.IteratorEnumeration<Integer>(iota10.iterator())));
+        iota10, toArrayList(new CollectionsPlume.IteratorEnumeration<>(iota10.iterator())));
 
     // public static class MergedIterator2 implements Iterator {
     assertEquals(
@@ -840,7 +839,7 @@ final class CollectionsPlumeTest {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> iota5middle = Arrays.asList(1, 2, 3);
     CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali =
-        new CollectionsPlume.RemoveFirstAndLastIterator<Integer>(iota5.iterator());
+        new CollectionsPlume.RemoveFirstAndLastIterator<>(iota5.iterator());
     ArrayList<Integer> rfali_vector = toArrayList(rfali);
     assertEquals(iota5middle, rfali_vector);
     assertEquals(0, rfali.getFirst());
@@ -852,6 +851,7 @@ final class CollectionsPlumeTest {
 
   // public static <T> List<T> randomElements(Iterator<T> itor, int numElts, Random random)
 
+  @SuppressWarnings("PMD.ReplaceJavaUtilCalendar")
   @Test
   void testRandomElements() {
 

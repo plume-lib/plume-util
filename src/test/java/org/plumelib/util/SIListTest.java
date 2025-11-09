@@ -85,7 +85,7 @@ class SIListTest {
     List<SIList<String>> lists = new ArrayList<>();
     ArrayList<String> al = new ArrayList<>();
 
-    SIList<String> base = SIList.from(new ArrayList<String>());
+    SIList<String> base = SIList.from(new ArrayList<>());
 
     int i;
     for (i = 0; i < 50; i++) {
@@ -94,7 +94,7 @@ class SIListTest {
       al.add(v);
     }
     lists.add(base);
-    lists.add(SIList.from(new ArrayList<String>()));
+    lists.add(SIList.from(new ArrayList<>()));
     base = SIList.concat(lists);
     for (i = 55; i < 70; i++) {
       String v = "str" + i;
@@ -111,7 +111,7 @@ class SIListTest {
 
   @Test
   void emptyLOL() {
-    List<SIList<String>> lists = Collections.singletonList(SIList.from(new ArrayList<String>()));
+    List<SIList<String>> lists = Collections.singletonList(SIList.from(new ArrayList<>()));
     SIList<String> sl = SIList.concat(lists);
 
     assertTrue(sl.isEmpty());

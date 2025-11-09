@@ -13,7 +13,12 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the Intern class. */
-@SuppressWarnings({"PMD.SimplifiableTestAssertion", "PMD.PrimitiveWrapperInstantiation"})
+@SuppressWarnings({
+  "PMD.SimplifiableTestAssertion",
+  "PMD.PrimitiveWrapperInstantiation",
+  "PMD.StringInstantiation",
+  "PMD.DoNotCallGarbageCollectionExplicitly",
+})
 final class InternTest {
 
   InternTest() {}
@@ -155,7 +160,7 @@ final class InternTest {
     Object sOtherIntern = Intern.intern(new String("foo"));
     assertTrue(sIntern == sOtherIntern);
 
-    @Interned String[] saOrig = new String[] {"foo", "bar"};
+    @Interned String[] saOrig = {"foo", "bar"};
     String[] saIntern = Intern.intern(saOrig);
     Object saObjIntern = Intern.intern((Object) saOrig);
     assertTrue(saIntern == saObjIntern);
@@ -176,14 +181,14 @@ final class InternTest {
     Object lOtherIntern = Intern.intern((Object) new Long(12_345_678_901_234L));
     assertTrue(lIntern == lOtherIntern);
 
-    int[] iaOrig = new int[] {1, 2, 3};
+    int[] iaOrig = {1, 2, 3};
     int[] iaIntern = Intern.intern(iaOrig);
     Object iaObjIntern = Intern.intern((Object) iaOrig);
     assertTrue(iaIntern == iaObjIntern);
     Object iaOtherIntern = Intern.intern((Object) new int[] {1, 2, 3});
     assertTrue(iaIntern == iaOtherIntern);
 
-    long[] laOrig = new long[] {12_345_678_901_234L, 98_765_432_109_876L};
+    long[] laOrig = {12_345_678_901_234L, 98_765_432_109_876L};
     long[] laIntern = Intern.intern(laOrig);
     Object laObjIntern = Intern.intern((Object) laOrig);
     assertTrue(laIntern == laObjIntern);
@@ -228,14 +233,14 @@ final class InternTest {
     Object dzOtherIntern = Intern.intern((Object) new Double(negativeZero));
     assertTrue(dzIntern == dzOtherIntern);
 
-    double[] daOrig = new double[] {3.14, 2.71};
+    double[] daOrig = {3.14, 2.71};
     double[] daIntern = Intern.intern(daOrig);
     Object daObjIntern = Intern.intern((Object) daOrig);
     assertTrue(daIntern == daObjIntern);
     Object daOtherIntern = Intern.intern((Object) new double[] {3.14, 2.71});
     assertTrue(daIntern == daOtherIntern);
 
-    double[] da2Orig = new double[] {+0.0, Double.NaN};
+    double[] da2Orig = {+0.0, Double.NaN};
     double[] da2Intern = Intern.intern(da2Orig);
     Object da2ObjIntern = Intern.intern((Object) da2Orig);
     assertTrue(da2Intern == da2ObjIntern);
@@ -244,7 +249,7 @@ final class InternTest {
             (Object) new double[] {-0.0, Double.POSITIVE_INFINITY / Double.POSITIVE_INFINITY});
     assertTrue(da2Intern == da2OtherIntern);
 
-    @Interned Object[] oaOrig = new Object[] {"foo", 1};
+    @Interned Object[] oaOrig = {"foo", 1};
     Object[] oaIntern = Intern.intern(oaOrig);
     Object oaObjIntern = Intern.intern((Object) oaOrig);
     assertTrue(oaIntern == oaObjIntern);

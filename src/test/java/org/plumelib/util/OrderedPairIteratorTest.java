@@ -31,7 +31,7 @@ final class OrderedPairIteratorTest {
     }
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(ones.iterator(), ones.iterator()),
+        new OrderedPairIterator<>(ones.iterator(), ones.iterator()),
         new int[][] {
           {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}, {8, 8}, {9, 9}, {10, 10},
           {11, 11}, {12, 12}, {13, 13}, {14, 14}, {15, 15}, {16, 16}, {17, 17}, {18, 18}, {19, 19},
@@ -40,7 +40,7 @@ final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(ones.iterator(), twos.iterator()),
+        new OrderedPairIterator<>(ones.iterator(), twos.iterator()),
         new int[][] {
           {1, NULL},
           {2, 2},
@@ -75,7 +75,7 @@ final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(twos.iterator(), ones.iterator()),
+        new OrderedPairIterator<>(twos.iterator(), ones.iterator()),
         new int[][] {
           {NULL, 1},
           {2, 2},
@@ -110,7 +110,7 @@ final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(ones.iterator(), threes.iterator()),
+        new OrderedPairIterator<>(ones.iterator(), threes.iterator()),
         new int[][] {
           {1, NULL},
           {2, NULL},
@@ -145,7 +145,7 @@ final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(twos.iterator(), threes.iterator()),
+        new OrderedPairIterator<>(twos.iterator(), threes.iterator()),
         new int[][] {
           {2, NULL},
           {NULL, 3},
