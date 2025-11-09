@@ -12,7 +12,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the Intern class. */
-public final class InternTest {
+final class InternTest {
 
   static class InternTestHelper {
     void test(boolean random) {
@@ -83,7 +83,7 @@ public final class InternTest {
   }
 
   @Test
-  public void testHasher() {
+  void testHasher() {
 
     // // To check (maybe some of these are done already).
     // // All of these methods are in Intern; should the tests appear in
@@ -121,7 +121,7 @@ public final class InternTest {
   }
 
   @Test
-  public void testIntern() {
+  void testIntern() {
     Integer i = Intern.internedInteger("1234");
     assertTrue(Intern.isInterned(i));
     assertTrue(i.intValue() == 1234);
@@ -140,7 +140,7 @@ public final class InternTest {
   // Tests the method "Object intern(Object)" in Intern.java
   @SuppressWarnings({"deprecation", "removal", "BoxedPrimitiveConstructor"}) // interning test
   @Test
-  public void testInternObject() {
+  void testInternObject() {
     Object nIntern = Intern.intern((@Nullable Object) null);
     assertTrue(nIntern == null);
 
@@ -245,7 +245,10 @@ public final class InternTest {
     assertTrue(oaIntern == oaObjIntern);
     Object oaOtherIntern = Intern.intern((Object) new Object[] {"foo", 1});
     assertTrue(oaIntern == oaOtherIntern);
+  }
 
+  @Test
+  void testInternObjectException() {
     java.awt.Point pOrig = new java.awt.Point(1, 2);
     try {
       Intern.intern((Object) pOrig); // performed for side effect
@@ -261,7 +264,7 @@ public final class InternTest {
    */
   @SuppressWarnings("index:argument") // https://github.com/typetools/checker-framework/issues/2484
   @Test
-  public void testSequenceAndIndices() {
+  void testSequenceAndIndices() {
     int[] a1 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});
     int[] a2 = Intern.intern(new int[] {1, 2, 3, 4, 5, 6, 7});
     int[] a3 = Intern.intern(new int[] {2, 3, 4, 5, 6, 7});

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 
-public final class MapsPTest {
+final class MapsPTest {
 
   /** The system-specific line separator. */
   private static final String lineSep = System.lineSeparator();
@@ -54,7 +54,7 @@ public final class MapsPTest {
   }
 
   @Test
-  public void testMapToString() {
+  void testMapToString() {
 
     // mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix) {
     // mapMapToStringMultiLine(

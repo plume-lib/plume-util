@@ -8,10 +8,10 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the OrderedPairIterator class. */
-public final class OrderedPairIteratorTest {
+final class OrderedPairIteratorTest {
 
   @Test
-  public void testOrderedPairIterator() {
+  void testOrderedPairIterator() {
     final int NULL = -2222;
 
     ArrayList<Integer> ones = new ArrayList<>();

@@ -7,7 +7,7 @@ import java.util.Comparator;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
-public final class FuzzyFloatTest {
+final class FuzzyFloatTest {
 
   // //////////////////////////////////////////////////////////////////////
   // Helper functions
@@ -57,7 +57,7 @@ public final class FuzzyFloatTest {
   double offlow2 = 1 - 2 * offset;
 
   @Test
-  public void test_eq() {
+  void test_eq() {
 
     // test equality for a variety of postive and negative numbers
     for (double d = -20000; d < 20000; d += 1000.36) {
@@ -92,7 +92,7 @@ public final class FuzzyFloatTest {
   // rudimentary checks on the comparison operators (since they all just
   // use eq and ne anyway)
   @Test
-  public void testcomparisons() {
+  void testcomparisons() {
 
     double d = 2563.789;
     assertTrue(!ff.gt(d, d * offlow));
@@ -106,7 +106,7 @@ public final class FuzzyFloatTest {
   }
 
   @Test
-  public void test_indexOf() {
+  void test_indexOf() {
 
     // public int indexOf (double[] a, double elt)
 
@@ -193,7 +193,7 @@ public final class FuzzyFloatTest {
   }
 
   @Test
-  public void test_isElemMatch() {
+  void test_isElemMatch() {
 
     // public boolean isElemMatch (double[] a1, double[] a2)
     {
@@ -249,7 +249,7 @@ public final class FuzzyFloatTest {
   }
 
   @Test
-  public void test_compare() {
+  void test_compare() {
 
     // public class DoubleArrayComparatorLexical implements Comparator
     // public int compare(Object o1, Object o2)
@@ -306,7 +306,7 @@ public final class FuzzyFloatTest {
   }
 
   @Test
-  public void test_isSubset() {
+  void test_isSubset() {
 
     // public boolean FuzzyFloat.isSubset (double[] a1, double[] a2)
 

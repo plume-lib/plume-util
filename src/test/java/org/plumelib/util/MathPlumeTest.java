@@ -12,7 +12,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
-public final class MathPlumeTest {
+final class MathPlumeTest {
 
   // ///////////////////////////////////////////////////////////////////////////
   // Utility functions
@@ -69,7 +69,7 @@ public final class MathPlumeTest {
 
   // Test the utility functions
   @Test
-  public void testTestUtilPlume() {
+  void testTestUtilPlume() {
     int[] a = new int[] {3, 4, 5};
     assertArraysEquals(intIteratorArray(intArrayIterator(a)), a);
   }
@@ -79,7 +79,7 @@ public final class MathPlumeTest {
   //
 
   @Test
-  public void test_negate() {
+  void test_negate() {
 
     // int negate(int a)
     assertTrue(MathPlume.negate(3) == -3);
@@ -88,7 +88,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_bitwiseComplement() {
+  void test_bitwiseComplement() {
 
     // int bitwiseComplement(int a)
     assertTrue(MathPlume.bitwiseComplement(3) == -4);
@@ -97,7 +97,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_sign() {
+  void test_sign() {
 
     // int sign(int a)
     assertTrue(MathPlume.sign(3) == 1);
@@ -106,7 +106,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_pow() {
+  void test_pow() {
 
     // int pow(int base, int expt)
     try {
@@ -122,6 +122,10 @@ public final class MathPlumeTest {
       e.printStackTrace();
       throw new Error(e);
     }
+  }
+
+  @Test
+  void test_pow_exception() {
     try {
       MathPlume.pow(3, -3);
       throw new Error("Didn't throw ArithmeticException");
@@ -131,7 +135,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_gcd() {
+  void test_gcd() {
 
     // int gcd(int a, int b)
     assertTrue(MathPlume.gcd(2, 50) == 2);
@@ -180,7 +184,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_mod() {
+  void test_mod() {
 
     // int modNonnegative(int x, int y)
     assertTrue(MathPlume.modNonnegative(33, 5) == 3);
@@ -200,7 +204,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_missingNumbers() {
+  void test_missingNumbers() {
 
     // int[] missingNumbers(int[] nums)
     assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 5, 6, 7, 8}), new int[] {});
@@ -377,7 +381,7 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_modulus() {
+  void test_modulus() {
 
     // int[] modulus(int[] nums)
     // int[] modulus(Iterator itor)

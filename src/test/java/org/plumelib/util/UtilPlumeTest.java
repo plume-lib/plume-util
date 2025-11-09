@@ -8,7 +8,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
 
 /** Test the UtilPlume class. */
-public final class UtilPlumeTest {
+final class UtilPlumeTest {
 
   private static BitSet randomBitSet(@NonNegative int length, Random r) {
     BitSet result = new BitSet(length);
@@ -19,7 +19,7 @@ public final class UtilPlumeTest {
   }
 
   @Test
-  public void test_intersectionCardinalityAtLeast() {
+  void test_intersectionCardinalityAtLeast() {
 
     // public static intersectionCardinalityAtLeast(BitSet a, BitSet b, int i)
 

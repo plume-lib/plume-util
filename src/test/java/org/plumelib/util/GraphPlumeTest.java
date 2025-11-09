@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
   "keyfor", // https://github.com/typetools/checker-framework/issues/2358 and maybe other issues
   "nullness"
 })
-public final class GraphPlumeTest {
+final class GraphPlumeTest {
 
   // ///////////////////////////////////////////////////////////////////////////
 
@@ -52,7 +52,7 @@ public final class GraphPlumeTest {
   }
 
   @Test
-  public void testGraphPlume() {
+  void testGraphPlume() {
 
     initializePreds1AndSucc1();
 

@@ -15,24 +15,24 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
-public final class ArraysPlumeTest {
+final class ArraysPlumeTest {
 
   @Test
-  public void testNCopies() {
+  void testNCopies() {
     assertArrayEquals(
         new String[] {"hello", "hello", "hello", "hello"}, ArraysPlume.nCopies(4, "hello"));
     assertArrayEquals(new String[] {}, ArraysPlume.nCopies(0, "hello"));
   }
 
   @Test
-  public void testAppend() {
+  void testAppend() {
     assertArrayEquals(
         new String[] {"a", "b", "c"}, ArraysPlume.append(new String[] {"a", "b"}, "c"));
     assertArrayEquals(new String[] {"a"}, ArraysPlume.append(new String[] {}, "a"));
   }
 
   @Test
-  public void testMinAndMax() {
+  void testMinAndMax() {
 
     // public static int min(int[] a)
     assertEquals(1, ArraysPlume.min(new int[] {1, 2, 3}));
@@ -55,18 +55,6 @@ public final class ArraysPlumeTest {
     assertArrayEquals(new int[] {1, 33}, ArraysPlume.minAndMax(new int[] {2, 33, 1}));
     assertArrayEquals(new int[] {-2, 3}, ArraysPlume.minAndMax(new int[] {3, -2, 1}));
     assertArrayEquals(new int[] {3, 3}, ArraysPlume.minAndMax(new int[] {3}));
-    try {
-      ArraysPlume.minAndMax(new int[] {});
-      throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
-    } catch (ArrayIndexOutOfBoundsException e) {
-      // This is the expected behavior, so do nothing.
-    }
-    try {
-      ArraysPlume.minAndMax(new long[] {});
-      throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
-    } catch (ArrayIndexOutOfBoundsException e) {
-      // This is the expected behavior, so do nothing.
-    }
 
     // public static int elementRange(int[] a)
     assertEquals(2, ArraysPlume.elementRange(new int[] {1, 2, 3}));
@@ -76,7 +64,27 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testSum() {
+  void testMinAndMaxException1() {
+    try {
+      ArraysPlume.minAndMax(new int[] {});
+      throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
+    } catch (ArrayIndexOutOfBoundsException e) {
+      // This is the expected behavior, so do nothing.
+    }
+  }
+
+  @Test
+  void testMinAndMaxException2() {
+    try {
+      ArraysPlume.minAndMax(new long[] {});
+      throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
+    } catch (ArrayIndexOutOfBoundsException e) {
+      // This is the expected behavior, so do nothing.
+    }
+  }
+
+  @Test
+  void testSum() {
 
     // public static int sum(int[] a)
     assertTrue(0 == ArraysPlume.sum(new int[0]));
@@ -137,7 +145,7 @@ public final class ArraysPlumeTest {
     "BoxedPrimitiveConstructor"
   }) // test performs == comparisons
   @Test
-  public void testIndexOf_array() {
+  void testIndexOf_array() {
 
     // public static int indexOf(Object[] a, Object elt)
     // public static int indexOfEq(Object[] a, Object elt)
@@ -170,7 +178,7 @@ public final class ArraysPlumeTest {
   // No test for `contains(T[])` for now because it just calls indexOf.
 
   @Test
-  public void testIndexOf_list() {
+  void testIndexOf_list() {
     // public static int indexOf(List<?> a, Object elt)
     // public static int indexOf(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt, int minindex, int indexlimit)
@@ -188,7 +196,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testIndexOf_array_primitive() {
+  void testIndexOf_array_primitive() {
 
     // public static int indexOf(int[] a, int elt)
     {
@@ -235,7 +243,7 @@ public final class ArraysPlumeTest {
     "BoxedPrimitiveConstructor"
   }) // test performs == comparisons
   @Test
-  public void testIndexOf_array_array() {
+  void testIndexOf_array_array() {
 
     // public static int indexOf(Object[] a, Object[] sub)
     // public static int indexOfEq(Object[] a, Object[] sub)
@@ -324,7 +332,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testSubarray() {
+  void testSubarray() {
 
     // public static int indexOf(boolean[] a, boolean[] sub)
     // [I'm punting on this for now; deal with it later...]
@@ -348,7 +356,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testPrinting() {
+  void testPrinting() {
 
     // public static String toString(Object @Nullable [] a)
     // public static String toStringQuoted(Object @Nullable [] a)
@@ -380,7 +388,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_isSorted() {
+  void test_isSorted() {
 
     // public static boolean isSorted(int[] a)
     assertTrue(ArraysPlume.isSorted(new int[] {0, 1, 2}));
@@ -393,7 +401,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_hasNoDuplicates() {
+  void test_hasNoDuplicates() {
     // public static int hasNoDuplicates(int[] a)
     assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, 3, 5, 4, 0}) == true);
     assertTrue(ArraysPlume.hasNoDuplicates(new int[] {1, 2, 3, 5, 4, 100}) == true);
@@ -432,7 +440,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_fnIsPermutation() {
+  void test_fnIsPermutation() {
     // public static boolean fnIsPermutation(int[] a)
     assertTrue(ArraysPlume.fnIsPermutation(new int[] {0, 1, 2, 3}) == true);
     assertTrue(ArraysPlume.fnIsPermutation(new int[] {1, 2, 3, 0}) == true);
@@ -444,7 +452,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_fnIsTotal() {
+  void test_fnIsTotal() {
     // public static boolean fnIsTotal(int[] a)
     assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 3}));
     assertTrue(ArraysPlume.fnIsTotal(new int[] {1, 2, 3, 0}));
@@ -463,7 +471,7 @@ public final class ArraysPlumeTest {
     "index:argument"
   }) // https://github.com/kelloggm/checker-framework/issues/147
   @Test
-  public void testFunctions() {
+  void testFunctions() {
 
     // public static int[] fnIdentity(int length)
     assertArrayEquals(ArraysPlume.fnIdentity(0), new int[] {});
@@ -524,7 +532,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_isSubset() {
+  void test_isSubset() {
 
     // public static boolean isSubset(long[] smaller, long[] bigger)
     // public static boolean isSubset(double[] smaller, double[] bigger)
@@ -572,7 +580,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_sameContents() {
+  void test_sameContents() {
     assertTrue(ArraysPlume.sameContents(new String[] {}, new String[] {}));
     assertTrue(ArraysPlume.sameContents(new String[] {"a"}, new String[] {"a"}));
     assertTrue(ArraysPlume.sameContents(new String[] {"a", "b"}, new String[] {"a", "b"}));
@@ -585,7 +593,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_IntArrayComparator() {
+  void test_IntArrayComparator() {
 
     // public static class IntArrayComparatorLexical implements Comparator
     // public static class IntArrayComparatorLengthFirst implements Comparator
@@ -655,7 +663,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_LongArrayComparator() {
+  void test_LongArrayComparator() {
 
     // public static class LongArrayComparatorLexical implements Comparator
     // public static class LongArrayComparatorLengthFirst implements Comparator
@@ -724,7 +732,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_DoubleArrayComparatorLexical() {
+  void test_DoubleArrayComparatorLexical() {
 
     // public static class DoubleArrayComparatorLexical implements Comparator
 
@@ -776,7 +784,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_ComparableArrayComparator() {
+  void test_ComparableArrayComparator() {
 
     // public static class ObjectArrayComparatorLexical implements Comparator
     // public static class ObjectArrayComparatorLengthFirst implements Comparator
@@ -856,7 +864,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_anyNull() {
+  void test_anyNull() {
 
     // public static boolean anyNull(Object[] a)
 
@@ -880,7 +888,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void test_allNull() {
+  void test_allNull() {
 
     // public static boolean allNull(Object[] a)
 
@@ -917,7 +925,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testPartitioning() {
+  void testPartitioning() {
 
     assertTrue(
         equalElementStrings(
@@ -972,7 +980,7 @@ public final class ArraysPlumeTest {
   Object[] emptyArrayObject = new Object[] {};
 
   @Test
-  public void testConcatenate() {
+  void testConcatenate() {
     String[] abcdefArray2 = ArraysPlume.concatenate(abcArray, defArray);
     assertArrayEquals(abcdefArray, abcdefArray2);
     assertNotSame(abcdefArray, abcdefArray2);
@@ -987,7 +995,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testConcat() {
+  void testConcat() {
     Instant[] da1 = new Instant[] {Instant.now()};
     Instant[] da2 = new Instant[] {Instant.now()};
     Instant[] da3 = ArraysPlume.concat(da1, da2);
@@ -1008,7 +1016,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testMapArray() {
+  void testMapArray() {
     Integer[] iota = new Integer[] {0, 1, 2, 3};
     String[] iotaStringGoal = new String[] {"0", "1", "2", "3"};
     String[] iotaStringActual =
@@ -1018,7 +1026,7 @@ public final class ArraysPlumeTest {
   }
 
   @Test
-  public void testReplaceAll() {
+  void testReplaceAll() {
     Instant now = Instant.now();
     @Nullable Instant[] da2 = new Instant[] {now, Instant.now(), null};
     @Nullable Instant[] da3 = new Instant[] {now, Instant.now(), null};

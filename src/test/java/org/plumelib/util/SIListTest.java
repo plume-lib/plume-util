@@ -11,10 +11,10 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.junit.jupiter.api.Test;
 
 /** Test (mainly) to make sure iterators over simple lists work. */
-public class SIListTest {
+class SIListTest {
 
   @Test
-  public void testArrayList() {
+  void testArrayList() {
     ArrayList<String> al = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
       al.add("str" + i);
@@ -28,7 +28,7 @@ public class SIListTest {
   }
 
   @Test
-  public void oneMoreElement() {
+  void oneMoreElement() {
     ArrayList<String> al = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
       al.add("str" + i);
@@ -44,7 +44,7 @@ public class SIListTest {
   }
 
   @Test
-  public void listOfList() {
+  void listOfList() {
     ArrayList<String> al = new ArrayList<>();
     ArrayList<String> sub = new ArrayList<>();
     List<SIList<String>> lists = new ArrayList<>();
@@ -78,7 +78,7 @@ public class SIListTest {
   }
 
   @Test
-  public void listOfMixed() {
+  void listOfMixed() {
 
     List<SIList<String>> lists = new ArrayList<>();
     ArrayList<String> al = new ArrayList<>();
@@ -108,7 +108,7 @@ public class SIListTest {
   }
 
   @Test
-  public void emptyLOL() {
+  void emptyLOL() {
     List<SIList<String>> lists = Collections.singletonList(SIList.from(new ArrayList<String>()));
     SIList<String> sl = SIList.concat(lists);
 

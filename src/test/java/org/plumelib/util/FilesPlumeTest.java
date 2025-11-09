@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-public final class FilesPlumeTest {
+final class FilesPlumeTest {
 
   // public static BufferedReader bufferedFileReader(String filename)
   // public static LineNumberReader lineNumberFileReader(String filename)
@@ -26,7 +26,7 @@ public final class FilesPlumeTest {
   // public Object incrementHashMap(HashMap hm, Object key, int count)
 
   @Test
-  public void test_canCreateAndWrite() {
+  void test_canCreateAndWrite() {
 
     try {
       assertTrue(FilesPlume.canCreateAndWrite(new File("TestPlume.java")));

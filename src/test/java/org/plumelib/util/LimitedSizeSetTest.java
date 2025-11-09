@@ -8,7 +8,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
 /** Test the LimitedSizeSet class. */
-public final class LimitedSizeSetTest {
+final class LimitedSizeSetTest {
 
   // Add 100 elements randomly selected from the range 0..limit-1 to the set.
   private static void lsisAddElts(@Positive int limit, LimitedSizeSet<Integer> s) {
@@ -49,7 +49,7 @@ public final class LimitedSizeSetTest {
   }
 
   @Test
-  public void testLimitedSizeSet() {
+  void testLimitedSizeSet() {
     for (int i = 1; i < 10; i++) {
       lsis_test(i);
     }

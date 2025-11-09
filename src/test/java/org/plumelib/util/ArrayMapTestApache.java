@@ -58,7 +58,8 @@ import org.junit.jupiter.api.Test;
   "CollectionIncompatibleType",
   "LogicalAssignment",
   "ReferenceEquality",
-  "UnnecessaryParentheses"
+  "UnnecessaryParentheses",
+  "PMD",
 })
 public class ArrayMapTestApache {
   static class MockMap extends AbstractMap {

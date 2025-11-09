@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.plumelib.util.StringsPlume.VersionNumberComparator;
 
 /** Test the stringsPlume class. */
-public final class StringsPlumeTest {
+final class StringsPlumeTest {
 
   @Test
-  public void test_replacePrefix() {
+  void test_replacePrefix() {
 
     // public static String replacePrefix(String target, String oldStr, String newStr)
 
@@ -29,7 +29,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_replaceSuffix() {
+  void test_replaceSuffix() {
 
     // public static String replaceSuffix(String target, String oldStr, String newStr)
 
@@ -40,7 +40,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_replaceAll() {
+  void test_replaceAll() {
 
     assertEquals("avarywhara", StringsPlume.replaceAll("everywhere", Pattern.compile("e"), "a"));
     assertEquals("aabaa", StringsPlume.replaceAll("abababa", Pattern.compile("aba"), "aa"));
@@ -49,7 +49,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_prefixLines() {
+  void test_prefixLines() {
 
     // public static String prefixLines(String prefix, String s) {
 
@@ -62,7 +62,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_indentLines() {
+  void test_indentLines() {
 
     // public static String indentLines(int indent, String s) {
 
@@ -75,7 +75,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_join() {
+  void test_join() {
 
     // public static String join(Object[] a, String delim)
     // public static String join(ArrayList v, String delim)
@@ -103,7 +103,7 @@ public final class StringsPlumeTest {
 
   @SuppressWarnings("UnicodeEscape")
   @Test
-  public void test_escapeJava() {
+  void test_escapeJava() {
 
     // public static String escapeJava(String orig)
     // public static String escapeJava(char c)
@@ -175,14 +175,14 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_charLiteral() {
+  void test_charLiteral() {
     assertEquals("'a'", StringsPlume.charLiteral('a'));
     assertEquals("'\\''", StringsPlume.charLiteral('\''));
     assertEquals("'\"'", StringsPlume.charLiteral('\"'));
   }
 
   @Test
-  public void test_removeWhitespace() {
+  void test_removeWhitespace() {
 
     // public static String removeWhitespaceAround(String arg, String delimiter)
     // public static String removeWhitespaceAfter(String arg, String delimiter)
@@ -241,7 +241,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_isVersionNumberLE() {
+  void test_isVersionNumberLE() {
 
     VersionNumberComparator vnc = new VersionNumberComparator();
 
@@ -259,7 +259,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_nPlural() {
+  void test_nPlural() {
 
     // public static String nPlural(int n, String noun)
 
@@ -317,7 +317,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_vPlural() {
+  void test_vPlural() {
 
     // public static String [Plural(int n, String verb)
 
@@ -333,7 +333,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_nvPlural() {
+  void test_nvPlural() {
 
     // public static String nvPlural(int n, String noun, String verb)
 
@@ -346,7 +346,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_conjunction() {
+  void test_conjunction() {
 
     // public static String conjunction(String conjunction, List<?> elements)
 
@@ -363,7 +363,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_rpad() {
+  void test_rpad() {
 
     // public static String rpad(String s, int length)
     // public static String rpad(int num, int length)
@@ -391,7 +391,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void test_count() {
+  void test_count() {
 
     // public static int count(String s, int ch)
     // public static int count(String s, String sub)
@@ -414,7 +414,7 @@ public final class StringsPlumeTest {
   // public static ArrayList makeArrayList(Enumeration e)
 
   @Test
-  public void test_abbreviateNumber() {
+  void test_abbreviateNumber() {
 
     Locale.setDefault(Locale.US);
     assertEquals("5.00", StringsPlume.abbreviateNumber(5));
@@ -444,7 +444,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void testCountFormatArguments() {
+  void testCountFormatArguments() {
     assertEquals(0, StringsPlume.countFormatArguments("No specifiier."));
     assertEquals(0, StringsPlume.countFormatArguments("This is 100%"));
     assertEquals(0, StringsPlume.countFormatArguments("This is 100%% excellent."));
@@ -462,7 +462,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void testSplitLines() {
+  void testSplitLines() {
     String str = "one\ntwo\n\rthree\r\nfour\rfive\n\n\nsix\r\n\r\n\r\n";
     @SuppressWarnings("value") // method that returns an array is not StaticallyExecutable
     String @ArrayLen(12) [] sa = StringsPlume.splitLines(str);
@@ -484,7 +484,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void testFirstLineSeparator() {
+  void testFirstLineSeparator() {
     assertEquals(null, StringsPlume.firstLineSeparator("hello"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
@@ -515,7 +515,7 @@ public final class StringsPlumeTest {
   }
 
   @Test
-  public void testToStringTruncated() {
+  void testToStringTruncated() {
     assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 100));
     assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 10));
     assertEquals("\"012...\"", StringsPlume.toStringTruncated("0123456789", 8));
