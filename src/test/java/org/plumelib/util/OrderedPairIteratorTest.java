@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 /** Test the OrderedPairIterator class. */
 final class OrderedPairIteratorTest {
 
+  OrderedPairIteratorTest() {}
+
   @Test
   void testOrderedPairIterator() {
     final int NULL = -2222;

@@ -16,7 +16,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("PMD.TooManyStaticImports")
+@SuppressWarnings({
+  "PMD.TooManyStaticImports",
+  "PMD.PrimitiveWrapperInstantiation",
+  "PMD.UnnecessaryBoxing"
+})
 final class ArraysPlumeTest {
 
   ArraysPlumeTest() {}
@@ -155,23 +159,23 @@ final class ArraysPlumeTest {
     // public static int indexOfEq(Object[] a, Object elt)
     Integer[] a = new Integer[10];
     for (int i = 0; i < a.length; i++) {
-      a[i] = Integer.valueOf(i);
+      a[i] = i;
     }
-    assertEquals(-1, ArraysPlume.indexOf(a, Integer.valueOf(-1)));
-    assertEquals(0, ArraysPlume.indexOf(a, Integer.valueOf(0)));
-    assertEquals(7, ArraysPlume.indexOf(a, Integer.valueOf(7)));
-    assertEquals(9, ArraysPlume.indexOf(a, Integer.valueOf(9)));
-    assertEquals(-1, ArraysPlume.indexOf(a, Integer.valueOf(10)));
-    assertEquals(-1, ArraysPlume.indexOf(a, Integer.valueOf(20)));
+    assertEquals(-1, ArraysPlume.indexOf(a, -1));
+    assertEquals(0, ArraysPlume.indexOf(a, 0));
+    assertEquals(7, ArraysPlume.indexOf(a, 7));
+    assertEquals(9, ArraysPlume.indexOf(a, 9));
+    assertEquals(-1, ArraysPlume.indexOf(a, 10));
+    assertEquals(-1, ArraysPlume.indexOf(a, 20));
     assertEquals(-1, ArraysPlume.indexOf(a, (Object) null));
     assertEquals(-1, ArraysPlume.indexOf(a, (Object) null, 1, 5));
 
-    assertEquals(-1, ArraysPlume.indexOfEq(a, Integer.valueOf(-1)));
+    assertEquals(-1, ArraysPlume.indexOfEq(a, new Integer(-1)));
     assertEquals(-1, ArraysPlume.indexOfEq(a, new Integer(0)));
     assertEquals(-1, ArraysPlume.indexOfEq(a, new Integer(7)));
     assertEquals(-1, ArraysPlume.indexOfEq(a, new Integer(9)));
-    assertEquals(-1, ArraysPlume.indexOfEq(a, Integer.valueOf(10)));
-    assertEquals(-1, ArraysPlume.indexOfEq(a, Integer.valueOf(20)));
+    assertEquals(-1, ArraysPlume.indexOfEq(a, new Integer(10)));
+    assertEquals(-1, ArraysPlume.indexOfEq(a, new Integer(20)));
     assertEquals(-1, ArraysPlume.indexOfEq(a, (Object) null));
     assertEquals(-1, ArraysPlume.indexOfEq(a, (Object) null, 1, 5));
     assertEquals(0, ArraysPlume.indexOfEq(a, a[0]));

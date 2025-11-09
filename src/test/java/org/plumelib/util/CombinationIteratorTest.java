@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 /** Test the CombinationIterator class. */
 final class CombinationIteratorTest {
 
+  CombinationIteratorTest() {}
+
   List<String> a = Arrays.asList("a1", "a2");
   List<String> b = Arrays.asList("b1");
   List<String> c = Arrays.asList("c1", "c2", "c3");

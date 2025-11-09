@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 /** Test the UtilPlume class. */
 final class UtilPlumeTest {
 
+  UtilPlumeTest() {}
+
   private static BitSet randomBitSet(@NonNegative int length, Random r) {
     BitSet result = new BitSet(length);
     for (int i = 0; i < length; i++) {

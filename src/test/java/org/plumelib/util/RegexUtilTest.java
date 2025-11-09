@@ -14,7 +14,10 @@ import java.util.List;
 import org.checkerframework.checker.regex.qual.Regex;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation", "PMD.TooManyFields"})
 final class RegexUtilTest {
+
+  RegexUtilTest() {}
 
   @Test
   void test_isRegex_and_asRegex() {

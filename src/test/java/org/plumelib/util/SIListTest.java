@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 /** Test (mainly) to make sure iterators over simple lists work. */
 class SIListTest {
 
+  SIListTest() {}
+
   @Test
   void testArrayList() {
     ArrayList<String> al = new ArrayList<>();

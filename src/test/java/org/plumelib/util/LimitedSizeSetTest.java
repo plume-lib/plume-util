@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 /** Test the LimitedSizeSet class. */
 final class LimitedSizeSetTest {
 
+  LimitedSizeSetTest() {}
+
   // Add 100 elements randomly selected from the range 0..limit-1 to the set.
   private static void lsisAddElts(@Positive int limit, LimitedSizeSet<Integer> s) {
     Random r = new Random(20_140_613);

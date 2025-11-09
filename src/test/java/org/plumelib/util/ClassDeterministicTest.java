@@ -1,3 +1,6 @@
 package org.plumelib.util;
 
-public final class ClassDeterministicTest {}
+public final class ClassDeterministicTest {
+
+  ClassDeterministicTest() {}
+}

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 
 final class MapsPTest {
 
+  MapsPTest() {}
+
   /** The system-specific line separator. */
   private static final String lineSep = System.lineSeparator();
 

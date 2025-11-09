@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 final class FuzzyFloatTest {
 
+  FuzzyFloatTest() {}
+
   // //////////////////////////////////////////////////////////////////////
   // Helper functions
   //

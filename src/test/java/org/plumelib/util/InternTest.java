@@ -13,8 +13,10 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the Intern class. */
-@SuppressWarnings({"PMD.SimplifiableTestAssertion"})
+@SuppressWarnings({"PMD.SimplifiableTestAssertion", "PMD.PrimitiveWrapperInstantiation"})
 final class InternTest {
+
+  InternTest() {}
 
   static class InternTestHelper {
     void test(boolean random) {
@@ -43,8 +45,8 @@ final class InternTest {
       if (Intern.numIntArrays() != 0) {
         throw new Error(" expected 0 int arrays at start, found " + Intern.numIntArrays());
       }
-      for (int i = 0; i < arrays.length; i++) {
-        Intern.intern(arrays[i]);
+      for (int[] elt : arrays) {
+        Intern.intern(elt);
       }
       if (Intern.numIntArrays() != size1) {
         throw new Error("Expected " + size1 + ", got " + Intern.numIntArrays() + " int arrays");
@@ -68,8 +70,8 @@ final class InternTest {
                   + Intern.numIntArrays());
         } else {
           System.out.println("================");
-          for (int i = 0; i < arrays.length; i++) {
-            System.out.println(Arrays.toString(arrays[i]));
+          for (int[] elt : arrays) {
+            System.out.println(Arrays.toString(elt));
           }
           System.out.println("================");
           for (Iterator<int[]> itor = Intern.intArrays(); itor.hasNext(); ) {

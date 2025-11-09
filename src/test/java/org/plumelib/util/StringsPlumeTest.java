@@ -17,6 +17,8 @@ import org.plumelib.util.StringsPlume.VersionNumberComparator;
 /** Test the stringsPlume class. */
 final class StringsPlumeTest {
 
+  StringsPlumeTest() {}
+
   @Test
   void test_replacePrefix() {
 
@@ -101,7 +103,7 @@ final class StringsPlumeTest {
     assertEquals(s, StringsPlume.unescapeJava(escaped));
   }
 
-  @SuppressWarnings("UnicodeEscape")
+  @SuppressWarnings({"UnicodeEscape", "PMD.SuspiciousOctalEscape"})
   @Test
   void test_escapeJava() {
 
@@ -505,7 +507,7 @@ final class StringsPlumeTest {
     String text = "hello\rworld\nhello\r\nworld\n\rfoo";
     List<String> result = StringsPlume.splitLinesRetainSeparators(text);
     List<String> expected =
-        Arrays.asList(new String[] {"hello\r", "world\n", "hello\r\n", "world\n", "\r", "foo"});
+        Arrays.asList("hello\r", "world\n", "hello\r\n", "world\n", "\r", "foo");
     assertEquals(expected, result);
   }
 

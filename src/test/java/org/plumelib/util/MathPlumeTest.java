@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 final class MathPlumeTest {
 
+  MathPlumeTest() {}
+
   // ///////////////////////////////////////////////////////////////////////////
   // Utility functions
   //
@@ -49,12 +51,13 @@ final class MathPlumeTest {
 
   private static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<>(nums.length);
-    for (int i = 0; i < nums.length; i++) {
-      asList.add(nums[i]);
+    for (int num : nums) {
+      asList.add(num);
     }
     return asList.iterator();
   }
 
+  @SuppressWarnings("PMD.ForLoopCanBeForeach") // PMD bug: index is used in two different ways
   private static int[] intIteratorArray(Iterator<Integer> itor) {
     ArrayList<Integer> v = new ArrayList<>();
     while (itor.hasNext()) {
@@ -246,13 +249,13 @@ final class MathPlumeTest {
       }
       int goalR = rm[0];
       int m = rm[1];
-      for (int i = 0; i < nums.length; i++) {
-        int r = nums[i] % m;
+      for (int num : nums) {
+        int r = num % m;
         if (r < 0) {
           r += m;
         }
         if (r != goalR) {
-          throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
+          throw new Error("Expected " + num + " % " + m + " = " + goalR + ", got " + r);
         }
       }
     }
@@ -281,13 +284,13 @@ final class MathPlumeTest {
       }
       long goalR = rm[0];
       long m = rm[1];
-      for (int i = 0; i < nums.length; i++) {
-        long r = nums[i] % m;
+      for (long num : nums) {
+        long r = num % m;
         if (r < 0) {
           r += m;
         }
         if (r != goalR) {
-          throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
+          throw new Error("Expected " + num + " % " + m + " = " + goalR + ", got " + r);
         }
       }
     }
@@ -368,13 +371,13 @@ final class MathPlumeTest {
       }
       int goalR = rm[0];
       int m = rm[1];
-      for (int i = 0; i < nums.length; i++) {
-        int r = nums[i] % m;
+      for (int num : nums) {
+        int r = num % m;
         if (r < 0) {
           r += m;
         }
         if (r == goalR) {
-          throw new Error("Expected inequality, saw " + nums[i] + " % " + m + " = " + r);
+          throw new Error("Expected inequality, saw " + num + " % " + m + " = " + r);
         }
       }
     }

@@ -29,7 +29,10 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.jupiter.api.Test;
 import org.plumelib.util.CollectionsPlume.Replacement;
 
+@SuppressWarnings({"PMD.TooManyStaticImports", "PMD.UnnecessaryVarargsArrayCreation"})
 final class CollectionsPlumeTest {
+
+  CollectionsPlumeTest() {}
 
   // If true, do 100 instead of 100000 iterations when testing randomElements.
   // This saves only a little time.  However, it is significant when running
@@ -588,7 +591,7 @@ final class CollectionsPlumeTest {
 
   // Median of 5 runs with size=4: ratio = .90, meaning 10% speedup.
   // @Test
-  @SuppressWarnings("ReturnValueIgnored")
+  @SuppressWarnings({"ReturnValueIgnored", "PMD.UselessPureMethodCall"})
   void testSortedSetTime() {
     int size = 4;
     int iterations = 100_000;
@@ -896,8 +899,8 @@ final class CollectionsPlumeTest {
             }
           }
         }
-        for (int k = 0; k < chosen.size(); k++) {
-          totals[chosen.get(k).intValue()]++;
+        for (Integer elt : chosen) {
+          totals[elt.intValue()]++;
         }
       }
       int iTruncated = Math.min(itorSize, i);

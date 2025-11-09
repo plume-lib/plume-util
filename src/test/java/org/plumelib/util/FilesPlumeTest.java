@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 final class FilesPlumeTest {
 
+  FilesPlumeTest() {}
+
   // public static BufferedReader bufferedFileReader(String filename)
   // public static LineNumberReader lineNumberFileReader(String filename)
   // public static BufferedWriter bufferedFileWriter(String filename) throws IOException

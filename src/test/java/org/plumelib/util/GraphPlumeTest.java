@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 })
 final class GraphPlumeTest {
 
+  GraphPlumeTest() {}
+
   // ///////////////////////////////////////////////////////////////////////////
 
   // Figure 1 from
