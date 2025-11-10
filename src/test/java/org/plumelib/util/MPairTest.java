@@ -4,5 +4,6 @@ package org.plumelib.util;
 public final class MPairTest {
 
   MPairTest() {}
+
   // TODO
 }

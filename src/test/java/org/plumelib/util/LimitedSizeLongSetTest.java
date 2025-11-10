@@ -4,5 +4,6 @@ package org.plumelib.util;
 public final class LimitedSizeLongSetTest {
 
   LimitedSizeLongSetTest() {}
+
   // TODO
 }

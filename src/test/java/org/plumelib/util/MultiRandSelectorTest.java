@@ -4,5 +4,6 @@ package org.plumelib.util;
 public final class MultiRandSelectorTest {
 
   MultiRandSelectorTest() {}
+
   // TODO
 }

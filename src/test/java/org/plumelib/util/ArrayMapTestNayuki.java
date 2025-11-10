@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
   "nullness", // Should be removed after CF 3.12.1 is released
-  "PMD"
+  "PMD",
 })
 public final class ArrayMapTestNayuki {
 

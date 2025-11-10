@@ -481,9 +481,9 @@ public final class ArraysPlume {
   @StaticallyExecutable
   public static int sum(int[][] a) {
     int sum = 0;
-    for (int i = 0; i < a.length; i++) { // NOPMD: foreach loop is less clear here
-      for (int j = 0; j < a[i].length; j++) {
-        sum += a[i][j];
+    for (int[] inner : a) {
+      for (int elt : inner) {
+        sum += elt;
       }
     }
     return sum;
@@ -515,9 +515,9 @@ public final class ArraysPlume {
   @StaticallyExecutable
   public static double sum(double[][] a) {
     double sum = 0;
-    for (int i = 0; i < a.length; i++) { // NOPMD: foreach loop is less clear here
-      for (int j = 0; j < a[i].length; j++) {
-        sum += a[i][j];
+    for (double[] inner : a) {
+      for (double elt : inner) {
+        sum += elt;
       }
     }
     return sum;
