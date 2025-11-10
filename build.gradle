@@ -257,18 +257,10 @@ check.dependsOn(requireJavadoc)
 javadocWeb.dependsOn(requireJavadoc)
 
 
-// Publishing
-
-// To upload to Maven Central:
-// * ./gradlew publishToMavenCentral
-// * browse to https://central.sonatype.com/publishing/deployments
-
-ext {
-  packageName = "plume-util"
-}
+// Publishing, see README-developers.md
 
 mavenPublishing {
-  coordinates("org.plumelib", "${packageName}", "1.12.1")
+  coordinates("org.plumelib", "${project.packageName}", "${project.version}")
 
   pom {
     name = "Plume Util"
