@@ -40,7 +40,7 @@ public class FuzzyFloat {
 
   /** Creates a FuzzyFloat with the default relativeRatio value of .0001. */
   public FuzzyFloat() {
-    setRelativeRatio(DEFAULT_RELATIVE_RATIO);
+    this(DEFAULT_RELATIVE_RATIO);
   }
 
   /**
@@ -50,6 +50,7 @@ public class FuzzyFloat {
    *
    * @param relativeRatio the relative diff to use; see {@link #setRelativeRatio}
    */
+  @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
   public FuzzyFloat(double relativeRatio) {
     setRelativeRatio(relativeRatio);
   }
@@ -264,8 +265,7 @@ public class FuzzyFloat {
     // look for elements of a2 in a1
     int start = 0;
     outer1:
-    for (int i = 0; i < a2.length; i++) {
-      double val = a2[i];
+    for (double val : a2) {
       for (int j = start; j < a1.length; j++) {
         if (eq(val, a1[j])) {
           start = j;
@@ -283,8 +283,7 @@ public class FuzzyFloat {
     // look for elements of a1 in a2
     start = 0;
     outer2:
-    for (int i = 0; i < a1.length; i++) {
-      double val = a1[i];
+    for (double val : a1) {
       for (int j = start; j < a2.length; j++) {
         if (eq(val, a2[j])) {
           start = j;
@@ -386,8 +385,7 @@ public class FuzzyFloat {
     // look for elements of smaller in bigger
     int start = 0;
     outer1:
-    for (int i = 0; i < smaller.length; i++) {
-      double val = smaller[i];
+    for (double val : smaller) {
       for (int j = start; j < bigger.length; j++) {
         if (eq(val, bigger[j])) {
           start = j;

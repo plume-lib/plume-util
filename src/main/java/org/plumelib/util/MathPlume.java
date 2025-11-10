@@ -466,7 +466,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  public static int pow(int base, int expt) throws ArithmeticException {
+  public static int pow(int base, int expt) {
     return powFast(base, expt);
   }
 
@@ -480,7 +480,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  public static long pow(long base, long expt) throws ArithmeticException {
+  public static long pow(long base, long expt) {
     return powFast(base, expt);
   }
 
@@ -495,7 +495,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  private static int powFast(int base, int expt) throws ArithmeticException {
+  private static int powFast(int base, int expt) {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
@@ -522,7 +522,7 @@ public final class MathPlume {
    */
   @Pure
   @StaticallyExecutable
-  private static long powFast(long base, long expt) throws ArithmeticException {
+  private static long powFast(long base, long expt) {
     if (expt < 0) {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
@@ -550,7 +550,7 @@ public final class MathPlume {
   //  */
   // @Pure
   // @StaticallyExecutable
-  // private static int powSlow(int base, int expt) throws ArithmeticException {
+  // private static int powSlow(int base, int expt) {
   //   if (expt < 0) {
   //     throw new ArithmeticException("Negative exponent passed to pow");
   //   }
@@ -879,17 +879,17 @@ public final class MathPlume {
     if (!itor.hasNext()) {
       return null;
     }
-    int avalue = itor.next().intValue();
+    int avalue = itor.next();
     if (!itor.hasNext()) {
       return null;
     }
-    int modulus = Math.abs(avalue - itor.next().intValue());
+    int modulus = Math.abs(avalue - itor.next());
     if (modulus == 1) {
       return null;
     }
     int count = 2;
     while (itor.hasNext()) {
-      int i = itor.next().intValue();
+      int i = itor.next();
       if (i == avalue) {
         continue;
       }
@@ -989,17 +989,17 @@ public final class MathPlume {
     int firstNonstrict = 0; // arbitrary initial value
     int lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
-      firstNonstrict = itor.next().intValue();
+      firstNonstrict = itor.next();
       if (!itor.hasNext()) {
         return null;
       }
     }
 
-    int prev = itor.next().intValue();
+    int prev = itor.next();
     if (!itor.hasNext()) {
       return null;
     }
-    int next = itor.next().intValue();
+    int next = itor.next();
     int modulus = next - prev;
     if (modulus == 1) {
       return null;
@@ -1007,7 +1007,7 @@ public final class MathPlume {
     int count = 2;
     while (itor.hasNext()) {
       prev = next;
-      next = itor.next().intValue();
+      next = itor.next();
       if (nonstrictEnds && !itor.hasNext()) {
         lastNonstrict = next;
         break;
@@ -1123,17 +1123,17 @@ public final class MathPlume {
     if (!itor.hasNext()) {
       return null;
     }
-    long avalue = itor.next().longValue();
+    long avalue = itor.next();
     if (!itor.hasNext()) {
       return null;
     }
-    long modulus = Math.abs(avalue - itor.next().longValue());
+    long modulus = Math.abs(avalue - itor.next());
     if (modulus == 1) {
       return null;
     }
     int count = 2;
     while (itor.hasNext()) {
-      long i = itor.next().longValue();
+      long i = itor.next();
       if (i == avalue) {
         continue;
       }
@@ -1233,17 +1233,17 @@ public final class MathPlume {
     long firstNonstrict = 0; // arbitrary initial value
     long lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
-      firstNonstrict = itor.next().longValue();
+      firstNonstrict = itor.next();
       if (!itor.hasNext()) {
         return null;
       }
     }
 
-    long prev = itor.next().longValue();
+    long prev = itor.next();
     if (!itor.hasNext()) {
       return null;
     }
-    long next = itor.next().longValue();
+    long next = itor.next();
     long modulus = next - prev;
     if (modulus == 1 || modulus == 0) {
       return null;
@@ -1251,7 +1251,7 @@ public final class MathPlume {
     int count = 2;
     while (itor.hasNext()) {
       prev = next;
-      next = itor.next().longValue();
+      next = itor.next();
       if (nonstrictEnds && !itor.hasNext()) {
         lastNonstrict = next;
         break;
@@ -1320,7 +1320,7 @@ public final class MathPlume {
     }
     int[] resultArray = new int[resultList.size()];
     for (int i = 0; i < resultArray.length; i++) {
-      resultArray[i] = resultList.get(i).intValue();
+      resultArray[i] = resultList.get(i);
     }
     return resultArray;
   }
@@ -1390,7 +1390,7 @@ public final class MathPlume {
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
       }
-      currentNonmissing = numsItor.next().intValue();
+      currentNonmissing = numsItor.next();
       if (addEnds) {
         currentMissing = currentNonmissing - 1;
       } else {
@@ -1439,8 +1439,8 @@ public final class MathPlume {
           }
           // prevNonmissing is for testing only
           int prevNonmissing = currentNonmissing;
-          currentNonmissing = numsItor.next().intValue();
-          if (!(prevNonmissing < currentNonmissing)) {
+          currentNonmissing = numsItor.next();
+          if (prevNonmissing >= currentNonmissing) {
             throw new Error(
                 "Non-sorted Iterator supplied to MissingNumbersIteratorInt: prevNonmissing = "
                     + prevNonmissing
@@ -1494,7 +1494,7 @@ public final class MathPlume {
       return null;
     }
     int range = ArraysPlume.elementRange(nums);
-    if (range > 65536) {
+    if (range > 65_536) {
       return null;
     }
     return nonmodulusStrictIntInternal(new MissingNumbersIteratorInt(nums, true));
@@ -1539,8 +1539,8 @@ public final class MathPlume {
       int @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
     int m = rm[1];
-    int first = rfali.getFirst().intValue();
-    int last = rfali.getLast().intValue();
+    int first = rfali.getFirst();
+    int last = rfali.getLast();
     return ((r != modNonnegative(first, m)) && (r != modNonnegative(last, m)));
   }
 
@@ -1659,7 +1659,7 @@ public final class MathPlume {
 
     long[] resultArray = new long[resultList.size()];
     for (int i = 0; i < resultArray.length; i++) {
-      resultArray[i] = resultList.get(i).longValue();
+      resultArray[i] = resultList.get(i);
     }
     return resultArray;
   }
@@ -1730,7 +1730,7 @@ public final class MathPlume {
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
       }
-      currentNonmissing = numsItor.next().longValue();
+      currentNonmissing = numsItor.next();
       if (addEnds) {
         currentMissing = currentNonmissing - 1;
       } else {
@@ -1779,8 +1779,8 @@ public final class MathPlume {
           }
           // prevNonmissing is for testing only
           long prevNonmissing = currentNonmissing;
-          currentNonmissing = numsItor.next().longValue();
-          if (!(prevNonmissing < currentNonmissing)) {
+          currentNonmissing = numsItor.next();
+          if (prevNonmissing >= currentNonmissing) {
             throw new Error(
                 "Non-sorted Iterator supplied to MissingNumbersIteratorLong: prevNonmissing = "
                     + prevNonmissing
@@ -1834,7 +1834,7 @@ public final class MathPlume {
       return null;
     }
     long range = ArraysPlume.elementRange(nums);
-    if (range > 65536) {
+    if (range > 65_536) {
       return null;
     }
     return nonmodulusStrictLongInternal(new MissingNumbersIteratorLong(nums, true));
@@ -1879,8 +1879,8 @@ public final class MathPlume {
       long @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];
     long m = rm[1];
-    long first = rfali.getFirst().longValue();
-    long last = rfali.getLast().longValue();
+    long first = rfali.getFirst();
+    long last = rfali.getLast();
     return ((r != modNonnegative(first, m)) && (r != modNonnegative(last, m)));
   }
 

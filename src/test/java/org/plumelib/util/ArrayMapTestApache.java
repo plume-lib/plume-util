@@ -58,9 +58,10 @@ import org.junit.jupiter.api.Test;
   "CollectionIncompatibleType",
   "LogicalAssignment",
   "ReferenceEquality",
-  "UnnecessaryParentheses"
+  "UnnecessaryParentheses",
+  "PMD", // Third-party-derived test code.
 })
-public class ArrayMapTestApache {
+class ArrayMapTestApache {
   static class MockMap extends AbstractMap {
     @Override
     public Set entrySet(@GuardSatisfied MockMap this) {

@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -7,7 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-public final class FilesPlumeTest {
+final class FilesPlumeTest {
+
+  FilesPlumeTest() {}
 
   // public static BufferedReader bufferedFileReader(String filename)
   // public static LineNumberReader lineNumberFileReader(String filename)
@@ -26,7 +29,7 @@ public final class FilesPlumeTest {
   // public Object incrementHashMap(HashMap hm, Object key, int count)
 
   @Test
-  public void test_canCreateAndWrite() {
+  void test_canCreateAndWrite() {
 
     try {
       assertTrue(FilesPlume.canCreateAndWrite(new File("TestPlume.java")));
@@ -37,12 +40,12 @@ public final class FilesPlumeTest {
         File readOnly = new File("temp");
         readOnly.createNewFile();
         readOnly.setReadOnly();
-        assertTrue(!FilesPlume.canCreateAndWrite(readOnly));
+        assertFalse(FilesPlume.canCreateAndWrite(readOnly));
         readOnly.delete();
       }
 
       assertTrue(FilesPlume.canCreateAndWrite(new File("temp")));
-      assertTrue(!FilesPlume.canCreateAndWrite(new File("temp/temp")));
+      assertFalse(FilesPlume.canCreateAndWrite(new File("temp/temp")));
     } catch (IOException e) {
       e.printStackTrace();
       fail("failure while testing FilesPlume.canCreateAndWrite(): " + e.toString());

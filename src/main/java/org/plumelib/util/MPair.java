@@ -17,7 +17,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 // This class does not implement DeepCopyable because that would require that V1 and V2 implement
 // DeepCopyable, but this class should be applicable to any types.  Therefore, deepCopy() in this
 // class is a static method that requires that the elements of the argument are DeepCopyable.
-public class MPair<V1, V2> {
+public final class MPair<V1, V2> {
   /** The first element of the pair. */
   public V1 first;
 
@@ -135,10 +135,10 @@ public class MPair<V1, V2> {
   }
 
   @SuppressWarnings(
-      "signedness:argument") // true positive: String.valueOf() argument might be an unsigned value
+      "signedness:unsigned.concat") // true positive: argument might be an unsigned value
   @SideEffectFree
   @Override
   public String toString(@GuardSatisfied MPair<V1, V2> this) {
-    return "MPair(" + String.valueOf(first) + ", " + String.valueOf(second) + ")";
+    return "MPair(" + first + ", " + second + ")";
   }
 }

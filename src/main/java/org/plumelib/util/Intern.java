@@ -28,7 +28,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * <p>Java builds in interning for Strings, but not for other objects. The methods in this class
  * extend interning to all Java objects.
  */
-@SuppressWarnings("identity") // use of Hasher for primitive wrappers
+@SuppressWarnings({
+  "identity", // use of Hasher for primitive wrappers
+  "PMD.UseDiamondOperator"
+})
 public final class Intern {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -123,7 +126,7 @@ public final class Intern {
     public int hashCode(@UnknownSignedness Object o) {
       @SuppressWarnings("signedness:cast.unsafe") // Signedness doesn't matter for hashCode().
       Integer i = (@Signed Integer) o;
-      return i.intValue();
+      return i;
     }
   }
 
@@ -247,6 +250,7 @@ public final class Intern {
       return true;
     }
 
+    @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // PMD is broken: elt isn't control var
     @Override
     public int hashCode(@UnknownSignedness Object o) {
       double[] a = (double[]) o;
@@ -611,6 +615,7 @@ public final class Intern {
    * @param i the value to intern
    * @return an interned Integer with value i
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Integer internedInteger(int i) {
     return intern(Integer.valueOf(i));
   }
@@ -656,6 +661,7 @@ public final class Intern {
    * @param i the value to intern
    * @return an interned Integer with value i
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Long internedLong(long i) {
     return intern(Long.valueOf(i));
   }
@@ -753,7 +759,7 @@ public final class Intern {
       return internedDoubleNaN;
     }
     // Double.+0 == Double.-0,  but they compare true via equals()
-    if (a.doubleValue() == 0) { // catches both positive and negative zero
+    if (a == 0) { // catches both positive and negative zero
       return internedDoubleZero;
     }
     WeakReference<@Interned Double> lookup = internedDoubles.get(a);
@@ -774,6 +780,7 @@ public final class Intern {
    * @param d the value to intern
    * @return an interned Double with value d
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Double internedDouble(double d) {
     return intern(Double.valueOf(d));
   }
@@ -827,6 +834,7 @@ public final class Intern {
    * @param a an array whose elements should already be intterned
    * @return true if each element is interned
    */
+  @SuppressWarnings("PMD.UseEqualsToCompareStrings")
   private static boolean eachElementInterned(@PolyNull @Interned String @PolyValue [] a) {
     for (String elt : a) {
       if (elt != intern(elt)) {
@@ -1070,10 +1078,12 @@ public final class Intern {
     } else {
       @PolyNull @Interned Object[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
       @PolyNull @Interned Object @Interned [] subseq = intern(subseqUninterned);
-      @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
-      Object
-          ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
-          internedObjectSubsequence.put(sai, new WeakReference<>(subseq));
+      @SuppressWarnings({
+        "nullness", // safe because map does no side effects
+        "UnusedVariable", // assignment so there is a place for the @SuppressWarnings annotation
+        "PMD.UnusedLocalVariable"
+      })
+      Object ignore = internedObjectSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -1105,10 +1115,12 @@ public final class Intern {
     } else {
       @PolyNull @Interned String[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
       @PolyNull @Interned String @Interned [] subseq = intern(subseqUninterned);
-      @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
-      Object
-          ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
-          internedStringSubsequence.put(sai, new WeakReference<>(subseq));
+      @SuppressWarnings({
+        "nullness", // safe because map does no side effects
+        "UnusedVariable", // dummy assignment is a place for the @SuppressWarnings annotation
+        "PMD.UnusedLocalVariable"
+      })
+      Object ignore = internedStringSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }

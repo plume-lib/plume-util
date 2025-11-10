@@ -136,6 +136,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "lock:method.guarantee.violated", // initializes `this`
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
+    "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
   public ArraySet(@Nullable Collection<? extends E> m) {
@@ -158,7 +159,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrHashSet(
       int capacity) {
     if (capacity <= 4) {
-      return new ArraySet<E>(capacity);
+      return new ArraySet<>(capacity);
     } else {
       return new HashSet<>(MapsP.mapCapacity(capacity));
     }
@@ -175,7 +176,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrHashSet(
       Collection<E> s) {
     if (s.size() <= 4) {
-      return new ArraySet<E>(s);
+      return new ArraySet<>(s);
     } else {
       return new HashSet<>(s);
     }
@@ -192,7 +193,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrLinkedHashSet(
       int capacity) {
     if (capacity <= 4) {
-      return new ArraySet<E>(capacity);
+      return new ArraySet<>(capacity);
     } else {
       return new LinkedHashSet<>(MapsP.mapCapacity(capacity));
     }
@@ -209,7 +210,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrLinkedHashSet(
       Collection<E> s) {
     if (s.size() <= 4) {
-      return new ArraySet<E>(s);
+      return new ArraySet<>(s);
     } else {
       return new LinkedHashSet<>(s);
     }
@@ -469,7 +470,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    *
    * @return a copy of this
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
   public ArraySet<E> clone() {

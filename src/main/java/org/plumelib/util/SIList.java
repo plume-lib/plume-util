@@ -321,8 +321,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    *
    * @param <E> the type of elements of the list
    */
-  private static final @ArrayLen(0) class SimpleEmptyList<E> extends SIList<E>
-      implements Serializable {
+  @ArrayLen(0) private static final class SimpleEmptyList<E> extends SIList<E> implements Serializable {
 
     /** serialVersionUID */
     private static final long serialVersionUID = 20250617;
@@ -373,7 +372,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    *
    * @param <E> the type of the list elements
    */
-  private static final @ArrayLen(1) class SingletonList<E> extends SIList<E> {
+  @ArrayLen(1) private static final class SingletonList<E> extends SIList<E> {
 
     /** serialVersionUID */
     private static final long serialVersionUID = 20250719;

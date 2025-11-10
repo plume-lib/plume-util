@@ -33,6 +33,7 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  * <p>If you need a unique identifier for a class that you cannot edit (that is, you cannot make it
  * implement {@code UniqueId}), use {@link UniqueIdMap}.
  */
+@FunctionalInterface
 public interface UniqueId {
 
   /**

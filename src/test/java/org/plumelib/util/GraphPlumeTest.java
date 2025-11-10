@@ -1,6 +1,6 @@
 package org.plumelib.util;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
   "keyfor", // https://github.com/typetools/checker-framework/issues/2358 and maybe other issues
   "nullness"
 })
-public final class GraphPlumeTest {
+final class GraphPlumeTest {
+
+  GraphPlumeTest() {}
 
   // ///////////////////////////////////////////////////////////////////////////
 
@@ -28,8 +30,8 @@ public final class GraphPlumeTest {
     preds1.clear();
     succs1.clear();
     for (int i = 0; i <= 7; i++) {
-      preds1.put(i, new ArrayList<Integer>());
-      succs1.put(i, new ArrayList<Integer>());
+      preds1.put(i, new ArrayList<>());
+      succs1.put(i, new ArrayList<>());
     }
     succs1.get(0).add(1);
     preds1.get(1).add(0);
@@ -52,29 +54,29 @@ public final class GraphPlumeTest {
   }
 
   @Test
-  public void testGraphPlume() {
+  void testGraphPlume() {
 
     initializePreds1AndSucc1();
 
     Map<Integer, List<Integer>> dom1post = GraphPlume.dominators(succs1);
-    assertTrue(dom1post.get(0).toString().equals("[7, 1, 0]"));
-    assertTrue(dom1post.get(1).toString().equals("[7, 1]"));
-    assertTrue(dom1post.get(2).toString().equals("[7, 2]"));
-    assertTrue(dom1post.get(3).toString().equals("[7, 5, 4, 3]"));
-    assertTrue(dom1post.get(4).toString().equals("[7, 5, 4]"));
-    assertTrue(dom1post.get(5).toString().equals("[7, 5]"));
-    assertTrue(dom1post.get(6).toString().equals("[7, 5, 4, 6]"));
-    assertTrue(dom1post.get(7).toString().equals("[7]"));
+    assertEquals("[7, 1, 0]", dom1post.get(0).toString());
+    assertEquals("[7, 1]", dom1post.get(1).toString());
+    assertEquals("[7, 2]", dom1post.get(2).toString());
+    assertEquals("[7, 5, 4, 3]", dom1post.get(3).toString());
+    assertEquals("[7, 5, 4]", dom1post.get(4).toString());
+    assertEquals("[7, 5]", dom1post.get(5).toString());
+    assertEquals("[7, 5, 4, 6]", dom1post.get(6).toString());
+    assertEquals("[7]", dom1post.get(7).toString());
 
     Map<Integer, List<Integer>> dom1pre = GraphPlume.dominators(preds1);
-    assertTrue(dom1pre.get(0).toString().equals("[0]"));
-    assertTrue(dom1pre.get(1).toString().equals("[0, 1]"));
-    assertTrue(dom1pre.get(2).toString().equals("[0, 1, 2]"));
-    assertTrue(dom1pre.get(3).toString().equals("[0, 1, 3]"));
-    assertTrue(dom1pre.get(4).toString().equals("[0, 1, 3, 4]"));
-    assertTrue(dom1pre.get(5).toString().equals("[0, 1, 3, 4, 5]"));
-    assertTrue(dom1pre.get(6).toString().equals("[0, 1, 3, 4, 6]"));
-    assertTrue(dom1pre.get(7).toString().equals("[0, 1, 7]"));
+    assertEquals("[0]", dom1pre.get(0).toString());
+    assertEquals("[0, 1]", dom1pre.get(1).toString());
+    assertEquals("[0, 1, 2]", dom1pre.get(2).toString());
+    assertEquals("[0, 1, 3]", dom1pre.get(3).toString());
+    assertEquals("[0, 1, 3, 4]", dom1pre.get(4).toString());
+    assertEquals("[0, 1, 3, 4, 5]", dom1pre.get(5).toString());
+    assertEquals("[0, 1, 3, 4, 6]", dom1pre.get(6).toString());
+    assertEquals("[0, 1, 7]", dom1pre.get(7).toString());
 
     // I should add more tests.
 

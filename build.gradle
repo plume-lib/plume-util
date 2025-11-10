@@ -11,9 +11,8 @@ plugins {
   // Error Prone linter
   id("net.ltgt.errorprone").version("4.3.0") apply false
 
-  // TODO: reinstate when all PMD warnings have been addressed.
-  // // PMD linter
-  // id("pmd")
+  // PMD linter
+  id("pmd")
 
   // Checker Framework pluggable type-checking
   id("org.checkerframework").version("0.6.61")
@@ -121,16 +120,15 @@ if (isJava21orHigher) {
   }
 }
 
-// TODO: reinstate when all PMD warnings have been addressed.
-// // PMD linter
-//
-// pmd {
-//   toolVersion = "7.18.0"
-//   ruleSetFiles =(files("${rootDir}/.pmd-ruleset.xml"))
-//   consoleOutput = true
-//   ignoreFailures = false
-//   incrementalAnalysis = true
-// }
+// PMD linter
+
+pmd {
+  toolVersion = "7.18.0"
+  ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
+  consoleOutput = true
+  ignoreFailures = false
+  incrementalAnalysis = true
+}
 
 
 // Checker Framework pluggable type-checking

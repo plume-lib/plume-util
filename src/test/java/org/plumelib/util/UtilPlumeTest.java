@@ -1,6 +1,6 @@
 package org.plumelib.util;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.BitSet;
 import java.util.Random;
@@ -8,7 +8,9 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.junit.jupiter.api.Test;
 
 /** Test the UtilPlume class. */
-public final class UtilPlumeTest {
+final class UtilPlumeTest {
+
+  UtilPlumeTest() {}
 
   private static BitSet randomBitSet(@NonNegative int length, Random r) {
     BitSet result = new BitSet(length);
@@ -19,11 +21,11 @@ public final class UtilPlumeTest {
   }
 
   @Test
-  public void test_intersectionCardinalityAtLeast() {
+  void test_intersectionCardinalityAtLeast() {
 
     // public static intersectionCardinalityAtLeast(BitSet a, BitSet b, int i)
 
-    Random r = new Random(20031008);
+    Random r = new Random(20_031_008);
     for (int i = 0; i < 100; i++) {
       BitSet b1 = randomBitSet(r.nextInt(100), r);
       BitSet b2 = randomBitSet(r.nextInt(100), r);
@@ -32,12 +34,12 @@ public final class UtilPlumeTest {
       intersection.and(b2);
       int card = intersection.cardinality();
       for (int j = 0; j < 100; j++) {
-        assertTrue(CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, j) == (card >= j));
+        assertEquals(card >= j, CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, j));
       }
       intersection.and(b3);
       card = intersection.cardinality();
       for (int j = 0; j < 100; j++) {
-        assertTrue(CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, b3, j) == (card >= j));
+        assertEquals(card >= j, CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, b3, j));
       }
     }
   }

@@ -14,10 +14,13 @@ import java.util.List;
 import org.checkerframework.checker.regex.qual.Regex;
 import org.junit.jupiter.api.Test;
 
-public final class RegexUtilTest {
+@SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation", "PMD.TooManyFields"})
+final class RegexUtilTest {
+
+  RegexUtilTest() {}
 
   @Test
-  public void test_isRegex_and_asRegex() {
+  void test_isRegex_and_asRegex() {
 
     String s1 = "colo(u?)r";
     String s2 = "(brown|beige)";
@@ -94,7 +97,7 @@ public final class RegexUtilTest {
   List<String> eefff = Arrays.asList(new String[] {"ee", "fff"});
 
   @Test
-  public void test_matchesSomeRegex() {
+  void test_matchesSomeRegex() {
     assertEquals(RegexUtil.matchesSomeRegex(s1, r1), empty);
     assertEquals(RegexUtil.matchesSomeRegex(s2, r1), empty);
     assertEquals(RegexUtil.matchesSomeRegex(s3, r1), empty);
@@ -167,7 +170,7 @@ public final class RegexUtilTest {
   }
 
   @Test
-  public void test_matchesNoRegex() {
+  void test_matchesNoRegex() {
     assertEquals(RegexUtil.matchesNoRegex(s1, r1), s1);
     assertEquals(RegexUtil.matchesNoRegex(s2, r1), s2);
     assertEquals(RegexUtil.matchesNoRegex(s3, r1), s3);
@@ -240,7 +243,7 @@ public final class RegexUtilTest {
   }
 
   @Test
-  public void test_r6() {
+  void test_r6() {
     assertEquals(ab, RegexUtil.matchesSomeRegex(s1, r6));
     assertEquals(ab, RegexUtil.matchesSomeRegex(s2, r6));
     assertEquals(onlyAA, RegexUtil.matchesSomeRegex(s3, r6));

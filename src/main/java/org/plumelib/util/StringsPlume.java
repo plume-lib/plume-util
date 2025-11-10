@@ -469,7 +469,7 @@ public final class StringsPlume {
             if (postEsc < i) {
               sb.append(orig.substring(postEsc, i));
             }
-            sb.append("\\");
+            sb.append('\\');
             int cAsInt = (int) c;
             sb.append(String.format("%03o", cAsInt));
             postEsc = i + 1;
@@ -736,7 +736,7 @@ public final class StringsPlume {
               break;
             }
             int newValue = (octalChar * 8) + thisDigit;
-            if (newValue > 0377) {
+            if (newValue > 0xFF) {
               break;
             }
             octalChar = (char) newValue;
@@ -1071,7 +1071,10 @@ public final class StringsPlume {
      * @return a negative integer, zero, or a positive integer as the first argument is less than,
      *     equal to, or greater than the second
      */
-    @SuppressWarnings("ReferenceEquality") // comparator method uses ==
+    @SuppressWarnings({
+      "ReferenceEquality",
+      "PMD.UseEqualsToCompareStrings"
+    }) // comparator method uses ==
     @Pure
     @Override
     public int compare(@Nullable String s1, @Nullable String s2) {
@@ -1252,8 +1255,8 @@ public final class StringsPlume {
       String[] components2 = s2.split("\\.");
       int len = Math.min(components1.length, components2.length);
       for (int i = 0; i < len; i++) {
-        int int1 = Integer.valueOf(components1[i]);
-        int int2 = Integer.valueOf(components2[i]);
+        int int1 = Integer.parseInt(components1[i]);
+        int int2 = Integer.parseInt(components2[i]);
         if (int1 < int2) {
           return -1;
         } else if (int1 > int2) {
@@ -1891,14 +1894,14 @@ public final class StringsPlume {
 
     if (val < 1000) {
       // nothing to do
-    } else if (val < 1000000) {
+    } else if (val < 1_000_000) {
       dval = val / 1000.0;
       mag = "K";
-    } else if (val < 1000000000) {
-      dval = val / 1000000.0;
+    } else if (val < 1_000_000_000) {
+      dval = val / 1_000_000.0;
       mag = "M";
     } else {
-      dval = val / 1000000000.0;
+      dval = val / 1_000_000_000.0;
       mag = "G";
     }
 

@@ -14,6 +14,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @param <T2> the type of the second element of the pair
  * @deprecated use {@link MPair} instead, or {@link IPair} for an immutable pair
  */
+@SuppressWarnings("PMD.ShortClassName")
 @Deprecated // 2023-05-20
 public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   /** The first element of the pair. */
@@ -49,7 +50,7 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   @Override
   @SideEffectFree
   public String toString(@GuardSatisfied Pair<T1, T2> this) {
-    return "<" + String.valueOf(a) + "," + String.valueOf(b) + ">";
+    return "<" + a + "," + b + ">";
   }
 
   @Override

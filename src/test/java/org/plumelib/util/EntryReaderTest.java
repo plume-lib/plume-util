@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,16 +24,19 @@ import org.junit.jupiter.api.io.TempDir;
 /** Test the EntryReader class. */
 @SuppressWarnings({
   "nullness", // run-time errors are acceptable
-  "initializedfields:contracts.postcondition" // @TempDir causes injection
+  "initializedfields:contracts.postcondition", // @TempDir causes injection
+  "PMD.TooManyStaticImports"
 })
-public final class EntryReaderTest {
+final class EntryReaderTest {
+
+  EntryReaderTest() {}
 
   /** Do not assign; JUnit will do so, thanks to the {@code @TempDir} annotation. */
   @TempDir Path tempDir;
 
   /** Test basic line reading without comments or includes. */
   @Test
-  public void testBasicLineReading() throws IOException {
+  void testBasicLineReading() throws IOException {
     String content = "line1\nline2\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -45,7 +49,7 @@ public final class EntryReaderTest {
 
   /** Test reading from InputStream. */
   @Test
-  public void testInputStreamReading() throws IOException {
+  void testInputStreamReading() throws IOException {
     String content = "line1\nline2\n";
     InputStream inputStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
     try (EntryReader reader = new EntryReader(inputStream, "test")) {
@@ -57,7 +61,7 @@ public final class EntryReaderTest {
 
   /** Test reading from a file. */
   @Test
-  public void testFileReading() throws IOException {
+  void testFileReading() throws IOException {
     Path testFile = tempDir.resolve("test.txt");
     Files.write(testFile, "line1\nline2\nline3\n".getBytes(StandardCharsets.UTF_8));
 
@@ -71,7 +75,7 @@ public final class EntryReaderTest {
 
   /** Test comment removal. */
   @Test
-  public void testCommentRemoval() throws IOException {
+  void testCommentRemoval() throws IOException {
     String content = "line1\n% comment line\nline2 % inline comment\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, "^%.*", null)) {
@@ -84,7 +88,7 @@ public final class EntryReaderTest {
 
   /** Test that lines that are entirely comments are skipped. */
   @Test
-  public void testFullLineCommentSkipped() throws IOException {
+  void testFullLineCommentSkipped() throws IOException {
     String content = "line1\n% full comment\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, "^%.*", null)) {
@@ -96,7 +100,7 @@ public final class EntryReaderTest {
 
   /** Test iterator functionality. */
   @Test
-  public void testIterator() throws IOException {
+  void testIterator() throws IOException {
     String content = "line1\nline2\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -113,7 +117,7 @@ public final class EntryReaderTest {
 
   /** Test hasNext() method. */
   @Test
-  public void testHasNext() throws IOException {
+  void testHasNext() throws IOException {
     String content = "line1\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -127,7 +131,7 @@ public final class EntryReaderTest {
 
   /** Test next() method throws NoSuchElementException at end. */
   @Test
-  public void testNextThrowsAtEnd() throws IOException {
+  void testNextThrowsAtEnd() throws IOException {
     String content = "line1\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -138,7 +142,7 @@ public final class EntryReaderTest {
 
   /** Test remove() is not supported. */
   @Test
-  public void testRemoveNotSupported() throws IOException {
+  void testRemoveNotSupported() throws IOException {
     String content = "line1\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -148,7 +152,7 @@ public final class EntryReaderTest {
 
   /** Test getEntry() for blank-line-separated entries. */
   @Test
-  public void testGetEntryBlankSeparated() throws IOException {
+  void testGetEntryBlankSeparated() throws IOException {
     String content1 = "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content1), "test", false, null, null)) {
@@ -176,7 +180,7 @@ public final class EntryReaderTest {
 
   /** Test getEntry() for two-blank-line-separated entries. */
   @Test
-  public void testGetEntryTwoBlankSeparated() throws IOException {
+  void testGetEntryTwoBlankSeparated() throws IOException {
     String content1 = "para1 line1\npara1 line2\n\npara2 line1\npara2 line2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content1), "test", true, null, null)) {
@@ -235,7 +239,7 @@ public final class EntryReaderTest {
 
   /** Test getEntry() with start/stop patterns. */
   @Test
-  public void testGetEntryWithStartStop() throws IOException {
+  void testGetEntryWithStartStop() throws IOException {
     String content =
         "START entry1\nentry1 line2\nentry1 line3\nEND\nSTART entry2\nentry2 line2\nEND\n";
     try (EntryReader reader =
@@ -262,7 +266,7 @@ public final class EntryReaderTest {
 
   /** Test line number tracking. */
   @Test
-  public void testLineNumberTracking() throws IOException {
+  void testLineNumberTracking() throws IOException {
     String content = "line1\nline2\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -277,7 +281,7 @@ public final class EntryReaderTest {
 
   /** Test setLineNumber(). */
   @Test
-  public void testSetLineNumber() throws IOException {
+  void testSetLineNumber() throws IOException {
     String content = "line1\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -289,7 +293,7 @@ public final class EntryReaderTest {
 
   /** Test getFileName(). */
   @Test
-  public void testGetFileName() throws IOException {
+  void testGetFileName() throws IOException {
     String content = "line1\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "myfile.txt", false, null, null)) {
@@ -299,7 +303,7 @@ public final class EntryReaderTest {
 
   /** Test putback(). */
   @Test
-  public void testPutback() throws IOException {
+  void testPutback() throws IOException {
     String content = "line1\nline2\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -313,7 +317,7 @@ public final class EntryReaderTest {
 
   /** Test that putback() cannot be called twice in a row. */
   @Test
-  public void testPutbackTwiceThrows() throws IOException {
+  void testPutbackTwiceThrows() throws IOException {
     String content = "line1\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -325,7 +329,7 @@ public final class EntryReaderTest {
 
   /** Test Entry.getDescription() without regex. */
   @Test
-  public void testEntryGetDescriptionNoRegex() throws IOException {
+  void testEntryGetDescriptionNoRegex() throws IOException {
     String content = "first line\nsecond line\n\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -337,7 +341,7 @@ public final class EntryReaderTest {
 
   /** Test Entry.getDescription() with regex match. */
   @Test
-  public void testEntryGetDescriptionWithRegex() throws IOException {
+  void testEntryGetDescriptionWithRegex() throws IOException {
     String content = "Some text with [DESCRIPTION] in body\nmore text\n\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -350,7 +354,7 @@ public final class EntryReaderTest {
 
   /** Test Entry.getDescription() with regex that doesn't match. */
   @Test
-  public void testEntryGetDescriptionNoMatch() throws IOException {
+  void testEntryGetDescriptionNoMatch() throws IOException {
     String content = "first line\nsecond line\n\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -363,7 +367,7 @@ public final class EntryReaderTest {
 
   /** Test with empty input. */
   @Test
-  public void testEmptyInput() throws IOException {
+  void testEmptyInput() throws IOException {
     String content = "";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -375,7 +379,7 @@ public final class EntryReaderTest {
 
   /** Test with only blank lines. */
   @Test
-  public void testOnlyBlankLines() throws IOException {
+  void testOnlyBlankLines() throws IOException {
     String content = "\n\n\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -385,7 +389,7 @@ public final class EntryReaderTest {
 
   /** Test reading File constructor. */
   @Test
-  public void testFileConstructor() throws IOException {
+  void testFileConstructor() throws IOException {
     Path testFile = tempDir.resolve("test.txt");
     Files.write(testFile, "line1\nline2\n".getBytes(StandardCharsets.UTF_8));
 
@@ -398,7 +402,7 @@ public final class EntryReaderTest {
 
   /** Test reading with charset. */
   @Test
-  public void testWithCharset() throws IOException {
+  void testWithCharset() throws IOException {
     Path testFile = tempDir.resolve("test.txt");
     Files.write(testFile, "line1\nline2\n".getBytes(StandardCharsets.UTF_8));
 
@@ -410,19 +414,18 @@ public final class EntryReaderTest {
   }
 
   /** Test that iterator returns the same instance. */
-  @SuppressWarnings("interning:not.interned") // identity test
   @Test
-  public void testIteratorReturnsSameInstance() throws IOException {
+  void testIteratorReturnsSameInstance() throws IOException {
     String content = "line1\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
-      assertTrue(reader.iterator() == reader);
+      assertSame(reader, reader.iterator()); // identity test
     }
   }
 
   /** Test mixed comments and content. */
   @Test
-  public void testMixedCommentsAndContent() throws IOException {
+  void testMixedCommentsAndContent() throws IOException {
     String content = "# comment1\nline1\n# comment2\n# comment3\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, "^#.*", null)) {
@@ -434,7 +437,7 @@ public final class EntryReaderTest {
 
   /** Test getEntry() with leading blank lines. */
   @Test
-  public void testGetEntryWithLeadingBlankLines() throws IOException {
+  void testGetEntryWithLeadingBlankLines() throws IOException {
     String content = "\n\nline1\nline2\n\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -447,7 +450,7 @@ public final class EntryReaderTest {
 
   /** Test Entry metadata (filename and lineNumber). */
   @Test
-  public void testEntryMetadata() throws IOException {
+  void testEntryMetadata() throws IOException {
     String content = "\nline1\nline2\n\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "testfile.txt", false, null, null)) {

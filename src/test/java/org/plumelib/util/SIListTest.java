@@ -11,10 +11,12 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.junit.jupiter.api.Test;
 
 /** Test (mainly) to make sure iterators over simple lists work. */
-public class SIListTest {
+class SIListTest {
+
+  SIListTest() {}
 
   @Test
-  public void testArrayList() {
+  void testArrayList() {
     ArrayList<String> al = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
       al.add("str" + i);
@@ -28,7 +30,7 @@ public class SIListTest {
   }
 
   @Test
-  public void oneMoreElement() {
+  void oneMoreElement() {
     ArrayList<String> al = new ArrayList<>();
     for (int i = 0; i < 100; i++) {
       al.add("str" + i);
@@ -44,7 +46,7 @@ public class SIListTest {
   }
 
   @Test
-  public void listOfList() {
+  void listOfList() {
     ArrayList<String> al = new ArrayList<>();
     ArrayList<String> sub = new ArrayList<>();
     List<SIList<String>> lists = new ArrayList<>();
@@ -78,12 +80,12 @@ public class SIListTest {
   }
 
   @Test
-  public void listOfMixed() {
+  void listOfMixed() {
 
     List<SIList<String>> lists = new ArrayList<>();
     ArrayList<String> al = new ArrayList<>();
 
-    SIList<String> base = SIList.from(new ArrayList<String>());
+    SIList<String> base = SIList.from(new ArrayList<>());
 
     int i;
     for (i = 0; i < 50; i++) {
@@ -92,7 +94,7 @@ public class SIListTest {
       al.add(v);
     }
     lists.add(base);
-    lists.add(SIList.from(new ArrayList<String>()));
+    lists.add(SIList.from(new ArrayList<>()));
     base = SIList.concat(lists);
     for (i = 55; i < 70; i++) {
       String v = "str" + i;
@@ -108,8 +110,8 @@ public class SIListTest {
   }
 
   @Test
-  public void emptyLOL() {
-    List<SIList<String>> lists = Collections.singletonList(SIList.from(new ArrayList<String>()));
+  void emptyLOL() {
+    List<SIList<String>> lists = Collections.singletonList(SIList.from(new ArrayList<>()));
     SIList<String> sl = SIList.concat(lists);
 
     assertTrue(sl.isEmpty());
