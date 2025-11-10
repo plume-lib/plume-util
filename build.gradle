@@ -268,12 +268,12 @@ mavenPublishing {
   pom {
     name = "Plume Util"
     description = "Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc."
-    url = "https://github.com/plume-lib/${packageName}"
+    url = "https://github.com/plume-lib/${project.packageName}"
 
     scm {
-      url = "https://github.com/plume-lib/${packageName}/"
-      connection = "scm:git:git://github.com/plume-lib/${packageName}.git"
-      developerConnection = "scm:git:ssh://git@github.com/plume-lib/${packageName}.git"
+      url = "https://github.com/plume-lib/${project.packageName}/"
+      connection = "scm:git:git://github.com/plume-lib/${project.packageName}.git"
+      developerConnection = "scm:git:ssh://git@github.com/plume-lib/${project.packageName}.git"
     }
 
     licenses {
