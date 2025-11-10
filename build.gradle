@@ -111,14 +111,15 @@ if (isJava21orHigher) {
   }
   tasks.withType(JavaCompile).configureEach {
     options.errorprone {
+      disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
+      disable("EffectivelyPrivate") // Loses information about the abstraction.
       disable("ExtendsObject")  // Incorrect when using the Checker Framework.
       disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
       disable("ReferenceEquality") // Use Interning Checker instead.
-      disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
-      disable("EffectivelyPrivate") // Loses information about the abstraction.
     }
   }
 }
+
 
 // PMD linter
 
@@ -256,9 +257,6 @@ javadocWeb.dependsOn(requireJavadoc)
 
 
 // Publishing
-
-// // To upload to Maven Central, see instructions in the file.
-// // apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
 
 // To upload to Maven Central:
 // * ./gradlew publishToMavenCentral
