@@ -116,7 +116,10 @@ if (isJava21orHigher) {
       disable("EffectivelyPrivate") // Loses information about the abstraction.
       disable("ExtendsObject")  // Incorrect when using the Checker Framework.
       disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
+      disable("PatternMatchingInstanceof") // requires Java 16 or later
       disable("ReferenceEquality") // Use Interning Checker instead.
+      disable("StatementSwitchToExpressionSwitch") // requires Java 12 or later
+      disable("StringConcatToTextBlock") // requires Java 15 or later
     }
   }
 }
@@ -172,7 +175,7 @@ if (false) {
     checkerFramework("org.checkerframework:checker:${checkerFrameworkVersion}")
   }
   configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, "minutes"
+    resolutionStrategy.cacheChangingModulesFor(0, "minutes")
   }
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".

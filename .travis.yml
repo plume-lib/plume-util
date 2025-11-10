@@ -11,12 +11,12 @@ cache:
     - $HOME/.m2/
 
 jdk:
-  - oraclejdk11
-  - openjdk11
+  - openjdk21
+  - openjdk25
 
 # Add "verGJF" task when google-java-format handles type annotations better;
 # see https://github.com/google/google-java-format/issues/5
-script: ./gradlew build javadoc && ./gradlew requireJavadoc
+script: ./gradlew build && ./gradlew requireJavadoc
 
 git:
   depth: 9
