@@ -61,7 +61,7 @@ import org.junit.jupiter.api.Test;
   "UnnecessaryParentheses",
   "PMD",
 })
-public class ArrayMapTestApache {
+class ArrayMapTestApache {
   static class MockMap extends AbstractMap {
     @Override
     public Set entrySet(@GuardSatisfied MockMap this) {
