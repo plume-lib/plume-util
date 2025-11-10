@@ -1739,6 +1739,14 @@ public final class StringsPlume {
   /**
    * Returns either the singular or plural form of the noun and verb, depending on {@code n}.
    *
+   * <p>Example uses:
+   *
+   * <pre>{@code
+   * StringsPlume.nvPlural(0, "fox", "was")  =  "0 foxes were"
+   * StringsPlume.nvPlural(1, "fox", "was")  =  "1 fox was"
+   * StringsPlume.nvPlural(2, "fox", "was")  =  "2 foxes were"
+   * }</pre>
+   *
    * @param n count
    * @param noun word being counted; must not be the empty string
    * @param verb verb whose subject is one or more things, depending on {@code n}
