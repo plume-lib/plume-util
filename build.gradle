@@ -112,6 +112,7 @@ if (isJava21orHigher) {
   tasks.withType(JavaCompile).configureEach {
     options.errorprone {
       disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
+      disable("DoNotCallSuggester") // Suggests use of an Error Prone annotation.
       disable("EffectivelyPrivate") // Loses information about the abstraction.
       disable("ExtendsObject")  // Incorrect when using the Checker Framework.
       disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
@@ -210,8 +211,8 @@ tasks.register("javadocWebUpload", Javadoc) {
   classpath = project.sourceSets.main.compileClasspath
   options.addStringOption("source", "8")
   doLast {
-    ant.replaceregexp(match: "@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace: "",
-    flags: "g", byline: true) {
+    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:"",
+    flags:"g", byline:true) {
       fileset(dir: destinationDir)
     }
   }
@@ -275,7 +276,7 @@ mavenPublishing {
     url = "https://github.com/plume-lib/${packageName}"
 
     scm {
-      url = "https://github.com:plume-lib/${packageName}/"
+      url = "https://github.com/plume-lib/${packageName}/"
       connection = "scm:git:git://github.com/plume-lib/${packageName}.git"
       developerConnection = "scm:git:ssh://git@github.com/plume-lib/${packageName}.git"
     }
