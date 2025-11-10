@@ -59,7 +59,7 @@ import org.junit.jupiter.api.Test;
   "LogicalAssignment",
   "ReferenceEquality",
   "UnnecessaryParentheses",
-  "PMD",
+  "PMD", // Third-party-derived test code.
 })
 class ArrayMapTestApache {
   static class MockMap extends AbstractMap {
