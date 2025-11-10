@@ -31,7 +31,8 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * Add a git tag and commit:
 
   ```sh
-  VER=1.12.1 && git commit -m "Version $VER" && git push && \
+  VER=1.12.1 && \
+  git commit -m "Version $VER" && git push && \
   git tag -a v$VER -m "Version $VER" && git push && git push --tags
   ```
 
@@ -50,9 +51,9 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * git pull
 * Set version to end in "-SNAPSHOT".
 * Make the snapshot release.
-   * Approach 1:  to Maven Central
-      * ./gradlew publishToMavenCentral
-      * In the clients' build.gradle: set version number and use:
+  * Approach 1:  to Maven Central
+    * ./gradlew publishToMavenCentral
+    * In the clients' build.gradle: set version number and use:
 
       <!-- markdownlint-disable line-length -->
         ```gradle
@@ -65,9 +66,9 @@ Run these steps on any filesystem, except the `javadocWeb` step.
         ```
       <!-- markdownlint-enable line-length -->
 
-   * Approach 2:  to Maven Local
-      * ./gradlew PublishToMavenLocal
-      * In the clients' build.gradle: set version number and use:
+  * Approach 2:  to Maven Local
+    * ./gradlew publishToMavenLocal
+    * In the clients' build.gradle: set version number and use:
 
         ```gradle
           repositories {
@@ -88,4 +89,4 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     ```
     <!-- markdownlint-enable line-length -->
 
- * For Daikon: make compile junit test
+* For Daikon: make compile junit test
