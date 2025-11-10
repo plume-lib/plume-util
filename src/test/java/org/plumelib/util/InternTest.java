@@ -14,15 +14,17 @@ import org.junit.jupiter.api.Test;
 
 /** Test the Intern class. */
 @SuppressWarnings({
-  "PMD.SimplifiableTestAssertion",
-  "PMD.PrimitiveWrapperInstantiation",
-  "PMD.StringInstantiation",
   "PMD.DoNotCallGarbageCollectionExplicitly",
+  "PMD.PrimitiveWrapperInstantiation",
+  "PMD.SimplifiableTestAssertion",
+  "PMD.StringInstantiation",
+  "PMD.UnnecessaryBoxing",
 })
 final class InternTest {
 
   InternTest() {}
 
+  @SuppressWarnings("PMD.UnusedAssignment")
   static class InternTestHelper {
     void test(boolean random) {
       int size1 = (random ? 100 : 1);
@@ -257,6 +259,7 @@ final class InternTest {
     assertTrue(oaIntern == oaOtherIntern);
   }
 
+  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void testInternObjectException() {
     java.awt.Point pOrig = new java.awt.Point(1, 2);

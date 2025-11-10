@@ -71,6 +71,7 @@ final class ArraysPlumeTest {
     assertEquals(0, ArraysPlume.elementRange(new int[] {3}));
   }
 
+  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void testMinAndMaxException1() {
     try {
@@ -81,6 +82,7 @@ final class ArraysPlumeTest {
     }
   }
 
+  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void testMinAndMaxException2() {
     try {
@@ -379,11 +381,10 @@ final class ArraysPlumeTest {
       assertEquals("null", ArraysPlume.toStringQuoted((List<? extends @Signed Object>) null));
       assertEquals(
           "[3.14, null, \"hello\"]",
-          ArraysPlume.toStringQuoted(Arrays.asList(new Object[] {3.14, null, "hello"})));
+          ArraysPlume.toStringQuoted(Arrays.asList(3.14, null, "hello")));
       assertEquals(
           "[\"a\\\"quote\", \"b\", \"c\\\\backslash\", \"d\\nnewline\"]",
-          ArraysPlume.toStringQuoted(
-              Arrays.asList(new Object[] {"a\"quote", "b", "c\\backslash", "d\nnewline"})));
+          ArraysPlume.toStringQuoted(Arrays.asList("a\"quote", "b", "c\\backslash", "d\nnewline")));
     }
 
     // static String toString(int[] a)
@@ -1023,14 +1024,16 @@ final class ArraysPlumeTest {
     assertSame(abcArrayObject, ArraysPlume.concat(emptyArrayObject, abcArrayObject));
   }
 
+  @SuppressWarnings(
+      "PMD.LambdaCanBeMethodReference") // PMD false positive: Integer::toString is ambiguous
   @Test
   void testMapArray() {
     Integer[] iota = {0, 1, 2, 3};
     String[] iotaStringGoal = {"0", "1", "2", "3"};
     String[] iotaStringActual =
         ArraysPlume.<Integer, String>mapArray(i -> i.toString(), iota, String.class);
-    assertArrayEquals(iotaStringActual, iotaStringGoal);
-    assertEquals(iotaStringActual.getClass().getComponentType(), String.class);
+    assertArrayEquals(iotaStringGoal, iotaStringActual);
+    assertEquals(String.class, iotaStringActual.getClass().getComponentType());
   }
 
   @Test

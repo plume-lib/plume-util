@@ -178,10 +178,11 @@ final class OrderedPairIteratorTest {
    * @param ints an array of two-element arrays of integers
    * @throws AssertionError iff the iterator returns the same values as the argument array contains
    */
-  @SuppressWarnings(
-      "index:array.access.unsafe.high" // same length iterator and array, and while loop with ++ on
-  // index
-  )
+  @SuppressWarnings({
+    "index:array.access.unsafe.high", // same length iterator and array, and while loop with ++ on
+    // index
+    "PMD.UnconditionalIfStatement", // for debugging
+  })
   public static void compareOrderedPairIterator(
       OrderedPairIterator<Integer> opi, int[] @ArrayLen(2) [] ints) {
     int pairno = 0;
@@ -192,8 +193,8 @@ final class OrderedPairIteratorTest {
             "Iterator: <%s,%s>, array: <%s,%s>%n",
             pair.first, pair.second, ints[pairno][0], ints[pairno][1]);
       }
-      assertTrue((pair.first == null) || (pair.first.intValue() == ints[pairno][0]));
-      assertTrue((pair.second == null) || (pair.second.intValue() == ints[pairno][1]));
+      assertTrue((pair.first == null) || (pair.first == ints[pairno][0]));
+      assertTrue((pair.second == null) || (pair.second == ints[pairno][1]));
       pairno++;
     }
     assertEquals(ints.length, pairno);

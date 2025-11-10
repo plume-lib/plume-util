@@ -64,7 +64,7 @@ final class MathPlumeTest {
     }
     int[] a = new int[v.size()];
     for (int i = 0; i < a.length; i++) {
-      a[i] = v.get(i).intValue();
+      a[i] = v.get(i);
     }
     return a;
   }
@@ -126,6 +126,7 @@ final class MathPlumeTest {
     }
   }
 
+  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void test_pow_exception() {
     try {

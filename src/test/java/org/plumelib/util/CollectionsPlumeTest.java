@@ -107,7 +107,7 @@ final class CollectionsPlumeTest {
 
     @Override
     public boolean test(Integer i) {
-      return i.intValue() % 2 != 0;
+      return i % 2 != 0;
     }
   }
 
@@ -893,14 +893,16 @@ final class CollectionsPlumeTest {
         List<@IndexFor("totals") Integer> chosen =
             CollectionsPlume.randomElements(new IotaIterator(itorSize), i, r);
         for (int m = 0; m < chosen.size(); m++) {
+          int mInt = chosen.get(m);
           for (int n = m + 1; n < chosen.size(); n++) {
-            if (chosen.get(m).intValue() == chosen.get(n).intValue()) {
+            int nInt = chosen.get(n);
+            if (mInt == nInt) {
               throw new Error("Duplicate at " + m + "," + n);
             }
           }
         }
         for (Integer elt : chosen) {
-          totals[elt.intValue()]++;
+          totals[elt]++;
         }
       }
       int iTruncated = Math.min(itorSize, i);
