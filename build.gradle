@@ -116,7 +116,10 @@ if (isJava21orHigher) {
       disable("EffectivelyPrivate") // Loses information about the abstraction.
       disable("ExtendsObject")  // Incorrect when using the Checker Framework.
       disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
+      disable("PatternMatchingInstanceof") // requires Java 16 or later
       disable("ReferenceEquality") // Use Interning Checker instead.
+      disable("StatementSwitchToExpressionSwitch") // requires Java 12 or later
+      disable("StringConcatToTextBlock") // requires Java 15 or later
     }
   }
 }
@@ -172,7 +175,7 @@ if (false) {
     checkerFramework("org.checkerframework:checker:${checkerFrameworkVersion}")
   }
   configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, "minutes"
+    resolutionStrategy.cacheChangingModulesFor(0, "minutes")
   }
 }
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
@@ -201,7 +204,7 @@ javadoc {
 }
 check.dependsOn(javadoc)
 
-tasks.register("javadocWeb", Javadoc) {
+tasks.register("javadocWeb", DefaultTask) {
   description = "Upload API documentation to website."
   dependsOn(javadocWebUpload, javadocWebChgrp, javadocWebChmod)
 }
@@ -257,28 +260,20 @@ check.dependsOn(requireJavadoc)
 javadocWeb.dependsOn(requireJavadoc)
 
 
-// Publishing
-
-// To upload to Maven Central:
-// * ./gradlew publishToMavenCentral
-// * browse to https://central.sonatype.com/publishing/deployments
-
-ext {
-  packageName = "plume-util"
-}
+// Publishing, see README-developers.md
 
 mavenPublishing {
-  coordinates("org.plumelib", "${packageName}", "1.12.1")
+  coordinates("org.plumelib", "${project.packageName}", "${project.version}")
 
   pom {
     name = "Plume Util"
     description = "Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc."
-    url = "https://github.com/plume-lib/${packageName}"
+    url = "https://github.com/plume-lib/${project.packageName}"
 
     scm {
-      url = "https://github.com/plume-lib/${packageName}/"
-      connection = "scm:git:git://github.com/plume-lib/${packageName}.git"
-      developerConnection = "scm:git:ssh://git@github.com/plume-lib/${packageName}.git"
+      url = "https://github.com/plume-lib/${project.packageName}/"
+      connection = "scm:git:git://github.com/plume-lib/${project.packageName}.git"
+      developerConnection = "scm:git:ssh://git@github.com/plume-lib/${project.packageName}.git"
     }
 
     licenses {

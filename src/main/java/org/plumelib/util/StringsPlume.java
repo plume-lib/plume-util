@@ -1245,14 +1245,13 @@ public final class StringsPlume {
     /** Creates a new VersionNumberComparator. */
     public VersionNumberComparator() {}
 
-    @SuppressWarnings("StringSplitter") // OK given that the arguments are version numbers.
     @Override
     public int compare(String s1, String s2) {
       if (s1.equals(s2)) {
         return 0;
       }
-      String[] components1 = s1.split("\\.");
-      String[] components2 = s2.split("\\.");
+      String[] components1 = s1.split("\\.", -1);
+      String[] components2 = s2.split("\\.", -1);
       int len = Math.min(components1.length, components2.length);
       for (int i = 0; i < len; i++) {
         int int1 = Integer.parseInt(components1[i]);

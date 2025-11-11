@@ -25,10 +25,5 @@ jobs:
           cache: 'gradle'
       - name: java -version
         run: java -version
-      - name: ./gradlew build javadoc
-        run: ./gradlew build javadoc
-      - name: ./gradlew requireJavadoc
-        run: ./gradlew requireJavadoc
-      # TODO: This might be done by "./gradlew build"
-      - name: ./gradlew spotlessCheck
-        run: ./gradlew spotlessCheck
+      - name: ./gradlew build
+        run: ./gradlew build
