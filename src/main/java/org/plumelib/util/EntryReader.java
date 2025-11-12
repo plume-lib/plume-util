@@ -256,6 +256,29 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
+   * Create an EntryReader that uses the given character set.
+   *
+   * @param in source from which to read entries
+   * @param charsetName the character set to use
+   * @param filename non-null file name for stream being read
+   * @param commentRegexString regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name.
+   * @throws UnsupportedEncodingException if the charset encoding is not supported
+   * @see #EntryReader(InputStream,String,String,String)
+   */
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
+      String charsetName,
+      String filename,
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString)
+      throws UnsupportedEncodingException {
+    this(in, charsetName, filename, false, commentRegexString, includeRegexString);
+  }
+
+  /**
    * Create an EntryReader that does not support comments or include directives.
    *
    * @param in the InputStream
@@ -276,6 +299,31 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create an EntryReader.
    *
    * @param in source from which to read entries
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
+   * @param filename non-null file name for stream being read
+   * @param commentRegexString regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name.
+   */
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
+      String filename,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString) {
+    this(
+        new InputStreamReader(in, UTF_8),
+        filename,
+        twoBlankLines,
+        commentRegexString,
+        includeRegexString);
+  }
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param in source from which to read entries
    * @param filename non-null file name for stream being read
    * @param commentRegexString regular expression that matches comments. Any text that matches
    *     commentRegex is removed. A line that is entirely a comment is ignored.
@@ -287,7 +335,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String filename,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
-    this(new InputStreamReader(in, UTF_8), filename, false, commentRegexString, includeRegexString);
+    this(in, filename, false, commentRegexString, includeRegexString);
   }
 
   /**
@@ -415,6 +463,25 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
+   * Create an EntryReader.
+   *
+   * @param reader source from which to read entries
+   * @param filename file name corresponding to reader, for use in error messages
+   * @param commentRegexString regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name
+   */
+  @SuppressWarnings("builder") // storing into a collection
+  public @MustCallAlias EntryReader(
+      @MustCallAlias Reader reader,
+      String filename,
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString) {
+    this(reader, filename, false, commentRegexString, includeRegexString);
+  }
+
+  /**
    * Create an EntryReader that does not support comments or include directives.
    *
    * @param reader source from which to read entries
@@ -445,6 +512,22 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       throws IOException {
     this(
         FilesPlume.newFileReader(path), path.toString(), twoBlankLines, commentRegex, includeRegex);
+  }
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param path initial file to read
+   * @param commentRegex regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   */
+  public EntryReader(
+      Path path, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
+      throws IOException {
+    this(path, false, commentRegex, includeRegex);
   }
 
   /**
@@ -494,6 +577,22 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
+   * Create an EntryReader.
+   *
+   * @param file initial file to read
+   * @param commentRegex regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   */
+  public EntryReader(
+      File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
+      throws IOException {
+    this(file, false, commentRegex, includeRegex);
+  }
+
+  /**
    * Create an EntryReader that does not support comments or include directives.
    *
    * @param file the file to read
@@ -537,6 +636,25 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(new File(filename), twoBlankLines, commentRegex, includeRegex);
+  }
+
+  /**
+   * Create a new EntryReader starting with the specified file.
+   *
+   * @param filename initial file to read
+   * @param commentRegex regular expression that matches comments. Any text that matches {@code
+   *     commentRegex} is removed. A line that is entirely a comment is ignored.
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   * @see #EntryReader(File,boolean,String,String)
+   */
+  public EntryReader(
+      String filename,
+      @Nullable @Regex String commentRegex,
+      @Nullable @Regex(1) String includeRegex)
+      throws IOException {
+    this(filename, false, commentRegex, includeRegex);
   }
 
   /**
