@@ -7,6 +7,10 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
+## 1.12.2 (2025-11-12)
+
+* Add more `EntryReader` constructors.
+
 ## 1.12.1 (2025-11-09)
 
 * Make `EntryReader` constructors more uniform.
