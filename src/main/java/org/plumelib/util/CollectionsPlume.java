@@ -69,7 +69,7 @@ public final class CollectionsPlume {
    * @param c the collection into which elements are to be inserted, which lacks an {@code
    *     addAll(Iterable} method
    * @param elements the elements to insert into c
-   * @return true if the collection changed as a result of the call
+   * @return true if the argument collection changed as a result of the call
    */
   public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements) {
     boolean added = false;
@@ -82,26 +82,28 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
+   * Returns true iff the argument contains no duplicate elements, according to {@code equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param <T> the type of the elements
-   * @param a a list
-   * @return true iff a does not contain duplicate elements
+   * @param a a collection
+   * @return true iff a contains no duplicate elements
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
-  public static <T> boolean hasDuplicates(List<T> a) {
-    HashSet<T> hs = new HashSet<>();
-    if (a instanceof RandomAccess) {
-      for (int i = 0; i < a.size(); i++) { // NOPMD: a foreach loop here would be less efficient
-        T elt = a.get(i);
+  public static <T> boolean hasDuplicates(Collection<T> a) {
+    if (a instanceof List && a instanceof RandomAccess) {
+      List<T> alist = (List<T>) a;
+      HashSet<T> hs = new HashSet<>();
+      for (int i = 0; i < alist.size(); i++) { // NOPMD: a foreach loop here would be less efficient
+        T elt = alist.get(i);
         if (!hs.add(elt)) {
           return true;
         }
       }
     } else {
+      HashSet<T> hs = new HashSet<>();
       for (T elt : a) {
         if (!hs.add(elt)) {
           return true;
@@ -112,92 +114,98 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
+   * Returns true iff the collection does not contain duplicate elements, according to {@code
+   * equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param <T> the type of the elements
-   * @param a a list
-   * @return true iff a does not contain duplicate elements
+   * @param a a collection
+   * @return true iff {@code a} does not contain duplicate elements
    */
   @Pure
-  public static <T> boolean hasNoDuplicates(List<T> a) {
+  public static <T> boolean hasNoDuplicates(Collection<T> a) {
     return !hasDuplicates(a);
   }
 
   /**
-   * Returns true iff the list does not contain duplicate elements, according to {@code equals()}.
+   * Returns true iff the argument does not contain duplicate elements, according to {@code
+   * equals()}.
    *
    * <p>The implementation uses O(n) time and O(n) space.
    *
    * @param <T> the type of the elements
-   * @param a a list
-   * @return true iff a does not contain duplicate elements
-   * @deprecated use {@link #hasNoDuplicates(List)}
+   * @param a a collection
+   * @return true iff {@code a} does not contain duplicate elements
+   * @deprecated use {@link #hasNoDuplicates}
    */
   @Deprecated // 2023-11-30
   // @InlineMe(
   //     replacement = "CollectionsPlume.hasNoDuplicates(a)",
   //     imports = "org.plumelib.util.CollectionsPlume")
   @Pure
-  public static <T> boolean noDuplicates(List<T> a) {
+  public static <T> boolean noDuplicates(Collection<T> a) {
     return hasNoDuplicates(a);
   }
 
   /**
-   * Returns a copy of the list (never the original list) with duplicates (according to {@code
-   * equals()}) removed, but retaining the original order. The argument is not modified.
+   * Returns a new list containing the collection elements without duplicates (according to {@code
+   * equals()}), but retaining the original order. The argument is not modified.
    *
    * @param <T> type of elements of the list
-   * @param l a list to remove duplicates from
+   * @param l a collection to remove duplicates from
    * @return a copy of the list with duplicates removed
    * @deprecated use {@link withoutDuplicates} or {@link withoutDuplicatesComparable}
    */
   @Deprecated // 2021-03-28
-  public static <T> List<T> removeDuplicates(List<T> l) {
+  public static <T> List<T> removeDuplicates(Collection<T> l) {
     HashSet<T> hs = new LinkedHashSet<>(l);
     List<T> result = new ArrayList<>(hs);
     return result;
   }
 
   /**
-   * Returns a copy of the list with duplicates (according to {@code equals()}) removed, but
-   * retaining the original order. May return its argument if its argument has no duplicates, but is
-   * not guaranteed to do so. The argument is not modified.
+   * Returns a list of the collection elements without duplicates (according to {@code equals()}),
+   * but retaining the original order. May return its argument if its argument is a list and has no
+   * duplicates, but is not guaranteed to do so. The argument is not modified.
    *
    * <p>If the element type implements {@link Comparable}, use {@link #withoutDuplicatesSorted} or
    * {@link #withoutDuplicatesComparable}.
    *
    * @param <T> the type of elements in {@code values}
-   * @param values a list of values
+   * @param values a collection
    * @return the values, with duplicates removed
    */
-  public static <T> List<T> withoutDuplicates(List<T> values) {
+  public static <T> List<T> withoutDuplicates(Collection<T> values) {
     Set<T> s = ArraySet.<T>newArraySetOrLinkedHashSet(values);
-    if (values.size() == s.size()) {
-      return values;
+    if (values.size() == s.size() && values instanceof List) {
+      return (List<T>) values;
     } else {
       return new ArrayList<>(s);
     }
   }
 
   /**
-   * Returns a list with the same contents as its argument, but sorted and without duplicates
+   * Returns a list with the same contents as the argument, but sorted and without duplicates
    * (according to {@code equals()}). May return its argument if its argument is sorted and has no
    * duplicates, but is not guaranteed to do so. The argument is not modified.
    *
-   * <p>This is like {@link #withoutDuplicates}, but requires the list elements to implement {@link
-   * Comparable}, and thus can be more efficient.
+   * <p>This is like {@link #withoutDuplicates}, but requires the collection elements to implement
+   * {@link Comparable}, and thus can be more efficient.
    *
    * @see #withoutDuplicatesComparable
    * @param <T> the type of elements in {@code values}
-   * @param values a list of values
+   * @param values a collection
    * @return the values, with duplicates removed
    */
-  public static <T extends Comparable<T>> List<T> withoutDuplicatesSorted(List<T> values) {
+  public static <T extends Comparable<T>> List<T> withoutDuplicatesSorted(Collection<T> values) {
     // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
     if (isSortedNoDuplicates(values)) {
-      return values;
+      if (values instanceof List) {
+        return (List<T>) values;
+      } else {
+        return new ArrayList<>(values);
+      }
     }
 
     Set<T> set = new TreeSet<>(values);
@@ -205,69 +213,89 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns a list with the same contents as its argument, but without duplicates. May return its
-   * argument if its argument has no duplicates, but is not guaranteed to do so. The argument is not
-   * modified.
+   * Returns a list with the same contents as the argument, but without duplicates. May return its
+   * argument if its argument is a list and has no duplicates, but is not guaranteed to do so. The
+   * argument is not modified.
    *
    * <p>This is like {@link #withoutDuplicatesSorted}, but it is not guaranteed to return a sorted
    * list. Thus, it is occasionally more efficient.
    *
-   * <p>This is like {@link #withoutDuplicates}, but requires the list elements to implement {@link
-   * Comparable}, and thus can be more efficient. If a new list is returned, this does not retain
-   * the original order; the result is sorted.
+   * <p>This is like {@link #withoutDuplicates}, but requires the collection elements to implement
+   * {@link Comparable}, and thus can be more efficient. If a new list is returned, this does not
+   * retain the original order; the result is sorted.
    *
    * @see #withoutDuplicatesSorted
    * @param <T> the type of elements in {@code values}
-   * @param values a list of values
+   * @param values a collection
    * @return the values, with duplicates removed
    */
-  public static <T extends Comparable<T>> List<T> withoutDuplicatesComparable(List<T> values) {
+  public static <T extends Comparable<T>> List<T> withoutDuplicatesComparable(
+      Collection<T> values) {
     // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
     if (isSortedNoDuplicates(values)) {
-      return values;
+      if (values instanceof List) {
+        return (List<T>) values;
+      } else {
+        return new ArrayList<>(values);
+      }
     }
 
     Set<T> set = new TreeSet<>(values);
-    if (values.size() == set.size()) {
-      return values;
+    if (values.size() == set.size() && values instanceof List) {
+      return (List<T>) values;
     } else {
       return new ArrayList<>(set);
     }
   }
 
   /**
-   * Returns the sorted version of the list. Does not alter the list. Simply calls {@code
+   * Returns the sorted version of the argument. Does not alter the argument. Simply calls {@code
    * Collections.sort(List<T>, Comparator<? super T>)} on a copy.
    *
-   * @return a sorted version of the list
    * @param <T> type of elements of the list
-   * @param l a list to sort; is not side-effected
-   * @param c a sorted version of the list
+   * @param l a collection to sort; is not side-effected
+   * @param c a comparator used to sort the returned list
+   * @return a sorted version of the list
    */
-  // TODO: rename to "sorted()".
-  public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c) {
+  public static <T> List<T> sorted(Collection<T> l, Comparator<@MustCallUnknown ? super T> c) {
     List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);
     return result;
   }
 
   /**
-   * Returns true if the given list is sorted.
+   * Returns the sorted version of the argument. Does not alter the argument. Simply calls {@code
+   * Collections.sort(List<T>, Comparator<? super T>)} on a copy.
+   *
+   * @param <T> type of elements of the list
+   * @param l a collection to sort; is not side-effected
+   * @param c a comparator used to sort the returned list
+   * @return a sorted version of the list
+   * @deprecated use {@link sorted}
+   */
+  @Deprecated // 2025-11-13
+  public static <T> List<T> sortList(Collection<T> l, Comparator<@MustCallUnknown ? super T> c) {
+    return sorted(l, c);
+  }
+
+  /**
+   * Returns true if the given collection is sorted.
    *
    * @param <T> the component type of the list
-   * @param values a list
-   * @return true if the list is sorted
+   * @param values a collection
+   * @return true if the argument is sorted
    */
-  public static <T extends Comparable<T>> boolean isSorted(List<T> values) {
+  public static <T extends Comparable<T>> boolean isSorted(Collection<T> values) {
     if (values.isEmpty() || values.size() == 1) {
       return true;
     }
 
-    if (values instanceof RandomAccess) {
+    if (values instanceof List && values instanceof RandomAccess) {
+      List<T> valuesList = (List<T>) values;
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      int size = values.size();
+      int size = valuesList.size();
       for (int i = 0; i < size - 1; i++) {
-        if (values.get(i).compareTo(values.get(i + 1)) > 0) {
+        if (valuesList.get(i).compareTo(valuesList.get(i + 1)) > 0) {
           return false;
         }
       }
@@ -287,22 +315,23 @@ public final class CollectionsPlume {
   }
 
   /**
-   * Returns true if the given list is sorted and has no duplicates.
+   * Returns true if the given collection is sorted and has no duplicates.
    *
    * @param <T> the component type of the list
-   * @param values a list
-   * @return true if the list is sorted and has no duplicates
+   * @param values a collection
+   * @return true if the collection is sorted and has no duplicates
    */
-  public static <T extends Comparable<T>> boolean isSortedNoDuplicates(List<T> values) {
+  public static <T extends Comparable<T>> boolean isSortedNoDuplicates(Collection<T> values) {
     if (values.size() < 2) {
       return true;
     }
 
-    if (values instanceof RandomAccess) {
+    if (values instanceof List && values instanceof RandomAccess) {
+      List<T> valuesList = (List<T>) values;
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      int size = values.size();
+      int size = valuesList.size();
       for (int i = 0; i < size - 1; i++) {
-        if (values.get(i).compareTo(values.get(i + 1)) >= 0) {
+        if (valuesList.get(i).compareTo(valuesList.get(i + 1)) >= 0) {
           return false;
         }
       }
@@ -464,7 +493,7 @@ public final class CollectionsPlume {
       List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
     List<TO> result;
 
-    if (iterable instanceof RandomAccess) {
+    if (iterable instanceof List && iterable instanceof RandomAccess) {
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
       List<FROM> list = (List<FROM>) iterable;
       int size = list.size();

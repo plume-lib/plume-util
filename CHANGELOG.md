@@ -7,6 +7,20 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
+## 1.12.3 (2025-??-??)
+
+* In `CollectionsPlume`:
+  * Renamed `sortList()` to `sorted()`
+  * Methods that now take a `Collection` rather than a `List` as input:
+    * `hasDuplicates()`
+    * `hasNoDuplicates()`
+    * `noDuplicates()`
+    * `withoutDuplicates()`
+    * `withoutDuplicatesSorted()`
+    * `withoutDuplicatesComparable()`
+    * `isSorted()`
+    * `isSortedNoDuplicates()`
+
 ## 1.12.2 (2025-11-12)
 
 * Add more `EntryReader` constructors.
