@@ -3072,7 +3072,7 @@ public final class ArraysPlume {
    * @param <T> the type of the elements
    * @param a a list
    * @return true iff a does not contain duplicate elements
-   * @deprecated use {@link CollectionsPlume#hasNoDuplicates(List)}
+   * @deprecated use {@link CollectionsPlume#hasNoDuplicates}
    */
   @Deprecated // 2021-04-09
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
