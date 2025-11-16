@@ -829,7 +829,6 @@ public final class FilesPlume {
     for (int i = 1; i < Integer.MAX_VALUE; i++) {
       File candidate = new File(createdDir.toFile(), prefix + i + suffix);
       if (!candidate.exists()) {
-        System.out.println("Created " + candidate);
         return candidate.toPath();
       }
     }
@@ -941,7 +940,7 @@ public final class FilesPlume {
       }
       prefix = wildcard.substring(0, astloc);
       suffix = wildcard.substring(astloc + 1);
-      if (wildcard.indexOf('*') != -1) {
+      if (suffix.indexOf('*') != -1) {
         throw new Error("Multiple asterisks in wildcard argument: " + wildcard);
       }
     }
@@ -1027,7 +1026,7 @@ public final class FilesPlume {
   /**
    * Reads an Object from a File. This is a wrapper around {@link ObjectInputStream#readObject}, but
    * it takes a {@link File} as an argument. Note that use of that method can lead to security
-   * vulnerabilities.
+   * vulnerabilities. Only run the method on trusted files.
    *
    * @param file the file from which to read
    * @return the object read from the file
