@@ -1101,7 +1101,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * Create a FlnReader.
      *
      * @param filename file from which to read
-     * @throws IOException if there is trobule reading the file
+     * @throws IOException if there is trouble reading the file
      */
     public FlnReader(String filename) throws IOException {
       super(FilesPlume.newFileReader(filename));
