@@ -4,7 +4,7 @@
 
 ### Requirements
 
-Your ~/.gradle/gradle.properties file must contain:
+Your `~/.gradle/gradle.properties` file must contain:
 
 ```properties
 signing.keyId=...
@@ -19,14 +19,14 @@ mavenCentralPassword=...
 Run these steps on any filesystem, except the `javadocWeb` step.
 
 * Make and test a snapshot release, see below.
-* git pull
+* `git pull`
 * In `build.gradle`, ensure that "To use a snapshot version" is not enabled.
 * Update the version number in `README.md`, `gradle.properties`, and in this
   file (multiple times in each).
   Ensure the version number in `gradle.properties` does not contain "-SNAPSHOT".
 * Update `CHANGELOG.md`.
 * Save files and stage changes.
-* ./gradlew publishToMavenCentral
+* `./gradlew publishToMavenCentral`
 * Browse to <https://central.sonatype.com/publishing/deployments>, click "publish".
 * Add a git tag and commit:
 
@@ -43,16 +43,16 @@ Run these steps on any filesystem, except the `javadocWeb` step.
   * Use the text from `CHANGELOG.md` as the description
   * Attach the .jar and -all.jar files from `build/libs/`
   * Click "publish release"
-* Finally, run on the CSE filesystem:  git pull && ./gradlew javadocWeb
+* Finally, run on the CSE filesystem:  `git pull && ./gradlew javadocWeb`
 * Update clients and test, so that if it's broken we can re-release.
 
 ### Making a snapshot release
 
-* git pull
-* Set version to end in "-SNAPSHOT".
+* `git pull`
+* Set version number in `gradle.properties` to end in "-SNAPSHOT".
 * Make the snapshot release.
   * Approach 1:  to Maven Central
-    * ./gradlew publishToMavenCentral
+    * `./gradlew publishToMavenCentral`
     * In the clients' build.gradle: set version number and use:
 
       <!-- markdownlint-disable line-length -->
@@ -67,7 +67,7 @@ Run these steps on any filesystem, except the `javadocWeb` step.
       <!-- markdownlint-enable line-length -->
 
   * Approach 2:  to Maven Local
-    * ./gradlew publishToMavenLocal
+    * `./gradlew publishToMavenLocal`
     * In the clients' build.gradle: set version number and use:
 
         ```gradle
@@ -89,4 +89,4 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     ```
     <!-- markdownlint-enable line-length -->
 
-* For Daikon: make compile junit test
+* For Daikon: `make compile junit test`
