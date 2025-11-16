@@ -78,7 +78,7 @@ import org.checkerframework.checker.regex.qual.Regex;
 })
 public class EntryReader extends LineNumberReader implements Iterable<String>, Iterator<String> {
 
-  //
+  // ///////////////////////////////////////////////////////////////////////////
   // User configuration variables
   //
 
@@ -112,7 +112,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** If true, then entries are separated by two blank lines rather than one. */
   public boolean twoBlankLines = false;
 
-  //
+  /** If true, output diagnostics. */
+  public boolean debug = false;
+
+  // ///////////////////////////////////////////////////////////////////////////
   // Internal implementation variables
   //
 
@@ -126,100 +129,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
 
-  //
-  // Helper classes
-  //
-
-  /**
-   * Like LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename and Line
-   * Number Reader".
-   */
-  private static class FlnReader extends LineNumberReader {
-    /** The file being read. */
-    public String filename;
-
-    /**
-     * Create a FlnReader.
-     *
-     * @param reader source from which to read entries
-     * @param filename file name corresponding to reader, for use in error messages. Must be
-     *     non-null; if there isn't a name, clients should provide a dummy value.
-     */
-    public FlnReader(Reader reader, String filename) {
-      super(reader);
-      this.filename = filename;
-    }
-
-    /**
-     * Create a FlnReader.
-     *
-     * @param filename file from which to read
-     * @throws IOException if there is trobule reading the file
-     */
-    public FlnReader(String filename) throws IOException {
-      super(FilesPlume.newFileReader(filename));
-      this.filename = filename;
-    }
-  }
-
-  /** Descriptor for an entry (record, paragraph, etc.). */
-  public static class Entry {
-    /** First line of the entry. */
-    public final String firstLine;
-
-    /** Complete body of the entry including the first line. */
-    public final String body;
-
-    /** True if this is a short entry (blank-line-separated). */
-    public final boolean shortEntry;
-
-    /** Filename in which the entry was found. */
-    public final String filename;
-
-    /** Line number of first line of entry. */
-    public final long lineNumber;
-
-    /**
-     * Create an entry.
-     *
-     * @param firstLine first line of the entry
-     * @param body complete body of the entry including the first line
-     * @param shortEntry true if this is a short entry (blank-line-separated)
-     * @param filename filename in which the entry was found
-     * @param lineNumber line number of first line of entry
-     */
-    public Entry(
-        String firstLine, String body, String filename, long lineNumber, boolean shortEntry) {
-      this.firstLine = firstLine;
-      this.body = body;
-      this.filename = filename;
-      this.lineNumber = lineNumber;
-      this.shortEntry = shortEntry;
-    }
-
-    /**
-     * Returns a substring of the entry body that matches the specified regular expression. If no
-     * match is found, returns {@link #firstLine}.
-     *
-     * @param re regex to match
-     * @return a substring that matches re
-     */
-    public String getDescription(@Nullable Pattern re) {
-
-      if (re == null) {
-        return firstLine;
-      }
-
-      Matcher descr = re.matcher(body);
-      if (descr.find()) {
-        return descr.group();
-      } else {
-        return firstLine;
-      }
-    }
-  }
-
-  //
+  // ///////////////////////////////////////////////////////////////////////////
   // Constructors
   //
 
@@ -680,7 +590,89 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(Files.newInputStream(Path.of(filename)), charsetName, filename, false, null, null);
   }
 
+  // ///////////////////////////////////////////////////////////////////////////
+  // Getters and setters
   //
+
+  /**
+   * Returns the current filename.
+   *
+   * @return the current filename
+   */
+  public String getFileName(@GuardSatisfied EntryReader this) {
+    FlnReader ri = readers.peekFirst();
+    if (ri == null) {
+      throw new Error("Past end of input");
+    }
+    return ri.filename;
+  }
+
+  /**
+   * Returns the current line number in the current file.
+   *
+   * @return the current line number
+   */
+  @Override
+  public @NonNegative int getLineNumber(@GuardSatisfied EntryReader this) {
+    FlnReader ri = readers.peekFirst();
+    if (ri == null) {
+      throw new Error("Past end of input");
+    }
+    return ri.getLineNumber();
+  }
+
+  /**
+   * Set the current line number in the current file.
+   *
+   * @param lineNumber new line number for the current file
+   */
+  @Override
+  public void setLineNumber(@GuardSatisfied EntryReader this, @NonNegative int lineNumber) {
+    FlnReader ri = readers.peekFirst();
+    if (ri == null) {
+      throw new Error("Past end of input");
+    }
+    ri.setLineNumber(lineNumber);
+  }
+
+  /**
+   * Set the regular expressions for the start and stop of long entries (multiple lines that are
+   * read as a group by getEntry()).
+   *
+   * @param entryStartRegex regular expression that starts a long entry
+   * @param entryStopRegex regular expression that ends a long entry
+   */
+  public void setEntryStartStop(
+      @GuardSatisfied EntryReader this,
+      @Regex(1) String entryStartRegex,
+      @Regex String entryStopRegex) {
+    this.entryStartRegex = Pattern.compile(entryStartRegex);
+    this.entryStopRegex = Pattern.compile(entryStopRegex);
+  }
+
+  /**
+   * Set the regular expressions for the start and stop of long entries (multiple lines that are
+   * read as a group by getEntry()).
+   *
+   * @param entryStartRegex regular expression that starts a long entry
+   * @param entryStopRegex regular expression that ends a long entry
+   */
+  public void setEntryStartStop(
+      @GuardSatisfied EntryReader this, @Regex(1) Pattern entryStartRegex, Pattern entryStopRegex) {
+    this.entryStartRegex = entryStartRegex;
+    this.entryStopRegex = entryStopRegex;
+  }
+
+  /**
+   * Set debugging on or off.
+   *
+   * @param debug true if debugging is on
+   */
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+  }
+
+  // ///////////////////////////////////////////////////////////////////////////
   // Methods
   //
 
@@ -695,7 +687,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   @Override
   public @Nullable String readLine(@GuardSatisfied EntryReader this) throws IOException {
 
-    // System.out.printf ("Entering size = %d%n", readers.size());
+    if (debug) {
+      System.err.printf("Entering size = %d%n", readers.size());
+    }
 
     // If a line has been pushed back, return it instead
     if (pushbackLine != null) {
@@ -717,7 +711,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           break;
         }
         line = getNextLine();
-        // System.out.printf ("getNextLine = %s%n", line);
+        if (debug) {
+          System.err.printf("getNextLine = %s%n", line);
+        }
       }
     }
 
@@ -737,14 +733,18 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                   "includeRegex (%s) does not capture group 1 in %s", includeRegex, line));
         }
         File filename = new File(FilesPlume.expandFilename(filenameString));
-        // System.out.printf ("Trying to include filename %s%n", filename);
+        if (debug) {
+          System.err.printf("Trying to include filename %s%n", filename);
+        }
         if (!filename.isAbsolute()) {
           FlnReader reader = readers.getFirst();
           File currentFilename = new File(reader.filename);
           File currentParent = currentFilename.getParentFile();
           filename = new File(currentParent, filename.toString());
-          // System.out.printf ("absolute filename = %s %s %s%n",
-          //                     currentFilename, currentParent, filename);
+          if (debug) {
+            System.err.printf(
+                "absolute filename = %s %s %s%n", currentFilename, currentParent, filename);
+          }
         }
         FlnReader reader = new FlnReader(filename.getAbsolutePath());
         readers.addFirst(reader);
@@ -752,7 +752,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
     }
 
-    // System.out.printf ("Returning [%d] '%s'%n", readers.size(), line);
+    if (debug) {
+      System.err.printf("Returning [%d] '%s'%n", readers.size(), line);
+    }
     return line;
   }
 
@@ -969,75 +971,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /**
-   * Returns the current filename.
-   *
-   * @return the current filename
-   */
-  public String getFileName(@GuardSatisfied EntryReader this) {
-    FlnReader ri = readers.peekFirst();
-    if (ri == null) {
-      throw new Error("Past end of input");
-    }
-    return ri.filename;
-  }
-
-  /**
-   * Returns the current line number in the current file.
-   *
-   * @return the current line number
-   */
-  @Override
-  public @NonNegative int getLineNumber(@GuardSatisfied EntryReader this) {
-    FlnReader ri = readers.peekFirst();
-    if (ri == null) {
-      throw new Error("Past end of input");
-    }
-    return ri.getLineNumber();
-  }
-
-  /**
-   * Set the current line number in the current file.
-   *
-   * @param lineNumber new line number for the current file
-   */
-  @Override
-  public void setLineNumber(@GuardSatisfied EntryReader this, @NonNegative int lineNumber) {
-    FlnReader ri = readers.peekFirst();
-    if (ri == null) {
-      throw new Error("Past end of input");
-    }
-    ri.setLineNumber(lineNumber);
-  }
-
-  /**
-   * Set the regular expressions for the start and stop of long entries (multiple lines that are
-   * read as a group by getEntry()).
-   *
-   * @param entryStartRegex regular expression that starts a long entry
-   * @param entryStopRegex regular expression that ends a long entry
-   */
-  public void setEntryStartStop(
-      @GuardSatisfied EntryReader this,
-      @Regex(1) String entryStartRegex,
-      @Regex String entryStopRegex) {
-    this.entryStartRegex = Pattern.compile(entryStartRegex);
-    this.entryStopRegex = Pattern.compile(entryStopRegex);
-  }
-
-  /**
-   * Set the regular expressions for the start and stop of long entries (multiple lines that are
-   * read as a group by getEntry()).
-   *
-   * @param entryStartRegex regular expression that starts a long entry
-   * @param entryStopRegex regular expression that ends a long entry
-   */
-  public void setEntryStartStop(
-      @GuardSatisfied EntryReader this, @Regex(1) Pattern entryStartRegex, Pattern entryStopRegex) {
-    this.entryStartRegex = entryStartRegex;
-    this.entryStopRegex = entryStopRegex;
-  }
-
-  /**
    * Puts the specified line back in the input. Only one line can be put back.
    *
    * @param line the line to be put back in the input
@@ -1078,6 +1011,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public @NonNegative long skip(@GuardSatisfied EntryReader this, long n) {
     throw new Error("not yet implemented");
   }
+
+  // ///////////////////////////////////////////////////////////////////////////
+  // Usage example
+  //
 
   /**
    * Simple usage example.
@@ -1132,6 +1069,99 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       while (line != null) {
         System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);
         line = reader.readLine();
+      }
+    }
+  }
+
+  // ///////////////////////////////////////////////////////////////////////////
+  // Helper classes
+  //
+
+  /**
+   * Like LineNumberReader, but also has a filename field. "FlnReader" stands for "Filename and Line
+   * Number Reader".
+   */
+  private static class FlnReader extends LineNumberReader {
+    /** The file being read. */
+    public String filename;
+
+    /**
+     * Create a FlnReader.
+     *
+     * @param reader source from which to read entries
+     * @param filename file name corresponding to reader, for use in error messages. Must be
+     *     non-null; if there isn't a name, clients should provide a dummy value.
+     */
+    public FlnReader(Reader reader, String filename) {
+      super(reader);
+      this.filename = filename;
+    }
+
+    /**
+     * Create a FlnReader.
+     *
+     * @param filename file from which to read
+     * @throws IOException if there is trobule reading the file
+     */
+    public FlnReader(String filename) throws IOException {
+      super(FilesPlume.newFileReader(filename));
+      this.filename = filename;
+    }
+  }
+
+  /** Descriptor for an entry (record, paragraph, etc.). */
+  public static class Entry {
+    /** First line of the entry. */
+    public final String firstLine;
+
+    /** Complete body of the entry including the first line. */
+    public final String body;
+
+    /** True if this is a short entry (blank-line-separated). */
+    public final boolean shortEntry;
+
+    /** Filename in which the entry was found. */
+    public final String filename;
+
+    /** Line number of first line of entry. */
+    public final long lineNumber;
+
+    /**
+     * Create an entry.
+     *
+     * @param firstLine first line of the entry
+     * @param body complete body of the entry including the first line
+     * @param shortEntry true if this is a short entry (blank-line-separated)
+     * @param filename filename in which the entry was found
+     * @param lineNumber line number of first line of entry
+     */
+    public Entry(
+        String firstLine, String body, String filename, long lineNumber, boolean shortEntry) {
+      this.firstLine = firstLine;
+      this.body = body;
+      this.filename = filename;
+      this.lineNumber = lineNumber;
+      this.shortEntry = shortEntry;
+    }
+
+    /**
+     * Returns a substring of the entry body that matches the specified regular expression. If no
+     * match is found, returns {@link #firstLine}.
+     *
+     * @param re regex to match
+     * @return a substring that matches re
+     */
+    public String getDescription(@Nullable Pattern re) {
+
+      if (re == null) {
+        return firstLine;
+      }
+
+      Matcher descr = re.matcher(body);
+      if (descr.find()) {
+        return descr.group();
+      } else {
+        return firstLine;
       }
     }
   }
