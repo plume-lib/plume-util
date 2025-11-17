@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -808,7 +809,11 @@ public final class FilesPlume {
    */
   public static Path createTempFile(String prefix, String suffix, FileAttribute<?>... attrs)
       throws IOException {
-    return createTempFile(Paths.get(System.getProperty("java.io.tmpdir")), prefix, suffix, attrs);
+    String tmpDir = System.getProperty("java.io.tmpdir");
+    if (tmpDir == null) {
+      throw new IOException("System property 'java.io.tmpdir' is not set");
+    }
+    return createTempFile(Paths.get(tmpDir), prefix, suffix, attrs);
   }
 
   /**
@@ -827,10 +832,11 @@ public final class FilesPlume {
       Path dir, String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
     Path createdDir = Files.createDirectories(dir, attrs);
     for (int i = 1; i < Integer.MAX_VALUE; i++) {
-      File candidate = new File(createdDir.toFile(), prefix + i + suffix);
-      if (!candidate.exists()) {
-        System.out.println("Created " + candidate);
-        return candidate.toPath();
+      Path candidate = createdDir.resolve(prefix + i + suffix);
+      try {
+        return Files.createFile(candidate, attrs);
+      } catch (FileAlreadyExistsException e) {
+        // Try next number
       }
     }
     throw new Error("every file exists");
@@ -862,8 +868,16 @@ public final class FilesPlume {
    * @see java.io.File#createTempFile(String, String, File)
    */
   public static File createTempDir(String prefix, String suffix) throws IOException {
+    String tmpDirProperty = System.getProperty("java.io.tmpdir");
+    if (tmpDirProperty == null) {
+      throw new IOException("System property 'java.io.tmpdir' is not set");
+    }
+    String userName = System.getProperty("user.name");
+    if (userName == null) {
+      throw new IOException("System property 'user.name' is not set");
+    }
     String fs = File.separator;
-    String path = System.getProperty("java.io.tmpdir") + fs + System.getProperty("user.name") + fs;
+    String path = tmpDirProperty + fs + userName + fs;
     File pathFile = new File(path);
     if (!pathFile.isDirectory()) {
       if (!pathFile.mkdirs()) {
@@ -879,7 +893,9 @@ public final class FilesPlume {
     }
     // Now that we have created our directory, we should get rid
     // of the intermediate TempFile we created.
-    tmpfile.delete();
+    if (!tmpfile.delete()) {
+      throw new IOException("Could not delete temporary file: " + tmpfile);
+    }
     return tmpDir;
   }
 
@@ -941,20 +957,21 @@ public final class FilesPlume {
       }
       prefix = wildcard.substring(0, astloc);
       suffix = wildcard.substring(astloc + 1);
-      if (wildcard.indexOf('*') != -1) {
+      if (suffix.indexOf('*') != -1) {
         throw new Error("Multiple asterisks in wildcard argument: " + wildcard);
       }
     }
 
     @Override
     public boolean accept(File dir, String name) {
-      // TODO: This is incorrect.  For example, the wildcard "ax*xb" would match the string "axb".
-      return name.startsWith(prefix) && name.endsWith(suffix);
+      return name.length() >= prefix.length() + suffix.length()
+          && name.startsWith(prefix)
+          && name.endsWith(suffix);
     }
   }
 
-  /** The user's home directory. */
-  static final String userHome = System.getProperty("user.home");
+  /** The user's home directory, or null if the system property is not set. */
+  static final @Nullable String userHome = System.getProperty("user.home");
 
   /**
    * Does tilde expansion on a file name (to the user's home directory).
@@ -984,6 +1001,9 @@ public final class FilesPlume {
   @SideEffectFree
   public static String expandFilename(String name) {
     if (name.contains("~")) {
+      if (userHome == null) {
+        throw new Error("Cannot expand filename: system property 'user.home' is not set");
+      }
       return name.replace("~", userHome);
     } else {
       return name;
@@ -1027,7 +1047,7 @@ public final class FilesPlume {
   /**
    * Reads an Object from a File. This is a wrapper around {@link ObjectInputStream#readObject}, but
    * it takes a {@link File} as an argument. Note that use of that method can lead to security
-   * vulnerabilities.
+   * vulnerabilities. Only run the method on trusted files.
    *
    * @param file the file from which to read
    * @return the object read from the file
