@@ -96,7 +96,7 @@ final class FuzzyFloatTest {
   // rudimentary checks on the comparison operators (since they all just
   // use eq and ne anyway)
   @Test
-  void testcomparisons() {
+  void testComparisons() {
 
     double d = 2563.789;
     assertFalse(ff.gt(d, d * offlow));

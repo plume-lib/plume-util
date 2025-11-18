@@ -447,7 +447,7 @@ final class StringsPlumeTest {
   }
 
   @Test
-  void testCountFormatArguments() {
+  void test_countFormatArguments() {
     assertEquals(0, StringsPlume.countFormatArguments("No specifiier."));
     assertEquals(0, StringsPlume.countFormatArguments("This is 100%"));
     assertEquals(0, StringsPlume.countFormatArguments("This is 100%% excellent."));
@@ -465,7 +465,7 @@ final class StringsPlumeTest {
   }
 
   @Test
-  void testSplitLines() {
+  void test_splitLines() {
     String str = "one\ntwo\n\rthree\r\nfour\rfive\n\n\nsix\r\n\r\n\r\n";
     @SuppressWarnings("value") // method that returns an array is not StaticallyExecutable
     String @ArrayLen(12) [] sa = StringsPlume.splitLines(str);
@@ -487,7 +487,7 @@ final class StringsPlumeTest {
   }
 
   @Test
-  void testFirstLineSeparator() {
+  void test_firstLineSeparator() {
     assertEquals(null, StringsPlume.firstLineSeparator("hello"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
     assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
@@ -504,7 +504,7 @@ final class StringsPlumeTest {
   }
 
   @Test
-  void testSplitLinesRetainSeparators() {
+  void test_splitLinesRetainSeparators() {
     String text = "hello\rworld\nhello\r\nworld\n\rfoo";
     List<String> result = StringsPlume.splitLinesRetainSeparators(text);
     List<String> expected =
@@ -513,12 +513,12 @@ final class StringsPlumeTest {
   }
 
   @Test
-  void testSplitRetainSeparators() {
+  void test_splitRetainSeparators() {
     // There are two overloaded methods to test here.
   }
 
   @Test
-  void testToStringTruncated() {
+  void test_toStringTruncated() {
     assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 100));
     assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 10));
     assertEquals("\"012...\"", StringsPlume.toStringTruncated("0123456789", 8));

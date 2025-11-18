@@ -56,7 +56,7 @@ final class MapsPTest {
   }
 
   @Test
-  void testMapToString() {
+  void test_mapToString() {
 
     // mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix) {
     // mapMapToStringMultiLine(
