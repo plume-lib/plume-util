@@ -150,7 +150,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements)
 
   @Test
-  void testAddAllIterable() {
+  void test_addAllIterable() {
     Iterable<String> itble = CollectionsPlume.listOf("a", "b");
     Collection<String> c = new ArrayList<>();
     CollectionsPlume.addAll(c, itble);
@@ -224,7 +224,7 @@ final class CollectionsPlumeTest {
   // public static <T extends Comparable<T>> boolean isSorted(List<T> values)
 
   @Test
-  void testIsSorted() {
+  void test_isSorted() {
     assertTrue(CollectionsPlume.isSorted(l123));
     assertFalse(CollectionsPlume.isSorted(l123123));
     assertTrue(CollectionsPlume.isSorted(l12223));
@@ -235,7 +235,7 @@ final class CollectionsPlumeTest {
   // public static <T extends Comparable<T>> boolean isSortedNoDuplicates(List<T> values)
 
   @Test
-  void testIsSortedNoDuplicates() {
+  void test_isSortedNoDuplicates() {
     assertTrue(CollectionsPlume.isSortedNoDuplicates(l123));
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l123123));
     assertFalse(CollectionsPlume.isSortedNoDuplicates(l12223));
@@ -246,7 +246,7 @@ final class CollectionsPlumeTest {
   // public static <T> Collection<T> duplicates(Collection<T> c)
 
   @Test
-  void testDuplicates() {
+  void test_duplicates() {
     assertEquals(Collections.emptyList(), new ArrayList<>(CollectionsPlume.duplicates(l123)));
     assertEquals(l123, new ArrayList<>(CollectionsPlume.duplicates(l123123)));
     assertEquals(Arrays.asList(2), new ArrayList<>(CollectionsPlume.duplicates(l12223)));
@@ -258,7 +258,7 @@ final class CollectionsPlumeTest {
 
   @Test
   @SuppressWarnings("ArrayEquals") // demonstrates the effect of regular equals
-  void testDeepEquals() {
+  void test_deepEquals() {
 
     // public boolean deepEquals(Object o1, Object o2)
 
@@ -296,7 +296,7 @@ final class CollectionsPlumeTest {
 
   @Test
   @SuppressWarnings("lock:type.arguments.not.inferred")
-  void testMapList() {
+  void test_mapList() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
@@ -306,7 +306,7 @@ final class CollectionsPlumeTest {
 
   @Test
   @SuppressWarnings("lock:type.arguments.not.inferred")
-  void testTransform() {
+  void test_transform() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.transform(in, Object::toString));
@@ -319,7 +319,7 @@ final class CollectionsPlumeTest {
   // public static <T> List<T> listFilter(Iterable<T> coll, Predicate<? super T> filter)
 
   @Test
-  void testListFilter() {
+  void test_listFilter() {
     List<Integer> in = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
     List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
     List<Integer> even = Arrays.asList(new Integer[] {2, 4});
@@ -332,7 +332,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean anyMatch(Iterable<T> coll, Predicate<? super T> predicate)
 
   @Test
-  void testAnyMatch() {
+  void test_anyMatch() {
     List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
     assertTrue(CollectionsPlume.anyMatch(iota, i -> i > -5));
     assertTrue(CollectionsPlume.anyMatch(iota, i -> i > 5));
@@ -342,7 +342,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean allMatch(Iterable<T> coll, Predicate<? super T> predicate)
 
   @Test
-  void testAllMatch() {
+  void test_allMatch() {
     List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
     assertTrue(CollectionsPlume.allMatch(iota, i -> i > -5));
     assertFalse(CollectionsPlume.allMatch(iota, i -> i > 5));
@@ -352,7 +352,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean noneMatch(Iterable<T> coll, Predicate<? super T> predicate)
 
   @Test
-  void testNoneMatch() {
+  void test_noneMatch() {
     List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
     assertFalse(CollectionsPlume.noneMatch(iota, i -> i > -5));
     assertFalse(CollectionsPlume.noneMatch(iota, i -> i > 5));
@@ -363,7 +363,7 @@ final class CollectionsPlumeTest {
 
   @Test
   @SuppressWarnings("nullness:unboxing.of.nullable")
-  void testfirstMatch() {
+  void test_firstMatch() {
     List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
     assertEquals(0, (int) CollectionsPlume.firstMatch(iota, i -> i > -5));
     assertEquals(6, (int) CollectionsPlume.firstMatch(iota, i -> i > 5));
@@ -373,7 +373,7 @@ final class CollectionsPlumeTest {
   // public static int indexOf(List<?> list, Object value, int start)
 
   @Test
-  void testIndexOf() {
+  void test_indexOf() {
     List<Integer> nums = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 0, 1, 2});
     assertEquals(3, CollectionsPlume.indexOf(nums, 3, 0));
     assertEquals(-1, CollectionsPlume.indexOf(nums, 3, 5));
@@ -388,7 +388,7 @@ final class CollectionsPlumeTest {
   // public static <T> List<T> replace(T[] c, Collection<Replacement<T>> replacements)
 
   @Test
-  void testReplace() {
+  void test_replace() {
     List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
     List<Integer> empty = Arrays.asList(new Integer[] {});
     List<Integer> l_101_103 = Arrays.asList(new Integer[] {101, 102, 103});
@@ -520,7 +520,7 @@ final class CollectionsPlumeTest {
   // shorter)
 
   @Test
-  void testIsSubsequenceMaybeNonContiguous() {
+  void test_isSubsequenceMaybeNonContiguous() {
     List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
     List<Integer> iota11 = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
     List<Integer> empty = Arrays.asList(new Integer[] {});
@@ -547,7 +547,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean sortedSetEquals(SortedSet<T> set1, SortedSet<T> set2)
 
   @Test
-  void testSortedSetEquals() {
+  void test_sortedSetEquals() {
     TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
     TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
     TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
@@ -562,7 +562,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean sortedSetContainsAll(SortedSet<T> set1, SortedSet<T> set2)
 
   @Test
-  void testSortedSetContainsAll() {
+  void test_sortedSetContainsAll() {
     TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
     TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
     TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
@@ -592,7 +592,7 @@ final class CollectionsPlumeTest {
   // Median of 5 runs with size=4: ratio = .90, meaning 10% speedup.
   // @Test
   @SuppressWarnings({"ReturnValueIgnored", "PMD.UselessPureMethodCall"})
-  void testSortedSetTime() {
+  void test_sortedSetTime() {
     int size = 4;
     int iterations = 100_000;
     long sortedTime = 0;
@@ -650,14 +650,14 @@ final class CollectionsPlumeTest {
   // public static <E> List<E> listOf(E e1, E e2)
 
   @Test
-  void testListOf() {
+  void test_listOf() {
     assertEquals(Arrays.asList("a", "b"), CollectionsPlume.listOf("a", "b"));
   }
 
   // public static <T> List<T> append(Collection<T> list, T lastElt)
 
   @Test
-  void testAppend() {
+  void test_append() {
     assertEquals(
         Arrays.asList("a", "b", "c"), CollectionsPlume.append(Arrays.asList("a", "b"), "c"));
   }
@@ -759,7 +759,7 @@ final class CollectionsPlumeTest {
   // public static final class MergedIterator<T> implements Iterator<T>
 
   @Test
-  void testMergedIterator() {
+  void test_mergedIterator() {
 
     // public static class EnumerationIterator implements Iterator
     // public static class IteratorEnumeration implements Enumeration
@@ -812,7 +812,7 @@ final class CollectionsPlumeTest {
   // public static final class FilteredIterator<T> implements Iterator<T>
 
   @Test
-  void testFilteredIterator() {
+  void test_filteredIterator() {
 
     // public static final class FilteredIterator implements Iterator
 
@@ -834,7 +834,7 @@ final class CollectionsPlumeTest {
 
   @SuppressWarnings("deprecation") // to be made package-private
   @Test
-  void testRemoveFirstAndLastIterator() {
+  void test_removeFirstAndLastIterator() {
 
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> iota5middle = Arrays.asList(1, 2, 3);
@@ -853,7 +853,7 @@ final class CollectionsPlumeTest {
 
   @SuppressWarnings("PMD.ReplaceJavaUtilCalendar")
   @Test
-  void testRandomElements() {
+  void test_randomElements() {
 
     // Tests CollectionsPlume.randomElements(...)
 
@@ -980,7 +980,7 @@ final class CollectionsPlumeTest {
   // public static @Nullable Object getFromSet(Set<? extends @Nullable Object> set, Object key)
 
   @Test
-  void testGetFromSet() {
+  void test_getFromSet() {
     Integer i2 = 2;
     Integer i10 = 10;
     Set<Integer> iota5 = new HashSet<>(Arrays.asList(0, 1, 2, 3, 4));
@@ -991,7 +991,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean adjoin(Collection<T> c, T e)
 
   @Test
-  void testAdjoin() {
+  void test_adjoin() {
     Integer i2 = 2;
     Integer i5 = 5;
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
@@ -1006,7 +1006,7 @@ final class CollectionsPlumeTest {
   // public static <T> boolean adjoinAll(Collection<T> c, Collection<? extends T> toAdd)
 
   @Test
-  void testAdjoinAll() {
+  void test_adjoinAll() {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
     List<Integer> result = Arrays.asList(0, 1, 2, 3, 4, 8, 7, 6, 5);
@@ -1018,7 +1018,7 @@ final class CollectionsPlumeTest {
   // public static <T> List<T> listUnion(Collection<T> c1, Collection<T> c2)
 
   @Test
-  void testListUnion() {
+  void test_listUnion() {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
     List<Integer> result = Arrays.asList(0, 1, 2, 3, 4, 8, 7, 6, 5);
@@ -1029,7 +1029,7 @@ final class CollectionsPlumeTest {
   // public static <T> List<T> listIntersection(Collection<T> c1, Collection<T> c2)
 
   @Test
-  void testListIntersection() {
+  void test_listIntersection() {
     List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
     List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
     List<Integer> result = Arrays.asList(3, 4);

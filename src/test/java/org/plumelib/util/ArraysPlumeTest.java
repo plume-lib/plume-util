@@ -26,21 +26,21 @@ final class ArraysPlumeTest {
   ArraysPlumeTest() {}
 
   @Test
-  void testNCopies() {
+  void test_nCopies() {
     assertArrayEquals(
         new String[] {"hello", "hello", "hello", "hello"}, ArraysPlume.nCopies(4, "hello"));
     assertArrayEquals(new String[] {}, ArraysPlume.nCopies(0, "hello"));
   }
 
   @Test
-  void testAppend() {
+  void test_append() {
     assertArrayEquals(
         new String[] {"a", "b", "c"}, ArraysPlume.append(new String[] {"a", "b"}, "c"));
     assertArrayEquals(new String[] {"a"}, ArraysPlume.append(new String[] {}, "a"));
   }
 
   @Test
-  void testMinAndMax() {
+  void test_minAndMax() {
 
     // public static int min(int[] a)
     assertEquals(1, ArraysPlume.min(new int[] {1, 2, 3}));
@@ -73,7 +73,7 @@ final class ArraysPlumeTest {
 
   @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
-  void testMinAndMaxException1() {
+  void test_minAndMaxException1() {
     try {
       ArraysPlume.minAndMax(new int[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
@@ -84,7 +84,7 @@ final class ArraysPlumeTest {
 
   @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
-  void testMinAndMaxException2() {
+  void test_minAndMaxException2() {
     try {
       ArraysPlume.minAndMax(new long[] {});
       throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
@@ -94,7 +94,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testSum() {
+  void test_sum() {
 
     // public static int sum(int[] a)
     assertEquals(0, ArraysPlume.sum(new int[0]));
@@ -155,7 +155,7 @@ final class ArraysPlumeTest {
     "BoxedPrimitiveConstructor"
   }) // test performs == comparisons
   @Test
-  void testIndexOf_array() {
+  void test_indexOf_array() {
 
     // public static int indexOf(Object[] a, Object elt)
     // public static int indexOfEq(Object[] a, Object elt)
@@ -188,7 +188,7 @@ final class ArraysPlumeTest {
   // No test for `contains(T[])` for now because it just calls indexOf.
 
   @Test
-  void testIndexOf_list() {
+  void test_indexOf_list() {
     // public static int indexOf(List<?> a, Object elt)
     // public static int indexOf(List<?> a, Object elt, int minindex, int indexlimit)
     // public static int indexOfEq(List<?> a, Object elt, int minindex, int indexlimit)
@@ -206,7 +206,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testIndexOf_array_primitive() {
+  void test_indexOf_array_primitive() {
 
     // public static int indexOf(int[] a, int elt)
     {
@@ -253,7 +253,7 @@ final class ArraysPlumeTest {
     "BoxedPrimitiveConstructor"
   }) // test performs == comparisons
   @Test
-  void testIndexOf_array_array() {
+  void test_indexOf_array_array() {
 
     // public static int indexOf(Object[] a, Object[] sub)
     // public static int indexOfEq(Object[] a, Object[] sub)
@@ -342,7 +342,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testSubarray() {
+  void test_subarray() {
 
     // public static int indexOf(boolean[] a, boolean[] sub)
     // [I'm punting on this for now; deal with it later...]
@@ -366,7 +366,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testPrinting() {
+  void test_printing() {
 
     // public static String toString(Object @Nullable [] a)
     // public static String toStringQuoted(Object @Nullable [] a)
@@ -480,7 +480,7 @@ final class ArraysPlumeTest {
     "index:argument"
   }) // https://github.com/kelloggm/checker-framework/issues/147
   @Test
-  void testFunctions() {
+  void test_functions() {
 
     // public static int[] fnIdentity(int length)
     assertArrayEquals(ArraysPlume.fnIdentity(0), new int[] {});
@@ -934,7 +934,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testPartitioning() {
+  void test_partitioning() {
 
     assertTrue(
         equalElementStrings(
@@ -989,7 +989,7 @@ final class ArraysPlumeTest {
   Object[] emptyArrayObject = {};
 
   @Test
-  void testConcatenate() {
+  void test_concatenate() {
     String[] abcdefArray2 = ArraysPlume.concatenate(abcArray, defArray);
     assertArrayEquals(abcdefArray, abcdefArray2);
     assertNotSame(abcdefArray, abcdefArray2);
@@ -1004,7 +1004,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testConcat() {
+  void test_concat() {
     Instant[] da1 = {Instant.now()};
     Instant[] da2 = {Instant.now()};
     Instant[] da3 = ArraysPlume.concat(da1, da2);
@@ -1027,7 +1027,7 @@ final class ArraysPlumeTest {
   @SuppressWarnings(
       "PMD.LambdaCanBeMethodReference") // PMD false positive: Integer::toString is ambiguous
   @Test
-  void testMapArray() {
+  void test_mapArray() {
     Integer[] iota = {0, 1, 2, 3};
     String[] iotaStringGoal = {"0", "1", "2", "3"};
     String[] iotaStringActual =
@@ -1037,7 +1037,7 @@ final class ArraysPlumeTest {
   }
 
   @Test
-  void testReplaceAll() {
+  void test_replaceAll() {
     Instant now = Instant.now();
     @Nullable Instant[] da2 = {now, Instant.now(), null};
     @Nullable Instant[] da3 = {now, Instant.now(), null};
