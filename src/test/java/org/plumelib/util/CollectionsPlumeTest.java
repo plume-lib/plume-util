@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +26,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.junit.jupiter.api.Test;
 import org.plumelib.util.CollectionsPlume.Replacement;
@@ -62,7 +64,7 @@ final class CollectionsPlumeTest {
   private static final List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
 
   // //////////////////////////////////////////////////////////////////////
-  // Helper functions
+  // Helper functions for testing
   //
 
   @SuppressWarnings("NonApiType")
@@ -137,6 +139,14 @@ final class CollectionsPlumeTest {
     public void remove(@GuardSatisfied IotaIterator this) {
       throw new UnsupportedOperationException();
     }
+  }
+
+  private static BitSet randomBitSet(@NonNegative int length, Random r) {
+    BitSet result = new BitSet(length);
+    for (int i = 0; i < length; i++) {
+      result.set(i, r.nextBoolean());
+    }
+    return result;
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1040,6 +1050,30 @@ final class CollectionsPlumeTest {
   // //////////////////////////////////////////////////////////////////////
   // BitSet
   //
+
+  @Test
+  void test_intersectionCardinalityAtLeast() {
+
+    // public static intersectionCardinalityAtLeast(BitSet a, BitSet b, int i)
+
+    Random r = new Random(20_031_008);
+    for (int i = 0; i < 100; i++) {
+      BitSet b1 = randomBitSet(r.nextInt(100), r);
+      BitSet b2 = randomBitSet(r.nextInt(100), r);
+      BitSet b3 = randomBitSet(r.nextInt(100), r);
+      BitSet intersection = (BitSet) b1.clone();
+      intersection.and(b2);
+      int card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assertEquals(card >= j, CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, j));
+      }
+      intersection.and(b3);
+      card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assertEquals(card >= j, CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, b3, j));
+      }
+    }
+  }
 
   // public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i)
 
