@@ -370,18 +370,6 @@ final class StringsPlumeTest {
     // Tests go here.
   }
 
-  /** Test lpad(). */
-  @Test
-  void test_lpad() {
-    // Tests go here.
-  }
-
-  /** Test lpad(). */
-  @Test
-  void test_lpad() {
-    // Tests go here.
-  }
-
   /** Test rpad(). */
   @Test
   void test_rpad() {
@@ -424,18 +412,6 @@ final class StringsPlumeTest {
     // Tests go here.
   }
 
-  /** Test tokens(). */
-  @Test
-  void test_tokens() {
-    // Tests go here.
-  }
-
-  /** Test tokens(). */
-  @Test
-  void test_tokens() {
-    // Tests go here.
-  }
-
   // //////////////////////////////////////////////////////////////////////
   // Version numbers
   //
@@ -468,12 +444,6 @@ final class StringsPlumeTest {
   // //////////////////////////////////////////////////////////////////////
   // Debugging variants of toString
   //
-
-  /** Test toStringAndClass(). */
-  @Test
-  void test_toStringAndClass() {
-    // Tests go here.
-  }
 
   /** Test toStringAndClass(). */
   @Test

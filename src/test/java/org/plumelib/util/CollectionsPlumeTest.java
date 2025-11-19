@@ -207,16 +207,6 @@ final class CollectionsPlumeTest {
   // public static <T> List<T> withoutDuplicates(List<T> values)
   @Test
   void test_withoutDuplicates() {
-    // Tests go here.
-  }
-
-  /** Test withoutDuplicatesSorted(). */
-  @SuppressWarnings("ArrayEquals")
-  @Test
-  void test_withoutDuplicates() {
-
-    // public static <T> List<T> withoutDuplicates(List<T> l) {
-
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l123));
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l123123));
     assertEquals(l123, CollectionsPlume.withoutDuplicates(l12223));
@@ -228,6 +218,13 @@ final class CollectionsPlumeTest {
     assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo12223));
     assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo1123));
     assertEquals(lo123, CollectionsPlume.withoutDuplicates(lo1233));
+  }
+
+  /** Test withoutDuplicatesSorted(). */
+  @SuppressWarnings("ArrayEquals")
+  @Test
+  void test_withoutDuplicatesSorted() {
+    // Tests go here.
   }
 
   // public static <T extends Comparable<T>> List<T> withoutDuplicatesSorted(List<T> values)

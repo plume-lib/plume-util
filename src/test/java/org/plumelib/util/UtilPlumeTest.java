@@ -41,95 +41,9 @@ final class UtilPlumeTest {
     // Tests go here.
   }
 
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  // Don't define hash with int args; use the long versions instead.
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
-  /** Test hash(). */
-  @Test
-  void test_hash() {
-    // Tests go here.
-  }
-
   // //////////////////////////////////////////////////////////////////////
   // ProcessBuilder
   //
-
-  /** Test backticks(). */
-  @Test
-  void test_backticks() {
-    // Tests go here.
-  }
 
   /** Test backticks(). */
   @Test
@@ -144,12 +58,6 @@ final class UtilPlumeTest {
   /** Test propertyIsTrue(). */
   @Test
   void test_propertyIsTrue() {
-    // Tests go here.
-  }
-
-  /** Test getBooleanProperty(). */
-  @Test
-  void test_getBooleanProperty() {
     // Tests go here.
   }
 
