@@ -1,6 +1,5 @@
 package org.plumelib.util;
 
-
 /** Test the UtilPlume class. */
 final class UtilPlumeTest {
 
