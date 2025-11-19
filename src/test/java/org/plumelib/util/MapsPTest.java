@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 
+/** Test the MapsP class. */
 final class MapsPTest {
 
   MapsPTest() {}
@@ -55,6 +56,10 @@ final class MapsPTest {
     allGifts.put("D", giftsToQuantity4);
   }
 
+  // ///////////////////////////////////////////////////////////////////////////
+  // The tests themselves
+  //
+
   @Test
   void test_mapToString() {
 
@@ -99,4 +104,13 @@ final class MapsPTest {
             ""),
         sb2.toString());
   }
+
+  //
+  // Map to string
+  //
+
+  // First, versions that append to an Appendable.
+
+  // Second, versions that return a String.
+
 }

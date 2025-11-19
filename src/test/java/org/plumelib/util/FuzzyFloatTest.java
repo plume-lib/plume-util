@@ -9,6 +9,7 @@ import java.util.Comparator;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
+/** Test the FuzzyFloat class. */
 final class FuzzyFloatTest {
 
   FuzzyFloatTest() {}
@@ -60,6 +61,7 @@ final class FuzzyFloatTest {
   double offhigh2 = 1 + 2 * offset;
   double offlow2 = 1 - 2 * offset;
 
+  /** Test eq(). */
   @Test
   void test_eq() {
 
@@ -109,6 +111,7 @@ final class FuzzyFloatTest {
     assertFalse(ff.lte(d, d * offlow2));
   }
 
+  /** Test indexOf(). */
   @Test
   void test_indexOf() {
 
@@ -196,6 +199,7 @@ final class FuzzyFloatTest {
     }
   }
 
+  /** Test isElemMatch(). */
   @Test
   void test_isElemMatch() {
 
@@ -309,6 +313,7 @@ final class FuzzyFloatTest {
     assertArraysEquals(a7, a7Copy);
   }
 
+  /** Test isSubset(). */
   @Test
   void test_isSubset() {
 
