@@ -1041,6 +1041,30 @@ final class CollectionsPlumeTest {
   // BitSet
   //
 
+  @Test
+  void test_intersectionCardinalityAtLeast() {
+
+    // public static intersectionCardinalityAtLeast(BitSet a, BitSet b, int i)
+
+    Random r = new Random(20_031_008);
+    for (int i = 0; i < 100; i++) {
+      BitSet b1 = randomBitSet(r.nextInt(100), r);
+      BitSet b2 = randomBitSet(r.nextInt(100), r);
+      BitSet b3 = randomBitSet(r.nextInt(100), r);
+      BitSet intersection = (BitSet) b1.clone();
+      intersection.and(b2);
+      int card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assertEquals(card >= j, CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, j));
+      }
+      intersection.and(b3);
+      card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assertEquals(card >= j, CollectionsPlume.intersectionCardinalityAtLeast(b1, b2, b3, j));
+      }
+    }
+  }
+
   // public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i)
 
   // public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, BitSet c, @NonNegative
@@ -1050,4 +1074,15 @@ final class CollectionsPlumeTest {
 
   // public static int intersectionCardinality(BitSet a, BitSet b, BitSet c)
 
+  // ///////////////////////////////////////////////////////////////////////////
+  // Helper functions for testing
+  //
+
+  private static BitSet randomBitSet(@NonNegative int length, Random r) {
+    BitSet result = new BitSet(length);
+    for (int i = 0; i < length; i++) {
+      result.set(i, r.nextBoolean());
+    }
+    return result;
+  }
 }
