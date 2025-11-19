@@ -289,7 +289,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   // //////////////////////////////////////////////////////////////////////
-
   // iterators
 
   @Override
@@ -357,7 +356,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   // //////////////////////////////////////////////////////////////////////
-
   // Comparison and hashing:  equals and hashCode are inherited from AbstractSet.
 
   // Defaultable methods

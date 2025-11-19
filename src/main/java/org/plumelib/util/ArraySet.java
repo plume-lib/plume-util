@@ -360,7 +360,6 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   }
 
   // //////////////////////////////////////////////////////////////////////
-
   // iterators
 
   @Override
@@ -435,7 +434,6 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   }
 
   // //////////////////////////////////////////////////////////////////////
-
   // Comparison and hashing:  equals and hashCode are inherited from AbstractSet.
 
   // Defaultable methods

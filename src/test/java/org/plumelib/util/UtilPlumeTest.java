@@ -1,26 +1,10 @@
 package org.plumelib.util;
 
 
-import java.util.BitSet;
-import java.util.Random;
-import org.checkerframework.checker.index.qual.NonNegative;
-
 /** Test the UtilPlume class. */
 final class UtilPlumeTest {
 
   UtilPlumeTest() {}
-
-  // ///////////////////////////////////////////////////////////////////////////
-  // Helper functions for testing
-  //
-
-  private static BitSet randomBitSet(@NonNegative int length, Random r) {
-    BitSet result = new BitSet(length);
-    for (int i = 0; i < length; i++) {
-      result.set(i, r.nextBoolean());
-    }
-    return result;
-  }
 
   // public static ArrayList randomElements(Iterator itor, int numElts)
   // public static ArrayList randomElements(Iterator itor, int numElts, Random random)

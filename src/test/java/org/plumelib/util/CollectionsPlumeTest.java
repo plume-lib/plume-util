@@ -1074,4 +1074,15 @@ final class CollectionsPlumeTest {
 
   // public static int intersectionCardinality(BitSet a, BitSet b, BitSet c)
 
+  // ///////////////////////////////////////////////////////////////////////////
+  // Helper functions for testing
+  //
+
+  private static BitSet randomBitSet(@NonNegative int length, Random r) {
+    BitSet result = new BitSet(length);
+    for (int i = 0; i < length; i++) {
+      result.set(i, r.nextBoolean());
+    }
+    return result;
+  }
 }
