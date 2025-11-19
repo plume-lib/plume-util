@@ -123,7 +123,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#ArrayMap() */
   @Test
-  public void test_Constructor() {
+  void test_Constructor() {
     // Test for method java.util.ArrayMap()
     ArrayMap hm2 = new ArrayMap();
     assertEquals(0, hm2.size());
@@ -131,7 +131,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#ArrayMap(int) */
   @Test
-  public void test_ConstructorI() {
+  void test_ConstructorI() {
     // Test for method java.util.ArrayMap(int)
     ArrayMap hm2 = new ArrayMap(5);
     assertEquals(0, hm2.size());
@@ -149,7 +149,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#ArrayMap(int, float) */
   @Test
-  public void test_ConstructorIF() {
+  void test_ConstructorIF() {
     // Test for method java.util.ArrayMap(int, float)
     ArrayMap hm2 = new ArrayMap(5);
     assertEquals(0, hm2.size());
@@ -161,7 +161,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#ArrayMap(java.util.Map) */
   @Test
-  public void test_ConstructorLjava_util_Map() {
+  void test_ConstructorLjava_util_Map() {
     // Test for method java.util.ArrayMap(java.util.Map)
     Map myMap = new TreeMap();
     for (int counter = 0; counter < hmSize; counter++)
@@ -176,7 +176,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#clear() */
   @Test
-  public void test_clear() {
+  void test_clear() {
     hm.clear();
     assertEquals(0, hm.size());
     for (int i = 0; i < hmSize; i++) assertNull(hm.get(objArray2[i]));
@@ -194,7 +194,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#clone() */
   @Test
-  public void test_clone() {
+  void test_clone() {
     // Test for method java.lang.Object java.util.ArrayMap.clone()
     ArrayMap hm2 = hm.clone();
     assertTrue(hm2 != hm);
@@ -232,7 +232,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#containsKey(java.lang.Object) */
   @Test
-  public void test_containsKeyLjava_lang_Object() {
+  void test_containsKeyLjava_lang_Object() {
     // Test for method boolean
     // java.util.ArrayMap.containsKey(java.lang.Object)
     assertTrue(hm.containsKey(new Integer(87).toString()));
@@ -245,7 +245,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#containsValue(java.lang.Object) */
   @Test
-  public void test_containsValueLjava_lang_Object() {
+  void test_containsValueLjava_lang_Object() {
     // Test for method boolean
     // java.util.ArrayMap.containsValue(java.lang.Object)
     assertTrue(hm.containsValue(new Integer(87)));
@@ -254,7 +254,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#entrySet() */
   @Test
-  public void test_entrySet() {
+  void test_entrySet() {
     // Test for method java.util.Set java.util.ArrayMap.entrySet()
     Set s = hm.entrySet();
     Iterator i = s.iterator();
@@ -270,7 +270,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#entrySet() */
   @Test
-  public void test_entrySetEquals() {
+  void test_entrySetEquals() {
     Set s1 = hm.entrySet();
     Set s2 = new ArrayMap(hm).entrySet();
     assertEquals(s1, s2);
@@ -278,7 +278,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#entrySet() */
   @Test
-  public void test_removeFromViews() {
+  void test_removeFromViews() {
     hm.put("A", null);
     hm.put("B", null);
     assertTrue(hm.keySet().remove("A"));
@@ -289,7 +289,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#get(java.lang.Object) */
   @Test
-  public void test_getLjava_lang_Object() {
+  void test_getLjava_lang_Object() {
     // Test for method java.lang.Object
     // java.util.ArrayMap.get(java.lang.Object)
     assertNull(hm.get("T"));
@@ -303,7 +303,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#isEmpty() */
   @Test
-  public void test_isEmpty() {
+  void test_isEmpty() {
     // Test for method boolean java.util.ArrayMap.isEmpty()
     assertTrue(new ArrayMap().isEmpty());
     assertTrue(!hm.isEmpty());
@@ -311,7 +311,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#keySet() */
   @Test
-  public void test_keySet() {
+  void test_keySet() {
     // Test for method java.util.Set java.util.ArrayMap.keySet()
     Set s = hm.keySet();
     assertTrue(s.size() == hm.size());
@@ -357,7 +357,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#put(java.lang.Object, java.lang.Object) */
   @Test
-  public void test_putLjava_lang_ObjectLjava_lang_Object() {
+  void test_putLjava_lang_ObjectLjava_lang_Object() {
     hm.put("KEY", "VALUE");
     assertEquals("VALUE", hm.get("KEY"));
     ArrayMap<Object, Object> m = new ArrayMap<Object, Object>();
@@ -424,7 +424,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#putAll(java.util.Map) */
   @Test
-  public void test_putAllLjava_util_Map() {
+  void test_putAllLjava_util_Map() {
     // Test for method void java.util.ArrayMap.putAll(java.util.Map)
     ArrayMap hm2 = new ArrayMap();
     hm2.putAll(hm);
@@ -438,7 +438,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#putAll(java.util.Map) */
   @Test
-  public void test_putAllLjava_util_Map_Null() {
+  void test_putAllLjava_util_Map_Null() {
     ArrayMap hashMap = new ArrayMap();
     try {
       hashMap.putAll(new MockMapNull());
@@ -455,7 +455,7 @@ class ArrayMapTestApache {
   }
 
   @Test
-  public void test_putAllLjava_util_Map_Resize() {
+  void test_putAllLjava_util_Map_Resize() {
     Random rnd = new Random(666);
     Map<Integer, Integer> m1 = new ArrayMap<Integer, Integer>();
     int MID = 10;
@@ -479,7 +479,7 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#remove(java.lang.Object) */
   @Test
-  public void test_removeLjava_lang_Object() {
+  void test_removeLjava_lang_Object() {
     int size = hm.size();
     Integer y = new Integer(9);
     Integer x = ((Integer) hm.remove(y.toString()));
@@ -517,14 +517,14 @@ class ArrayMapTestApache {
 
   /** java.util.ArrayMap#size() */
   @Test
-  public void test_size() {
+  void test_size() {
     // Test for method int java.util.ArrayMap.size()
     assertTrue(hm.size() == (objArray.length + 2));
   }
 
   /** java.util.ArrayMap#values() */
   @Test
-  public void test_values() {
+  void test_values() {
     // Test for method java.util.Collection java.util.ArrayMap.values()
     Collection c = hm.values();
     assertTrue(c.size() == hm.size());
@@ -538,7 +538,7 @@ class ArrayMapTestApache {
 
   /** java.util.AbstractMap#toString() */
   @Test
-  public void test_toString() {
+  void test_toString() {
     ArrayMap m = new ArrayMap();
     m.put(m, m);
     String result = m.toString();
@@ -587,7 +587,7 @@ class ArrayMapTestApache {
    * Regression test for HY-4750
    */
   @Test
-  public void test_EntrySet() {
+  void test_EntrySet() {
     ArrayMap map = new ArrayMap();
     map.put(new Integer(1), "ONE");
     Set entrySet = map.entrySet();
