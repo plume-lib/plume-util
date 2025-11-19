@@ -10,8 +10,12 @@ import java.util.TreeSet;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.junit.jupiter.api.Test;
 
-/** Test (mainly) to make sure iterators over simple lists work. */
-class SIListTest {
+/**
+ * Tests the SIList class.
+ *
+ * <p>Focuses mainly on verifying that iterators over simple lists work correctly.
+ */
+final class SIListTest {
 
   SIListTest() {}
 

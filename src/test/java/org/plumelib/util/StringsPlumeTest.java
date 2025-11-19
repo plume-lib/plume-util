@@ -14,11 +14,16 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 import org.plumelib.util.StringsPlume.VersionNumberComparator;
 
-/** Test the stringsPlume class. */
+/** Test the StringsPlume class. */
 final class StringsPlumeTest {
 
   StringsPlumeTest() {}
 
+  // //////////////////////////////////////////////////////////////////////
+  // Replacement
+  //
+
+  /** Test replacePrefix(). */
   @Test
   void test_replacePrefix() {
 
@@ -30,6 +35,7 @@ final class StringsPlumeTest {
     assertEquals("abcdefg", StringsPlume.replacePrefix("abcdefg", "bcd", ""));
   }
 
+  /** Test replaceSuffix(). */
   @Test
   void test_replaceSuffix() {
 
@@ -41,6 +47,7 @@ final class StringsPlumeTest {
     assertEquals("abcdefg", StringsPlume.replaceSuffix("abcdefg", "cdef", ""));
   }
 
+  /** Test replaceAll(). */
   @Test
   void test_replaceAll() {
 
@@ -50,6 +57,11 @@ final class StringsPlumeTest {
         "abbababba", StringsPlume.replaceAll("abababa", Pattern.compile("a(b)a"), "a$1$1a"));
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // Prefixing and indentation
+  //
+
+  /** Test prefixLines(). */
   @Test
   void test_prefixLines() {
 
@@ -63,6 +75,13 @@ final class StringsPlumeTest {
         StringsPlume.prefixLines("  ", StringsPlume.joinLines("", "1", "", "2", "")));
   }
 
+  /** Test prefixLinesExceptFirst(). */
+  @Test
+  void test_prefixLinesExceptFirst() {
+    // Tests go here.
+  }
+
+  /** Test indentLines(). */
   @Test
   void test_indentLines() {
 
@@ -76,6 +95,74 @@ final class StringsPlumeTest {
         StringsPlume.indentLines(2, StringsPlume.joinLines("", "1", "", "2", "")));
   }
 
+  /** Test indentLinesExceptFirst(). */
+  @Test
+  void test_indentLinesExceptFirst() {
+    // Tests go here.
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Splitting and joining
+  //
+
+  /** Test splitLines(). */
+  @Test
+  void test_splitLines() {
+    String str = "one\ntwo\n\rthree\r\nfour\rfive\n\n\nsix\r\n\r\n\r\n";
+    @SuppressWarnings("value") // method that returns an array is not StaticallyExecutable
+    String @ArrayLen(12) [] sa = StringsPlume.splitLines(str);
+    // for (String s : sa)
+    //   System.out.printf ("'%s'%n", s);
+    assertEquals(12, sa.length);
+    assertEquals("one", sa[0]);
+    assertEquals("two", sa[1]);
+    assertEquals("", sa[2]);
+    assertEquals("three", sa[3]);
+    assertEquals("four", sa[4]);
+    assertEquals("five", sa[5]);
+    assertEquals("", sa[6]);
+    assertEquals("", sa[7]);
+    assertEquals("six", sa[8]);
+    assertEquals("", sa[9]);
+    assertEquals("", sa[10]);
+    assertEquals("", sa[11]);
+  }
+
+  /** Test firstLineSeparator(). */
+  @Test
+  void test_firstLineSeparator() {
+    assertEquals(null, StringsPlume.firstLineSeparator("hello"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));
+    assertEquals("\n", StringsPlume.firstLineSeparator("hello\n\rgoodbye\rau revior\r\nWindows"));
+
+    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye"));
+    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye\nau revior"));
+    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye\nau revior\r\nWindows"));
+
+    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye"));
+    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior"));
+    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior\rold MacOS"));
+  }
+
+  /** Test splitLinesRetainSeparators(). */
+  @Test
+  void test_splitLinesRetainSeparators() {
+    String text = "hello\rworld\nhello\r\nworld\n\rfoo";
+    List<String> result = StringsPlume.splitLinesRetainSeparators(text);
+    List<String> expected =
+        Arrays.asList("hello\r", "world\n", "hello\r\n", "world\n", "\r", "foo");
+    assertEquals(expected, result);
+  }
+
+  /** Test splitRetainSeparators(). */
+  @Test
+  void test_splitRetainSeparators() {
+    // There are two overloaded methods to test here.
+  }
+
+  /** Test join(). */
   @SuppressWarnings("PMD.UnnecessaryVarargsArrayCreation") // testing with & without varargs array
   @Test
   void test_join() {
@@ -99,11 +186,22 @@ final class StringsPlumeTest {
     assertEquals("day 2 day", StringsPlume.join(" ", potpourri));
   }
 
+  /** Test joinLines(). */
+  @Test
+  void test_joinLines() {
+    // Tests go here.
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Quoting and escaping
+  //
+
   private void oneEscapeJava(String s, String escaped) {
     assertEquals(escaped, StringsPlume.escapeJava(s));
     assertEquals(s, StringsPlume.unescapeJava(escaped));
   }
 
+  /** Test escapeJava(). */
   @SuppressWarnings({"UnicodeEscape", "PMD.SuspiciousOctalEscape"})
   @Test
   void test_escapeJava() {
@@ -177,11 +275,34 @@ final class StringsPlumeTest {
     // assertEquals("MIT", StringsPlume.unescapeNonASCII("\\115\\111\\124")));
   }
 
+  /** Test charLiteral(). */
   @Test
   void test_charLiteral() {
     assertEquals("'a'", StringsPlume.charLiteral('a'));
     assertEquals("'\\''", StringsPlume.charLiteral('\''));
     assertEquals("'\"'", StringsPlume.charLiteral('\"'));
+  }
+
+  /** Test escapeNonASCII(). */
+  @Test
+  void test_escapeNonASCII() {
+    // Tests go here.
+  }
+
+  /** Test unescapeJava(). */
+  @Test
+  void test_unescapeJava() {
+    // Tests go here.
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Whitespace
+  //
+
+  /** Test isBlank(). */
+  @Test
+  void test_isBlank() {
+    // Tests go here.
   }
 
   @Test
@@ -243,6 +364,65 @@ final class StringsPlumeTest {
     assertEquals("cd123", StringsPlume.removeWhitespaceAround("cd 123", "123"));
   }
 
+  /** Test lpad(). */
+  @Test
+  void test_lpad() {
+    // Tests go here.
+  }
+
+  /** Test rpad(). */
+  @Test
+  void test_rpad() {
+
+    // public static String rpad(String s, int length)
+    // public static String rpad(int num, int length)
+    // public static String rpad(double num, int length)
+
+    assertEquals("     ", StringsPlume.rpad("", 5));
+    assertEquals("abcd ", StringsPlume.rpad("abcd", 5));
+    assertEquals("abcde", StringsPlume.rpad("abcde", 5));
+    assertEquals("ab...", StringsPlume.rpad("abcdef", 5));
+    assertEquals("ab...", StringsPlume.rpad("abcde ghij", 5));
+    assertEquals("10   ", StringsPlume.rpad(10, 5));
+    assertEquals("3.14 ", StringsPlume.rpad(3.14, 5));
+    assertEquals("3.141", StringsPlume.rpad(3.141_592, 5));
+    assertEquals("3141592", StringsPlume.rpad(3_141_592, 5));
+    assertEquals("12", StringsPlume.rpad(12.345_67, 1));
+    assertEquals("12", StringsPlume.rpad(12.345_67, 2));
+    assertEquals("12 ", StringsPlume.rpad(12.345_67, 3));
+    assertEquals("12.3", StringsPlume.rpad(12.345_67, 4));
+    assertEquals("12.34", StringsPlume.rpad(12.345_67, 5));
+    assertEquals("12.345", StringsPlume.rpad(12.345_67, 6));
+  }
+
+  // public static class NullableStringComparator
+  //   public int compare(Object o1, Object o2)
+
+  // //////////////////////////////////////////////////////////////////////
+  // Comparisons
+  //
+
+  // //////////////////////////////////////////////////////////////////////
+  // StringTokenizer
+  //
+
+  /** Test tokens(). */
+  @Test
+  void test_tokens() {
+    // Tests go here.
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Version numbers
+  //
+
+  /** Test isVersionNumber(). */
+  @Test
+  void test_isVersionNumber() {
+    // Tests go here.
+  }
+
+  /** Test isVersionNumberLE(). */
   @Test
   void test_isVersionNumberLE() {
 
@@ -261,6 +441,55 @@ final class StringsPlumeTest {
     assertEquals(1, vnc.compare("123.456.789", "123.456"));
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // Debugging variants of toString
+  //
+
+  /** Test toStringAndClass(). */
+  @Test
+  void test_toStringAndClass() {
+    // Tests go here.
+  }
+
+  /** Test listToStringAndClass(). */
+  @Test
+  void test_listToStringAndClass() {
+    // Tests go here.
+  }
+
+  /** Test listToString(). */
+  @Test
+  void test_listToString() {
+    // Tests go here.
+  }
+
+  /** Test arrayToStringAndClass(). */
+  @Test
+  void test_arrayToStringAndClass() {
+    // Tests go here.
+  }
+
+  //
+  // Diagnostic output
+  //
+
+  /** Test mapToStringAndClass(). */
+  @Test
+  void test_mapToStringAndClass() {
+    // Tests go here.
+  }
+
+  /** Test mapToStringLinewise(). */
+  @Test
+  void test_mapToStringLinewise() {
+    // Tests go here.
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // English text
+  //
+
+  /** Test nPlural(). */
   @Test
   void test_nPlural() {
 
@@ -319,6 +548,7 @@ final class StringsPlumeTest {
     assertEquals("2 fish", StringsPlume.nPlural(size2, "fish"));
   }
 
+  /** Test vPlural(). */
   @Test
   void test_vPlural() {
 
@@ -335,6 +565,7 @@ final class StringsPlumeTest {
     assertEquals("eat", StringsPlume.vPlural(2, "eat"));
   }
 
+  /** Test nvPlural(). */
   @Test
   void test_nvPlural() {
 
@@ -348,6 +579,7 @@ final class StringsPlumeTest {
     assertEquals("2 wishes are", StringsPlume.nvPlural(2, "wish", "is"));
   }
 
+  /** Test conjunction(). */
   @Test
   void test_conjunction() {
 
@@ -365,34 +597,11 @@ final class StringsPlumeTest {
         "a, b, c, or d", StringsPlume.conjunction("or", Arrays.asList("a", "b", "c", "d")));
   }
 
-  @Test
-  void test_rpad() {
+  // //////////////////////////////////////////////////////////////////////
+  // Miscellaneous
+  //
 
-    // public static String rpad(String s, int length)
-    // public static String rpad(int num, int length)
-    // public static String rpad(double num, int length)
-
-    assertEquals("     ", StringsPlume.rpad("", 5));
-    assertEquals("abcd ", StringsPlume.rpad("abcd", 5));
-    assertEquals("abcde", StringsPlume.rpad("abcde", 5));
-    assertEquals("ab...", StringsPlume.rpad("abcdef", 5));
-    assertEquals("ab...", StringsPlume.rpad("abcde ghij", 5));
-    assertEquals("10   ", StringsPlume.rpad(10, 5));
-    assertEquals("3.14 ", StringsPlume.rpad(3.14, 5));
-    assertEquals("3.141", StringsPlume.rpad(3.141_592, 5));
-    assertEquals("3141592", StringsPlume.rpad(3_141_592, 5));
-    assertEquals("12", StringsPlume.rpad(12.345_67, 1));
-    assertEquals("12", StringsPlume.rpad(12.345_67, 2));
-    assertEquals("12 ", StringsPlume.rpad(12.345_67, 3));
-    assertEquals("12.3", StringsPlume.rpad(12.345_67, 4));
-    assertEquals("12.34", StringsPlume.rpad(12.345_67, 5));
-    assertEquals("12.345", StringsPlume.rpad(12.345_67, 6));
-
-    // public static class NullableStringComparator
-    //   public int compare(Object o1, Object o2)
-
-  }
-
+  /** Test count(). */
   @Test
   void test_count() {
 
@@ -416,6 +625,7 @@ final class StringsPlumeTest {
   // This is tested by the tokens methods.
   // public static ArrayList makeArrayList(Enumeration e)
 
+  /** Test abbreviateNumber(). */
   @Test
   void test_abbreviateNumber() {
 
@@ -446,6 +656,7 @@ final class StringsPlumeTest {
     assertEquals("9.88G", StringsPlume.abbreviateNumber(9_876_543_210L));
   }
 
+  /** Test countFormatArguments(). */
   @Test
   void test_countFormatArguments() {
     assertEquals(0, StringsPlume.countFormatArguments("No specifiier."));
@@ -464,59 +675,7 @@ final class StringsPlumeTest {
     assertEquals(14, StringsPlume.countFormatArguments("%f and %14$f makes fourteen"));
   }
 
-  @Test
-  void test_splitLines() {
-    String str = "one\ntwo\n\rthree\r\nfour\rfive\n\n\nsix\r\n\r\n\r\n";
-    @SuppressWarnings("value") // method that returns an array is not StaticallyExecutable
-    String @ArrayLen(12) [] sa = StringsPlume.splitLines(str);
-    // for (String s : sa)
-    //   System.out.printf ("'%s'%n", s);
-    assertEquals(12, sa.length);
-    assertEquals("one", sa[0]);
-    assertEquals("two", sa[1]);
-    assertEquals("", sa[2]);
-    assertEquals("three", sa[3]);
-    assertEquals("four", sa[4]);
-    assertEquals("five", sa[5]);
-    assertEquals("", sa[6]);
-    assertEquals("", sa[7]);
-    assertEquals("six", sa[8]);
-    assertEquals("", sa[9]);
-    assertEquals("", sa[10]);
-    assertEquals("", sa[11]);
-  }
-
-  @Test
-  void test_firstLineSeparator() {
-    assertEquals(null, StringsPlume.firstLineSeparator("hello"));
-    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye"));
-    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior"));
-    assertEquals("\n", StringsPlume.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));
-    assertEquals("\n", StringsPlume.firstLineSeparator("hello\n\rgoodbye\rau revior\r\nWindows"));
-
-    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye"));
-    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye\nau revior"));
-    assertEquals("\r", StringsPlume.firstLineSeparator("hello\rgoodbye\nau revior\r\nWindows"));
-
-    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye"));
-    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior"));
-    assertEquals("\r\n", StringsPlume.firstLineSeparator("hello\r\ngoodbye\nau revior\rold MacOS"));
-  }
-
-  @Test
-  void test_splitLinesRetainSeparators() {
-    String text = "hello\rworld\nhello\r\nworld\n\rfoo";
-    List<String> result = StringsPlume.splitLinesRetainSeparators(text);
-    List<String> expected =
-        Arrays.asList("hello\r", "world\n", "hello\r\n", "world\n", "\r", "foo");
-    assertEquals(expected, result);
-  }
-
-  @Test
-  void test_splitRetainSeparators() {
-    // There are two overloaded methods to test here.
-  }
-
+  /** Test toStringTruncated(). */
   @Test
   void test_toStringTruncated() {
     assertEquals("0123456789", StringsPlume.toStringTruncated("0123456789", 100));

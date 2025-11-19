@@ -14,6 +14,7 @@ import java.util.List;
 import org.checkerframework.checker.regex.qual.Regex;
 import org.junit.jupiter.api.Test;
 
+/** Test the RegexUtil class. */
 @SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation", "PMD.TooManyFields"})
 final class RegexUtilTest {
 
@@ -96,6 +97,7 @@ final class RegexUtilTest {
   List<String> cd = Arrays.asList(new String[] {"c", "d"});
   List<String> eefff = Arrays.asList(new String[] {"ee", "fff"});
 
+  /** Test matchesSomeRegex(). */
   @Test
   void test_matchesSomeRegex() {
     assertEquals(RegexUtil.matchesSomeRegex(s1, r1), empty);
@@ -169,6 +171,7 @@ final class RegexUtilTest {
     assertTrue(RegexUtil.everyStringMatchesSomeRegex(s6, r5));
   }
 
+  /** Test matchesNoRegex(). */
   @Test
   void test_matchesNoRegex() {
     assertEquals(RegexUtil.matchesNoRegex(s1, r1), s1);

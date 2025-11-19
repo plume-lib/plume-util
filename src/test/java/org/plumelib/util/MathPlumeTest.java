@@ -12,12 +12,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
+/** Test the MathPlume class. */
 final class MathPlumeTest {
 
   MathPlumeTest() {}
 
   // ///////////////////////////////////////////////////////////////////////////
-  // Utility functions
+  // Helper functions
   //
 
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
@@ -80,6 +81,11 @@ final class MathPlumeTest {
   // The tests themselves
   //
 
+  //
+  // Function versions of Java operators
+  //
+
+  /** Test negate(). */
   @Test
   void test_negate() {
 
@@ -89,6 +95,7 @@ final class MathPlumeTest {
     assertEquals(0, MathPlume.negate(0));
   }
 
+  /** Test bitwiseComplement(). */
   @Test
   void test_bitwiseComplement() {
 
@@ -98,6 +105,11 @@ final class MathPlumeTest {
     assertEquals(-1, MathPlume.bitwiseComplement(0));
   }
 
+  //
+  // sign
+  //
+
+  /** Test sign(). */
   @Test
   void test_sign() {
 
@@ -186,15 +198,25 @@ final class MathPlumeTest {
     assertEquals(0, MathPlume.gcdDifferences(new int[] {5, 5, 5, 5}));
   }
 
+  /** Test mul(). */
+  @Test
+  void test_mul() {
+    // Tests go here.
+  }
+
+  /** Test mod(). */
   @Test
   void test_mod() {
-
     // int modNonnegative(int x, int y)
     assertEquals(3, MathPlume.modNonnegative(33, 5));
     assertEquals(2, MathPlume.modNonnegative(-33, 5));
     assertEquals(3, MathPlume.modNonnegative(33, -5));
     assertEquals(2, MathPlume.modNonnegative(-33, -5));
   }
+
+  //
+  // Non-Modulus
+  //
 
   static class TestMissingNumbersIteratorInt {
     void test(int[] orig, boolean addEnds, int[] goalMissing) {
@@ -383,6 +405,17 @@ final class MathPlumeTest {
     }
   }
 
+  //
+  // Modulus
+  //
+
+  /** Test modNonnegative(). */
+  @Test
+  void test_modNonnegative() {
+    // Tests go here.
+  }
+
+  /** Test modulus(). */
   @Test
   void test_modulus() {
 

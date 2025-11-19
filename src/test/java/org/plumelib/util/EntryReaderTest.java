@@ -281,7 +281,7 @@ final class EntryReaderTest {
 
   /** Test setLineNumber(). */
   @Test
-  void testSetLineNumber() throws IOException {
+  void test_setLineNumber() throws IOException {
     String content = "line1\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -293,7 +293,7 @@ final class EntryReaderTest {
 
   /** Test getFileName(). */
   @Test
-  void testGetFileName() throws IOException {
+  void test_getFileName() throws IOException {
     String content = "line1\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "myfile.txt", false, null, null)) {

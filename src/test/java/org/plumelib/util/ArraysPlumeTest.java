@@ -16,6 +16,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.junit.jupiter.api.Test;
 
+/** Test the ArraysPlume class. */
 @SuppressWarnings({
   "PMD.TooManyStaticImports",
   "PMD.PrimitiveWrapperInstantiation",
@@ -25,6 +26,11 @@ final class ArraysPlumeTest {
 
   ArraysPlumeTest() {}
 
+  // //////////////////////////////////////////////////////////////////////
+  // Creation
+  //
+
+  /** Test nCopies(). */
   @Test
   void test_nCopies() {
     assertArrayEquals(
@@ -32,12 +38,17 @@ final class ArraysPlumeTest {
     assertArrayEquals(new String[] {}, ArraysPlume.nCopies(0, "hello"));
   }
 
+  /** Test append(). */
   @Test
   void test_append() {
     assertArrayEquals(
         new String[] {"a", "b", "c"}, ArraysPlume.append(new String[] {"a", "b"}, "c"));
     assertArrayEquals(new String[] {"a"}, ArraysPlume.append(new String[] {}, "a"));
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // min, max
+  //
 
   @Test
   void test_minAndMax() {
@@ -93,6 +104,11 @@ final class ArraysPlumeTest {
     }
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // sum
+  //
+
+  /** Test sum(). */
   @Test
   void test_sum() {
 
@@ -148,6 +164,10 @@ final class ArraysPlumeTest {
       return value;
     }
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // indexOf
+  //
 
   @SuppressWarnings({
     "deprecation",
@@ -341,6 +361,10 @@ final class ArraysPlumeTest {
     }
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // subarray extraction
+  //
+
   @Test
   void test_subarray() {
 
@@ -364,6 +388,52 @@ final class ArraysPlumeTest {
     // (The subarray tests are missing; I hope that the indexOf(..., array)
     // operations above test them sufficiently.)
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Concatenation
+  //
+
+  /** Test concatenate(). */
+  @Test
+  void test_concatenate() {
+    String[] abcdefArray2 = ArraysPlume.concatenate(abcArray, defArray);
+    assertArrayEquals(abcdefArray, abcdefArray2);
+    assertNotSame(abcdefArray, abcdefArray2);
+
+    String[] abcArray2 = ArraysPlume.concatenate(abcArray, emptyArray);
+    assertArrayEquals(abcArray, abcArray2);
+    assertNotSame(abcArray, abcArray2);
+
+    String[] abcArray3 = ArraysPlume.concatenate(emptyArray, abcArray);
+    assertArrayEquals(abcArray, abcArray3);
+    assertNotSame(abcArray, abcArray3);
+  }
+
+  /** Test concat(). */
+  @Test
+  void test_concat() {
+    Instant[] da1 = {Instant.now()};
+    Instant[] da2 = {Instant.now()};
+    Instant[] da3 = ArraysPlume.concat(da1, da2);
+    assert da3.length == 2 : "@AssumeAssertion(index)";
+    assertEquals(da3.length, 2);
+    assertSame(da1[0], da3[0]);
+    assertSame(da2[0], da3[1]);
+
+    assertArrayEquals(abcdefList.toArray(), ArraysPlume.concat(abcList, defList));
+
+    assertArrayEquals(abcdefArray, ArraysPlume.concat(abcArray, defArray));
+    assertSame(abcArray, ArraysPlume.concat(abcArray, emptyArray));
+    assertSame(abcArray, ArraysPlume.concat(emptyArray, abcArray));
+
+    assertArrayEquals(abcdefArrayObject, ArraysPlume.concat(abcArrayObject, defArrayObject));
+    assertSame(abcArrayObject, ArraysPlume.concat(abcArrayObject, emptyArrayObject));
+    assertSame(abcArrayObject, ArraysPlume.concat(emptyArrayObject, abcArrayObject));
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Printing
+  //
 
   @Test
   void test_printing() {
@@ -396,6 +466,11 @@ final class ArraysPlumeTest {
         ArraysPlume.toStringQuoted(new Object[] {"a\"quote", "b", "c\\backslash", "d\nnewline"}));
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // Sortedness
+  //
+
+  /** Test isSorted(). */
   @Test
   void test_isSorted() {
 
@@ -407,6 +482,18 @@ final class ArraysPlumeTest {
     assertTrue(ArraysPlume.isSorted(new int[] {0, 1}));
     assertFalse(ArraysPlume.isSorted(new int[] {1, 0}));
     assertFalse(ArraysPlume.isSorted(new int[] {0, 1, 2, 1, 2, 3}));
+  }
+
+  /** Test isSortedDescending(). */
+  @Test
+  void test_isSortedDescending() {
+    // Tests go here.
+  }
+
+  /** Test hasDuplicates(). */
+  @Test
+  void test_hasDuplicates() {
+    // Tests go here.
   }
 
   @Test
@@ -448,6 +535,11 @@ final class ArraysPlumeTest {
     assertTrue(ArraysPlume.hasNoDuplicates(new String[] {"  ", " "}));
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // Arrays as partial functions of int->int
+  //
+
+  /** Test fnIsPermutation(). */
   @Test
   void test_fnIsPermutation() {
     // public static boolean fnIsPermutation(int[] a)
@@ -460,6 +552,7 @@ final class ArraysPlumeTest {
     assertFalse(ArraysPlume.fnIsPermutation(new int[] {0, 0, 0, 0}));
   }
 
+  /** Test fnIsTotal(). */
   @Test
   void test_fnIsTotal() {
     // public static boolean fnIsTotal(int[] a)
@@ -473,6 +566,12 @@ final class ArraysPlumeTest {
     assertFalse(ArraysPlume.fnIsTotal(new int[] {0, 2, 3, -1}));
     assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 1, 2, 4}));
     assertTrue(ArraysPlume.fnIsTotal(new int[] {0, 0, 0, 0}));
+  }
+
+  /** Test fnIdentity(). */
+  @Test
+  void test_fnIdentity() {
+    // Tests go here.
   }
 
   @SuppressWarnings({
@@ -588,6 +687,11 @@ final class ArraysPlumeTest {
     }
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // Set operations, such as subset, unions, and intersections
+  //
+
+  /** Test sameContents(). */
   @Test
   void test_sameContents() {
     assertTrue(ArraysPlume.sameContents(new String[] {}, new String[] {}));
@@ -600,6 +704,10 @@ final class ArraysPlumeTest {
         ArraysPlume.sameContents(
             new String[] {"a", "b", "c"}, new String[] {"c", "b", "a", "b", "b"}));
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Array comparators
+  //
 
   @Test
   void test_IntArrayComparator() {
@@ -872,6 +980,11 @@ final class ArraysPlumeTest {
     assertTrue(caclf.compare(a3, a8) > 0);
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // nullness
+  //
+
+  /** Test anyNull(). */
   @Test
   void test_anyNull() {
 
@@ -896,6 +1009,7 @@ final class ArraysPlumeTest {
         ArraysPlume.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
   }
 
+  /** Test allNull(). */
   @Test
   void test_allNull() {
 
@@ -932,6 +1046,10 @@ final class ArraysPlumeTest {
     }
     return true;
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Partitioning
+  //
 
   @Test
   void test_partitioning() {
@@ -988,42 +1106,6 @@ final class ArraysPlumeTest {
   Object[] defArrayObject = {"d", "e", "f"};
   Object[] emptyArrayObject = {};
 
-  @Test
-  void test_concatenate() {
-    String[] abcdefArray2 = ArraysPlume.concatenate(abcArray, defArray);
-    assertArrayEquals(abcdefArray, abcdefArray2);
-    assertNotSame(abcdefArray, abcdefArray2);
-
-    String[] abcArray2 = ArraysPlume.concatenate(abcArray, emptyArray);
-    assertArrayEquals(abcArray, abcArray2);
-    assertNotSame(abcArray, abcArray2);
-
-    String[] abcArray3 = ArraysPlume.concatenate(emptyArray, abcArray);
-    assertArrayEquals(abcArray, abcArray3);
-    assertNotSame(abcArray, abcArray3);
-  }
-
-  @Test
-  void test_concat() {
-    Instant[] da1 = {Instant.now()};
-    Instant[] da2 = {Instant.now()};
-    Instant[] da3 = ArraysPlume.concat(da1, da2);
-    assert da3.length == 2 : "@AssumeAssertion(index)";
-    assertEquals(da3.length, 2);
-    assertSame(da1[0], da3[0]);
-    assertSame(da2[0], da3[1]);
-
-    assertArrayEquals(abcdefList.toArray(), ArraysPlume.concat(abcList, defList));
-
-    assertArrayEquals(abcdefArray, ArraysPlume.concat(abcArray, defArray));
-    assertSame(abcArray, ArraysPlume.concat(abcArray, emptyArray));
-    assertSame(abcArray, ArraysPlume.concat(emptyArray, abcArray));
-
-    assertArrayEquals(abcdefArrayObject, ArraysPlume.concat(abcArrayObject, defArrayObject));
-    assertSame(abcArrayObject, ArraysPlume.concat(abcArrayObject, emptyArrayObject));
-    assertSame(abcArrayObject, ArraysPlume.concat(emptyArrayObject, abcArrayObject));
-  }
-
   @SuppressWarnings(
       "PMD.LambdaCanBeMethodReference") // PMD false positive: Integer::toString is ambiguous
   @Test
@@ -1036,6 +1118,11 @@ final class ArraysPlumeTest {
     assertEquals(String.class, iotaStringActual.getClass().getComponentType());
   }
 
+  // //////////////////////////////////////////////////////////////////////
+  // Mapping
+  //
+
+  /** Test replaceAll(). */
   @Test
   void test_replaceAll() {
     Instant now = Instant.now();
