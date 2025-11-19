@@ -16,6 +16,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.junit.jupiter.api.Test;
 
+/** Test the ArraysPlume class. */
 @SuppressWarnings({
   "PMD.TooManyStaticImports",
   "PMD.PrimitiveWrapperInstantiation",
@@ -24,6 +25,10 @@ import org.junit.jupiter.api.Test;
 final class ArraysPlumeTest {
 
   ArraysPlumeTest() {}
+
+  // //////////////////////////////////////////////////////////////////////
+  // Creation
+  //
 
   @Test
   void test_nCopies() {
