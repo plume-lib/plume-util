@@ -100,7 +100,7 @@ final class EntryReaderTest {
 
   /** Test iterator functionality. */
   @Test
-  void testIterator() throws IOException {
+  void test_iterator() throws IOException {
     String content = "line1\nline2\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -117,7 +117,7 @@ final class EntryReaderTest {
 
   /** Test hasNext() method. */
   @Test
-  void testHasNext() throws IOException {
+  void test_hasNext() throws IOException {
     String content = "line1\nline2\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
@@ -303,7 +303,7 @@ final class EntryReaderTest {
 
   /** Test putback(). */
   @Test
-  void testPutback() throws IOException {
+  void test_putback() throws IOException {
     String content = "line1\nline2\nline3\n";
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", false, null, null)) {
