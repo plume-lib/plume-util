@@ -11,9 +11,9 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test the SIList class.
+ * Tests the SIList class.
  *
- * <p>Test (mainly) to make sure iterators over simple lists work.
+ * <p>Focuses mainly on verifying that iterators over simple lists work correctly.
  */
 final class SIListTest {
 
