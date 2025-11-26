@@ -112,7 +112,7 @@ public final class ArraysPlume {
    *
    * @param <T> the type of the array elements
    * @param array the array
-   * @return an empty copy of the array
+   * @return an array with the same length and type, but all elements are null
    */
   @SuppressWarnings({"unchecked"})
   public static <T> T[] copyEmpty(T[] array) {
@@ -126,7 +126,7 @@ public final class ArraysPlume {
    * @param <T> the type of the array elements
    * @param array the array
    * @param newLength the length of the new array
-   * @return an empty copy of the array
+   * @return an array with the same type, of the given length, and all elements are null
    */
   @SuppressWarnings({"unchecked"})
   public static <T> T[] copyEmpty(T[] array, @NonNegative int newLength) {
