@@ -90,7 +90,7 @@ public final class ArraysPlume {
    * Concatenates an element and an array into a new array.
    *
    * @param <T> the type of the array elements
-   * @param firstElt the new first elemeent
+   * @param firstElt the new first element
    * @param array the array
    * @return a new array containing the first element and the array elements, in that order
    */
