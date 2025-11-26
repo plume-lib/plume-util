@@ -58,10 +58,22 @@ final class ArraysPlumeTest {
   @Test
   void test_copyEmpty() {
     String[] orig = {"a", "b", "c"};
-    String[] copy = ArraysPlume.copyEmpty(orig);
-    assertEquals(orig.length, copy.length);
-    for (String elt : copy) {
-      assertEquals(null, elt);
+    {
+      String[] copy = ArraysPlume.copyEmpty(orig);
+      assertEquals(String.class, copy.getClass().getComponentType());
+      assertEquals(orig.length, copy.length);
+      for (String elt : copy) {
+        assertEquals(null, elt);
+      }
+    }
+
+    {
+      String[] copy = ArraysPlume.copyEmpty(orig, 5);
+      assertEquals(String.class, copy.getClass().getComponentType());
+      assertEquals(5, copy.length);
+      for (String elt : copy) {
+        assertEquals(null, elt);
+      }
     }
   }
 
