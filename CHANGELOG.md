@@ -7,7 +7,7 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
-## 1.12.3 (2025-??-??)
+## 1.12.3 (2025-11-26)
 
 * In `ArraysPlume`:
   * new method `prepend()` concatenates an element and an array into a new array.
