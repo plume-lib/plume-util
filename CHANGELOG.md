@@ -9,8 +9,11 @@
 
 ## 1.12.3 (2025-??-??)
 
+* In `ArraysPlume`:
+  * new method `prepend()` concatenates an element and an array into a new array.
+  * new methods `copyEmpty()` type-safely make an array of the same type.
 * In `CollectionsPlume`:
-  * Renamed `sortList()` to `sorted()`
+  * Renamed `sortList()` to `sorted()`.
   * Methods that now take a `Collection` rather than a `List` as input:
     * `hasDuplicates()`
     * `hasNoDuplicates()`

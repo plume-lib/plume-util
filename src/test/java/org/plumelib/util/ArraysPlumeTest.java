@@ -46,6 +46,25 @@ final class ArraysPlumeTest {
     assertArrayEquals(new String[] {"a"}, ArraysPlume.append(new String[] {}, "a"));
   }
 
+  /** Test prepend(). */
+  @Test
+  void test_prepend() {
+    assertArrayEquals(
+        new String[] {"a", "b", "c"}, ArraysPlume.prepend("a", new String[] {"b", "c"}));
+    assertArrayEquals(new String[] {"a"}, ArraysPlume.prepend("a", new String[] {}));
+  }
+
+  /** Test copyEmpty(). */
+  @Test
+  void test_copyEmpty() {
+    String[] orig = {"a", "b", "c"};
+    String[] copy = ArraysPlume.copyEmpty(orig);
+    assertEquals(orig.length, copy.length);
+    for (String elt : copy) {
+      assertEquals(null, elt);
+    }
+  }
+
   // //////////////////////////////////////////////////////////////////////
   // min, max
   //

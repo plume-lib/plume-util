@@ -86,24 +86,56 @@ public final class ArraysPlume {
     return result;
   }
 
-  // /**
-  //  * Concatenates an element and an array into a new array.
-  //  *
-  //  * @param <T> the type of the array elements
-  //  * @param firstElt the new first elemeent
-  //  * @param array the array
-  //  * @return a new array containing the first element and the array elements, in that order
-  //  */
-  // @SuppressWarnings({
-  //   "unchecked",
-  //   "index:array.access.unsafe.high" // addition in array length
-  // })
-  // public static <T> T[] prepend(T firstElt, T[] array) {
-  //   @SuppressWarnings({"unchecked", "nullness:assignment"})
-  //   T[] result = Arrays.copyOf(array, array.length + 1, 1, array.length + 1);
-  //   result[0] = firstElt;
-  //   return result;
-  // }
+  /**
+   * Concatenates an element and an array into a new array.
+   *
+   * @param <T> the type of the array elements
+   * @param firstElt the new first elemeent
+   * @param array the array
+   * @return a new array containing the first element and the array elements, in that order
+   */
+  @SuppressWarnings({
+    "unchecked",
+    "index:argument", // false positive
+    "index:array.access.unsafe.high.constant", // false positive
+  })
+  public static <T> T[] prepend(T firstElt, T[] array) {
+    T[] result = copyEmpty(array, array.length + 1);
+    result[0] = firstElt;
+    System.arraycopy(array, 0, result, 1, array.length);
+    return result;
+  }
+
+  /**
+   * Creates an empty copy of the array. The copy has the same type and length, but all elements are
+   * null.
+   *
+   * @param <T> the type of the array elements
+   * @param array the array
+   * @return a new array containing the first element and the array elements, in that order
+   */
+  @SuppressWarnings({"unchecked"})
+  public static <T> T[] copyEmpty(T[] array) {
+    return copyEmpty(array, array.length);
+  }
+
+  /**
+   * Creates an empty copy of the array, of the given length. The copy has the same type, but all
+   * elements are null.
+   *
+   * @param <T> the type of the array elements
+   * @param array the array
+   * @param newLength the length of the new array
+   * @return a new array of the given length
+   */
+  @SuppressWarnings({"unchecked"})
+  public static <T> T[] copyEmpty(T[] array, @NonNegative int newLength) {
+    Class<T[]> arrayType = (Class<T[]>) array.getClass();
+    Class<T> elementType = (Class<T>) arrayType.getComponentType();
+    assert elementType != null : "@AssumeAssertion(nullness) argument was an array type";
+    T[] result = (T[]) Array.newInstance(elementType, newLength);
+    return result;
+  }
 
   // //////////////////////////////////////////////////////////////////////
   // min, max
