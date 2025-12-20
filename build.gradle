@@ -111,14 +111,12 @@ tasks.withType(JavaCompile).configureEach {
   options.forkOptions.jvmArgs += "-Xmx6g"
   options.compilerArgs << "-Werror"
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  // "-options" is because of JDK 21 warning "source value 8 is obsolete..."
+  // "-Xlint:-options" is because of JDK 21 warning "source value 8 is obsolete..."
   if (isJava21orHigher) {
     options.compilerArgs << "-Xlint:all,-processing,-options,-this-escape"
   } else {
     options.compilerArgs << "-Xlint:all,-processing,-options"
   }
-  // // Only needed when debugging.
-  // options.compilerArgs << "-g"
 }
 if (isJava21orHigher) {
   apply plugin: "net.ltgt.errorprone"
@@ -317,17 +315,4 @@ mavenPublishing {
 tasks.register("tags", Exec) {
   description = "Run etags to create an Emacs TAGS table"
   commandLine("bash", "-c", "find src/ -name '*.java' | sort | xargs etags")
-}
-
-
-// Debugging support
-
-tasks.register("printCompileClasspaths") {
-  description = "Print the compile-time classpaths"
-  doFirst {
-    println("Compile classpath:")
-    println(sourceSets.main.compileClasspath.asPath)
-    println("Compile test classpath:")
-    println(sourceSets.test.compileClasspath.asPath)
-  }
 }
