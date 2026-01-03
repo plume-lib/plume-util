@@ -1137,8 +1137,6 @@ final class ArraysPlumeTest {
   Object[] defArrayObject = {"d", "e", "f"};
   Object[] emptyArrayObject = {};
 
-  @SuppressWarnings(
-      "PMD.LambdaCanBeMethodReference") // PMD false positive: Integer::toString is ambiguous
   @Test
   void test_mapArray() {
     Integer[] iota = {0, 1, 2, 3};
