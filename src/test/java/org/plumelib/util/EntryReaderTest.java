@@ -25,7 +25,8 @@ import org.junit.jupiter.api.io.TempDir;
 @SuppressWarnings({
   "nullness", // run-time errors are acceptable
   "initializedfields:contracts.postcondition", // @TempDir causes injection
-  "PMD.TooManyStaticImports"
+  "PMD.TooManyStaticImports",
+  "deprecation" // TODO
 })
 final class EntryReaderTest {
 
