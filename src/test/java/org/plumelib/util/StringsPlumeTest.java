@@ -229,12 +229,19 @@ final class StringsPlumeTest {
     oneEscapeJava("foo\0bar", "foo\\000bar");
     oneEscapeJava("foo\tbar", "foo\\tbar");
     oneEscapeJava("\b\f\n\r\t\1\377", "\\b\\f\\n\\r\\t\\001\\377");
+    oneEscapeJava("foo\b\f\n\r\t\1\377", "foo\\b\\f\\n\\r\\t\\001\\377");
     oneEscapeJava("\222", "\\222");
+    oneEscapeJava("foo\222", "foo\\222");
     oneEscapeJava("\300", "\\300");
+    oneEscapeJava("foo\300", "foo\\300");
     oneEscapeJava("\u12345", "\\u12345");
+    oneEscapeJava("foo\u12345", "foo\\u12345");
     oneEscapeJava("\u1234A", "\\u1234A");
+    oneEscapeJava("foo\u1234A", "foo\\u1234A");
     oneEscapeJava("\u54321", "\\u54321");
+    oneEscapeJava("foo\u54321", "foo\\u54321");
     oneEscapeJava("\u5432A", "\\u5432A");
+    oneEscapeJava("foo\u5432A", "foo\\u5432A");
     // Should add more tests here.
 
     // These tests are not symmetric because the argument is not a value that escapeJava would ever

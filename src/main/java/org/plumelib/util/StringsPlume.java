@@ -475,6 +475,9 @@ public final class StringsPlume {
             postEsc = i + 1;
             break;
           } else {
+            if (postEsc < i) {
+              sb.append(orig.substring(postEsc, i));
+            }
             sb.append("\\u");
             sb.append(String.format("%04x", (int) c));
             postEsc = i + 1;
