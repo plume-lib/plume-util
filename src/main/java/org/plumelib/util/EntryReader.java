@@ -135,6 +135,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   // Inputstream and charset constructors
 
+  // This is the complete constructor that supplies all possible arguments.
   /**
    * Create an EntryReader that uses the given character set.
    *
@@ -177,7 +178,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
+   * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -196,7 +199,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename the file name
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
+   * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
@@ -215,7 +220,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
+   * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -239,7 +246,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
+   * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -270,73 +279,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(in, "(InputStream)", null, null);
   }
 
-  /** A dummy Reader to be used when null is not acceptable. */
-  private static class DummyReader extends Reader {
-
-    /** The canonical DummyReader. */
-    public static final DummyReader it = new DummyReader();
-
-    /**
-     * Create a new DummyReader.
-     *
-     * @deprecated use {@link #it}.
-     */
-    @Deprecated // 2022-07-25; to make private
-    public DummyReader() {}
-
-    @Override
-    public void close(@GuardSatisfied DummyReader this) {
-      // No error, because closing is OK if it appears in try-with-resources.
-      // Later maybe create two versions (with and without exception here).
-    }
-
-    @Override
-    public void mark(@GuardSatisfied DummyReader this, int readAheadLimit) {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public boolean markSupported() {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public @GTENegativeOne int read(@GuardSatisfied DummyReader this) {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public @IndexOrLow("#1") int read(@GuardSatisfied DummyReader this, char[] cbuf) {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public @IndexOrLow("#1") int read(
-        @GuardSatisfied DummyReader this, char[] cbuf, int off, int len) {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public @GTENegativeOne int read(@GuardSatisfied DummyReader this, CharBuffer target) {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public boolean ready() {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public void reset(@GuardSatisfied DummyReader this) {
-      throw new Error("DummyReader");
-    }
-
-    @Override
-    public @NonNegative long skip(@GuardSatisfied DummyReader this, long n) {
-      throw new Error("DummyReader");
-    }
-  }
-
   /**
    * Create an EntryReader.
    *
@@ -355,7 +297,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       boolean twoBlankLines,
       @Nullable @Regex String commentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
-    // we won't use superclass methods, but passing null as an argument
+    // We won't use superclass methods, but passing null as an argument
     // leads to a NullPointerException.
     super(DummyReader.it);
     readers.addFirst(new FlnReader(reader, filename));
@@ -381,7 +323,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
+   * @deprecated use {@link #EntryReader(Reader,String,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -433,7 +377,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
+   * @deprecated use {@link #EntryReader(Path,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public EntryReader(
       Path path, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -458,7 +404,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(Stream,String,String,boolean,String,String)
+   * @deprecated use {@link #EntryReader(Path,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public EntryReader(Path path, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(path), charsetName, path.toString(), false, null, null);
   }
@@ -495,7 +443,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
+   * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public EntryReader(
       File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -520,7 +470,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(File,boolean,String,String)
+   * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public EntryReader(File file, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(file), charsetName, file.toString(), false, null, null);
   }
@@ -558,7 +510,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(File,boolean,String,String)
+   * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public EntryReader(
       String filename,
       @Nullable @Regex String commentRegex,
@@ -585,7 +539,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(String,boolean,String,String)
+   * @deprecated use {@link #EntryReader(String,boolean,String,String)}
    */
+  @Deprecated // 2026-01-05
   public EntryReader(String filename, String charsetName) throws IOException {
     this(Files.newInputStream(Path.of(filename)), charsetName, filename, false, null, null);
   }
@@ -1163,6 +1119,73 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       } else {
         return firstLine;
       }
+    }
+  }
+
+  /** A dummy Reader to be used when null is not acceptable. */
+  private static class DummyReader extends Reader {
+
+    /** The canonical DummyReader. */
+    public static final DummyReader it = new DummyReader();
+
+    /**
+     * Create a new DummyReader.
+     *
+     * @deprecated use {@link #it}.
+     */
+    @Deprecated // 2022-07-25; to make private
+    public DummyReader() {}
+
+    @Override
+    public void close(@GuardSatisfied DummyReader this) {
+      // No error, because closing is OK if it appears in try-with-resources.
+      // Later maybe create two versions (with and without exception here).
+    }
+
+    @Override
+    public void mark(@GuardSatisfied DummyReader this, int readAheadLimit) {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public boolean markSupported() {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public @GTENegativeOne int read(@GuardSatisfied DummyReader this) {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public @IndexOrLow("#1") int read(@GuardSatisfied DummyReader this, char[] cbuf) {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public @IndexOrLow("#1") int read(
+        @GuardSatisfied DummyReader this, char[] cbuf, int off, int len) {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public @GTENegativeOne int read(@GuardSatisfied DummyReader this, CharBuffer target) {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public boolean ready() {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public void reset(@GuardSatisfied DummyReader this) {
+      throw new Error("DummyReader");
+    }
+
+    @Override
+    public @NonNegative long skip(@GuardSatisfied DummyReader this, long n) {
+      throw new Error("DummyReader");
     }
   }
 }

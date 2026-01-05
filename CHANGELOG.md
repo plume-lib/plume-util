@@ -7,11 +7,16 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
+## 1.13.0 (2026-??-??)
+
+* In `EntryReader`:
+  * Deprecated several constructors; there were an unweildy number of them.
+
 ## 1.12.3 (2025-11-26)
 
 * In `ArraysPlume`:
-  * new method `prepend()` concatenates an element and an array into a new array.
-  * new methods `copyEmpty()` type-safely make an array of the same type.
+  * New method `prepend()` concatenates an element and an array into a new array.
+  * New methods `copyEmpty()` type-safely make an array of the same type.
 * In `CollectionsPlume`:
   * Renamed `sortList()` to `sorted()`.
   * Methods that now take a `Collection` rather than a `List` as input:
