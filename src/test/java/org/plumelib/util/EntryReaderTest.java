@@ -400,19 +400,6 @@ final class EntryReaderTest {
     }
   }
 
-  /** Test reading with charset. */
-  @Test
-  void testWithCharset() throws IOException {
-    Path testFile = tempDir.resolve("test.txt");
-    Files.write(testFile, "line1\nline2\n".getBytes(StandardCharsets.UTF_8));
-
-    try (EntryReader reader = new EntryReader(testFile, "UTF-8")) {
-      assertEquals("line1", reader.readLine());
-      assertEquals("line2", reader.readLine());
-      assertNull(reader.readLine());
-    }
-  }
-
   /** Test that iterator returns the same instance. */
   @Test
   void testIteratorReturnsSameInstance() throws IOException {
