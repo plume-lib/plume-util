@@ -220,7 +220,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
-   * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
+   * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}, passing
+   *     {@code UTF_8} as the charset
    */
   @Deprecated // 2026-01-05
   public @MustCallAlias EntryReader(
@@ -510,7 +511,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(File,boolean,String,String)
-   * @deprecated use {@link #EntryReader(File,boolean,String,String)}
+   * @deprecated use {@link #EntryReader(String,boolean,String,String)}
    */
   @Deprecated // 2026-01-05
   public EntryReader(

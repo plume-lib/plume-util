@@ -10,7 +10,7 @@
 ## 1.13.0 (2026-??-??)
 
 * In `EntryReader`:
-  * Deprecated several constructors; there were an unweildy number of them.
+  * Deprecated several constructors; there were an unwieldy number of them.
 
 ## 1.12.3 (2025-11-26)
 
