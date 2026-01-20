@@ -991,7 +991,6 @@ public final class CollectionsPlume {
           }
           @SuppressWarnings({
             "unchecked", // Java warning about generic cast
-            "nullness:dereference", // next() has side effects, so elt1 isn't know to be non-null
             "signedness:method.invocation" // generics problem; #979?
           })
           int comparison = ((Comparable<T>) elt1).compareTo(elt2);
