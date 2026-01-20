@@ -615,6 +615,32 @@ final class CollectionsPlumeTest {
     assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s3));
     assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s3a));
     assertTrue(CollectionsPlume.sortedSetContainsAll(s4, s4));
+
+    TreeSet<Integer> ts1 = new TreeSet<>(Arrays.asList(0, 1, 2));
+    TreeSet<Integer> ts2 = new TreeSet<>(Arrays.asList(2, 0));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(ts1, ts2));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts2, ts1));
+
+    TreeSet<Integer> ts3 = new TreeSet<>(Arrays.asList(0, 1, 2, 3, 4));
+    TreeSet<Integer> ts4 = new TreeSet<>(Arrays.asList(1, 3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(ts3, ts4));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts4, ts3));
+
+    TreeSet<Integer> ts5 = new TreeSet<>(Arrays.asList(-1));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts3, ts5));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts5, ts3));
+    TreeSet<Integer> ts6 = new TreeSet<>(Arrays.asList(0));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(ts3, ts6));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts6, ts3));
+    TreeSet<Integer> ts7 = new TreeSet<>(Arrays.asList(3));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(ts3, ts7));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts7, ts3));
+    TreeSet<Integer> ts8 = new TreeSet<>(Arrays.asList(4));
+    assertTrue(CollectionsPlume.sortedSetContainsAll(ts3, ts8));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts8, ts3));
+    TreeSet<Integer> ts9 = new TreeSet<>(Arrays.asList(5));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts3, ts9));
+    assertFalse(CollectionsPlume.sortedSetContainsAll(ts9, ts3));
   }
 
   // Median of 5 runs with size=4: ratio = .90, meaning 10% speedup.
