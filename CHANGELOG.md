@@ -7,7 +7,7 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
-## 1.13.0 (2026-??-??)
+## 1.13.0 (2026-01-20)
 
 * In `EntryReader`:
   * Deprecated several constructors; there were an unwieldy number of them.
