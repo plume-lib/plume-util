@@ -7,6 +7,14 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
+## 1.14.0 (2026-??-??)
+
+* In `EntryReader`:
+  * Replaced three arguments to constructors (`entryStartRegex`,
+    `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
+    constructors still exist but are deprecated.
+  * Removed `setEntryStartStop()` methods
+
 ## 1.13.0 (2026-01-20)
 
 * In `EntryReader`:
