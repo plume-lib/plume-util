@@ -948,7 +948,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     // If first line matches entryStartRegex, this is a long entry.
     final Pattern entryStartRegex = entryFormat.entryStartRegex;
     final Pattern entryStopRegex = entryFormat.entryStopRegex;
-    @Regex(1) Matcher entryMatch;
+    @Regex Matcher entryMatch;
     if (entryStartRegex == null) {
       entryMatch = null;
     } else {
@@ -1339,10 +1339,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public static final EntryFormat DEFAULT =
         new EntryFormat((Pattern) null, (Pattern) null, false);
 
-    /**
-     * An EntryFormat with no multi-line entries and using two single blank lines to separate
-     * entries.
-     */
+    /** An EntryFormat with no multi-line entries and using two blank lines to separate entries. */
     public static final EntryFormat TWO_BLANK_LINES =
         new EntryFormat((Pattern) null, (Pattern) null, true);
 
