@@ -24,7 +24,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.mustcall.qual.MustCallAlias;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
 
@@ -39,9 +38,11 @@ import org.checkerframework.checker.regex.qual.Regex;
 //    "not yet implemented" in this file).
 //  * It should have constructors that take a Reader (in addition to the current
 //    BufferedReader, File, InputStream, and String versions).
-//  * It should have a close method.
+//  * It should have a `close()` method (it already implements AutoCloseable,
+//    though I don't know whether it does so adequately).
 //  * It should automatically close the underlying file/etc. when the
-//    iterator gets to the end (or the end is otherwise reached).
+//    iterator gets to the end (or the end is otherwise reached) -- or, better,
+//    have the `close()` method do so.
 
 /**
  * Class that reads records or "entries" from a file. In the simplest case, entries can be lines. It
@@ -957,13 +958,16 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     if (entryMatch != null && entryMatch.find()) {
       assert entryStartRegex != null : "@AssumeAssertion(nullness): dependent: entryMatch != null";
 
-      // Remove entry match from the line
-      if (entryMatch.groupCount() > 0) {
-        @SuppressWarnings(
-            "nullness") // dependent: groupCount() checked group; https://tinyurl.com/cfissue/291
-        @NonNull String matchGroup1 = entryMatch.group(1);
-        line = entryMatch.replaceFirst(matchGroup1);
+      // Remove entry start text from the line.
+      String replacement = null;
+      if (entryMatch.groupCount() >= 1) {
+        // There is a group, so replace the whole match by the group.
+        replacement = entryMatch.group(1);
       }
+      if (replacement == null) {
+        replacement = "";
+      }
+      line = entryMatch.replaceFirst(replacement);
 
       // Description is the first line (possibly with part of the entry start removed).
       String description = line;

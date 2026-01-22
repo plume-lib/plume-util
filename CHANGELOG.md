@@ -14,6 +14,8 @@
     `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
     constructors still exist but are deprecated.
   * Removed `setEntryStartStop()` methods
+  * When `entryStartRegex` has no capturing group, the whole thing is discarded
+    rather than the whole thing being retained.
 
 ## 1.13.0 (2026-01-20)
 
