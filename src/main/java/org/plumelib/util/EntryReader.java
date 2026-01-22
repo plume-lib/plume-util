@@ -24,7 +24,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.mustcall.qual.MustCallAlias;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
@@ -1340,24 +1339,30 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         new EntryFormat((Pattern) null, (Pattern) null, true);
 
     /**
-     * Regular expression that starts a long entry. If the regular expression has a capturing group,
-     * the first capturing group is retained in the output; otherwise, the whole match is removed.
+     * Regular expression that starts a long entry. If null, there are no long entries, only short
+     * entries. A short entry is terminated by one or two blank lines (depending on {@link
+     * #twoBlankLines}) or the end of the current file.
      *
-     * <p>If the first line of an entry matches this regexp, then the entry is terminated by {@link
-     * #entryStopRegex}, another line that matches {@code entryStartRegex} (even not following a
-     * newline), or the end of the current file.
+     * <p>If the first line of an entry matches this regexp, it is a long entry. It is terminated by
+     * any of:
      *
-     * <p>Otherwise, the first line of an entry does NOT match this regexp (or the regexp is null),
-     * in which case the entry is terminated by a blank line or the end of the current file.
+     * <ul>
+     *   <li>{@link #entryStopRegex}
+     *   <li>another line that matches {@code entryStartRegex} (even not following a newline), or
+     *   <li>the end of the current file.
+     * </ul>
+     *
+     * <p>If the regular expression has a capturing group, the first capturing group is retained in
+     * the output; otherwise, the whole match is removed.
      */
-    public final @MonotonicNonNull @Regex(1) Pattern entryStartRegex;
+    public final @Nullable @Regex(1) Pattern entryStartRegex;
 
     /**
      * See {@link #entryStartRegex}.
      *
      * @see #entryStartRegex
      */
-    public final @MonotonicNonNull Pattern entryStopRegex;
+    public final Pattern entryStopRegex;
 
     /** If true, then entries are separated by two blank lines rather than one. */
     public final boolean twoBlankLines;
@@ -1380,7 +1385,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         this.entryStartRegex = Pattern.compile(entryStartRegex);
       }
       if (entryStopRegex == null) {
-        this.entryStopRegex = null;
+        // This never matches.
+        this.entryStopRegex = Pattern.compile("\\b\\B");
       } else {
         if (entryStartRegex == null) {
           throw new IllegalArgumentException(
