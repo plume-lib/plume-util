@@ -886,8 +886,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return "";
     }
 
-    
-
     if (commentRegex != null) {
       while (line != null) {
         Matcher cmatch = commentRegex.matcher(line);
