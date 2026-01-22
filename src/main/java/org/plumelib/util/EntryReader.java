@@ -37,10 +37,10 @@ import org.checkerframework.checker.regex.qual.Regex;
 // Here are some useful features that EntryReader should have.
 //  * It should implement some unimplemented methods from LineNumberReader (see
 //    "not yet implemented" in this file).
-//  * It should have constructors that take an InputStream or Reader
-//    (in addition to the current BufferedReader, File, and String versions).
+//  * It should have constructors that take a Reader (in addition to the current
+//    BufferedReader, File, InputStream, and String versions).
 //  * It should have a `close()` method (it already implements AutoCloseable,
-//  * though I don't know whether it does so adequately).
+//    though I don't know whether it does so adequately).
 //  * It should automatically close the underlying file/etc. when the
 //    iterator gets to the end (or the end is otherwise reached) -- or, better,
 //    have the `close()` method do so.
@@ -134,7 +134,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   // Constructors
   //
 
-  // Inputstream and charset constructors
+  // InputStream and charset constructors
 
   // This is the complete constructor that supplies all possible arguments.
   /**
@@ -209,14 +209,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(in, charsetName, filename, false, null, null);
   }
 
-  // Inputstream (no charset) constructors
+  // InputStream (no charset) constructors
 
   /**
    * Create an EntryReader.
    *
    * @param in source from which to read entries
-   * @param twoBlankLines true if entries are separated by two blank lines rather than one
    * @param filename non-null file name for stream being read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
    * @param commentRegexString regular expression that matches comments. Any text that matches
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
@@ -818,7 +818,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       entryMatch = entryStartRegex.matcher(line);
     }
     Entry entry;
-    if ((entryMatch != null) && entryMatch.find()) {
+    if (entryMatch != null && entryMatch.find()) {
       assert entryStartRegex != null : "@AssumeAssertion(nullness): dependent: entryMatch != null";
       assert entryStopRegex != null
           : "@AssumeAssertion(nullness): dependent: entryStartRegex != null";
@@ -837,7 +837,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       // Description is the first line
       String description = line;
 
-      // Read until we find the termination of the entry
+      // Read until we find the termination of the entry.
       Matcher endEntryMatch = entryStopRegex.matcher(line);
       while ((line != null)
           && !entryMatch.find()
@@ -854,7 +854,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
 
       // If this entry was terminated by the start of the next one,
-      // put that line back
+      // put that line back.
       if ((line != null) && (entryMatch.find(0) || !filename.equals(getFileName()))) {
         putback(line);
       }
