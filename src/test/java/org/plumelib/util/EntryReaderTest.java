@@ -448,4 +448,31 @@ final class EntryReaderTest {
       assertEquals(2, entry.lineNumber); // line 2 after the leading blank line
     }
   }
+
+  /** Test multiline comments */
+  @Test
+  void testMultilineComments() throws IOException {
+    String content =
+        "pre\n```sh\ncode\n<!-- inside code should not be comment -->\n```\n<!--\nhidden1\nhidden2\n-->\npost\n";
+
+    try (EntryReader r =
+        new EntryReader(
+            new StringReader(content), "testfile.txt", false, null, null, "^<!--$", "^-->$")) {
+      assertEquals("pre", r.readLine());
+      assertEquals("```sh", r.readLine());
+      assertEquals("code", r.readLine());
+      // inside fenced code block; comment markers should be ignored
+      assertEquals("<!-- inside code should not be comment -->", r.readLine());
+      assertEquals("```", r.readLine());
+
+      // multiline comment block
+      assertEquals("", r.readLine()); // <!--
+      assertEquals("", r.readLine()); // hidden1
+      assertEquals("", r.readLine()); // hidden2
+      assertEquals("", r.readLine()); // -->
+
+      assertEquals("post", r.readLine());
+      assertNull(r.readLine());
+    }
+  }
 }

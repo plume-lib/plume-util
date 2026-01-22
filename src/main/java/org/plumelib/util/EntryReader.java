@@ -180,7 +180,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         filename,
         twoBlankLines,
         commentRegexString,
-        includeRegexString);
+        includeRegexString,
+        multilineCommentStart,
+        multilineCommentEnd);
   }
 
   /**
@@ -462,7 +464,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String multilineCommentEnd)
       throws IOException {
     this(
-        FilesPlume.newFileReader(path), path.toString(), twoBlankLines, commentRegex, includeRegex);
+        FilesPlume.newFileReader(path),
+        path.toString(),
+        twoBlankLines,
+        commentRegex,
+        includeRegex,
+        multilineCommentStart,
+        multilineCommentEnd);
   }
 
   /**
@@ -557,7 +565,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String multilineCommentEnd)
       throws IOException {
     this(
-        FilesPlume.newFileReader(file), file.toString(), twoBlankLines, commentRegex, includeRegex);
+        FilesPlume.newFileReader(file),
+        file.toString(),
+        twoBlankLines,
+        commentRegex,
+        includeRegex,
+        multilineCommentStart,
+        multilineCommentEnd);
   }
 
   /**
@@ -652,7 +666,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String multilineCommentStart,
       @Nullable @Regex String multilineCommentEnd)
       throws IOException {
-    this(new File(filename), twoBlankLines, commentRegex, includeRegex);
+    this(
+        new File(filename),
+        twoBlankLines,
+        commentRegex,
+        includeRegex,
+        multilineCommentStart,
+        multilineCommentEnd);
   }
 
   /**
@@ -842,29 +862,31 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return line;
     }
 
-    // Handles multiline comments
-    // Multiline comments are assumed to be block-level only.
-    // Lines containing multilineCommentStart and multilineCommentEnd
-    // may appear on the same line, but must not contain any non-comment code.
-    // All lines within a multiline comment are ignored.
-    if (inMultilineComment) {
-      if (multilineCommentEnd != null
-          && line != null
-          && line.trim().endsWith(multilineCommentEnd.toString())) {
-        inMultilineComment = false;
-      }
-      return "";
-    }
-    if (multilineCommentStart != null
-        && line != null
-        && line.trim().startsWith(multilineCommentStart.toString())) {
-      inMultilineComment = true; // NOPMD
+    // Handles multiline comments.
+    // Multiline comments are block-level only: a block must start with
+    // multilineCommentStart on its own line and end with
+    // multilineCommentEnd on its own line.
+    // All lines inside a multiline comment are ignored.
 
-      if (multilineCommentEnd != null && line.trim().endsWith(multilineCommentEnd.toString())) {
+    if (line == null) {
+      return null;
+    }
+
+    String trimmed = line.trim();
+
+    if (inMultilineComment) {
+      if (multilineCommentEnd != null && multilineCommentEnd.matcher(trimmed).matches()) {
         inMultilineComment = false;
       }
       return "";
     }
+
+    if (multilineCommentStart != null && multilineCommentStart.matcher(trimmed).matches()) {
+      inMultilineComment = true;
+      return "";
+    }
+
+    
 
     if (commentRegex != null) {
       while (line != null) {
