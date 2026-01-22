@@ -1367,6 +1367,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** If true, then entries are separated by two blank lines rather than one. */
     public final boolean twoBlankLines;
 
+    /** A regular expression that never matches. */
+    private static Pattern neverMatches = Pattern.compile("\\b\\B");
+
     /**
      * Creates an EntryFormat.
      *
@@ -1379,22 +1382,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         @Nullable @Regex(1) String entryStartRegex,
         @Nullable @Regex String entryStopRegex,
         boolean twoBlankLines) {
-      if (entryStartRegex == null) {
-        this.entryStartRegex = null;
-      } else {
-        this.entryStartRegex = Pattern.compile(entryStartRegex);
-      }
-      if (entryStopRegex == null) {
-        // This never matches.
-        this.entryStopRegex = Pattern.compile("\\b\\B");
-      } else {
-        if (entryStartRegex == null) {
-          throw new IllegalArgumentException(
-              "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
-        }
-        this.entryStopRegex = Pattern.compile(entryStopRegex);
-      }
-      this.twoBlankLines = twoBlankLines;
+      this(
+          entryStartRegex == null ? null : Pattern.compile(entryStartRegex),
+          entryStopRegex == null ? null : Pattern.compile(entryStopRegex),
+          twoBlankLines);
     }
 
     /**
@@ -1414,7 +1405,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
             "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
       }
       this.entryStartRegex = entryStartRegex;
-      this.entryStopRegex = entryStopRegex;
+      this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
       this.twoBlankLines = twoBlankLines;
     }
   }
