@@ -943,16 +943,16 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     long lineNumber = getLineNumber();
 
     // If first line matches entryStartRegex, this is a long entry.
-    @Regex(1) Matcher entryMatch = null;
-    if (entryFormat.entryStartRegex != null) {
-      entryMatch = entryFormat.entryStartRegex.matcher(line);
+    Pattern entryStartRegex = entryFormat.entryStartRegex;
+    Pattern entryStopRegex = entryStopRegex;
+    @Regex(1) Matcher entryMatch;
+    if (entryStartRegex == null) {
+      entryMatch = null;
+    } else {
+      entryMatch = entryStartRegex.matcher(line);
     }
     Entry entry;
     if ((entryMatch != null) && entryMatch.find()) {
-      assert entryFormat.entryStartRegex != null
-          : "@AssumeAssertion(nullness): dependent: entryMatch != null";
-      assert entryFormat.entryStopRegex != null
-          : "@AssumeAssertion(nullness): dependent: entryStartRegex != null";
 
       // Remove entry match from the line
       if (entryMatch.groupCount() > 0) {
@@ -966,7 +966,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String description = line;
 
       // Read until we find the termination of the entry.
-      Matcher endEntryMatch = entryFormat.entryStopRegex.matcher(line);
+      Matcher endEntryMatch = entryStopRegex.matcher(line);
       while ((line != null)
           && !entryMatch.find()
           && !endEntryMatch.find()
@@ -977,8 +977,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         if (line == null) {
           break; // end of file serves as entry terminator
         }
-        entryMatch = entryFormat.entryStartRegex.matcher(line);
-        endEntryMatch = entryFormat.entryStopRegex.matcher(line);
+        entryMatch = entryStartRegex.matcher(line);
+        endEntryMatch = entryStopRegex.matcher(line);
       }
 
       // If this entry was terminated by the start of the next one,
