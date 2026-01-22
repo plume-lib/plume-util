@@ -129,7 +129,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
-   * @see #EntryReader(InputStream,String,String,String)
    */
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
@@ -542,7 +541,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
-   * @deprecated use {@link #EntryReader(File,boolean,String,String)}
+   * @deprecated use {@link #EntryReader(File,EntryFormat,String,String)}
    */
   @Deprecated // 2026-01-21
   public EntryReader(
@@ -1373,7 +1372,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public final boolean twoBlankLines;
 
     /** A regular expression that never matches. */
-    private static Pattern neverMatches = Pattern.compile("\\b\\B");
+    private static final Pattern neverMatches = Pattern.compile("\\b\\B");
 
     /**
      * Creates an EntryFormat.
