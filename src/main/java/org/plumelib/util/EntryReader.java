@@ -541,7 +541,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
+   * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
+  @Deprecated // 2026-01-21
   public EntryReader(
       File file,
       boolean twoBlankLines,
@@ -943,8 +945,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     long lineNumber = getLineNumber();
 
     // If first line matches entryStartRegex, this is a long entry.
-    Pattern entryStartRegex = entryFormat.entryStartRegex;
-    Pattern entryStopRegex = entryStopRegex;
+    final Pattern entryStartRegex = entryFormat.entryStartRegex;
+    final Pattern entryStopRegex = entryFormat.entryStopRegex;
     @Regex(1) Matcher entryMatch;
     if (entryStartRegex == null) {
       entryMatch = null;
@@ -952,7 +954,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       entryMatch = entryStartRegex.matcher(line);
     }
     Entry entry;
-    if ((entryMatch != null) && entryMatch.find()) {
+    if (entryMatch != null && entryMatch.find()) {
+      assert entryStartRegex != null : "@AssumeAssertion(nullness): dependent: entryMatch != null";
 
       // Remove entry match from the line
       if (entryMatch.groupCount() > 0) {
