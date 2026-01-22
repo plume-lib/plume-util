@@ -1332,13 +1332,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /**
      * An EntryFormat with no multi-line entries and using a single blank line to separate entries.
      */
-    public static EntryFormat DEFAULT = new EntryFormat((Pattern) null, (Pattern) null, false);
+    public static final EntryFormat DEFAULT =
+        new EntryFormat((Pattern) null, (Pattern) null, false);
 
     /**
      * An EntryFormat with no multi-line entries and using two single blank lines to separate
      * entries.
      */
-    public static EntryFormat TWO_BLANK_LINES =
+    public static final EntryFormat TWO_BLANK_LINES =
         new EntryFormat((Pattern) null, (Pattern) null, true);
 
     /**
