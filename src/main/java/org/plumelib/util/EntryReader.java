@@ -825,11 +825,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
       // Remove entry start text from the line.
       String replacement;
-      if (entryMatch.groupCount() == 0) {
-        replacement = "";
-      } else {
+      if (entryMatch.groupCount() >= 1) {
         // There is a group, so replace the whole match by the group.
         replacement = entryMatch.group(1);
+      } else {
+        replacement = "";
       }
       line = entryMatch.replaceFirst(replacement);
 
