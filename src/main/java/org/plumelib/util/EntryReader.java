@@ -364,7 +364,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
-   * @deprecated use {@link #EntryReader(Reader,String,boolean,String,String)}
+   * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
    */
   @Deprecated // 2026-01-21
   @SuppressWarnings("builder") // storing into a collection
@@ -497,7 +497,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(Stream,String,String,boolean,String,String)
-   * @deprecated use {@link #EntryReader(Path,EntryFormat,String,String)}
+   * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
   @Deprecated // 2026-01-05
   public EntryReader(Path path, String charsetName) throws IOException {
@@ -639,8 +639,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(File,EntryFormat,String,String)
-   * @deprecated use {@link #EntryReader(String,EntryReader,String,String)}
+   * @deprecated use {@link #EntryReader(String,EntryFormat,String,String)}
    */
+  @Deprecated // 2026-01-21
   public EntryReader(
       String filename,
       boolean twoBlankLines,
@@ -962,10 +963,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         line = entryMatch.replaceFirst(matchGroup1);
       }
 
-      // Description is the first line
+      // Description is the first line (possibly with part of the entry start removed).
       String description = line;
 
-      // Read until we find the termination of the entry
+      // Read until we find the termination of the entry.
       Matcher endEntryMatch = entryFormat.entryStopRegex.matcher(line);
       while ((line != null)
           && !entryMatch.find()
@@ -982,7 +983,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
 
       // If this entry was terminated by the start of the next one,
-      // put that line back
+      // put that line back.
       if ((line != null) && (entryMatch.find(0) || !filename.equals(getFileName()))) {
         putback(line);
       }
@@ -1352,7 +1353,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public final @MonotonicNonNull @Regex(1) Pattern entryStartRegex;
 
     /**
-     * See {@link entryStartRegex}.
+     * See {@link #entryStartRegex}.
      *
      * @see #entryStartRegex
      */
@@ -1366,7 +1367,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *
      * @param entryStartRegex regular expression that starts a long entry; see {@link
      *     #entryStartRegex}
-     * @param entryStopRegex regular expression that ends a long entry; see {@link entryStartRegex}
+     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
      */
     public EntryFormat(
@@ -1395,7 +1396,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *
      * @param entryStartRegex regular expression that starts a long entry; see {@link
      *     #entryStartRegex}
-     * @param entryStopRegex regular expression that ends a long entry; see {@link entryStartRegex}
+     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
      */
     public EntryFormat(
