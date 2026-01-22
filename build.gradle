@@ -2,14 +2,14 @@ plugins {
   id("java-library")
 
   // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
-  id("com.gradleup.shadow").version("9.3.0")
+  id("com.gradleup.shadow").version("9.3.1")
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
   // Version 8.0.0 and later requires Java 17+.
   id("com.diffplug.spotless").version("8.1.0")
 
   // Error Prone linter
-  id("net.ltgt.errorprone").version("4.3.0") apply false
+  id("net.ltgt.errorprone").version("4.4.0") apply false
 
   // PMD linter
   id("pmd")
@@ -21,7 +21,7 @@ plugins {
   id("org.checkerframework").version("0.6.61")
 
   // Publishing to Maven Central.
-  id("com.vanniktech.maven.publish").version("0.35.0")
+  id("com.vanniktech.maven.publish").version("0.36.0")
 }
 
 repositories {
@@ -32,7 +32,7 @@ repositories {
 }
 
 ext {
-  errorproneVersion = "2.45.0"
+  errorproneVersion = "2.46.0"
   isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
@@ -45,7 +45,7 @@ dependencies {
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation("com.google.errorprone:error_prone_annotations:${errorproneVersion}")
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.14.1")
+  testImplementation("org.junit.jupiter:junit-jupiter:5.14.2")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -180,9 +180,9 @@ checkerFramework {
   ]
 }
 // To use a snapshot version of the Checker Framework.
-if (false) {
+if (true) {
   // If the above is true, change it to false after CF is released.
-  ext.checkerFrameworkVersion = "3.52.1"
+  ext.checkerFrameworkVersion = "3.53.1-SNAPSHOT"
   dependencies {
     compileOnly("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
     testCompileOnly("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
