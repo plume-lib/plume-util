@@ -7,6 +7,12 @@
   for example, use `CollectionsP` instead of `CollectionsPlume`.
 * Removed all deprecated classes and mehods.
 
+## 1.14.0 (2026-??-??)
+
+* In `EntryReader`:
+  * When `entryStartRegex` has no capturing group, the whole thing is discarded
+    rather than the whole thing being retained.
+
 ## 1.13.0 (2026-01-20)
 
 * In `EntryReader`:
