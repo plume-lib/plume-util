@@ -831,7 +831,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         // There is a group, so replace the whole match by the group.
         replacement = entryMatch.group(1);
       }
-      line = entryMatch.replaceFirst(matchGroup1);
+      line = entryMatch.replaceFirst(replacement);
 
       // Description is the first line
       String description = line;
