@@ -202,7 +202,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link
    *     #EntryReader(InputStream,String,String,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -233,7 +233,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -254,7 +254,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
@@ -276,7 +276,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}, passing
    *     {@code UTF_8} as the charset
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -302,7 +302,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -397,7 +397,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -419,7 +419,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -486,7 +486,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(Path,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       Path path,
       boolean twoBlankLines,
@@ -508,7 +508,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(Path,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       Path path, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -535,7 +535,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,boolean,String,String,String,String)
    * @deprecated use {@link #EntryReader(Path,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(Path path, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(path), charsetName, path.toString(), false, null, null);
   }
@@ -587,7 +587,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(File,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       File file,
       boolean twoBlankLines,
@@ -609,7 +609,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -636,7 +636,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,boolean,String,String)
    * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(File file, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(file), charsetName, file.toString(), false, null, null);
   }
@@ -689,7 +689,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,boolean,String,String)
    * @deprecated use {@link #EntryReader(String,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       String filename,
       boolean twoBlankLines,
@@ -711,7 +711,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,boolean,String,String)
    * @deprecated use {@link #EntryReader(String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       String filename,
       @Nullable @Regex String commentRegex,
@@ -740,7 +740,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(String,boolean,String,String)
    * @deprecated use {@link #EntryReader(String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(String filename, String charsetName) throws IOException {
     this(Files.newInputStream(Path.of(filename)), charsetName, filename, false, null, null);
   }
@@ -854,37 +854,35 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     String line = getNextLine();
-    // Handles fenced code blocks.
-    if (line != null && line.trim().startsWith("```")) {
-      inFencedCodeBlock = !inFencedCodeBlock;
-      return line;
-    }
-    if (inFencedCodeBlock) {
-      return line;
-    }
-
-    // Handles multiline comments.
-    // Multiline comments are block-level only: a block must start with
-    // multilineCommentStart on its own line and end with
-    // multilineCommentEnd on its own line.
-    // All lines inside a multiline comment are ignored.
-
-    if (line == null) {
-      return null;
-    }
-
-    String trimmed = line.trim();
-
-    if (inMultilineComment) {
-      if (multilineCommentEnd != null && multilineCommentEnd.matcher(trimmed).matches()) {
-        inMultilineComment = false;
+    // Handle multiline comments and fenced code blocks.
+    while (true) {
+      if (line == null) {
+        return null;
       }
-      return "";
-    }
+      String trimmed = line.trim();
 
-    if (multilineCommentStart != null && multilineCommentStart.matcher(trimmed).matches()) {
-      inMultilineComment = true;
-      return "";
+      if (inMultilineComment) {
+        if (multilineCommentEnd != null && multilineCommentEnd.matcher(trimmed).matches()) {
+          inMultilineComment = false;
+        }
+        line = getNextLine();
+        continue;
+      }
+
+      if (trimmed.startsWith("```")) {
+        inFencedCodeBlock = !inFencedCodeBlock;
+        return line;
+      }
+      if (inFencedCodeBlock) {
+        return line;
+      }
+
+      if (multilineCommentStart != null && multilineCommentStart.matcher(trimmed).matches()) {
+        inMultilineComment = true;
+        line = getNextLine();
+        continue;
+      }
+      break;
     }
 
     if (commentRegex != null) {
