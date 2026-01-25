@@ -91,6 +91,12 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   private final @Nullable Pattern commentRegex;
 
+  /** Regular expression that matches the start of a multiline comment. */
+  private final @Nullable Pattern multilineCommentStart;
+
+  /** Regular expression that matches the end of a multiline comment. */
+  private final @Nullable Pattern multilineCommentEnd;
+
   /**
    * Regular expression that starts a long entry.
    *
@@ -130,13 +136,56 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
 
+  /** True if currently inside a multiline comment. */
+  private boolean inMultilineComment = false;
+
+  /** True if currently inside a fenced code block (``` ... ```). */
+  private boolean inFencedCodeBlock = false;
+
   // ///////////////////////////////////////////////////////////////////////////
   // Constructors
   //
 
   // InputStream and charset constructors
 
-  // This is the complete constructor that supplies all possible arguments.
+  /**
+   * Create an EntryReader.
+   *
+   * @param in source from which to read entries
+   * @param charsetName the character set to use
+   * @param filename non-null file name for stream being read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
+   * @param commentRegexString regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name.
+   * @param multilineCommentStart regular expression that matches the start of a multiline comment.
+   *     Any text that matches and follows after this regex is removed.
+   * @param multilineCommentEnd regular expression that matches the end of a multiline comment. Any
+   *     text that matches and precedes this regex is removed.
+   * @throws UnsupportedEncodingException if the charset encoding is not supported
+   * @see #EntryReader(InputStream,String,String,String)
+   */
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
+      String charsetName,
+      String filename,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString,
+      @Nullable @Regex String multilineCommentStart,
+      @Nullable @Regex String multilineCommentEnd)
+      throws UnsupportedEncodingException {
+    this(
+        new InputStreamReader(in, charsetName),
+        filename,
+        twoBlankLines,
+        commentRegexString,
+        includeRegexString,
+        multilineCommentStart,
+        multilineCommentEnd);
+  }
+
   /**
    * Create an EntryReader that uses the given character set.
    *
@@ -150,7 +199,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @see #EntryReader(InputStream,String,String,String)
+   * @deprecated use {@link
+   *     #EntryReader(InputStream,String,String,boolean,String,String,String,String)}
    */
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -181,7 +233,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -202,7 +254,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
@@ -224,7 +276,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}, passing
    *     {@code UTF_8} as the charset
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -250,7 +302,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -281,6 +333,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     this(in, "(InputStream)", null, null);
   }
 
+  // The body of every constructor other than this one is an invocation of `this(...)`.
   /**
    * Create an EntryReader.
    *
@@ -291,6 +344,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
+   * @param multilineCommentStart regular expression that matches the start of a multiline comment.
+   *     Any text that matches and follows after this regex is removed.
+   * @param multilineCommentEnd regular expression that matches the end of a multiline comment. Any
+   *     text that matches and precedes this regex is removed.
    */
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
@@ -298,7 +355,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String filename,
       boolean twoBlankLines,
       @Nullable @Regex String commentRegexString,
-      @Nullable @Regex(1) String includeRegexString) {
+      @Nullable @Regex(1) String includeRegexString,
+      @Nullable @Regex String multilineCommentStart,
+      @Nullable @Regex String multilineCommentEnd) {
     // We won't use superclass methods, but passing null as an argument
     // leads to a NullPointerException.
     super(DummyReader.it);
@@ -314,6 +373,39 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     } else {
       includeRegex = Pattern.compile(includeRegexString);
     }
+    if (multilineCommentStart == null) {
+      this.multilineCommentStart = null;
+    } else {
+      this.multilineCommentStart = Pattern.compile(multilineCommentStart);
+    }
+    if (multilineCommentEnd == null) {
+      this.multilineCommentEnd = null;
+    } else {
+      this.multilineCommentEnd = Pattern.compile(multilineCommentEnd);
+    }
+  }
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param reader source from which to read entries
+   * @param filename file name corresponding to reader, for use in error messages
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
+   * @param commentRegexString regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name
+   * @deprecated use {@link #EntryReader(Reader,String,boolean,String,String,String,String)}
+   */
+  @Deprecated // 2026-01-22
+  @SuppressWarnings("builder") // storing into a collection
+  public @MustCallAlias EntryReader(
+      @MustCallAlias Reader reader,
+      String filename,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegexString,
+      @Nullable @Regex(1) String includeRegexString) {
+    this(reader, filename, twoBlankLines, commentRegexString, includeRegexString, null, null);
   }
 
   /**
@@ -327,7 +419,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -358,8 +450,43 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
+   * @param multilineCommentStart regular expression that matches the start of a multiline comment.
+   *     Any text that matches and follows after this regex is removed.
+   * @param multilineCommentEnd regular expression that matches the end of a multiline comment. Any
+   *     text that matches and precedes this regex is removed.
    * @throws IOException if there is a problem reading the file
    */
+  public EntryReader(
+      Path path,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegex,
+      @Nullable @Regex(1) String includeRegex,
+      @Nullable @Regex String multilineCommentStart,
+      @Nullable @Regex String multilineCommentEnd)
+      throws IOException {
+    this(
+        FilesPlume.newFileReader(path),
+        path.toString(),
+        twoBlankLines,
+        commentRegex,
+        includeRegex,
+        multilineCommentStart,
+        multilineCommentEnd);
+  }
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param path initial file to read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
+   * @param commentRegex regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   * @deprecated use {@link #EntryReader(Path,boolean,String,String,String,String)}
+   */
+  @Deprecated // 2026-01-22
   public EntryReader(
       Path path,
       boolean twoBlankLines,
@@ -381,7 +508,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(Path,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       Path path, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -405,10 +532,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param path the file to read
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(Stream,String,String,boolean,String,String)
-   * @deprecated use {@link #EntryReader(Path,boolean,String,String)}
+   * @see #EntryReader(InputStream,String,String,boolean,String,String,String,String)
+   * @deprecated use {@link #EntryReader(Path,boolean,String,String,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(Path path, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(path), charsetName, path.toString(), false, null, null);
   }
@@ -424,8 +551,43 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
+   * @param multilineCommentStart regular expression that matches the start of a multiline comment.
+   *     Any text that matches and follows after this regex is removed.
+   * @param multilineCommentEnd regular expression that matches the end of a multiline comment. Any
+   *     text that matches and precedes this regex is removed.
    * @throws IOException if there is a problem reading the file
    */
+  public EntryReader(
+      File file,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegex,
+      @Nullable @Regex(1) String includeRegex,
+      @Nullable @Regex String multilineCommentStart,
+      @Nullable @Regex String multilineCommentEnd)
+      throws IOException {
+    this(
+        FilesPlume.newFileReader(file),
+        file.toString(),
+        twoBlankLines,
+        commentRegex,
+        includeRegex,
+        multilineCommentStart,
+        multilineCommentEnd);
+  }
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param file initial file to read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
+   * @param commentRegex regular expression that matches comments. Any text that matches
+   *     commentRegex is removed. A line that is entirely a comment is ignored.
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   * @deprecated use {@link #EntryReader(File,boolean,String,String,String,String)}
+   */
+  @Deprecated // 2026-01-22
   public EntryReader(
       File file,
       boolean twoBlankLines,
@@ -447,7 +609,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       File file, @Nullable @Regex String commentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -474,7 +636,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,boolean,String,String)
    * @deprecated use {@link #EntryReader(File,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(File file, String charsetName) throws IOException {
     this(FilesPlume.newFileInputStream(file), charsetName, file.toString(), false, null, null);
   }
@@ -490,9 +652,44 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex} is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
+   * @param multilineCommentStart regular expression that matches the start of a multiline comment.
+   *     Any text that matches and follows after this regex is removed.
+   * @param multilineCommentEnd regular expression that matches the end of a multiline comment. Any
+   *     text that matches and precedes this regex is removed.
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(File,boolean,String,String)
    */
+  public EntryReader(
+      String filename,
+      boolean twoBlankLines,
+      @Nullable @Regex String commentRegex,
+      @Nullable @Regex(1) String includeRegex,
+      @Nullable @Regex String multilineCommentStart,
+      @Nullable @Regex String multilineCommentEnd)
+      throws IOException {
+    this(
+        new File(filename),
+        twoBlankLines,
+        commentRegex,
+        includeRegex,
+        multilineCommentStart,
+        multilineCommentEnd);
+  }
+
+  /**
+   * Create a new EntryReader starting with the specified file.
+   *
+   * @param filename initial file to read
+   * @param twoBlankLines true if entries are separated by two blank lines rather than one
+   * @param commentRegex regular expression that matches comments. Any text that matches {@code
+   *     commentRegex} is removed. A line that is entirely a comment is ignored.
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   * @see #EntryReader(File,boolean,String,String)
+   * @deprecated use {@link #EntryReader(String,boolean,String,String,String,String)}
+   */
+  @Deprecated // 2026-01-22
   public EntryReader(
       String filename,
       boolean twoBlankLines,
@@ -514,7 +711,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,boolean,String,String)
    * @deprecated use {@link #EntryReader(String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(
       String filename,
       @Nullable @Regex String commentRegex,
@@ -543,7 +740,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(String,boolean,String,String)
    * @deprecated use {@link #EntryReader(String,boolean,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated // 2026-01-22
   public EntryReader(String filename, String charsetName) throws IOException {
     this(Files.newInputStream(Path.of(filename)), charsetName, filename, false, null, null);
   }
@@ -657,6 +854,37 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     String line = getNextLine();
+    // Handle multiline comments and fenced code blocks.
+    while (true) {
+      if (line == null) {
+        return null;
+      }
+      String trimmed = line.trim();
+
+      if (inMultilineComment) {
+        if (multilineCommentEnd != null && multilineCommentEnd.matcher(trimmed).matches()) {
+          inMultilineComment = false;
+        }
+        line = getNextLine();
+        continue;
+      }
+
+      if (trimmed.startsWith("```")) {
+        inFencedCodeBlock = !inFencedCodeBlock;
+        return line;
+      }
+      if (inFencedCodeBlock) {
+        return line;
+      }
+
+      if (multilineCommentStart != null && multilineCommentStart.matcher(trimmed).matches()) {
+        inMultilineComment = true;
+        line = getNextLine();
+        continue;
+      }
+      break;
+    }
+
     if (commentRegex != null) {
       while (line != null) {
         Matcher cmatch = commentRegex.matcher(line);
