@@ -88,7 +88,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Specifies how an entry begins and ends. */
   public final EntryFormat entryFormat;
 
-  /** Specifies how a comment begins and ends. */
+  /** Specifies the syntax of comments (if comments are supported). */
   public final CommentFormat commentFormat;
 
   /** If true, output diagnostics. */
@@ -122,7 +122,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @param filename non-null file name for stream being read
    * @param entryFormat indicates how entries begin and end
-   * @param commentFormat indicates which lines are comments
+   * @param commentFormat indicates the syntax of comments
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
@@ -259,7 +259,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in source from which to read entries
    * @param filename non-null file name for stream being read
    * @param entryFormat indicates how entries begin and end
-   * @param commentFormat indicates how comments begin and end
+   * @param commentFormat indicates the syntax of comments
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    */
@@ -1276,8 +1276,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     if (args.length < 1 || args.length > 3) {
       System.err.println(
-          "EntryReader sample program requires 1-3 args: filename [lineCommentRegex"
-              + " [includeRegex]]");
+          "EntryReader sample program requires 1-3 args:"
+              + " filename [lineCommentRegex [includeRegex]]");
       System.exit(1);
     }
     final String filename = args[0];
@@ -1592,7 +1592,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /**
      * Creates a CommentFormat.
      *
-     * @param lineCommentRegex regular expression that starts a single-line comment
+     * @param lineCommentRegex regular expression that matches a single-line comment
      */
     public CommentFormat(@Nullable @Regex String lineCommentRegex) {
       this(lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex));
@@ -1601,7 +1601,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /**
      * Creates a CommentFormat.
      *
-     * @param lineCommentRegex regular expression that starts a single-line comment
+     * @param lineCommentRegex regular expression that matches a single-line comment
      */
     public CommentFormat(@Nullable Pattern lineCommentRegex) {
       this.lineCommentRegex = lineCommentRegex;
