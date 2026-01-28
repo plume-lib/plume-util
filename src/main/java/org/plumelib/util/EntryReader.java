@@ -247,10 +247,30 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
-    this(in, charsetName, filename, EntryFormat.DEFAULT, null, null);
+    this(in, charsetName, filename, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
   // InputStream (no charset) constructors
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param in source from which to read entries
+   * @param filename non-null file name for stream being read
+   * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates how comments begin and end
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name.
+   */
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
+      String filename,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegexString) {
+    this(
+        new InputStreamReader(in, UTF_8), filename, entryFormat, commentFormat, includeRegexString);
+  }
 
   /**
    * Create an EntryReader.
@@ -262,7 +282,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
+   * @deprecated use {@link #EntryReader(InputStream,String,EntryFormat,CommentFormat,String)}
    */
+  @Deprecated // 2026-01-28
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -334,7 +356,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    */
   public @MustCallAlias EntryReader(@MustCallAlias InputStream in, String filename) {
-    this(in, filename, EntryFormat.DEFAULT, null, null);
+    this(in, filename, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
   /**
@@ -344,7 +366,37 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    */
   public @MustCallAlias EntryReader(@MustCallAlias InputStream in) {
-    this(in, "(InputStream)", EntryFormat.DEFAULT, null, null);
+    this(in, "(InputStream)", EntryFormat.DEFAULT, CommentFormat.NONE, null);
+  }
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param reader source from which to read entries
+   * @param filename file name corresponding to reader, for use in error messages
+   * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates the syntax of comments
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name
+   */
+  @SuppressWarnings("builder") // storing into a collection
+  public @MustCallAlias EntryReader(
+      @MustCallAlias Reader reader,
+      String filename,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegexString) {
+    // We won't use superclass methods, but passing null as an argument
+    // leads to a NullPointerException.
+    super(DummyReader.it);
+    readers.addFirst(new FlnReader(reader, filename));
+    this.entryFormat = entryFormat;
+    this.commentFormat = commentFormat;
+    if (includeRegexString == null) {
+      includeRegex = null;
+    } else {
+      includeRegex = Pattern.compile(includeRegexString);
+    }
   }
 
   /**
@@ -357,7 +409,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     commentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
+   * @deprecated see {@link #EntryReader(Reader,String,EntryFormat,CommentFormat,String)}
    */
+  @Deprecated // 2026-01-28
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -370,11 +424,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     super(DummyReader.it);
     readers.addFirst(new FlnReader(reader, filename));
     this.entryFormat = entryFormat;
-    if (commentRegexString == null) {
-      commentRegex = null;
-    } else {
-      commentRegex = Pattern.compile(commentRegexString);
-    }
+    this.commentFormat = new CommentFormat(commentRegexString);
     if (includeRegexString == null) {
       includeRegex = null;
     } else {
@@ -438,10 +488,29 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(Reader,String,EntryFormat,String,String)
    */
   public @MustCallAlias EntryReader(@MustCallAlias Reader reader) {
-    this(reader, reader.toString(), EntryFormat.DEFAULT, null, null);
+    this(reader, reader.toString(), EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
   // Path constructors
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param path initial file to read
+   * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates the syntax of comments
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   */
+  public EntryReader(
+      Path path,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegex)
+      throws IOException {
+    this(FilesPlume.newFileReader(path), path.toString(), entryFormat, commentFormat, includeRegex);
+  }
 
   /**
    * Create an EntryReader.
@@ -453,7 +522,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
+   * @deprecated see {@link #EntryReader(Path,EntryFormat,CommentFormat, String)}
    */
+  @Deprecated // 2026-01-28
   public EntryReader(
       Path path,
       EntryFormat entryFormat,
@@ -515,7 +586,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,EntryFormat,String,String)
    */
   public EntryReader(Path path) throws IOException {
-    this(path, EntryFormat.DEFAULT, null, null);
+    this(path, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
   /**
@@ -534,11 +605,30 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         charsetName,
         path.toString(),
         EntryFormat.DEFAULT,
-        null,
+        CommentFormat.NONE,
         null);
   }
 
   // File constructors
+
+  /**
+   * Create an EntryReader.
+   *
+   * @param file initial file to read
+   * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates the syntax of comments
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   */
+  public EntryReader(
+      File file,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegex)
+      throws IOException {
+    this(FilesPlume.newFileReader(file), file.toString(), entryFormat, commentFormat, includeRegex);
+  }
 
   /**
    * Create an EntryReader.
@@ -550,7 +640,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
+   * @deprecated see {@link #EntryReader(File, EntryFormat,CommentFormat,String)}
    */
+  @Deprecated // 2026-01-28
   public EntryReader(
       File file,
       EntryFormat entryFormat,
@@ -612,7 +704,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,EntryFormat,String,String)
    */
   public EntryReader(File file) throws IOException {
-    this(file, EntryFormat.DEFAULT, null, null);
+    this(file, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
   /**
@@ -631,11 +723,31 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         charsetName,
         file.toString(),
         EntryFormat.DEFAULT,
-        null,
+        CommentFormat.NONE,
         null);
   }
 
   // Filename constructors
+
+  /**
+   * Create a new EntryReader starting with the specified file.
+   *
+   * @param filename initial file to read
+   * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates the syntax of comments
+   * @param includeRegex regular expression that matches include directives. The expression should
+   *     define one group that contains the include file name.
+   * @throws IOException if there is a problem reading the file
+   * @see #EntryReader(File,EntryFormat,String,String)
+   */
+  public EntryReader(
+      String filename,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegex)
+      throws IOException {
+    this(new File(filename), entryFormat, commentFormat, includeRegex);
+  }
 
   /**
    * Create a new EntryReader starting with the specified file.
@@ -648,7 +760,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    * @see #EntryReader(File,EntryFormat,String,String)
+   * @deprecated see {@link #EntryReader(String, EntryFormat,CommentFormat,String)}
    */
+  @Deprecated // 2026-01-28
   public EntryReader(
       String filename,
       EntryFormat entryFormat,
@@ -714,7 +828,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(String,EntryFormat,String,String)
    */
   public EntryReader(String filename) throws IOException {
-    this(filename, EntryFormat.DEFAULT, null, null);
+    this(filename, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
   /**
@@ -733,7 +847,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         charsetName,
         filename,
         EntryFormat.DEFAULT,
-        null,
+        CommentFormat.NONE,
         null);
   }
 
@@ -818,9 +932,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     String line = getNextLine();
-    if (commentRegex != null) {
+    if (commentFormat.commentRegex != null) {
       while (line != null) {
-        Matcher cmatch = commentRegex.matcher(line);
+        Matcher cmatch = commentFormat.commentRegex.matcher(line);
         if (cmatch.find()) {
           line = cmatch.replaceFirst("");
           if (line.length() > 0) {
@@ -1155,9 +1269,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
     final String filename = args[0];
 
-    final String commentRegex;
+    final CommentFormat commentFormat;
     if (args.length >= 2) {
-      commentRegex = args[1];
+      String commentRegex = args[1];
       if (!RegexUtil.isRegex(commentRegex)) {
         System.err.println(
             "Error parsing comment regex \""
@@ -1166,8 +1280,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + RegexUtil.regexError(commentRegex));
         System.exit(1);
       }
+      commentFormat = new CommentFormat(commentRegex);
     } else {
-      commentRegex = null;
+      commentFormat = CommentFormat.NONE;
     }
 
     final @Regex(1) String includeRegex;
@@ -1189,7 +1304,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     try (EntryReader reader =
-        new EntryReader(filename, EntryFormat.DEFAULT, commentRegex, includeRegex)) {
+        new EntryReader(filename, EntryFormat.DEFAULT, commentFormat, includeRegex)) {
       String line = reader.readLine();
       while (line != null) {
         System.out.printf("%s: %d: %s%n", reader.getFileName(), reader.getLineNumber(), line);
@@ -1358,6 +1473,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
   }
 
+  /** A regular expression that never matches. */
+  private static final Pattern neverMatches = Pattern.compile("\\b\\B");
+
   /** This class informs {@link EntryReader} where an entry begins and ends. */
   public static class EntryFormat {
 
@@ -1446,88 +1564,36 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** This class informs {@link EntryReader} where a comment begins and ends. */
   public static class CommentFormat {
 
-    /**
-     * An CommentFormat with no multi-line entries and using a single blank line to separate
-     * entries.
-     */
-    public static final CommentFormat DEFAULT =
-        new CommentFormat((Pattern) null, (Pattern) null, false);
+    /** A CommentFormat that supports no comments. */
+    public static final CommentFormat NONE = new CommentFormat((Pattern) null);
+
+    /** A CommentFormat for Shell/Python-style comments. */
+    public static final CommentFormat SHELL = new CommentFormat(Pattern.compile("^#.*"));
+
+    /** A CommentFormat for C-style comments. */
+    public static final CommentFormat C = new CommentFormat(Pattern.compile("^//.*"));
 
     /**
-     * An CommentFormat with no multi-line entries and using two blank lines to separate entries.
+     * Regular expression that matches a comment, at the beginning of a line (not after other text).
      */
-    public static final CommentFormat TWO_BLANK_LINES =
-        new CommentFormat((Pattern) null, (Pattern) null, true);
+    private final Pattern commentRegex;
 
     /**
-     * Regular expression that starts a long entry. If null, there are no long entries, only short
-     * entries. A short entry is terminated by one or two blank lines (depending on {@link
-     * #twoBlankLines}) or the end of the current file.
+     * Creates a CommentFormat.
      *
-     * <p>If the first line of an entry matches this regexp, it is a long entry. It is terminated by
-     * any of:
-     *
-     * <ul>
-     *   <li>{@link #entryStopRegex}
-     *   <li>another line that matches {@code entryStartRegex} (even not following a newline), or
-     *   <li>the end of the current file.
-     * </ul>
-     *
-     * <p>If the regular expression has a capturing group, the first capturing group is retained in
-     * the output; otherwise, the whole match is removed.
+     * @param commentRegex regular expression that starts a single-line comment
      */
-    public final @Nullable @Regex(1) Pattern entryStartRegex;
-
-    /**
-     * See {@link #entryStartRegex}.
-     *
-     * @see #entryStartRegex
-     */
-    public final Pattern entryStopRegex;
-
-    /** If true, then entries are separated by two blank lines rather than one. */
-    public final boolean twoBlankLines;
-
-    /** A regular expression that never matches. */
-    private static final Pattern neverMatches = Pattern.compile("\\b\\B");
-
-    /**
-     * Creates an CommentFormat.
-     *
-     * @param entryStartRegex regular expression that starts a long entry; see {@link
-     *     #entryStartRegex}
-     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
-     * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-     */
-    public CommentFormat(
-        @Nullable @Regex(1) String entryStartRegex,
-        @Nullable @Regex String entryStopRegex,
-        boolean twoBlankLines) {
-      this(
-          entryStartRegex == null ? null : Pattern.compile(entryStartRegex),
-          entryStopRegex == null ? null : Pattern.compile(entryStopRegex),
-          twoBlankLines);
+    public CommentFormat(@Nullable @Regex String commentRegex) {
+      this(commentRegex == null ? null : Pattern.compile(commentRegex));
     }
 
     /**
-     * Creates an CommentFormat.
+     * Creates a CommentFormat.
      *
-     * @param entryStartRegex regular expression that starts a long entry; see {@link
-     *     #entryStartRegex}
-     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
-     * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     * @param commentRegex regular expression that starts a single-line comment
      */
-    public CommentFormat(
-        @Nullable @Regex(1) Pattern entryStartRegex,
-        @Nullable Pattern entryStopRegex,
-        boolean twoBlankLines) {
-      if (entryStartRegex == null && entryStopRegex != null) {
-        throw new IllegalArgumentException(
-            "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
-      }
-      this.entryStartRegex = entryStartRegex;
-      this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
-      this.twoBlankLines = twoBlankLines;
+    public CommentFormat(@Nullable Pattern commentRegex) {
+      this.commentRegex = commentRegex == null ? neverMatches : commentRegex;
     }
   }
 }
