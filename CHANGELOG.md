@@ -13,6 +13,9 @@
   * Replaced three arguments to constructors (`entryStartRegex`,
     `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
     constructors still exist but are deprecated.
+  * Replaced String/Pattern argument to constructor (`commentRegex`) by a
+    `CommentFormat` value.  This eases future extensions.  The old constructors
+    still exist but are deprecated.
   * Removed `setEntryStartStop()` methods
   * When `entryStartRegex` has no capturing group, the whole thing is discarded
     rather than the whole thing being retained.
