@@ -85,7 +85,7 @@ final class EntryReaderTest {
             new StringReader(content),
             "test",
             EntryFormat.DEFAULT,
-            CommentFormat.TEX_START_OF_LINE,
+            CommentFormat.TEX_AT_START_OF_LINE,
             null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2 % inline comment", reader.readLine()); // no inline comment removal
@@ -103,7 +103,7 @@ final class EntryReaderTest {
             new StringReader(content),
             "test",
             EntryFormat.DEFAULT,
-            CommentFormat.TEX_START_OF_LINE,
+            CommentFormat.TEX_AT_START_OF_LINE,
             null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
@@ -482,7 +482,7 @@ final class EntryReaderTest {
             new StringReader(content),
             "test",
             EntryFormat.DEFAULT,
-            CommentFormat.SHELL_START_OF_LINE,
+            CommentFormat.SHELL_AT_START_OF_LINE,
             null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
@@ -519,6 +519,90 @@ final class EntryReaderTest {
       assertNotNull(entry);
       assertEquals("testfile.txt", entry.filename);
       assertEquals(2, entry.lineNumber); // line 2 after the leading blank line
+    }
+  }
+
+  final CommentFormat SHELL_AND_HTML = new CommentFormat("#.*", "<!--", "-->");
+
+  /** Test mutlilineComments. */
+  @Test
+  void testMultilineComments() throws IOException {
+    String content = String.join(System.lineSeparator(), "<!--", "line1", "line2", "line3", "-->");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertNull(reader.getEntry());
+    }
+  }
+
+  /** Test mutlilineComments surrounded by content. */
+  @Test
+  void testMultilineCommentsWithContent() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "line1",
+            "line2",
+            "<!--",
+            "cline1",
+            "cline2",
+            "cline3",
+            "-->",
+            "line3");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertEquals("line1", reader.readLine());
+      assertEquals("line2", reader.readLine());
+      assertEquals("line3", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Test mutlilineComments that contain a comment and a blank line inside. */
+  @Test
+  void testMultilineCommentsWithCommentInside() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(), "<!--", "cline1", "# comment", "cline2", "", "cline3", "-->");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertNull(reader.getEntry());
+    }
+  }
+
+  /** Test fenced code blocks (including a blank line inside). */
+  @Test
+  void testFencedCodeBlockWithBlankLine() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "pre",
+            "```sh",
+            "code1",
+            "", // blank line inside the fenced block
+            "code2",
+            "```",
+            "post");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertEquals("pre", reader.readLine());
+      assertEquals("```sh", reader.readLine());
+      assertEquals("code1", reader.readLine());
+      assertEquals("", reader.readLine());
+      assertEquals("code2", reader.readLine());
+      assertEquals("```", reader.readLine());
+      assertEquals("post", reader.readLine());
+      assertNull(reader.readLine());
     }
   }
 }

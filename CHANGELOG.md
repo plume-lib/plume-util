@@ -19,6 +19,8 @@
   * Removed `setEntryStartStop()` methods
   * When `entryStartRegex` has no capturing group, the whole thing is discarded
     rather than the whole thing being retained.
+  * EntryReader now supports multiline comments.
+  * EntryReader now supports fenced code blocks.
 
 ## 1.13.0 (2026-01-20)
 

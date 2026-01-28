@@ -108,6 +108,12 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
 
+  /** True if currently inside a multiline comment. */
+  private boolean inMultilineComment = false;
+
+  /** True if currently inside a fenced code block (``` ... ```). */
+  private boolean inFencedCodeBlock = false;
+
   // ///////////////////////////////////////////////////////////////////////////
   // Constructors
   //
@@ -425,7 +431,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     super(DummyReader.it);
     readers.addFirst(new FlnReader(reader, filename));
     this.entryFormat = entryFormat;
-    this.commentFormat = new CommentFormat(lineCommentRegexString);
+    this.commentFormat = new CommentFormat(lineCommentRegexString, null, null);
     if (includeRegexString == null) {
       includeRegex = null;
     } else {
@@ -942,7 +948,41 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return line;
     }
 
+    Pattern multilineCommentStart = commentFormat.multilineCommentStart;
+    Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
+
     String line = getNextLine();
+    // Handle multiline comments and fenced code blocks.
+    while (true) {
+      if (line == null) {
+        return null;
+      }
+      String trimmed = line.trim();
+
+      if (inMultilineComment) {
+        if (multilineCommentEnd != null && multilineCommentEnd.matcher(trimmed).matches()) {
+          inMultilineComment = false;
+        }
+        line = getNextLine();
+        continue;
+      }
+
+      if (trimmed.startsWith("```")) {
+        inFencedCodeBlock = !inFencedCodeBlock;
+        return line;
+      }
+      if (inFencedCodeBlock) {
+        return line;
+      }
+
+      if (multilineCommentStart != null && multilineCommentStart.matcher(trimmed).matches()) {
+        inMultilineComment = true;
+        line = getNextLine();
+        continue;
+      }
+      break;
+    }
+
     Pattern lineCommentRegex = commentFormat.lineCommentRegex;
     if (lineCommentRegex != null) {
       while (line != null) {
@@ -1293,7 +1333,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + RegexUtil.regexError(lineCommentRegex));
         System.exit(1);
       }
-      commentFormat = new CommentFormat(lineCommentRegex);
+      commentFormat = new CommentFormat(lineCommentRegex, null, null);
     } else {
       commentFormat = CommentFormat.NONE;
     }
@@ -1575,47 +1615,79 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public static class CommentFormat {
 
     /** A CommentFormat that supports no comments. */
-    public static final CommentFormat NONE = new CommentFormat((Pattern) null);
+    public static final CommentFormat NONE = new CommentFormat((Pattern) null, null, null);
 
     /** A CommentFormat for C-style comments. */
-    public static final CommentFormat C_MID_LINE = new CommentFormat(Pattern.compile("//.*"));
+    public static final CommentFormat C = new CommentFormat(Pattern.compile("//.*"), null, null);
 
     /** A CommentFormat for C-style comments, only at the beginning of a line. */
-    public static final CommentFormat C_START_OF_LINE = new CommentFormat(Pattern.compile("^//.*"));
+    public static final CommentFormat C_AT_START_OF_LINE =
+        new CommentFormat(Pattern.compile("^//.*"), null, null);
+
+    /** A CommentFormat for HTML-style comments. */
+    public static final CommentFormat HTML =
+        new CommentFormat(null, Pattern.compile("<!--"), Pattern.compile("-->"));
+
+    /** A CommentFormat for HTML-style comments, only at the beginning of a line. */
+    public static final CommentFormat HTML_AT_START_OF_LINE =
+        new CommentFormat(null, Pattern.compile("^<!--"), Pattern.compile("^-->"));
 
     /** A CommentFormat for Shell/Python-style comments. */
-    public static final CommentFormat SHELL_MID_LINE = new CommentFormat(Pattern.compile("#.*"));
+    public static final CommentFormat SHELL = new CommentFormat(Pattern.compile("#.*"), null, null);
 
     /** A CommentFormat for Shell/Python-style comments, only at the beginning of a line. */
-    public static final CommentFormat SHELL_START_OF_LINE =
-        new CommentFormat(Pattern.compile("^#.*"));
+    public static final CommentFormat SHELL_AT_START_OF_LINE =
+        new CommentFormat(Pattern.compile("^#.*"), null, null);
 
     /** A CommentFormat for TeX/LaTeX-style comments. */
-    public static final CommentFormat TEX_MID_LINE = new CommentFormat(Pattern.compile("%.*"));
+    public static final CommentFormat TEX = new CommentFormat(Pattern.compile("%.*"), null, null);
 
     /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
-    public static final CommentFormat TEX_START_OF_LINE =
-        new CommentFormat(Pattern.compile("^%.*"));
+    public static final CommentFormat TEX_AT_START_OF_LINE =
+        new CommentFormat(Pattern.compile("^%.*"), null, null);
 
-    /** Regular expression that matches a comment. */
+    /** Regular expression that matches a single-line comment. */
     private final @Nullable Pattern lineCommentRegex;
+
+    /** Regular expression that matches the start of a multiline comment. */
+    private final @Nullable Pattern multilineCommentStart;
+
+    /** Regular expression that matches the end of a multiline comment. */
+    private final @Nullable Pattern multilineCommentEnd;
 
     /**
      * Creates a CommentFormat.
      *
      * @param lineCommentRegex regular expression that matches a single-line comment
+     * @param multilineCommentStart regular expression that matches the start of a multi-line
+     *     comment
+     * @param multilineCommentEnd regular expression that matches the end of a multi-line comment
      */
-    public CommentFormat(@Nullable @Regex String lineCommentRegex) {
-      this(lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex));
+    public CommentFormat(
+        @Nullable @Regex String lineCommentRegex,
+        @Nullable @Regex String multilineCommentStart,
+        @Nullable @Regex String multilineCommentEnd) {
+      this(
+          lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex),
+          multilineCommentStart == null ? null : Pattern.compile(multilineCommentStart),
+          multilineCommentEnd == null ? null : Pattern.compile(multilineCommentEnd));
     }
 
     /**
      * Creates a CommentFormat.
      *
      * @param lineCommentRegex regular expression that matches a single-line comment
+     * @param multilineCommentStart regular expression that matches the start of a multi-line
+     *     comment
+     * @param multilineCommentEnd regular expression that matches the end of a multi-line comment
      */
-    public CommentFormat(@Nullable Pattern lineCommentRegex) {
+    public CommentFormat(
+        @Nullable Pattern lineCommentRegex,
+        @Nullable Pattern multilineCommentStart,
+        @Nullable Pattern multilineCommentEnd) {
       this.lineCommentRegex = lineCommentRegex;
+      this.multilineCommentStart = multilineCommentStart;
+      this.multilineCommentEnd = multilineCommentEnd;
     }
   }
 }
