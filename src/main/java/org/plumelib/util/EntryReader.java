@@ -85,13 +85,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Regular expression that specifies an include file. */
   private final @Nullable @Regex(1) Pattern includeRegex;
 
-  /**
-   * Regular expression that matches a comment, at the beginning of a line (not after other text).
-   */
-  private final @Nullable Pattern commentRegex;
-
   /** Specifies how an entry begins and ends. */
-  public EntryFormat entryFormat;
+  public final EntryFormat entryFormat;
+
+  /** Specifies how a comment begins and ends. */
+  public final CommentFormat commentFormat;
 
   /** If true, output diagnostics. */
   public boolean debug = false;
@@ -124,12 +122,43 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @param filename non-null file name for stream being read
    * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates which lines are comments
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name.
+   * @throws UnsupportedEncodingException if the charset encoding is not supported
+   */
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
+      String charsetName,
+      String filename,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegexString)
+      throws UnsupportedEncodingException {
+    this(
+        new InputStreamReader(in, charsetName),
+        filename,
+        entryFormat,
+        commentFormat,
+        includeRegexString);
+  }
+
+  /**
+   * Create an EntryReader that uses the given character set.
+   *
+   * @param in source from which to read entries
+   * @param charsetName the character set to use
+   * @param filename non-null file name for stream being read
+   * @param entryFormat indicates how entries begin and end
    * @param commentRegexString regular expression that matches comments. Any text that matches
    *     commentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
+   * @deprecated use {@link
+   *     #EntryReader(InputStream,String,String,EntryFormat,CommentFormat,String)}
    */
+  @Deprecated // 2026-01-28
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -1401,6 +1430,94 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
      */
     public EntryFormat(
+        @Nullable @Regex(1) Pattern entryStartRegex,
+        @Nullable Pattern entryStopRegex,
+        boolean twoBlankLines) {
+      if (entryStartRegex == null && entryStopRegex != null) {
+        throw new IllegalArgumentException(
+            "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
+      }
+      this.entryStartRegex = entryStartRegex;
+      this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
+      this.twoBlankLines = twoBlankLines;
+    }
+  }
+
+  /** This class informs {@link EntryReader} where a comment begins and ends. */
+  public static class CommentFormat {
+
+    /**
+     * An CommentFormat with no multi-line entries and using a single blank line to separate
+     * entries.
+     */
+    public static final CommentFormat DEFAULT =
+        new CommentFormat((Pattern) null, (Pattern) null, false);
+
+    /**
+     * An CommentFormat with no multi-line entries and using two blank lines to separate entries.
+     */
+    public static final CommentFormat TWO_BLANK_LINES =
+        new CommentFormat((Pattern) null, (Pattern) null, true);
+
+    /**
+     * Regular expression that starts a long entry. If null, there are no long entries, only short
+     * entries. A short entry is terminated by one or two blank lines (depending on {@link
+     * #twoBlankLines}) or the end of the current file.
+     *
+     * <p>If the first line of an entry matches this regexp, it is a long entry. It is terminated by
+     * any of:
+     *
+     * <ul>
+     *   <li>{@link #entryStopRegex}
+     *   <li>another line that matches {@code entryStartRegex} (even not following a newline), or
+     *   <li>the end of the current file.
+     * </ul>
+     *
+     * <p>If the regular expression has a capturing group, the first capturing group is retained in
+     * the output; otherwise, the whole match is removed.
+     */
+    public final @Nullable @Regex(1) Pattern entryStartRegex;
+
+    /**
+     * See {@link #entryStartRegex}.
+     *
+     * @see #entryStartRegex
+     */
+    public final Pattern entryStopRegex;
+
+    /** If true, then entries are separated by two blank lines rather than one. */
+    public final boolean twoBlankLines;
+
+    /** A regular expression that never matches. */
+    private static final Pattern neverMatches = Pattern.compile("\\b\\B");
+
+    /**
+     * Creates an CommentFormat.
+     *
+     * @param entryStartRegex regular expression that starts a long entry; see {@link
+     *     #entryStartRegex}
+     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
+     * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     */
+    public CommentFormat(
+        @Nullable @Regex(1) String entryStartRegex,
+        @Nullable @Regex String entryStopRegex,
+        boolean twoBlankLines) {
+      this(
+          entryStartRegex == null ? null : Pattern.compile(entryStartRegex),
+          entryStopRegex == null ? null : Pattern.compile(entryStopRegex),
+          twoBlankLines);
+    }
+
+    /**
+     * Creates an CommentFormat.
+     *
+     * @param entryStartRegex regular expression that starts a long entry; see {@link
+     *     #entryStartRegex}
+     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
+     * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     */
+    public CommentFormat(
         @Nullable @Regex(1) Pattern entryStartRegex,
         @Nullable Pattern entryStopRegex,
         boolean twoBlankLines) {
