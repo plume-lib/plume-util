@@ -150,8 +150,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @param filename non-null file name for stream being read
    * @param entryFormat indicates how entries begin and end
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
@@ -164,14 +164,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String charsetName,
       String filename,
       EntryFormat entryFormat,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString)
       throws UnsupportedEncodingException {
     this(
         new InputStreamReader(in, charsetName),
         filename,
         entryFormat,
-        lineCommentStartString,
+        lineCommentRegexString,
         includeRegexString);
   }
 
@@ -182,8 +182,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param charsetName the character set to use
    * @param filename non-null file name for stream being read
    * @param twoBlankLines true if entries are separated by two blank lines rather than one
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
@@ -196,7 +196,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String charsetName,
       String filename,
       boolean twoBlankLines,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString)
       throws UnsupportedEncodingException {
     this(
@@ -204,7 +204,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         charsetName,
         filename,
         twoBlankLines ? EntryFormat.TWO_BLANK_LINES : EntryFormat.DEFAULT,
-        lineCommentStartString,
+        lineCommentRegexString,
         includeRegexString);
   }
 
@@ -214,8 +214,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in source from which to read entries
    * @param charsetName the character set to use
    * @param filename non-null file name for stream being read
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
@@ -227,11 +227,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @MustCallAlias InputStream in,
       String charsetName,
       String filename,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString)
       throws UnsupportedEncodingException {
     this(
-        in, charsetName, filename, EntryFormat.DEFAULT, lineCommentStartString, includeRegexString);
+        in, charsetName, filename, EntryFormat.DEFAULT, lineCommentRegexString, includeRegexString);
   }
 
   /**
@@ -279,8 +279,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in source from which to read entries
    * @param filename non-null file name for stream being read
    * @param entryFormat indicates how entries begin and end
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,EntryFormat,CommentFormat,String)}
@@ -290,13 +290,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @MustCallAlias InputStream in,
       String filename,
       EntryFormat entryFormat,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
     this(
         new InputStreamReader(in, UTF_8),
         filename,
         entryFormat,
-        lineCommentStartString,
+        lineCommentRegexString,
         includeRegexString);
   }
 
@@ -306,8 +306,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in source from which to read entries
    * @param filename non-null file name for stream being read
    * @param twoBlankLines true if entries are separated by two blank lines rather than one
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)},
@@ -318,13 +318,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @MustCallAlias InputStream in,
       String filename,
       boolean twoBlankLines,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
     this(
         new InputStreamReader(in, UTF_8),
         filename,
         twoBlankLines ? EntryFormat.TWO_BLANK_LINES : EntryFormat.DEFAULT,
-        lineCommentStartString,
+        lineCommentRegexString,
         includeRegexString);
   }
 
@@ -333,8 +333,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param in source from which to read entries
    * @param filename non-null file name for stream being read
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
@@ -343,9 +343,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
-    this(in, filename, EntryFormat.DEFAULT, lineCommentStartString, includeRegexString);
+    this(in, filename, EntryFormat.DEFAULT, lineCommentRegexString, includeRegexString);
   }
 
   /**
@@ -406,8 +406,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param reader source from which to read entries
    * @param filename file name corresponding to reader, for use in error messages
    * @param entryFormat indicates how entries begin and end
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
    * @deprecated see {@link #EntryReader(Reader,String,EntryFormat,CommentFormat,String)}
@@ -418,14 +418,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @MustCallAlias Reader reader,
       String filename,
       EntryFormat entryFormat,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
     // We won't use superclass methods, but passing null as an argument
     // leads to a NullPointerException.
     super(DummyReader.it);
     readers.addFirst(new FlnReader(reader, filename));
     this.entryFormat = entryFormat;
-    this.commentFormat = new CommentFormat(lineCommentStartString);
+    this.commentFormat = new CommentFormat(lineCommentRegexString);
     if (includeRegexString == null) {
       includeRegex = null;
     } else {
@@ -439,8 +439,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param reader source from which to read entries
    * @param filename file name corresponding to reader, for use in error messages
    * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
@@ -451,13 +451,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @MustCallAlias Reader reader,
       String filename,
       boolean twoBlankLines,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
     this(
         reader,
         filename,
         twoBlankLines ? EntryFormat.TWO_BLANK_LINES : EntryFormat.DEFAULT,
-        lineCommentStartString,
+        lineCommentRegexString,
         includeRegexString);
   }
 
@@ -466,8 +466,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param reader source from which to read entries
    * @param filename file name corresponding to reader, for use in error messages
-   * @param lineCommentStartString regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored
+   * @param lineCommentRegexString regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
@@ -477,9 +477,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
       String filename,
-      @Nullable @Regex String lineCommentStartString,
+      @Nullable @Regex String lineCommentRegexString,
       @Nullable @Regex(1) String includeRegexString) {
-    this(reader, filename, EntryFormat.DEFAULT, lineCommentStartString, includeRegexString);
+    this(reader, filename, EntryFormat.DEFAULT, lineCommentRegexString, includeRegexString);
   }
 
   /**
@@ -518,8 +518,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param path initial file to read
    * @param entryFormat indicates how entries begin and end
-   * @param lineCommentStart regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -529,14 +529,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       Path path,
       EntryFormat entryFormat,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(
         FilesPlume.newFileReader(path),
         path.toString(),
         entryFormat,
-        lineCommentStart,
+        lineCommentRegex,
         includeRegex);
   }
 
@@ -545,8 +545,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param path initial file to read
    * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-   * @param lineCommentStart regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -556,13 +556,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       Path path,
       boolean twoBlankLines,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(
         path,
         twoBlankLines ? EntryFormat.TWO_BLANK_LINES : EntryFormat.DEFAULT,
-        lineCommentStart,
+        lineCommentRegex,
         includeRegex);
   }
 
@@ -570,8 +570,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create an EntryReader.
    *
    * @param path initial file to read
-   * @param lineCommentStart regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -579,9 +579,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   @Deprecated // 2026-01-05
   public EntryReader(
-      Path path, @Nullable @Regex String lineCommentStart, @Nullable @Regex(1) String includeRegex)
+      Path path, @Nullable @Regex String lineCommentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(path, EntryFormat.DEFAULT, lineCommentStart, includeRegex);
+    this(path, EntryFormat.DEFAULT, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -641,8 +641,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param file initial file to read
    * @param entryFormat indicates how entries begin and end
-   * @param lineCommentStart regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -652,14 +652,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       File file,
       EntryFormat entryFormat,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(
         FilesPlume.newFileReader(file),
         file.toString(),
         entryFormat,
-        lineCommentStart,
+        lineCommentRegex,
         includeRegex);
   }
 
@@ -668,8 +668,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param file initial file to read
    * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-   * @param lineCommentStart regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -679,13 +679,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       File file,
       boolean twoBlankLines,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(
         file,
         twoBlankLines ? EntryFormat.TWO_BLANK_LINES : EntryFormat.DEFAULT,
-        lineCommentStart,
+        lineCommentRegex,
         includeRegex);
   }
 
@@ -693,8 +693,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create an EntryReader.
    *
    * @param file initial file to read
-   * @param lineCommentStart regular expression that matches comments. Any text that matches
-   *     lineCommentStart is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches
+   *     lineCommentRegex is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -702,9 +702,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   @Deprecated // 2026-01-05
   public EntryReader(
-      File file, @Nullable @Regex String lineCommentStart, @Nullable @Regex(1) String includeRegex)
+      File file, @Nullable @Regex String lineCommentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(file, EntryFormat.DEFAULT, lineCommentStart, includeRegex);
+    this(file, EntryFormat.DEFAULT, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -765,8 +765,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param filename initial file to read
    * @param entryFormat indicates how entries begin and end
-   * @param lineCommentStart regular expression that matches comments. Any text that matches {@code
-   *     lineCommentStart} is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches {@code
+   *     lineCommentRegex} is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -777,10 +777,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       String filename,
       EntryFormat entryFormat,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(new File(filename), entryFormat, lineCommentStart, includeRegex);
+    this(new File(filename), entryFormat, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -788,8 +788,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param filename initial file to read
    * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-   * @param lineCommentStart regular expression that matches comments. Any text that matches {@code
-   *     lineCommentStart} is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches {@code
+   *     lineCommentRegex} is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -800,13 +800,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public EntryReader(
       String filename,
       boolean twoBlankLines,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
     this(
         filename,
         twoBlankLines ? EntryFormat.TWO_BLANK_LINES : EntryFormat.DEFAULT,
-        lineCommentStart,
+        lineCommentRegex,
         includeRegex);
   }
 
@@ -814,8 +814,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create a new EntryReader starting with the specified file.
    *
    * @param filename initial file to read
-   * @param lineCommentStart regular expression that matches comments. Any text that matches {@code
-   *     lineCommentStart} is removed. A line that is entirely a comment is ignored.
+   * @param lineCommentRegex regular expression that matches comments. Any text that matches {@code
+   *     lineCommentRegex} is removed. A line that is entirely a comment is ignored.
    * @param includeRegex regular expression that matches include directives. The expression should
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
@@ -825,10 +825,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   @Deprecated // 2026-01-05
   public EntryReader(
       String filename,
-      @Nullable @Regex String lineCommentStart,
+      @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(filename, EntryFormat.DEFAULT, lineCommentStart, includeRegex);
+    this(filename, EntryFormat.DEFAULT, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -943,10 +943,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     String line = getNextLine();
-    Pattern lineCommentStart = commentFormat.lineCommentStart;
-    if (lineCommentStart != null) {
+    Pattern lineCommentRegex = commentFormat.lineCommentRegex;
+    if (lineCommentRegex != null) {
       while (line != null) {
-        Matcher cmatch = lineCommentStart.matcher(line);
+        Matcher cmatch = lineCommentRegex.matcher(line);
         if (cmatch.find()) {
           line = cmatch.replaceFirst("");
           if (line.length() > 0) {
@@ -1269,14 +1269,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /**
    * Simple usage example.
    *
-   * @param args command-line arguments: filename [lineCommentStart [includeRegex]]
+   * @param args command-line arguments: filename [lineCommentRegex [includeRegex]]
    * @throws IOException if there is a problem reading a file
    */
   public static void main(String[] args) throws IOException {
 
     if (args.length < 1 || args.length > 3) {
       System.err.println(
-          "EntryReader sample program requires 1-3 args: filename [lineCommentStart"
+          "EntryReader sample program requires 1-3 args: filename [lineCommentRegex"
               + " [includeRegex]]");
       System.exit(1);
     }
@@ -1284,16 +1284,16 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     final CommentFormat commentFormat;
     if (args.length >= 2) {
-      String lineCommentStart = args[1];
-      if (!RegexUtil.isRegex(lineCommentStart)) {
+      String lineCommentRegex = args[1];
+      if (!RegexUtil.isRegex(lineCommentRegex)) {
         System.err.println(
             "Error parsing comment regex \""
-                + lineCommentStart
+                + lineCommentRegex
                 + "\": "
-                + RegexUtil.regexError(lineCommentStart));
+                + RegexUtil.regexError(lineCommentRegex));
         System.exit(1);
       }
-      commentFormat = new CommentFormat(lineCommentStart);
+      commentFormat = new CommentFormat(lineCommentRegex);
     } else {
       commentFormat = CommentFormat.NONE;
     }
@@ -1586,28 +1586,25 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** A CommentFormat for TeX/LaTeX-style comments. */
     public static final CommentFormat TEX = new CommentFormat(Pattern.compile("^%.*"));
 
-    /**
-     * Regular expression that matches a comment, at the beginning of a line (not after other text).
-     */
-    private final @Nullable Pattern lineCommentStart;
+    /** Regular expression that matches a comment. */
+    private final @Nullable Pattern lineCommentRegex;
 
     /**
      * Creates a CommentFormat.
      *
-     * @param lineCommentStart regular expression that starts a single-line comment
+     * @param lineCommentRegex regular expression that starts a single-line comment
      */
-    public CommentFormat(@Nullable @Regex String lineCommentStart) {
-      this(lineCommentStart == null ? null : Pattern.compile(lineCommentStart));
-      // TODO: Add "^"...".*", so user does not have to.
+    public CommentFormat(@Nullable @Regex String lineCommentRegex) {
+      this(lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex));
     }
 
     /**
      * Creates a CommentFormat.
      *
-     * @param lineCommentStart regular expression that starts a single-line comment
+     * @param lineCommentRegex regular expression that starts a single-line comment
      */
-    public CommentFormat(@Nullable Pattern lineCommentStart) {
-      this.lineCommentStart = lineCommentStart;
+    public CommentFormat(@Nullable Pattern lineCommentRegex) {
+      this.lineCommentRegex = lineCommentRegex;
     }
   }
 }
