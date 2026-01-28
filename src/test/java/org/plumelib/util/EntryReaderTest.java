@@ -82,7 +82,11 @@ final class EntryReaderTest {
     String content = "line1\n% comment line\nline2 % inline comment\nline3\n";
     try (EntryReader reader =
         new EntryReader(
-            new StringReader(content), "test", EntryFormat.DEFAULT, CommentFormat.TEX, null)) {
+            new StringReader(content),
+            "test",
+            EntryFormat.DEFAULT,
+            CommentFormat.TEX_START_OF_LINE,
+            null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2 % inline comment", reader.readLine()); // no inline comment removal
       assertEquals("line3", reader.readLine());
@@ -96,7 +100,11 @@ final class EntryReaderTest {
     String content = "line1\n% full comment\nline2\n";
     try (EntryReader reader =
         new EntryReader(
-            new StringReader(content), "test", EntryFormat.DEFAULT, CommentFormat.TEX, null)) {
+            new StringReader(content),
+            "test",
+            EntryFormat.DEFAULT,
+            CommentFormat.TEX_START_OF_LINE,
+            null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
       assertNull(reader.readLine());
@@ -471,7 +479,11 @@ final class EntryReaderTest {
     String content = "# comment1\nline1\n# comment2\n# comment3\nline2\n";
     try (EntryReader reader =
         new EntryReader(
-            new StringReader(content), "test", EntryFormat.DEFAULT, CommentFormat.SHELL, null)) {
+            new StringReader(content),
+            "test",
+            EntryFormat.DEFAULT,
+            CommentFormat.SHELL_START_OF_LINE,
+            null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
       assertNull(reader.readLine());

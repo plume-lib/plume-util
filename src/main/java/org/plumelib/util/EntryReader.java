@@ -1578,13 +1578,24 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public static final CommentFormat NONE = new CommentFormat((Pattern) null);
 
     /** A CommentFormat for C-style comments. */
-    public static final CommentFormat C = new CommentFormat(Pattern.compile("^//.*"));
+    public static final CommentFormat C_MID_LINE = new CommentFormat(Pattern.compile("//.*"));
+
+    /** A CommentFormat for C-style comments, only at the beginning of a line. */
+    public static final CommentFormat C_START_OF_LINE = new CommentFormat(Pattern.compile("^//.*"));
 
     /** A CommentFormat for Shell/Python-style comments. */
-    public static final CommentFormat SHELL = new CommentFormat(Pattern.compile("^#.*"));
+    public static final CommentFormat SHELL_MID_LINE = new CommentFormat(Pattern.compile("#.*"));
+
+    /** A CommentFormat for Shell/Python-style comments, only at the beginning of a line. */
+    public static final CommentFormat SHELL_START_OF_LINE =
+        new CommentFormat(Pattern.compile("^#.*"));
 
     /** A CommentFormat for TeX/LaTeX-style comments. */
-    public static final CommentFormat TEX = new CommentFormat(Pattern.compile("^%.*"));
+    public static final CommentFormat TEX_MID_LINE = new CommentFormat(Pattern.compile("%.*"));
+
+    /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
+    public static final CommentFormat TEX_START_OF_LINE =
+        new CommentFormat(Pattern.compile("^%.*"));
 
     /** Regular expression that matches a comment. */
     private final @Nullable Pattern lineCommentRegex;
