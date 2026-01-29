@@ -1618,11 +1618,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public static final CommentFormat NONE = new CommentFormat((Pattern) null, null, null);
 
     /** A CommentFormat for C-style comments. */
-    public static final CommentFormat C = new CommentFormat(Pattern.compile("//.*"), null, null);
+    public static final CommentFormat C =
+        new CommentFormat(
+            Pattern.compile("//.*"), Pattern.compile("/\\*"), Pattern.compile("\\*/"));
 
     /** A CommentFormat for C-style comments, only at the beginning of a line. */
     public static final CommentFormat C_AT_START_OF_LINE =
-        new CommentFormat(Pattern.compile("^//.*"), null, null);
+        new CommentFormat(
+            Pattern.compile("^//.*"), Pattern.compile("^/\\*"), Pattern.compile("^\\*/"));
 
     /** A CommentFormat for HTML-style comments. */
     public static final CommentFormat HTML =

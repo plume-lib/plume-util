@@ -54,7 +54,7 @@
  * <dl>
  *   <dt>{@link org.plumelib.util.EntryReader EntryReader}
  *   <dd>Class that reads "entries" from a file. In the simplest case, entries can be lines. It
- *       supports: include files, single-line comments, multi-line comments, multi-line entries
+ *       supports: include files, single-line comments, multi-line comments, and multi-line entries
  *       (paragraphs). The syntax of each of these is customizable.
  *   <dt>{@link org.plumelib.util.FileIOException FileIOException}
  *   <dd>Extends IOException by also reporting a file name and line number at which the exception
