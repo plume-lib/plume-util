@@ -525,7 +525,7 @@ final class EntryReaderTest {
   /** A comment format that has both single-line and multi-line comments. */
   final CommentFormat SHELL_AND_HTML = new CommentFormat("#.*", "<!--", "-->");
 
-  /** Test mutlilineComments. */
+  /** Test multi-line comments. */
   @Test
   void testMultilineComments() throws IOException {
     String content = String.join(System.lineSeparator(), "<!--", "line1", "line2", "line3", "-->");
@@ -537,7 +537,7 @@ final class EntryReaderTest {
     }
   }
 
-  /** Test mutlilineComments surrounded by content. */
+  /** Test multi-line comments surrounded by content. */
   @Test
   void testMultilineCommentsWithContent() throws IOException {
     String content =
@@ -563,7 +563,7 @@ final class EntryReaderTest {
     }
   }
 
-  /** Test mutlilineComments that contain a comment and a blank line inside. */
+  /** Test multi-line comments that contain a comment and a blank line inside. */
   @Test
   void testMultilineCommentsWithCommentInside() throws IOException {
     String content =
