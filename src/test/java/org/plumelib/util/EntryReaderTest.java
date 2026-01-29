@@ -85,7 +85,7 @@ final class EntryReaderTest {
             new StringReader(content),
             "test",
             EntryFormat.DEFAULT,
-            CommentFormat.TEX_START_OF_LINE,
+            CommentFormat.TEX_AT_START_OF_LINE,
             null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2 % inline comment", reader.readLine()); // no inline comment removal
@@ -103,7 +103,7 @@ final class EntryReaderTest {
             new StringReader(content),
             "test",
             EntryFormat.DEFAULT,
-            CommentFormat.TEX_START_OF_LINE,
+            CommentFormat.TEX_AT_START_OF_LINE,
             null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
@@ -482,7 +482,7 @@ final class EntryReaderTest {
             new StringReader(content),
             "test",
             EntryFormat.DEFAULT,
-            CommentFormat.SHELL_START_OF_LINE,
+            CommentFormat.SHELL_AT_START_OF_LINE,
             null)) {
       assertEquals("line1", reader.readLine());
       assertEquals("line2", reader.readLine());
