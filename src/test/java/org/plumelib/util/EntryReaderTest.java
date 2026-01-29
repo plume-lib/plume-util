@@ -523,7 +523,7 @@ final class EntryReaderTest {
   }
 
   /** A comment format that has both single-line and multi-line comments. */
-  final CommentFormat SHELL_AND_HTML = new CommentFormat("#.*", "<!--", "-->");
+  private static final CommentFormat SHELL_AND_HTML = new CommentFormat("#.*", "<!--", "-->");
 
   /** Test multi-line comments. */
   @Test
