@@ -156,7 +156,6 @@ apply plugin: "org.checkerframework"
 
 checkerFramework {
   version = libs.checker.get().version
-
   checkers = [
     // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
     // "org.checkerframework.checker.calledmethods.CalledMethodsChecker",
@@ -181,6 +180,7 @@ checkerFramework {
     "-AwarnUnneededSuppressions",
   ]
 }
+
 
 // Javadoc
 
