@@ -986,19 +986,18 @@ public final class CollectionsPlume {
         }
         while (itor1.hasNext()) {
           T elt1 = itor1.next();
-          if (elt2 == null) {
-            throw new IllegalArgumentException("null element in set 2: " + set2);
+          if (elt1 == null) {
+            throw new IllegalArgumentException("null element in set 1: " + set1);
           }
           @SuppressWarnings({
             "unchecked", // Java warning about generic cast
-            "nullness:dereference", // next() has side effects, so elt1 isn't know to be non-null
             "signedness:method.invocation" // generics problem; #979?
           })
           int comparison = ((Comparable<T>) elt1).compareTo(elt2);
-          if (comparison == 0) {
-            continue outerloopNaturalOrder;
-          } else if (comparison < 0) {
+          if (comparison > 0) {
             return false;
+          } else if (comparison == 0) {
+            continue outerloopNaturalOrder;
           }
         }
         return false;
@@ -1012,7 +1011,7 @@ public final class CollectionsPlume {
           int comparison = comparator1.compare(elt1, elt2);
           if (comparison == 0) {
             continue outerloopComparator;
-          } else if (comparison < 0) {
+          } else if (comparison > 0) {
             return false;
           }
         }

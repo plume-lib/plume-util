@@ -6,10 +6,10 @@ plugins {
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
   // Version 8.0.0 and later requires Java 17+.
-  id("com.diffplug.spotless").version("8.1.0")
+  id("com.diffplug.spotless").version("8.2.1")
 
   // Error Prone linter
-  id("net.ltgt.errorprone").version("4.4.0") apply false
+  id("net.ltgt.errorprone").version("5.0.0") apply false
 
   // PMD linter
   id("pmd")
@@ -18,10 +18,10 @@ plugins {
   id("jacoco")
 
   // Checker Framework pluggable type-checking
-  id("org.checkerframework").version("0.9.0-SNAPSHOT")
+  id("org.checkerframework").version("1.0.0")
 
   // Publishing to Maven Central.
-  id("com.vanniktech.maven.publish").version("0.35.0")
+  id("com.vanniktech.maven.publish").version("0.36.0")
 }
 
 repositories {
@@ -142,7 +142,7 @@ if (isJava21orHigher) {
 // PMD linter
 
 pmd {
-  toolVersion = "7.20.0"
+  toolVersion = "7.21.0"
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
   ignoreFailures = false
