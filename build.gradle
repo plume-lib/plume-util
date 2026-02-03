@@ -156,14 +156,7 @@ apply plugin: "org.checkerframework"
 
 checkerFramework {
   version = libs.checker.get().version
-  // To use a snapshot version of the Checker Framework.
-  if (false) {
-    // If the above is true, change it to false after CF is released.
-    ext.checkerFrameworkVersion = "3.53.0-SNAPSHOT"
-    configurations.all {
-      resolutionStrategy.cacheChangingModulesFor(0, "minutes")
-    }
-  }
+
   checkers = [
     // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
     // "org.checkerframework.checker.calledmethods.CalledMethodsChecker",
