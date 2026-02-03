@@ -18,7 +18,7 @@ plugins {
   id("jacoco")
 
   // Checker Framework pluggable type-checking
-  id("org.checkerframework").version("0.6.61")
+  id("org.checkerframework").version("1.0.1")
 
   // Publishing to Maven Central.
   id("com.vanniktech.maven.publish").version("0.36.0")
@@ -155,6 +155,7 @@ pmd {
 apply plugin: "org.checkerframework"
 
 checkerFramework {
+  version = libs.checker.get().version
   checkers = [
     // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
     // "org.checkerframework.checker.calledmethods.CalledMethodsChecker",
@@ -179,28 +180,7 @@ checkerFramework {
     "-AwarnUnneededSuppressions",
   ]
 }
-// To use a snapshot version of the Checker Framework.
-if (true) {
-  // If the above is true, change it to false after CF is released.
-  ext.checkerFrameworkVersion = "3.53.1"
-  dependencies {
-    compileOnly("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
-    testCompileOnly("org.checkerframework:checker-qual:${checkerFrameworkVersion}")
-    checkerFramework("org.checkerframework:checker:${checkerFrameworkVersion}")
-  }
-  configurations.all {
-    resolutionStrategy.cacheChangingModulesFor(0, "minutes")
-  }
-}
-// To use a locally-built Checker Framework, run gradle with "-PcfLocal".
-if (project.hasProperty("cfLocal")) {
-  def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
-  dependencies {
-    compileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
-    testCompileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
-    checkerFramework(files(cfHome + "/checker/dist/checker.jar"))
-  }
-}
+
 
 // Javadoc
 
