@@ -18,7 +18,7 @@ plugins {
   id("jacoco")
 
   // Checker Framework pluggable type-checking
-  id("org.checkerframework").version("1.0.1")
+  id("org.checkerframework").version("1.0.2")
 
   // Publishing to Maven Central.
   id("com.vanniktech.maven.publish").version("0.36.0")
