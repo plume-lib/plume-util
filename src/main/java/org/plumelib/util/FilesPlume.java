@@ -166,7 +166,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "JdkObsolete" // due to use of string charsetName, remove in Java 11+
+  })
   @SideEffectFree
   @Owning
   public static InputStreamReader newFileReader(Path path, @Nullable String charsetName)
@@ -488,7 +491,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "JdkObsolete" // due to use of string charsetName, remove in Java 11+
+  })
   @SideEffectFree
   @Owning
   public static OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
@@ -1306,6 +1312,7 @@ public final class FilesPlume {
    * @param is input stream to read
    * @return a String containing all the characters from the input stream
    */
+  @SuppressWarnings("JdkObsolete") // due to use of string "UTF-8", remove in Java 11+
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
