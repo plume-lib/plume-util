@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -758,7 +759,7 @@ public final class FilesPlume {
       }
       return false;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1128,7 +1129,7 @@ public final class FilesPlume {
     // try {
     //   return Files.readString(path, UTF_8);
     // } catch (IOException e) {
-    //   throw new Error(e);
+    //   throw new UncheckedIOException(e);
     // }
 
     try (BufferedReader reader = newBufferedFileReader(path.toFile())) {
@@ -1259,7 +1260,7 @@ public final class FilesPlume {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1277,7 +1278,7 @@ public final class FilesPlume {
     try {
       result = baos.toString("UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
     return result;
   }
@@ -1380,7 +1381,7 @@ public final class FilesPlume {
       int codePoint = new String(utf8Bytes, StandardCharsets.UTF_8).codePointAt(0);
       return codePoint;
     } catch (IOException e) {
-      throw new Error("input stream = " + is, e);
+      throw new UncheckedIOException("input stream = " + is, e);
     }
   }
 
