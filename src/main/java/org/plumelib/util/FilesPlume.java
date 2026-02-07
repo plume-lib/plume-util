@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -937,7 +938,8 @@ public final class FilesPlume {
     try {
       return Files.createDirectory(dir, attrs);
     } catch (IOException e) {
-      throw new Error("Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
     }
   }
 
@@ -955,7 +957,8 @@ public final class FilesPlume {
     try {
       return Files.createDirectories(dir, attrs);
     } catch (IOException e) {
-      throw new Error("Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
     }
   }
 
