@@ -1314,7 +1314,7 @@ public final class FilesPlume {
     try {
       result = baos.toString("UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
     return result;
   }
