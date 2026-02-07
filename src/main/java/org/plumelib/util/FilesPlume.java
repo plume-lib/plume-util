@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -923,6 +924,42 @@ public final class FilesPlume {
       }
     }
     return dir.delete();
+  }
+
+  /**
+   * Creates a new directory. Like {@link Files#createDirectory}, but does not throw any checked
+   * exceptions.
+   *
+   * @param dir the directory to create
+   * @param attrs an optional list of file attributes to set atomically when creating the directory
+   * @return the directory
+   */
+  public static Path createDirectory(Path dir, FileAttribute<?>... attrs) {
+    try {
+      return Files.createDirectory(dir, attrs);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+    }
+  }
+
+  /**
+   * Creates a directory by creating all nonexistent parent directories first. Unlike the
+   * createDirectory method, an exception is not thrown if the directory could not be created
+   * because it already exists. Like {@link Files#createDirectories}, but does not throw any checked
+   * exceptions.
+   *
+   * @param dir the directory to create
+   * @param attrs an optional list of file attributes to set atomically when creating the directory
+   * @return the directory
+   */
+  public static Path createDirectories(Path dir, FileAttribute<?>... attrs) {
+    try {
+      return Files.createDirectories(dir, attrs);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+    }
   }
 
   //
