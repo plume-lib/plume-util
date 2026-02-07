@@ -127,6 +127,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    */
+  @SuppressWarnings("JdkObsolete") // due to use of string charsetName, remove in Java 11+
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -159,6 +160,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     #EntryReader(InputStream,String,String,EntryFormat,CommentFormat,String)}
    */
   @Deprecated // 2026-01-28
+  @SuppressWarnings("JdkObsolete") // due to use of string charsetName, remove in Java 11+
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
