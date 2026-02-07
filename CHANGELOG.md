@@ -9,6 +9,8 @@
 
 ## 1.14.0 (2026-??-??)
 
+* In `FilesPlume`:
+  * New methods `createDirectory()` and `createDirectories()`.
 * In `EntryReader`:
   * Replaced three arguments to constructors (`entryStartRegex`,
     `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
