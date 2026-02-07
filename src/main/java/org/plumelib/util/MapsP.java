@@ -339,7 +339,7 @@ public final class MapsP {
         sb.append(lineSep);
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -381,7 +381,7 @@ public final class MapsP {
         mapToStringMultiLine(sb, entry.getValue(), linePrefix + "  ");
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 

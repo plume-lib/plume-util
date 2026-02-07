@@ -2123,7 +2123,7 @@ public final class CollectionsPlume {
         sb.append(lineSep);
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -2153,7 +2153,7 @@ public final class CollectionsPlume {
         mapToStringMultiLine(sb, entry.getValue(), linePrefix + "  ");
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
