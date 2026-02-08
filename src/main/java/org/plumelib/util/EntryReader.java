@@ -108,9 +108,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
 
-  /** True if currently inside a multiline comment. */
-  private boolean inMultilineComment = false;
-
   /** True if currently inside a fenced code block (``` ... ```). */
   private boolean inFencedCodeBlock = false;
 
@@ -607,7 +604,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param path the file to read
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(Stream,String,String,boolean,String,String)
+   * @see #EntryReader(InputStream,String,String,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
   @Deprecated // 2026-01-05
@@ -948,58 +945,111 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       return line;
     }
 
-    Pattern multilineCommentStart = commentFormat.multilineCommentStart;
-    Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
-
     String line = getNextLine();
-    // Handle multiline comments and fenced code blocks.
-    while (true) {
-      if (line == null) {
-        return null;
-      }
-      String trimmed = line.trim();
+    if (line == null) {
+      return null;
+    }
 
-      if (inMultilineComment) {
-        if (multilineCommentEnd != null && multilineCommentEnd.matcher(trimmed).matches()) {
-          inMultilineComment = false;
-        }
-        line = getNextLine();
-        continue;
-      }
-
-      if (trimmed.startsWith("```")) {
+    // Handles fenced code blocks.
+    if (!entryFormat.isMarkdown) {
+      this.inFencedCodeBlock = false;
+    }
+    if (entryFormat.isMarkdown) {
+      if (line.startsWith("```")) {
         inFencedCodeBlock = !inFencedCodeBlock;
         return line;
       }
       if (inFencedCodeBlock) {
         return line;
       }
-
-      if (multilineCommentStart != null && multilineCommentStart.matcher(trimmed).matches()) {
-        inMultilineComment = true;
-        line = getNextLine();
-        continue;
-      }
-      break;
     }
 
+    // Handles comments (single-line and multiline)
+    Pattern multilineCommentStart = commentFormat.multilineCommentStart;
+    Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
     Pattern lineCommentRegex = commentFormat.lineCommentRegex;
-    if (lineCommentRegex != null) {
-      while (line != null) {
-        Matcher cmatch = lineCommentRegex.matcher(line);
-        if (cmatch.find()) {
-          line = cmatch.replaceFirst("");
-          if (line.length() > 0) {
-            break;
+
+    restart:
+    while (line != null) {
+
+      // Find earliest single-line comment start (if any)
+      int lineCommentIndex = Integer.MAX_VALUE;
+      if (lineCommentRegex != null) {
+        Matcher lc = lineCommentRegex.matcher(line);
+        if (lc.find()) {
+          lineCommentIndex = lc.start();
+        }
+      }
+
+      // Find earliest multiline comment start (if any)
+      int multilineStartIndex = Integer.MAX_VALUE;
+      Matcher ms = null;
+      if (multilineCommentStart != null) {
+        assert multilineCommentEnd != null : "@AssumeAssertion(nullness)";
+        ms = multilineCommentStart.matcher(line);
+        if (ms.find()) {
+          multilineStartIndex = ms.start();
+        }
+      }
+
+      // If neither exists, break out of the loop
+      if (lineCommentIndex == Integer.MAX_VALUE && multilineStartIndex == Integer.MAX_VALUE) {
+        break;
+      }
+
+      // If single-line comment comes first (or ties with multiline), strip it
+      if (lineCommentIndex <= multilineStartIndex) {
+        if (lineCommentRegex != null) {
+          Matcher cmatch = lineCommentRegex.matcher(line);
+          if (cmatch.find()) {
+            line = cmatch.replaceFirst("");
           }
-        } else {
+        }
+        if (line.length() > 0) {
           break;
         }
         line = getNextLine();
-        if (debug) {
-          System.err.printf("getNextLine = %s%n", line);
-        }
+        continue;
       }
+
+      // Otherwise multiline comment comes first: strip one multiline comment occurrence.
+      // At this point ms must be non-null and must have had a successful find() earlier.
+      assert ms != null : "@AssumeAssertion(nullness)";
+      int msStart = ms.start();
+      int msEnd = ms.end();
+      assert 0 <= msStart && msStart <= line.length() : "@AssumeAssertion(index)";
+      assert 0 <= msEnd && msEnd <= line.length() : "@AssumeAssertion(index)";
+
+      String prefix = line.substring(0, msStart);
+      String rest = line.substring(msEnd);
+
+      assert multilineCommentEnd != null : "@AssumeAssertion(nullness)";
+
+      String suffix;
+      while (true) {
+        Matcher me = multilineCommentEnd.matcher(rest);
+        if (me.find()) {
+          int meEnd = me.end();
+          assert 0 <= meEnd && meEnd <= rest.length() : "@AssumeAssertion(index)";
+          suffix = rest.substring(meEnd);
+          break;
+        }
+
+        line = getNextLine();
+        if (line == null) {
+          throw new IllegalArgumentException("Unterminated multiline comment");
+        }
+        rest = line;
+      }
+
+      line = prefix + suffix;
+
+      if (line.length() > 0) {
+        continue;
+      }
+
+      line = getNextLine();
+      continue restart;
     }
 
     if (line == null) {
@@ -1536,11 +1586,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * An EntryFormat with no multi-line entries and using a single blank line to separate entries.
      */
     public static final EntryFormat DEFAULT =
-        new EntryFormat((Pattern) null, (Pattern) null, false);
+        new EntryFormat((Pattern) null, (Pattern) null, false, false);
 
     /** An EntryFormat with no multi-line entries and using two blank lines to separate entries. */
     public static final EntryFormat TWO_BLANK_LINES =
-        new EntryFormat((Pattern) null, (Pattern) null, true);
+        new EntryFormat((Pattern) null, (Pattern) null, true, false);
 
     /**
      * Regular expression that starts a long entry. If null, there are no long entries, only short
@@ -1571,6 +1621,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** If true, then entries are separated by two blank lines rather than one. */
     public final boolean twoBlankLines;
 
+    /** If true, then entries are in markdown format. */
+    public final boolean isMarkdown;
+
     /**
      * Creates an EntryFormat.
      *
@@ -1578,15 +1631,18 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *     #entryStartRegex}
      * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     * @param isMarkdown if true, then entries are in markdown format.
      */
     public EntryFormat(
         @Nullable @Regex(1) String entryStartRegex,
         @Nullable @Regex String entryStopRegex,
-        boolean twoBlankLines) {
+        boolean twoBlankLines,
+        boolean isMarkdown) {
       this(
           entryStartRegex == null ? null : Pattern.compile(entryStartRegex),
           entryStopRegex == null ? null : Pattern.compile(entryStopRegex),
-          twoBlankLines);
+          twoBlankLines,
+          isMarkdown);
     }
 
     /**
@@ -1596,11 +1652,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *     #entryStartRegex}
      * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     * @param isMarkdown if true, then entries are in markdown format.
      */
     public EntryFormat(
         @Nullable @Regex(1) Pattern entryStartRegex,
         @Nullable Pattern entryStopRegex,
-        boolean twoBlankLines) {
+        boolean twoBlankLines,
+        boolean isMarkdown) {
       if (entryStartRegex == null && entryStopRegex != null) {
         throw new IllegalArgumentException(
             "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
@@ -1608,6 +1666,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       this.entryStartRegex = entryStartRegex;
       this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
       this.twoBlankLines = twoBlankLines;
+      this.isMarkdown = isMarkdown;
     }
   }
 
