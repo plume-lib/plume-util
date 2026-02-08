@@ -279,7 +279,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
     "lock:method.guarantee.violated"
   }) // side effect to local state
   public String toString(@GuardSatisfied SIList<E> this) {
-    StringJoiner sj = new StringJoiner(", ", "SI[", "]");
+    StringJoiner sj = new StringJoiner(", ", "SIL[", "]");
     for (E elt : this) {
       sj.add(Objects.toString(elt));
     }
