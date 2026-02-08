@@ -23,7 +23,7 @@
   * When `entryStartRegex` has no capturing group, the whole thing is discarded
     rather than the whole thing being retained.
   * EntryReader supports multiline comments.
-  * EntryReader supports fenced code blocks (when entry format is Markdown).
+  * EntryReader supports fenced code blocks.
 
 ## 1.13.0 (2026-01-20)
 

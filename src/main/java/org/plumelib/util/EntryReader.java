@@ -1605,7 +1605,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         new EntryFormat((Pattern) null, (Pattern) null, false, false);
 
     /**
-     * An EntryFormat using a two blank lines to separate entries, with no multi-line entries and no
+     * An EntryFormat using two blank lines to separate entries, with no multi-line entries and no
      * fenced code blocks.
      */
     public static final EntryFormat TWO_BLANK_LINES =
@@ -1743,7 +1743,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
     public static final CommentFormat TEX_AT_START_OF_LINE = new CommentFormat("^%.*");
 
-    /** Regular expression that matches a single-line comment. */
+    /** Regular expression that matches the start of a single-line comment. */
     private final @Nullable Pattern lineCommentStart;
 
     /** Regular expression that matches the start of a multi-line comment. */
