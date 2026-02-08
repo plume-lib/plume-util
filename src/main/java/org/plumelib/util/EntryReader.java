@@ -994,7 +994,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         }
       }
 
-      // If neither exists, break out of the loop
+      // If neither exists, break out of the comment loop.
       if (lineCommentIndex == Integer.MAX_VALUE && multilineStartIndex == Integer.MAX_VALUE) {
         break;
       }
@@ -1691,7 +1691,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public static class CommentFormat {
 
     /** A CommentFormat that supports no comments. */
-    public static final CommentFormat NONE = new CommentFormat((Pattern) null);
+    public static final CommentFormat NONE = new CommentFormat(null);
 
     /** A CommentFormat for C-style comments. */
     public static final CommentFormat C = new CommentFormat("//.*", "/\\*", "\\*/");
