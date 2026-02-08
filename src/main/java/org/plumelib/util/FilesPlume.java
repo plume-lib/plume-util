@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -165,7 +166,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "JdkObsolete" // due to use of string charsetName, remove in Java 11+
+  })
   @SideEffectFree
   @Owning
   public static InputStreamReader newFileReader(Path path, @Nullable String charsetName)
@@ -487,7 +491,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "JdkObsolete" // due to use of string charsetName, remove in Java 11+
+  })
   @SideEffectFree
   @Owning
   public static OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
@@ -758,7 +765,7 @@ public final class FilesPlume {
       }
       return false;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -923,6 +930,42 @@ public final class FilesPlume {
       }
     }
     return dir.delete();
+  }
+
+  /**
+   * Creates a new directory. Like {@link Files#createDirectory}, but does not throw any checked
+   * exceptions.
+   *
+   * @param dir the directory to create
+   * @param attrs an optional list of file attributes to set atomically when creating the directory
+   * @return the directory
+   */
+  public static Path createDirectory(Path dir, FileAttribute<?>... attrs) {
+    try {
+      return Files.createDirectory(dir, attrs);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+    }
+  }
+
+  /**
+   * Creates a directory by creating all nonexistent parent directories first. Unlike the
+   * createDirectory method, an exception is not thrown if the directory could not be created
+   * because it already exists. Like {@link Files#createDirectories}, but does not throw any checked
+   * exceptions.
+   *
+   * @param dir the directory to create
+   * @param attrs an optional list of file attributes to set atomically when creating the directory
+   * @return the directory
+   */
+  public static Path createDirectories(Path dir, FileAttribute<?>... attrs) {
+    try {
+      return Files.createDirectories(dir, attrs);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+    }
   }
 
   //
@@ -1128,7 +1171,7 @@ public final class FilesPlume {
     // try {
     //   return Files.readString(path, UTF_8);
     // } catch (IOException e) {
-    //   throw new Error(e);
+    //   throw new UncheckedIOException(e);
     // }
 
     try (BufferedReader reader = newBufferedFileReader(path.toFile())) {
@@ -1259,7 +1302,7 @@ public final class FilesPlume {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1269,6 +1312,7 @@ public final class FilesPlume {
    * @param is input stream to read
    * @return a String containing all the characters from the input stream
    */
+  @SuppressWarnings("JdkObsolete") // due to use of string "UTF-8", remove in Java 11+
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
@@ -1277,7 +1321,7 @@ public final class FilesPlume {
     try {
       result = baos.toString("UTF-8");
     } catch (UnsupportedEncodingException e) {
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
     return result;
   }
@@ -1380,7 +1424,7 @@ public final class FilesPlume {
       int codePoint = new String(utf8Bytes, StandardCharsets.UTF_8).codePointAt(0);
       return codePoint;
     } catch (IOException e) {
-      throw new Error("input stream = " + is, e);
+      throw new UncheckedIOException("input stream = " + is, e);
     }
   }
 

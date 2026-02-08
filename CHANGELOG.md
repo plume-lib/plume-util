@@ -3,9 +3,25 @@
 ## 2.0.0 (????-??-??)
 
 * Require Java 11.
-* Renamed `*Plume` classes to `*P`, for brevity;
-  for example, use `CollectionsP` instead of `CollectionsPlume`.
-* Removed all deprecated classes and mehods.
+* Renamed `*Plume` classes to `*P`, for brevity; for example:
+  * use `CollectionsP` instead of `CollectionsPlume`.
+  * use `FilesP` instead of `FilesPlume`.
+* Removed all deprecated classes and methods.
+
+## 1.14.0 (2026-??-??)
+
+* In `FilesPlume`:
+  * New methods `createDirectory()` and `createDirectories()`.
+* In `EntryReader`:
+  * Replaced three arguments to constructors (`entryStartRegex`,
+    `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
+    constructors still exist but are deprecated.
+  * Replaced String/Pattern argument to constructor (`commentRegex`) by a
+    `CommentFormat` value.  This eases future extensions.  The old constructors
+    still exist but are deprecated.
+  * Removed `setEntryStartStop()` methods
+  * When `entryStartRegex` has no capturing group, the whole thing is discarded
+    rather than the whole thing being retained.
 
 ## 1.13.0 (2026-01-20)
 
