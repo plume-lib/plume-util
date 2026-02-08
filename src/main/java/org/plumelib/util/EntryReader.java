@@ -971,7 +971,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
     Pattern lineCommentRegex = commentFormat.lineCommentRegex;
 
-    restart:
+    look_for_comment:
     while (line != null) {
 
       // Find earliest single-line comment start (if any)
@@ -1051,7 +1051,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
 
       line = getNextLine();
-      continue restart;
+      continue look_for_comment;
     }
 
     if (line == null) {
