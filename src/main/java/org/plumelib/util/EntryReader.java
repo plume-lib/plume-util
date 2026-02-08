@@ -1248,6 +1248,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String blankLineFound = null;
       while ((line != null) && filename.equals(getFileName())) {
         if (line.isBlank()) {
+          if (entryFormat.isMarkdown && inFencedCodeBlock) {
+            // Don't treat blank lines inside fenced code blocks as entry separators.
+            body.append(line);
+            body.append(lineSep);
+            line = readLine();
+            continue;
+          }
           if (!entryFormat.twoBlankLines) {
             break;
           } else if (blankLineFound != null) {
