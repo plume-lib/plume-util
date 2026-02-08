@@ -1630,7 +1630,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** If true, then entries are separated by two blank lines rather than one. */
     public final boolean twoBlankLines;
 
-    /** If true, then fenced code blocks are respected. */
+    /**
+     * If true, then fenced code blocks are respected. The special "````" fence is not supported.
+     */
     public final boolean supportsFences;
 
     /**
@@ -1679,7 +1681,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
   }
 
-  /** This class informs {@link EntryReader} where a comment begins and ends. */
+  /**
+   * This class informs {@link EntryReader} where a comment begins and ends.
+   *
+   * <p>No quoting is supported. That is, {@code EntryReader} does not attempt to infer whether a
+   * comment regex matches within (say) a string in the input text. To prevent a comment marker from
+   * being matched, embed it in a fenced code block.
+   */
   public static class CommentFormat {
 
     /** A CommentFormat that supports no comments. */
