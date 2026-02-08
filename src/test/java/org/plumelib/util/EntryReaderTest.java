@@ -611,6 +611,43 @@ final class EntryReaderTest {
     }
   }
 
+  /** Test fenced code blocks (including a blank line inside). */
+  @Test
+  void testFencedCodeBlockWithBlankLine_withmarkdown() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "pre",
+            "```sh",
+            "code1",
+            "", // blank line inside the fenced block
+            "code2",
+            "<!--",
+            "code3",
+            "```",
+            "post");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content),
+            "test",
+            EntryFormat.FENCED_CODE_BLOCKS,
+            SHELL_AND_HTML,
+            null)) {
+
+      assertEquals("pre", reader.readLine());
+      assertEquals("```sh", reader.readLine());
+      assertEquals("code1", reader.readLine());
+      assertEquals("", reader.readLine());
+      assertEquals("code2", reader.readLine());
+      assertEquals("<!--", reader.readLine());
+      assertEquals("code3", reader.readLine());
+      assertEquals("```", reader.readLine());
+      assertEquals("post", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
   /** Unterminated multi-line comment should throw an error. */
   @Test
   void testUnterminatedMultilineComment() throws IOException {
@@ -621,36 +658,6 @@ final class EntryReaderTest {
             new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
 
       assertThrows(IOException.class, reader::getEntry);
-    }
-  }
-
-  /** If both lineCommentRegex and multilineCommentStart occur, and lineCommentRegex comes first. */
-  @Test
-  void testCommentPrecedence_singleLineBeforeMultiline() throws IOException {
-    // On the first line, // starts before /*, so we should NOT enter multiline mode.
-    // The next line that looks like a multiline end should be returned as normal text.
-    String content = "code#slc <!-- not-started\n" + "-->still-text\n";
-    try (EntryReader reader =
-        new EntryReader(
-            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
-      assertEquals("code", reader.readLine());
-      assertEquals("-->still-text", reader.readLine());
-      assertNull(reader.readLine());
-    }
-  }
-
-  /**
-   * If both lineCommentRegex and multilineCommentStart occur, and multilineCommentStart comes first
-   */
-  @Test
-  void testCommentPrecedence_multilineBeforeSingleLine() throws IOException {
-    // /* occurs before //, so multiline is stripped first; then // is stripped from the suffix.
-    String content = "code<!--ml-->more#slc\n";
-    try (EntryReader reader =
-        new EntryReader(
-            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
-      assertEquals("codemore", reader.readLine());
-      assertNull(reader.readLine());
     }
   }
 
@@ -698,6 +705,48 @@ final class EntryReaderTest {
         new EntryReader(
             new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
       assertEquals("y", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Multiline comment on a single line: preserve prefix and suffix as if comment were absent. */
+  @Test
+  void testMultilineSameLine_multiple() throws IOException {
+    String content = "a<!--b-->c<!--d-->e\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("ace", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** If both lineCommentRegex and multilineCommentStart occur, and lineCommentRegex comes first. */
+  @Test
+  void testCommentPrecedence_singleLineBeforeMultiline() throws IOException {
+    // On the first line, // starts before /*, so we should NOT enter multiline mode.
+    // The next line that looks like a multiline end should be returned as normal text.
+    String content = "code#slc <!-- not-started\n" + "-->still-text\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("code", reader.readLine());
+      assertEquals("-->still-text", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /**
+   * If both lineCommentRegex and multilineCommentStart occur, and multilineCommentStart comes first
+   */
+  @Test
+  void testCommentPrecedence_multilineBeforeSingleLine() throws IOException {
+    // /* occurs before //, so multiline is stripped first; then // is stripped from the suffix.
+    String content = "code<!--ml#-->more#slc\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("codemore", reader.readLine());
       assertNull(reader.readLine());
     }
   }
