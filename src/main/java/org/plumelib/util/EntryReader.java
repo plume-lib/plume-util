@@ -56,13 +56,26 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * <p>The syntax of each of these is customizable.
  *
- * <p>Example use:
+ * <p>Here are example uses. The first reads by lines and the second reads by entries.
  *
  * <pre>{@code
- * // EntryReader constructor args are: filename, comment regexp, include regexp
- * try (EntryReader er = new EntryReader(filename, false, "^#.*", null)) {
+ * // EntryReader constructor args are: filename, EntryFormat, CommentFormat, include regex.
+ * // First argument can also be a File or Path; additional constructors also exist.
+ * try (EntryReader er = new EntryReader(filename,
+ *     EntryFormat.DEFAULT, CommentFormat.TEX, "\\\\include\\{(.*)\\}")) {
  *   for (String line : er) {
  *     ...
+ *   }
+ * } catch (IOException e) {
+ *   System.err.println("Problem reading " + filename + ": " + e.getMessage());
+ * }
+ *
+ * try (EntryReader er = new EntryReader(filename,
+ *     EntryFormat.TWO_BLANK_LINES_AND_FENCED_CODE_BLOCKS,
+ *     CommentFormat.HTML,
+ *     null)) {
+ *   for (EntryReader.Entry entry = er.getEntry(); entry != null; entry = er.getEntry()) {
+ *     ....
  *   }
  * } catch (IOException e) {
  *   System.err.println("Problem reading " + filename + ": " + e.getMessage());
