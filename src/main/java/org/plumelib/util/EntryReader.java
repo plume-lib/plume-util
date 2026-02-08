@@ -1120,7 +1120,12 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         replacement = "";
       } else {
         // There is a group, so replace the whole match by the group.
-        replacement = entryMatch.group(1);
+        String group1 = entryMatch.group(1);
+        if (group1 == null) {
+          replacement = "";
+        } else {
+          replacement = group1;
+        }
       }
       line = entryMatch.replaceFirst(replacement);
 
