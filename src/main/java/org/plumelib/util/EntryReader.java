@@ -38,8 +38,8 @@ import org.checkerframework.checker.regex.qual.Regex;
 // Here are some useful features that EntryReader should have.
 //  * It should implement some unimplemented methods from LineNumberReader (see
 //    "not yet implemented" in this file).
-//  * It should have constructors that take a Reader (in addition to the current
-//    BufferedReader, File, InputStream, and String versions).
+//  * It should have constructors that take a Reader
+//    (in addition to the current BufferedReader, File, InputStream, and String versions).
 //  * It should have a `close()` method (it already implements AutoCloseable,
 //    though I don't know whether it does so adequately).
 //  * It should automatically close the underlying file/etc. when the
@@ -58,12 +58,25 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * <p>The syntax of each of these is customizable.
  *
- * <p>Example use:
+ * <p>Here are example uses. The first reads by lines and the second reads by entries.
  *
  * <pre>{@code
- * // EntryReader constructor args are: filename, comment regexp, include regexp
- * try (EntryReader er = new EntryReader(filename, false, "^#.*", null)) {
+ * // EntryReader constructor args are: filename, EntryFormat, CommentFormat, include regex.
+ * // First argument can also be a File or Path; additional constructors also exist.
+ * try (EntryReader er = new EntryReader(filename,
+ *     EntryFormat.DEFAULT, CommentFormat.TEX, "\\\\include\\{(.*)\\}")) {
  *   for (String line : er) {
+ *     ...
+ *   }
+ * } catch (IOException e) {
+ *   System.err.println("Problem reading " + filename + ": " + e.getMessage());
+ * }
+ *
+ * try (EntryReader er = new EntryReader(filename,
+ *     EntryFormat.TWO_BLANK_LINES_AND_FENCED_CODE_BLOCKS,
+ *     CommentFormat.HTML,
+ *     null)) {
+ *   for (EntryReader.Entry entry = er.getEntry(); entry != null; entry = er.getEntry()) {
  *     ...
  *   }
  * } catch (IOException e) {
@@ -1211,13 +1224,17 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       assert entryStartRegex != null : "@AssumeAssertion(nullness): dependent: entryMatch != null";
 
       // Remove entry start text from the line.
-      String replacement = null;
-      if (entryMatch.groupCount() >= 1) {
-        // There is a group, so replace the whole match by the group.
-        replacement = entryMatch.group(1);
-      }
-      if (replacement == null) {
+      String replacement;
+      if (entryMatch.groupCount() == 0) {
         replacement = "";
+      } else {
+        // There is a group, so replace the whole match by the group.
+        String group1 = entryMatch.group(1);
+        if (group1 == null) {
+          replacement = "";
+        } else {
+          replacement = group1;
+        }
       }
       line = entryMatch.replaceFirst(replacement);
 
