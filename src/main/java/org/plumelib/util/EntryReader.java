@@ -1037,7 +1037,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
         line = getNextLine();
         if (line == null) {
-          throw new IllegalArgumentException("Unterminated multiline comment");
+          throw new IOException("Unterminated multiline comment");
         }
         rest = line;
       }
@@ -1747,6 +1747,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         @Nullable Pattern lineCommentRegex,
         @Nullable Pattern multilineCommentStart,
         @Nullable Pattern multilineCommentEnd) {
+      if ((multilineCommentStart == null) != (multilineCommentEnd == null)) {
+        throw new IllegalArgumentException(
+            "multilineCommentStart and multilineCommentEnd must both be null or both be non-null");
+      }
       this.lineCommentRegex = lineCommentRegex;
       this.multilineCommentStart = multilineCommentStart;
       this.multilineCommentEnd = multilineCommentEnd;

@@ -584,7 +584,7 @@ final class EntryReaderTest {
 
   /** Test fenced code blocks (including a blank line inside). */
   @Test
-  void testFencedCodeBlockWithBlankLine() throws IOException {
+  void testFencedCodeBlockWithBlankLine_nomarkdown() throws IOException {
     String content =
         String.join(
             System.lineSeparator(),
@@ -620,7 +620,7 @@ final class EntryReaderTest {
         new EntryReader(
             new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
 
-      assertThrows(IllegalArgumentException.class, reader::getEntry);
+      assertThrows(IOException.class, reader::getEntry);
     }
   }
 
@@ -639,7 +639,9 @@ final class EntryReaderTest {
     }
   }
 
-  /** If both lineCommentRegex and multilineCommentStart occur, and multilineCommentStart comes first */
+  /**
+   * If both lineCommentRegex and multilineCommentStart occur, and multilineCommentStart comes first
+   */
   @Test
   void testCommentPrecedence_multilineBeforeSingleLine() throws IOException {
     // /* occurs before //, so multiline is stripped first; then // is stripped from the suffix.
@@ -704,20 +706,11 @@ final class EntryReaderTest {
   @Test
   void testFencedCodeBlocksWithBlankLine_markdown() throws IOException {
     String content =
-        String.join(
-            System.lineSeparator(),
-            "pre",
-            "```sh",
-            "code1",
-            "", 
-            "code2",
-            "```",
-            "post");
+        String.join(System.lineSeparator(), "pre", "```sh", "code1", "", "code2", "```", "post");
 
     try (EntryReader reader =
         new EntryReader(new StringReader(content), "test", MARKDOWN_ENTRY, SHELL_AND_HTML, null)) {
 
-  
       assertEquals("pre", reader.readLine());
       assertEquals("```sh", reader.readLine());
       assertEquals("code1", reader.readLine());
@@ -730,7 +723,8 @@ final class EntryReaderTest {
   }
 
   /**
-   * Test fenced code blocks and multiline comments: comments stripped outside fences, but preserved inside fences (Markdown enabled).
+   * Test fenced code blocks and multiline comments: comments stripped outside fences, but preserved
+   * inside fences (Markdown enabled).
    */
   @Test
   void testFencedCodeBlocksAndComments_markdown() throws IOException {
