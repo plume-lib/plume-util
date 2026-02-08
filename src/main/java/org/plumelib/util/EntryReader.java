@@ -953,10 +953,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     // Handles fenced code blocks.
-    if (!entryFormat.isMarkdown) {
+    if (!entryFormat.supportsFences) {
       this.inFencedCodeBlock = false;
     }
-    if (entryFormat.isMarkdown) {
+    if (entryFormat.supportsFences) {
       if (line.startsWith("```")) {
         inFencedCodeBlock = !inFencedCodeBlock;
         return line;
@@ -966,7 +966,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
     }
 
-    // Handles comments (single-line and multiline)
+    // Handles comments (single-line and multi-line)
     Pattern multilineCommentStart = commentFormat.multilineCommentStart;
     Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
     Pattern lineCommentRegex = commentFormat.lineCommentRegex;
@@ -983,7 +983,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         }
       }
 
-      // Find earliest multiline comment start (if any)
+      // Find earliest multi-line comment start (if any)
       int multilineStartIndex = Integer.MAX_VALUE;
       Matcher ms = null;
       if (multilineCommentStart != null) {
@@ -999,7 +999,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         break;
       }
 
-      // If single-line comment comes first (or ties with multiline), strip it
+      // If single-line comment comes first (or ties with multi-line), strip it
       if (lineCommentIndex <= multilineStartIndex) {
         if (lineCommentRegex != null) {
           Matcher cmatch = lineCommentRegex.matcher(line);
@@ -1014,7 +1014,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         continue;
       }
 
-      // Otherwise multiline comment comes first: strip one multiline comment occurrence.
+      // Otherwise multi-line comment comes first: strip one multi-line comment occurrence.
       // At this point ms must be non-null and must have had a successful find() earlier.
       assert ms != null : "@AssumeAssertion(nullness)";
       int msStart = ms.start();
@@ -1039,7 +1039,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
         line = getNextLine();
         if (line == null) {
-          throw new IOException("Unterminated multiline comment");
+          throw new IOException("Unterminated multi-line comment");
         }
         rest = line;
       }
@@ -1250,7 +1250,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String blankLineFound = null;
       while ((line != null) && filename.equals(getFileName())) {
         if (line.isBlank()) {
-          if (entryFormat.isMarkdown && inFencedCodeBlock) {
+          if (inFencedCodeBlock) {
             // Don't treat blank lines inside fenced code blocks as entry separators.
             body.append(line);
             body.append(lineSep);
@@ -1630,8 +1630,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** If true, then entries are separated by two blank lines rather than one. */
     public final boolean twoBlankLines;
 
-    /** If true, then entries are in markdown format. */
-    public final boolean isMarkdown;
+    /** If true, then fenced code blocks are respected. */
+    public final boolean supportsFences;
 
     /**
      * Creates an EntryFormat.
@@ -1640,18 +1640,18 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *     #entryStartRegex}
      * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-     * @param isMarkdown if true, then entries are in markdown format.
+     * @param supportsFences if true, then fenced code blocks are respected
      */
     public EntryFormat(
         @Nullable @Regex(1) String entryStartRegex,
         @Nullable @Regex String entryStopRegex,
         boolean twoBlankLines,
-        boolean isMarkdown) {
+        boolean supportsFences) {
       this(
           entryStartRegex == null ? null : Pattern.compile(entryStartRegex),
           entryStopRegex == null ? null : Pattern.compile(entryStopRegex),
           twoBlankLines,
-          isMarkdown);
+          supportsFences);
     }
 
     /**
@@ -1661,13 +1661,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *     #entryStartRegex}
      * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-     * @param isMarkdown if true, then entries are in markdown format.
+     * @param supportsFences if true, then fenced code blocks are respected
      */
     public EntryFormat(
         @Nullable @Regex(1) Pattern entryStartRegex,
         @Nullable Pattern entryStopRegex,
         boolean twoBlankLines,
-        boolean isMarkdown) {
+        boolean supportsFences) {
       if (entryStartRegex == null && entryStopRegex != null) {
         throw new IllegalArgumentException(
             "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
@@ -1675,7 +1675,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       this.entryStartRegex = entryStartRegex;
       this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
       this.twoBlankLines = twoBlankLines;
-      this.isMarkdown = isMarkdown;
+      this.supportsFences = supportsFences;
     }
   }
 
@@ -1690,12 +1690,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     /** A CommentFormat for C-style comments, only at the beginning of a line. */
     public static final CommentFormat C_AT_START_OF_LINE =
-        new CommentFormat(
-            Pattern.compile("^//.*"), Pattern.compile("^/\\*"), Pattern.compile("^\\*/"));
+        new CommentFormat("^//.*", "^/\\*", "^\\*/");
 
     /** A CommentFormat for HTML-style comments. */
-    public static final CommentFormat HTML =
-        new CommentFormat(null, Pattern.compile("<!--"), Pattern.compile("-->"));
+    public static final CommentFormat HTML = new CommentFormat(null, "<!--", "-->");
 
     /** A CommentFormat for HTML-style comments, only at the beginning of a line. */
     public static final CommentFormat HTML_AT_START_OF_LINE =
@@ -1716,10 +1714,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** Regular expression that matches a single-line comment. */
     private final @Nullable Pattern lineCommentRegex;
 
-    /** Regular expression that matches the start of a multiline comment. */
+    /** Regular expression that matches the start of a multi-line comment. */
     private final @Nullable Pattern multilineCommentStart;
 
-    /** Regular expression that matches the end of a multiline comment. */
+    /** Regular expression that matches the end of a multi-line comment. */
     private final @Nullable Pattern multilineCommentEnd;
 
     /**
