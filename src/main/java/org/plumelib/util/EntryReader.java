@@ -1616,7 +1616,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * multi-line entries.
      */
     public static final EntryFormat FENCED_CODE_BLOCKS =
-        new EntryFormat((Pattern) null, (Pattern) null, true, true);
+        new EntryFormat((Pattern) null, (Pattern) null, false, true);
 
     /**
      * An EntryFormat using two blank lines to separate entries, with fenced code blocks but no
