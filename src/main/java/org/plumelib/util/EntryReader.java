@@ -1622,7 +1622,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * An EntryFormat using two blank lines to separate entries, with fenced code blocks but no
      * multi-line entries.
      */
-    public static final EntryFormat TWO_BLANK_LINES_FENCED_CODE_BLOCKS =
+    public static final EntryFormat TWO_BLANK_LINES_AND_FENCED_CODE_BLOCKS =
         new EntryFormat((Pattern) null, (Pattern) null, true, true);
 
     /**
