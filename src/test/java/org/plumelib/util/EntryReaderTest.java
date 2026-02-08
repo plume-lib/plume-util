@@ -721,6 +721,18 @@ final class EntryReaderTest {
     }
   }
 
+  /** Multiline comment on a single line: preserve prefix and suffix as if comment were absent. */
+  @Test
+  void testMultilineSameLine_multipleAbutting() throws IOException {
+    String content = "a<!--b-->c<!--d-->e\n" + "<!--b--><!--d-->\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("ace", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
   /** If both lineCommentRegex and multilineCommentStart occur, and lineCommentRegex comes first. */
   @Test
   void testCommentPrecedence_singleLineBeforeMultiline() throws IOException {
