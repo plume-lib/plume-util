@@ -75,7 +75,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *     CommentFormat.HTML,
  *     null)) {
  *   for (EntryReader.Entry entry = er.getEntry(); entry != null; entry = er.getEntry()) {
- *     ....
+ *     ...
  *   }
  * } catch (IOException e) {
  *   System.err.println("Problem reading " + filename + ": " + e.getMessage());
