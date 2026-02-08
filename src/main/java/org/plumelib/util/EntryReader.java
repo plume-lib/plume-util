@@ -603,7 +603,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param path the file to read
    * @param charsetName the character set to use
    * @throws IOException if there is a problem reading the file
-   * @see #EntryReader(Stream,String,String,boolean,String,String)
+   * @see #EntryReader(InputStream,String,String,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
   @Deprecated // 2026-01-05
@@ -934,7 +934,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public @Nullable String readLine(@GuardSatisfied EntryReader this) throws IOException {
 
     if (debug) {
-      System.err.printf("Entering size = %d%n", readers.size());
+      System.err.printf("Entering readLine(), size = %d%n", readers.size());
     }
 
     // If a line has been pushed back, return it instead
@@ -945,10 +945,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     String line = getNextLine();
-    Pattern lineCommentRegex = commentFormat.lineCommentRegex;
-    if (lineCommentRegex != null) {
+    Pattern lineCommentStart = commentFormat.lineCommentStart;
+    if (lineCommentStart != null) {
       while (line != null) {
-        Matcher cmatch = lineCommentRegex.matcher(line);
+        Matcher cmatch = lineCommentStart.matcher(line);
         if (cmatch.find()) {
           line = cmatch.replaceFirst("");
           if (line.length() > 0) {
@@ -1271,7 +1271,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /**
    * Simple usage example.
    *
-   * @param args command-line arguments: filename [lineCommentRegex [includeRegex]]
+   * @param args command-line arguments: filename [lineCommentStartRegex [includeRegex]]
    * @throws IOException if there is a problem reading a file
    */
   public static void main(String[] args) throws IOException {
@@ -1279,23 +1279,23 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     if (args.length < 1 || args.length > 3) {
       System.err.println(
           "EntryReader sample program requires 1-3 args:"
-              + " filename [lineCommentRegex [includeRegex]]");
+              + " filename [lineCommentStartRegex [includeRegex]]");
       System.exit(1);
     }
     final String filename = args[0];
 
     final CommentFormat commentFormat;
     if (args.length >= 2) {
-      String lineCommentRegex = args[1];
-      if (!RegexUtil.isRegex(lineCommentRegex)) {
+      String lineCommentStartRegex = args[1];
+      if (!RegexUtil.isRegex(lineCommentStartRegex)) {
         System.err.println(
             "Error parsing comment regex \""
-                + lineCommentRegex
+                + lineCommentStartRegex
                 + "\": "
-                + RegexUtil.regexError(lineCommentRegex));
+                + RegexUtil.regexError(lineCommentStartRegex));
         System.exit(1);
       }
-      commentFormat = new CommentFormat(lineCommentRegex);
+      commentFormat = new CommentFormat(lineCommentStartRegex);
     } else {
       commentFormat = CommentFormat.NONE;
     }
@@ -1495,12 +1495,16 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public static class EntryFormat {
 
     /**
-     * An EntryFormat with no multi-line entries and using a single blank line to separate entries.
+     * An EntryFormat using a single blank line to separate entries, with no multi-line entries and
+     * no fenced code blocks.
      */
     public static final EntryFormat DEFAULT =
         new EntryFormat((Pattern) null, (Pattern) null, false);
 
-    /** An EntryFormat with no multi-line entries and using two blank lines to separate entries. */
+    /**
+     * An EntryFormat using two blank lines to separate entries, with no multi-line entries and no
+     * fenced code blocks.
+     */
     public static final EntryFormat TWO_BLANK_LINES =
         new EntryFormat((Pattern) null, (Pattern) null, true);
 
@@ -1597,25 +1601,25 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
     public static final CommentFormat TEX_AT_START_OF_LINE = new CommentFormat("^%.*");
 
-    /** Regular expression that matches a comment. */
-    private final @Nullable Pattern lineCommentRegex;
+    /** Regular expression that matches the start of a single-line comment. */
+    private final @Nullable Pattern lineCommentStart;
 
     /**
      * Creates a CommentFormat.
      *
-     * @param lineCommentRegex regular expression that matches a single-line comment
+     * @param lineCommentStart regular expression that matches a single-line comment
      */
-    public CommentFormat(@Nullable @Regex String lineCommentRegex) {
-      this(lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex));
+    public CommentFormat(@Nullable @Regex String lineCommentStart) {
+      this(lineCommentStart == null ? null : Pattern.compile(lineCommentStart));
     }
 
     /**
      * Creates a CommentFormat.
      *
-     * @param lineCommentRegex regular expression that matches a single-line comment
+     * @param lineCommentStart regular expression that matches a single-line comment
      */
-    public CommentFormat(@Nullable Pattern lineCommentRegex) {
-      this.lineCommentRegex = lineCommentRegex;
+    public CommentFormat(@Nullable Pattern lineCommentStart) {
+      this.lineCommentStart = lineCommentStart;
     }
   }
 }
