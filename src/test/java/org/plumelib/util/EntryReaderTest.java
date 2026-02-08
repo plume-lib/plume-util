@@ -624,7 +624,7 @@ final class EntryReaderTest {
     }
   }
 
-  /** If both // and /* occur, and // comes first, then // wins (multiline is ignored). */
+  /** If both lineCommentRegex and multilineCommentStart occur, and lineCommentRegex comes first. */
   @Test
   void testCommentPrecedence_singleLineBeforeMultiline() throws IOException {
     // On the first line, // starts before /*, so we should NOT enter multiline mode.
@@ -639,7 +639,7 @@ final class EntryReaderTest {
     }
   }
 
-  /** If both // and /* occur, and /* comes first, then multiline wins and suffix is preserved. */
+  /** If both lineCommentRegex and multilineCommentStart occur, and multilineCommentStart comes first */
   @Test
   void testCommentPrecedence_multilineBeforeSingleLine() throws IOException {
     // /* occurs before //, so multiline is stripped first; then // is stripped from the suffix.
@@ -677,7 +677,7 @@ final class EntryReaderTest {
     }
   }
 
-  /** If stripping a multiline comment yields an empty logical line, readLine skips to the next. */
+  /** If stripping a multiline comment results in an empty line, readLine skips to the next. */
   @Test
   void testMultilineWholeLineSkipped_sameLine() throws IOException {
     String content = "<!--wholeline-->\n" + "x\n";
@@ -689,7 +689,6 @@ final class EntryReaderTest {
     }
   }
 
-  /** If stripping a multiline comment yields an empty logical line, readLine skips to the next. */
   @Test
   void testMultilineWholeLineSkipped_acrossLines() throws IOException {
     String content = "<!--start\n" + "middle\n" + "end-->\n" + "y\n";
@@ -731,7 +730,7 @@ final class EntryReaderTest {
   }
 
   /**
-   * Test both: comments stripped outside fences, but preserved inside fences (Markdown enabled).
+   * Test fenced code blocks and multiline comments: comments stripped outside fences, but preserved inside fences (Markdown enabled).
    */
   @Test
   void testFencedCodeBlocksAndComments_markdown() throws IOException {
