@@ -430,7 +430,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     super(DummyReader.it);
     readers.addFirst(new FlnReader(reader, filename));
     this.entryFormat = entryFormat;
-    this.commentFormat = new CommentFormat(lineCommentRegexString, null, null);
+    this.commentFormat = new CommentFormat(lineCommentRegexString);
     if (includeRegexString == null) {
       includeRegex = null;
     } else {
@@ -1392,7 +1392,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
                 + RegexUtil.regexError(lineCommentRegex));
         System.exit(1);
       }
-      commentFormat = new CommentFormat(lineCommentRegex, null, null);
+      commentFormat = new CommentFormat(lineCommentRegex);
     } else {
       commentFormat = CommentFormat.NONE;
     }
@@ -1683,7 +1683,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   public static class CommentFormat {
 
     /** A CommentFormat that supports no comments. */
-    public static final CommentFormat NONE = new CommentFormat((Pattern) null, null, null);
+    public static final CommentFormat NONE = new CommentFormat((Pattern) null);
 
     /** A CommentFormat for C-style comments. */
     public static final CommentFormat C =
@@ -1704,18 +1704,18 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         new CommentFormat(null, Pattern.compile("^<!--"), Pattern.compile("^-->"));
 
     /** A CommentFormat for Shell/Python-style comments. */
-    public static final CommentFormat SHELL = new CommentFormat(Pattern.compile("#.*"), null, null);
+    public static final CommentFormat SHELL = new CommentFormat(Pattern.compile("#.*"));
 
     /** A CommentFormat for Shell/Python-style comments, only at the beginning of a line. */
     public static final CommentFormat SHELL_AT_START_OF_LINE =
-        new CommentFormat(Pattern.compile("^#.*"), null, null);
+        new CommentFormat(Pattern.compile("^#.*"));
 
     /** A CommentFormat for TeX/LaTeX-style comments. */
-    public static final CommentFormat TEX = new CommentFormat(Pattern.compile("%.*"), null, null);
+    public static final CommentFormat TEX = new CommentFormat(Pattern.compile("%.*"));
 
     /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
     public static final CommentFormat TEX_AT_START_OF_LINE =
-        new CommentFormat(Pattern.compile("^%.*"), null, null);
+        new CommentFormat(Pattern.compile("^%.*"));
 
     /** Regular expression that matches a single-line comment. */
     private final @Nullable Pattern lineCommentRegex;
@@ -1742,6 +1742,15 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex),
           multilineCommentStart == null ? null : Pattern.compile(multilineCommentStart),
           multilineCommentEnd == null ? null : Pattern.compile(multilineCommentEnd));
+    }
+
+    /**
+     * Creates a CommentFormat that does not match multi-line comments.
+     *
+     * @param lineCommentRegex regular expression that matches a single-line comment
+     */
+    public CommentFormat(@Nullable @Regex String lineCommentRegex) {
+      this(lineCommentRegex == null ? null : Pattern.compile(lineCommentRegex), null, null);
     }
 
     /**
