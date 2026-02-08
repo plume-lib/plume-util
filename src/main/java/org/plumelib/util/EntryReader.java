@@ -1038,8 +1038,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       while (true) {
         Matcher me = multilineCommentEnd.matcher(line);
         if (me.find()) {
-          int meEnd = me.end();
-          assert 0 <= meEnd && meEnd <= line.length() : "@AssumeAssertion(index)";
+          @SuppressWarnings("index:assignment") // msEnd is an index into `line`
+          @IndexFor("line") int meEnd = me.end();
           line = line.substring(meEnd);
           break;
         }
