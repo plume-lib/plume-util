@@ -982,6 +982,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     // Handles comments (single-line and multi-line)
     Pattern multilineCommentStart = commentFormat.multilineCommentStart;
     Pattern lineCommentStart = commentFormat.lineCommentStart;
+    int multilineCommentStartLine = -1;
+    String multilineCommentStartFile = null;
 
     while (line != null) {
 
@@ -998,6 +1000,11 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       int multilineStartIndex = Integer.MAX_VALUE;
       Matcher ms = null;
       if (multilineCommentStart != null) {
+        if (multilineCommentStartLine == -1) {
+          multilineCommentStartLine = getLineNumber();
+          multilineCommentStartFile = readers.getFirst().filename;
+        }
+
         ms = multilineCommentStart.matcher(line);
         if (ms.find()) {
           multilineStartIndex = ms.start();
@@ -1056,8 +1063,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         if (line == null) {
           throw new IOException(
               String.format(
-                  "Unterminated multi-line comment opened at index %d (reached end of file)",
-                  lineCommentIndex));
+                  "Unterminated multi-line comment opened at %s:%d (reached end of file)",
+                  multilineCommentStartFile, multilineCommentStartLine));
         }
       }
 
