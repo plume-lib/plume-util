@@ -968,24 +968,21 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     // Handles fenced code blocks.
-    if (!entryFormat.supportsFences) {
-      this.inFencedCodeBlock = false;
-    }
     if (entryFormat.supportsFences) {
-      if (line.startsWith("```")) {
+      if (line.stripLeading().startsWith("```")) {
         inFencedCodeBlock = !inFencedCodeBlock;
         return line;
       }
-      if (inFencedCodeBlock) {
-        return line;
-      }
+    }
+
+    if (inFencedCodeBlock) {
+      return line;
     }
 
     // Handles comments (single-line and multi-line)
     Pattern multilineCommentStart = commentFormat.multilineCommentStart;
     Pattern lineCommentStart = commentFormat.lineCommentStart;
 
-    look_for_comment:
     while (line != null) {
 
       // Find earliest single-line comment start (if any)
@@ -1021,12 +1018,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
       if (lineCommentIndex < multilineStartIndex) {
         // Single-line comment comes first.
-        if (lineCommentStart != null) {
-          Matcher cmatch = lineCommentStart.matcher(line);
-          if (cmatch.find()) {
-            line = cmatch.replaceFirst("");
-          }
+        if (lineCommentIndex >= 0 && lineCommentIndex <= line.length()) {
+          line = line.substring(0, lineCommentIndex);
         }
+
         if (line.length() > 0) {
           break;
         }
@@ -1059,7 +1054,10 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
         line = getNextLine();
         if (line == null) {
-          throw new IOException("Unterminated multi-line comment");
+          throw new IOException(
+              String.format(
+                  "Unterminated multi-line comment opened at line %d (reached end of file)",
+                  lineCommentIndex));
         }
       }
 
@@ -1070,7 +1068,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       }
 
       line = getNextLine();
-      continue look_for_comment;
+      continue;
     }
 
     if (line == null) {
