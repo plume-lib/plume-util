@@ -525,10 +525,6 @@ final class EntryReaderTest {
   /** A comment format that has both single-line and multi-line comments. */
   private static final CommentFormat SHELL_AND_HTML = new CommentFormat("#.*", "<!--", "-->");
 
-  /** An entry format that enables Markdown fenced code blocks. */
-  private static final EntryFormat MARKDOWN_ENTRY =
-      new EntryFormat((java.util.regex.Pattern) null, (java.util.regex.Pattern) null, false, true);
-
   /** Test multi-line comments. */
   @Test
   void testMultilineComments() throws IOException {
@@ -770,7 +766,8 @@ final class EntryReaderTest {
         String.join(System.lineSeparator(), "pre", "```sh", "code1", "", "code2", "```", "post");
 
     try (EntryReader reader =
-        new EntryReader(new StringReader(content), "test", MARKDOWN_ENTRY, SHELL_AND_HTML, null)) {
+        new EntryReader(
+            new StringReader(content), "test", FENCED_CODE_BLOCKS, SHELL_AND_HTML, null)) {
 
       assertEquals("pre", reader.readLine());
       assertEquals("```sh", reader.readLine());
@@ -809,7 +806,8 @@ final class EntryReaderTest {
             "post");
 
     try (EntryReader reader =
-        new EntryReader(new StringReader(content), "test", MARKDOWN_ENTRY, SHELL_AND_HTML, null)) {
+        new EntryReader(
+            new StringReader(content), "test", FENCED_CODE_BLOCKS, SHELL_AND_HTML, null)) {
 
       // Outside fenced block: multiline comments are stripped.
       assertEquals("pre", reader.readLine());
