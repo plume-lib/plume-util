@@ -1070,12 +1070,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
       line = prefix + line;
 
-      if (line.length() > 0) {
-        continue;
+      if (line.isEmpty()) {
+        line = getNextLine();
       }
-
-      line = getNextLine();
-      continue;
     }
 
     if (line == null) {
