@@ -1056,7 +1056,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         if (line == null) {
           throw new IOException(
               String.format(
-                  "Unterminated multi-line comment opened at line %d (reached end of file)",
+                  "Unterminated multi-line comment opened at index %d (reached end of file)",
                   lineCommentIndex));
         }
       }
