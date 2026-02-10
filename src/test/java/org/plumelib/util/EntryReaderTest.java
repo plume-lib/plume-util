@@ -627,7 +627,7 @@ final class EntryReaderTest {
         new EntryReader(
             new StringReader(content),
             "test",
-            EntryFormat.FENCED_CODE_BLOCKS,
+            EntryFormat.EntryFormat.FENCED_CODE_BLOCKS,
             SHELL_AND_HTML,
             null)) {
 
@@ -767,7 +767,11 @@ final class EntryReaderTest {
 
     try (EntryReader reader =
         new EntryReader(
-            new StringReader(content), "test", FENCED_CODE_BLOCKS, SHELL_AND_HTML, null)) {
+            new StringReader(content),
+            "test",
+            EntryFormat.FENCED_CODE_BLOCKS,
+            SHELL_AND_HTML,
+            null)) {
 
       assertEquals("pre", reader.readLine());
       assertEquals("```sh", reader.readLine());
@@ -807,7 +811,11 @@ final class EntryReaderTest {
 
     try (EntryReader reader =
         new EntryReader(
-            new StringReader(content), "test", FENCED_CODE_BLOCKS, SHELL_AND_HTML, null)) {
+            new StringReader(content),
+            "test",
+            EntryFormat.FENCED_CODE_BLOCKS,
+            SHELL_AND_HTML,
+            null)) {
 
       // Outside fenced block: multiline comments are stripped.
       assertEquals("pre", reader.readLine());
