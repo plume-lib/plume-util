@@ -1032,15 +1032,14 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
       if (lineCommentIndex < multilineStartIndex) {
         // Single-line comment comes first.
-        if (lineCommentIndex >= 0 && lineCommentIndex <= line.length()) {
-          line = line.substring(0, lineCommentIndex);
+        if (lineCommentIndex == 0) {
+          line = getNextLine();
+          continue;
         }
-
-        if (line.length() > 0) {
-          break;
-        }
-        line = getNextLine();
-        continue;
+        @SuppressWarnings("index:argument") // `lineCommentIndex` is an index for `line`
+        String suffix = line.substring(0, lineCommentIndex);
+        line = suffix;
+        break;
       }
 
       // Multi-line comment comes first: strip one multi-line comment occurrence.

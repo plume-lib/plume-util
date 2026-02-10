@@ -627,7 +627,7 @@ final class EntryReaderTest {
         new EntryReader(
             new StringReader(content),
             "test",
-            EntryFormat.EntryFormat.FENCED_CODE_BLOCKS,
+            EntryFormat.FENCED_CODE_BLOCKS,
             SHELL_AND_HTML,
             null)) {
 
