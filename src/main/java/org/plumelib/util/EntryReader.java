@@ -19,11 +19,13 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
+import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.mustcall.qual.MustCallAlias;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
 
@@ -120,6 +122,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
+
+  /** True if currently inside a fenced code block (``` ... ```). */
+  private boolean inFencedCodeBlock = false;
 
   // ///////////////////////////////////////////////////////////////////////////
   // Constructors
@@ -958,22 +963,121 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     String line = getNextLine();
+    if (line == null) {
+      return null;
+    }
+
+    // Handles fenced code blocks.
+    if (entryFormat.supportsFences) {
+      if (line.stripLeading().startsWith("```")) {
+        inFencedCodeBlock = !inFencedCodeBlock;
+        return line;
+      }
+    }
+
+    if (inFencedCodeBlock) {
+      return line;
+    }
+
+    // Handles comments (single-line and multi-line)
+    Pattern multilineCommentStart = commentFormat.multilineCommentStart;
     Pattern lineCommentStart = commentFormat.lineCommentStart;
-    if (lineCommentStart != null) {
-      while (line != null) {
-        Matcher cmatch = lineCommentStart.matcher(line);
-        if (cmatch.find()) {
-          line = cmatch.replaceFirst("");
-          if (line.length() > 0) {
-            break;
-          }
-        } else {
+    int multilineCommentStartLine = -1;
+    String multilineCommentStartFile = null;
+
+    while (line != null) {
+
+      // Find the earliest single-line comment start (if any).
+      int lineCommentIndex = Integer.MAX_VALUE;
+      if (lineCommentStart != null) {
+        Matcher lc = lineCommentStart.matcher(line);
+        if (lc.find()) {
+          lineCommentIndex = lc.start();
+        }
+      }
+
+      // Find the earliest multi-line comment start (if any).
+      int multilineStartIndex = Integer.MAX_VALUE;
+      Matcher ms = null;
+      if (multilineCommentStart != null) {
+        if (multilineCommentStartLine == -1) {
+          multilineCommentStartLine = getLineNumber();
+          multilineCommentStartFile = readers.getFirst().filename;
+        }
+
+        ms = multilineCommentStart.matcher(line);
+        if (ms.find()) {
+          multilineStartIndex = ms.start();
+        }
+      }
+
+      // If neither exists, break out of the comment loop.
+      if (lineCommentIndex == Integer.MAX_VALUE && multilineStartIndex == Integer.MAX_VALUE) {
+        break;
+      }
+
+      if (lineCommentIndex == multilineStartIndex) {
+        throw new IOException(
+            String.format(
+                "%s:%d:%d: Both lineCommentStart (%s) and multilineCommentStart (%s) match"
+                    + " at column %d in this line: %s",
+                multilineCommentStartFile,
+                multilineCommentStartLine,
+                lineCommentIndex,
+                lineCommentStart,
+                multilineCommentStart,
+                lineCommentIndex,
+                line));
+      }
+
+      if (lineCommentIndex < multilineStartIndex) {
+        // Single-line comment comes first.
+        if (lineCommentIndex == 0) {
+          line = getNextLine();
+          continue;
+        }
+        @SuppressWarnings("index:argument") // `lineCommentIndex` is an index for `line`
+        String suffix = line.substring(0, lineCommentIndex);
+        line = suffix;
+        break;
+      }
+
+      // Multi-line comment comes first: strip one multi-line comment occurrence.
+      // At this point ms must be non-null and must have had a successful find() earlier.
+      assert ms != null : "@AssumeAssertion(nullness)";
+      @SuppressWarnings("index:assignment") // msEnd is an index into `line`
+      @IndexFor("line") int msStart = ms.start();
+      @SuppressWarnings("index:assignment") // msEnd is an index into `line`
+      @IndexFor("line") int msEnd = ms.end();
+
+      String prefix = line.substring(0, msStart);
+      line = line.substring(msEnd);
+
+      @SuppressWarnings("nullness") // if `multilineCommentStart` is non-null, so is `...End`
+      @NonNull Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
+
+      while (true) {
+        Matcher me = multilineCommentEnd.matcher(line);
+        if (me.find()) {
+          @SuppressWarnings("index:assignment") // msEnd is an index into `line`
+          @IndexFor("line") int meEnd = me.end();
+          line = line.substring(meEnd);
           break;
         }
+
         line = getNextLine();
-        if (debug) {
-          System.err.printf("getNextLine = %s%n", line);
+        if (line == null) {
+          throw new IOException(
+              String.format(
+                  "%s:%d: unterminated multi-line comment",
+                  multilineCommentStartFile, multilineCommentStartLine));
         }
+      }
+
+      line = prefix + line;
+
+      if (line.isEmpty()) {
+        line = getNextLine();
       }
     }
 
@@ -1177,6 +1281,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       String blankLineFound = null;
       while ((line != null) && filename.equals(getFileName())) {
         if (line.isBlank()) {
+          if (inFencedCodeBlock) {
+            // Don't treat blank lines inside fenced code blocks as entry separators.
+            body.append(line);
+            body.append(lineSep);
+            line = readLine();
+            continue;
+          }
           if (!entryFormat.twoBlankLines) {
             break;
           } else if (blankLineFound != null) {
@@ -1516,14 +1627,28 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * no fenced code blocks.
      */
     public static final EntryFormat DEFAULT =
-        new EntryFormat((Pattern) null, (Pattern) null, false);
+        new EntryFormat((Pattern) null, (Pattern) null, false, false);
 
     /**
      * An EntryFormat using two blank lines to separate entries, with no multi-line entries and no
      * fenced code blocks.
      */
     public static final EntryFormat TWO_BLANK_LINES =
-        new EntryFormat((Pattern) null, (Pattern) null, true);
+        new EntryFormat((Pattern) null, (Pattern) null, true, false);
+
+    /**
+     * An EntryFormat using one blank line to separate entries, with fenced code blocks but no
+     * multi-line entries.
+     */
+    public static final EntryFormat FENCED_CODE_BLOCKS =
+        new EntryFormat((Pattern) null, (Pattern) null, false, true);
+
+    /**
+     * An EntryFormat using two blank lines to separate entries, with fenced code blocks but no
+     * multi-line entries.
+     */
+    public static final EntryFormat TWO_BLANK_LINES_AND_FENCED_CODE_BLOCKS =
+        new EntryFormat((Pattern) null, (Pattern) null, true, true);
 
     /**
      * Regular expression that starts a long entry. If null, there are no long entries, only short
@@ -1555,21 +1680,29 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public final boolean twoBlankLines;
 
     /**
+     * If true, then fenced code blocks are respected. The special "````" fence is not supported.
+     */
+    public final boolean supportsFences;
+
+    /**
      * Creates an EntryFormat.
      *
      * @param entryStartRegex regular expression that starts a long entry; see {@link
      *     #entryStartRegex}
      * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     * @param supportsFences if true, then fenced code blocks are respected
      */
     public EntryFormat(
         @Nullable @Regex(1) String entryStartRegex,
         @Nullable @Regex String entryStopRegex,
-        boolean twoBlankLines) {
+        boolean twoBlankLines,
+        boolean supportsFences) {
       this(
           entryStartRegex == null ? null : Pattern.compile(entryStartRegex),
           entryStopRegex == null ? null : Pattern.compile(entryStopRegex),
-          twoBlankLines);
+          twoBlankLines,
+          supportsFences);
     }
 
     /**
@@ -1579,11 +1712,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *     #entryStartRegex}
      * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     * @param supportsFences if true, then fenced code blocks are respected
      */
     public EntryFormat(
         @Nullable @Regex(1) Pattern entryStartRegex,
         @Nullable Pattern entryStopRegex,
-        boolean twoBlankLines) {
+        boolean twoBlankLines,
+        boolean supportsFences) {
       if (entryStartRegex == null && entryStopRegex != null) {
         throw new IllegalArgumentException(
             "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
@@ -1591,52 +1726,103 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       this.entryStartRegex = entryStartRegex;
       this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
       this.twoBlankLines = twoBlankLines;
+      this.supportsFences = supportsFences;
     }
   }
 
-  /** This class informs {@link EntryReader} where a comment begins and ends. */
+  /**
+   * This class informs {@link EntryReader} where a comment begins and ends.
+   *
+   * <p>No quoting is supported. That is, {@code EntryReader} does not attempt to infer whether a
+   * comment regex matches within (say) a string in the input text. To prevent a comment marker from
+   * being matched, embed it in a fenced code block.
+   */
   public static class CommentFormat {
 
     /** A CommentFormat that supports no comments. */
-    public static final CommentFormat NONE = new CommentFormat((Pattern) null);
+    public static final CommentFormat NONE = new CommentFormat(null);
 
     /** A CommentFormat for C-style comments. */
-    public static final CommentFormat C = new CommentFormat("//.*");
+    public static final CommentFormat C = new CommentFormat("//", "/\\*", "\\*/");
 
     /** A CommentFormat for C-style comments, only at the beginning of a line. */
-    public static final CommentFormat C_AT_START_OF_LINE = new CommentFormat("^//.*");
+    public static final CommentFormat C_AT_START_OF_LINE =
+        new CommentFormat("^//", "^/\\*", "^\\*/");
+
+    /** A CommentFormat for HTML-style comments. */
+    public static final CommentFormat HTML = new CommentFormat(null, "<!--", "-->");
+
+    /** A CommentFormat for HTML-style comments, only at the beginning of a line. */
+    public static final CommentFormat HTML_AT_START_OF_LINE =
+        new CommentFormat(null, "^<!--", "^-->");
 
     /** A CommentFormat for Shell/Python-style comments. */
-    public static final CommentFormat SHELL = new CommentFormat("#.*");
+    public static final CommentFormat SHELL = new CommentFormat("#");
 
     /** A CommentFormat for Shell/Python-style comments, only at the beginning of a line. */
-    public static final CommentFormat SHELL_AT_START_OF_LINE = new CommentFormat("^#.*");
+    public static final CommentFormat SHELL_AT_START_OF_LINE = new CommentFormat("^#");
 
     /** A CommentFormat for TeX/LaTeX-style comments. */
-    public static final CommentFormat TEX = new CommentFormat("%.*");
+    public static final CommentFormat TEX = new CommentFormat("%");
 
     /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
-    public static final CommentFormat TEX_AT_START_OF_LINE = new CommentFormat("^%.*");
+    public static final CommentFormat TEX_AT_START_OF_LINE = new CommentFormat("^%");
 
     /** Regular expression that matches the start of a single-line comment. */
     private final @Nullable Pattern lineCommentStart;
 
+    /** Regular expression that matches the start of a multi-line comment. */
+    private final @Nullable Pattern multilineCommentStart;
+
+    /** Regular expression that matches the end of a multi-line comment. */
+    private final @Nullable Pattern multilineCommentEnd;
+
     /**
      * Creates a CommentFormat.
      *
      * @param lineCommentStart regular expression that matches a single-line comment
+     * @param multilineCommentStart regular expression that matches the start of a multi-line
+     *     comment
+     * @param multilineCommentEnd regular expression that matches the end of a multi-line comment
+     */
+    public CommentFormat(
+        @Nullable @Regex String lineCommentStart,
+        @Nullable @Regex String multilineCommentStart,
+        @Nullable @Regex String multilineCommentEnd) {
+      this(
+          lineCommentStart == null ? null : Pattern.compile(lineCommentStart),
+          multilineCommentStart == null ? null : Pattern.compile(multilineCommentStart),
+          multilineCommentEnd == null ? null : Pattern.compile(multilineCommentEnd));
+    }
+
+    /**
+     * Creates a CommentFormat that does not match multi-line comments.
+     *
+     * @param lineCommentStart regular expression that matches a single-line comment
      */
     public CommentFormat(@Nullable @Regex String lineCommentStart) {
-      this(lineCommentStart == null ? null : Pattern.compile(lineCommentStart));
+      this(lineCommentStart == null ? null : Pattern.compile(lineCommentStart), null, null);
     }
 
     /**
      * Creates a CommentFormat.
      *
      * @param lineCommentStart regular expression that matches a single-line comment
+     * @param multilineCommentStart regular expression that matches the start of a multi-line
+     *     comment
+     * @param multilineCommentEnd regular expression that matches the end of a multi-line comment
      */
-    public CommentFormat(@Nullable Pattern lineCommentStart) {
+    public CommentFormat(
+        @Nullable Pattern lineCommentStart,
+        @Nullable Pattern multilineCommentStart,
+        @Nullable Pattern multilineCommentEnd) {
+      if ((multilineCommentStart == null) != (multilineCommentEnd == null)) {
+        throw new IllegalArgumentException(
+            "multilineCommentStart and multilineCommentEnd must both be null or both be non-null");
+      }
       this.lineCommentStart = lineCommentStart;
+      this.multilineCommentStart = multilineCommentStart;
+      this.multilineCommentEnd = multilineCommentEnd;
     }
   }
 }

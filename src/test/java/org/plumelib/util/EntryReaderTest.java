@@ -290,7 +290,7 @@ final class EntryReaderTest {
         new EntryReader(
             new StringReader(content),
             "test",
-            new EntryFormat("^START (.*)$", "^END$", false),
+            new EntryFormat("^START (.*)$", "^END$", false, false),
             CommentFormat.NONE,
             null)) {
 
@@ -519,6 +519,319 @@ final class EntryReaderTest {
       assertNotNull(entry);
       assertEquals("testfile.txt", entry.filename);
       assertEquals(2, entry.lineNumber); // line 2 after the leading blank line
+    }
+  }
+
+  /** A comment format that has both single-line and multi-line comments. */
+  private static final CommentFormat SHELL_AND_HTML = new CommentFormat("#", "<!--", "-->");
+
+  /** Test multi-line comments. */
+  @Test
+  void testMultilineComments() throws IOException {
+    String content = String.join(System.lineSeparator(), "<!--", "line1", "line2", "line3", "-->");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertNull(reader.getEntry());
+    }
+  }
+
+  /** Test multi-line comments surrounded by content. */
+  @Test
+  void testMultilineCommentsWithContent() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "line1",
+            "line2",
+            "<!--",
+            "cline1",
+            "cline2",
+            "cline3",
+            "-->",
+            "line3");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertEquals("line1", reader.readLine());
+      assertEquals("line2", reader.readLine());
+      assertEquals("line3", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Test multi-line comments that contain a comment and a blank line inside. */
+  @Test
+  void testMultilineCommentsWithCommentInside() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(), "<!--", "cline1", "# comment", "cline2", "", "cline3", "-->");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertNull(reader.getEntry());
+    }
+  }
+
+  /** Test fenced code blocks (including a blank line inside). */
+  @Test
+  void testFencedCodeBlockWithBlankLine_nomarkdown() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "pre",
+            "```sh",
+            "code1",
+            "", // blank line inside the fenced block
+            "code2",
+            "```",
+            "post");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertEquals("pre", reader.readLine());
+      assertEquals("```sh", reader.readLine());
+      assertEquals("code1", reader.readLine());
+      assertEquals("", reader.readLine());
+      assertEquals("code2", reader.readLine());
+      assertEquals("```", reader.readLine());
+      assertEquals("post", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Test fenced code blocks (including a blank line inside). */
+  @Test
+  void testFencedCodeBlockWithBlankLine_withmarkdown() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "pre",
+            "```sh",
+            "code1",
+            "", // blank line inside the fenced block
+            "code2",
+            "<!--",
+            "code3",
+            "```",
+            "post");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content),
+            "test",
+            EntryFormat.FENCED_CODE_BLOCKS,
+            SHELL_AND_HTML,
+            null)) {
+
+      assertEquals("pre", reader.readLine());
+      assertEquals("```sh", reader.readLine());
+      assertEquals("code1", reader.readLine());
+      assertEquals("", reader.readLine());
+      assertEquals("code2", reader.readLine());
+      assertEquals("<!--", reader.readLine());
+      assertEquals("code3", reader.readLine());
+      assertEquals("```", reader.readLine());
+      assertEquals("post", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Unterminated multi-line comment should throw an error. */
+  @Test
+  void testUnterminatedMultilineComment() throws IOException {
+    String content = String.join(System.lineSeparator(), "<!--", "line1", "line2");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+
+      assertThrows(IOException.class, reader::getEntry);
+    }
+  }
+
+  /** Multiline comment on a single line: preserve prefix and suffix as if comment were absent. */
+  @Test
+  void testMultilineSameLine_preservePrefixAndSuffix() throws IOException {
+    String content = "pre<!--mid-->post\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("prepost", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Multiline comment across lines: preserve prefix from first line and suffix from last line. */
+  @Test
+  void testMultilineAcrossLines_preservePrefixAndSuffix() throws IOException {
+    String content = "pre<!--mid\n" + "stillmid\n" + "end-->post\n" + "after\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("prepost", reader.readLine());
+      assertEquals("after", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** If stripping a multiline comment results in an empty line, readLine skips to the next. */
+  @Test
+  void testMultilineWholeLineSkipped_sameLine() throws IOException {
+    String content = "<!--wholeline-->\n" + "x\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("x", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  @Test
+  void testMultilineWholeLineSkipped_acrossLines() throws IOException {
+    String content = "<!--start\n" + "middle\n" + "end-->\n" + "y\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("y", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Multiline comment on a single line: preserve prefix and suffix as if comment were absent. */
+  @Test
+  void testMultilineSameLine_multiple() throws IOException {
+    String content = "a<!--b-->c<!--d-->e\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("ace", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Multiline comment on a single line: preserve prefix and suffix as if comment were absent. */
+  @Test
+  void testMultilineSameLine_multipleAbutting() throws IOException {
+    String content = "a<!--b-->c<!--d-->e\n" + "<!--b--><!--d-->\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("ace", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** If both lineCommentRegex and multilineCommentStart occur, and lineCommentRegex comes first. */
+  @Test
+  void testCommentPrecedence_singleLineBeforeMultiline() throws IOException {
+    // On the first line, // starts before /*, so we should NOT enter multiline mode.
+    // The next line that looks like a multiline end should be returned as normal text.
+    String content = "code#slc <!-- not-started\n" + "-->still-text\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("code", reader.readLine());
+      assertEquals("-->still-text", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /**
+   * If both lineCommentRegex and multilineCommentStart occur, and multilineCommentStart comes first
+   */
+  @Test
+  void testCommentPrecedence_multilineBeforeSingleLine() throws IOException {
+    // /* occurs before //, so multiline is stripped first; then // is stripped from the suffix.
+    String content = "code<!--ml#-->more#slc\n";
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content), "test", EntryFormat.DEFAULT, SHELL_AND_HTML, null)) {
+      assertEquals("codemore", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /** Test fenced code blocks (including a blank line inside), with Markdown enabled. */
+  @Test
+  void testFencedCodeBlocksWithBlankLine_markdown() throws IOException {
+    String content =
+        String.join(System.lineSeparator(), "pre", "```sh", "code1", "", "code2", "```", "post");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content),
+            "test",
+            EntryFormat.FENCED_CODE_BLOCKS,
+            SHELL_AND_HTML,
+            null)) {
+
+      assertEquals("pre", reader.readLine());
+      assertEquals("```sh", reader.readLine());
+      assertEquals("code1", reader.readLine());
+      assertEquals("", reader.readLine());
+      assertEquals("code2", reader.readLine());
+      assertEquals("```", reader.readLine());
+      assertEquals("post", reader.readLine());
+      assertNull(reader.readLine());
+    }
+  }
+
+  /**
+   * Test fenced code blocks and multiline comments: comments stripped outside fences, but preserved
+   * inside fences (Markdown enabled).
+   */
+  @Test
+  void testFencedCodeBlocksAndComments_markdown() throws IOException {
+    String content =
+        String.join(
+            System.lineSeparator(),
+            "pre",
+            "<!--",
+            "outside",
+            "-->",
+            "mid",
+            "```sh",
+            "<!-- inside fence should be preserved -->",
+            "",
+            "# inside fence should be preserved",
+            "code",
+            "```",
+            "<!--",
+            "outside2",
+            "-->",
+            "post");
+
+    try (EntryReader reader =
+        new EntryReader(
+            new StringReader(content),
+            "test",
+            EntryFormat.FENCED_CODE_BLOCKS,
+            SHELL_AND_HTML,
+            null)) {
+
+      // Outside fenced block: multiline comments are stripped.
+      assertEquals("pre", reader.readLine());
+      assertEquals("mid", reader.readLine());
+
+      // Inside fenced block: lines are returned verbatim (no comment stripping).
+      assertEquals("```sh", reader.readLine());
+      assertEquals("<!-- inside fence should be preserved -->", reader.readLine());
+      assertEquals("", reader.readLine());
+      assertEquals("# inside fence should be preserved", reader.readLine());
+      assertEquals("code", reader.readLine());
+      assertEquals("```", reader.readLine());
+
+      // Outside again: multiline comments stripped.
+      assertEquals("post", reader.readLine());
+      assertNull(reader.readLine());
     }
   }
 }
