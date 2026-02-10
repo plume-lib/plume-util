@@ -987,7 +987,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     while (line != null) {
 
-      // Find earliest single-line comment start (if any)
+      // Find the earliest single-line comment start (if any).
       int lineCommentIndex = Integer.MAX_VALUE;
       if (lineCommentStart != null) {
         Matcher lc = lineCommentStart.matcher(line);
@@ -996,7 +996,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         }
       }
 
-      // Find earliest multi-line comment start (if any)
+      // Find the earliest multi-line comment start (if any).
       int multilineStartIndex = Integer.MAX_VALUE;
       Matcher ms = null;
       if (multilineCommentStart != null) {
@@ -1019,10 +1019,17 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       if (lineCommentIndex == multilineStartIndex) {
         throw new IOException(
             String.format(
-                "Both lineCommentStart (%s) and multilineCommentStart (%s) match at index %d"
-                    + " in this line: %s",
-                lineCommentStart, multilineCommentStart, lineCommentIndex, line));
+                "%s:%d:%d: Both lineCommentStart (%s) and multilineCommentStart (%s) match"
+                    + " at column %d in this line: %s",
+                multilineCommentStartFile,
+                multilineCommentStartLine,
+                lineCommentIndex,
+                lineCommentStart,
+                multilineCommentStart,
+                lineCommentIndex,
+                line));
       }
+
       if (lineCommentIndex < multilineStartIndex) {
         // Single-line comment comes first.
         if (lineCommentIndex >= 0 && lineCommentIndex <= line.length()) {
@@ -1063,7 +1070,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         if (line == null) {
           throw new IOException(
               String.format(
-                  "Unterminated multi-line comment opened at %s:%d (reached end of file)",
+                  "%s:%d: unterminated multi-line comment",
                   multilineCommentStartFile, multilineCommentStartLine));
         }
       }
