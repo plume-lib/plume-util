@@ -937,9 +937,9 @@ public final class CollectionsPlume {
 
   // TODO: Handle libraries such as Commons Collections and Guava.
   /**
-   * Given a collection whose type is defined in the JDK, returns true if it is modifiable.  This
+   * Given a collection whose type is defined in the JDK, returns true if it is modifiable. This
    * method is approximate; for example, it does not correctly handle lists created by {@code
-   * ArrayList.subList()`, always reporting them as modifiable.
+   * ArrayList.subList()}, always reporting them as modifiable.
    *
    * @param c a collection defined in the JDK
    * @return true if the collection is modifiable
