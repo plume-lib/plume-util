@@ -591,8 +591,10 @@ final class CollectionsPlumeTest {
     assertUnmodifiable(Collections.unmodifiableList(unmodList));
     assertUnmodifiable(Collections.unmodifiableCollection(modList));
     assertUnmodifiable(Collections.unmodifiableCollection(unmodList));
-    assertUnmodifiable(Collections.unmodifiableSequencedCollection(modList));
-    assertUnmodifiable(Collections.unmodifiableSequencedCollection(unmodList));
+
+    // Collections.unmodifiableSequencedCollection() requires Java 21+.
+    // assertUnmodifiable(Collections.unmodifiableSequencedCollection(modList));
+    // assertUnmodifiable(Collections.unmodifiableSequencedCollection(unmodList));
   }
 
   /**
