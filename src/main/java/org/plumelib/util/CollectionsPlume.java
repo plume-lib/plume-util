@@ -880,7 +880,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of collection elements
    * @param c an array
-   * @param replacements the replacements to perform on the arary, in order from the beginning of
+   * @param replacements the replacements to perform on the array, in order from the beginning of
    *     the list to the end
    * @return the transformed collection, as a list
    */
@@ -952,7 +952,7 @@ public final class CollectionsPlume {
     String className = c.getClass().getName();
     if (className == "java.util.Arrays$ArrayList") { // NOPMD: UseEqualsToCompareStrings
       return false;
-      // See comment above about AraryList$SubList.
+      // See comment above about ArrayList$SubList.
       // } else if (SubListClass.isInstance(c)) {
       //   try {
       //     @SuppressWarnings("nullness:assignment") // The field in the JDK is non-null.
