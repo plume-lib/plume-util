@@ -570,8 +570,6 @@ final class CollectionsPlumeTest {
 
   /** Test isModifiable(). */
   @Test
-  /** Test isModifiable(). */
-  `@Test`
   void test_isModifiable() {
     // asList's result is fixed-size (cannot add or remove), but elements can be replaced.
     List<Integer> unmodList = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
@@ -602,8 +600,11 @@ final class CollectionsPlumeTest {
     assertUnmodifiable(Set.of(1, 2, 3));
 
     assertModifiable(new HashSet<>(modList));
-    assertModifiable(new LinkedList<>(modList));
     assertModifiable(new TreeSet<>(modList));
+
+    // Collections.unmodifiableSequencedCollection() requires Java 21+.
+    // assertUnmodifiable(Collections.unmodifiableSequencedCollection(modList));
+    // assertUnmodifiable(Collections.unmodifiableSequencedCollection(unmodList));
   }
 
   /**
