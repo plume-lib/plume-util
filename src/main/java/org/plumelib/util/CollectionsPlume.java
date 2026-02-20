@@ -916,6 +916,66 @@ public final class CollectionsPlume {
     return true;
   }
 
+  // /** The {@code java.util.ArrayList$SubList} class. */
+  // static Class<?> SubListClass;
+  //
+  // /** The {@code java.util.ArrayList$SubList.root} field. */
+  // static Field SubListRootField;
+  //
+  // static {
+  //   try {
+  //     SubListClass = Class.forName("java.util.ArrayList$SubList");
+  //     SubListRootField = SubListClass.getDeclaredField("root");
+  //     // This fails because: "module java.base does not "opens java.util" to unnamed module".  I
+  //     // can fix it by passing `--add-opens=java.base/java.util=ALL-UNNAMED` on every run, but
+  //     // that is gross and disruptive to clients.  So, give up on handling ArrayList$SubList.
+  //     SubListRootField.setAccessible(true);
+  //   } catch (ClassNotFoundException | NoSuchElementException | NoSuchFieldException e) {
+  //     throw new Error(e);
+  //   }
+  // }
+
+  // TODO: Handle libraries such as Commons Collections and Guava.
+  /**
+   * Given a collection whose type is defined in the JDK, returns true if it is modifiable.  This
+   * method is approximate; for example, it does not correctly handle lists created by {@code
+   * ArrayList.subList()`, always reporting them as modifiable.
+   *
+   * @param c a collection defined in the JDK
+   * @return true if the collection is modifiable
+   */
+  public static boolean isModifiable(Collection<?> c) {
+    // This is a hack, but I don't know how else to implement it.
+    // This implementation is error-prone because (per the documentation of `Class.getName()`)
+    // "Distinct class objects can have the same name but different class loaders."
+
+    String className = c.getClass().getName();
+    if (className == "java.util.Arrays$ArrayList") { // NOPMD: UseEqualsToCompareStrings
+      return false;
+      // See comment above about AraryList$SubList.
+      // } else if (SubListClass.isInstance(c)) {
+      //   try {
+      //     @SuppressWarnings("nullness:assignment") // The field in the JDK is non-null.
+      //     @NonNull ArrayList<?> root = (ArrayList<?>) SubListRootField.get(c);
+      //     return isModifiable(root);
+      //   } catch (IllegalAccessException e) {
+      //     throw new Error("this can't happen", e);
+      //   }
+    } else if (className.startsWith("java.util.Collections$")) {
+      String nestedClassSimpleName = className.substring("java.util.Collections$".length());
+      if (nestedClassSimpleName.startsWith("Copies")
+          || nestedClassSimpleName.startsWith("Empty")
+          || nestedClassSimpleName.startsWith("Singleton")
+          || nestedClassSimpleName.startsWith("Unmodifiable")) {
+        return false;
+      }
+    } else if (className.startsWith("java.util.ImmutableCollections$")) {
+      return false;
+    }
+
+    return true;
+  }
+
   // //////////////////////////////////////////////////////////////////////
   // SortedSet
   //

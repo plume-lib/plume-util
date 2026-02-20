@@ -10,8 +10,8 @@
 
 ## 1.14.0 (2026-??-??)
 
-* In `FilesPlume`:
-  * New methods `createDirectory()` and `createDirectories()`.
+* In `CollectionsPlume`:
+  * New method `isModifiable(Collection)`.
 * In `EntryReader`:
   * Replaced three arguments to constructors (`entryStartRegex`,
     `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
@@ -24,6 +24,8 @@
     rather than the whole thing being retained.
   * EntryReader supports multiline comments.
   * EntryReader supports fenced code blocks.
+* In `FilesPlume`:
+  * New methods `createDirectory()` and `createDirectories()`.
 
 ## 1.13.0 (2026-01-20)
 

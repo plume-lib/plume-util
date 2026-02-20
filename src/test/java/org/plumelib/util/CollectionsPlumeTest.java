@@ -568,6 +568,51 @@ final class CollectionsPlumeTest {
     assertTrue(CollectionsPlume.isSubsequenceMaybeNonContiguous(iota11, iota));
   }
 
+  /** Test isModifiable(). */
+  @Test
+  void test_isModifiable() {
+    // asList's result is fixed-size (cannot add or remove), but elements can be replaced.
+    List<Integer> unmodList = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    List<Integer> modList = new ArrayList<>(unmodList);
+
+    assertUnmodifiable(unmodList);
+    assertModifiable(modList);
+
+    assertUnmodifiable(Collections.emptyList());
+    assertUnmodifiable(Collections.emptySet());
+
+    assertUnmodifiable(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+
+    // The implementation does not handle `subList()`.
+    // assertModifiable(modList.subList(3, 6));
+    // assertUnmodifiable(unmodList.subList(3, 6));
+
+    assertUnmodifiable(Collections.unmodifiableList(modList));
+    assertUnmodifiable(Collections.unmodifiableList(unmodList));
+    assertUnmodifiable(Collections.unmodifiableCollection(modList));
+    assertUnmodifiable(Collections.unmodifiableCollection(unmodList));
+    assertUnmodifiable(Collections.unmodifiableSequencedCollection(modList));
+    assertUnmodifiable(Collections.unmodifiableSequencedCollection(unmodList));
+  }
+
+  /**
+   * Throws an exception if the collection is unmodifiable.
+   *
+   * @param c a collection
+   */
+  private void assertModifiable(Collection<?> c) {
+    assertTrue(CollectionsPlume.isModifiable(c));
+  }
+
+  /**
+   * Throws an exception if the collection is modifiable.
+   *
+   * @param c a collection
+   */
+  private void assertUnmodifiable(Collection<?> c) {
+    assertFalse(CollectionsPlume.isModifiable(c));
+  }
+
   // //////////////////////////////////////////////////////////////////////
   // SortedSet
   //
