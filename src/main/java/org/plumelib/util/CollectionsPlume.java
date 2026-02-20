@@ -944,6 +944,10 @@ public final class CollectionsPlume {
    * @param c a collection defined in the JDK
    * @return true if the collection is modifiable
    */
+  @SuppressWarnings({
+    "allcheckers:purity.not.deterministic.call",
+    "lock:method.guarantee.violated"
+  }) // String.substring
   @Pure
   public static boolean isModifiable(Collection<?> c) {
     // This is a hack, but I don't know how else to implement it.
