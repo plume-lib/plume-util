@@ -937,13 +937,14 @@ public final class CollectionsPlume {
 
   // TODO: Handle libraries such as Commons Collections and Guava.
   /**
-   * Given a collection whose type is defined in the JDK, returns true if it is modifiable. This
-   * method is approximate; for example, it does not correctly handle lists created by {@code
-   * ArrayList.subList()}, always reporting them as modifiable.
+   * Given a collection whose type is defined in the JDK, returns true if it is modifiable (it can
+   * be added to and removed from). This method is approximate; for example, it does not correctly
+   * handle lists created by {@code ArrayList.subList()}, always reporting them as modifiable.
    *
    * @param c a collection defined in the JDK
    * @return true if the collection is modifiable
    */
+  @Pure
   public static boolean isModifiable(Collection<?> c) {
     // This is a hack, but I don't know how else to implement it.
     // This implementation is error-prone because (per the documentation of `Class.getName()`)
