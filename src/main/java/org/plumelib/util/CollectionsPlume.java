@@ -93,7 +93,7 @@ public final class CollectionsPlume {
    * @return true if the argument collection changed as a result of the call
    */
   public static <T> boolean addIf(
-      Collection<? super T> c, Collection<? extends T> elements, Predicate<? super T> p) {
+      Collection<? super T> c, Iterable<? extends T> elements, Predicate<? super T> p) {
     boolean added = false;
     for (T elt : elements) {
       if (p.test(elt)) {
@@ -116,7 +116,7 @@ public final class CollectionsPlume {
    * @return true if the argument collection changed as a result of the call
    */
   public static <T> boolean addIfNot(
-      Collection<? super T> c, Collection<? extends T> elements, Predicate<? super T> p) {
+      Collection<? super T> c, Iterable<? extends T> elements, Predicate<? super T> p) {
     boolean added = false;
     for (T elt : elements) {
       if (!p.test(elt)) {
