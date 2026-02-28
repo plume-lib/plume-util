@@ -32,7 +32,7 @@ repositories {
 }
 
 ext {
-  errorproneVersion = "2.47.0"
+  errorproneVersion = "2.48.0"
   isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
   isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
 }
@@ -142,7 +142,7 @@ if (isJava21orHigher) {
 // PMD linter
 
 pmd {
-  toolVersion = "7.21.0"
+  toolVersion = "7.22.0"
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
   ignoreFailures = false

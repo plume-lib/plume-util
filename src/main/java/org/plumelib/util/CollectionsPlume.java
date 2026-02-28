@@ -537,6 +537,48 @@ public final class CollectionsPlume {
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
+    return mapList(f, iterable, false);
+  }
+
+  /**
+   * Applies the function to each element of the given iterable, producing a new list of the
+   * results. The returned list does not contain null elements. The function is applied to every
+   * element of {@code iterable}, including null values.
+   *
+   * <p>For details, see {@link #mapList(Function,Iterable)}.
+   *
+   * @param <FROM> the type of elements of the given iterable
+   * @param <TO> the type of elements of the result list
+   * @param f a function
+   * @param iterable an iterable
+   * @return a list of the results of applying {@code f} to the elements of {@code iterable}
+   */
+  @SuppressWarnings("nullness:type.arguments.not.inferred") // type depends on boolean `removeNull`
+  public static <
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<@NonNull TO> mapListRemoveNull(
+          Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
+    return mapList(f, iterable, true);
+  }
+
+  /**
+   * Helper method for {@link #mapList(Function,Iterable)} and {@link
+   * #mapListRemoveNull(Function,Iterable)}.
+   *
+   * @param <FROM> the type of elements of the given iterable
+   * @param <TO> the type of elements of the result list
+   * @param f a function
+   * @param iterable an iterable
+   * @param removeNull if true, don't add null values to the result list
+   * @return a list of the results of applying {@code f} to the elements of {@code iterable}
+   */
+  private static <
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<TO> mapList(
+          Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable, boolean removeNull) {
+
     List<TO> result;
 
     if (iterable instanceof List && iterable instanceof RandomAccess) {
@@ -545,7 +587,15 @@ public final class CollectionsPlume {
       int size = list.size();
       result = new ArrayList<>(size);
       for (int i = 0; i < size; i++) {
-        result.add(f.apply(list.get(i)));
+        TO eltResult = f.apply(list.get(i));
+        if (!(removeNull && eltResult == null)) {
+          @SuppressWarnings({
+            "UnusedVariable",
+            "PMD.UnusedLocalVariable",
+            "keyfor:argument" // confusing generics error
+          })
+          boolean ignore = result.add(eltResult);
+        }
       }
       return result;
     }
@@ -556,7 +606,15 @@ public final class CollectionsPlume {
       result = new ArrayList<>(); // no information about size is available
     }
     for (FROM elt : iterable) {
-      result.add(f.apply(elt));
+      TO eltResult = f.apply(elt);
+      if (!(removeNull && eltResult == null)) {
+        @SuppressWarnings({
+          "UnusedVariable",
+          "PMD.UnusedLocalVariable",
+          "keyfor:argument" // confusing generics error
+        })
+        boolean ignore = result.add(eltResult);
+      }
     }
     return result;
   }
@@ -584,10 +642,62 @@ public final class CollectionsPlume {
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapList(
           @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f, FROM[] a) {
+    return mapList(f, a, false);
+  }
+
+  /**
+   * Applies the function to each element of the given array, producing a new list of the results.
+   * The returned list does not contain null elements. The function is applied to every element of
+   * {@code a}, including null values.
+   *
+   * <p>For details, see {@link #mapList(Function,Object[])}.
+   *
+   * @param <FROM> the type of elements of the given array
+   * @param <TO> the type of elements of the result list
+   * @param f a function
+   * @param a an array
+   * @return a list of the results of applying {@code f} to the elements of {@code a}
+   */
+  @SuppressWarnings("nullness:type.arguments.not.inferred") // type depends on boolean `removeNull`
+  public static <
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<@NonNull TO> mapListRemoveNull(
+          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f, FROM[] a) {
+    return mapList(f, a, true);
+  }
+
+  /**
+   * Helper method for {@link #mapList(Function,Object[])} and {@link
+   * #mapListRemoveNull(Function,Object[])}.
+   *
+   * @param <FROM> the type of elements of the given array
+   * @param <TO> the type of elements of the result list
+   * @param f a function
+   * @param a an array
+   * @param removeNull if true, don't add null values to the result list
+   * @return a list of the results of applying {@code f} to the elements of {@code a}
+   */
+  private static <
+          @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
+          @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
+      List<TO> mapList(
+          @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f,
+          FROM[] a,
+          boolean removeNull) {
+
     int size = a.length;
     List<TO> result = new ArrayList<>(size);
     for (int i = 0; i < size; i++) {
-      result.add(f.apply(a[i]));
+      TO eltResult = f.apply(a[i]);
+      if (!(removeNull && eltResult == null)) {
+        @SuppressWarnings({
+          "UnusedVariable",
+          "PMD.UnusedLocalVariable",
+          "keyfor:argument" // confusing generics error
+        })
+        boolean ignore = result.add(eltResult);
+      }
     }
     return result;
   }
