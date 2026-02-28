@@ -171,8 +171,14 @@ final class CollectionsPlumeTest {
   void test_addAllIterable() {
     Iterable<String> itble = CollectionsPlume.listOf("a", "b");
     Collection<String> c = new ArrayList<>();
-    CollectionsPlume.addAll(c, itble);
+    assertTrue(CollectionsPlume.addAll(c, itble));
     assertEquals(Arrays.asList("a", "b"), c);
+    assertTrue(CollectionsPlume.addAll(c, itble));
+    assertEquals(Arrays.asList("a", "b", "a", "b"), c);
+    Set<String> s = new HashSet<>();
+    assertTrue(CollectionsPlume.addAll(s, itble));
+    assertFalse(CollectionsPlume.addAll(s, itble));
+    assertEquals(2, s.size());
   }
 
   @Test
