@@ -12,6 +12,7 @@
 
 * In `CollectionsPlume`:
   * New method `isModifiable(Collection)`.
+  * New methods `mapListRemoveNull(Function,Iterable)` and `mapListRemoveNull(Function,Object[])`.
 * In `EntryReader`:
   * Replaced three arguments to constructors (`entryStartRegex`,
     `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
