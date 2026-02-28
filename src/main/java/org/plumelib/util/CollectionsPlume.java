@@ -512,7 +512,7 @@ public final class CollectionsPlume {
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
       List<TO> mapListRemoveNull(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
-    return mapList(f, iterable, false);
+    return mapList(f, iterable, true);
   }
 
   /**

@@ -337,7 +337,6 @@ final class CollectionsPlumeTest {
     } else {
       result = x.toString();
     }
-    System.out.printf("toStringOrNull(%s) => %s%n", x, result);
     return result;
   }
 
