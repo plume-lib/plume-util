@@ -186,7 +186,7 @@ final class CollectionsPlumeTest {
     assertEquals(odd, c1);
     Collection<Integer> c2 = new LinkedHashSet<>();
     CollectionsPlume.addIf(c2, iota5, i -> i % 2 == 0);
-    assertEquals(even, c2);
+    assertEquals(new LinkedHashSet<>(even), c2);
   }
 
   @Test
@@ -200,7 +200,7 @@ final class CollectionsPlumeTest {
     assertEquals(even, c1);
     Collection<Integer> c2 = new LinkedHashSet<>();
     CollectionsPlume.addIfNot(c2, iota5, i -> i % 2 == 0);
-    assertEquals(odd, c2);
+    assertEquals(new LinkedHashSet<>(odd), c2);
   }
 
   // public static <T> boolean hasDuplicates(List<T> a)

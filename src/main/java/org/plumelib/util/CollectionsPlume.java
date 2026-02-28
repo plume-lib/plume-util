@@ -119,9 +119,11 @@ public final class CollectionsPlume {
       Collection<? super T> c, Collection<? extends T> elements, Predicate<? super T> p) {
     boolean added = false;
     for (T elt : elements) {
-      // Not `added = c.add(elt) || true;` because Error Prone issues a false positive about that.
-      if (c.add(elt)) {
-        added = true;
+      if (!p.test(elt)) {
+        // Not `added = c.add(elt) || true;` because Error Prone issues a false positive about that.
+        if (c.add(elt)) {
+          added = true;
+        }
       }
     }
     return added;

@@ -10,11 +10,11 @@
 
 ## 1.14.0 (2026-??-??)
 
-* In `CollectionsPlume`:
+* `CollectionsPlume`:
   * New method `isModifiable(Collection)`.
   * New methods `addIf()` and `addIfNot()`.
   * New methods `mapListRemoveNull(Function,Iterable)` and `mapListRemoveNull(Function,Object[])`.
-* In `EntryReader`:
+* `EntryReader`:
   * Replaced three arguments to constructors (`entryStartRegex`,
     `entryStopRegex`, `twoBlankLines`) by a single `EntryFormat` value.  The old
     constructors still exist but are deprecated.
@@ -24,9 +24,9 @@
   * Removed `setEntryStartStop()` methods
   * When `entryStartRegex` has no capturing group, the whole thing is discarded
     rather than the whole thing being retained.
-  * EntryReader supports multiline comments.
-  * EntryReader supports fenced code blocks.
-* In `FilesPlume`:
+  * `EntryReader` supports multiline comments.
+  * `EntryReader` supports fenced code blocks.
+* `FilesPlume`:
   * New methods `createDirectory()` and `createDirectories()`.
 
 ## 1.13.0 (2026-01-20)
