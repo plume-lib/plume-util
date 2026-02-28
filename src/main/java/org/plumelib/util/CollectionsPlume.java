@@ -75,8 +75,46 @@ public final class CollectionsPlume {
   public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements) {
     boolean added = false;
     for (T elt : elements) {
-      if (c.add(elt)) {
-        added = true;
+      added = c.add(elt) || added;
+    }
+    return added;
+  }
+
+  /**
+   * Adds to the collection all elements of the Iterable that satisfy the predicate.
+   *
+   * @param <T> the type of elements
+   * @param c the collection into which elements are to be inserted
+   * @param elements the elements to insert into {@code c} (if they satisfy the predicate)
+   * @param p the predicate for elements to insert into {@code c}
+   * @return true if the argument collection changed as a result of the call
+   */
+  public static <T> boolean addIf(
+      Collection<? super T> c, Iterable<? extends T> elements, Predicate<? super T> p) {
+    boolean added = false;
+    for (T elt : elements) {
+      if (p.test(elt)) {
+        added = c.add(elt) || added;
+      }
+    }
+    return added;
+  }
+
+  /**
+   * Adds to the collection all elements of the Iterable that do not satisfy the predicate.
+   *
+   * @param <T> the type of elements
+   * @param c the collection into which elements are to be inserted
+   * @param elements the elements to insert into {@code c} (if they do not satisfy the predicate)
+   * @param p the predicate for elements to not insert into {@code c}
+   * @return true if the argument collection changed as a result of the call
+   */
+  public static <T> boolean addIfNot(
+      Collection<? super T> c, Iterable<? extends T> elements, Predicate<? super T> p) {
+    boolean added = false;
+    for (T elt : elements) {
+      if (!p.test(elt)) {
+        added = c.add(elt) || added;
       }
     }
     return added;

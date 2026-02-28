@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -170,8 +171,42 @@ final class CollectionsPlumeTest {
   void test_addAllIterable() {
     Iterable<String> itble = CollectionsPlume.listOf("a", "b");
     Collection<String> c = new ArrayList<>();
-    CollectionsPlume.addAll(c, itble);
+    assertTrue(CollectionsPlume.addAll(c, itble));
     assertEquals(Arrays.asList("a", "b"), c);
+    assertTrue(CollectionsPlume.addAll(c, itble));
+    assertEquals(Arrays.asList("a", "b", "a", "b"), c);
+    Set<String> s = new HashSet<>();
+    assertTrue(CollectionsPlume.addAll(s, itble));
+    assertFalse(CollectionsPlume.addAll(s, itble));
+    assertEquals(2, s.size());
+  }
+
+  @Test
+  void test_addIf() {
+    List<Integer> iota5 = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
+    List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
+    List<Integer> even = Arrays.asList(new Integer[] {2, 4});
+
+    Collection<Integer> c1 = new ArrayList<>();
+    CollectionsPlume.addIf(c1, iota5, i -> i % 2 == 1);
+    assertEquals(odd, c1);
+    Collection<Integer> c2 = new LinkedHashSet<>();
+    CollectionsPlume.addIf(c2, iota5, i -> i % 2 == 0);
+    assertEquals(new LinkedHashSet<>(even), c2);
+  }
+
+  @Test
+  void test_addIfNot() {
+    List<Integer> iota5 = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
+    List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
+    List<Integer> even = Arrays.asList(new Integer[] {2, 4});
+
+    Collection<Integer> c1 = new ArrayList<>();
+    CollectionsPlume.addIfNot(c1, iota5, i -> i % 2 == 1);
+    assertEquals(even, c1);
+    Collection<Integer> c2 = new LinkedHashSet<>();
+    CollectionsPlume.addIfNot(c2, iota5, i -> i % 2 == 0);
+    assertEquals(new LinkedHashSet<>(odd), c2);
   }
 
   // public static <T> boolean hasDuplicates(List<T> a)
