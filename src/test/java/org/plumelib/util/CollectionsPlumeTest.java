@@ -328,6 +328,8 @@ final class CollectionsPlumeTest {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
+    List<@Nullable Object> out2 = Arrays.asList(new Object[] {"1", null, "3"});
+    assertEquals(out2, CollectionsPlume.mapList(CollectionsPlumeTest::toStringOrNull, in));
   }
 
   private static @Nullable String toStringOrNull(Object x) {
@@ -344,7 +346,16 @@ final class CollectionsPlumeTest {
   void test_mapListRemoveNull() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
-    List<@Nullable Object> result =
+    List<Object> result =
+        CollectionsPlume.mapListRemoveNull(CollectionsPlumeTest::toStringOrNull, in);
+    assertEquals(goal, result);
+  }
+
+  @Test
+  void test_mapListRemoveNull_array() {
+    Object[] in = {1, 2, 3};
+    List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
+    List<Object> result =
         CollectionsPlume.mapListRemoveNull(CollectionsPlumeTest::toStringOrNull, in);
     assertEquals(goal, result);
   }

@@ -508,10 +508,12 @@ public final class CollectionsPlume {
    * @param iterable an iterable
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
+  @SuppressWarnings("nullness:type.arguments.not.inferred") // type depends on boolean `removeNull`
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
-      List<TO> mapListRemoveNull(Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
+      List<@NonNull TO> mapListRemoveNull(
+          Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable) {
     return mapList(f, iterable, true);
   }
 
@@ -601,7 +603,7 @@ public final class CollectionsPlume {
   /**
    * Applies the function to each element of the given array, producing a new list of the results.
    * The returned list does not contain null elements. The function is applied to every element of
-   * {@code iterable}, including null values.
+   * {@code a}, including null values.
    *
    * <p>For details, see {@link #mapList(Function,Object[])}.
    *
@@ -611,10 +613,11 @@ public final class CollectionsPlume {
    * @param a an array
    * @return a list of the results of applying {@code f} to the elements of {@code a}
    */
+  @SuppressWarnings("nullness:type.arguments.not.inferred") // type depends on boolean `removeNull`
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
-      List<TO> mapListRemoveNull(
+      List<@NonNull TO> mapListRemoveNull(
           @MustCallUnknown Function<@MustCallUnknown ? super FROM, ? extends TO> f, FROM[] a) {
     return mapList(f, a, true);
   }
