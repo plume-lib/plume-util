@@ -75,10 +75,7 @@ public final class CollectionsPlume {
   public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements) {
     boolean added = false;
     for (T elt : elements) {
-      // Not `added = c.add(elt) || true;` because Error Prone issues a false positive about that.
-      if (c.add(elt)) {
-        added = true;
-      }
+      added = c.add(elt) || added;
     }
     return added;
   }
@@ -97,10 +94,7 @@ public final class CollectionsPlume {
     boolean added = false;
     for (T elt : elements) {
       if (p.test(elt)) {
-        // Not `added = c.add(elt) || true;` because Error Prone issues a false positive about that.
-        if (c.add(elt)) {
-          added = true;
-        }
+        added = c.add(elt) || added;
       }
     }
     return added;
@@ -120,10 +114,7 @@ public final class CollectionsPlume {
     boolean added = false;
     for (T elt : elements) {
       if (!p.test(elt)) {
-        // Not `added = c.add(elt) || true;` because Error Prone issues a false positive about that.
-        if (c.add(elt)) {
-          added = true;
-        }
+        added = c.add(elt) || added;
       }
     }
     return added;
