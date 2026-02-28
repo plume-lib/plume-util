@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 import org.plumelib.util.CollectionsPlume.Replacement;
 
@@ -327,6 +328,26 @@ final class CollectionsPlumeTest {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
     assertEquals(out, CollectionsPlume.mapList(Object::toString, in));
+  }
+
+  private static @Nullable String toStringOrNull(Object x) {
+    String result;
+    if (x instanceof Integer && ((Integer) x) % 2 == 0) {
+      result = null;
+    } else {
+      result = x.toString();
+    }
+    System.out.printf("toStringOrNull(%s) => %s%n", x, result);
+    return result;
+  }
+
+  @Test
+  void test_mapListRemoveNull() {
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
+    List<@Nullable Object> result =
+        CollectionsPlume.mapListRemoveNull(CollectionsPlumeTest::toStringOrNull, in);
+    assertEquals(goal, result);
   }
 
   // public static <List<TO> transform(Iterable<FROM> iterable, Function f)
