@@ -672,6 +672,7 @@ final class EntryReaderTest {
   /** Multiline comment across lines: preserve prefix from first line and suffix from last line. */
   @Test
   void testMultilineAcrossLines_preservePrefixAndSuffix() throws IOException {
+    @SuppressWarnings("StringConcatToTextBlock") // todo
     String content = "pre<!--mid\n" + "stillmid\n" + "end-->post\n" + "after\n";
     try (EntryReader reader =
         new EntryReader(
@@ -685,6 +686,7 @@ final class EntryReaderTest {
   /** If stripping a multiline comment results in an empty line, readLine skips to the next. */
   @Test
   void testMultilineWholeLineSkipped_sameLine() throws IOException {
+    @SuppressWarnings("StringConcatToTextBlock") // todo
     String content = "<!--wholeline-->\n" + "x\n";
     try (EntryReader reader =
         new EntryReader(
@@ -696,6 +698,7 @@ final class EntryReaderTest {
 
   @Test
   void testMultilineWholeLineSkipped_acrossLines() throws IOException {
+    @SuppressWarnings("StringConcatToTextBlock") // todo
     String content = "<!--start\n" + "middle\n" + "end-->\n" + "y\n";
     try (EntryReader reader =
         new EntryReader(
@@ -720,6 +723,7 @@ final class EntryReaderTest {
   /** Multiline comment on a single line: preserve prefix and suffix as if comment were absent. */
   @Test
   void testMultilineSameLine_multipleAbutting() throws IOException {
+    @SuppressWarnings("StringConcatToTextBlock") // todo
     String content = "a<!--b-->c<!--d-->e\n" + "<!--b--><!--d-->\n";
     try (EntryReader reader =
         new EntryReader(
@@ -734,6 +738,7 @@ final class EntryReaderTest {
   void testCommentPrecedence_singleLineBeforeMultiline() throws IOException {
     // On the first line, // starts before /*, so we should NOT enter multiline mode.
     // The next line that looks like a multiline end should be returned as normal text.
+    @SuppressWarnings("StringConcatToTextBlock") // todo
     String content = "code#slc <!-- not-started\n" + "-->still-text\n";
     try (EntryReader reader =
         new EntryReader(

@@ -411,57 +411,57 @@ public final class StringsPlume {
     for (int i = 0; i < origLen; i++) {
       char c = orig.charAt(i);
       switch (c) {
-        case '\"':
+        case '\"' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\\"");
           postEsc = i + 1;
-          break;
-        case '\\':
+        }
+        case '\\' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\\\");
           postEsc = i + 1;
-          break;
-        case '\b':
+        }
+        case '\b' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\b");
           postEsc = i + 1;
-          break;
-        case '\f':
+        }
+        case '\f' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\f");
           postEsc = i + 1;
-          break;
-        case '\n': // not lineSep
+        }
+        case '\n' -> { // '\n', not lineSep
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\n"); // not lineSep
           postEsc = i + 1;
-          break;
-        case '\r':
+        }
+        case '\r' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\r");
           postEsc = i + 1;
-          break;
-        case '\t':
+        }
+        case '\t' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\t");
           postEsc = i + 1;
-          break;
+        }
 
-        default:
+        default -> {
           if (c >= ' ' && c <= '~') {
             // Nothing to do: i gets incremented
           } else if (c <= '\377') {
@@ -472,7 +472,6 @@ public final class StringsPlume {
             int cAsInt = (int) c;
             sb.append(String.format("%03o", cAsInt));
             postEsc = i + 1;
-            break;
           } else {
             if (postEsc < i) {
               sb.append(orig.substring(postEsc, i));
@@ -480,8 +479,8 @@ public final class StringsPlume {
             sb.append("\\u");
             sb.append(String.format("%04x", (int) c));
             postEsc = i + 1;
-            break;
           }
+        }
       }
     }
     if (sb.length() == 0) {
@@ -516,24 +515,16 @@ public final class StringsPlume {
   @Deprecated // 2021-03-14
   @SideEffectFree
   public static String escapeJava(char c) {
-    switch (c) {
-      case '\"':
-        return "\\\"";
-      case '\\':
-        return "\\\\";
-      case '\b':
-        return "\\b";
-      case '\f':
-        return "\\f";
-      case '\n': // not lineSep
-        return "\\n"; // not lineSep
-      case '\r':
-        return "\\r";
-      case '\t':
-        return "\\t";
-      default:
-        return new String(new char[] {c});
-    }
+    return switch (c) {
+      case '\"' -> "\\\"";
+      case '\\' -> "\\\\";
+      case '\b' -> "\\b";
+      case '\f' -> "\\f";
+      case '\n' -> "\\n"; // '\n', not lineSep
+      case '\r' -> "\\r";
+      case '\t' -> "\\t";
+      default -> new String(new char[] {c});
+    };
   }
 
   /**
@@ -556,24 +547,16 @@ public final class StringsPlume {
    */
   @SideEffectFree
   public static String charLiteral(char c) {
-    switch (c) {
-      case '\'':
-        return "'\\''";
-      case '\\':
-        return "'\\\\'";
-      case '\b':
-        return "'\\b'";
-      case '\f':
-        return "'\\f'";
-      case '\n': // not lineSep
-        return "'\\n'"; // not lineSep
-      case '\r':
-        return "'\\r'";
-      case '\t':
-        return "'\\t'";
-      default:
-        return "'" + c + "'";
-    }
+    return switch (c) {
+      case '\'' -> "'\\''";
+      case '\\' -> "'\\\\'";
+      case '\b' -> "'\\b'";
+      case '\f' -> "'\\f'";
+      case '\n' -> "'\\n'"; // '\n', not lineSep
+      case '\r' -> "'\\r'";
+      case '\t' -> "'\\t'";
+      default -> "'" + c + "'";
+    };
   }
 
   /**
@@ -663,40 +646,40 @@ public final class StringsPlume {
         break;
       }
       switch (orig.charAt(thisEsc + 1)) {
-        case 'b':
+        case 'b' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\b');
           postEsc = thisEsc + 2;
-          break;
-        case 'f':
+        }
+        case 'f' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\f');
           postEsc = thisEsc + 2;
-          break;
-        case 'n':
+        }
+        case 'n' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\n'); // not lineSep
           postEsc = thisEsc + 2;
-          break;
-        case 'r':
+        }
+        case 'r' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\r');
           postEsc = thisEsc + 2;
-          break;
-        case 't':
+        }
+        case 't' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\t');
           postEsc = thisEsc + 2;
-          break;
-        case '\\':
+        }
+        case '\\' -> {
           // This is not in the default case because the search would find
           // the quoted backslash.  Here we include the first backslash in
           // the output, but not the first.
           sb.append(orig.substring(postEsc, thisEsc + 1));
           postEsc = thisEsc + 2;
-          break;
+        }
 
-        case 'u':
+        case 'u' -> {
           // Unescape Unicode characters.
           sb.append(orig.substring(postEsc, thisEsc));
           char unicodeChar = 0;
@@ -710,50 +693,40 @@ public final class StringsPlume {
           int limit = Math.min(ii + 4, orig.length());
           while (ii < limit) {
             int thisDigit = Character.digit(orig.charAt(ii), 16);
-            if (thisDigit == -1) {
-              break;
+            if (thisDigit != -1) {
+              unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
+              ii++;
             }
-            unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
-            ii++;
           }
           sb.append(unicodeChar);
           postEsc = ii;
-          break;
+        }
 
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
+        case '0', '1', '2', '3', '4', '5', '6', '7' -> {
           // Unescape octal characters.
           sb.append(orig.substring(postEsc, thisEsc));
           char octalChar = 0;
           int iii = thisEsc + 1;
           while (iii < Math.min(thisEsc + 4, orig.length())) {
             int thisDigit = Character.digit(orig.charAt(iii), 8);
-            if (thisDigit == -1) {
-              break;
+            if (thisDigit != -1) {
+              int newValue = (octalChar * 8) + thisDigit;
+              if (newValue <= 0xFF) {
+                octalChar = (char) newValue;
+                iii++;
+              }
             }
-            int newValue = (octalChar * 8) + thisDigit;
-            if (newValue > 0xFF) {
-              break;
-            }
-            octalChar = (char) newValue;
-            iii++;
           }
           sb.append(octalChar);
           postEsc = iii;
-          break;
+        }
 
-        default:
+        default -> {
           // In the default case, retain the character following the backslash,
           // but discard the backslash itself.  "\*" is just a one-character string.
           sb.append(orig.substring(postEsc, thisEsc));
           postEsc = thisEsc + 1;
-          break;
+        }
       }
       thisEsc = orig.indexOf('\\', postEsc);
     }
@@ -771,16 +744,18 @@ public final class StringsPlume {
   /**
    * Returns true if the string contains only white space codepoints, otherwise false.
    *
-   * <p>In Java 11, use {@code String.isBlank()} instead.
+   * <p>In Java 11+, use {@code String.isBlank()} instead.
    *
    * @param s a string
    * @return true if the string contains only white space codepoints, otherwise false
+   * @deprecated use {@code String.isBlank()}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
+  @Deprecated // 2026-03-05
   @Pure
   public static boolean isBlank(String s) {
     return s.chars().allMatch(Character::isWhitespace);
@@ -1396,27 +1371,27 @@ public final class StringsPlume {
     }
     String theClass = " [" + a.getClass() + "]";
 
-    if (a instanceof boolean[]) {
-      return Arrays.toString((boolean[]) a) + theClass;
-    } else if (a instanceof byte[]) {
-      return Arrays.toString((byte[]) a) + theClass;
-    } else if (a instanceof char[]) {
-      return Arrays.toString((char[]) a) + theClass;
-    } else if (a instanceof double[]) {
-      return Arrays.toString((double[]) a) + theClass;
-    } else if (a instanceof float[]) {
-      return Arrays.toString((float[]) a) + theClass;
-    } else if (a instanceof int[]) {
-      return Arrays.toString((int[]) a) + theClass;
-    } else if (a instanceof long[]) {
-      return Arrays.toString((long[]) a) + theClass;
-    } else if (a instanceof short[]) {
-      return Arrays.toString((short[]) a) + theClass;
+    if (a instanceof boolean[] ba) {
+      return Arrays.toString(ba) + theClass;
+    } else if (a instanceof byte[] ba) {
+      return Arrays.toString(ba) + theClass;
+    } else if (a instanceof char[] ca) {
+      return Arrays.toString(ca) + theClass;
+    } else if (a instanceof double[] da) {
+      return Arrays.toString(da) + theClass;
+    } else if (a instanceof float[] fa) {
+      return Arrays.toString(fa) + theClass;
+    } else if (a instanceof int[] ia) {
+      return Arrays.toString(ia) + theClass;
+    } else if (a instanceof long[] la) {
+      return Arrays.toString(la) + theClass;
+    } else if (a instanceof short[] sa) {
+      return Arrays.toString(sa) + theClass;
     }
 
-    if (a instanceof Object[]) {
+    if (a instanceof Object[] oa) {
       try {
-        return listToString(Arrays.asList((Object[]) a)) + theClass;
+        return listToString(Arrays.asList(oa)) + theClass;
       } catch (Exception e) {
         return "exception_when_printing_array" + theClass;
       }

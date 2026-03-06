@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
@@ -137,7 +138,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * Create an EntryReader that uses the given character set.
    *
    * @param in source from which to read entries
-   * @param charsetName the character set to use
+   * @param charset the character set to use
    * @param filename non-null file name for stream being read
    * @param entryFormat indicates how entries begin and end
    * @param commentFormat indicates the syntax of comments
@@ -145,7 +146,37 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    */
-  @SuppressWarnings("JdkObsolete") // due to use of string charsetName, remove in Java 11+
+  public @MustCallAlias EntryReader(
+      @MustCallAlias InputStream in,
+      Charset charset,
+      String filename,
+      EntryFormat entryFormat,
+      CommentFormat commentFormat,
+      @Nullable @Regex(1) String includeRegexString)
+      throws UnsupportedEncodingException {
+    this(
+        new InputStreamReader(in, charset),
+        filename,
+        entryFormat,
+        commentFormat,
+        includeRegexString);
+  }
+
+  /**
+   * Create an EntryReader that uses the given character set.
+   *
+   * @param in source from which to read entries
+   * @param charsetName the character set to use
+   * @param filename non-null file name for stream being read
+   * @param entryFormat indicates how entries begin and end
+   * @param commentFormat indicates the syntax of comments
+   * @param includeRegexString regular expression that matches include directives. The expression
+   *     should define one group that contains the include file name.
+   * @throws UnsupportedEncodingException if the charset encoding is not supported
+   * @deprecated use {@link EntryReader(InputStream,String,String,EntryFormat,CommentFormat,String)}
+   */
+  @Deprecated // 2026-03-05
+  @SuppressWarnings("JdkObsolete") // this method is deprecated
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -178,7 +209,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     #EntryReader(InputStream,String,String,EntryFormat,CommentFormat,String)}
    */
   @Deprecated // 2026-01-28
-  @SuppressWarnings("JdkObsolete") // due to use of string charsetName, remove in Java 11+
+  @SuppressWarnings("JdkObsolete") // this method is deprecated
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
