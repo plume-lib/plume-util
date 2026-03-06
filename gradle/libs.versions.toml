@@ -28,6 +28,6 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 
-reflection-util = "org.plumelib:reflection-util:1.1.5"
+reflection-util = "org.plumelib:reflection-util:1.1.6"
 
 require-javadoc = "org.plumelib:require-javadoc:2.0.0"
