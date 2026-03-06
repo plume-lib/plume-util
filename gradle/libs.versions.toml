@@ -35,4 +35,3 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 reflection-util = "org.plumelib:reflection-util:1.1.5"
 
 require-javadoc = "org.plumelib:require-javadoc:2.0.0"
->>>>>>> 228a7a1a9c1ddcca66c4c2a0aae851145e099bf6
