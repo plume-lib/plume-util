@@ -212,11 +212,8 @@ public final class MapsP {
    * @param size size of the cache
    * @return a new cache with the provided size
    */
-  @SuppressWarnings(
-      "PMD.UseDiamondOperator" // '<>' with anonymous inner classes is not supported in -source 8
-  )
   public static <K, V> Map<K, V> createLruCache(@Positive int size) {
-    return new LinkedHashMap<K, V>(size, .75F, true) {
+    return new LinkedHashMap<>(size, .75F, true) {
 
       private static final long serialVersionUID = 5261489276168775084L;
 
