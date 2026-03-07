@@ -60,7 +60,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * <pre>{@code
  * // EntryReader constructor args are: filename, EntryFormat, CommentFormat, include regex.
- * // When reading by lines (as in this `for` loop), the EntryFormat is irrelevant.
+ * // When reading by lines (as in this `for` loop), this EntryFormat is irrelevant.
  * // First argument can also be a File or Path; additional constructors also exist.
  * try (EntryReader er = new EntryReader(filename,
  *     EntryFormat.DEFAULT, CommentFormat.TEX, "\\\\include\\{(.*)\\}")) {
@@ -1622,7 +1622,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * This class informs {@link EntryReader} where an entry begins and ends.
    *
    * <p>When reading a file by lines (as {@link EntryReader#iterator} and {@link
-   * EntryReader#getNextLine} do), the EntryFormat is irrelevant.
+   * EntryReader#readLine} do), the EntryFormat is irrelevant, with one exception. If {@link
+   * EntryFormat#supportsFences} is true, then comments are not stripped inside fenced code blocks.
    */
   public static class EntryFormat {
 
