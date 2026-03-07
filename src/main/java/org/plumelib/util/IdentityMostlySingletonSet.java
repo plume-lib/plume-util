@@ -69,16 +69,14 @@ public final class IdentityMostlySingletonSet<T extends Object>
   public boolean contains(
       @GuardSatisfied IdentityMostlySingletonSet<T> this,
       @GuardSatisfied @UnknownSignedness Object o) {
-    switch (state) {
-      case EMPTY:
-        return false;
-      case SINGLETON:
-        return o == value;
-      case ANY:
+    return switch (state) {
+      case EMPTY -> false;
+      case SINGLETON -> o == value;
+      case ANY -> {
         assert set != null : "@AssumeAssertion(nullness): set initialized before";
-        return set.contains(o);
-      default:
-        throw new IllegalStateException("Unhandled state " + state);
-    }
+        yield set.contains(o);
+      }
+      default -> throw new IllegalStateException("Unhandled state " + state);
+    };
   }
 }

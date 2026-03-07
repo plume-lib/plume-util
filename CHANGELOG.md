@@ -2,7 +2,7 @@
 
 ## 2.0.0 (????-??-??)
 
-* Require Java 11.
+* Requires Java 21 to run.
 * Renamed `*Plume` classes to `*P`, for brevity; for example:
   * use `CollectionsP` instead of `CollectionsPlume`.
   * use `FilesP` instead of `FilesPlume`.

@@ -1236,20 +1236,14 @@ public final class UtilPlume {
     if (pvalue == null) {
       return defaultValue;
     }
-    switch (pvalue.toLowerCase(Locale.getDefault())) {
-      case "true":
-      case "yes":
-      case "1":
-        return true;
-      case "false":
-      case "no":
-      case "0":
-        return false;
-      default:
-        throw new Error(
-            String.format(
-                "Property %s is set to \"%s\" which is not a boolean value", key, pvalue));
-    }
+    return switch (pvalue.toLowerCase(Locale.getDefault())) {
+      case "true", "yes", "1" -> true;
+      case "false", "no", "0" -> false;
+      default ->
+          throw new Error(
+              String.format(
+                  "Property %s is set to \"%s\" which is not a boolean value", key, pvalue));
+    };
   }
 
   /**
@@ -1488,7 +1482,7 @@ public final class UtilPlume {
    * empty string).
    *
    * <p>Consider using the built-in <a
-   * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
+   * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
    * method, which takes a regular expression whereas this method takes a a character that is
    * interpreted literally.
    *
@@ -1511,7 +1505,7 @@ public final class UtilPlume {
    * string).
    *
    * <p>Consider using the built-in <a
-   * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
+   * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
    * method, method, which takes a regular expression whereas this method takes string.
    *
    * @see #split(String s, char delim)
