@@ -155,7 +155,7 @@ pmd {
 apply plugin: "org.checkerframework"
 
 checkerFramework {
-  version = libs.checker.get().version
+  version = libs.checker.framework.get().version
   checkers = [
     // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
     // "org.checkerframework.checker.calledmethods.CalledMethodsChecker",
