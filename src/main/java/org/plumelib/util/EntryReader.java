@@ -38,8 +38,6 @@ import org.checkerframework.checker.regex.qual.Regex;
 // Here are some useful features that EntryReader should have.
 //  * It should implement some unimplemented methods from LineNumberReader (see
 //    "not yet implemented" in this file).
-//  * It should have constructors that take a Reader
-//    (in addition to the current BufferedReader, File, InputStream, and String versions).
 //  * It should have a `close()` method (it already implements AutoCloseable,
 //    though I don't know whether it does so adequately).
 //  * It should automatically close the underlying file/etc. when the
@@ -62,6 +60,7 @@ import org.checkerframework.checker.regex.qual.Regex;
  *
  * <pre>{@code
  * // EntryReader constructor args are: filename, EntryFormat, CommentFormat, include regex.
+ * // When reading by lines (as in this `for` loop), this EntryFormat is irrelevant.
  * // First argument can also be a File or Path; additional constructors also exist.
  * try (EntryReader er = new EntryReader(filename,
  *     EntryFormat.DEFAULT, CommentFormat.TEX, "\\\\include\\{(.*)\\}")) {
@@ -1619,7 +1618,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /** A regular expression that never matches. */
   private static final Pattern neverMatches = Pattern.compile("\\b\\B");
 
-  /** This class informs {@link EntryReader} where an entry begins and ends. */
+  /**
+   * This class informs {@link EntryReader} where an entry begins and ends.
+   *
+   * <p>When reading a file by lines (as {@link EntryReader#iterator} and {@link
+   * EntryReader#readLine} do), the EntryFormat is irrelevant, with one exception. If {@link
+   * EntryFormat#supportsFences} is true, then comments are not stripped inside fenced code blocks.
+   */
   public static class EntryFormat {
 
     /**

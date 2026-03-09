@@ -8,7 +8,7 @@
   * use `FilesP` instead of `FilesPlume`.
 * Removed all deprecated classes and methods.
 
-## 1.14.0 (2026-??-??)
+## 1.14.0 (2026-03-05)
 
 * `CollectionsPlume`:
   * New method `isModifiable(Collection)`.
