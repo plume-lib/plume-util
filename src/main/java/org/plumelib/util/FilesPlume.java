@@ -45,7 +45,6 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
-@SuppressWarnings("PMD.CloseResource")
 public final class FilesPlume {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -1119,6 +1118,7 @@ public final class FilesPlume {
    * @param r the Reader to read; this method exhausts it and closes it
    * @return the entire contents of the reader, as a string
    */
+  @SuppressWarnings("PMD.AssignmentInOperand") // while read() idiom
   public static String readerContents(Reader r) {
     try {
       StringBuilder contents = new StringBuilder();
@@ -1333,6 +1333,7 @@ public final class FilesPlume {
    * @return the list of lines read from the stream
    * @throws IOException if there is an error reading from the stream
    */
+  @SuppressWarnings("PMD.AssignmentInOperand") // while read() idiom
   public static List<String> streamLines(InputStream stream) throws IOException {
     List<String> outputLines = new ArrayList<>();
     try (BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, UTF_8))) {

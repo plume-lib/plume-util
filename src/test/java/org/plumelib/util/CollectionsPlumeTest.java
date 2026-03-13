@@ -135,6 +135,7 @@ final class CollectionsPlumeTest {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
+
       return i++;
     }
 
