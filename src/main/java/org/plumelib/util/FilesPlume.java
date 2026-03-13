@@ -24,8 +24,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UncheckedIOException;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -128,7 +127,7 @@ public final class FilesPlume {
   @Owning
   public static InputStreamReader newFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return newFileReader(new File(filename), null);
+    return newFileReader(new File(filename), (Charset) null);
   }
 
   /**
@@ -148,7 +147,35 @@ public final class FilesPlume {
   @Owning
   public static InputStreamReader newFileReader(Path path)
       throws FileNotFoundException, IOException {
-    return newFileReader(path.toFile(), null);
+    return newFileReader(path.toFile(), (Charset) null);
+  }
+
+  /**
+   * Returns a Reader for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param charset the name of a Charset to use when reading the file, or null to use UTF-8
+   * @return an InputStreamReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+  })
+  @SideEffectFree
+  @Owning
+  public static InputStreamReader newFileReader(Path path, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    InputStream in = newFileInputStream(path.toFile());
+    if (charset == null) {
+      charset = UTF_8;
+    }
+    return new InputStreamReader(in, charset);
   }
 
   /**
@@ -164,10 +191,12 @@ public final class FilesPlume {
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newFileReader(Path,Charset)}
    */
+  @Deprecated // 2026-03-05
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
-    "JdkObsolete" // due to use of string charsetName, remove in Java 11+
+    "JdkObsolete", // this method is deprecated
   })
   @SideEffectFree
   @Owning
@@ -200,7 +229,28 @@ public final class FilesPlume {
   @Owning
   public static InputStreamReader newFileReader(File file)
       throws FileNotFoundException, IOException {
-    return newFileReader(file, null);
+    return newFileReader(file, (Charset) null);
+  }
+
+  /**
+   * Returns a Reader for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charset the name of a Charset to use when reading the file, or null to use UTF-8
+   * @return an InputStreamReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SideEffectFree
+  @Owning
+  public static InputStreamReader newFileReader(File file, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    return newFileReader(file.toPath(), charset);
   }
 
   /**
@@ -217,6 +267,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @Deprecated // 2026-03-05
   @SideEffectFree
   @Owning
   public static InputStreamReader newFileReader(File file, @Nullable String charsetName)
@@ -245,7 +296,7 @@ public final class FilesPlume {
   @Owning
   public static BufferedReader newBufferedFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return newBufferedFileReader(filename, null);
+    return newBufferedFileReader(filename, (Charset) null);
   }
 
   /**
@@ -265,7 +316,28 @@ public final class FilesPlume {
   @Owning
   public static BufferedReader newBufferedFileReader(File file)
       throws FileNotFoundException, IOException {
-    return newBufferedFileReader(file, null);
+    return newBufferedFileReader(file, (Charset) null);
+  }
+
+  /**
+   * Returns a BufferedReader for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param filename the possibly-compressed file to read
+   * @param charset the character set to use when reading the file, or null to use UTF-8
+   * @return a BufferedReader for filename
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SideEffectFree
+  @Owning
+  public static BufferedReader newBufferedFileReader(String filename, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    return newBufferedFileReader(new File(filename), charset);
   }
 
   /**
@@ -281,7 +353,9 @@ public final class FilesPlume {
    * @return a BufferedReader for filename
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newBufferedFileReader(String,Charset)}
    */
+  @Deprecated // 2026-03-05
   @SideEffectFree
   @Owning
   public static BufferedReader newBufferedFileReader(String filename, @Nullable String charsetName)
@@ -298,11 +372,36 @@ public final class FilesPlume {
    * files) after the first gzipped file.
    *
    * @param file the possibly-compressed file to read
-   * @param charsetName the character set to use when reading the file, or null to use UTF-8
+   * @param charset the character set to use when reading the file, or null to use UTF-8
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
+  @Owning
+  public static BufferedReader newBufferedFileReader(File file, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    Reader fileReader = newFileReader(file, charset);
+    return new BufferedReader(fileReader);
+  }
+
+  /**
+   * Returns a BufferedReader for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charsetName the character set to use when reading the file, or null to use UTF-8
+   * @return a BufferedReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newBufferedFileReader(File,Charset)}
+   */
+  @Deprecated // 2026-03-05
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   @Owning
@@ -350,7 +449,7 @@ public final class FilesPlume {
   @Owning
   public static LineNumberReader newLineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
-    Reader fileReader = newFileReader(file, null);
+    Reader fileReader = newFileReader(file, (Charset) null);
     return new LineNumberReader(fileReader);
   }
 
@@ -453,7 +552,7 @@ public final class FilesPlume {
   @Owning
   public static OutputStreamWriter newFileWriter(String filename)
       throws FileNotFoundException, IOException {
-    return newFileWriter(new File(filename), null);
+    return newFileWriter(new File(filename), (Charset) null);
   }
 
   /**
@@ -473,7 +572,35 @@ public final class FilesPlume {
   @Owning
   public static OutputStreamWriter newFileWriter(Path path)
       throws FileNotFoundException, IOException {
-    return newFileWriter(path.toFile(), null);
+    return newFileWriter(path.toFile(), (Charset) null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param charset the charset to use when reading the file, or null to use UTF-8
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+  })
+  @SideEffectFree
+  @Owning
+  public static OutputStreamWriter newFileWriter(Path path, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    OutputStream in = newFileOutputStream(path.toFile());
+    if (charset == null) {
+      charset = UTF_8;
+    }
+    return new OutputStreamWriter(in, charset);
   }
 
   /**
@@ -489,10 +616,12 @@ public final class FilesPlume {
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link newFileWriter(Path,Charset)}
    */
+  @Deprecated // 2026-03-05
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
-    "JdkObsolete" // due to use of string charsetName, remove in Java 11+
+    "JdkObsolete", // this method is deprecated
   })
   @SideEffectFree
   @Owning
@@ -525,7 +654,28 @@ public final class FilesPlume {
   @Owning
   public static OutputStreamWriter newFileWriter(File file)
       throws FileNotFoundException, IOException {
-    return newFileWriter(file, null);
+    return newFileWriter(file, (Charset) null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charset the charset to use when reading the file, or null to use UTF-8
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SideEffectFree
+  @Owning
+  public static OutputStreamWriter newFileWriter(File file, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    return newFileWriter(file.toPath(), charset);
   }
 
   /**
@@ -541,7 +691,9 @@ public final class FilesPlume {
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newFileWriter(File,Charset)}
    */
+  @Deprecated // 2026-03-05
   @SideEffectFree
   @Owning
   public static OutputStreamWriter newFileWriter(File file, @Nullable String charsetName)
@@ -1167,25 +1319,10 @@ public final class FilesPlume {
   })
   @SideEffectFree
   public static String readString(Path path) {
-    // In Java 11:
-    // try {
-    //   return Files.readString(path, UTF_8);
-    // } catch (IOException e) {
-    //   throw new UncheckedIOException(e);
-    // }
-
-    try (BufferedReader reader = newBufferedFileReader(path.toFile())) {
-      StringBuilder contents = new StringBuilder();
-      String line = reader.readLine();
-      while (line != null) {
-        contents.append(line);
-        // Note that this converts line terminators!
-        contents.append(lineSep);
-        line = reader.readLine();
-      }
-      return contents.toString();
-    } catch (Exception e) {
-      throw new Error("Unexpected error in readString(" + path + ")", e);
+    try {
+      return Files.readString(path, UTF_8);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1262,20 +1399,10 @@ public final class FilesPlume {
    * @param contents the text to put in the file
    */
   public static void writeString(Path path, String contents) {
-    // In Java 11:
-    // try {
-    //   Files.writeString(path, contents, StandardCharsets.UTF_8);
-    // } catch (Exception e) {
-    //   throw new Error("Unexpected error in writeFile(" + path + ")", e);
-    // }
-
-    try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
-      writer.write(contents, 0, contents.length());
+    try {
+      Files.writeString(path, contents, UTF_8);
     } catch (Exception e) {
-      Error newError = new Error("Unexpected error in writeString(" + path + ")", e);
-      newError.printStackTrace(System.out);
-      newError.printStackTrace(System.err);
-      throw newError;
+      throw new Error("Unexpected error in writeFile(" + path + ")", e);
     }
   }
 
@@ -1312,17 +1439,10 @@ public final class FilesPlume {
    * @param is input stream to read
    * @return a String containing all the characters from the input stream
    */
-  @SuppressWarnings("JdkObsolete") // due to use of string "UTF-8", remove in Java 11+
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    // In Java 11: String result = baos.toString(UTF_8);
-    String result;
-    try {
-      result = baos.toString("UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new UncheckedIOException(e);
-    }
+    String result = baos.toString(UTF_8);
     return result;
   }
 

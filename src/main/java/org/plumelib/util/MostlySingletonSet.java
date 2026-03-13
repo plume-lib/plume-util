@@ -68,17 +68,19 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
   @Override
   public boolean contains(
       @GuardSatisfied MostlySingletonSet<T> this, @GuardSatisfied @UnknownSignedness Object o) {
-    switch (state) {
-      case EMPTY:
-        return false;
-      case SINGLETON:
+    return switch (state) {
+      case EMPTY -> false;
+      case SINGLETON -> {
         assert value != null : "@AssumeAssertion(nullness): SINGLETON => value != null";
-        return value.equals(o);
-      case ANY:
+        yield value.equals(o);
+      }
+      case ANY -> {
         assert set != null : "@AssumeAssertion(nullness): set initialized before";
-        return set.contains(o);
-      default:
+        yield set.contains(o);
+      }
+      default -> {
         throw new IllegalStateException("Unhandled state " + state);
-    }
+      }
+    };
   }
 }

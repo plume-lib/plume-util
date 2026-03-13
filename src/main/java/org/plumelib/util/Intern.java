@@ -78,24 +78,24 @@ public final class Intern {
     if (value == null) {
       // nothing to do
       return true;
-    } else if (value instanceof String) {
-      return value == ((String) value).intern();
-    } else if (value instanceof String[]) {
-      return value == intern((String[]) value);
-    } else if (value instanceof Integer) {
-      return value == intern((Integer) value);
-    } else if (value instanceof Long) {
-      return value == intern((Long) value);
-    } else if (value instanceof int[]) {
-      return value == intern((int[]) value);
-    } else if (value instanceof long[]) {
-      return value == intern((long[]) value);
-    } else if (value instanceof Double) {
-      return value == intern((Double) value);
-    } else if (value instanceof double[]) {
-      return value == intern((double[]) value);
-    } else if (value instanceof Object[]) {
-      return value == intern((Object[]) value);
+    } else if (value instanceof String s) {
+      return value == s.intern();
+    } else if (value instanceof String[] sa) {
+      return value == intern(sa);
+    } else if (value instanceof Integer i) {
+      return value == intern(i);
+    } else if (value instanceof Long l) {
+      return value == intern(l);
+    } else if (value instanceof int[] ia) {
+      return value == intern(ia);
+    } else if (value instanceof long[] la) {
+      return value == intern(la);
+    } else if (value instanceof Double d) {
+      return value == intern(d);
+    } else if (value instanceof double[] da) {
+      return value == intern(da);
+    } else if (value instanceof Object[] oa) {
+      return value == intern(oa);
     } else {
       // Nothing to do, because we don't intern other types.
       // System.out.println("What type? " + value.getClass().getName());
@@ -933,25 +933,25 @@ public final class Intern {
   public static @Interned @PolyNull Object intern(@PolyNull Object a) {
     if (a == null) {
       return null;
-    } else if (a instanceof String) {
-      return intern((String) a);
-    } else if (a instanceof String[]) {
-      @Interned String[] asArray = (@Interned String[]) a;
+    } else if (a instanceof String s) {
+      return intern(s);
+    } else if (a instanceof String[] sa) {
+      @Interned String[] asArray = (@Interned String[]) sa;
       return intern(asArray);
-    } else if (a instanceof Integer) {
-      return intern((Integer) a);
-    } else if (a instanceof Long) {
-      return intern((Long) a);
-    } else if (a instanceof int[]) {
-      return intern((int[]) a);
-    } else if (a instanceof long[]) {
-      return intern((long[]) a);
-    } else if (a instanceof Double) {
-      return intern((Double) a);
-    } else if (a instanceof double[]) {
-      return intern((double[]) a);
-    } else if (a instanceof Object[]) {
-      @Interned Object[] asArray = (@Interned Object[]) a;
+    } else if (a instanceof Integer i) {
+      return intern(i);
+    } else if (a instanceof Long l) {
+      return intern(l);
+    } else if (a instanceof int[] ia) {
+      return intern(ia);
+    } else if (a instanceof long[] la) {
+      return intern(la);
+    } else if (a instanceof Double d) {
+      return intern(d);
+    } else if (a instanceof double[] da) {
+      return intern(da);
+    } else if (a instanceof Object[] oa) {
+      @Interned Object[] asArray = (@Interned Object[]) oa;
       return intern(asArray);
     } else {
       throw new IllegalArgumentException(

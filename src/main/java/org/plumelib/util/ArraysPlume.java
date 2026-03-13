@@ -2319,24 +2319,24 @@ public final class ArraysPlume {
   public static @NonNegative int length(Object a) {
     if (a == null) {
       throw new IllegalArgumentException("Argument is null");
-    } else if (a instanceof boolean[]) {
-      return ((boolean[]) a).length;
-    } else if (a instanceof byte[]) {
-      return ((byte[]) a).length;
-    } else if (a instanceof char[]) {
-      return ((char[]) a).length;
-    } else if (a instanceof double[]) {
-      return ((double[]) a).length;
-    } else if (a instanceof float[]) {
-      return ((float[]) a).length;
-    } else if (a instanceof int[]) {
-      return ((int[]) a).length;
-    } else if (a instanceof long[]) {
-      return ((long[]) a).length;
-    } else if (a instanceof short[]) {
-      return ((short[]) a).length;
-    } else if (a instanceof Object[]) {
-      return ((Object[]) a).length;
+    } else if (a instanceof boolean[] ba) {
+      return ba.length;
+    } else if (a instanceof byte[] ba) {
+      return ba.length;
+    } else if (a instanceof char[] ca) {
+      return ca.length;
+    } else if (a instanceof double[] da) {
+      return da.length;
+    } else if (a instanceof float[] fa) {
+      return fa.length;
+    } else if (a instanceof int[] ia) {
+      return ia.length;
+    } else if (a instanceof long[] la) {
+      return la.length;
+    } else if (a instanceof short[] sa) {
+      return sa.length;
+    } else if (a instanceof Object[] oa) {
+      return oa.length;
     } else {
       throw new IllegalArgumentException(
           "Argument is not an array, but has class " + a.getClass().getName());
@@ -2356,31 +2356,23 @@ public final class ArraysPlume {
   public static String toString(@Nullable Object a) {
     if (a == null) {
       return "null";
-    } else if (a instanceof boolean[]) {
-      return Arrays.toString((boolean[]) a);
-    } else if (a instanceof byte[]) {
-      return Arrays.toString((byte[]) a);
-    } else if (a instanceof char[]) {
-      return Arrays.toString((char[]) a);
-    } else if (a instanceof double[]) {
-      return Arrays.toString((double[]) a);
-    } else if (a instanceof float[]) {
-      return Arrays.toString((float[]) a);
-    } else if (a instanceof int[]) {
-      return Arrays.toString((int[]) a);
-    } else if (a instanceof long[]) {
-      return Arrays.toString((long[]) a);
-    } else if (a instanceof short[]) {
-      return Arrays.toString((short[]) a);
-    } else if (a instanceof Object[]) {
-      return Arrays.toString((Object[]) a);
-    } else if (a instanceof List<?>) {
-      // Handles lists, but this is not a documented feature
-      return a.toString();
-    } else {
-      throw new IllegalArgumentException(
-          "Argument is not an array, but has class " + a.getClass().getName());
     }
+    return switch (a) {
+      case boolean[] ba -> Arrays.toString(ba);
+      case byte[] ba -> Arrays.toString(ba);
+      case char[] ca -> Arrays.toString(ca);
+      case double[] da -> Arrays.toString(da);
+      case float[] fa -> Arrays.toString(fa);
+      case int[] ia -> Arrays.toString(ia);
+      case long[] la -> Arrays.toString(la);
+      case short[] sa -> Arrays.toString(sa);
+      case Object[] oa -> Arrays.toString(oa);
+      // Handles lists, but this is not a documented feature
+      case List<?> l -> l.toString();
+      default ->
+          throw new IllegalArgumentException(
+              "Argument is not an array, but has class " + a.getClass().getName());
+    };
   }
 
   /**
@@ -2414,8 +2406,8 @@ public final class ArraysPlume {
     }
     StringJoiner sj = new StringJoiner(", ", "[", "]");
     for (Object elt : a) {
-      if (quoted && elt instanceof String) {
-        sj.add("\"" + StringsPlume.escapeJava((String) elt) + "\"");
+      if (quoted && elt instanceof String s) {
+        sj.add("\"" + StringsPlume.escapeJava(s) + "\"");
       } else {
         sj.add(Objects.toString(elt));
       }
@@ -2455,8 +2447,8 @@ public final class ArraysPlume {
     }
     StringJoiner sj = new StringJoiner(", ", "[", "]");
     for (Object elt : a) {
-      if (quoted && elt instanceof String) {
-        sj.add("\"" + StringsPlume.escapeJava((String) elt) + "\"");
+      if (quoted && elt instanceof String s) {
+        sj.add("\"" + StringsPlume.escapeJava(s) + "\"");
       } else {
         sj.add(Objects.toString(elt));
       }

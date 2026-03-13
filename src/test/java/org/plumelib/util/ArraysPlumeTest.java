@@ -182,12 +182,12 @@ final class ArraysPlumeTest {
     }
 
     @Override
-    public boolean equals(@GuardSatisfied MyInteger this, @GuardSatisfied @Nullable Object other) {
-      if (!(other instanceof MyInteger)) {
+    @SuppressWarnings("lock:instanceof.pattern.unsafe") // todo
+    public boolean equals(@GuardSatisfied MyInteger this, @GuardSatisfied @Nullable Object o) {
+      if (!(o instanceof MyInteger other)) {
         return false;
       }
-      MyInteger that = (MyInteger) other;
-      return this.value == that.value;
+      return this.value == other.value;
     }
 
     @Override

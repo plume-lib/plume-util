@@ -43,7 +43,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * <ul>
  *   <li>https://docs.oracle.com/en/database/oracle/oracle-database/19/olapi/oracle/olapi/ArraySet.html
  *   <li>https://developer.android.com/reference/android/util/ArraySet
- *   <li>https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CopyOnWriteArraySet.html
+ *   <li>https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CopyOnWriteArraySet.html
  * </ul>
  *
  * All of those use the GPL or the Apache License, version 2.0, whereas this implementation is

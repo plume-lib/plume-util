@@ -370,7 +370,7 @@ final class CollectionsPlumeTest {
 
   private static @Nullable String toStringOrNull(Object x) {
     String result;
-    if (x instanceof Integer && ((Integer) x) % 2 == 0) {
+    if (x instanceof Integer i && i % 2 == 0) {
       result = null;
     } else {
       result = x.toString();
