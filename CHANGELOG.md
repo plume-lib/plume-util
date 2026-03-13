@@ -21,7 +21,8 @@
   * Replaced String/Pattern argument to constructor (`commentRegex`) by a
     `CommentFormat` value.  This eases future extensions.  The old constructors
     still exist but are deprecated.
-  * Removed `setEntryStartStop()` methods
+  * Removed `setEntryStartStop()` methods.  Pass an `EntryFormat` to the
+    constructor instead.
   * When `entryStartRegex` has no capturing group, the whole thing is discarded
     rather than the whole thing being retained.
   * `EntryReader` supports multiline comments.

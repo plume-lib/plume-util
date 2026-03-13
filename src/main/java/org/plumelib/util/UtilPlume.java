@@ -1285,6 +1285,7 @@ public final class UtilPlume {
    * @param value value to set the property to, if it is not already set
    * @return the previous value of the property
    */
+  @SuppressWarnings("PMD.LinguisticNaming") // Java's Properties.set returns the old value
   public static @Nullable String setDefaultMaybe(Properties p, String key, String value) {
     String currentValue = p.getProperty(key);
     if (currentValue == null) {
