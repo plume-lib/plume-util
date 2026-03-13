@@ -45,7 +45,6 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
-@SuppressWarnings("PMD.CloseResource")
 public final class FilesPlume {
 
   /** This class is a collection of methods; it does not represent anything. */
