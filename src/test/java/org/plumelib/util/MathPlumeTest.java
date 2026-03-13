@@ -334,10 +334,10 @@ final class MathPlumeTest {
         assertNull(rm);
       } else {
         assertArraysEquals(goalRm, rm);
-        long modulus = goalRm[1];
         if (nums.length == 0) {
           throw new Error("this can't happen, because goalRm is not null");
         }
+        long modulus = goalRm[1];
         long first = nums[0];
         for (int i = 0; i < nums.length; i++) {
           assertEquals(nums[i], first + i * modulus);
@@ -351,11 +351,11 @@ final class MathPlumeTest {
         assertNull(rm);
       } else {
         assertArraysEquals(goalRm, rm);
-        long remainder = goalRm[0];
-        long modulus = goalRm[1];
         if (nums.length < 3) {
           throw new Error("this can't happen, because goalRm is not null");
         }
+        long remainder = goalRm[0];
+        long modulus = goalRm[1];
         assertEquals(remainder, nums[0] % modulus);
         assertEquals(remainder, nums[nums.length - 1] % modulus);
         long first = nums[1];
