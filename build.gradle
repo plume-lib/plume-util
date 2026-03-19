@@ -44,13 +44,13 @@ dependencies {
 
 java {
   toolchain {
-    // Always compile using Java 21, but test using various Java versions.
-    languageVersion = JavaLanguageVersion.of(21)
+    // Always compile using Java 17, but test using various Java versions.
+    languageVersion = JavaLanguageVersion.of(17)
   }
 }
 tasks.withType(JavaCompile).configureEach {
-  // Set the language level and byte code to 21.
-  options.release = 21
+  // Set the language level and byte code to 17.
+  options.release = 17
 }
 
 test {
