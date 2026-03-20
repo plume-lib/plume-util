@@ -110,7 +110,7 @@ tasks.withType(JavaCompile).configureEach {
   options.forkOptions.jvmArgs += "-Xmx6g"
   options.compilerArgs << "-Werror"
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  options.compilerArgs << "-Xlint:all,-processing"
+  options.compilerArgs << "-Xlint:all,-processing,-this-escape"
 }
 apply plugin: "net.ltgt.errorprone"
 dependencies {
