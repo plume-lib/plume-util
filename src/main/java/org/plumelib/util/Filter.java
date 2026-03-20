@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <T> the type of arguments to {@link #accept}
  * @deprecated use {@code java.util.function.Predicate}
  */
-@Deprecated // 2024-04-19
+@Deprecated(since = "2024-04-19")
 @FunctionalInterface
 public interface Filter<T extends @Nullable Object> {
   /**

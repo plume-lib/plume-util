@@ -15,7 +15,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @deprecated use {@link MPair} instead, or {@link IPair} for an immutable pair
  */
 @SuppressWarnings("PMD.ShortClassName")
-@Deprecated // 2023-05-20
+@Deprecated(since = "2023-05-20")
 public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   /** The first element of the pair. */
   public T1 a;

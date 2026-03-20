@@ -800,7 +800,7 @@ public final class MathPlume {
    * @return x % y, where the result is constrained to be non-negative
    * @deprecated use {@link #modNonnegative(int, int)}
    */
-  @Deprecated // 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports =
   // "org.plumelib.util.MathPlume")
   @Pure
@@ -1045,7 +1045,7 @@ public final class MathPlume {
    * @return x % y, where the result is constrained to be non-negative
    * @deprecated use {@link #modNonnegative(long, long)}
    */
-  @Deprecated // 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(replacement = "modNonnegative(x, y)", imports =
   // "org.plumelib.util.MathPlume")
   @Pure
