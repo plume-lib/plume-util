@@ -44,8 +44,8 @@ dependencies {
 
 java {
   toolchain {
-    // Always compile using Java 17, but test using various Java versions.
-    languageVersion = JavaLanguageVersion.of(17)
+    // Always compile using Java 21, but test using various Java versions.
+    languageVersion = JavaLanguageVersion.of(21)
   }
 }
 tasks.withType(JavaCompile).configureEach {
