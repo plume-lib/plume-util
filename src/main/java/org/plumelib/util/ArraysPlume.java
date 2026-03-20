@@ -2379,9 +2379,10 @@ public final class ArraysPlume {
     // Handles lists, but this is not a documented feature
     if (a instanceof List<?> l) {
       return l.toString();
-    } else
+    } else {
       throw new IllegalArgumentException(
           "Argument is not an array, but has class " + a.getClass().getName());
+    }
   }
 
   /**
