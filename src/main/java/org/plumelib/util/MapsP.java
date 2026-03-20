@@ -305,7 +305,7 @@ public final class MapsP {
    * @param linePrefix a prefix to put at the beginning of each line
    * @deprecated use {@link #mapToStringMultiLine(Appendable, Map, String)}
    */
-  @Deprecated(since = "2026-06-21")
+  @Deprecated(since = "2025-06-21")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
     mapToStringMultiLine(sb, m, linePrefix);
