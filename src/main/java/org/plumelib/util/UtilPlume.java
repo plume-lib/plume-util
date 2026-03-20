@@ -114,7 +114,7 @@ public final class UtilPlume {
    * @return true iff size(a intersect b) &ge; i
    * @deprecated use CollectionsPlume.intersectionCardinalityAtLeast
    */
-  @Deprecated // 2021-04-24
+  @Deprecated(since = "2021-04-24")
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinalityAtLeast(a, b, i)",
   //     imports = "org.plumelib.util.CollectionsPlume")
@@ -134,7 +134,7 @@ public final class UtilPlume {
    * @return true iff size(a intersect b intersect c) &ge; i
    * @deprecated use CollectionsPlume.intersectionCardinalityAtLeast
    */
-  @Deprecated // 2021-04-24
+  @Deprecated(since = "2021-04-24")
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinalityAtLeast(a, b, c, i)",
   //     imports = "org.plumelib.util.CollectionsPlume")
@@ -152,7 +152,7 @@ public final class UtilPlume {
    * @return size(a intersect b)
    * @deprecated use CollectionsPlume.intersectionCardinality
    */
-  @Deprecated // 2021-04-24
+  @Deprecated(since = "2021-04-24")
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinality(a, b)",
   //     imports = "org.plumelib.util.CollectionsPlume")
@@ -170,7 +170,7 @@ public final class UtilPlume {
    * @return size(a intersect b intersect c)
    * @deprecated use CollectionsPlume.intersectionCardinality
    */
-  @Deprecated // 2021-04-24
+  @Deprecated(since = "2021-04-24")
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinality(a, b, c)",
   //     imports = "org.plumelib.util.CollectionsPlume")
@@ -199,7 +199,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
-  @Deprecated // deprecated 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileInputStream(path)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -220,7 +220,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newFileInputStream}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileInputStream(file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -242,7 +242,7 @@ public final class UtilPlume {
    * @throws FileNotFoundException if the file is not found
    * @deprecated use {@link FilesPlume#newFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -265,7 +265,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(path)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -288,7 +288,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(path, charsetName)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -311,7 +311,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -334,7 +334,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newFileReader(file, charsetName)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -357,7 +357,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileReader(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -380,7 +380,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileReader(file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -404,7 +404,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileReader(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -428,7 +428,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newBufferedFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileReader(file, charsetName)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -451,7 +451,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newLineNumberFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newLineNumberFileReader(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -474,7 +474,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#newLineNumberFileReader}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newLineNumberFileReader(file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -496,7 +496,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble writing the file
    * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileWriter(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -519,7 +519,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble writing the file
    * @deprecated use {@link FilesPlume#newBufferedFileWriter}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileWriter(filename, append)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -543,7 +543,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble writing the file
    * @deprecated use {@link FilesPlume#newBufferedFileOutputStream}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.newBufferedFileOutputStream(filename, append)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -564,7 +564,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#countLines}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.countLines(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -581,7 +581,7 @@ public final class UtilPlume {
    * @throws IOException if there was a problem reading the file
    * @deprecated use {@link Files#readAllLines}
    */
-  @Deprecated // 2021-01-03
+  @Deprecated(since = "2021-01-03")
   // @InlineMe(
   //     replacement = "Files.readAllLines(Paths.get(filename))",
   //     imports = {"java.nio.file.Files", "java.nio.file.Paths"})
@@ -597,7 +597,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#inferLineSeparator}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.inferLineSeparator(filename)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -613,7 +613,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link FilesPlume#inferLineSeparator}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.inferLineSeparator(file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -629,7 +629,7 @@ public final class UtilPlume {
    * @return true iff the files have the same contents
    * @deprecated use {@link FilesPlume#equalFiles}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.equalFiles(file1, file2, false)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -647,7 +647,7 @@ public final class UtilPlume {
    * @return true iff the files have the same contents
    * @deprecated use {@link FilesPlume#equalFiles}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.equalFiles(file1, file2, trimLines)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -664,7 +664,7 @@ public final class UtilPlume {
    * @return true iff the file can be created and written
    * @deprecated use {@link FilesPlume#canCreateAndWrite}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.canCreateAndWrite(file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -695,7 +695,7 @@ public final class UtilPlume {
    * @see java.io.File#createTempFile(String, String, File)
    * @deprecated use {@link FilesPlume#createTempDir}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.createTempDir(prefix, suffix)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -710,7 +710,7 @@ public final class UtilPlume {
    * @return true if and only if the file or directory is successfully deleted; false otherwise
    * @deprecated use {@link FilesPlume#deleteDir}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.deleteDir(dirName)", imports =
   // "org.plumelib.util.FilesPlume")
   public static boolean deleteDir(String dirName) {
@@ -724,7 +724,7 @@ public final class UtilPlume {
    * @return true if and only if the file or directory is successfully deleted; false otherwise
    * @deprecated use {@link FilesPlume#deleteDir}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.deleteDir(dir)", imports = "org.plumelib.util.FilesPlume")
   public static boolean deleteDir(File dir) {
     return FilesPlume.deleteDir(dir);
@@ -744,7 +744,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link FilesPlume.WildcardFilter}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   public static final class WildcardFilter implements FilenameFilter {
     /** The text before the wildcard. */
     String prefix;
@@ -786,7 +786,7 @@ public final class UtilPlume {
    * @return file with expanded file
    * @deprecated use {@link FilesPlume#expandFilename}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.expandFilename(name)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -801,7 +801,7 @@ public final class UtilPlume {
    * @return expanded filename
    * @deprecated use {@link FilesPlume#expandFilename}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.expandFilename(name)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -821,7 +821,7 @@ public final class UtilPlume {
    * @return a string version of the name that can be used in Java source
    * @deprecated use {@link FilesPlume#javaSource}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.javaSource(name)", imports =
   // "org.plumelib.util.FilesPlume")
   public static String javaSource(File name) {
@@ -841,7 +841,7 @@ public final class UtilPlume {
    * @throws IOException if there is trouble writing the file
    * @deprecated use {@link FilesPlume#writeObject}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.writeObject(o, file)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -860,7 +860,7 @@ public final class UtilPlume {
    * @throws ClassNotFoundException if the object's class cannot be found
    * @deprecated use {@link FilesPlume#readObject}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.readObject(file)", imports =
   // "org.plumelib.util.FilesPlume")
   @SuppressWarnings("BanSerializableRead") // wrapper around dangerous API
@@ -876,7 +876,7 @@ public final class UtilPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link FilesPlume#readerContents}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.readerContents(r)", imports =
   // "org.plumelib.util.FilesPlume")
   public static String readerContents(Reader r) {
@@ -895,7 +895,7 @@ public final class UtilPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link FilesPlume#readFile}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
   // "org.plumelib.util.FilesPlume")
   public static String readFile(File file) {
@@ -911,7 +911,7 @@ public final class UtilPlume {
    * @param contents the text to put in the file
    * @deprecated use {@link FilesPlume#writeFile}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.writeFile(file, contents)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -966,7 +966,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Double#hashCode()}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Double.hashCode(x)")
   public static int hash(double x) {
     return Double.hashCode(x);
@@ -980,7 +980,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Objects#hash}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hash(a, b)", imports = "java.util.Objects")
   public static int hash(double a, double b) {
     return Objects.hash(a, b);
@@ -995,7 +995,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Objects#hash}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hash(a, b, c)", imports = "java.util.Objects")
   public static int hash(double a, double b, double c) {
     return Objects.hash(a, b, c);
@@ -1008,7 +1008,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Arrays#hashCode}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Arrays.hashCode(a)", imports = "java.util.Arrays")
   public static int hash(double @Nullable [] a) {
     return Arrays.hashCode(a);
@@ -1025,7 +1025,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Long#hashCode()}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Long.hashCode(l)")
   public static int hash(long l) {
     return Long.hashCode(l);
@@ -1039,7 +1039,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Objects#hash}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hash(a, b)", imports = "java.util.Objects")
   public static int hash(long a, long b) {
     return Objects.hash(a, b);
@@ -1054,7 +1054,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Objects#hash}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hash(a, b, c)", imports = "java.util.Objects")
   public static int hash(long a, long b, long c) {
     return Objects.hash(a, b, c);
@@ -1067,7 +1067,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Arrays#hashCode}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Arrays.hashCode(a)", imports = "java.util.Arrays")
   public static int hash(long @Nullable [] a) {
     return Arrays.hashCode(a);
@@ -1080,7 +1080,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link String#hashCode}
    */
-  @Deprecated // use Objects.hashCode; deprecated 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hashCode(a)", imports = "java.util.Objects")
   public static int hash(@Nullable String a) {
     return Objects.hashCode(a);
@@ -1094,7 +1094,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Objects#hash}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hash(a, b)", imports = "java.util.Objects")
   public static int hash(@Nullable String a, @Nullable String b) {
     return Objects.hash(a, b);
@@ -1109,7 +1109,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Objects#hash}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Objects.hash(a, b, c)", imports = "java.util.Objects")
   public static int hash(@Nullable String a, @Nullable String b, @Nullable String c) {
     return Objects.hash(a, b, c);
@@ -1122,7 +1122,7 @@ public final class UtilPlume {
    * @return a hash of the arguments
    * @deprecated use {@link Arrays#hashCode}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "Arrays.hashCode(a)", imports = "java.util.Arrays")
   public static int hash(@Nullable String @Nullable [] a) {
     return Arrays.hashCode(a);
@@ -1139,7 +1139,7 @@ public final class UtilPlume {
    * @return a string representation of the map
    * @deprecated use {@link StringsPlume#mapToStringAndClass}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.mapToStringAndClass(m)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1155,7 +1155,7 @@ public final class UtilPlume {
    * @return a string representation of the value and its run-time class
    * @deprecated use {@link StringsPlume#toStringAndClass}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.toStringAndClass(o)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1211,7 +1211,7 @@ public final class UtilPlume {
    * @deprecated use {@link getBooleanProperty}
    */
   @Pure
-  @Deprecated // 2021-03-28
+  @Deprecated(since = "2021-03-28")
   // @InlineMe(
   //     replacement = "UtilPlume.getBooleanProperty(p, key)",
   //     imports = "org.plumelib.util.UtilPlume")
@@ -1305,7 +1305,7 @@ public final class UtilPlume {
    * @param to output stream
    * @deprecated use {@link FilesPlume#streamCopy}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.streamCopy(from, to)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -1320,7 +1320,7 @@ public final class UtilPlume {
    * @return a String containing all the characters from the input stream
    * @deprecated use {@link FilesPlume#streamString}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(replacement = "FilesPlume.streamString(is)", imports =
   // "org.plumelib.util.FilesPlume")
   public static String streamString(InputStream is) {
@@ -1335,7 +1335,7 @@ public final class UtilPlume {
    * @throws IOException if there is an error reading from the stream
    * @deprecated use {@link FilesPlume#streamLines}
    */
-  @Deprecated // deprecated 2021-02-25
+  @Deprecated(since = "2021-02-25")
   // @InlineMe(
   //     replacement = "FilesPlume.streamLines(stream)",
   //     imports = "org.plumelib.util.FilesPlume")
@@ -1357,7 +1357,7 @@ public final class UtilPlume {
    * @return target with all instances of oldStr replaced by newStr
    * @deprecated use {@link String#replace}
    */
-  @Deprecated // 2020-09-07
+  @Deprecated(since = "2020-09-07")
   // @InlineMe(replacement = "target.replace(oldStr, newStr)")
   public static String replaceString(String target, String oldStr, String newStr) {
     return target.replace(oldStr, newStr);
@@ -1377,7 +1377,7 @@ public final class UtilPlume {
    *     target if it does not start with oldStr
    * @deprecated use {@link StringsPlume#replacePrefix}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.replacePrefix(target, oldStr, newStr)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1399,7 +1399,7 @@ public final class UtilPlume {
    *     target if it does not start with oldStr
    * @deprecated use {@link StringsPlume#replaceSuffix}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.replaceSuffix(target, oldStr, newStr)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1415,7 +1415,7 @@ public final class UtilPlume {
    * @return the printed representation of {@code o}, with each line prefixed by the given prefix
    * @deprecated use {@link StringsPlume#prefixLines}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.prefixLines(prefix, o)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1433,7 +1433,7 @@ public final class UtilPlume {
    *     the given prefix
    * @deprecated use {@link StringsPlume#prefixLinesExceptFirst}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.prefixLinesExceptFirst(prefix, o)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1451,7 +1451,7 @@ public final class UtilPlume {
    *     space characters
    * @deprecated use {@link StringsPlume#indentLines}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.indentLines(indent, o)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1469,7 +1469,7 @@ public final class UtilPlume {
    *     {@code indent} space characters
    * @deprecated use {@link StringsPlume#indentLinesExceptFirst}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.indentLinesExceptFirst(indent, o)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1493,7 +1493,7 @@ public final class UtilPlume {
    * @return array of length at least 1, containing s split on delimiter
    * @deprecated use {@link String#split}
    */
-  @Deprecated // use String.split; deprecated 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "s.split(\"\\\\\" + delim)")
   @SuppressWarnings("regex:argument") // "\\" + char is a regex
   public static String[] split(String s, char delim) {
@@ -1515,7 +1515,7 @@ public final class UtilPlume {
    * @return array of length at least 1, containing s split on delimiter
    * @deprecated use {@link String#split}
    */
-  @Deprecated // use String.split; deprecated 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "s.split(Pattern.quote(delim))", imports = "java.util.regex.Pattern")
   public static String[] split(String s, String delim) {
     return s.split(Pattern.quote(delim));
@@ -1535,7 +1535,7 @@ public final class UtilPlume {
   @SuppressWarnings("value:statically.executable.not.pure") // pure wrt `equals()` but not `==`
   @SideEffectFree
   @StaticallyExecutable
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.splitLines(s)", imports =
   // "org.plumelib.util.StringsPlume")
   public static String[] splitLines(String s) {
@@ -1558,7 +1558,7 @@ public final class UtilPlume {
    * @deprecated use {@link #join(CharSequence, Object...)} which has the arguments in the other
    *     order
    */
-  @Deprecated // 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(replacement = "StringsPlume.join(delim, a)", imports =
   // "org.plumelib.util.StringsPlume")
   @SuppressWarnings("nullness:type.arguments.not.inferred")
@@ -1581,7 +1581,7 @@ public final class UtilPlume {
    *     between
    * @deprecated use {@link StringsPlume#join}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.join(delim, a)", imports =
   // "org.plumelib.util.StringsPlume")
   @SafeVarargs
@@ -1601,7 +1601,7 @@ public final class UtilPlume {
    */
   @SafeVarargs
   @SuppressWarnings({"varargs", "nullness:type.arguments.not.inferred"})
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.joinLines(a)", imports =
   // "org.plumelib.util.StringsPlume")
   public static <T> String joinLines(@Signed T... a) {
@@ -1622,7 +1622,7 @@ public final class UtilPlume {
    * @deprecated use {@link #join(CharSequence, Iterable)} which has the arguments in the other
    *     order
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.join(delim, v)", imports =
   // "org.plumelib.util.StringsPlume")
   public static String join(Iterable<? extends @Signed @PolyNull Object> v, CharSequence delim) {
@@ -1642,7 +1642,7 @@ public final class UtilPlume {
    *     between
    * @deprecated use {@link StringsPlume#join}
    */
-  @Deprecated // deprecated 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.join(delim, v)", imports =
   // "org.plumelib.util.StringsPlume")
   public static String join(CharSequence delim, Iterable<? extends @Signed @PolyNull Object> v) {
@@ -1658,7 +1658,7 @@ public final class UtilPlume {
    * @return the concatenation of the string representations of the values, each on its own line
    * @deprecated use {@link StringsPlume#joinLines}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.joinLines(v)", imports =
   // "org.plumelib.util.StringsPlume")
   public static String joinLines(Iterable<? extends @Signed @PolyNull Object> v) {
@@ -1672,7 +1672,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link #escapeJava(String)}
    */
-  @Deprecated // 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(
   //     replacement = "StringsPlume.escapeJava(orig)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1693,7 +1693,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link StringsPlume#escapeJava}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.escapeJava(orig)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1708,7 +1708,7 @@ public final class UtilPlume {
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(Character)}
    */
-  @Deprecated // use escapeJava(Character); deprecated 2020-02-20
+  @Deprecated(since = "2020-02-20")
   public static String escapeNonJava(Character ch) {
     return escapeJava(ch);
   }
@@ -1721,7 +1721,7 @@ public final class UtilPlume {
    * @return quoted version of ch
    * @deprecated use {@link StringsPlume#escapeJava}
    */
-  @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
+  @Deprecated(since = "2020-12-02")
   public static String escapeJava(Character ch) {
     return StringsPlume.escapeJava(ch);
   }
@@ -1734,7 +1734,7 @@ public final class UtilPlume {
    * @return quoted version of ch
    * @deprecated use {@link StringsPlume#escapeJava}
    */
-  @Deprecated // use StringsPlume.escapeJava; deprecated 2020-12-02
+  @Deprecated(since = "2020-12-02")
   public static String escapeJava(char c) {
     return StringsPlume.escapeJava(c);
   }
@@ -1747,7 +1747,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link StringsPlume#escapeNonASCII}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.escapeNonASCII(orig)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1767,7 +1767,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link #unescapeJava(String)}
    */
-  @Deprecated // 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(
   //     replacement = "StringsPlume.unescapeJava(orig)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1787,7 +1787,7 @@ public final class UtilPlume {
    * @return quoted version of orig
    * @deprecated use {@link StringsPlume#unescapeJava}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.unescapeJava(orig)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1803,7 +1803,7 @@ public final class UtilPlume {
    * @return version of arg, with whitespace abutting delimiter removed
    * @deprecated use {@link StringsPlume#removeWhitespaceAround}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.removeWhitespaceAround(arg, delimiter)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1819,7 +1819,7 @@ public final class UtilPlume {
    * @return version of arg, with whitespace after delimiter removed
    * @deprecated use {@link StringsPlume#removeWhitespaceAfter}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.removeWhitespaceAfter(arg, delimiter)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1835,7 +1835,7 @@ public final class UtilPlume {
    * @return version of arg, with whitespace before delimiter removed
    * @deprecated use {@link StringsPlume#removeWhitespaceBefore}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.removeWhitespaceBefore(arg, delimiter)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1852,7 +1852,7 @@ public final class UtilPlume {
    * @return noun, if n==1; otherwise, pluralization of noun
    * @deprecated use {@link StringsPlume#nplural}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.nplural(n, noun)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1869,7 +1869,7 @@ public final class UtilPlume {
    * @return s truncated or padded to length characters
    * @deprecated use {@link StringsPlume#lpad}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.lpad(s, length)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1886,7 +1886,7 @@ public final class UtilPlume {
    * @return s truncated or padded to length characters
    * @deprecated use {@link StringsPlume#rpad}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.rpad(s, length)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1902,7 +1902,7 @@ public final class UtilPlume {
    * @return a string representation of num truncated or padded to length characters
    * @deprecated use {@link StringsPlume#rpad}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.rpad(num, length)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1918,7 +1918,7 @@ public final class UtilPlume {
    * @return a string representation of num truncated or padded to length characters
    * @deprecated use {@link StringsPlume#rpad}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.rpad(num, length)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -1931,7 +1931,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link StringsPlume.NullableStringComparator}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   public static class NullableStringComparator
       implements Comparator<@Nullable String>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -1969,7 +1969,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link StringsPlume.ObjectComparator}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     static final long serialVersionUID = 20170420L;
@@ -2012,7 +2012,7 @@ public final class UtilPlume {
    * @return number of times the character appears in the string
    * @deprecated use {@link StringsPlume#count}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.count(s, ch)", imports =
   // "org.plumelib.util.StringsPlume")
   public static int count(String s, int ch) {
@@ -2027,7 +2027,7 @@ public final class UtilPlume {
    * @return number of times the substring appears in the string
    * @deprecated use {@link StringsPlume#count}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(replacement = "StringsPlume.count(s, sub)", imports =
   // "org.plumelib.util.StringsPlume")
   public static int count(String s, String sub) {
@@ -2043,7 +2043,7 @@ public final class UtilPlume {
    * @return an abbreviated string representation of the value
    * @deprecated use {@link StringsPlume#abbreviateNumber}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.abbreviateNumber(val)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -2059,7 +2059,7 @@ public final class UtilPlume {
    * @return the number of format specifiers in the string
    * @deprecated use {@link StringsPlume#countFormatArguments}
    */
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "StringsPlume.countFormatArguments(s)",
   //     imports = "org.plumelib.util.StringsPlume")
@@ -2086,7 +2086,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#tokens}
    */
   @SuppressWarnings("NonApiType")
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "(ArrayList<Object>) StringsPlume.tokens(str, delim, returnDelims)",
   //     imports = {"java.util.ArrayList", "org.plumelib.util.StringsPlume"})
@@ -2104,7 +2104,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#tokens}
    */
   @SuppressWarnings("NonApiType")
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "(ArrayList<Object>) StringsPlume.tokens(str, delim)",
   //     imports = {"java.util.ArrayList", "org.plumelib.util.StringsPlume"})
@@ -2121,7 +2121,7 @@ public final class UtilPlume {
    * @deprecated use {@link StringsPlume#tokens}
    */
   @SuppressWarnings("NonApiType")
-  @Deprecated // 2020-12-02
+  @Deprecated(since = "2020-12-02")
   // @InlineMe(
   //     replacement = "(ArrayList<Object>) StringsPlume.tokens(str)",
   //     imports = {"java.util.ArrayList", "org.plumelib.util.StringsPlume"})
@@ -2141,7 +2141,7 @@ public final class UtilPlume {
    * @param millis the length of time to sleep in milliseconds
    * @deprecated use {@link SystemPlume#sleep}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "SystemPlume.sleep(millis)", imports = "org.plumelib.util.SystemPlume")
   public static void sleep(long millis) {
     SystemPlume.sleep(millis);
@@ -2156,7 +2156,7 @@ public final class UtilPlume {
    * @return the amount of used memory
    * @deprecated use {@link SystemPlume#usedMemory()}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "SystemPlume.usedMemory()", imports = "org.plumelib.util.SystemPlume")
   public static long usedMemory() {
     return SystemPlume.usedMemory();
@@ -2170,7 +2170,7 @@ public final class UtilPlume {
    * @return the amount of used memory
    * @deprecated use {@link SystemPlume#usedMemory(boolean)}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(
   //     replacement = "SystemPlume.usedMemory(forceGc)",
   //     imports = "org.plumelib.util.SystemPlume")
@@ -2184,7 +2184,7 @@ public final class UtilPlume {
    *
    * @deprecated use {@link SystemPlume#gc}
    */
-  @Deprecated // 2021-01-05
+  @Deprecated(since = "2021-01-05")
   // @InlineMe(replacement = "SystemPlume.gc()", imports = "org.plumelib.util.SystemPlume")
   public static void gc() {
     SystemPlume.gc();
@@ -2202,7 +2202,7 @@ public final class UtilPlume {
    * @return a String representation of the backtrace of the given Throwable
    * @deprecated use {@link #stackTraceToString}
    */
-  @Deprecated // 2020-02-20
+  @Deprecated(since = "2020-02-20")
   // @InlineMe(
   //     replacement = "UtilPlume.stackTraceToString(t)",
   //     imports = "org.plumelib.util.UtilPlume")

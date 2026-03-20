@@ -178,7 +178,7 @@ public final class CollectionsPlume {
    * @return true iff {@code a} does not contain duplicate elements
    * @deprecated use {@link #hasNoDuplicates}
    */
-  @Deprecated // 2023-11-30
+  @Deprecated(since = "2023-11-30")
   // @InlineMe(
   //     replacement = "CollectionsPlume.hasNoDuplicates(a)",
   //     imports = "org.plumelib.util.CollectionsPlume")
@@ -196,7 +196,7 @@ public final class CollectionsPlume {
    * @return a copy of the list with duplicates removed
    * @deprecated use {@link withoutDuplicates} or {@link withoutDuplicatesComparable}
    */
-  @Deprecated // 2021-03-28
+  @Deprecated(since = "2021-03-28")
   public static <T> List<T> removeDuplicates(Collection<T> l) {
     HashSet<T> hs = new LinkedHashSet<>(l);
     List<T> result = new ArrayList<>(hs);
@@ -312,7 +312,7 @@ public final class CollectionsPlume {
    * @return a sorted version of the list
    * @deprecated use {@link sorted}
    */
-  @Deprecated // 2025-11-13
+  @Deprecated(since = "2025-11-13")
   public static <T> List<T> sortList(Collection<T> l, Comparator<@MustCallUnknown ? super T> c) {
     return sorted(l, c);
   }
@@ -796,7 +796,7 @@ public final class CollectionsPlume {
    * @return a new list with the elements for which the filter returns true
    * @deprecated use {@link #filter} instead
    */
-  @Deprecated // 2023-11-30
+  @Deprecated(since = "2023-11-30")
   // @InlineMe(
   //     replacement = "CollectionsPlume.filter(coll, filter)",
   //     imports = "org.plumelib.util.CollectionsPlume")
@@ -1640,7 +1640,7 @@ public final class CollectionsPlume {
      * @param itor2 another Iterator
      * @deprecated use {@link CollectionsPlume#mergedIterator2}
      */
-    @Deprecated // use {@link #mergediterator2}
+    @Deprecated
     public MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
       this.itor1 = itor1;
       this.itor2 = itor2;
@@ -2014,7 +2014,7 @@ public final class CollectionsPlume {
    * @throws Error if the key is in the Map but maps to a non-Integer
    * @deprecated use {@link MapsP#incrementMap}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key) {
     return incrementMap(m, key, 1);
@@ -2032,7 +2032,7 @@ public final class CollectionsPlume {
    * @throws Error if the key is in the Map but maps to a non-Integer
    * @deprecated use {@link MapsP#incrementMap}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
     Integer newTotal = m.getOrDefault(key, 0) + count;
@@ -2048,7 +2048,7 @@ public final class CollectionsPlume {
    * @return a sorted version of m.keySet()
    * @deprecated use {@link MapsP#sortedKeySet}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
@@ -2066,7 +2066,7 @@ public final class CollectionsPlume {
    * @return a sorted version of m.keySet()
    * @deprecated use {@link MapsP#sortedKeySet}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K, V> Collection<@KeyFor("#1") K> sortedKeySet(
       Map<K, V> m, Comparator<K> comparator) {
     ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
@@ -2082,7 +2082,7 @@ public final class CollectionsPlume {
    * @return the initial capacity to pass to a HashMap or HashSet constructor
    * @deprecated use {@link MapsP#mapCapacity}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static int mapCapacity(int numElements) {
     // Equivalent to: (int) (numElements / 0.75) + 1
     // where 0.75 is the default load factor used throughout the JDK.
@@ -2098,7 +2098,7 @@ public final class CollectionsPlume {
    * @return the initial capacity to pass to a HashMap or HashSet constructor
    * @deprecated use {@link MapsP#mapCapacity}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <T> int mapCapacity(T[] a) {
     return mapCapacity(a.length);
   }
@@ -2111,7 +2111,7 @@ public final class CollectionsPlume {
    * @return the initial capacity to pass to a HashMap or HashSet constructor
    * @deprecated use {@link MapsP#mapCapacity}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static int mapCapacity(Collection<?> c) {
     return mapCapacity(c.size());
   }
@@ -2124,7 +2124,7 @@ public final class CollectionsPlume {
    * @return the initial capacity to pass to a HashMap or HashSet constructor
    * @deprecated use {@link MapsP#mapCapacity}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static int mapCapacity(Map<?, ?> m) {
     return mapCapacity(m.size());
   }
@@ -2143,7 +2143,7 @@ public final class CollectionsPlume {
    * @deprecated use {@link MapsP#deepCopy}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <
           K extends @Nullable DeepCopyable<K>,
           V extends @Nullable DeepCopyable<V>,
@@ -2175,7 +2175,7 @@ public final class CollectionsPlume {
    * @deprecated use {@link MapsP#deepCopyValues}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>>
       @PolyNull M deepCopyValues(@PolyNull M orig) {
     if (orig == null) {
@@ -2203,7 +2203,7 @@ public final class CollectionsPlume {
    * @return a new cache with the provided size
    * @deprecated use {@link MapsP#createLruCache}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K, V> Map<K, V> createLruCache(@Positive int size) {
     return new LinkedHashMap<>(size, .75F, true) {
 
@@ -2230,7 +2230,7 @@ public final class CollectionsPlume {
    * @deprecated use {@link MapsP#cloneElements}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(@PolyNull M orig) {
     return cloneElements(orig, true);
   }
@@ -2247,7 +2247,7 @@ public final class CollectionsPlume {
    * @deprecated use {@link MapsP#cloneValues}
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneValues(@PolyNull M orig) {
     return cloneElements(orig, false);
   }
@@ -2299,7 +2299,7 @@ public final class CollectionsPlume {
    * @param linePrefix a prefix to put at the beginning of each line
    * @deprecated use {@link MapsP#mapToString}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
     mapToStringMultiLine(sb, m, linePrefix);
@@ -2319,7 +2319,7 @@ public final class CollectionsPlume {
    * @param linePrefix a prefix to put at the beginning of each line
    * @deprecated use {@link MapsP#mapToStringMultiLine}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       void mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix) {
     try {
@@ -2376,7 +2376,7 @@ public final class CollectionsPlume {
    * @return a multi-line string representation of m
    * @deprecated use {@link MapsP#mapToString}
    */
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   @SideEffectFree
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToString(Map<K, V> m) {
@@ -2398,7 +2398,7 @@ public final class CollectionsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringMultiLine(Map<K, V> m) {
     StringJoiner result = new StringJoiner(lineSep);
@@ -2424,7 +2424,7 @@ public final class CollectionsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringMultiLine(Map<K, V> m, String linePrefix) {
     StringJoiner result = new StringJoiner(lineSep);
@@ -2445,7 +2445,7 @@ public final class CollectionsPlume {
    * @deprecated use {@link MapsP#mapToStringAndClassMultiLine}
    */
   @SideEffectFree
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringAndClassMultiLine(Map<K, V> m) {
     return mapToStringAndClassMultiLine(m, "");
@@ -2467,7 +2467,7 @@ public final class CollectionsPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  @Deprecated // 2025-06-28
+  @Deprecated(since = "2025-06-28")
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
     StringJoiner result = new StringJoiner(lineSep);

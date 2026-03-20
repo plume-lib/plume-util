@@ -193,7 +193,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link #newFileReader(Path,Charset)}
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
     "JdkObsolete", // this method is deprecated
@@ -267,7 +267,7 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SideEffectFree
   @Owning
   public static InputStreamReader newFileReader(File file, @Nullable String charsetName)
@@ -355,7 +355,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link #newBufferedFileReader(String,Charset)}
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SideEffectFree
   @Owning
   public static BufferedReader newBufferedFileReader(String filename, @Nullable String charsetName)
@@ -401,7 +401,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link #newBufferedFileReader(File,Charset)}
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
   @Owning
@@ -618,7 +618,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link newFileWriter(Path,Charset)}
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
     "JdkObsolete", // this method is deprecated
@@ -693,7 +693,7 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    * @deprecated use {@link #newFileWriter(File,Charset)}
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SideEffectFree
   @Owning
   public static OutputStreamWriter newFileWriter(File file, @Nullable String charsetName)
@@ -1298,7 +1298,7 @@ public final class FilesPlume {
    */
   // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
   // "org.plumelib.util.FilesPlume")
-  @Deprecated // 2023-03-02
+  @Deprecated(since = "2023-03-02")
   @SideEffectFree
   public static String readFile(File file) {
     return fileContents(file);
@@ -1351,7 +1351,7 @@ public final class FilesPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link #readString}
    */
-  @Deprecated // 2024-04-14
+  @Deprecated(since = "2024-04-14")
   @SideEffectFree
   public static String fileContents(File file) {
     return readString(file.toPath());
@@ -1368,7 +1368,7 @@ public final class FilesPlume {
    * @param contents the text to put in the file
    * @deprecated use {@link #writeString(File, String)}
    */
-  @Deprecated // 2024-04-16
+  @Deprecated(since = "2024-04-16")
   public static void writeFile(File file, String contents) {
     writeString(file.toPath(), contents);
   }

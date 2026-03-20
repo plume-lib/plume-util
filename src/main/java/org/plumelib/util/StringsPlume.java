@@ -498,7 +498,7 @@ public final class StringsPlume {
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(Character)}
    */
-  @Deprecated // 2021-03-14
+  @Deprecated(since = "2021-03-14")
   @SideEffectFree
   public static String escapeJava(Character ch) {
     return escapeJava(ch.charValue());
@@ -512,7 +512,7 @@ public final class StringsPlume {
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
-  @Deprecated // 2021-03-14
+  @Deprecated(since = "2021-03-14")
   @SideEffectFree
   public static String escapeJava(char c) {
     return switch (c) {
@@ -755,7 +755,7 @@ public final class StringsPlume {
     "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @Pure
   public static boolean isBlank(String s) {
     return s.chars().allMatch(Character::isWhitespace);
@@ -1030,7 +1030,7 @@ public final class StringsPlume {
    *
    * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
-  @Deprecated // deprecated 2021-02-27
+  @Deprecated(since = "2021-02-27")
   public static class NullableStringComparator
       implements Comparator<@Nullable String>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -1089,7 +1089,7 @@ public final class StringsPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public ObjectComparator() {}
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -1416,7 +1416,7 @@ public final class StringsPlume {
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
-  @Deprecated // 2025-06-21
+  @Deprecated(since = "2025-06-21")
   @SideEffectFree
   public static String mapToStringAndClass(
       Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
@@ -1439,7 +1439,7 @@ public final class StringsPlume {
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
-  @Deprecated // 2025-06-21
+  @Deprecated(since = "2025-06-21")
   @SideEffectFree
   public static String mapToStringLinewise(
       Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
@@ -1466,7 +1466,7 @@ public final class StringsPlume {
    * @throws IllegalArgumentException if the length of {@code noun} is 0
    * @deprecated use {@link #nPlural(int, String)}
    */
-  @Deprecated // 2025-07-16
+  @Deprecated(since = "2025-07-16")
   @SideEffectFree
   public static String nplural(int n, String noun) {
     return nPlural(n, noun);

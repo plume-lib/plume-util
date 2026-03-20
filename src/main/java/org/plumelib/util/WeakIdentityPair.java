@@ -38,7 +38,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
    * @param b the second element of the pair
    * @deprecated use {@link #of}
    */
-  @Deprecated // 2023-05-20; to be made private
+  @Deprecated(since = "2023-05-20") // to make private
   public WeakIdentityPair(V1 a, V2 b) {
     if (a == null || b == null) {
       throw new IllegalArgumentException(

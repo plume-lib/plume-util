@@ -53,7 +53,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @return the new list
    * @deprecated use {@link #from(Collection)}
    */
-  @Deprecated // 2025-08-30
+  @Deprecated(since = "2025-08-30")
   public static <E2> SIList<E2> fromList(Collection<E2> list) {
     int size = list.size();
     if (size == 0) {

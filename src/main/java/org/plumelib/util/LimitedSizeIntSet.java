@@ -20,7 +20,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * estimate (because the internal representation is nulled, in order to save space).
  *
  * <p>The advantage of this class over {@code LimitedSizeSet<Integer>} is that it does not autobox
- * the int values, so it takes less memory.
+ * the int values, so it takes less memory and possibly less time.
  *
  * @see LimitedSizeSet
  */

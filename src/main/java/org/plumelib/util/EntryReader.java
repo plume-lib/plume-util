@@ -173,7 +173,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    * @deprecated use {@link EntryReader(InputStream,String,String,EntryFormat,CommentFormat,String)}
    */
-  @Deprecated // 2026-03-05
+  @Deprecated(since = "2026-03-05")
   @SuppressWarnings("JdkObsolete") // this method is deprecated
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
@@ -206,7 +206,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link
    *     #EntryReader(InputStream,String,String,EntryFormat,CommentFormat,String)}
    */
-  @Deprecated // 2026-01-28
+  @Deprecated(since = "2026-01-28")
   @SuppressWarnings("JdkObsolete") // this method is deprecated
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
@@ -239,7 +239,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-21
+  @Deprecated(since = "2026-01-21")
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -271,7 +271,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String charsetName,
@@ -293,7 +293,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in, String charsetName, String filename)
       throws UnsupportedEncodingException {
@@ -334,7 +334,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,EntryFormat,CommentFormat,String)}
    */
-  @Deprecated // 2026-01-28
+  @Deprecated(since = "2026-01-28")
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -362,7 +362,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)},
    *     passing {@code UTF_8} as the charset
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -388,7 +388,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public @MustCallAlias EntryReader(
       @MustCallAlias InputStream in,
       String filename,
@@ -461,7 +461,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    * @deprecated see {@link #EntryReader(Reader,String,EntryFormat,CommentFormat,String)}
    */
-  @Deprecated // 2026-01-28
+  @Deprecated(since = "2026-01-28")
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -494,7 +494,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-21
+  @Deprecated(since = "2026-01-21")
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -521,7 +521,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
@@ -574,7 +574,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated see {@link #EntryReader(Path,EntryFormat,CommentFormat, String)}
    */
-  @Deprecated // 2026-01-28
+  @Deprecated(since = "2026-01-28")
   public EntryReader(
       Path path,
       EntryFormat entryFormat,
@@ -601,7 +601,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(Path,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-21
+  @Deprecated(since = "2026-01-21")
   public EntryReader(
       Path path,
       boolean twoBlankLines,
@@ -626,7 +626,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(Path,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public EntryReader(
       Path path, @Nullable @Regex String lineCommentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -653,7 +653,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(InputStream,String,String,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(InputStream,String,String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public EntryReader(Path path, String charsetName) throws IOException {
     this(
         FilesPlume.newFileInputStream(path),
@@ -697,7 +697,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated see {@link #EntryReader(File, EntryFormat,CommentFormat,String)}
    */
-  @Deprecated // 2026-01-28
+  @Deprecated(since = "2026-01-28")
   public EntryReader(
       File file,
       EntryFormat entryFormat,
@@ -724,7 +724,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(File,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-21
+  @Deprecated(since = "2026-01-21")
   public EntryReader(
       File file,
       boolean twoBlankLines,
@@ -749,7 +749,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws IOException if there is a problem reading the file
    * @deprecated use {@link #EntryReader(File,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public EntryReader(
       File file, @Nullable @Regex String lineCommentRegex, @Nullable @Regex(1) String includeRegex)
       throws IOException {
@@ -776,7 +776,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(File,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public EntryReader(File file, String charsetName) throws IOException {
     this(
         FilesPlume.newFileInputStream(file),
@@ -822,7 +822,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,EntryFormat,String,String)
    * @deprecated see {@link #EntryReader(String, EntryFormat,CommentFormat,String)}
    */
-  @Deprecated // 2026-01-28
+  @Deprecated(since = "2026-01-28")
   public EntryReader(
       String filename,
       EntryFormat entryFormat,
@@ -845,7 +845,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-21
+  @Deprecated(since = "2026-01-21")
   public EntryReader(
       String filename,
       boolean twoBlankLines,
@@ -871,7 +871,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(File,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public EntryReader(
       String filename,
       @Nullable @Regex String lineCommentRegex,
@@ -900,7 +900,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @see #EntryReader(String,EntryFormat,String,String)
    * @deprecated use {@link #EntryReader(String,EntryFormat,String,String)}
    */
-  @Deprecated // 2026-01-05
+  @Deprecated(since = "2026-01-05")
   public EntryReader(String filename, String charsetName) throws IOException {
     this(
         Files.newInputStream(Path.of(filename)),
@@ -1589,7 +1589,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public DummyReader() {}
 
     @Override

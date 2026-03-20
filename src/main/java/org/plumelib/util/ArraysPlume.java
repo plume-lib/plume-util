@@ -2504,7 +2504,7 @@ public final class ArraysPlume {
    * @return true iff the array is sorted
    * @deprecated use {@link #isSorted(int[])}
    */
-  @Deprecated // 2024-04-21
+  @Deprecated(since = "2024-04-21")
   @Pure
   public static boolean sorted(int[] a) {
     return isSorted(a);
@@ -2533,7 +2533,7 @@ public final class ArraysPlume {
    * @return true iff the array is sorted
    * @deprecated use {@link #isSorted(long[])}
    */
-  @Deprecated // 2024-04-21
+  @Deprecated(since = "2024-04-21")
   public static boolean sorted(long[] a) {
     return isSorted(a);
   }
@@ -2615,7 +2615,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2666,7 +2666,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2717,7 +2717,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2768,7 +2768,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2819,7 +2819,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2870,7 +2870,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2922,7 +2922,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -2974,7 +2974,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -3025,7 +3025,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -3076,7 +3076,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@code hasNoDuplicates}
    */
-  @Deprecated // 2023-12-01
+  @Deprecated(since = "2023-12-01")
   // @InlineMe(
   //     replacement = "!ArraysPlume.hasDuplicates(a)",
   //     imports = "org.plumelib.util.ArraysPlume")
@@ -3108,7 +3108,7 @@ public final class ArraysPlume {
    * @return true iff a does not contain duplicate elements
    * @deprecated use {@link CollectionsPlume#hasNoDuplicates}
    */
-  @Deprecated // 2021-04-09
+  @Deprecated(since = "2021-04-09")
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static <T> boolean noDuplicates(List<T> a) {
@@ -3410,7 +3410,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public IntArrayComparatorLexical() {}
 
     /**
@@ -3457,7 +3457,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public LongArrayComparatorLexical() {}
 
     /**
@@ -3505,7 +3505,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public DoubleArrayComparatorLexical() {}
 
     /**
@@ -3554,7 +3554,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public StringArrayComparatorLexical() {}
 
     /**
@@ -3681,7 +3681,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public ObjectArrayComparatorLexical() {}
 
     /**
@@ -3734,7 +3734,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public IntArrayComparatorLengthFirst() {}
 
     /**
@@ -3784,7 +3784,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public LongArrayComparatorLengthFirst() {}
 
     /**
@@ -3906,7 +3906,7 @@ public final class ArraysPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public ObjectArrayComparatorLengthFirst() {}
 
     /**
