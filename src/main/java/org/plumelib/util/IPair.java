@@ -11,6 +11,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 /**
  * Immutable pair class. If mutation is needed, use {@link MPair}.
  *
+ * <p>It is usually better to use a custom record class rather than {@code IPair}.
+ *
  * @param <V1> the type of the first element of the pair
  * @param <V2> the type of the second element of the pair
  */

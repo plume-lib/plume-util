@@ -943,28 +943,20 @@ public final class CollectionsPlume {
    * Represents a replacement of one range of a collection by another collection.
    *
    * @param <T> the type of collection elements
+   * @param start the first line to replace, inclusive; may be equal to {@code start}-1
+   * @param end the last line to replace, exclusive
+   * @param elements the new (replacement) elements
    */
-  public static final class Replacement<T> {
-    /** The first line to replace, inclusive. */
-    public final int start;
-
-    /** The last line to replace, <em>inclusive</em>. May be equal to {@code start}-1. */
-    public final int end;
-
-    /** The new (replacement) elements. */
-    final Collection<T> elements;
+  public static record Replacement<T>(int start, int end, Collection<T> elements) {
 
     /**
      * Creates a new Replacement.
      *
-     * @param start the first line to replace, inclusive
+     * @param start the first line to replace, inclusive; may be equal to {@code start}-1
      * @param end the last line to replace, exclusive
      * @param elements the new (replacement) elements
      */
-    private Replacement(int start, int end, Collection<T> elements) {
-      this.start = start;
-      this.end = end;
-      this.elements = elements;
+    public Replacement {
       if (end < start - 1) {
         throw new Error("Invalid <start,end> pair: " + this);
       }
