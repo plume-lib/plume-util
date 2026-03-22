@@ -1521,40 +1521,17 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
   }
 
-  /** Descriptor for an entry (record, paragraph, etc.). */
-  public static class Entry {
-    /** First line of the entry. */
-    public final String firstLine;
-
-    /** Complete body of the entry including the first line. */
-    public final String body;
-
-    /** True if this is a short entry (blank-line-separated). */
-    public final boolean shortEntry;
-
-    /** Filename in which the entry was found. */
-    public final String filename;
-
-    /** Line number of first line of entry. */
-    public final long lineNumber;
-
-    /**
-     * Create an entry.
-     *
-     * @param firstLine first line of the entry
-     * @param body complete body of the entry including the first line
-     * @param shortEntry true if this is a short entry (blank-line-separated)
-     * @param filename filename in which the entry was found
-     * @param lineNumber line number of first line of entry
-     */
-    public Entry(
-        String firstLine, String body, String filename, long lineNumber, boolean shortEntry) {
-      this.firstLine = firstLine;
-      this.body = body;
-      this.filename = filename;
-      this.lineNumber = lineNumber;
-      this.shortEntry = shortEntry;
-    }
+  /**
+   * Descriptor for an entry (record, paragraph, etc.).
+   *
+   * @param firstLine first line of the entry
+   * @param body complete body of the entry including the first line
+   * @param filename filename in which the entry was found
+   * @param lineNumber line number of first line of entry
+   * @param shortEntry true if this is a short entry (blank-line-separated)
+   */
+  public static record Entry(
+      String firstLine, String body, String filename, long lineNumber, boolean shortEntry) {
 
     /**
      * Returns a substring of the entry body that matches the specified regular expression. If no

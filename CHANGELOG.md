@@ -7,6 +7,9 @@
   * use `CollectionsP` instead of `CollectionsPlume`.
   * use `FilesP` instead of `FilesPlume`.
 * Removed all deprecated classes and methods.
+* Converted classes to records:
+  * `CollectionsPlume.Replacement`
+  * `EntryReader.Entry`
 
 ## 1.14.0 (2026-03-05)
 
