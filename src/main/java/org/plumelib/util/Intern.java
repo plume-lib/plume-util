@@ -1157,15 +1157,13 @@ public final class Intern {
       this.end = end;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "lock:instanceof.pattern.unsafe"}) // other is @GuardSatisfied
     @Pure
     @Override
     public boolean equals(
         @GuardSatisfied Subsequence<T> this, @GuardSatisfied @Nullable Object other) {
-      if (other instanceof Subsequence<?>) {
-        @SuppressWarnings("unchecked")
-        Subsequence<T> otherSai = (Subsequence<T>) other;
-        return equalsSubsequence(otherSai);
+      if (other instanceof Subsequence<?> otherSai) {
+        return equalsSubsequence((Subsequence<T>) otherSai);
       } else {
         return false;
       }

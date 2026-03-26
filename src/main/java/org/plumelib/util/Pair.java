@@ -55,13 +55,11 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
 
   @Override
   @Pure
+  @SuppressWarnings("lock:instanceof.pattern.unsafe") // obj is @GuardSatisfied
   public boolean equals(@GuardSatisfied Pair<T1, T2> this, @GuardSatisfied @Nullable Object obj) {
-    if (!(obj instanceof Pair<?, ?>)) {
+    if (!(obj instanceof Pair<?, ?> other)) {
       return false;
     }
-    // generics are not checked at run time!
-    @SuppressWarnings("unchecked")
-    Pair<T1, T2> other = (Pair<T1, T2>) obj;
     return (((this.a == other.a) || (this.a != null && this.a.equals(other.a)))
         && ((this.b == other.b) || (this.b != null && this.b.equals(other.b))));
   }

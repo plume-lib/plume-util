@@ -4250,9 +4250,8 @@ public final class ArraysPlume {
       return result;
     }
 
-    if (iterable instanceof Collection) {
-      @SuppressWarnings("unchecked") // checked just above
-      int len = ((Collection<?>) iterable).size();
+    if (iterable instanceof Collection<?> c) {
+      int len = c.size();
       @SuppressWarnings("unchecked") // reflection
       TO[] result = (TO[]) Array.newInstance(toClass, len);
       if (result.length == 0) {

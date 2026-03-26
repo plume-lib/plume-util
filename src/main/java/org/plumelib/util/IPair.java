@@ -123,15 +123,14 @@ public final class IPair<V1, V2> {
 
   @Override
   @Pure
+  @SuppressWarnings("lock:instanceof.pattern.unsafe") // obj is @GuardSatisfied
   public boolean equals(@GuardSatisfied IPair<V1, V2> this, @GuardSatisfied @Nullable Object obj) {
     if (this == obj) {
       return true;
     }
-    if (!(obj instanceof IPair)) {
+    if (!(obj instanceof IPair<?, ?> other)) {
       return false;
     }
-    @SuppressWarnings("unchecked") // generics are not checked at run time
-    IPair<V1, V2> other = (IPair<V1, V2>) obj;
     return Objects.equals(this.first, other.first) && Objects.equals(this.second, other.second);
   }
 

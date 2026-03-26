@@ -33,26 +33,28 @@ public final class IdentityMostlySingletonSet<T extends Object>
     super(State.SINGLETON, value);
   }
 
-  @SuppressWarnings("fallthrough")
   @Override
   public boolean add(@GuardSatisfied IdentityMostlySingletonSet<T> this, @FindDistinct T e) {
-    switch (state) {
-      case EMPTY:
+    return switch (state) {
+      case EMPTY -> {
         state = State.SINGLETON;
         value = e;
-        return true;
-      case SINGLETON:
+        yield true;
+      }
+      case SINGLETON -> {
         if (value == e) {
-          return false;
+          yield false;
         }
         makeNonSingleton();
-      // fall through
-      case ANY:
         assert set != null : "@AssumeAssertion(nullness): set initialized before";
-        return set.add(e);
-      default:
-        throw new IllegalStateException("Unhandled state " + state);
-    }
+        yield set.add(e);
+      }
+      case ANY -> {
+        assert set != null : "@AssumeAssertion(nullness): set initialized before";
+        yield set.add(e);
+      }
+      default -> throw new IllegalStateException("Unhandled state " + state);
+    };
   }
 
   /** Switch the representation of this from SINGLETON to ANY. */
