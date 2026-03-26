@@ -1299,12 +1299,12 @@ public final class StringsPlume {
       if (v.getClass().isArray()) {
         return arrayToStringAndClass(v);
       }
-      if (v instanceof List) {
-        return listToStringAndClass((List<? extends @PolyNull @Signed Object>) v);
+      if (v instanceof List<?> l) {
+        return listToStringAndClass((List<? extends @PolyNull @Signed Object>) l);
       }
-      if (v instanceof Map) {
+      if (v instanceof Map<?, ?> m) {
         return mapToStringAndClass(
-            (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) v);
+            (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
       }
     }
     try {

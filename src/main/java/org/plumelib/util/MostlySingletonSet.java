@@ -31,29 +31,29 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
   }
 
   @Override
-  @SuppressWarnings({
-    "fallthrough",
-    "lock:method.invocation" // #979?
-  })
+  @SuppressWarnings("lock:method.invocation") // #979?
   public boolean add(@GuardSatisfied MostlySingletonSet<T> this, T e) {
-    switch (state) {
-      case EMPTY:
+    return switch (state) {
+      case EMPTY -> {
         state = State.SINGLETON;
         value = e;
-        return true;
-      case SINGLETON:
+        yield true;
+      }
+      case SINGLETON -> {
         assert value != null : "@AssumeAssertion(nullness): SINGLETON => value != null";
         if (value.equals(e)) {
-          return false;
+          yield false;
         }
         makeNonSingleton();
-      // fall through
-      case ANY:
-        assert set != null : "@AssumeAssertion(nullness): ANY => value != null";
-        return set.add(e);
-      default:
-        throw new IllegalStateException("Unhandled state " + state);
-    }
+        assert set != null : "@AssumeAssertion(nullness): set != null after makeNonSingleton";
+        yield set.add(e);
+      }
+      case ANY -> {
+        assert set != null : "@AssumeAssertion(nullness): ANY => set != null";
+        yield set.add(e);
+      }
+      default -> throw new IllegalStateException("Unhandled state " + state);
+    };
   }
 
   /** Switch the representation of this from SINGLETON to ANY. */

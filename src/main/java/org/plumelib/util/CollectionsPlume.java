@@ -132,8 +132,7 @@ public final class CollectionsPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static <T> boolean hasDuplicates(Collection<T> a) {
-    if (a instanceof List && a instanceof RandomAccess) {
-      List<T> alist = (List<T>) a;
+    if (a instanceof List<T> alist && alist instanceof RandomAccess) {
       HashSet<T> hs = new HashSet<>();
       for (int i = 0; i < alist.size(); i++) { // NOPMD: a foreach loop here would be less efficient
         T elt = alist.get(i);
@@ -217,8 +216,8 @@ public final class CollectionsPlume {
    */
   public static <T> List<T> withoutDuplicates(Collection<T> values) {
     Set<T> s = ArraySet.<T>newArraySetOrLinkedHashSet(values);
-    if (values.size() == s.size() && values instanceof List) {
-      return (List<T>) values;
+    if (values.size() == s.size() && values instanceof List<T> l) {
+      return l;
     } else {
       return new ArrayList<>(s);
     }
@@ -240,8 +239,8 @@ public final class CollectionsPlume {
   public static <T extends Comparable<T>> List<T> withoutDuplicatesSorted(Collection<T> values) {
     // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
     if (isSortedNoDuplicates(values)) {
-      if (values instanceof List) {
-        return (List<T>) values;
+      if (values instanceof List<T> l) {
+        return l;
       } else {
         return new ArrayList<>(values);
       }
@@ -272,16 +271,16 @@ public final class CollectionsPlume {
       Collection<T> values) {
     // This adds O(n) time cost, and has the benefit of sometimes avoiding allocating a TreeSet.
     if (isSortedNoDuplicates(values)) {
-      if (values instanceof List) {
-        return (List<T>) values;
+      if (values instanceof List<T> l) {
+        return l;
       } else {
         return new ArrayList<>(values);
       }
     }
 
     Set<T> set = new TreeSet<>(values);
-    if (values.size() == set.size() && values instanceof List) {
-      return (List<T>) values;
+    if (values.size() == set.size() && values instanceof List<T> l) {
+      return l;
     } else {
       return new ArrayList<>(set);
     }
@@ -329,8 +328,7 @@ public final class CollectionsPlume {
       return true;
     }
 
-    if (values instanceof List && values instanceof RandomAccess) {
-      List<T> valuesList = (List<T>) values;
+    if (values instanceof List<T> valuesList && valuesList instanceof RandomAccess) {
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
       int size = valuesList.size();
       for (int i = 0; i < size - 1; i++) {
@@ -365,8 +363,7 @@ public final class CollectionsPlume {
       return true;
     }
 
-    if (values instanceof List && values instanceof RandomAccess) {
-      List<T> valuesList = (List<T>) values;
+    if (values instanceof List<T> valuesList && valuesList instanceof RandomAccess) {
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
       int size = valuesList.size();
       for (int i = 0; i < size - 1; i++) {
@@ -574,9 +571,8 @@ public final class CollectionsPlume {
 
     List<TO> result;
 
-    if (iterable instanceof List && iterable instanceof RandomAccess) {
+    if (iterable instanceof List<FROM> list && list instanceof RandomAccess) {
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      List<FROM> list = (List<FROM>) iterable;
       int size = list.size();
       result = new ArrayList<>(size);
       for (int i = 0; i < size; i++) {
@@ -593,8 +589,8 @@ public final class CollectionsPlume {
       return result;
     }
 
-    if (iterable instanceof Collection) {
-      result = new ArrayList<>(((Collection<?>) iterable).size());
+    if (iterable instanceof Collection<?> c) {
+      result = new ArrayList<>(c.size());
     } else {
       result = new ArrayList<>(); // no information about size is available
     }
