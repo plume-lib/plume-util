@@ -359,7 +359,7 @@ final class CollectionsPlumeTest {
   // a)
 
   @Test
-  @SuppressWarnings("lock:type.arguments.not.inferred")
+  @SuppressWarnings("lock:methodref.receiver")
   void test_mapList() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
@@ -399,7 +399,7 @@ final class CollectionsPlumeTest {
   // public static <List<TO> transform(Iterable<FROM> iterable, Function f)
 
   @Test
-  @SuppressWarnings("lock:type.arguments.not.inferred")
+  @SuppressWarnings("lock:methodref.receiver")
   void test_transform() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
