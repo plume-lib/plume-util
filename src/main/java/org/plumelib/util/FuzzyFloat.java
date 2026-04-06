@@ -290,44 +290,14 @@ public class FuzzyFloat {
           continue outer2;
         }
         if (val < a2[j]) {
-          // System.out.println ("isElemMatch: " + val + " " + a2[j]);
           return false;
         }
       }
-      // System.out.println ("isElemMatch: " + i);
       return false;
     }
 
     return true;
   }
-
-  // Slightly more efficient method that will miss some matches
-  //     int i = 0;
-  //     int j = 0;
-  //     while (i < a1.length && j < a2.length) {
-  //       if (ne (a1[i], a2[j])) {
-  //         System.out.println ("isElemMatch: " + a1[i] + " " + a2[j]);
-  //         return false;
-  //       }
-  //       double val = a1[i];
-  //       i++;
-  //       while ((i < a1.length) && (eq (a1[i], val))) {
-  //         i++;
-  //       }
-  //       j++;
-  //       while ((j < a2.length) && (eq (a2[j], val))) {
-  //         j++;
-  //       }
-  //     }
-
-  //     // if there are any elements left, then they don't match.
-  //     if ((i != a1.length) || (j != a2.length)) {
-  //       System.out.println ("isElemMatch: " + i + " " + j);
-  //       return false;
-  //     }
-
-  //     return true;
-  //     }
 
   /** Lexically compares two double arrays. */
   public class DoubleArrayComparatorLexical implements Comparator<double[]>, Serializable {

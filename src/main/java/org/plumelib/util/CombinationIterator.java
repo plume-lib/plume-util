@@ -113,7 +113,6 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
 
   @Override
   public void remove(@GuardSatisfied CombinationIterator<T> this) {
-    throw new UnsupportedOperationException(
-        "Remove not implemented for randoop.reflection.SubstitutionEnumerator");
+    throw new UnsupportedOperationException("Remove not implemented for CombinationIterator");
   }
 }
