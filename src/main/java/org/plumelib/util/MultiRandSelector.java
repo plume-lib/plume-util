@@ -137,14 +137,6 @@ public class MultiRandSelector<T extends @Nullable Object> {
     delegation.accept(next);
   }
 
-  // I assume this is only for testing?  Comment it out to see whether that causes a problem for
-  // any client.
-  // TODO: is there any reason not to simply return a copy?
-  // NOT safe from concurrent modification.
-  // private Map<T, RandomSelector<T>> values() {
-  //   return map;
-  // }
-
   /**
    * Returns an iterator of all objects selected.
    *

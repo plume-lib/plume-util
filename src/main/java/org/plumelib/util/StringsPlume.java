@@ -163,7 +163,7 @@ public final class StringsPlume {
     if (indent == 0) {
       return (o == null) ? "null" : o.toString();
     }
-    String prefix = new String(new char[indent]).replace('\0', ' ');
+    String prefix = " ".repeat(indent);
     return prefixLines(prefix, o);
   }
 
@@ -181,7 +181,7 @@ public final class StringsPlume {
     if (indent == 0) {
       return (o == null) ? "null" : o.toString();
     }
-    String prefix = new String(new char[indent]).replace('\0', ' ');
+    String prefix = " ".repeat(indent);
     return prefixLinesExceptFirst(prefix, o);
   }
 

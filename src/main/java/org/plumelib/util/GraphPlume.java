@@ -148,10 +148,7 @@ public final class GraphPlume {
    */
   public static <T extends @NonNull Object> void print(
       Map<T, List<T>> graph, PrintStream ps, int indent) {
-    String indentString = "";
-    for (int i = 0; i < indent; i++) {
-      indentString += " ";
-    }
+    String indentString = " ".repeat(indent);
     for (T node : graph.keySet()) {
       ps.printf("%s%s%n", indentString, node);
       for (T child : graph.get(node)) {
