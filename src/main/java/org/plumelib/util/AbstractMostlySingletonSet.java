@@ -101,7 +101,8 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   @Override
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree",
-    "lock:override.receiver" // cannot specify the anonymous receiver type
+    "lock:override.receiver", // cannot specify the anonymous receiver type
+    "NotJavadoc" // Error prone forbids Javadoc comments on anonymous classes.
   })
   @SideEffectFree
   public Iterator<T> iterator() {
