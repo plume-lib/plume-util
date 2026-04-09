@@ -3201,7 +3201,7 @@ public final class ArraysPlume {
    * @param arange length of the argument's range and the result's domain
    * @return function from [0..arange) to [0..a.length) that is the inverse of a
    * @throws IllegalArgumentException if a value of a is outside of arange
-   * @exception UnsupportedOperationException when the function is not invertible
+   * @throws UnsupportedOperationException when the function is not invertible
    */
   @SuppressWarnings({
     "allcheckers:purity",
