@@ -10,6 +10,7 @@
 * Converted classes to records:
   * `CollectionsPlume.Replacement`
   * `EntryReader.Entry`
+* New overloads of `UtilPlume.backticks()` that take a directory argument.
 
 ## 1.14.0 (2026-03-05)
 

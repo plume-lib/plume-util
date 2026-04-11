@@ -1174,7 +1174,18 @@ public final class UtilPlume {
    * @return all the output of the command
    */
   public static String backticks(String... command) {
-    return backticks(Arrays.asList(command));
+    return backticks(null, Arrays.asList(command));
+  }
+
+  /**
+   * Execute the given command in the given directory, and return all its output as a string.
+   *
+   * @param dir the directory in which to execute the command
+   * @param command a command to execute on the command line
+   * @return all the output of the command
+   */
+  public static String backticks(File dir, String... command) {
+    return backticks(dir, Arrays.asList(command));
   }
 
   /**
@@ -1185,7 +1196,22 @@ public final class UtilPlume {
    * @return all the output of the command
    */
   public static String backticks(List<String> command) {
+    return backticks(null, command);
+  }
+
+  /**
+   * Execute the given command in the given directory, and return all its output as a string.
+   *
+   * @param dir the directory in which to execute the command
+   * @param command a command to execute on the command line, as a list of strings (the command,
+   *     then its arguments)
+   * @return all the output of the command
+   */
+  public static String backticks(@Nullable File dir, List<String> command) {
     ProcessBuilder pb = new ProcessBuilder(command);
+    if (dir != null) {
+      pb.directory(dir);
+    }
     pb.redirectErrorStream(true);
     // TimeLimitProcess p = new TimeLimitProcess(pb.start(), TIMEOUT_SEC * 1000);
     try {
