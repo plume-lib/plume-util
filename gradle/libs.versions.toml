@@ -12,7 +12,7 @@ org-checkerframework = { id = "org.checkerframework", version = "1.0.2" }
 
 [versions]
 
-junit-jupiter = "5.14.3"
+junit-jupiter = "5.14.4"
 
 [libraries]
 
