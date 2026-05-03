@@ -48,8 +48,8 @@ import org.junit.jupiter.api.Test;
   "unchecked",
   "deprecation",
   "removal",
-  "nullness", // contains intentional misuses; exceptions are caught in catch statments
-  "index", // contains intentional misuses; exceptions are caught in catch statments
+  "nullness", // contains intentional misuses; exceptions are caught in catch statements
+  "index", // contains intentional misuses; exceptions are caught in catch statements
   "interning", // ad hoc equality tests
   "signedness", // raw collection types
   "BoxedPrimitiveConstructor",
@@ -218,7 +218,7 @@ class ArrayMapTestApache {
     Set key2 = map2.keySet();
     assertTrue(key2 != keys);
     assertEquals("key2", key2.iterator().next());
-    // regresion test for HARMONY-4603
+    // regression test for HARMONY-4603
     ArrayMap hashmap = new ArrayMap();
     MockClonable mock = new MockClonable(1);
     hashmap.put(1, mock);

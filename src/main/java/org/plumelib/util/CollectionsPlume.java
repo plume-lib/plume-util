@@ -612,7 +612,7 @@ public final class CollectionsPlume {
    * Applies the function to each element of the given array, producing a list of the results.
    *
    * <p>This produces a list rather than an array because it is problematic to create an array with
-   * generic compontent type.
+   * generic component type.
    *
    * <p>The point of this method is to make mapping operations more concise. Import it with
    *

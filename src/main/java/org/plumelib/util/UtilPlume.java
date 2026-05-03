@@ -1434,7 +1434,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns the printed represenation of a value, with each line prefixed by another string.
+   * Returns the printed representation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
@@ -1450,7 +1450,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns the printed represenation of a value, with each line (except the first) prefixed by
+   * Returns the printed representation of a value, with each line (except the first) prefixed by
    * another string.
    *
    * @param prefix the prefix to place before each line

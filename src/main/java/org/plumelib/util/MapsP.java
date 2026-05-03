@@ -355,7 +355,7 @@ public final class MapsP {
    * ...
    * </pre>
    *
-   * where each inner map is formmatted by {@link mapToStringMultiLine(Appendable, Map, String)}.
+   * where each inner map is formatted by {@link mapToStringMultiLine(Appendable, Map, String)}.
    *
    * @param <K1> the type of the outer map keys
    * @param <K2> the type of the inner map keys
