@@ -39,6 +39,7 @@ import java.util.zip.GZIPOutputStream;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.mustcall.qual.Owning;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.regex.qual.Regex;
 import org.checkerframework.common.value.qual.IntVal;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -820,7 +821,7 @@ public final class FilesPlume {
     "allcheckers:purity.not.deterministic.object.creation" // create local state
   })
   @Pure
-  public static String inferLineSeparator(String filename) throws IOException {
+  public static @Regex String inferLineSeparator(String filename) throws IOException {
     return inferLineSeparator(new File(filename));
   }
 
@@ -837,7 +838,7 @@ public final class FilesPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @Pure
-  public static String inferLineSeparator(File file) throws IOException {
+  public static @Regex String inferLineSeparator(File file) throws IOException {
     try (BufferedReader r = newBufferedFileReader(file)) {
       int unix = 0;
       int dos = 0;
