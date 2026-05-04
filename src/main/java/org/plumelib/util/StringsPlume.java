@@ -121,7 +121,7 @@ public final class StringsPlume {
   //
 
   /**
-   * Returns the printed represenation of a value, with each line prefixed by another string.
+   * Returns the printed representation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
@@ -133,7 +133,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the printed represenation of a value, with each line (except the first) prefixed by
+   * Returns the printed representation of a value, with each line (except the first) prefixed by
    * another string.
    *
    * @param prefix the prefix to place before each line
@@ -1077,7 +1077,7 @@ public final class StringsPlume {
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
    *
-   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} becase
+   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} because
    * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {

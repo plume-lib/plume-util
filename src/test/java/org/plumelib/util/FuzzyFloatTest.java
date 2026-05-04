@@ -65,7 +65,7 @@ final class FuzzyFloatTest {
   @Test
   void test_eq() {
 
-    // test equality for a variety of postive and negative numbers
+    // test equality for a variety of positive and negative numbers
     for (double d = -20_000; d < 20_000; d += 1000.36) {
       assertTrue(ff.eq(d, d * offhigh));
       assertTrue(ff.eq(d, d * offlow));

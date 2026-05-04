@@ -3379,7 +3379,7 @@ public final class ArraysPlume {
     List<T> list2 = Arrays.asList(arr2);
     return list1.containsAll(list2) && list2.containsAll(list1);
 
-    // // Alterate implementation, which is more efficient if the arrays are large:
+    // // Alternate implementation, which is more efficient if the arrays are large:
     // Note: this sorts the arrays as a side effect.
     // Arrays.sort(arr1);
     // Arrays.sort(arr2);
