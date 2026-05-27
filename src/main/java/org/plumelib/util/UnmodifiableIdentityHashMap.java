@@ -127,6 +127,8 @@ public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, 
     return map.hashCode();
   }
 
+  // TODO: Implement `clone()`.
+
   @Override
   public Set<K> keySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
     return Collections.unmodifiableSet(map.keySet());
