@@ -474,12 +474,13 @@ public final class CollectionsPlume {
     if (o1 instanceof List<?> && o2 instanceof List<?>) {
       List<? extends @Signed Object> l1 = (List<? extends @Signed Object>) o1;
       List<? extends @Signed Object> l2 = (List<? extends @Signed Object>) o2;
-      if (l1.size() != l2.size()) {
+      int l1size = l1.size();
+      if (l1size != l2.size()) {
         return false;
       }
       try {
         deepEqualsUnderway.add(mypair);
-        for (int i = 0; i < l1.size(); i++) {
+        for (int i = 0; i < l1size; i++) {
           Object e1 = l1.get(i);
           Object e2 = l2.get(i);
           if (!deepEquals(e1, e2)) {
