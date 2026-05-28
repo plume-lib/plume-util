@@ -1293,11 +1293,12 @@ public final class StringsPlume {
     if (v == null) {
       return "null";
     }
-    if (v.getClass() == Object.class) {
-      return "a value of class " + v.getClass();
+    Class<?> vClass = v.getClass();
+    if (vClass == Object.class) {
+      return "a value of class " + vClass;
     }
     if (!shallow) {
-      if (v.getClass().isArray()) {
+      if (vClass.isArray()) {
         return arrayToStringAndClass(v);
       }
       if (v instanceof List<?> l) {
@@ -1310,9 +1311,9 @@ public final class StringsPlume {
     }
     try {
       String formatted = escapeJava(v.toString());
-      return String.format("%s [%s]", formatted, v.getClass());
+      return String.format("%s [%s]", formatted, vClass);
     } catch (Exception e) {
-      return String.format("exception_when_calling_toString [%s]", v.getClass());
+      return String.format("exception_when_calling_toString [%s]", vClass);
     }
   }
 
