@@ -65,7 +65,6 @@ public final class IPair<V1, V2> {
    * @return a copy of {@code orig}, with all elements cloned
    */
   // This method is static so that the pair element types can be constrained to be Cloneable.
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1 extends Cloneable, T2 extends Cloneable> IPair<T1, T2> cloneElements(
       IPair<T1, T2> orig) {
     T1 oldFirst = orig.first;
@@ -84,7 +83,6 @@ public final class IPair<V1, V2> {
    * @param orig a pair
    * @return a deep copy of {@code orig}
    */
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   // This method is static so that the pair element types can be constrained to be DeepCopyable.
   public static <T1 extends DeepCopyable<T1>, T2 extends DeepCopyable<T2>> IPair<T1, T2> deepCopy(
       IPair<T1, T2> orig) {
@@ -101,7 +99,6 @@ public final class IPair<V1, V2> {
    * @param orig a pair
    * @return a copy of {@code orig}, where the first element is a deep copy
    */
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1 extends DeepCopyable<T1>, T2> IPair<T1, T2> deepCopyFirst(IPair<T1, T2> orig) {
     return of(DeepCopyable.deepCopyOrNull(orig.first), orig.second);
   }
@@ -116,7 +113,6 @@ public final class IPair<V1, V2> {
    * @param orig a pair
    * @return a copy of {@code orig}, where the second element is a deep copy
    */
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1, T2 extends DeepCopyable<T2>> IPair<T1, T2> deepCopySecond(IPair<T1, T2> orig) {
     return of(orig.first, DeepCopyable.deepCopyOrNull(orig.second));
   }

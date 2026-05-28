@@ -137,7 +137,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param values the values
    * @param size the number of used items in the arrays; may be less than their lengths
    */
-  @SuppressWarnings("samelen:assignment") // initialization
   @SideEffectFree
   private ArrayMap(
       K @SameLen("values") [] keys,
@@ -524,7 +523,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return removeIndex(index);
     }
 
-    @SuppressWarnings({"nullness:return"}) // array isn't padded with null, before index `size`
     @SideEffectFree
     @Override
     public @PolySigned Object[] toArray() {
