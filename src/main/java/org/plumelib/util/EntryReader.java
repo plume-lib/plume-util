@@ -495,7 +495,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
    */
   @Deprecated(since = "2026-01-21")
-  @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
       String filename,
@@ -522,7 +521,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @deprecated use {@link #EntryReader(Reader,String,EntryFormat,String,String)}
    */
   @Deprecated(since = "2026-01-05")
-  @SuppressWarnings("builder") // storing into a collection
   public @MustCallAlias EntryReader(
       @MustCallAlias Reader reader,
       String filename,
