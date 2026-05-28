@@ -155,7 +155,7 @@ public final class MapsP {
    * @param orig a map
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  @SuppressWarnings("nullness:argument")
   public static <
           K extends @Nullable DeepCopyable<K>,
           V extends @Nullable DeepCopyable<V>,
@@ -185,7 +185,7 @@ public final class MapsP {
    * @param orig a map
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
+  @SuppressWarnings("nullness") // generics problem with clone
   public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>>
       @PolyNull M deepCopyValues(@PolyNull M orig) {
     if (orig == null) {
@@ -236,7 +236,6 @@ public final class MapsP {
    * @param orig a map
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
   public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(@PolyNull M orig) {
     return cloneElements(orig, true);
   }
@@ -251,7 +250,6 @@ public final class MapsP {
    * @param orig a map
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
   public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneValues(@PolyNull M orig) {
     return cloneElements(orig, false);
   }

@@ -174,7 +174,6 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "CollectionsPlume.intersectionCardinality(a, b, c)",
   //     imports = "org.plumelib.util.CollectionsPlume")
-  @SuppressWarnings({"lock"}) // side effect to local state (BitSet)
   @Pure
   public static int intersectionCardinality(BitSet a, BitSet b, BitSet c) {
     return CollectionsPlume.intersectionCardinality(a, b, c);
@@ -651,7 +650,6 @@ public final class UtilPlume {
   // @InlineMe(
   //     replacement = "FilesPlume.equalFiles(file1, file2, trimLines)",
   //     imports = "org.plumelib.util.FilesPlume")
-  @SuppressWarnings({"lock"}) // reads files, side effects local state
   @Pure
   public static boolean equalFiles(String file1, String file2, boolean trimLines) {
     return FilesPlume.equalFiles(file1, file2, trimLines);
