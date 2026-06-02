@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -305,17 +304,11 @@ public final class StringsPlume {
   @SideEffectFree
   public static <T extends @MustCallUnknown Object> String join(
       CharSequence delim, @Signed T... a) {
-    if (a.length == 0) {
-      return "";
+    StringJoiner sj = new StringJoiner(delim);
+    for (T elt : a) {
+      sj.add(String.valueOf(elt));
     }
-    if (a.length == 1) {
-      return String.valueOf(a[0]);
-    }
-    StringBuilder sb = new StringBuilder(String.valueOf(a[0]));
-    for (int i = 1; i < a.length; i++) {
-      sb.append(delim).append(a[i]);
-    }
-    return sb.toString();
+    return sj.toString();
   }
 
   /**
@@ -353,18 +346,11 @@ public final class StringsPlume {
   public static String join(
       CharSequence delim,
       @MustCallUnknown Iterable<? extends @Signed @PolyNull @MustCallUnknown Object> v) {
-    StringBuilder sb = new StringBuilder();
-    boolean first = true;
-    Iterator<? extends @Signed @PolyNull @MustCallUnknown Object> itor = v.iterator();
-    while (itor.hasNext()) {
-      if (first) {
-        first = false;
-      } else {
-        sb.append(delim);
-      }
-      sb.append(itor.next());
+    StringJoiner sj = new StringJoiner(delim);
+    for (@Signed @PolyNull Object elt : v) {
+      sj.add(String.valueOf(elt));
     }
-    return sb.toString();
+    return sj.toString();
   }
 
   /**
