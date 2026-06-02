@@ -133,6 +133,7 @@ tasks.withType(JavaCompile).configureEach {
 
 pmd {
   toolVersion = "7.25.0"
+  ruleSets = []                 // Prevent the default errorprone.xml from being applied.
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
   ignoreFailures = false
