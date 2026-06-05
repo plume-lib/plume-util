@@ -15,13 +15,14 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
- * A wrapper around an {@link IdentityHashMap} that makes it unmodifiable. All mutating operations
- * throw {@link UnsupportedOperationException}, and all other operations delegate to the underlying
- * map.
+ * Returns an unmodifiable view of an {@link IdentityHashMap}. All mutating operations throw {@link
+ * UnsupportedOperationException}, and all other operations delegate to the underlying map. It is
+ * possible that another alias to the underlying map asynchronously changes the contents of the
+ * underlying map.
  *
- * <p>This class extends {@link IdentityHashMap} only so it is assignable to variables / fields of
- * static type {@link IdentityHashMap}. All valid operations are delegated to the wrapped map, and
- * any inherited state from the superclass is unused.
+ * <p>This class extends {@link IdentityHashMap} only so it is assignable to variables/fields of
+ * static type {@link IdentityHashMap}. Any inherited state from the superclass is unused, because
+ * all valid operations are delegated to the wrapped map.
  *
  * @param <K> the type of keys of the map
  * @param <V> the type of values of the map
@@ -32,7 +33,10 @@ public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, 
   /** The serial version UID. */
   private static final long serialVersionUID = -5147442142854693854L;
 
-  /** The wrapped map. */
+  /**
+   * The wrapped map. It may be modifiable, but it will not be modified via this {@code
+   * UnmodifiableIdentityHashMap}.
+   */
   private final IdentityHashMap<K, V> map;
 
   /**
@@ -141,7 +145,7 @@ public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, 
 
   @Override
   public Set<Map.Entry<K, V>> entrySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
-    return Collections.unmodifiableSet(map.entrySet());
+    return Collections.unmodifiableMap(map).entrySet();
   }
 
   // `action` has no side effects on the map, because it is only passed keys and values.
