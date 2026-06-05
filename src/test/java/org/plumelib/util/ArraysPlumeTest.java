@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 /** Test the ArraysPlume class. */
 @SuppressWarnings({
-  "PMD.TooManyStaticImports",
   "PMD.PrimitiveWrapperInstantiation",
   "PMD.UnnecessaryBoxing",
 })

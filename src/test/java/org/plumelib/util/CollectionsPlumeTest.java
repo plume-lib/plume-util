@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.plumelib.util.CollectionsPlume.Replacement;
 
 /** Test the CollectionsPlume class. */
-@SuppressWarnings({"PMD.TooManyStaticImports", "PMD.UnnecessaryVarargsArrayCreation"})
+@SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation"})
 final class CollectionsPlumeTest {
 
   CollectionsPlumeTest() {}
