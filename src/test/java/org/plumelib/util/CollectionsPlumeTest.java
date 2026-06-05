@@ -116,12 +116,12 @@ final class CollectionsPlumeTest {
     }
   }
 
-  // Iterate through numbers from zero up to the argument (non-inclusive)
-  private static class IotaIterator implements Iterator<Integer> {
-    int i = 0;
-    int limit;
+  /** Iterate through numbers from zero up to the argument (non-inclusive). */
+  private static class IotaIterator implements Iterator<@NonNegative Integer> {
+    @NonNegative int i = 0;
+    @NonNegative int limit;
 
-    public IotaIterator(int limit) {
+    public IotaIterator(@NonNegative int limit) {
       this.limit = limit;
     }
 
@@ -131,7 +131,7 @@ final class CollectionsPlumeTest {
     }
 
     @Override
-    public Integer next(@GuardSatisfied IotaIterator this) {
+    public @NonNegative Integer next(@GuardSatisfied IotaIterator this) {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -1069,11 +1069,8 @@ final class CollectionsPlumeTest {
           }
         }
         @SuppressWarnings({
-          "index:type.arguments.not.inferred",
-          "lowerbound:assignment",
-          "index:assignment",
-          "value"
-        }) // The IotaIterator only contains indexes for totals.length, and since chosen's
+          "index:argument"
+        }) // The IotaIterator only contains indexes for totals.length, and since `chosen`'s
         // elements are selected randomly from the IotaIterator, all of its elements are
         // @IndexFor
         List<@IndexFor("totals") Integer> chosen =
