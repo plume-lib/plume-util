@@ -26,8 +26,7 @@ import org.plumelib.util.EntryReader.EntryFormat;
 /** Test the EntryReader class. */
 @SuppressWarnings({
   "nullness", // run-time errors are acceptable
-  "initializedfields:contracts.postcondition", // @TempDir causes injection
-  "PMD.TooManyStaticImports"
+  "initializedfields:contracts.postcondition" // @TempDir causes injection
 })
 final class EntryReaderTest {
 
