@@ -987,7 +987,6 @@ public final class MathPlume {
     }
 
     int firstNonstrict = 0; // arbitrary initial value
-    @SuppressWarnings("PMD.PrematureDeclaration") // put firstNonstrict and lastNonstrict together
     int lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
       firstNonstrict = itor.next();
@@ -1232,7 +1231,6 @@ public final class MathPlume {
     }
 
     long firstNonstrict = 0; // arbitrary initial value
-    @SuppressWarnings("PMD.PrematureDeclaration") // put firstNonstrict and lastNonstrict together
     long lastNonstrict = 0; // arbitrary initial value
     if (nonstrictEnds) {
       firstNonstrict = itor.next();
@@ -1603,7 +1601,6 @@ public final class MathPlume {
     // include it to make this function stand on its own
     for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      @SuppressWarnings("PMD.LinguisticNaming") // array of boolean is OK
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
       for (int elt : nums) {
@@ -1944,7 +1941,6 @@ public final class MathPlume {
     // include it to make this function stand on its own
     for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      @SuppressWarnings("PMD.LinguisticNaming") // array of boolean is OK
       boolean[] hasModulus = new boolean[m]; // initialized to false?
       int numNonmodulus = m;
       for (long elt : nums) {
