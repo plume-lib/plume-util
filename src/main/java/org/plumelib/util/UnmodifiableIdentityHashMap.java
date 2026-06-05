@@ -145,7 +145,7 @@ public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, 
 
   @Override
   public Set<Map.Entry<K, V>> entrySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
-    return Collections.unmodifiableSet(map.entrySet());
+    return Collections.unmodifiableMap(map).entrySet();
   }
 
   // `action` has no side effects on the map, because it is only passed keys and values.
