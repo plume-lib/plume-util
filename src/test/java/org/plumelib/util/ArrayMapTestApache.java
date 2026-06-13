@@ -59,6 +59,7 @@ import org.junit.jupiter.api.Test;
   "LogicalAssignment",
   "ReferenceEquality",
   "UnnecessaryParentheses",
+  "NullArgumentForNonNullParameter",
   "PMD", // Third-party-derived test code.
 })
 class ArrayMapTestApache {

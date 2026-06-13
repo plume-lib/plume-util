@@ -175,7 +175,7 @@ public final class ClassDeterministic {
   // }
 
   /** Compares Annotation objects by type name. */
-  static AnnotationComparator annotationComparator = new AnnotationComparator();
+  private static AnnotationComparator annotationComparator = new AnnotationComparator();
 
   /** Compares Annotation objects by type name. */
   private static class AnnotationComparator implements Comparator<Annotation> {
@@ -190,7 +190,7 @@ public final class ClassDeterministic {
   }
 
   /** Compares Class objects by fully-qualified name. */
-  static ClassComparator classComparator = new ClassComparator();
+  private static ClassComparator classComparator = new ClassComparator();
 
   /** Compares Class objects by fully-qualified name. */
   private static class ClassComparator implements Comparator<Class<?>> {
@@ -208,7 +208,7 @@ public final class ClassDeterministic {
    * Compares Method objects by signature: compares name, number of parameters, parameter type
    * names, declaring class, and return type (which is necessary to distinguish bridge methods).
    */
-  static MethodComparator methodComparator = new MethodComparator();
+  private static MethodComparator methodComparator = new MethodComparator();
 
   /**
    * Compares Method objects by signature: compares name, number of parameters, parameter type
@@ -261,7 +261,7 @@ public final class ClassDeterministic {
    * Compares Constructor objects by signature: compares name, number of parameters, and parameter
    * type names.
    */
-  static ConstructorComparator constructorComparator = new ConstructorComparator();
+  private static ConstructorComparator constructorComparator = new ConstructorComparator();
 
   /**
    * Compares Constructor objects by signature: compares name, number of parameters, and parameter
@@ -298,7 +298,7 @@ public final class ClassDeterministic {
   }
 
   /** Compares Field objects by name. */
-  static FieldComparator fieldComparator = new FieldComparator();
+  private static FieldComparator fieldComparator = new FieldComparator();
 
   /** Compares Field objects by name. */
   private static class FieldComparator implements Comparator<Field> {
@@ -317,7 +317,7 @@ public final class ClassDeterministic {
   }
 
   /** Compares objects by the result of toString(). */
-  static ToStringComparator toStringComparator = new ToStringComparator();
+  private static ToStringComparator toStringComparator = new ToStringComparator();
 
   /** Compares objects by the result of toString(). */
   private static class ToStringComparator implements Comparator<Object> {
