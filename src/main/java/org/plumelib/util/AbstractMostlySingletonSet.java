@@ -125,12 +125,12 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
     public SingletonIterator() {}
 
     @Override
-    public boolean hasNext(@GuardedBy SingletonIterator this) {
+    public boolean hasNext() {
       return hasNext;
     }
 
     @Override
-    public T next(@GuardedBy SingletonIterator this) {
+    public T next() {
       if (hasNext) {
         hasNext = false;
         assert value != null : "@AssumeAssertion(nullness): previous add is non-null";
@@ -140,7 +140,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
     }
 
     @Override
-    public void remove(@GuardedBy SingletonIterator this) {
+    public void remove() {
       state = State.EMPTY;
       value = null;
     }
