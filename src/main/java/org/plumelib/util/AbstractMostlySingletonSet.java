@@ -99,41 +99,12 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   }
 
   @Override
-  @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree",
-    "lock:override.receiver", // cannot specify the anonymous receiver type
-    "NotJavadoc" // Error prone forbids Javadoc comments on anonymous classes.
-  })
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree")
   @SideEffectFree
   public Iterator<T> iterator() {
     return switch (state) {
       case EMPTY -> Collections.emptyIterator();
-      case SINGLETON ->
-          new Iterator<T>() { // NOPMD: remove when upgrading to Java 9
-            /** True if the iterator has a next element. */
-            private boolean hasNext = true;
-
-            @Override
-            public boolean hasNext(/*@GuardedBy Iterator<T> this*/ ) {
-              return hasNext;
-            }
-
-            @Override
-            public T next(/*@GuardedBy Iterator<T> this*/ ) {
-              if (hasNext) {
-                hasNext = false;
-                assert value != null : "@AssumeAssertion(nullness): previous add is non-null";
-                return value;
-              }
-              throw new NoSuchElementException();
-            }
-
-            @Override
-            public void remove(/*@GuardedBy Iterator<T> this*/ ) {
-              state = State.EMPTY;
-              value = null;
-            }
-          };
+      case SINGLETON -> new SingletonIterator();
       case ANY -> {
         assert set != null : "@AssumeAssertion(nullness): set initialized before";
         yield set.iterator();
@@ -142,6 +113,37 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
         throw new IllegalStateException("Unhandled state " + state);
       }
     };
+  }
+
+  /** An iterator over a set that is in the {@link State#SINGLETON} state. */
+  @SuppressWarnings("lock:override.receiver") // cannot specify the receiver type
+  private class SingletonIterator implements Iterator<T> {
+    /** True if the iterator has a next element. */
+    private boolean hasNext = true;
+
+    /** Creates a SingletonIterator. */
+    public SingletonIterator() {}
+
+    @Override
+    public boolean hasNext() {
+      return hasNext;
+    }
+
+    @Override
+    public T next() {
+      if (hasNext) {
+        hasNext = false;
+        assert value != null : "@AssumeAssertion(nullness): previous add is non-null";
+        return value;
+      }
+      throw new NoSuchElementException();
+    }
+
+    @Override
+    public void remove() {
+      state = State.EMPTY;
+      value = null;
+    }
   }
 
   @Override
