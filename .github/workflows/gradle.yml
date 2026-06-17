@@ -3,7 +3,7 @@ name: Java CI with Gradle
 on: [push, pull_request]   # yamllint disable-line rule:truthy
 
 jobs:
-  build:
+  main:
 
     runs-on: ubuntu-latest
 
@@ -15,17 +15,16 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 1
-          show-progress: false
+          show-progress: true
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-          check-latest: true
+          check-latest: false
           cache: 'gradle'
       - name: java -version
         run: java -version
       - name: Warm up Gradle cache
         run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
       - name: ./gradlew build
-        run: ./gradlew build
