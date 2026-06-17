@@ -1,7 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Agent(*)",
       "Bash(./gradlew:*)",
       "Bash(./x.py check:*)",
       "Bash(basename:*)",
@@ -69,7 +68,6 @@
       "Bash(which:*)",
       "Edit(*)",
       "Edit(./**)",
-      "Glob(*)",
       "Grep(*)",
       "NotebookEdit(*)",
       "Read(*)",
@@ -94,6 +92,6 @@
   "skipDangerousModePermissionPrompt": true,
   "spinnerVerbs": {
     "mode": "replace",
-    "verbs": ["Thinking", "Processing", "Working"]
+    "verbs": ["Thinking", "Reading", "Processing", "Working"]
   }
 }
