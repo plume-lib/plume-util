@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 
 // TODO:  A better name would be LineNumberException.
 // And then it needn't really extend IOException.
@@ -273,8 +273,7 @@ public class FileIOException extends IOException {
   // Utility and helper methods
   //
 
-  @SuppressWarnings("lock:override.sideeffect") // temporary until after CF 3.0.1
-  @SideEffectFree
+  @Pure
   @Override
   public String getMessage(@GuardSatisfied FileIOException this) {
     String result = super.getMessage();
@@ -287,7 +286,7 @@ public class FileIOException extends IOException {
     if (lineNumber != -1) {
       result += " at line " + lineNumber;
     }
-    return result;
+    return result.intern();
   }
 
   // There is no setter method because field lineNumber is final.
