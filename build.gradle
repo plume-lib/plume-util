@@ -132,7 +132,7 @@ tasks.withType(JavaCompile).configureEach {
 // PMD linter
 
 pmd {
-  toolVersion = "7.25.0"
+  toolVersion = "7.26.0"
   ruleSets = []                 // Prevent the default errorprone.xml from being applied.
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
