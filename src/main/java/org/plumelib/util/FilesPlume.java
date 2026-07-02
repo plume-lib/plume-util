@@ -309,7 +309,7 @@ public final class FilesPlume {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param file the possibility-compressed file to read
+   * @param file the possibly-compressed file to read
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
@@ -787,7 +787,7 @@ public final class FilesPlume {
   //
 
   /**
-   * Count the number of lines in the specified file.
+   * Counts the number of lines in the specified file.
    *
    * @param filename file whose size to count
    * @return number of lines in filename
@@ -1328,7 +1328,7 @@ public final class FilesPlume {
   }
 
   /**
-   * Read the entire contents of the file and return it as a list of lines. Each line ends with a
+   * Reads the entire contents of the file and returns it as a list of lines. Each line ends with a
    * line separator (except perhaps the last line).
    *
    * @param path the path to the file
@@ -1390,7 +1390,7 @@ public final class FilesPlume {
 
   /**
    * Creates a file with the given name and writes the specified string to it. If the file currently
-   * exists (and is writable) it is overwritten Any IOException encountered will be turned into an
+   * exists (and is writable) it is overwritten. Any IOException encountered will be turned into an
    * Error.
    *
    * <p>The point of this method is that it does not throw any checked exception: any IOException
@@ -1412,7 +1412,7 @@ public final class FilesPlume {
   //
 
   /**
-   * Copy the contents of the input stream to the output stream.
+   * Copies the contents of the input stream to the output stream.
    *
    * @param from input stream
    * @param to output stream
@@ -1552,11 +1552,11 @@ public final class FilesPlume {
   // From https://stackoverflow.com/a/54513347 .
   /**
    * Returns the number of bytes in a UTF-8 character based on the bit pattern of the supplied byte.
-   * The only valid values are 1, 2 3 or 4. If the byte has an invalid bit pattern an
+   * The only valid values are 1, 2, 3, or 4. If the byte has an invalid bit pattern an
    * IllegalArgumentException is thrown.
    *
    * @param b the first byte of a UTF-8 character
-   * @return the number of bytes for this UTF-* character
+   * @return the number of bytes for this UTF-8 character
    */
   private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) {
     if ((b >= 0)) {

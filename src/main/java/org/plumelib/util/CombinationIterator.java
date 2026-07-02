@@ -13,7 +13,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * Given a set of collections, yield each combination that takes one element from each collection.
- * Each tuple has a value from each candidate list. Each combination'slength is the same as the
+ * Each tuple has a value from each candidate list. Each combination's length is the same as the
  * number of input lists.
  *
  * <p>For instance, given {@code [["a1", "a2"], ["b1"], ["c1", "c2", "c3"]]}, this class yields in
@@ -41,7 +41,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
   /** The size of each returned result; the length of listsOfCandidates. */
   private final @LengthOf({"listsOfCandidates", "iterators"}) int combinationSize;
 
-  /** The next value to return, or null if to more values. */
+  /** The next value to return, or null if no more values. */
   private @Nullable List<T> nextValue;
 
   /**

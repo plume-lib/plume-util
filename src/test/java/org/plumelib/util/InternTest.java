@@ -272,7 +272,7 @@ final class InternTest {
   }
 
   /**
-   * Test the intering of subsequences as triples of the original sequence, the start and the end
+   * Test the interning of subsequences as triples of the original sequence, the start and the end
    * indices.
    */
   @SuppressWarnings("index:argument") // https://github.com/typetools/checker-framework/issues/2484

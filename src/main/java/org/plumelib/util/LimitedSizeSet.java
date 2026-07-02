@@ -43,7 +43,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
   protected @IndexOrHigh("values") int numValues;
 
   /**
-   * Create a new LimitedSizeSet that can hold maxValues values.
+   * Creates a new LimitedSizeSet that can hold maxValues values.
    *
    * @param maxValues the maximum number of values this set will be able to hold; must be positive
    */
@@ -60,7 +60,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
   }
 
   /**
-   * Add an element to this set.
+   * Adds an element to this set.
    *
    * @param elt the element to add to this set
    */
@@ -81,7 +81,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
   }
 
   /**
-   * Add all elements of {@code s} to this set.
+   * Adds all elements of {@code s} to this set.
    *
    * @param s the elements to add to this set
    */

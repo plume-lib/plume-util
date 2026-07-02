@@ -31,7 +31,7 @@ public class FuzzyFloat {
 
   /**
    * True if this class does approximate (fuzzy) arithmetic comparisons. If false, this class does
-   * exact matching
+   * exact matching.
    *
    * <p>ratio test turned off. This occurs exactly if the class is instantiated with the relative
    * difference 0.
@@ -45,7 +45,7 @@ public class FuzzyFloat {
 
   /**
    * Creates a FuzzyFloat. Specify the specific relative difference allowed between two floats in
-   * order for them to be equal. The default is 0.0001. A relative diff of zero, disables it (i.e.,
+   * order for them to be equal. The default is 0.0001. A relative diff of zero disables it (i.e.,
    * this class's methods work just like regular Java arithmetic comparisons).
    *
    * @param relativeRatio the relative diff to use; see {@link #setRelativeRatio}
@@ -75,7 +75,7 @@ public class FuzzyFloat {
    * Test d1 and d2 for equality using the current ratio. Two NaN floats are not considered equal
    * (consistent with the == operator).
    *
-   * <p>Note that if one of the numbers if 0.0, then the other number must be less than the square
+   * <p>Note that if one of the numbers is 0.0, then the other number must be less than the square
    * of the fuzzy ratio. This policy accommodates roundoff errors in floating-point values.
    *
    * @param d1 the first value to compare
@@ -165,7 +165,7 @@ public class FuzzyFloat {
   }
 
   /**
-   * test d1 and d2 for {@code d1 > d2}. IF d1 is equal to d2 using the current ratio, this returns
+   * Test d1 and d2 for {@code d1 > d2}. If d1 is equal to d2 using the current ratio, this returns
    * false.
    *
    * @param d1 the first value to compare
@@ -179,7 +179,7 @@ public class FuzzyFloat {
   }
 
   /**
-   * test d1 and d2 for {@code d1 >= d2}. If d1 is equal to d2 using the current ratio, this returns
+   * Test d1 and d2 for {@code d1 >= d2}. If d1 is equal to d2 using the current ratio, this returns
    * true.
    *
    * @param d1 the first value to compare
@@ -312,7 +312,7 @@ public class FuzzyFloat {
      *
      * @param a1 the first array to compare
      * @param a2 the second array to compare
-     * @return positive if o1 &gt; 02, 0 if o1 == o2, negative if o1 &lt; o2
+     * @return positive if o1 &gt; o2, 0 if o1 == o2, negative if o1 &lt; o2
      */
     @Pure
     @Override
@@ -338,7 +338,7 @@ public class FuzzyFloat {
    *
    * @param smaller the possibly-smaller subset
    * @param bigger the possibly-larger set
-   * @return true if smaller is a subset (each element of smaller is also a element of bigger) of
+   * @return true if smaller is a subset (each element of smaller is also an element of bigger) of
    *     bigger, false otherwise
    */
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (arrays)

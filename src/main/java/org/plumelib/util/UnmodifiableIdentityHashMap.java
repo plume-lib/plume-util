@@ -40,7 +40,7 @@ public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, 
   private final IdentityHashMap<K, V> map;
 
   /**
-   * Create an UnmodifiableIdentityHashMap. Clients should use {@link #wrap} instead.
+   * Creates an UnmodifiableIdentityHashMap. Clients should use {@link #wrap} instead.
    *
    * @param map the map to wrap
    */
@@ -49,7 +49,7 @@ public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, 
   }
 
   /**
-   * Create an {@link UnmodifiableIdentityHashMap} wrapper for a map. Returns the argument if it is
+   * Creates an {@link UnmodifiableIdentityHashMap} wrapper for a map. Returns the argument if it is
    * already an {@link UnmodifiableIdentityHashMap}.
    *
    * @param map the map to wrap

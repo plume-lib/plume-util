@@ -575,7 +575,7 @@ public final class Intern {
   }
 
   /**
-   * Interns a double A no-op. Provided for completeness.
+   * Interns a double. A no-op. Provided for completeness.
    *
    * @param d the double to intern
    * @return an interned version of the argument
@@ -586,7 +586,7 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) an Integer. Return a canonical representation for the Integer.
+   * Interns (canonicalizes) an Integer. Returns a canonical representation for the Integer.
    *
    * @param a an Integer to canonicalize
    * @return a canonical representation for the Integer
@@ -632,7 +632,7 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) a Long. Return a canonical representation for the Long.
+   * Interns (canonicalizes) a Long. Returns a canonical representation for the Long.
    *
    * @param a the value to intern
    * @return a canonical representation for the Long
@@ -683,8 +683,8 @@ public final class Intern {
   // that really improve performance even in that case?)
 
   /**
-   * Intern (canonicalize) an int[]. Return a canonical representation for the int[] array. Arrays
-   * are compared according to their elements.
+   * Interns (canonicalizes) an int[]. Returns a canonical representation for the int[] array.
+   * Arrays are compared according to their elements.
    *
    * @param a the array to canonicalize
    * @return a canonical representation for the int[] array
@@ -714,8 +714,8 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) a long[]. Return a canonical representation for the long[] array. Arrays
-   * are compared according to their elements.
+   * Interns (canonicalizes) a long[]. Returns a canonical representation for the long[] array.
+   * Arrays are compared according to their elements.
    *
    * @param a the array to canonicalize
    * @return a canonical representation for the long[] array
@@ -743,7 +743,7 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) a Double. Return a canonical representation for the Double.
+   * Interns (canonicalizes) a Double. Returns a canonical representation for the Double.
    *
    * @param a the Double to canonicalize
    * @return a canonical representation for the Double
@@ -802,7 +802,7 @@ public final class Intern {
   // that really improve performance even in that case?)
 
   /**
-   * Intern (canonicalize) a double[]. Return a canonical representation for the double[] array.
+   * Interns (canonicalizes) a double[]. Returns a canonical representation for the double[] array.
    * Arrays are compared according to their elements.
    *
    * @param a the array to canonicalize
@@ -831,7 +831,7 @@ public final class Intern {
   /**
    * Returns true if each element is interned.
    *
-   * @param a an array whose elements should already be intterned
+   * @param a an array whose elements should already be interned
    * @return true if each element is interned
    */
   @SuppressWarnings("PMD.UseEqualsToCompareStrings")
@@ -845,7 +845,7 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) a String[]. Return a canonical representation for the String[] array.
+   * Interns (canonicalizes) a String[]. Returns a canonical representation for the String[] array.
    * Arrays are compared according to their elements' equals() methods.
    *
    * @param a the array to canonicalize. Its elements should already be interned.
@@ -887,7 +887,7 @@ public final class Intern {
   }
 
   /**
-   * Intern (canonicalize) an Object[]. Return a canonical representation for the Object[] array.
+   * Interns (canonicalizes) an Object[]. Returns a canonical representation for the Object[] array.
    * Arrays are compared according to their elements. The elements should themselves already be
    * interned; they are compared using their equals() methods.
    *

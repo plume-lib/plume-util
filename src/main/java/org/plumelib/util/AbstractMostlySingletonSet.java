@@ -48,7 +48,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   protected @Nullable Set<T> set;
 
   /**
-   * Create an AbstractMostlySingletonSet.
+   * Creates an AbstractMostlySingletonSet.
    *
    * @param s the state
    */
@@ -58,7 +58,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   }
 
   /**
-   * Create an AbstractMostlySingletonSet.
+   * Creates an AbstractMostlySingletonSet.
    *
    * @param s the state
    * @param v the value
@@ -68,7 +68,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
     this.value = v;
   }
 
-  /** Throw an exception if the internal representation is corrupted. */
+  /** Throws an exception if the internal representation is corrupted. */
   protected void checkRep() {
     if ((state == State.EMPTY && (value != null || set != null))
         || (state == State.SINGLETON && (value == null || set != null))

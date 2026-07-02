@@ -49,7 +49,7 @@ public final class StringsPlume {
 
   /**
    * Returns the target with an occurrence of oldStr at the start replaced by newStr. Returns the
-   * target if it does not strt with oldStr.
+   * target if it does not start with oldStr.
    *
    * <p>An alternative to this is to use regular expressions: {@code target.replaceFirst("^" +
    * Pattern.quote(oldStr), newStr)}
@@ -316,7 +316,7 @@ public final class StringsPlume {
    * separator between them.
    *
    * @param <T> the type of array elements
-   * @param a array of values to whose string representation to concatenate
+   * @param a array of values whose string representation to concatenate
    * @return the concatenation of the string representations of the values, each on its own line
    */
   @SafeVarargs
@@ -495,7 +495,7 @@ public final class StringsPlume {
    * argument for inclusion in a string literal, not in a character literal.
    *
    * @param c character to quote
-   * @return quoted version of ch
+   * @return quoted version of c
    * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
   @Deprecated(since = "2021-03-14")
@@ -529,7 +529,7 @@ public final class StringsPlume {
    * Given a character, returns a Java character literal denoting the character.
    *
    * @param c character to quote
-   * @return quoted version of ch
+   * @return quoted version of c
    */
   @SideEffectFree
   public static String charLiteral(char c) {
@@ -660,7 +660,7 @@ public final class StringsPlume {
         case '\\' -> {
           // This is not in the default case because the search would find
           // the quoted backslash.  Here we include the first backslash in
-          // the output, but not the first.
+          // the output, but not the second.
           sb.append(orig.substring(postEsc, thisEsc + 1));
           postEsc = thisEsc + 2;
         }
@@ -1124,7 +1124,7 @@ public final class StringsPlume {
   //
 
   /**
-   * Returns a ArrayList of the Strings returned by {@link
+   * Returns an ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String,boolean)} with the given arguments.
    *
    * <p>The static type is {@code ArrayList<Object>} because StringTokenizer extends {@code
@@ -1146,7 +1146,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns a ArrayList of the Strings returned by {@link
+   * Returns an ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String,String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -1163,7 +1163,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns a ArrayList of the Strings returned by {@link
+   * Returns an ArrayList of the Strings returned by {@link
    * java.util.StringTokenizer#StringTokenizer(String)} with the given arguments.
    *
    * @param str a string to be parsed
@@ -1243,7 +1243,7 @@ public final class StringsPlume {
    *
    * @param v1 a version number
    * @param v2 a version number
-   * @return true if the given text is a version number
+   * @return true if the first version number is less than or equal to the second version number
    */
   // "protected" to permit tests to access it.
   public static boolean isVersionNumberLE(String v1, String v2) {

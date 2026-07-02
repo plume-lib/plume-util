@@ -189,7 +189,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   /**
-   * Remove the element at the given index. Does nothing if index is -1.
+   * Removes the element at the given index. Does nothing if index is -1.
    *
    * @param index the index of the element to remove
    * @return true if this set was modified

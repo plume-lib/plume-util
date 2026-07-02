@@ -261,9 +261,9 @@
 
 * New methods `CollectionsPlume.mapCapacity` to compute the size
   for a newly-allocated map.
-* New methods `hasDuplicates` in `ArraysPlume` and `ColletionsPlume`
+* New methods `hasDuplicates` in `ArraysPlume` and `CollectionsPlume`
 * Renamed methods (the old versions still work but are deprecated):
-  * `ArraysPlume.noDuplicates(List)` to `ColletionsPlume.noDuplicates`
+  * `ArraysPlume.noDuplicates(List)` to `CollectionsPlume.noDuplicates`
 * Moved methods (the old versions still work but are deprecated):
   * `UtilPlume.intersectionCardinality` and `intersectionCardinalityAtLeast` to `CollectionsPlume`
 

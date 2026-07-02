@@ -176,7 +176,8 @@ final class OrderedPairIteratorTest {
    *
    * @param opi an iterator over pairs of integers
    * @param ints an array of two-element arrays of integers
-   * @throws AssertionError iff the iterator returns the same values as the argument array contains
+   * @throws AssertionError unless the iterator returns the same values as the argument array
+   *     contains
    */
   @SuppressWarnings({
     "index:array.access.unsafe.high", // same length iterator and array, and while loop with ++ on

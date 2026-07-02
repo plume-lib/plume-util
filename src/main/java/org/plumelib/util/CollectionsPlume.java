@@ -68,7 +68,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of elements
    * @param c the collection into which elements are to be inserted, which lacks an {@code
-   *     addAll(Iterable} method
+   *     addAll(Iterable)} method
    * @param elements the elements to insert into c
    * @return true if the argument collection changed as a result of the call
    */
@@ -1128,7 +1128,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of elements in the sets
    * @param set1 the first set to compare
-   * @param set2 the first set to compare
+   * @param set2 the second set to compare
    * @return true if the two sets contain the same elements in the same order
    */
   public static <T> boolean sortedSetEquals(SortedSet<T> set1, SortedSet<T> set2) {
@@ -1161,7 +1161,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of elements in the sets
    * @param set1 the first set to compare
-   * @param set2 the first set to compare
+   * @param set2 the second set to compare
    * @return true if the first set contains all the elements of the second set
    */
   public static <T> boolean sortedSetContainsAll(SortedSet<T> set1, SortedSet<T> set2) {
@@ -1231,7 +1231,7 @@ public final class CollectionsPlume {
    * Returns a vector containing the elements of the enumeration.
    *
    * @param <T> type of the enumeration and vector elements
-   * @param e an enumeration to convert to a ArrayList
+   * @param e an enumeration to convert to an ArrayList
    * @return a vector containing the elements of the enumeration
    */
   @SuppressWarnings({"JdkObsolete", "NonApiType"})
@@ -1263,7 +1263,7 @@ public final class CollectionsPlume {
    *
    * @param <T> the type of the list elements
    * @param list the list; is not modified by this method
-   * @param lastElt the new last elemeent
+   * @param lastElt the new last element
    * @return a new list containing the list elements and the last element, in that order
    */
   @SuppressWarnings("unchecked")
@@ -1821,7 +1821,7 @@ public final class CollectionsPlume {
    * Returns an iterator just like {@code itor}, except without its first and last elements.
    *
    * @param <T> the type of elements of the iterator
-   * @param itor an itorator whose first and last elements to discard
+   * @param itor an iterator whose first and last elements to discard
    * @return an iterator just like {@code itor}, except without its first and last elements
    */
   public static <T extends @Nullable Object> Iterator<T> removeFirstAndLastIterator(
@@ -1857,7 +1857,7 @@ public final class CollectionsPlume {
     /**
      * Create an iterator just like {@code itor}, except without its first and last elements.
      *
-     * @param itor an itorator whose first and last elements to discard
+     * @param itor an iterator whose first and last elements to discard
      * @deprecated use {@link #removeFirstAndLastIterator}
      */
     @Deprecated // make package-private
@@ -2184,7 +2184,7 @@ public final class CollectionsPlume {
    * Creates a LRU cache.
    *
    * <p>You might want to consider using a {@code WeakHashMap} or {@code WeakIdentityHashMap}
-   * instead
+   * instead.
    *
    * @param <K> the type of keys
    * @param <V> the type of values
@@ -2247,7 +2247,7 @@ public final class CollectionsPlume {
    * @param <V> the type of values of the map
    * @param <M> the type of the map
    * @param orig a map
-   * @param cloneKeys if true, clone keys; otherwise, re-use them
+   * @param cloneKeys if true, clone keys; otherwise, reuse them
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone

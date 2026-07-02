@@ -81,7 +81,7 @@ public final class SystemPlume {
    * Returns the amount of used memory in the JVM.
    *
    * <p>To force a garbage collection, which gives a more accurate overapproximation of the memory
-   * used, but is also slower, use {@link #usedMemory(boolean)}
+   * used, but is also slower, use {@link #usedMemory(boolean)}.
    *
    * @return the amount of used memory
    */

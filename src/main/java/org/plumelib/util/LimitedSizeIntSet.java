@@ -45,7 +45,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   protected @IndexOrHigh("values") int numValues;
 
   /**
-   * Create a new LimitedSizeIntSet that can hold maxValues values.
+   * Creates a new LimitedSizeIntSet that can hold maxValues values.
    *
    * @param maxValues the maximum number of values this set will be able to hold; must be positive
    */
@@ -57,7 +57,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   }
 
   /**
-   * Add an element to this set.
+   * Adds an element to this set.
    *
    * @param elt the element to add to this set
    */
@@ -78,7 +78,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
   }
 
   /**
-   * Add all elements of {@code s} to this set.
+   * Adds all elements of {@code s} to this set.
    *
    * @param s the elements to add to this set
    */

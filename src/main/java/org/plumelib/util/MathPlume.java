@@ -172,7 +172,7 @@ public final class MathPlume {
   /**
    * Returns x % y, the modulus operation applied to its arguments.
    *
-   * @param x valued to be modded
+   * @param x value to be modded
    * @param y modulus
    * @return x % y
    */
@@ -185,7 +185,7 @@ public final class MathPlume {
   /**
    * Returns x % y, the modulus operation applied to its arguments.
    *
-   * @param x valued to be modded
+   * @param x value to be modded
    * @param y modulus
    * @return x % y
    */
@@ -198,7 +198,7 @@ public final class MathPlume {
   /**
    * Returns x &lt;&lt; y, the left-shift operation applied to its arguments.
    *
-   * @param x valued to be left-shifted
+   * @param x value to be left-shifted
    * @param y magnitude of the left-shift
    * @return x &lt;&lt; y
    */
@@ -211,7 +211,7 @@ public final class MathPlume {
   /**
    * Returns x &lt;&lt; y, the left-shift operation applied to its arguments.
    *
-   * @param x valued to be left-shifted
+   * @param x value to be left-shifted
    * @param y magnitude of the left-shift
    * @return x &lt;&lt; y
    */
@@ -224,7 +224,7 @@ public final class MathPlume {
   /**
    * Returns x &gt;&gt; y, the signed right-shift operation applied to its arguments.
    *
-   * @param x valued to be right-shifted
+   * @param x value to be right-shifted
    * @param y magnitude of the right-shift
    * @return x &gt;&gt; y
    */
@@ -237,7 +237,7 @@ public final class MathPlume {
   /**
    * Returns x &gt;&gt; y, the signed right-shift operation applied to its arguments.
    *
-   * @param x valued to be right-shifted
+   * @param x value to be right-shifted
    * @param y magnitude of the right-shift
    * @return x &gt;&gt; y
    */
@@ -250,7 +250,7 @@ public final class MathPlume {
   /**
    * Returns x &gt;&gt;&gt; y, the unsigned right-shift operation applied to its arguments.
    *
-   * @param x valued to be right-shifted
+   * @param x value to be right-shifted
    * @param y magnitude of the right-shift
    * @return x &gt;&gt;&gt; y
    */
@@ -263,7 +263,7 @@ public final class MathPlume {
   /**
    * Returns x &gt;&gt;&gt; y, the unsigned right-shift operation applied to its arguments.
    *
-   * @param x valued to be right-shifted
+   * @param x value to be right-shifted
    * @param y magnitude of the right-shift
    * @return x &gt;&gt;&gt; y
    */
@@ -456,7 +456,7 @@ public final class MathPlume {
   //
 
   /**
-   * Returns of value of the first argument raised to the power of the second argument. The
+   * Returns the value of the first argument raised to the power of the second argument. The
    * arguments are integers.
    *
    * @param base the base
@@ -471,7 +471,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns of value of the first argument raised to the power of the second argument.
+   * Returns the value of the first argument raised to the power of the second argument.
    *
    * @param base the base
    * @param expt the exponent
@@ -485,7 +485,7 @@ public final class MathPlume {
   }
 
   /**
-   * Returns of value of the first argument raised to the power of the second argument. Uses a fast
+   * Returns the value of the first argument raised to the power of the second argument. Uses a fast
    * algorithm.
    *
    * @param base the base
@@ -1866,12 +1866,12 @@ public final class MathPlume {
   }
 
   /**
-   * Returns true if the first and last elements are equal to r (mod m).
+   * Returns true if the first and last elements are not equal to r (mod m).
    *
    * @param rm an array containing two elements
    * @param rfali a sequence of numbers, plus a first and last element outside their range. This
    *     iterator has already been iterated all the way to its end.
-   * @return true if the first and last elements are equal to r (mod m)
+   * @return true if the first and last elements are not equal to r (mod m)
    */
   @SuppressWarnings("deprecation") // to be made package-private
   @Pure

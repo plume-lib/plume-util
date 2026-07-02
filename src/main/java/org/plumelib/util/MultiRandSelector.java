@@ -40,7 +40,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
   /** The Random instance to use. Is not a seed. Gets side-effected. */
   private Random r;
 
-  /** Partioner that determines how to partition the objects. */
+  /** Partitioner that determines how to partition the objects. */
   private Partitioner<T, T> eq;
 
   /** Maps from partition representatives to the RandomSelector to use on that partition. */
@@ -50,7 +50,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
    * Create a MultiRandSelector that chooses {@code numElts} elements from each bucket.
    *
    * @param numElts the number of elements to select from each bucket
-   * @param eq partioner that determines how to partition the objects
+   * @param eq partitioner that determines how to partition the objects
    */
   public MultiRandSelector(int numElts, Partitioner<T, T> eq) {
     this(numElts, new Random(), eq);
@@ -60,7 +60,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
    * Create a MultiRandSelector that chooses each element with probability {@code keepProbability}.
    *
    * @param keepProbability the likelihood to select each element
-   * @param eq partioner that determines how to partition the objects
+   * @param eq partitioner that determines how to partition the objects
    */
   public MultiRandSelector(double keepProbability, Partitioner<T, T> eq) {
     this(keepProbability, new Random(), eq);
@@ -72,7 +72,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
    *
    * @param numElts the number of elements to select from each bucket
    * @param r the Random instance to use for making random choices
-   * @param eq partioner that determines how to partition the objects
+   * @param eq partitioner that determines how to partition the objects
    */
   public MultiRandSelector(int numElts, Random r, Partitioner<T, T> eq) {
     this(r, eq);
@@ -81,12 +81,12 @@ public class MultiRandSelector<T extends @Nullable Object> {
   }
 
   /**
-   * Create a MultiRandSelector that chooses each element with probability {@code keepProbability}.,
+   * Create a MultiRandSelector that chooses each element with probability {@code keepProbability},
    * using the given Random.
    *
    * @param keepProbability likelihood to select each element
    * @param r the Random instance to use for making random choices
-   * @param eq partioner that determines how to partition the objects
+   * @param eq partitioner that determines how to partition the objects
    */
   public MultiRandSelector(double keepProbability, Random r, Partitioner<T, T> eq) {
     this(r, eq);
@@ -98,7 +98,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
    * Helper constructor to create a not-fully-initialized MultiRandSelector.
    *
    * @param r the Random instance to use for making random choices
-   * @param eq partioner that determines how to partition the objects
+   * @param eq partitioner that determines how to partition the objects
    */
   private MultiRandSelector(Random r, Partitioner<T, T> eq) {
     this.r = r;

@@ -262,7 +262,7 @@ public final class MapsP {
    * @param <V> the type of values of the map
    * @param <M> the type of the map
    * @param orig a map
-   * @param cloneKeys if true, clone keys; otherwise, re-use them
+   * @param cloneKeys if true, clone keys; otherwise, reuse them
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
@@ -353,7 +353,7 @@ public final class MapsP {
    * ...
    * </pre>
    *
-   * where each inner map is formatted by {@link mapToStringMultiLine(Appendable, Map, String)}.
+   * where each inner map is formatted by {@link #mapToStringMultiLine(Appendable, Map, String)}.
    *
    * @param <K1> the type of the outer map keys
    * @param <K2> the type of the inner map keys
@@ -361,8 +361,7 @@ public final class MapsP {
    * @param sb the destination for the string representation
    * @param linePrefix a prefix to put at the beginning of each line
    * @param innerHeader what to print before each key of the outer map (equivalently, before each
-   *     each inner map). If non-empty, it usually ends with a space to avoid abutting the outer map
-   *     key.
+   *     inner map). If non-empty, it usually ends with a space to avoid abutting the outer map key.
    * @param mapMap what to print
    */
   static <K1 extends @Signed Object, K2 extends @Signed Object, V2 extends @Signed Object>

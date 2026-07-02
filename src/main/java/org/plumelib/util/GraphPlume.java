@@ -139,7 +139,7 @@ public final class GraphPlume {
   }
 
   /**
-   * Print a representation of the graph to ps, indented by intent spaces.
+   * Prints a representation of the graph to ps, indented by {@code indent} spaces.
    *
    * @param <T> the type of nodes of the graph
    * @param graph the graph to print

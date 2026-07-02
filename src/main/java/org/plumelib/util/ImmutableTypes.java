@@ -49,9 +49,9 @@ public final class ImmutableTypes {
     immutableTypeNames.add("java.awt.Composite");
     immutableTypeNames.add("java.awt.Cursor");
     immutableTypeNames.add("java.awt.Font");
-    immutableTypeNames.add("java.awt.GradientPaint,");
+    immutableTypeNames.add("java.awt.GradientPaint");
     immutableTypeNames.add("java.awt.LinearGradientPaint");
-    immutableTypeNames.add("java.awt.RadialGradientPaint,");
+    immutableTypeNames.add("java.awt.RadialGradientPaint");
     immutableTypeNames.add("java.awt.RenderingHints");
     immutableTypeNames.add("java.awt.font.GlyphMetrics");
     immutableTypeNames.add("java.awt.font.GraphicAttribute");

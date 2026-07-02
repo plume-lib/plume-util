@@ -59,7 +59,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * </ul>
  *
  * All of those use the Apache License, version 2.0, whereas this implementation is licensed under
- * the more libral MIT License. In addition, some of those implementations forbid nulls or
+ * the more liberal MIT License. In addition, some of those implementations forbid nulls or
  * nondeterministically reorder the contents, and others don't specify their behavior regarding
  * nulls and ordering.
  *
@@ -842,7 +842,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   //    ConcurrentModificationException in that case, by checking that the values in the array still
   //    match those stored in the entry.
 
-  // Per the specification of Map.Entry, a map entry is  meaningful only during the execution of the
+  // Per the specification of Map.Entry, a map entry is meaningful only during the execution of the
   // iteration over the entry set, and only if the backing map has not been modified except through
   // calling {@code setValue} on the map entry.
   /** An entrySet() entry. Tracks the containing list and the index. */

@@ -82,7 +82,7 @@ public final class UtilPlume {
   }
 
   /**
-   * Returns the first argument if it is non-null, otherwise return the second argument. Throws an
+   * Returns the first argument if it is non-null, otherwise returns the second argument. Throws an
    * exception if both arguments are null.
    *
    * @param <T> the type of the arguments
@@ -373,7 +373,7 @@ public final class UtilPlume {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param file the possibility-compressed file to read
+   * @param file the possibly-compressed file to read
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
@@ -683,8 +683,7 @@ public final class UtilPlume {
    * @param prefix the prefix string to be used in generating the file's name; must be at least
    *     three characters long
    * @param suffix the suffix string to be used in generating the file's name; may be null, in which
-   *     case the suffix ".tmp" will be used Returns: An abstract pathname denoting a newly-created
-   *     empty file
+   *     case the suffix ".tmp" will be used
    * @return a File representing the newly-created temporary directory
    * @throws IllegalArgumentException If the prefix argument contains fewer than three characters
    * @throws IOException If a file could not be created
@@ -902,7 +901,7 @@ public final class UtilPlume {
 
   /**
    * Creates a file with the given name and writes the specified string to it. If the file currently
-   * exists (and is writable) it is overwritten Any IOException encountered will be turned into an
+   * exists (and is writable) it is overwritten. Any IOException encountered will be turned into an
    * Error.
    *
    * @param file the file to write to
@@ -1388,7 +1387,7 @@ public final class UtilPlume {
 
   /**
    * Returns the target with an occurrence of oldStr at the start replaced by newStr. Returns the
-   * target if it does not strt with oldStr.
+   * target if it does not start with oldStr.
    *
    * <p>An alternative to this is to use regular expressions: {@code target.replaceFirst("^" +
    * Pattern.quote(oldStr), newStr)}
@@ -1507,7 +1506,7 @@ public final class UtilPlume {
    *
    * <p>Consider using the built-in <a
    * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
-   * method, which takes a regular expression whereas this method takes a a character that is
+   * method, which takes a regular expression whereas this method takes a character that is
    * interpreted literally.
    *
    * @see #split(String s, String delim)
@@ -1530,7 +1529,7 @@ public final class UtilPlume {
    *
    * <p>Consider using the built-in <a
    * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html#split(java.lang.String)">String.split</a>
-   * method, method, which takes a regular expression whereas this method takes string.
+   * method, which takes a regular expression whereas this method takes a string.
    *
    * @see #split(String s, char delim)
    * @param s the string to split

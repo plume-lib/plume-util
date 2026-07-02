@@ -24,7 +24,7 @@ public class Pair<T1 extends @Nullable Object, T2 extends @Nullable Object> {
   public T2 b;
 
   /**
-   * Make a new pair.
+   * Makes a new pair.
    *
    * @param a the first element of the pair
    * @param b the second element of the pair

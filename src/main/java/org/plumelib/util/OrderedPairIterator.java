@@ -58,8 +58,8 @@ public class OrderedPairIterator<T extends @Nullable Object>
   @Nullable Comparator<? super T> comparator;
 
   /**
-   * Create an iterator that returns pairs, where each pair contains has an element from each
-   * iterator and the two elements are equal.
+   * Creates an iterator that returns pairs, where each pair contains an element from each iterator
+   * and the two elements are equal.
    *
    * @param itor1 iterator for first elements of pairs
    * @param itor2 iterator for second elements of pairs
@@ -74,8 +74,8 @@ public class OrderedPairIterator<T extends @Nullable Object>
   }
 
   /**
-   * Create an iterator that returns pairs, where each pair contains has an element from each
-   * iterator and the two elements are equal according to the comparator.
+   * Creates an iterator that returns pairs, where each pair contains an element from each iterator
+   * and the two elements are equal according to the comparator.
    *
    * @param itor1 iterator for first elements of pairs
    * @param itor2 iterator for second elements of pairs

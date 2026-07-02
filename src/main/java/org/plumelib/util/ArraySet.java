@@ -47,7 +47,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * </ul>
  *
  * All of those use the GPL or the Apache License, version 2.0, whereas this implementation is
- * licensed under the more libral MIT License. In addition, some of those implementations forbid
+ * licensed under the more liberal MIT License. In addition, some of those implementations forbid
  * nulls or nondeterministically reorder the contents, and others don't specify their behavior
  * regarding nulls and ordering. CopyOnWriteArraySet uses an ArrayList, not an array, as its
  * representation.

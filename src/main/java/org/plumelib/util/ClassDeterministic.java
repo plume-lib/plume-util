@@ -21,7 +21,7 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getAnnotations()}, but returns the methods in deterministic order.
+   * Like {@link Class#getAnnotations()}, but returns the annotations in deterministic order.
    *
    * @param c the Class whose annotations to return
    * @return the class's annotations
@@ -33,7 +33,8 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getDeclaredAnnotations()}, but returns the methods in deterministic order.
+   * Like {@link Class#getDeclaredAnnotations()}, but returns the annotations in deterministic
+   * order.
    *
    * @param c the Class whose declared annotations to return
    * @return the class's declared annotations
@@ -69,8 +70,8 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getEnumConstants()}, but returns the methods in deterministic order. Returns
-   * null if the argument is not an enum class.
+   * Like {@link Class#getEnumConstants()}, but returns the enum constants in deterministic order.
+   * Returns null if the argument is not an enum class.
    *
    * @param <T> the class's type parameter
    * @param c the Class whose enum constants to return
@@ -86,7 +87,7 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getConstructors()}, but returns the methods in deterministic order.
+   * Like {@link Class#getConstructors()}, but returns the constructors in deterministic order.
    *
    * @param c the Class whose constructors to return
    * @return the class's constructors
@@ -98,7 +99,8 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getDeclaredConstructors()}, but returns the methods in deterministic order.
+   * Like {@link Class#getDeclaredConstructors()}, but returns the constructors in deterministic
+   * order.
    *
    * @param c the Class whose declared constructors to return
    * @return the class's declared constructors
@@ -110,7 +112,7 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getFields()}, but returns the methods in deterministic order.
+   * Like {@link Class#getFields()}, but returns the fields in deterministic order.
    *
    * @param c the Class whose fields to return
    * @return the class's fields
@@ -122,7 +124,7 @@ public final class ClassDeterministic {
   }
 
   /**
-   * Like {@link Class#getDeclaredFields()}, but returns the methods in deterministic order.
+   * Like {@link Class#getDeclaredFields()}, but returns the fields in deterministic order.
    *
    * @param c the Class whose declared fields to return
    * @return the class's declared fields

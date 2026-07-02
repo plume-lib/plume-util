@@ -66,7 +66,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
   /**
    * Returns the first element of the pair, or null if it has been garbage-collected.
    *
-   * @return the first element of the pail, or null if it has been garbage-collected
+   * @return the first element of the pair, or null if it has been garbage-collected
    */
   @SideEffectFree
   public @Nullable V1 getA(@GuardSatisfied WeakIdentityPair<V1, V2> this) {

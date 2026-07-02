@@ -559,7 +559,7 @@ final class StringsPlumeTest {
   @Test
   void test_vPlural() {
 
-    // public static String [Plural(int n, String verb)
+    // public static String vPlural(int n, String verb)
 
     assertEquals("were", StringsPlume.vPlural(0, "was"));
     assertEquals("was", StringsPlume.vPlural(1, "was"));

@@ -20,7 +20,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 
 // Implementation note:
 // Randoop's main generator ({@link randoop.generation.ForwardGenerator ForwardGenerator})
-// creates new sequences by concatenating existing sequences, thenappending a statement at the end.
+// creates new sequences by concatenating existing sequences, then appending a statement at the end.
 // When profiling Randoop, we observed that naive concatenation took up a large portion of the
 // tool's running time, and the component set (i.e. the set of stored sequences used to create more
 // sequences) quickly exhausted the memory available.
