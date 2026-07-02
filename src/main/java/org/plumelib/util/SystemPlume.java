@@ -2,6 +2,7 @@
 
 package org.plumelib.util;
 
+import java.io.File;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
@@ -284,5 +285,30 @@ public final class SystemPlume {
           "total memory = " + Runtime.getRuntime().totalMemory(),
           " free memory = " + Runtime.getRuntime().freeMemory());
     }
+  }
+
+  //
+  // Paths
+  //
+
+  /**
+   * Returns the absolute path of a program that is on the system PATH.
+   *
+   * @param programName the name of the program
+   * @return the absolute path of the program
+   */
+  public static @Nullable String pathToExecutable(String programName) {
+    String osName = System.getProperty("os.name").toLowerCase();
+    if (osName.contains("win") && !programName.endsWith(".exe")) {
+      programName += ".exe";
+    }
+
+    for (String dir : System.getenv("PATH").split(System.getProperty("path.separator"))) {
+      File file = new File(dir, programName);
+      if (file.isFile() && file.canExecute()) {
+        return file.getAbsolutePath();
+      }
+    }
+    return null; // Executable not found in PATH
   }
 }
