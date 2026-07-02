@@ -303,7 +303,12 @@ public final class SystemPlume {
       programName += ".exe";
     }
 
-    for (String dir : System.getenv("PATH").split(System.getProperty("path.separator"))) {
+    String path = System.getenv("PATH");
+    if (path == null) {
+      return null;
+    }
+
+    for (String dir : path.split(System.getProperty("path.separator"))) {
       File file = new File(dir, programName);
       if (file.isFile() && file.canExecute()) {
         return file.getAbsolutePath();
