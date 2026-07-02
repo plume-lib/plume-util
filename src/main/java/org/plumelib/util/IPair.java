@@ -68,9 +68,9 @@ public final class IPair<V1, V2> {
   public static <T1 extends Cloneable, T2 extends Cloneable> IPair<T1, T2> cloneElements(
       IPair<T1, T2> orig) {
     T1 oldFirst = orig.first;
-    T1 newFirst = oldFirst == null ? oldFirst : UtilPlume.clone(oldFirst);
+    T1 newFirst = oldFirst == null ? oldFirst : UtilP.clone(oldFirst);
     T2 oldSecond = orig.second;
-    T2 newSecond = oldSecond == null ? oldSecond : UtilPlume.clone(oldSecond);
+    T2 newSecond = oldSecond == null ? oldSecond : UtilP.clone(oldSecond);
     return of(newFirst, newSecond);
   }
 

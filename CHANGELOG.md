@@ -8,9 +8,9 @@
   * use `FilesP` instead of `FilesPlume`.
 * Removed all deprecated classes and methods.
 * Converted classes to records:
-  * `CollectionsPlume.Replacement`
+  * `CollectionsP.Replacement`
   * `EntryReader.Entry`
-* New overloads of `UtilPlume.backticks()` that take a directory argument.
+* New overloads of `UtilP.backticks()` that take a directory argument.
 
 ## 1.14.0 (2026-03-05)
 

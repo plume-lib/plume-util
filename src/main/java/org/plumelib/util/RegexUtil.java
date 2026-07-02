@@ -345,7 +345,7 @@ public final class RegexUtil {
    */
   public static List<String> matchesSomeRegex(
       Collection<String> strings, Collection<@Regex String> regexes) {
-    List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
+    List<Pattern> patterns = CollectionsP.mapList(Pattern::compile, regexes);
     List<String> result = new ArrayList<>(strings.size());
     for (String s : strings) {
       for (Pattern p : patterns) {
@@ -367,7 +367,7 @@ public final class RegexUtil {
    */
   public static boolean everyStringMatchesSomeRegex(
       Collection<String> strings, Collection<@Regex String> regexes) {
-    List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
+    List<Pattern> patterns = CollectionsP.mapList(Pattern::compile, regexes);
     outer:
     for (String s : strings) {
       for (Pattern p : patterns) {
@@ -389,7 +389,7 @@ public final class RegexUtil {
    */
   public static List<String> matchesNoRegex(
       Collection<String> strings, Collection<@Regex String> regexes) {
-    List<Pattern> patterns = CollectionsPlume.mapList(Pattern::compile, regexes);
+    List<Pattern> patterns = CollectionsP.mapList(Pattern::compile, regexes);
     List<String> result = new ArrayList<>(strings.size());
     outer:
     for (String s : strings) {

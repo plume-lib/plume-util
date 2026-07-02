@@ -986,7 +986,7 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      int[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      int[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
       int @Interned [] subseq = intern(subseqUninterned);
       internedIntSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
@@ -1015,7 +1015,7 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      long[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      long[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
       long @Interned [] subseq = intern(subseqUninterned);
       internedLongSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
@@ -1044,7 +1044,7 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      double[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      double[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
       double @Interned [] subseq = intern(subseqUninterned);
       internedDoubleSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
@@ -1076,7 +1076,7 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @PolyNull @Interned Object[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      @PolyNull @Interned Object[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
       @PolyNull @Interned Object @Interned [] subseq = intern(subseqUninterned);
       @SuppressWarnings({
         "nullness", // safe because map does no side effects
@@ -1113,7 +1113,7 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @PolyNull @Interned String[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
+      @PolyNull @Interned String[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
       @PolyNull @Interned String @Interned [] subseq = intern(subseqUninterned);
       @SuppressWarnings({
         "nullness", // safe because map does no side effects
@@ -1191,7 +1191,7 @@ public final class Intern {
     @SideEffectFree
     @Override
     public String toString(@GuardSatisfied Subsequence<T> this) {
-      return "SAI(" + start + "," + end + ") from: " + ArraysPlume.toString(seq);
+      return "SAI(" + start + "," + end + ") from: " + ArraysP.toString(seq);
     }
   }
 

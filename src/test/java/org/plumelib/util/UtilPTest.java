@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 */
 import org.junit.jupiter.api.Test;
 
-/** Test the UtilPlume class. */
-final class UtilPlumeTest {
+/** Test the UtilP class. */
+final class UtilPTest {
 
-  UtilPlumeTest() {}
+  UtilPTest() {}
 
   // //////////////////////////////////////////////////////////////////////
   // Object

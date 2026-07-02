@@ -11,13 +11,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
-public final class SystemPlume {
+public final class SystemP {
 
   /** The Runtime instance for the current execution. */
   private static Runtime runtime = Runtime.getRuntime();
 
   /** This class is a collection of methods; it does not represent anything. */
-  private SystemPlume() {
+  private SystemP() {
     throw new Error("do not instantiate");
   }
 
@@ -37,7 +37,7 @@ public final class SystemPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
   public static boolean getBooleanSystemProperty(String key, boolean defaultValue) {
-    return UtilPlume.getBooleanProperty(System.getProperties(), key, defaultValue);
+    return UtilP.getBooleanProperty(System.getProperties(), key, defaultValue);
   }
 
   /**

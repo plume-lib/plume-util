@@ -30,7 +30,7 @@ final class FuzzyFloatTest {
     boolean result = Arrays.equals(a1, a2);
     if (!result) {
       System.out.println(
-          "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+          "Arrays differ: " + ArraysP.toString(a1) + ", " + ArraysP.toString(a2));
     }
     assertTrue(result);
   }
