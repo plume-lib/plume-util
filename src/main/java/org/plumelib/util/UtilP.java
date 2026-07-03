@@ -405,11 +405,11 @@ public final class UtilP {
    */
   @Deprecated(since = "2021-02-25")
   // @InlineMe(
-  //     replacement = "FilesP.newBufferedFileReader(filename)",
+  //     replacement = "FilesP.newBufferedFileReader(filename, charsetName)",
   //     imports = "org.plumelib.util.FilesP")
   public static BufferedReader bufferedFileReader(String filename, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
-    return FilesP.newBufferedFileReader(filename);
+    return FilesP.newBufferedFileReader(filename, charsetName);
   }
 
   /**
