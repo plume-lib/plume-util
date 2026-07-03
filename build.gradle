@@ -92,7 +92,7 @@ spotless {
     endWithNewline()
   }
   java {
-    targetExclude("**/WeakIdentityHashMap.java")
+    targetExclude("**/WeakIdentityHashMap\\.java")
     googleJavaFormat()
     formatAnnotations()
   }
@@ -126,7 +126,7 @@ tasks.withType(JavaCompile).configureEach {
     disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
     disable("ReferenceEquality") // Use Interning Checker instead.
     // Code copied from the JDK that we don't want to change gratuitously.
-    excludedPaths = ".*/Weak.*Hash(er)?Map.java"
+    excludedPaths = ".*/Weak.*Hash(er)?Map\\.java"
   }
 }
 
