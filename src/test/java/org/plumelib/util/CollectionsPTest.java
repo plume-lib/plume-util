@@ -382,8 +382,7 @@ final class CollectionsPTest {
   void test_mapListRemoveNull() {
     List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
     List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
-    List<Object> result =
-        CollectionsP.mapListRemoveNull(CollectionsPTest::toStringOrNull, in);
+    List<Object> result = CollectionsP.mapListRemoveNull(CollectionsPTest::toStringOrNull, in);
     assertEquals(goal, result);
   }
 
@@ -391,8 +390,7 @@ final class CollectionsPTest {
   void test_mapListRemoveNull_array() {
     Object[] in = {1, 2, 3};
     List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
-    List<Object> result =
-        CollectionsP.mapListRemoveNull(CollectionsPTest::toStringOrNull, in);
+    List<Object> result = CollectionsP.mapListRemoveNull(CollectionsPTest::toStringOrNull, in);
     assertEquals(goal, result);
   }
 
@@ -839,8 +837,7 @@ final class CollectionsPTest {
   // public static <T> List<T> append(Collection<T> list, T lastElt)
   @Test
   void test_append() {
-    assertEquals(
-        Arrays.asList("a", "b", "c"), CollectionsP.append(Arrays.asList("a", "b"), "c"));
+    assertEquals(Arrays.asList("a", "b", "c"), CollectionsP.append(Arrays.asList("a", "b"), "c"));
   }
 
   /** Test concatenate(). */
@@ -954,8 +951,7 @@ final class CollectionsPTest {
     assertEquals(iota0, toArrayList(iota0.iterator()));
     assertEquals(iota0, toArrayList(new CollectionsP.IteratorEnumeration<>(iota0.iterator())));
     assertEquals(iota10, toArrayList(iota10.iterator()));
-    assertEquals(
-        iota10, toArrayList(new CollectionsP.IteratorEnumeration<>(iota10.iterator())));
+    assertEquals(iota10, toArrayList(new CollectionsP.IteratorEnumeration<>(iota10.iterator())));
 
     // public static class MergedIterator2 implements Iterator {
     assertEquals(
@@ -972,8 +968,7 @@ final class CollectionsPTest {
     iota10IteratorThrice.add(iota10.iterator());
     iota10IteratorThrice.add(iota10.iterator());
     assertEquals(
-        iota10Thrice,
-        toArrayList(CollectionsP.mergedIterator(iota10IteratorThrice.iterator())));
+        iota10Thrice, toArrayList(CollectionsP.mergedIterator(iota10IteratorThrice.iterator())));
     ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<>();
     iota10IteratorTwice1.add(iota0.iterator());
     iota10IteratorTwice1.add(iota10.iterator());

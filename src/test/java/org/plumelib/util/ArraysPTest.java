@@ -40,16 +40,14 @@ final class ArraysPTest {
   /** Test append(). */
   @Test
   void test_append() {
-    assertArrayEquals(
-        new String[] {"a", "b", "c"}, ArraysP.append(new String[] {"a", "b"}, "c"));
+    assertArrayEquals(new String[] {"a", "b", "c"}, ArraysP.append(new String[] {"a", "b"}, "c"));
     assertArrayEquals(new String[] {"a"}, ArraysP.append(new String[] {}, "a"));
   }
 
   /** Test prepend(). */
   @Test
   void test_prepend() {
-    assertArrayEquals(
-        new String[] {"a", "b", "c"}, ArraysP.prepend("a", new String[] {"b", "c"}));
+    assertArrayEquals(new String[] {"a", "b", "c"}, ArraysP.prepend("a", new String[] {"b", "c"}));
     assertArrayEquals(new String[] {"a"}, ArraysP.prepend("a", new String[] {}));
   }
 
@@ -160,8 +158,7 @@ final class ArraysPTest {
     // public static double sum(double[][] a)
     assertEquals(0, ArraysP.sum(new double[0][0]));
     assertEquals(
-        79.5,
-        ArraysP.sum(new double[][] {{1.1, 2.2, 3.3, 4.4}, {5.5, 6, 7, 8}, {9, 10, 11, 12}}));
+        79.5, ArraysP.sum(new double[][] {{1.1, 2.2, 3.3, 4.4}, {5.5, 6, 7, 8}, {9, 10, 11, 12}}));
   }
 
   /**
@@ -480,8 +477,7 @@ final class ArraysPTest {
       assertEquals("null", ArraysP.toString((List<? extends @Signed Object>) null));
       assertEquals("null", ArraysP.toStringQuoted((List<? extends @Signed Object>) null));
       assertEquals(
-          "[3.14, null, \"hello\"]",
-          ArraysP.toStringQuoted(Arrays.asList(3.14, null, "hello")));
+          "[3.14, null, \"hello\"]", ArraysP.toStringQuoted(Arrays.asList(3.14, null, "hello")));
       assertEquals(
           "[\"a\\\"quote\", \"b\", \"c\\\\backslash\", \"d\\nnewline\"]",
           ArraysP.toStringQuoted(Arrays.asList("a\"quote", "b", "c\\backslash", "d\nnewline")));
@@ -618,12 +614,9 @@ final class ArraysPTest {
     assertArrayEquals(ArraysP.fnIdentity(3), new int[] {0, 1, 2});
 
     // public static int[] fnInversePermutation(int[] a)
-    assertArrayEquals(
-        ArraysP.fnInversePermutation(new int[] {0, 1, 2, 3}), new int[] {0, 1, 2, 3});
-    assertArrayEquals(
-        ArraysP.fnInversePermutation(new int[] {1, 2, 3, 0}), new int[] {3, 0, 1, 2});
-    assertArrayEquals(
-        ArraysP.fnInversePermutation(new int[] {3, 2, 1, 0}), new int[] {3, 2, 1, 0});
+    assertArrayEquals(ArraysP.fnInversePermutation(new int[] {0, 1, 2, 3}), new int[] {0, 1, 2, 3});
+    assertArrayEquals(ArraysP.fnInversePermutation(new int[] {1, 2, 3, 0}), new int[] {3, 0, 1, 2});
+    assertArrayEquals(ArraysP.fnInversePermutation(new int[] {3, 2, 1, 0}), new int[] {3, 2, 1, 0});
 
     // public static int[] fnInverse(int[] a, int arange)
     assertArrayEquals(ArraysP.fnInverse(new int[] {0, 1, 2, 3}, 4), new int[] {0, 1, 2, 3});
@@ -637,8 +630,7 @@ final class ArraysPTest {
           e.getMessage() != null && e.getMessage().equals("Not invertible; a[1]=0 and a[3]=0"));
     }
     assertArrayEquals(ArraysP.fnInverse(new int[] {5}, 6), new int[] {-1, -1, -1, -1, -1, 0});
-    assertArrayEquals(
-        ArraysP.fnInverse(new int[] {1, 2, 3, 5}, 6), new int[] {-1, 0, 1, 2, -1, 3});
+    assertArrayEquals(ArraysP.fnInverse(new int[] {1, 2, 3, 5}, 6), new int[] {-1, 0, 1, 2, -1, 3});
 
     try {
       assertArrayEquals(
@@ -728,11 +720,9 @@ final class ArraysPTest {
     assertTrue(ArraysP.sameContents(new String[] {"a"}, new String[] {"a"}));
     assertTrue(ArraysP.sameContents(new String[] {"a", "b"}, new String[] {"a", "b"}));
     assertTrue(ArraysP.sameContents(new String[] {"a", "b"}, new String[] {"b", "a"}));
+    assertTrue(ArraysP.sameContents(new String[] {"a", "b", "c"}, new String[] {"c", "b", "a"}));
     assertTrue(
-        ArraysP.sameContents(new String[] {"a", "b", "c"}, new String[] {"c", "b", "a"}));
-    assertTrue(
-        ArraysP.sameContents(
-            new String[] {"a", "b", "c"}, new String[] {"c", "b", "a", "b", "b"}));
+        ArraysP.sameContents(new String[] {"a", "b", "c"}, new String[] {"c", "b", "a", "b", "b"}));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1035,8 +1025,7 @@ final class ArraysPTest {
     // Extraneous @Nullable on the following lines are due to https://tinyurl.com/cfissue/599
     assertFalse(ArraysP.anyNull(new @Nullable Object[][] {new Object[] {null}}));
     assertTrue(ArraysP.anyNull(new @Nullable Object[][] {new Object[] {null}, null}));
-    assertFalse(
-        ArraysP.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
+    assertFalse(ArraysP.anyNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
   }
 
   /** Test allNull(). */
@@ -1060,8 +1049,7 @@ final class ArraysPTest {
     assertTrue(ArraysP.allNull(new Object[][] {null, null}));
     assertFalse(ArraysP.allNull(new @Nullable Object[][] {new Object[] {null}}));
     assertFalse(ArraysP.allNull(new @Nullable Object[][] {new Object[] {null}, null}));
-    assertFalse(
-        ArraysP.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
+    assertFalse(ArraysP.allNull(new @Nullable Object[][] {new Object[] {null}, new Object[] {o}}));
   }
 
   /** Returns true if the toString of each element in elts equals the corresponding string. */
@@ -1085,8 +1073,7 @@ final class ArraysPTest {
   void test_partitioning() {
 
     assertTrue(
-        equalElementStrings(
-            ArraysP.partitionInto(Arrays.asList("a"), 1), Arrays.asList("[[a]]")));
+        equalElementStrings(ArraysP.partitionInto(Arrays.asList("a"), 1), Arrays.asList("[[a]]")));
     assertTrue(
         equalElementStrings(
             ArraysP.partitionInto(Arrays.asList("a", "b"), 1), Arrays.asList("[[a, b]]")));
@@ -1095,8 +1082,7 @@ final class ArraysPTest {
             ArraysP.partitionInto(Arrays.asList("a", "b"), 2), Arrays.asList("[[a], [b]]")));
     assertTrue(
         equalElementStrings(
-            ArraysP.partitionInto(Arrays.asList("a", "b", "c"), 1),
-            Arrays.asList("[[a, b, c]]")));
+            ArraysP.partitionInto(Arrays.asList("a", "b", "c"), 1), Arrays.asList("[[a, b, c]]")));
     assertTrue(
         equalElementStrings(
             ArraysP.partitionInto(Arrays.asList("a", "b", "c"), 2),

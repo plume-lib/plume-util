@@ -580,12 +580,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(
-        FilesP.newFileReader(path),
-        path.toString(),
-        entryFormat,
-        lineCommentRegex,
-        includeRegex);
+    this(FilesP.newFileReader(path), path.toString(), entryFormat, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -703,12 +698,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(
-        FilesP.newFileReader(file),
-        file.toString(),
-        entryFormat,
-        lineCommentRegex,
-        includeRegex);
+    this(FilesP.newFileReader(file), file.toString(), entryFormat, lineCommentRegex, includeRegex);
   }
 
   /**

@@ -3881,8 +3881,7 @@ public final class ArraysP {
   }
 
   /** Sorts arbitrary objects; used to determine equal. */
-  private static final StringsP.ObjectComparator objectComparator =
-      StringsP.ObjectComparator.it;
+  private static final StringsP.ObjectComparator objectComparator = StringsP.ObjectComparator.it;
 
   /**
    * Compare two arrays first by length (a shorter array is considered less), and if of equal length

@@ -53,8 +53,7 @@ final class StringsPTest {
 
     assertEquals("avarywhara", StringsP.replaceAll("everywhere", Pattern.compile("e"), "a"));
     assertEquals("aabaa", StringsP.replaceAll("abababa", Pattern.compile("aba"), "aa"));
-    assertEquals(
-        "abbababba", StringsP.replaceAll("abababa", Pattern.compile("a(b)a"), "a$1$1a"));
+    assertEquals("abbababba", StringsP.replaceAll("abababa", Pattern.compile("a(b)a"), "a$1$1a"));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -269,8 +268,7 @@ final class StringsPTest {
     assertEquals("\\\"hello\\\"", StringsP.escapeNonASCII("\"hello\""));
     assertEquals("\\\"hello\\\" \\\"world\\\"", StringsP.escapeNonASCII("\"hello\" \"world\""));
     assertEquals(
-        "\\000\\001\\002\\007\\n8@I\\222",
-        StringsP.escapeNonASCII("\0\1\2\7\12\70\100\111\222"));
+        "\\000\\001\\002\\007\\n8@I\\222", StringsP.escapeNonASCII("\0\1\2\7\12\70\100\111\222"));
     assertEquals(
         "\\u0100\\u1000\\ucafe\\uffff", StringsP.escapeNonASCII("\u0100\u1000\ucafe\uffff"));
 
@@ -595,13 +593,11 @@ final class StringsPTest {
     assertEquals("a", StringsP.conjunction("and", Arrays.asList("a")));
     assertEquals("a and b", StringsP.conjunction("and", Arrays.asList("a", "b")));
     assertEquals("a, b, and c", StringsP.conjunction("and", Arrays.asList("a", "b", "c")));
-    assertEquals(
-        "a, b, c, and d", StringsP.conjunction("and", Arrays.asList("a", "b", "c", "d")));
+    assertEquals("a, b, c, and d", StringsP.conjunction("and", Arrays.asList("a", "b", "c", "d")));
     assertEquals("a", StringsP.conjunction("or", Arrays.asList("a")));
     assertEquals("a or b", StringsP.conjunction("or", Arrays.asList("a", "b")));
     assertEquals("a, b, or c", StringsP.conjunction("or", Arrays.asList("a", "b", "c")));
-    assertEquals(
-        "a, b, c, or d", StringsP.conjunction("or", Arrays.asList("a", "b", "c", "d")));
+    assertEquals("a, b, c, or d", StringsP.conjunction("or", Arrays.asList("a", "b", "c", "d")));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -675,8 +671,7 @@ final class StringsPTest {
     assertEquals(2, StringsP.countFormatArguments("Two %d and %d"));
     assertEquals(3, StringsP.countFormatArguments("%f and %s and %d makes three"));
     assertEquals(
-        3,
-        StringsP.countFormatArguments("Hi! My name is %s and I have %d dogs and a %d cats."));
+        3, StringsP.countFormatArguments("Hi! My name is %s and I have %d dogs and a %d cats."));
 
     assertEquals(2, StringsP.countFormatArguments("%f and %1$f and %d and %1$f makes two"));
     assertEquals(14, StringsP.countFormatArguments("%f and %14$f makes fourteen"));
