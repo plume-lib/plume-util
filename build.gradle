@@ -1,69 +1,90 @@
 plugins {
-  id 'java-library'
+  id("java-library")
 
   // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
-  id 'com.gradleup.shadow' version '8.3.6'
+  alias(libs.plugins.com.gradleup.shadow)
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  // Version 6.14.0 and later requires JRE 11+, but version 6.13.0 doesn't work on JRE 21.
-  id 'com.diffplug.spotless' version '7.0.3'
+  // which is run by "check" (which is itself run by "build").
+  alias(libs.plugins.com.diffplug.spotless)
 
   // Error Prone linter
-  id('net.ltgt.errorprone') version '4.2.0'
+  alias(libs.plugins.net.ltgt.errorprone) apply false
+
+  // PMD linter
+  id("pmd")
+
+  // code coverage
+  id("jacoco")
 
   // Checker Framework pluggable type-checking
-  id 'org.checkerframework' version '0.6.53'
+  alias(libs.plugins.org.checkerframework)
+
+  // Publishing to Maven Central.
+  alias(libs.plugins.com.vanniktech.maven.publish)
 }
 
 repositories {
-  gradlePluginPortal()
   mavenLocal()
   mavenCentral()
-  maven { url = 'https://oss.sonatype.org/content/repositories/snapshots/' }
-}
-
-ext {
-  errorproneVersion = '2.38.0'
-  isJava17orHigher = JavaVersion.current() >= JavaVersion.VERSION_17
-  isJava21orHigher = JavaVersion.current() >= JavaVersion.VERSION_21
+  maven { url = "https://central.sonatype.com/repository/maven-snapshots/" }
+  gradlePluginPortal()
 }
 
 dependencies {
-  implementation 'org.plumelib:hashmap-util:0.0.1'
-  implementation 'org.plumelib:reflection-util:1.1.5'
+  implementation(libs.hashmap.util)
+  implementation(libs.reflection.util)
   // Including error_prone_annotations leads to javac warnings (not errors, but
   // annoying nonetheless) when a client of plume-util doesn't itself depend on
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
-  // implementation "com.google.errorprone:error_prone_annotations:${errorproneVersion}"
+  // implementation("com.google.errorprone:error_prone_annotations")
 
-  testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  testImplementation(libs.junit.jupiter)
+  testRuntimeOnly(libs.junit.platform.launcher)
 }
 
-// To upload to Maven Central, see instructions in the file.
-apply from: "${buildscript.sourceFile.parent}/gradle/mavencentral.gradle"
-
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  toolchain {
+    // Always compile using Java 21, but test using various Java versions.
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+tasks.withType(JavaCompile).configureEach {
+  // Set the language level and byte code to 17.
+  options.release = 17
 }
 
 test {
   useJUnitPlatform {
-    includeEngines 'junit-jupiter'
-    excludeEngines 'junit-vintage'
+    includeEngines("junit-jupiter")
+    excludeEngines("junit-vintage")
   }
 
   testLogging {
     outputs.upToDateWhen{false}
     showStandardStreams = true
+    events("failed")
+    exceptionFormat = "full"
   }
 }
 
+jacocoTestReport {
+  reports {
+    xml.required = false
+    csv.required = true // Output is written to build/reports/jacoco/test/jacocoTestReport.csv
+    html.required = true // Output is written to build/reports/jacoco/test/html/index.html
+  }
+}
+// Two possible configurations:
+// Configuration A: report is always generated after tests run.
+test.finalizedBy(jacocoTestReport)
+// Configuration B: user must run `jacocoTestReport` explicitly.
+// jacocoTestReport.dependsOn(test)
+
 spotless {
-  format 'misc', {
+  format "misc", {
     // define the files to apply `misc` to
-    target '*.md', '.gitignore'
+    target("*.md", ".gitignore")
 
     // define the steps to apply to those files
     trimTrailingWhitespace()
@@ -71,12 +92,12 @@ spotless {
     endWithNewline()
   }
   java {
-    targetExclude('**/WeakIdentityHashMap.java')
+    targetExclude("**/WeakIdentityHashMap.java")
     googleJavaFormat()
     formatAnnotations()
   }
   groovyGradle {
-    target '**/*.gradle'
+    target("**/*.gradle")
     greclipse()  // which formatter Spotless should use to format .gradle files.
     leadingTabsToSpaces(2)
     trimTrailingWhitespace()
@@ -86,150 +107,186 @@ spotless {
 
 // Error Prone linter
 
+tasks.withType(JavaCompile).configureEach {
+  options.forkOptions.jvmArgs += "-Xmx6g"
+  options.compilerArgs << "-Werror"
+  // "-processing" avoids javac warning "No processor claimed any of these annotations".
+  options.compilerArgs << "-Xlint:all,-processing,-this-escape"
+}
+apply plugin: "net.ltgt.errorprone"
 dependencies {
-  errorprone("com.google.errorprone:error_prone_core:${errorproneVersion}")
+  errorprone(libs.error.prone.core)
 }
 tasks.withType(JavaCompile).configureEach {
-  // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  // "-options" is because starting in JDK 20, javac warns about using -source 8.
-  options.compilerArgs << '-Xlint:all,-processing,-options' << '-Werror'
-  options.forkOptions.jvmArgs += '-Xmx2g'
-  if (isJava21orHigher) {
-    options.compilerArgs << '-Xlint:-this-escape'
-  }
   options.errorprone {
-    disable('ExtendsObject')  // Incorrect when using the Checker Framework
-    disable('InlineMeSuggester') // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations
-    disable('ReferenceEquality') // Use Interning Checker instead.
-    disable('AnnotateFormatMethod') // Error Prone doesn't know about Checker Framework @FormatMethod
+    disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
+    disable("DoNotCallSuggester") // Suggests use of an Error Prone annotation.
+    disable("EffectivelyPrivate") // Loses information about the abstraction.
+    disable("ExtendsObject")  // Incorrect when using the Checker Framework.
+    disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
+    disable("ReferenceEquality") // Use Interning Checker instead.
     // Code copied from the JDK that we don't want to change gratuitously.
-    excludedPaths = '.*/Weak.*Hash(er)?Map.java'
+    excludedPaths = ".*/Weak.*Hash(er)?Map.java"
   }
-  options.errorprone.enabled = isJava17orHigher
 }
+
+
+// PMD linter
+
+pmd {
+  toolVersion = "7.26.0"
+  ruleSets = []                 // Prevent the default errorprone.xml from being applied.
+  ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
+  consoleOutput = true
+  ignoreFailures = false
+  incrementalAnalysis = true
+}
+
 
 // Checker Framework pluggable type-checking
 
-apply plugin: 'org.checkerframework'
+apply plugin: "org.checkerframework"
 
 checkerFramework {
+  version = libs.checker.framework.get().version
   checkers = [
     // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
-    // 'org.checkerframework.checker.calledmethods.CalledMethodsChecker',
-    'org.checkerframework.checker.formatter.FormatterChecker',
-    'org.checkerframework.checker.index.IndexChecker',
-    'org.checkerframework.checker.interning.InterningChecker',
-    'org.checkerframework.checker.lock.LockChecker',
-    'org.checkerframework.checker.nullness.NullnessChecker',
-    'org.checkerframework.checker.regex.RegexChecker',
-    'org.checkerframework.checker.resourceleak.ResourceLeakChecker',
-    'org.checkerframework.checker.signature.SignatureChecker',
-    'org.checkerframework.checker.signedness.SignednessChecker',
-    'org.checkerframework.common.initializedfields.InitializedFieldsChecker',
+    // "org.checkerframework.checker.calledmethods.CalledMethodsChecker",
+    "org.checkerframework.checker.formatter.FormatterChecker",
+    "org.checkerframework.checker.index.IndexChecker",
+    "org.checkerframework.checker.interning.InterningChecker",
+    "org.checkerframework.checker.lock.LockChecker",
+    "org.checkerframework.checker.nullness.NullnessChecker",
+    "org.checkerframework.checker.regex.RegexChecker",
+    "org.checkerframework.checker.resourceleak.ResourceLeakChecker",
+    "org.checkerframework.checker.signature.SignatureChecker",
+    "org.checkerframework.checker.signedness.SignednessChecker",
+    "org.checkerframework.common.initializedfields.InitializedFieldsChecker",
   ]
   extraJavacArgs = [
-    '-Werror',
-    '-Aversion',
-    // '-verbose',
-    '-AcheckPurityAnnotations',
-    '-ArequirePrefixInWarningSuppressions',
-    '-AwarnRedundantAnnotations',
-    '-AwarnUnneededSuppressions',
+    "-Werror",
+    // "-Aversion",
+    // "-verbose",
+    "-AcheckPurityAnnotations",
+    "-ArequirePrefixInWarningSuppressions",
+    "-AwarnRedundantAnnotations",
+    "-AwarnUnneededSuppressions",
   ]
 }
-// To use a snapshot version of the Checker Framework.
-if (false) {
-  // TODO: Change the above test to false when CF is released.
-  ext.checkerFrameworkVersion = '3.49.2'
-  dependencies {
-    compileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-    testCompileOnly "org.checkerframework:checker-qual:${checkerFrameworkVersion}"
-    checkerFramework "org.checkerframework:checker:${checkerFrameworkVersion}"
-  }
-  configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'minutes'
-  }
-}
-// To use a locally-built Checker Framework, run gradle with "-PcfLocal".
-if (project.hasProperty('cfLocal')) {
-  def cfHome = String.valueOf(System.getenv('CHECKERFRAMEWORK'))
-  dependencies {
-    compileOnly files(cfHome + '/checker/dist/checker-qual.jar')
-    testCompileOnly files(cfHome + '/checker/dist/checker-qual.jar')
-    checkerFramework files(cfHome + '/checker/dist/checker.jar')
-  }
-}
+
 
 // Javadoc
 
-// Turn Javadoc warnings into errors.
+tasks.withType(Javadoc) {
+  options.noTimestamp = true
+}
 javadoc {
-  options.addStringOption('Xwerror', '-Xdoclint:all')
-  options.addStringOption('private', '-quiet')
-  options.addStringOption('source', '11')
+  // Turn Javadoc warnings into errors.
+  options.addStringOption("Xwerror", "-Xdoclint:all")
+  options.addStringOption("private", "-quiet")
   doLast {
-    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
-    flags:'g', byline:true) {
+    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:"",
+    flags:"g", byline:true) {
       fileset(dir: destinationDir)
     }
   }
 }
-check.dependsOn javadoc
+check.dependsOn(javadoc)
 
-task javadocWeb(type: Javadoc) {
-  description = 'Upload API documentation to website.'
+tasks.register("javadocWeb", DefaultTask) {
+  description = "Upload API documentation to website."
+  dependsOn(javadocWebUpload, javadocWebChgrp, javadocWebChmod)
+}
+tasks.register("javadocWebUpload", Javadoc) {
   source = sourceSets.main.allJava
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
-  options.addStringOption('source', '11')
   doLast {
-    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:'',
-    flags:'g', byline:true) {
+    ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:"",
+    flags:"g", byline:true) {
       fileset(dir: destinationDir)
-    }
-    // Set permissions
-    project.exec {
-      commandLine('chgrp', '-R',  'plse_www', "/cse/web/research/plumelib/${project.name}/api")
-    }
-    project.exec {
-      commandLine('chmod', '-R',  'g+w', "/cse/web/research/plumelib/${project.name}/api")
     }
   }
 }
+// Set permissions
+tasks.register("javadocWebChgrp", Exec) {
+  commandLine("chgrp", "-R", "plse_www", "/cse/web/research/plumelib/${project.name}/api")
+  ignoreExitValue = true
+}
+javadocWebChgrp.mustRunAfter("javadocWebUpload")
+tasks.register("javadocWebChmod", Exec) {
+  commandLine("chmod", "-R", "g+w", "/cse/web/research/plumelib/${project.name}/api")
+  ignoreExitValue = true
+}
+javadocWebChmod.mustRunAfter("javadocWebUpload")
+
 
 configurations {
   requireJavadoc
 }
 dependencies {
-  requireJavadoc 'org.plumelib:require-javadoc:1.0.9'
+  requireJavadoc(libs.require.javadoc)
 }
-task requireJavadoc(type: JavaExec) {
-  group = 'Documentation'
-  description = 'Ensures that Javadoc documentation exists.'
-  mainClass = 'org.plumelib.javadoc.RequireJavadoc'
+def requireJavadoc = tasks.register("requireJavadoc", JavaExec) {
+  group = "Documentation"
+  description = "Ensures that Javadoc documentation exists."
+  inputs.files(sourceSets.main.allJava)
+  mainClass = "org.plumelib.javadoc.RequireJavadoc"
   classpath = configurations.requireJavadoc
-  args 'src/main/java'
+  args(sourceSets.main.allJava.srcDirs.collect{it.getAbsolutePath()})
+  jvmArgs += [
+    "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+    "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+    "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+    "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+    "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+    "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+  ]
 }
-check.dependsOn requireJavadoc
-javadocWeb.dependsOn requireJavadoc
+check.dependsOn(requireJavadoc)
+javadocWeb.dependsOn(requireJavadoc)
+
+
+// Publishing, see README-developers.md
+
+mavenPublishing {
+  coordinates("org.plumelib", "${project.packageName}", "${project.version}")
+
+  pom {
+    name = "Plume Util"
+    description = "Utility libraries for Java.  Complements Guava, Apache Commons, Eclipse Collections, etc."
+    url = "https://github.com/plume-lib/${project.packageName}"
+
+    scm {
+      url = "https://github.com/plume-lib/${project.packageName}/"
+      connection = "scm:git:git://github.com/plume-lib/${project.packageName}.git"
+      developerConnection = "scm:git:ssh://git@github.com/plume-lib/${project.packageName}.git"
+    }
+
+    licenses {
+      license {
+        name = "MIT License"
+        url = "https://opensource.org/licenses/MIT"
+      }
+    }
+
+    developers {
+      developer {
+        id = "mernst"
+        name = "Michael Ernst"
+        email = "mernst@alum.mit.edu"
+      }
+    }
+  }
+}
+
 
 // Emacs support
 
 /* Make Emacs TAGS table */
-task tags(type: Exec) {
-  description = 'Run etags to create an Emacs TAGS table'
-  commandLine 'bash', '-c', "find src/ -name '*.java' | sort | xargs etags"
-}
-
-
-// Debugging support
-
-task printCompileClasspaths {
-  description = 'Print the compile-time classpaths'
-  doFirst {
-    println 'Compile classpath:'
-    println sourceSets.main.compileClasspath.asPath
-    println 'Compile test classpath:'
-    println sourceSets.test.compileClasspath.asPath
-  }
+tasks.register("tags", Exec) {
+  description = "Run etags to create an Emacs TAGS table"
+  commandLine("bash", "-c", "find src/ -name '*.java' | sort | xargs etags")
 }

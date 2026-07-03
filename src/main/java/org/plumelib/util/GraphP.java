@@ -11,10 +11,10 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /** Graph utility methods. This class does not model a graph: all methods are static. */
-public final class GraphPlume {
+public final class GraphP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private GraphPlume() {
+  private GraphP() {
     throw new Error("do not instantiate");
   }
 
@@ -75,12 +75,12 @@ public final class GraphPlume {
       if (preds.get(node).isEmpty()) {
         // This is a root.  Its only dominator is itself.
         Set<T> set = Collections.singleton(node);
-        dom.put(node, new ArrayList<T>(set));
+        dom.put(node, new ArrayList<>(set));
         roots.add(node);
       } else {
         // Initially, set all nodes as dominators;
         // will later remove nodes that aren't dominators.
-        dom.put(node, new ArrayList<T>(nodes));
+        dom.put(node, new ArrayList<>(nodes));
         nonRoots.add(node);
       }
     }
@@ -109,7 +109,7 @@ public final class GraphPlume {
           @NonNull List<T> domOfPred = dom.get(pred);
           if (newDoms == null) {
             // make copy because we may side-effect newDoms
-            newDoms = new ArrayList<T>(domOfPred);
+            newDoms = new ArrayList<>(domOfPred);
           } else {
             newDoms.retainAll(domOfPred);
           }
@@ -148,10 +148,7 @@ public final class GraphPlume {
    */
   public static <T extends @NonNull Object> void print(
       Map<T, List<T>> graph, PrintStream ps, int indent) {
-    String indentString = "";
-    for (int i = 0; i < indent; i++) {
-      indentString += " ";
-    }
+    String indentString = " ".repeat(indent);
     for (T node : graph.keySet()) {
       ps.printf("%s%s%n", indentString, node);
       for (T child : graph.get(node)) {

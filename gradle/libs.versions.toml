@@ -1,0 +1,31 @@
+[plugins]
+
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.8.0" }
+
+com-gradleup-shadow = { id = "com.gradleup.shadow", version = "9.4.3" }
+
+com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
+
+net-ltgt-errorprone = { id = "net.ltgt.errorprone", version = "5.1.0" }
+
+org-checkerframework = { id = "org.checkerframework", version = "1.0.2" }
+
+[versions]
+
+junit-jupiter = "6.1.1"
+
+[libraries]
+
+checker-framework = "org.checkerframework:checker:4.2.1"
+
+error-prone-core = "com.google.errorprone:error_prone_core:2.50.0"
+
+hashmap-util = "org.plumelib:hashmap-util:0.0.1"
+
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+reflection-util = "org.plumelib:reflection-util:1.1.6"
+
+require-javadoc = "org.plumelib:require-javadoc:2.0.0"

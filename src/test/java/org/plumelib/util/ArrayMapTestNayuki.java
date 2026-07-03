@@ -34,8 +34,10 @@ import java.util.Map;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("nullness") // Should be removed after CF 3.12.1 is released
-public final class ArrayMapTestNayuki {
+@SuppressWarnings({
+  "PMD", // Third-party-derived test code.
+})
+final class ArrayMapTestNayuki {
 
   /* Utilities */
 
@@ -44,7 +46,7 @@ public final class ArrayMapTestNayuki {
   /* Test cases */
 
   @Test
-  public void testPut() {
+  void testPut() {
     ArrayMap<String, Integer> map = new ArrayMap<String, Integer>();
     assertEquals(null, map.put("a", 9));
     assertEquals(null, map.put("b", 8));
@@ -65,7 +67,7 @@ public final class ArrayMapTestNayuki {
   }
 
   @Test
-  public void testSize() {
+  void testSize() {
     ArrayMap<String, Integer> map = new ArrayMap<String, Integer>();
     assertEquals(0, map.size());
     map.put("xy", 32);
@@ -81,7 +83,7 @@ public final class ArrayMapTestNayuki {
   }
 
   @Test
-  public void testMediumSimple() {
+  void testMediumSimple() {
     Map<String, Integer> map = new ArrayMap<String, Integer>();
     for (int i = 0; i < 100; i++) {
       assertNull(map.put(Integer.toString(i), i));
@@ -92,7 +94,7 @@ public final class ArrayMapTestNayuki {
   }
 
   @Test
-  public void testMediumSeesaw() {
+  void testMediumSeesaw() {
     Map<String, Integer> map0 = new HashMap<String, Integer>();
     ArrayMap<String, Integer> map1 = new ArrayMap<String, Integer>();
     for (int i = 0; i < 30; i++) {
@@ -127,7 +129,7 @@ public final class ArrayMapTestNayuki {
   }
 
   @Test
-  public void testLargeRandomly() {
+  void testLargeRandomly() {
     Map<String, Integer> map0 = new HashMap<String, Integer>();
     ArrayMap<String, Integer> map1 = new ArrayMap<String, Integer>();
     for (int i = 0; i < 1000; i++) {
@@ -148,7 +150,7 @@ public final class ArrayMapTestNayuki {
   }
 
   @Test
-  public void testIteratorDump() {
+  void testIteratorDump() {
     for (int i = 0; i < 100; i++) {
       // Generate random data
       int n = rand.nextInt(30);
@@ -179,7 +181,7 @@ public final class ArrayMapTestNayuki {
   }
 
   @Test
-  public void testIteratorModifyRemove() {
+  void testIteratorModifyRemove() {
     for (int i = 0; i < 100; i++) {
       // Generate random data
       int n = rand.nextInt(30);

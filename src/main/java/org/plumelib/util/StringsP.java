@@ -5,8 +5,9 @@ package org.plumelib.util;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,10 +33,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging variants of
  * toString; diagnostic output; miscellaneous.
  */
-public final class StringsPlume {
+public final class StringsP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private StringsPlume() {
+  private StringsP() {
     throw new Error("do not instantiate");
   }
 
@@ -59,7 +60,6 @@ public final class StringsPlume {
    * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
    *     target if it does not start with oldStr
    */
-  @SuppressWarnings("index:argument") // startsWith implies indexes fit
   @SideEffectFree
   public static String replacePrefix(String target, String oldStr, String newStr) {
     if (target.startsWith(oldStr)) {
@@ -120,7 +120,7 @@ public final class StringsPlume {
   //
 
   /**
-   * Returns the printed represenation of a value, with each line prefixed by another string.
+   * Returns the printed representation of a value, with each line prefixed by another string.
    *
    * @param prefix the prefix to place before each line
    * @param o the value to be printed
@@ -132,7 +132,7 @@ public final class StringsPlume {
   }
 
   /**
-   * Returns the printed represenation of a value, with each line (except the first) prefixed by
+   * Returns the printed representation of a value, with each line (except the first) prefixed by
    * another string.
    *
    * @param prefix the prefix to place before each line
@@ -162,7 +162,7 @@ public final class StringsPlume {
     if (indent == 0) {
       return (o == null) ? "null" : o.toString();
     }
-    String prefix = new String(new char[indent]).replace('\0', ' ');
+    String prefix = " ".repeat(indent);
     return prefixLines(prefix, o);
   }
 
@@ -180,7 +180,7 @@ public final class StringsPlume {
     if (indent == 0) {
       return (o == null) ? "null" : o.toString();
     }
-    String prefix = new String(new char[indent]).replace('\0', ' ');
+    String prefix = " ".repeat(indent);
     return prefixLinesExceptFirst(prefix, o);
   }
 
@@ -269,7 +269,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<String> splitRetainSeparators(String input, Pattern p) {
-    List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<>();
     Matcher m = p.matcher(input);
     int pos = 0;
     while (m.find()) {
@@ -304,17 +304,11 @@ public final class StringsPlume {
   @SideEffectFree
   public static <T extends @MustCallUnknown Object> String join(
       CharSequence delim, @Signed T... a) {
-    if (a.length == 0) {
-      return "";
+    StringJoiner sj = new StringJoiner(delim);
+    for (T elt : a) {
+      sj.add(String.valueOf(elt));
     }
-    if (a.length == 1) {
-      return String.valueOf(a[0]);
-    }
-    StringBuilder sb = new StringBuilder(String.valueOf(a[0]));
-    for (int i = 1; i < a.length; i++) {
-      sb.append(delim).append(a[i]);
-    }
-    return sb.toString();
+    return sj.toString();
   }
 
   /**
@@ -352,18 +346,11 @@ public final class StringsPlume {
   public static String join(
       CharSequence delim,
       @MustCallUnknown Iterable<? extends @Signed @PolyNull @MustCallUnknown Object> v) {
-    StringBuilder sb = new StringBuilder();
-    boolean first = true;
-    Iterator<? extends @Signed @PolyNull @MustCallUnknown Object> itor = v.iterator();
-    while (itor.hasNext()) {
-      if (first) {
-        first = false;
-      } else {
-        sb.append(delim);
-      }
-      sb.append(itor.next());
+    StringJoiner sj = new StringJoiner(delim);
+    for (@Signed @PolyNull Object elt : v) {
+      sj.add(String.valueOf(elt));
     }
-    return sb.toString();
+    return sj.toString();
   }
 
   /**
@@ -410,74 +397,76 @@ public final class StringsPlume {
     for (int i = 0; i < origLen; i++) {
       char c = orig.charAt(i);
       switch (c) {
-        case '\"':
+        case '\"' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\\"");
           postEsc = i + 1;
-          break;
-        case '\\':
+        }
+        case '\\' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\\\");
           postEsc = i + 1;
-          break;
-        case '\b':
+        }
+        case '\b' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\b");
           postEsc = i + 1;
-          break;
-        case '\f':
+        }
+        case '\f' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\f");
           postEsc = i + 1;
-          break;
-        case '\n': // not lineSep
+        }
+        case '\n' -> { // '\n', not lineSep
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\n"); // not lineSep
           postEsc = i + 1;
-          break;
-        case '\r':
+        }
+        case '\r' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\r");
           postEsc = i + 1;
-          break;
-        case '\t':
+        }
+        case '\t' -> {
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
           sb.append("\\t");
           postEsc = i + 1;
-          break;
+        }
 
-        default:
+        default -> {
           if (c >= ' ' && c <= '~') {
             // Nothing to do: i gets incremented
           } else if (c <= '\377') {
             if (postEsc < i) {
               sb.append(orig.substring(postEsc, i));
             }
-            sb.append("\\");
+            sb.append('\\');
             int cAsInt = (int) c;
             sb.append(String.format("%03o", cAsInt));
             postEsc = i + 1;
-            break;
           } else {
+            if (postEsc < i) {
+              sb.append(orig.substring(postEsc, i));
+            }
             sb.append("\\u");
             sb.append(String.format("%04x", (int) c));
             postEsc = i + 1;
-            break;
           }
+        }
       }
     }
     if (sb.length() == 0) {
@@ -495,7 +484,7 @@ public final class StringsPlume {
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(Character)}
    */
-  @Deprecated // 2021-03-14
+  @Deprecated(since = "2021-03-14")
   @SideEffectFree
   public static String escapeJava(Character ch) {
     return escapeJava(ch.charValue());
@@ -509,31 +498,24 @@ public final class StringsPlume {
    * @return quoted version of ch
    * @deprecated use {@link #escapeJava(String)} or {@link #charLiteral(char)}
    */
-  @Deprecated // 2021-03-14
+  @Deprecated(since = "2021-03-14")
   @SideEffectFree
   public static String escapeJava(char c) {
-    switch (c) {
-      case '\"':
-        return "\\\"";
-      case '\\':
-        return "\\\\";
-      case '\b':
-        return "\\b";
-      case '\f':
-        return "\\f";
-      case '\n': // not lineSep
-        return "\\n"; // not lineSep
-      case '\r':
-        return "\\r";
-      case '\t':
-        return "\\t";
-      default:
-        return new String(new char[] {c});
-    }
+    return switch (c) {
+      case '\"' -> "\\\"";
+      case '\\' -> "\\\\";
+      case '\b' -> "\\b";
+      case '\f' -> "\\f";
+      case '\n' -> "\\n"; // '\n', not lineSep
+      case '\r' -> "\\r";
+      case '\t' -> "\\t";
+      default -> new String(new char[] {c});
+    };
   }
 
   /**
-   * Given a character, returns a Java character literal denoting the character.
+   * Given a character, returns a Java character literal denoting the character. The return value
+   * begins and ends with a single quote mark.
    *
    * @param ch character to quote
    * @return quoted version of ch
@@ -551,24 +533,16 @@ public final class StringsPlume {
    */
   @SideEffectFree
   public static String charLiteral(char c) {
-    switch (c) {
-      case '\'':
-        return "'\\''";
-      case '\\':
-        return "'\\\\'";
-      case '\b':
-        return "'\\b'";
-      case '\f':
-        return "'\\f'";
-      case '\n': // not lineSep
-        return "'\\n'"; // not lineSep
-      case '\r':
-        return "'\\r'";
-      case '\t':
-        return "'\\t'";
-      default:
-        return "'" + c + "'";
-    }
+    return switch (c) {
+      case '\'' -> "'\\''";
+      case '\\' -> "'\\\\'";
+      case '\b' -> "'\\b'";
+      case '\f' -> "'\\f'";
+      case '\n' -> "'\\n'"; // '\n', not lineSep
+      case '\r' -> "'\\r'";
+      case '\t' -> "'\\t'";
+      default -> "'" + c + "'";
+    };
   }
 
   /**
@@ -658,40 +632,40 @@ public final class StringsPlume {
         break;
       }
       switch (orig.charAt(thisEsc + 1)) {
-        case 'b':
+        case 'b' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\b');
           postEsc = thisEsc + 2;
-          break;
-        case 'f':
+        }
+        case 'f' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\f');
           postEsc = thisEsc + 2;
-          break;
-        case 'n':
+        }
+        case 'n' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\n'); // not lineSep
           postEsc = thisEsc + 2;
-          break;
-        case 'r':
+        }
+        case 'r' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\r');
           postEsc = thisEsc + 2;
-          break;
-        case 't':
+        }
+        case 't' -> {
           sb.append(orig.substring(postEsc, thisEsc));
           sb.append('\t');
           postEsc = thisEsc + 2;
-          break;
-        case '\\':
+        }
+        case '\\' -> {
           // This is not in the default case because the search would find
           // the quoted backslash.  Here we include the first backslash in
           // the output, but not the first.
           sb.append(orig.substring(postEsc, thisEsc + 1));
           postEsc = thisEsc + 2;
-          break;
+        }
 
-        case 'u':
+        case 'u' -> {
           // Unescape Unicode characters.
           sb.append(orig.substring(postEsc, thisEsc));
           char unicodeChar = 0;
@@ -705,50 +679,40 @@ public final class StringsPlume {
           int limit = Math.min(ii + 4, orig.length());
           while (ii < limit) {
             int thisDigit = Character.digit(orig.charAt(ii), 16);
-            if (thisDigit == -1) {
-              break;
+            if (thisDigit != -1) {
+              unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
+              ii++;
             }
-            unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
-            ii++;
           }
           sb.append(unicodeChar);
           postEsc = ii;
-          break;
+        }
 
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
+        case '0', '1', '2', '3', '4', '5', '6', '7' -> {
           // Unescape octal characters.
           sb.append(orig.substring(postEsc, thisEsc));
           char octalChar = 0;
           int iii = thisEsc + 1;
           while (iii < Math.min(thisEsc + 4, orig.length())) {
             int thisDigit = Character.digit(orig.charAt(iii), 8);
-            if (thisDigit == -1) {
-              break;
+            if (thisDigit != -1) {
+              int newValue = (octalChar * 8) + thisDigit;
+              if (newValue <= 0xFF) {
+                octalChar = (char) newValue;
+                iii++;
+              }
             }
-            int newValue = (octalChar * 8) + thisDigit;
-            if (newValue > 0377) {
-              break;
-            }
-            octalChar = (char) newValue;
-            iii++;
           }
           sb.append(octalChar);
           postEsc = iii;
-          break;
+        }
 
-        default:
+        default -> {
           // In the default case, retain the character following the backslash,
           // but discard the backslash itself.  "\*" is just a one-character string.
           sb.append(orig.substring(postEsc, thisEsc));
           postEsc = thisEsc + 1;
-          break;
+        }
       }
       thisEsc = orig.indexOf('\\', postEsc);
     }
@@ -766,16 +730,19 @@ public final class StringsPlume {
   /**
    * Returns true if the string contains only white space codepoints, otherwise false.
    *
-   * <p>In Java 11, use {@code String.isBlank()} instead.
+   * <p>In Java 11+, use {@code String.isBlank()} instead.
    *
    * @param s a string
    * @return true if the string contains only white space codepoints, otherwise false
+   * @deprecated use {@code String.isBlank()}
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.not.deterministic.call", // used for lookup, so order does not matter
     "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
+  @Deprecated(since = "2026-03-05")
   @Pure
   public static boolean isBlank(String s) {
     return s.chars().allMatch(Character::isWhitespace);
@@ -1050,7 +1017,7 @@ public final class StringsPlume {
    *
    * @deprecated use {@code Comparator.nullsFirst(Comparator.naturalOrder())}
    */
-  @Deprecated // deprecated 2021-02-27
+  @Deprecated(since = "2021-02-27")
   public static class NullableStringComparator
       implements Comparator<@Nullable String>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -1068,7 +1035,10 @@ public final class StringsPlume {
      * @return a negative integer, zero, or a positive integer as the first argument is less than,
      *     equal to, or greater than the second
      */
-    @SuppressWarnings("ReferenceEquality") // comparator method uses ==
+    @SuppressWarnings({
+      "ReferenceEquality",
+      "PMD.UseEqualsToCompareStrings"
+    }) // comparator method uses ==
     @Pure
     @Override
     public int compare(@Nullable String s1, @Nullable String s2) {
@@ -1093,7 +1063,7 @@ public final class StringsPlume {
    * of {@code hashCode()}, then this comparator may yield different orderings from run to run of a
    * program.
    *
-   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} becase
+   * <p>This cannot be replaced by {@code Comparator.nullsFirst(Comparator.naturalOrder())} because
    * {@code Object} is not {@code Comparable}.
    */
   public static class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
@@ -1106,7 +1076,7 @@ public final class StringsPlume {
      *
      * @deprecated use {@link #it}.
      */
-    @Deprecated // 2022-07-25; to make private
+    @Deprecated(since = "2022-07-25") // to make private
     public ObjectComparator() {}
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -1172,7 +1142,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<Object> tokens(String str, String delim, boolean returnDelims) {
-    return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim, returnDelims));
+    return CollectionsP.makeArrayList(new StringTokenizer(str, delim, returnDelims));
   }
 
   /**
@@ -1189,7 +1159,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<Object> tokens(String str, String delim) {
-    return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim));
+    return CollectionsP.makeArrayList(new StringTokenizer(str, delim));
   }
 
   /**
@@ -1205,7 +1175,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<Object> tokens(String str) {
-    return CollectionsPlume.makeArrayList(new StringTokenizer(str));
+    return CollectionsP.makeArrayList(new StringTokenizer(str));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1239,18 +1209,17 @@ public final class StringsPlume {
     /** Creates a new VersionNumberComparator. */
     public VersionNumberComparator() {}
 
-    @SuppressWarnings("StringSplitter") // OK given that the arguments are version numbers.
     @Override
     public int compare(String s1, String s2) {
       if (s1.equals(s2)) {
         return 0;
       }
-      String[] components1 = s1.split("\\.");
-      String[] components2 = s2.split("\\.");
+      String[] components1 = s1.split("\\.", -1);
+      String[] components2 = s2.split("\\.", -1);
       int len = Math.min(components1.length, components2.length);
       for (int i = 0; i < len; i++) {
-        int int1 = Integer.valueOf(components1[i]);
-        int int2 = Integer.valueOf(components2[i]);
+        int int1 = Integer.parseInt(components1[i]);
+        int int2 = Integer.parseInt(components2[i]);
         if (int1 < int2) {
           return -1;
         } else if (int1 > int2) {
@@ -1310,26 +1279,27 @@ public final class StringsPlume {
     if (v == null) {
       return "null";
     }
-    if (v.getClass() == Object.class) {
-      return "a value of class " + v.getClass();
+    Class<?> vClass = v.getClass();
+    if (vClass == Object.class) {
+      return "a value of class " + vClass;
     }
     if (!shallow) {
-      if (v.getClass().isArray()) {
+      if (vClass.isArray()) {
         return arrayToStringAndClass(v);
       }
-      if (v instanceof List) {
-        return listToStringAndClass((List<? extends @PolyNull @Signed Object>) v);
+      if (v instanceof List<?> l) {
+        return listToStringAndClass((List<? extends @PolyNull @Signed Object>) l);
       }
-      if (v instanceof Map) {
+      if (v instanceof Map<?, ?> m) {
         return mapToStringAndClass(
-            (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) v);
+            (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
       }
     }
     try {
       String formatted = escapeJava(v.toString());
-      return String.format("%s [%s]", formatted, v.getClass());
+      return String.format("%s [%s]", formatted, vClass);
     } catch (Exception e) {
-      return String.format("exception_when_calling_toString [%s]", v.getClass());
+      return String.format("exception_when_calling_toString [%s]", vClass);
     }
   }
 
@@ -1389,27 +1359,27 @@ public final class StringsPlume {
     }
     String theClass = " [" + a.getClass() + "]";
 
-    if (a instanceof boolean[]) {
-      return Arrays.toString((boolean[]) a) + theClass;
-    } else if (a instanceof byte[]) {
-      return Arrays.toString((byte[]) a) + theClass;
-    } else if (a instanceof char[]) {
-      return Arrays.toString((char[]) a) + theClass;
-    } else if (a instanceof double[]) {
-      return Arrays.toString((double[]) a) + theClass;
-    } else if (a instanceof float[]) {
-      return Arrays.toString((float[]) a) + theClass;
-    } else if (a instanceof int[]) {
-      return Arrays.toString((int[]) a) + theClass;
-    } else if (a instanceof long[]) {
-      return Arrays.toString((long[]) a) + theClass;
-    } else if (a instanceof short[]) {
-      return Arrays.toString((short[]) a) + theClass;
+    if (a instanceof boolean[] ba) {
+      return Arrays.toString(ba) + theClass;
+    } else if (a instanceof byte[] ba) {
+      return Arrays.toString(ba) + theClass;
+    } else if (a instanceof char[] ca) {
+      return Arrays.toString(ca) + theClass;
+    } else if (a instanceof double[] da) {
+      return Arrays.toString(da) + theClass;
+    } else if (a instanceof float[] fa) {
+      return Arrays.toString(fa) + theClass;
+    } else if (a instanceof int[] ia) {
+      return Arrays.toString(ia) + theClass;
+    } else if (a instanceof long[] la) {
+      return Arrays.toString(la) + theClass;
+    } else if (a instanceof short[] sa) {
+      return Arrays.toString(sa) + theClass;
     }
 
-    if (a instanceof Object[]) {
+    if (a instanceof Object[] oa) {
       try {
-        return listToString(Arrays.asList((Object[]) a)) + theClass;
+        return listToString(Arrays.asList(oa)) + theClass;
       } catch (Exception e) {
         return "exception_when_printing_array" + theClass;
       }
@@ -1428,11 +1398,13 @@ public final class StringsPlume {
    *
    * @param m a map
    * @return a string representation of the map
+   * @deprecated use {@link CollectionsP#mapToStringAndClassMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
+  @Deprecated(since = "2025-06-21")
   @SideEffectFree
   public static String mapToStringAndClass(
       Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
@@ -1449,11 +1421,13 @@ public final class StringsPlume {
    *
    * @param m a map
    * @return a string representation of the map
+   * @deprecated use {@link CollectionsP#mapToStringAndClassMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
+  @Deprecated(since = "2025-06-21")
   @SideEffectFree
   public static String mapToStringLinewise(
       Map<? extends @Signed @PolyNull Object, ? extends @Signed @PolyNull Object> m) {
@@ -1466,7 +1440,7 @@ public final class StringsPlume {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  // Miscellaneous
+  // English text
   //
 
   /**
@@ -1476,18 +1450,105 @@ public final class StringsPlume {
    *
    * @param n count of nouns
    * @param noun word being counted; must not be the empty string
-   * @return noun, if n==1; otherwise, pluralization of noun
-   * @throws IllegalArgumentException if the length of noun is 0
+   * @return {@code noun}, if n==1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   * @deprecated use {@link #nPlural(int, String)}
    */
+  @Deprecated(since = "2025-07-16")
   @SideEffectFree
   public static String nplural(int n, String noun) {
+    return nPlural(n, noun);
+  }
+
+  /** Exceptions to the usual English noun pluralization rules. */
+  private static final Map<String, String> nPluralExceptions = new HashMap<>();
+
+  static {
+    // No change
+    nPluralExceptions.put("bison", "bison");
+    nPluralExceptions.put("buffalo", "buffalo");
+    nPluralExceptions.put("carp", "carp");
+    nPluralExceptions.put("chassis", "chassis");
+    nPluralExceptions.put("cod", "cod");
+    nPluralExceptions.put("deer", "deer");
+    nPluralExceptions.put("fish", "fish");
+    nPluralExceptions.put("kakapo", "kakapo");
+    nPluralExceptions.put("neat", "neat");
+    nPluralExceptions.put("pike", "pike");
+    nPluralExceptions.put("salmon", "salmon");
+    nPluralExceptions.put("series", "series");
+    nPluralExceptions.put("sheep", "sheep");
+    nPluralExceptions.put("shrimp", "shrimp");
+    nPluralExceptions.put("species", "species");
+    nPluralExceptions.put("squid", "squid");
+    nPluralExceptions.put("trout", "trout");
+
+    // Native American tribe names
+
+    nPluralExceptions.put("Cherokee", "Cherokee");
+    nPluralExceptions.put("Cree", "Cree");
+    nPluralExceptions.put("Comanche", "Comanche");
+    nPluralExceptions.put("Delaware", "Delaware");
+    nPluralExceptions.put("Hopi", "Hopi");
+    nPluralExceptions.put("Iroquois", "Iroquois");
+    nPluralExceptions.put("Kiowa", "Kiowa");
+    nPluralExceptions.put("Navajo", "Navajo");
+    nPluralExceptions.put("Ojibwa", "Ojibwa");
+    nPluralExceptions.put("Sioux", "Sioux");
+    nPluralExceptions.put("Zuni", "Zuni");
+
+    // Ending in "y"
+    nPluralExceptions.put("lay-by", "lay-bys");
+    nPluralExceptions.put("stand-by", "stand-bys");
+
+    // Ending in "i"
+    nPluralExceptions.put("alkali", "alkalies");
+
+    // Plural ending in "en"
+    nPluralExceptions.put("ox", "oxen");
+    nPluralExceptions.put("child", "children");
+
+    // Apophonic plurals
+    nPluralExceptions.put("foot", "feet");
+    nPluralExceptions.put("goose", "geese");
+    nPluralExceptions.put("louse", "lice");
+    nPluralExceptions.put("dormouse", "dormice");
+    nPluralExceptions.put("man", "men");
+    nPluralExceptions.put("mouse", "mice");
+    nPluralExceptions.put("tooth", "teeth");
+    nPluralExceptions.put("woman", "women");
+
+    // Miscellaneous irregular plurals
+    nPluralExceptions.put("person", "people");
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on {@code n}. Adds "es" to
+   * words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y" when the
+   * previous letter is a consonant. Handles some irregular nouns.
+   *
+   * @param n count of nouns
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if n==1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static String nPlural(int n, String noun) {
     if (noun.isEmpty()) {
       throw new IllegalArgumentException(
-          "The second argument to nplural must not be an empty string");
+          "The second argument to nPlural must not be an empty string");
     }
     if (n == 1) {
       return n + " " + noun;
     }
+    String irregular = nPluralExceptions.get(noun);
+    if (irregular != null) {
+      return n + " " + irregular;
+    }
+
+    // TODO: handle more from https://en.wikipedia.org/wiki/English_plurals ,
+    // and organize `nPluralExceptions` and the code the same as it.
+
     char lastLetter = noun.charAt(noun.length() - 1);
     char penultimateLetter = (noun.length() == 1) ? '\u0000' : noun.charAt(noun.length() - 2);
     if ((penultimateLetter == 'c' && lastLetter == 'h')
@@ -1504,13 +1565,217 @@ public final class StringsPlume {
             && penultimateLetter != 'u')) {
       return n + " " + noun.substring(0, noun.length() - 1) + "ies";
     }
+
+    // TODO:  Change nouns ending in "f" or "fe" to "ves" (knives, leaves, lives, wolves, calves),
+    // but beware that there are exceptions (roofs, fifes).
+
+    // TODO:
+    // Singular nouns ending in o preceded by a consonant in many cases spell the plural by adding
+    // -es: heroes,	potatoes, echoes.
+    // However, many nouns of foreign origin, including almost all Italian loanwords, add only -s:
+    // And also some other exceptions like volcanos.
+
     return n + " " + noun + "s";
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
+   * Adds "es" to words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y"
+   * when the previous letter is a consonant.
+   *
+   * @param c a collection whose size to test
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if {@code c} has size 1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static String nPlural(Collection<?> c, String noun) {
+    return nPlural(c.size(), noun);
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
+   * Adds "es" to words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y"
+   * when the previous letter is a consonant.
+   *
+   * @param m a map whose size to test
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if {@code m} has size 1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static String nPlural(Map<?, ?> m, String noun) {
+    return nPlural(m.size(), noun);
+  }
+
+  /**
+   * Returns either "n <em>noun</em>" or "n <em>noun</em>s" depending on the size of the collection.
+   * Adds "es" to words ending with "ch", "s", "sh", or "x". Adds "ies" to words ending with "y"
+   * when the previous letter is a consonant.
+   *
+   * @param <T> the type of array elements
+   * @param a an array whose size to test
+   * @param noun word being counted; must not be the empty string
+   * @return {@code noun}, if {@code a} has size 1; otherwise, pluralization of {@code noun}
+   * @throws IllegalArgumentException if the length of {@code noun} is 0
+   */
+  @SideEffectFree
+  public static <T> String nPlural(T[] a, String noun) {
+    return nPlural(a.length, noun);
+  }
+
+  /** Exceptions to the usual English verb pluralization rules. */
+  private static final Map<String, String> vPluralExceptions = new HashMap<>();
+
+  static {
+    vPluralExceptions.put("is", "are");
+    vPluralExceptions.put("was", "were");
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on {@code n}. Most
+   * English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param n count
+   * @param verb verb whose subject is one or more things, depending on {@code n}
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static String vPlural(int n, String verb) {
+    if (n == 1) {
+      return verb;
+    }
+    return vPluralExceptions.getOrDefault(verb, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on the size of the
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param c a collection
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static String vPlural(Collection<?> c, String verb) {
+    return vPlural(c.size(), verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on the size of the
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param m a map
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static String vPlural(Map<?, ?> m, String verb) {
+    return vPlural(m.size(), verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given verb, depending on the size of the
+   * collection. Most English verbs have the same singular and plural form.
+   *
+   * <p>The implementation of this method hard-codes some irregular verbs, and otherwise returns its
+   * argument.
+   *
+   * @param <T> the type of array elements
+   * @param a an array
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code verb}, if n==1; otherwise, pluralization of {@code verb}
+   */
+  @SideEffectFree
+  public static <T> String vPlural(T[] a, String verb) {
+    return vPlural(a.length, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the noun and verb, depending on {@code n}.
+   *
+   * <p>Example uses:
+   *
+   * <pre>{@code
+   * StringsP.nvPlural(0, "fox", "was")  =  "0 foxes were"
+   * StringsP.nvPlural(1, "fox", "was")  =  "1 fox was"
+   * StringsP.nvPlural(2, "fox", "was")  =  "2 foxes were"
+   * }</pre>
+   *
+   * @param n count
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on {@code n}
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static String nvPlural(int n, String noun, String verb) {
+    return nPlural(n, noun) + " " + vPlural(n, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given noun and verb, depending on the size of
+   * the collection.
+   *
+   * @param c a collection
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static String nvPlural(Collection<?> c, String noun, String verb) {
+    return nvPlural(c.size(), noun, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given noun and verb, depending on the size of
+   * the collection.
+   *
+   * @param m a map
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static String nvPlural(Map<?, ?> m, String noun, String verb) {
+    return nvPlural(m.size(), noun, verb);
+  }
+
+  /**
+   * Returns either the singular or plural form of the given noun and verb, depending on the size of
+   * the collection.
+   *
+   * @param <T> the type of array elements
+   * @param a an array
+   * @param noun word being counted; must not be the empty string
+   * @param verb verb whose subject is one or more things, depending on the size of the collection
+   * @return {@code noun verb}, if n==1; otherwise, its pluralization
+   * @see #nPlural(int, String)
+   * @see #vPlural(int, String)
+   */
+  @SideEffectFree
+  public static <T> String nvPlural(T[] a, String noun, String verb) {
+    return nvPlural(a.length, noun, verb);
   }
 
   /**
    * Creates a conjunction or disjunction, like "a", "a or b", and "a, b, or c". Obeys the "serial
    * comma" or "Oxford comma" rule: when the list has size 3 or larger, puts a comma after every
-   * element but the last.
+   * element (except the last one, which ends the list).
    *
    * @param conjunction the conjunction word, like "and" or "or"
    * @param elements the elements of the conjunction or disjunction
@@ -1539,6 +1804,10 @@ public final class StringsPlume {
     sj.add(conjunction + " " + elements.get(size - 1));
     return sj.toString();
   }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Miscellaneous
+  //
 
   /**
    * Returns the number of times the character appears in the string.
@@ -1597,14 +1866,14 @@ public final class StringsPlume {
 
     if (val < 1000) {
       // nothing to do
-    } else if (val < 1000000) {
+    } else if (val < 1_000_000) {
       dval = val / 1000.0;
       mag = "K";
-    } else if (val < 1000000000) {
-      dval = val / 1000000.0;
+    } else if (val < 1_000_000_000) {
+      dval = val / 1_000_000.0;
       mag = "M";
     } else {
-      dval = val / 1000000000.0;
+      dval = val / 1_000_000_000.0;
       mag = "G";
     }
 

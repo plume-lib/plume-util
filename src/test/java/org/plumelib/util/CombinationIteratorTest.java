@@ -9,7 +9,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /** Test the CombinationIterator class. */
-public final class CombinationIteratorTest {
+final class CombinationIteratorTest {
+
+  CombinationIteratorTest() {}
 
   List<String> a = Arrays.asList("a1", "a2");
   List<String> b = Arrays.asList("b1");
@@ -17,7 +19,7 @@ public final class CombinationIteratorTest {
   List<String> empty = Arrays.asList();
 
   @Test
-  public void test1() {
+  void test1() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(a, b, c));
     assertTrue(ci.hasNext());
     assertTrue(ci.hasNext());
@@ -42,7 +44,7 @@ public final class CombinationIteratorTest {
   }
 
   @Test
-  public void test2() {
+  void test2() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(c, b, a));
     assertTrue(ci.hasNext());
     assertTrue(ci.hasNext());
@@ -67,7 +69,7 @@ public final class CombinationIteratorTest {
   }
 
   @Test
-  public void test3() {
+  void test3() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(a));
     assertTrue(ci.hasNext());
     assertTrue(ci.hasNext());
@@ -80,7 +82,7 @@ public final class CombinationIteratorTest {
   }
 
   @Test
-  public void test4() {
+  void test4() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(b));
     assertTrue(ci.hasNext());
     assertTrue(ci.hasNext());
@@ -90,35 +92,35 @@ public final class CombinationIteratorTest {
   }
 
   @Test
-  public void testEmpty1() {
+  void testEmpty1() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(a, empty, c));
     assertFalse(ci.hasNext());
     assertFalse(ci.hasNext());
   }
 
   @Test
-  public void testEmpty2() {
+  void testEmpty2() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(empty, b, c));
     assertFalse(ci.hasNext());
     assertFalse(ci.hasNext());
   }
 
   @Test
-  public void testEmpty3() {
+  void testEmpty3() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(a, b, empty));
     assertFalse(ci.hasNext());
     assertFalse(ci.hasNext());
   }
 
   @Test
-  public void testEmpty4() {
+  void testEmpty4() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList(empty));
     assertFalse(ci.hasNext());
     assertFalse(ci.hasNext());
   }
 
   @Test
-  public void testEmpty5() {
+  void testEmpty5() {
     CombinationIterator<String> ci = new CombinationIterator<>(Arrays.asList());
     assertFalse(ci.hasNext());
     assertFalse(ci.hasNext());

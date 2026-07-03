@@ -11,6 +11,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 /**
  * Immutable pair class. If mutation is needed, use {@link MPair}.
  *
+ * <p>It is usually better to use a custom record class rather than {@code IPair}.
+ *
  * @param <V1> the type of the first element of the pair
  * @param <V2> the type of the second element of the pair
  */
@@ -18,7 +20,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 // This class does not implement DeepCopyable because that would require that V1 and V2 implement
 // DeepCopyable, but this class should be applicable to any types.  Therefore, deepCopy() in this
 // class is a static method that requires that the elements of the argument are DeepCopyable,
-public class IPair<V1, V2> {
+public final class IPair<V1, V2> {
   /** The first element of the pair. */
   public final V1 first;
 
@@ -63,13 +65,12 @@ public class IPair<V1, V2> {
    * @return a copy of {@code orig}, with all elements cloned
    */
   // This method is static so that the pair element types can be constrained to be Cloneable.
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1 extends Cloneable, T2 extends Cloneable> IPair<T1, T2> cloneElements(
       IPair<T1, T2> orig) {
     T1 oldFirst = orig.first;
-    T1 newFirst = oldFirst == null ? oldFirst : UtilPlume.clone(oldFirst);
+    T1 newFirst = oldFirst == null ? oldFirst : UtilP.clone(oldFirst);
     T2 oldSecond = orig.second;
-    T2 newSecond = oldSecond == null ? oldSecond : UtilPlume.clone(oldSecond);
+    T2 newSecond = oldSecond == null ? oldSecond : UtilP.clone(oldSecond);
     return of(newFirst, newSecond);
   }
 
@@ -82,7 +83,6 @@ public class IPair<V1, V2> {
    * @param orig a pair
    * @return a deep copy of {@code orig}
    */
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   // This method is static so that the pair element types can be constrained to be DeepCopyable.
   public static <T1 extends DeepCopyable<T1>, T2 extends DeepCopyable<T2>> IPair<T1, T2> deepCopy(
       IPair<T1, T2> orig) {
@@ -99,7 +99,6 @@ public class IPair<V1, V2> {
    * @param orig a pair
    * @return a copy of {@code orig}, where the first element is a deep copy
    */
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1 extends DeepCopyable<T1>, T2> IPair<T1, T2> deepCopyFirst(IPair<T1, T2> orig) {
     return of(DeepCopyable.deepCopyOrNull(orig.first), orig.second);
   }
@@ -114,22 +113,20 @@ public class IPair<V1, V2> {
    * @param orig a pair
    * @return a copy of {@code orig}, where the second element is a deep copy
    */
-  @SuppressWarnings("nullness") // generics problem with deepCopy()
   public static <T1, T2 extends DeepCopyable<T2>> IPair<T1, T2> deepCopySecond(IPair<T1, T2> orig) {
     return of(orig.first, DeepCopyable.deepCopyOrNull(orig.second));
   }
 
   @Override
   @Pure
+  @SuppressWarnings("lock:instanceof.pattern.unsafe") // obj is @GuardSatisfied
   public boolean equals(@GuardSatisfied IPair<V1, V2> this, @GuardSatisfied @Nullable Object obj) {
     if (this == obj) {
       return true;
     }
-    if (!(obj instanceof IPair)) {
+    if (!(obj instanceof IPair<?, ?> other)) {
       return false;
     }
-    @SuppressWarnings("unchecked") // generics are not checked at run time
-    IPair<V1, V2> other = (IPair<V1, V2>) obj;
     return Objects.equals(this.first, other.first) && Objects.equals(this.second, other.second);
   }
 
@@ -150,10 +147,10 @@ public class IPair<V1, V2> {
   }
 
   @SuppressWarnings(
-      "signedness:argument") // true positive: String.valueOf() argument might be an unsigned value
+      "signedness:unsigned.concat") // true positive: argument might be an unsigned value
   @SideEffectFree
   @Override
   public String toString(@GuardSatisfied IPair<V1, V2> this) {
-    return "IPair(" + String.valueOf(first) + ", " + String.valueOf(second) + ")";
+    return "IPair(" + first + ", " + second + ")";
   }
 }

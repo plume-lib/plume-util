@@ -37,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 // T need not extend Comparable<T>, because a comparator can be passed in.
 // TODO: Make this use IPair instead?
 public class OrderedPairIterator<T extends @Nullable Object>
-    implements java.util.Iterator<IPair<@Nullable T, @Nullable T>> {
+    implements Iterator<IPair<@Nullable T, @Nullable T>> {
 
   /** The iterator for first elements of pairs. */
   Iterator<T> itor1;

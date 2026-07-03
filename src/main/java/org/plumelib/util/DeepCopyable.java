@@ -8,6 +8,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
  *
  * @param <T> the type of the subtype of DeepCopyable
  */
+@FunctionalInterface
 public interface DeepCopyable<T> {
 
   /**

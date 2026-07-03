@@ -5,15 +5,15 @@
  *
  * <p>Note that <a
  * href="http://plumelib.org/hashmap-util/api/org/plumelib/util/package-summary.html#package.description">HashMap
- * Util</a> defines other classes in the <code>org.plumelib.util</code> package.
+ * Util</a> defines other classes in the {@code org.plumelib.util} package.
  *
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.ArraysPlume ArraysPlume}
+ *   <dt>{@link org.plumelib.util.ArraysP ArraysP}
  *   <dd>Utilities for manipulating arrays and collections. This complements java.util.Arrays and
  *       java.util.Collections.
- *   <dt>{@link org.plumelib.util.CollectionsPlume CollectionsPlume}
+ *   <dt>{@link org.plumelib.util.CollectionsP CollectionsP}
  *   <dd>Utilities for manipulating collections, iterators, lists, maps, and sets.
  *   <dt>{@link org.plumelib.util.CombinationIterator CombinationIterator}
  *   <dd>Given a set of collections, return all combinations that take one element from each
@@ -31,6 +31,11 @@
  *   <dd>Given two sequences/iterators/whatever, OrderedPairIterator returns a new
  *       sequence/iterator/whatever that pairs the matching elements of the inputs, according to
  *       their respective sort orders. (This operation is sometimes called "zipping".)
+ *   <dt>{@link org.plumelib.util.SIList SIList}
+ *   <dd>An immutable list implementation that can share substructure, for time and space
+ *       efficiency. Use this only if you will be creating many lists that share structure. Examples
+ *       are when one list is the concatenation of other lists, or one list is just like another
+ *       with a single element added.
  *   <dt>{@link org.plumelib.util.Hasher Hasher}
  *   <dd>See <a href="http://plumelib.org/hashmap-util/api/org/plumelib/util/Hasher.html">HashMap
  *       Util</a>.
@@ -49,12 +54,12 @@
  * <dl>
  *   <dt>{@link org.plumelib.util.EntryReader EntryReader}
  *   <dd>Class that reads "entries" from a file. In the simplest case, entries can be lines. It
- *       supports: include files, comments, and multi-line entries (paragraphs). The syntax of each
- *       of these is customizable.
+ *       supports: include files, single-line comments, multi-line comments, multi-line entries
+ *       (paragraphs), and Markdown fenced code blocks. The syntax of each of these is customizable.
  *   <dt>{@link org.plumelib.util.FileIOException FileIOException}
  *   <dd>Extends IOException by also reporting a file name and line number at which the exception
  *       occurred.
- *   <dt>{@link org.plumelib.util.FilesPlume}
+ *   <dt>{@link org.plumelib.util.FilesP}
  *   <dd>Utility methods that create and manipulate files, directories, streams, readers, and
  *       writers.
  *   <dt>{@link org.plumelib.util.FileWriterWithName FileWriterWithName}
@@ -63,7 +68,7 @@
  *   <dt>{@link org.plumelib.util.RegexUtil RegexUtil}
  *   <dd>Utility methods for regular expressions, most notably for testing whether a string is a
  *       regular expression.
- *   <dt>{@link org.plumelib.util.StringsPlume}
+ *   <dt>{@link org.plumelib.util.StringsP}
  *   <dd>Utility methods that manipulate Strings: replacement; prefixing and indentation; splitting
  *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; version
  *       numbers; debugging variants of toString; diagnostic output; miscellaneous.
@@ -81,7 +86,7 @@
  * <h3 id="Math">Math</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.MathPlume MathPlume}
+ *   <dt>{@link org.plumelib.util.MathP MathP}
  *   <dd>Mathematical utilities.
  *   <dt>{@link org.plumelib.util.FuzzyFloat FuzzyFloat}
  *   <dd>Routines for doing approximate ('fuzzy') floating point comparisons. Those are comparisons
@@ -132,14 +137,14 @@
  * <dl>
  *   <dt>{@link org.plumelib.util.DumpHeap DumpHeap}
  *   <dd>Dumps the heap into a {@code .hprof} file.
- *   <dt>{@link org.plumelib.util.SystemPlume SystemPlume}
+ *   <dt>{@link org.plumelib.util.SystemP SystemP}
  *   <dd>Utility methods relating to the JVM runtime system: sleep and garbage collection.
  * </dl>
  *
  * <h3 id="miscellaneous">Miscellaneous</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.GraphPlume GraphPlume}
+ *   <dt>{@link org.plumelib.util.GraphP GraphP}
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
  *   <dd>Utilities for interning objects. Interning is also known as canonicalization or
@@ -154,7 +159,7 @@
  *       ways: cannot hold null, holds its elements with weak pointers, clients must use getter
  *       methods rather than accessing the fields, and its {@code equals()} method uses object
  *       equality to compare its elements.
- *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
+ *   <dt>{@link org.plumelib.util.UtilP UtilP}
  *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
  *       directories; file names; reading and writing; hashing; ProcessBuilder; properties; Stream;
  *       Throwable.

@@ -16,9 +16,9 @@ import org.checkerframework.checker.signedness.qual.Signed;
 // Once https://github.com/typetools/checker-framework/issues/1970 is fixed, Comparator's type
 // argument should be marked as @Contravariant and this should be declared as "extends
 // Comparator<@Nullable Object>".
-public class ToStringComparator implements Comparator<Object> {
+public final class ToStringComparator implements Comparator<Object> {
   /** The unique instance (this class is a singleton). */
-  public static ToStringComparator instance = new ToStringComparator();
+  public static final ToStringComparator instance = new ToStringComparator();
 
   /** Creates a ToStringComparator. */
   private ToStringComparator() {}
@@ -37,7 +37,7 @@ public class ToStringComparator implements Comparator<Object> {
    */
   @SuppressWarnings("nullness:argument") // Comparator should be @Contravariant.
   public static <T extends @Nullable @Signed Object> List<T> sorted(Iterable<T> in) {
-    List<T> result = new ArrayList<T>();
+    List<T> result = new ArrayList<>();
     for (T object : in) {
       result.add(object);
     }

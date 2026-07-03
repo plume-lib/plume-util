@@ -18,6 +18,9 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -40,7 +43,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * <ul>
  *   <li>https://docs.oracle.com/en/database/oracle/oracle-database/19/olapi/oracle/olapi/ArraySet.html
  *   <li>https://developer.android.com/reference/android/util/ArraySet
- *   <li>https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CopyOnWriteArraySet.html
+ *   <li>https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CopyOnWriteArraySet.html
  * </ul>
  *
  * All of those use the GPL or the Apache License, version 2.0, whereas this implementation is
@@ -53,14 +56,13 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  */
 @SuppressWarnings({
   "index", // TODO
-  "keyfor", // https://tinyurl.com/cfissue/4558
-  "lock", // not yet annotated for the Lock Checker
-  "nullness" // temporary; nullness is tricky because of null-padded arrays
+  "lock" // not yet annotated for the Lock Checker
 })
-public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E> {
+public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends AbstractSet<E>
+    implements Cloneable {
 
   /** The values. Null if capacity=0. */
-  private @Nullable E[] values;
+  private @Nullable E @MonotonicNonNull [] values;
 
   /** The number of used slots in the representation of this. */
   private @NonNegative @LessThan("values.length + 1") @IndexOrHigh({"values"}) int size = 0;
@@ -89,8 +91,9 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   })
   @SideEffectFree
   public ArraySet(int initialCapacity) {
-    if (initialCapacity < 0)
+    if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
+    }
     if (initialCapacity == 0) {
       this.values = null;
     } else {
@@ -117,7 +120,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "allcheckers:purity.not.sideeffectfree.call" // calls `super`
   })
   @SideEffectFree
-  private ArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
+  private ArraySet(@Nullable E @Nullable [] values, @LTEqLengthOf({"values"}) int size) {
     this.values = values;
     this.size = size;
   }
@@ -133,11 +136,14 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     "lock:method.guarantee.violated", // initializes `this`
     "nullness:method.invocation", // inference failure;
     // https://github.com/typetools/checker-framework/issues/979 ?
+    "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public ArraySet(Collection<? extends E> m) {
-    this(m.size());
-    addAll(m);
+  public ArraySet(@Nullable Collection<? extends E> m) {
+    this(m == null ? 0 : m.size());
+    if (m != null) {
+      addAll(m);
+    }
   }
 
   // Factory (constructor) methods
@@ -150,11 +156,12 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param capacity the expected maximum number of elements in the set
    * @return a new ArraySet or HashSet with the given capacity
    */
-  public static <E> Set<E> newArraySetOrHashSet(int capacity) {
+  public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrHashSet(
+      int capacity) {
     if (capacity <= 4) {
       return new ArraySet<>(capacity);
     } else {
-      return new HashSet<>(CollectionsPlume.mapCapacity(capacity));
+      return new HashSet<>(MapsP.mapCapacity(capacity));
     }
   }
 
@@ -166,7 +173,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param s the elements to put in the returned set
    * @return a new ArraySet or HashSet with the given elements
    */
-  public static <E> Set<E> newArraySetOrHashSet(Collection<E> s) {
+  public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrHashSet(
+      Collection<E> s) {
     if (s.size() <= 4) {
       return new ArraySet<>(s);
     } else {
@@ -182,11 +190,12 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param capacity the expected maximum number of elements in the set
    * @return a new ArraySet or LinkedHashSet with the given capacity
    */
-  public static <E> Set<E> newArraySetOrLinkedHashSet(int capacity) {
+  public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrLinkedHashSet(
+      int capacity) {
     if (capacity <= 4) {
       return new ArraySet<>(capacity);
     } else {
-      return new LinkedHashSet<>(CollectionsPlume.mapCapacity(capacity));
+      return new LinkedHashSet<>(MapsP.mapCapacity(capacity));
     }
   }
 
@@ -198,7 +207,8 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    * @param s the elements to put in the returned set
    * @return a new ArraySet or LinkedHashSet with the given elements
    */
-  public static <E> Set<E> newArraySetOrLinkedHashSet(Collection<E> s) {
+  public static <E extends @Nullable @UnknownSignedness Object> Set<E> newArraySetOrLinkedHashSet(
+      Collection<E> s) {
     if (s.size() <= 4) {
       return new ArraySet<>(s);
     } else {
@@ -223,7 +233,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
     }
 
     // Add a new element.
-    if ((size == 0 && values == null) || (size == values.length)) {
+    if (values == null || size == 0 || size == values.length) {
       grow();
     }
     values[size] = value;
@@ -234,6 +244,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
 
   /** Increases the capacity of the array. */
   @SuppressWarnings({"unchecked"}) // generic array cast
+  @EnsuresNonNull("values")
   private void grow() {
     if (values == null) {
       this.values = (E[]) new Object[4];
@@ -252,6 +263,13 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
       return false;
+    }
+    if (values == null) {
+      throw new IndexOutOfBoundsException("removeIndex(" + index + ") called on empty ArraySet");
+    }
+    if (index < 0 || index >= size) {
+      throw new IndexOutOfBoundsException(
+          "removeIndex(" + index + ") called on ArraySet of size " + size);
     }
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
@@ -342,7 +360,6 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   // //////////////////////////////////////////////////////////////////////
-
   // iterators
 
   @Override
@@ -376,17 +393,24 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
      */
     @Pure
     @Override
+    @SuppressWarnings("nullness:contracts.conditional.postcondition") // arithmetic logic
+    @EnsuresNonNullIf(expression = "values", result = true)
     public final boolean hasNext() {
       return index < size();
     }
 
     @Override
+    @SuppressWarnings({
+      "cast", // cast to (E) because it isn't outside the range
+      "nullness:return" // is in range
+    })
     public final E next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
       removed = false;
-      return values[index++];
+      E result = values[index++];
+      return (E) result;
     }
 
     /** Removes the previously-returned element. */
@@ -410,11 +434,14 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
   }
 
   // //////////////////////////////////////////////////////////////////////
-
   // Comparison and hashing:  equals and hashCode are inherited from AbstractSet.
 
   // Defaultable methods
 
+  @SuppressWarnings({
+    "cast", // cast to (E) because it isn't outside the range
+    "nullness:argument" // is in range
+  })
   @Override
   public void forEach(Consumer<? super E> action) {
     Objects.requireNonNull(action);
@@ -429,7 +456,7 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
       } catch (IndexOutOfBoundsException exc) {
         throw new ConcurrentModificationException(exc);
       }
-      action.accept(e);
+      action.accept((E) e);
     }
     if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
@@ -441,11 +468,15 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    *
    * @return a copy of this
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
   public ArraySet<E> clone() {
-    return new ArraySet<E>(Arrays.copyOf(values, size), size);
+    if (values == null) {
+      return new ArraySet<>(null, 0);
+    } else {
+      return new ArraySet<E>(Arrays.copyOf(values, size), size); // NOPMD: CF cannot infer type arg
+    }
   }
 
   // Extra methods, not specified by `Set`.
@@ -470,7 +501,9 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
       "signedness:argument" // unsigned values (forbidden by precondiditon) cannot be sorted
   )
   public void sort() {
-    Arrays.sort(values, 0, size);
+    if (values != null) {
+      Arrays.sort(values, 0, size);
+    }
   }
 
   /**
@@ -479,7 +512,10 @@ public class ArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E
    *
    * @param comparator imposes an ordering on the elements of this
    */
+  @SuppressWarnings("nullness:type.arguments.not.inferred") // CF bug?
   public void sort(Comparator<? super E> comparator) {
-    Arrays.sort(values, 0, size, comparator);
+    if (values != null) {
+      Arrays.sort(values, 0, size, comparator);
+    }
   }
 }

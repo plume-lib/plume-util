@@ -1,0 +1,1256 @@
+package org.plumelib.util;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Predicate;
+import org.checkerframework.checker.index.qual.IndexFor;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.junit.jupiter.api.Test;
+import org.plumelib.util.CollectionsP.Replacement;
+
+/** Test the CollectionsP class. */
+@SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation"})
+final class CollectionsPTest {
+
+  CollectionsPTest() {}
+
+  // If true, do 100 instead of 100000 iterations when testing randomElements.
+  // This saves only a little time.  However, it is significant when running
+  // under instrumentation such as that of Chicory.
+  private static final boolean shortRun = false;
+
+  // //////////////////////////////////////////////////////////////////////
+  // Immutable variables
+  //
+
+  private static final List<Integer> l123 = Arrays.asList(1, 2, 3);
+  private static final List<Integer> l123123 = Arrays.asList(1, 2, 3, 1, 2, 3);
+  private static final List<Integer> l12223 = Arrays.asList(1, 2, 2, 2, 3);
+  private static final List<Integer> l1123 = Arrays.asList(1, 1, 2, 3);
+  private static final List<Integer> l1233 = Arrays.asList(1, 2, 3, 3);
+
+  private static final Object object1 = new Object();
+  private static final Object object2 = new Object();
+  private static final Object object3 = new Object();
+
+  private static final List<Object> lo123 = Arrays.asList(object1, object2, object3);
+  private static final List<Object> lo123123 =
+      Arrays.asList(object1, object2, object3, object1, object2, object3);
+  private static final List<Object> lo12223 =
+      Arrays.asList(object1, object2, object2, object2, object3);
+  private static final List<Object> lo1123 = Arrays.asList(object1, object1, object2, object3);
+  private static final List<Object> lo1233 = Arrays.asList(object1, object2, object3, object3);
+
+  // //////////////////////////////////////////////////////////////////////
+  // Helper functions for testing
+  //
+
+  @SuppressWarnings("NonApiType")
+  public static <T> ArrayList<T> toArrayList(Iterator<T> itor) {
+    ArrayList<T> v = new ArrayList<>();
+    while (itor.hasNext()) {
+      v.add(itor.next());
+    }
+    return v;
+  }
+
+  @SuppressWarnings({"JdkObsolete", "NonApiType"})
+  public static <T> ArrayList<T> toArrayList(Enumeration<T> e) {
+    ArrayList<T> v = new ArrayList<>();
+    while (e.hasMoreElements()) {
+      v.add(e.nextElement());
+    }
+    return v;
+  }
+
+  // These names are taken from APL notation, where iota creates an
+  // array of all the numbers up to its argument.
+  private static List<Integer> iota0 = new ArrayList<>();
+  private static List<Integer> iota10 = new ArrayList<>();
+  private static List<Integer> iota10Twice = new ArrayList<>();
+  private static List<Integer> iota10Thrice = new ArrayList<>();
+
+  static {
+    for (int i = 0; i < 10; i++) {
+      iota10.add(i);
+    }
+    iota10Twice.addAll(iota10);
+    iota10Twice.addAll(iota10);
+    iota10Thrice.addAll(iota10);
+    iota10Thrice.addAll(iota10);
+    iota10Thrice.addAll(iota10);
+    // Could make these lists immutable to avoid accidental modification in the tests.
+  }
+
+  private static class OddPredicate implements Predicate<Integer> {
+    public OddPredicate() {}
+
+    @Override
+    public boolean test(Integer i) {
+      return i % 2 != 0;
+    }
+  }
+
+  /** Iterate through numbers from zero up to the argument (non-inclusive). */
+  private static class IotaIterator implements Iterator<@NonNegative Integer> {
+    @NonNegative int i = 0;
+    @NonNegative int limit;
+
+    public IotaIterator(@NonNegative int limit) {
+      this.limit = limit;
+    }
+
+    @Override
+    public boolean hasNext(@GuardSatisfied IotaIterator this) {
+      return i < limit;
+    }
+
+    @Override
+    public @NonNegative Integer next(@GuardSatisfied IotaIterator this) {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+
+      return i++;
+    }
+
+    @Override
+    public void remove(@GuardSatisfied IotaIterator this) {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  private static BitSet randomBitSet(@NonNegative int length, Random r) {
+    BitSet result = new BitSet(length);
+    for (int i = 0; i < length; i++) {
+      result.set(i, r.nextBoolean());
+    }
+    return result;
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // The tests themselves
+  //
+
+  // //////////////////////////////////////////////////////////////////////
+  // Collections
+  //
+
+  /** Test addAll(). */
+  // public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements)
+  @Test
+  void test_addAll() {
+    // Tests go here.
+  }
+
+  @Test
+  void test_addAllIterable() {
+    Iterable<String> itble = CollectionsP.listOf("a", "b");
+    Collection<String> c = new ArrayList<>();
+    assertTrue(CollectionsP.addAll(c, itble));
+    assertEquals(Arrays.asList("a", "b"), c);
+    assertTrue(CollectionsP.addAll(c, itble));
+    assertEquals(Arrays.asList("a", "b", "a", "b"), c);
+    Set<String> s = new HashSet<>();
+    assertTrue(CollectionsP.addAll(s, itble));
+    assertFalse(CollectionsP.addAll(s, itble));
+    assertEquals(2, s.size());
+  }
+
+  @Test
+  void test_addIf() {
+    List<Integer> iota5 = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
+    List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
+    List<Integer> even = Arrays.asList(new Integer[] {2, 4});
+
+    Collection<Integer> c1 = new ArrayList<>();
+    CollectionsP.addIf(c1, iota5, i -> i % 2 == 1);
+    assertEquals(odd, c1);
+    Collection<Integer> c2 = new LinkedHashSet<>();
+    CollectionsP.addIf(c2, iota5, i -> i % 2 == 0);
+    assertEquals(new LinkedHashSet<>(even), c2);
+  }
+
+  @Test
+  void test_addIfNot() {
+    List<Integer> iota5 = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
+    List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
+    List<Integer> even = Arrays.asList(new Integer[] {2, 4});
+
+    Collection<Integer> c1 = new ArrayList<>();
+    CollectionsP.addIfNot(c1, iota5, i -> i % 2 == 1);
+    assertEquals(even, c1);
+    Collection<Integer> c2 = new LinkedHashSet<>();
+    CollectionsP.addIfNot(c2, iota5, i -> i % 2 == 0);
+    assertEquals(new LinkedHashSet<>(odd), c2);
+  }
+
+  // public static <T> boolean hasDuplicates(List<T> a)
+
+  /** Test hasNoDuplicates(). */
+  @SuppressWarnings("JdkObsolete") // test of List that does not implement RandomAccess
+  @Test
+  void test_hasDuplicates() {
+    assertFalse(CollectionsP.hasDuplicates(l123));
+    assertTrue(CollectionsP.hasDuplicates(l123123));
+    assertTrue(CollectionsP.hasDuplicates(l12223));
+    assertTrue(CollectionsP.hasDuplicates(l1123));
+    assertTrue(CollectionsP.hasDuplicates(l1233));
+
+    assertFalse(CollectionsP.hasDuplicates(new LinkedList<>(l123)));
+    assertTrue(CollectionsP.hasDuplicates(new LinkedList<>(l123123)));
+    assertTrue(CollectionsP.hasDuplicates(new LinkedList<>(l12223)));
+    assertTrue(CollectionsP.hasDuplicates(new LinkedList<>(l1123)));
+    assertTrue(CollectionsP.hasDuplicates(new LinkedList<>(l1233)));
+  }
+
+  // public static <T> boolean hasNoDuplicates(List<T> a)
+
+  // public static <T> boolean noDuplicates(List<T> a)
+
+  /** Test removeDuplicates(). */
+  // public static <T> List<T> removeDuplicates(List<T> l)
+  @Test
+  void test_removeDuplicates() {
+    // Tests go here.
+  }
+
+  /** Test withoutDuplicates(). */
+  // public static <T> List<T> withoutDuplicates(List<T> values)
+  @Test
+  void test_withoutDuplicates() {
+    assertEquals(l123, CollectionsP.withoutDuplicates(l123));
+    assertEquals(l123, CollectionsP.withoutDuplicates(l123123));
+    assertEquals(l123, CollectionsP.withoutDuplicates(l12223));
+    assertEquals(l123, CollectionsP.withoutDuplicates(l1123));
+    assertEquals(l123, CollectionsP.withoutDuplicates(l1233));
+
+    assertEquals(lo123, CollectionsP.withoutDuplicates(lo123));
+    assertEquals(lo123, CollectionsP.withoutDuplicates(lo123123));
+    assertEquals(lo123, CollectionsP.withoutDuplicates(lo12223));
+    assertEquals(lo123, CollectionsP.withoutDuplicates(lo1123));
+    assertEquals(lo123, CollectionsP.withoutDuplicates(lo1233));
+  }
+
+  /** Test withoutDuplicatesSorted(). */
+  @SuppressWarnings("ArrayEquals")
+  @Test
+  void test_withoutDuplicatesSorted() {
+    // Tests go here.
+  }
+
+  // public static <T extends Comparable<T>> List<T> withoutDuplicatesSorted(List<T> values)
+
+  // public static <T extends Comparable<T>> List<T> withoutDuplicatesComparable(List<T> values)
+
+  /** Test withoutDuplicatesComparable(). */
+  @SuppressWarnings("ArrayEquals")
+  @Test
+  void test_withoutDuplicatesComparable() {
+    // public static <T> List<T> withoutDuplicates(List<T> l)
+
+    assertEquals(l123, CollectionsP.withoutDuplicatesComparable(l123));
+    assertEquals(l123, CollectionsP.withoutDuplicatesComparable(l123123));
+    assertEquals(l123, CollectionsP.withoutDuplicatesComparable(l12223));
+    assertEquals(l123, CollectionsP.withoutDuplicatesComparable(l1123));
+    assertEquals(l123, CollectionsP.withoutDuplicatesComparable(l1233));
+  }
+
+  // public static <T> List<T> sortList(List<T> l, Comparator<@MustCallUnknown ? super T> c)
+
+  // public static <T extends Comparable<T>> boolean isSorted(List<T> values)
+
+  /** Test isSorted(). */
+  @Test
+  void test_isSorted() {
+    assertTrue(CollectionsP.isSorted(l123));
+    assertFalse(CollectionsP.isSorted(l123123));
+    assertTrue(CollectionsP.isSorted(l12223));
+    assertTrue(CollectionsP.isSorted(l1123));
+    assertTrue(CollectionsP.isSorted(l1233));
+  }
+
+  /** Test isSortedNoDuplicates(). */
+  // public static <T extends Comparable<T>> boolean isSortedNoDuplicates(List<T> values)
+  @Test
+  void test_isSortedNoDuplicates() {
+    assertTrue(CollectionsP.isSortedNoDuplicates(l123));
+    assertFalse(CollectionsP.isSortedNoDuplicates(l123123));
+    assertFalse(CollectionsP.isSortedNoDuplicates(l12223));
+    assertFalse(CollectionsP.isSortedNoDuplicates(l1123));
+    assertFalse(CollectionsP.isSortedNoDuplicates(l1233));
+  }
+
+  /** Test duplicates(). */
+  // public static <T> Collection<T> duplicates(Collection<T> c)
+  @Test
+  void test_duplicates() {
+    assertEquals(Collections.emptyList(), new ArrayList<>(CollectionsP.duplicates(l123)));
+    assertEquals(l123, new ArrayList<>(CollectionsP.duplicates(l123123)));
+    assertEquals(Arrays.asList(2), new ArrayList<>(CollectionsP.duplicates(l12223)));
+    assertEquals(Arrays.asList(1), new ArrayList<>(CollectionsP.duplicates(l1123)));
+    assertEquals(Arrays.asList(3), new ArrayList<>(CollectionsP.duplicates(l1233)));
+  }
+
+  // public static boolean deepEquals(@Nullable Object o1, @Nullable Object o2)
+
+  /** Test deepEquals(). */
+  @Test
+  @SuppressWarnings("ArrayEquals") // demonstrates the effect of regular equals
+  void test_deepEquals() {
+
+    // public boolean deepEquals(Object o1, Object o2)
+
+    boolean[] zatft1 = {true, false, true};
+    boolean[] zatft2 = {true, false, true};
+    boolean[] zatff = {true, false, false};
+    assertNotEquals(zatft1, zatft2); // regular equals returns false
+    assertTrue(CollectionsP.deepEquals(zatft1, zatft2));
+    assertNotEquals(zatft1, zatff); // regular equals returns false
+    assertFalse(CollectionsP.deepEquals(zatft1, zatff));
+
+    List<Object> l1 = new ArrayList<>();
+    List<Object> l2 = new ArrayList<>();
+    List<Object> l3 = new ArrayList<>();
+    l1.add(l1);
+    l2.add(l2);
+    l3.add(l3);
+    l1.add(zatft1);
+    l2.add(zatft2);
+    l3.add(zatff);
+    // Don't test .equals because it suffers infinite recursion.
+    // assertFalse( l1.equals(l2));
+    // assertFalse( l1.equals(l3));
+    // assertFalse( l2.equals(l3));
+    assertTrue(CollectionsP.deepEquals(l1, l2));
+    assertFalse(CollectionsP.deepEquals(l1, l3));
+    assertFalse(CollectionsP.deepEquals(l2, l3));
+  }
+
+  // public static <List<TO> mapList(Function<? super FROM, ? extends TO> f, Iterable<FROM>
+  // iterable)
+
+  // public static <List<TO> mapList(Function<@MustCallUnknown ? super FROM, ? extends TO> f, FROM[]
+  // a)
+
+  @Test
+  @SuppressWarnings("lock:methodref.receiver")
+  void test_mapList() {
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
+    assertEquals(out, CollectionsP.mapList(Object::toString, in));
+    List<@Nullable Object> out2 = Arrays.asList(new Object[] {"1", null, "3"});
+    assertEquals(out2, CollectionsP.mapList(CollectionsPTest::toStringOrNull, in));
+  }
+
+  private static @Nullable String toStringOrNull(Object x) {
+    String result;
+    if (x instanceof Integer i && i % 2 == 0) {
+      result = null;
+    } else {
+      result = x.toString();
+    }
+    return result;
+  }
+
+  @Test
+  void test_mapListRemoveNull() {
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
+    List<Object> result = CollectionsP.mapListRemoveNull(CollectionsPTest::toStringOrNull, in);
+    assertEquals(goal, result);
+  }
+
+  @Test
+  void test_mapListRemoveNull_array() {
+    Object[] in = {1, 2, 3};
+    List<Object> goal = Arrays.asList(new Object[] {"1", "3"});
+    List<Object> result = CollectionsP.mapListRemoveNull(CollectionsPTest::toStringOrNull, in);
+    assertEquals(goal, result);
+  }
+
+  // public static <List<TO> transform(Iterable<FROM> iterable, Function f)
+
+  @Test
+  @SuppressWarnings("lock:methodref.receiver")
+  void test_transform() {
+    List<Object> in = Arrays.asList(new Object[] {1, 2, 3});
+    List<Object> out = Arrays.asList(new Object[] {"1", "2", "3"});
+    assertEquals(out, CollectionsP.transform(in, Object::toString));
+  }
+
+  // public static <T extends @Nullable Object, C extends @Nullable Collection<T>>
+
+  // public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>>
+
+  // public static <T> List<T> listFilter(Iterable<T> coll, Predicate<? super T> filter)
+
+  @Test
+  void test_listFilter() {
+    List<Integer> in = Arrays.asList(new Integer[] {1, 2, 3, 4, 5});
+    List<Integer> odd = Arrays.asList(new Integer[] {1, 3, 5});
+    List<Integer> even = Arrays.asList(new Integer[] {2, 4});
+    assertEquals(odd, CollectionsP.filter(in, i -> i % 2 == 1));
+    assertEquals(even, CollectionsP.filter(in, i -> i % 2 == 0));
+  }
+
+  // public static <T> List<T> filter(Iterable<T> coll, Predicate<? super T> filter)
+
+  /** Test anyMatch(). */
+  // public static <T> boolean anyMatch(Iterable<T> coll, Predicate<? super T> predicate)
+  @Test
+  void test_anyMatch() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    assertTrue(CollectionsP.anyMatch(iota, i -> i > -5));
+    assertTrue(CollectionsP.anyMatch(iota, i -> i > 5));
+    assertFalse(CollectionsP.anyMatch(iota, i -> i > 15));
+  }
+
+  /** Test allMatch(). */
+  // public static <T> boolean allMatch(Iterable<T> coll, Predicate<? super T> predicate)
+  @Test
+  void test_allMatch() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    assertTrue(CollectionsP.allMatch(iota, i -> i > -5));
+    assertFalse(CollectionsP.allMatch(iota, i -> i > 5));
+    assertFalse(CollectionsP.allMatch(iota, i -> i > 15));
+  }
+
+  // public static <T> boolean noneMatch(Iterable<T> coll, Predicate<? super T> predicate)
+
+  /** Test noneMatch(). */
+  @Test
+  void test_noneMatch() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    assertFalse(CollectionsP.noneMatch(iota, i -> i > -5));
+    assertFalse(CollectionsP.noneMatch(iota, i -> i > 5));
+    assertTrue(CollectionsP.noneMatch(iota, i -> i > 15));
+  }
+
+  /** Test firstMatch(). */
+  // public static <T> @Nullable T firstMatch(Iterable<T> coll, Predicate<? super T> predicate)
+  @Test
+  @SuppressWarnings("nullness:unboxing.of.nullable")
+  void test_firstMatch() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    assertEquals(0, (int) CollectionsP.firstMatch(iota, i -> i > -5));
+    assertEquals(6, (int) CollectionsP.firstMatch(iota, i -> i > 5));
+    assertNull(CollectionsP.firstMatch(iota, i -> i > 15));
+  }
+
+  /** Test indexOf(). */
+  // public static int indexOf(List<?> list, Object value, int start)
+  @Test
+  void test_indexOf() {
+    List<Integer> nums = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 0, 1, 2});
+    assertEquals(3, CollectionsP.indexOf(nums, 3, 0));
+    assertEquals(-1, CollectionsP.indexOf(nums, 3, 5));
+    assertEquals(7, CollectionsP.indexOf(nums, 1, 3));
+    assertEquals(-1, CollectionsP.indexOf(nums, 100, 0));
+  }
+
+  // public static class Replacement<T>
+
+  /** Test replace(). */
+  // public static <T> List<T> replace(Iterable<T> c, Iterable<Replacement<T>> replacements)
+  // public static <T> List<T> replace(T[] c, Collection<Replacement<T>> replacements)
+  @Test
+  void test_replace() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    List<Integer> empty = Arrays.asList(new Integer[] {});
+    List<Integer> l_101_103 = Arrays.asList(new Integer[] {101, 102, 103});
+    List<Integer> l_201_205 = Arrays.asList(new Integer[] {201, 202, 203, 204, 205});
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(Replacement.of(1, 3, l_101_103), Replacement.of(5, 6, l_201_205));
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {0, 101, 102, 103, 4, 201, 202, 203, 204, 205, 7, 8, 9});
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(1, 1, Arrays.asList(new Integer[] {101, 102, 103})),
+              Replacement.of(5, 5, Arrays.asList(new Integer[] {201, 202, 203, 204, 205})));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(
+              new Integer[] {0, 101, 102, 103, 2, 3, 4, 201, 202, 203, 204, 205, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(1, 0, Arrays.asList(new Integer[] {101, 102, 103})),
+              Replacement.of(5, 4, Arrays.asList(new Integer[] {201, 202, 203, 204, 205})));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(
+              new Integer[] {0, 101, 102, 103, 1, 2, 3, 4, 201, 202, 203, 204, 205, 5, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(0, 4, Arrays.asList(new Integer[] {101, 102, 103})),
+              Replacement.of(5, 5, Arrays.asList(new Integer[] {201, 202, 203, 204, 205})));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 201, 202, 203, 204, 205, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, 9, empty));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected = empty;
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(1, 8, empty));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected = Arrays.asList(new Integer[] {0, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(Replacement.of(0, 5, l_101_103), Replacement.of(5, 8, l_201_205));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 201, 202, 203, 204, 205, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(9, 9, l_101_103));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 101, 102, 103});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(9, 8, l_101_103));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 101, 102, 103, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, 0, l_101_103));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, -1, l_101_103));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(new Integer[] {101, 102, 103, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements =
+          Arrays.asList(
+              Replacement.of(0, 4, l_101_103),
+              Replacement.of(5, 4, l_201_205),
+              Replacement.of(5, 4, l_201_205));
+      List<Integer> replaced = CollectionsP.replace(iota, replacements);
+      List<Integer> expected =
+          Arrays.asList(
+              new Integer[] {
+                101, 102, 103, 201, 202, 203, 204, 205, 201, 202, 203, 204, 205, 5, 6, 7, 8, 9
+              });
+      assertEquals(expected, replaced);
+    }
+
+    {
+      List<Replacement<Integer>> replacements = Arrays.asList(Replacement.of(0, -1, l_101_103));
+      List<Integer> replaced = CollectionsP.replace(empty, replacements);
+      List<Integer> expected = l_101_103;
+      assertEquals(expected, replaced);
+    }
+  }
+
+  // public static <T> boolean isSubsequenceMaybeNonContiguous(Iterable<T> longer, Iterable<T>
+  // shorter)
+
+  /** Test isSubsequenceMaybeNonContiguous(). */
+  @Test
+  void test_isSubsequenceMaybeNonContiguous() {
+    List<Integer> iota = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    List<Integer> iota11 = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+    List<Integer> empty = Arrays.asList(new Integer[] {});
+
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(empty, empty));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, empty));
+    assertFalse(CollectionsP.isSubsequenceMaybeNonContiguous(empty, iota));
+
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(0)));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(0, 1, 2)));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(9)));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(7, 8, 9)));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(5)));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(4, 5, 6)));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota, Arrays.asList(2, 4, 6, 8)));
+    assertFalse(CollectionsP.isSubsequenceMaybeNonContiguous(iota, iota11));
+    assertTrue(CollectionsP.isSubsequenceMaybeNonContiguous(iota11, iota));
+  }
+
+  /** Test isModifiable(). */
+  @Test
+  void test_isModifiable() {
+    // asList's result is fixed-size (cannot add or remove), but elements can be replaced.
+    List<Integer> unmodList = Arrays.asList(new Integer[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    List<Integer> modList = new ArrayList<>(unmodList);
+
+    assertUnmodifiable(unmodList);
+    assertModifiable(modList);
+
+    assertUnmodifiable(Collections.emptyList());
+    assertUnmodifiable(Collections.emptySet());
+
+    assertUnmodifiable(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+
+    // The implementation does not handle `subList()`.
+    // assertModifiable(modList.subList(3, 6));
+    // assertUnmodifiable(unmodList.subList(3, 6));
+
+    assertUnmodifiable(Collections.unmodifiableList(modList));
+    assertUnmodifiable(Collections.unmodifiableList(unmodList));
+    assertUnmodifiable(Collections.unmodifiableCollection(modList));
+    assertUnmodifiable(Collections.unmodifiableCollection(unmodList));
+
+    assertUnmodifiable(Collections.singletonList(1));
+    assertUnmodifiable(Collections.singleton(1));
+    assertUnmodifiable(Collections.nCopies(5, 1));
+    assertUnmodifiable(Set.of(1, 2, 3));
+
+    assertModifiable(new HashSet<>(modList));
+    assertModifiable(new TreeSet<>(modList));
+
+    // Collections.unmodifiableSequencedCollection() requires Java 21+.
+    // assertUnmodifiable(Collections.unmodifiableSequencedCollection(modList));
+    // assertUnmodifiable(Collections.unmodifiableSequencedCollection(unmodList));
+  }
+
+  /**
+   * Throws an exception if the collection is unmodifiable.
+   *
+   * @param c a collection
+   */
+  private void assertModifiable(Collection<?> c) {
+    assertTrue(CollectionsP.isModifiable(c));
+  }
+
+  /**
+   * Throws an exception if the collection is modifiable.
+   *
+   * @param c a collection
+   */
+  private void assertUnmodifiable(Collection<?> c) {
+    assertFalse(CollectionsP.isModifiable(c));
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // SortedSet
+  //
+
+  /** Test sortedSetEquals(). */
+  // public static <T> boolean sortedSetEquals(SortedSet<T> set1, SortedSet<T> set2)
+  @Test
+  void test_sortedSetEquals() {
+    TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
+    TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
+    TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
+    TreeSet<Integer> s4 = new TreeSet<>(Arrays.asList(1, 2, 3, 4));
+
+    assertTrue(CollectionsP.sortedSetEquals(s3, s3));
+    assertTrue(CollectionsP.sortedSetEquals(s3, s3a));
+    assertFalse(CollectionsP.sortedSetEquals(s3, s2));
+    assertFalse(CollectionsP.sortedSetEquals(s3, s4));
+  }
+
+  /** Test sortedSetContainsAll(). */
+  // public static <T> boolean sortedSetContainsAll(SortedSet<T> set1, SortedSet<T> set2)
+  @Test
+  void test_sortedSetContainsAll() {
+    TreeSet<Integer> s2 = new TreeSet<>(Arrays.asList(1, 2));
+    TreeSet<Integer> s3 = new TreeSet<>(Arrays.asList(1, 2, 3));
+    TreeSet<Integer> s3a = new TreeSet<>(Arrays.asList(3, 2, 1));
+    TreeSet<Integer> s4 = new TreeSet<>(Arrays.asList(1, 2, 3, 4));
+
+    assertTrue(CollectionsP.sortedSetContainsAll(s2, s2));
+    assertFalse(CollectionsP.sortedSetContainsAll(s2, s3));
+    assertFalse(CollectionsP.sortedSetContainsAll(s2, s3a));
+    assertFalse(CollectionsP.sortedSetContainsAll(s2, s4));
+
+    assertTrue(CollectionsP.sortedSetContainsAll(s3, s2));
+    assertTrue(CollectionsP.sortedSetContainsAll(s3, s3));
+    assertTrue(CollectionsP.sortedSetContainsAll(s3, s3a));
+    assertFalse(CollectionsP.sortedSetContainsAll(s3, s4));
+
+    assertTrue(CollectionsP.sortedSetContainsAll(s3a, s2));
+    assertTrue(CollectionsP.sortedSetContainsAll(s3a, s3));
+    assertTrue(CollectionsP.sortedSetContainsAll(s3a, s3a));
+    assertFalse(CollectionsP.sortedSetContainsAll(s3a, s4));
+
+    assertTrue(CollectionsP.sortedSetContainsAll(s4, s2));
+    assertTrue(CollectionsP.sortedSetContainsAll(s4, s3));
+    assertTrue(CollectionsP.sortedSetContainsAll(s4, s3a));
+    assertTrue(CollectionsP.sortedSetContainsAll(s4, s4));
+
+    TreeSet<Integer> ts1 = new TreeSet<>(Arrays.asList(0, 1, 2));
+    TreeSet<Integer> ts2 = new TreeSet<>(Arrays.asList(2, 0));
+    assertTrue(CollectionsP.sortedSetContainsAll(ts1, ts2));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts2, ts1));
+
+    TreeSet<Integer> ts3 = new TreeSet<>(Arrays.asList(0, 1, 2, 3, 4));
+    TreeSet<Integer> ts4 = new TreeSet<>(Arrays.asList(1, 3));
+    assertTrue(CollectionsP.sortedSetContainsAll(ts3, ts4));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts4, ts3));
+
+    TreeSet<Integer> ts5 = new TreeSet<>(Arrays.asList(-1));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts3, ts5));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts5, ts3));
+    TreeSet<Integer> ts6 = new TreeSet<>(Arrays.asList(0));
+    assertTrue(CollectionsP.sortedSetContainsAll(ts3, ts6));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts6, ts3));
+    TreeSet<Integer> ts7 = new TreeSet<>(Arrays.asList(3));
+    assertTrue(CollectionsP.sortedSetContainsAll(ts3, ts7));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts7, ts3));
+    TreeSet<Integer> ts8 = new TreeSet<>(Arrays.asList(4));
+    assertTrue(CollectionsP.sortedSetContainsAll(ts3, ts8));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts8, ts3));
+    TreeSet<Integer> ts9 = new TreeSet<>(Arrays.asList(5));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts3, ts9));
+    assertFalse(CollectionsP.sortedSetContainsAll(ts9, ts3));
+  }
+
+  // Median of 5 runs with size=4: ratio = .90, meaning 10% speedup.
+  // @Test
+  @SuppressWarnings({"ReturnValueIgnored", "PMD.UselessPureMethodCall"})
+  void test_sortedSetTime() {
+    int size = 4;
+    int iterations = 100_000;
+    long sortedTime = 0;
+    long unsortedTime = 0;
+    Random random = new Random(0);
+    for (int i = 0; i < iterations; i++) {
+      SortedSet<Integer> s1 = new TreeSet<>();
+      SortedSet<Integer> s2 = new TreeSet<>();
+      SortedSet<Integer> s3 = new TreeSet<>();
+      for (int j = 0; j < size; j++) {
+        int elt1 = random.nextInt(10);
+        int elt2 = random.nextInt(10);
+        s1.add(elt1);
+        s2.add(elt1);
+        s3.add(elt2);
+      }
+      s3.add(random.nextInt(10));
+      long sortedStart = System.nanoTime();
+      for (int k = 0; k < 10; k++) {
+        CollectionsP.sortedSetEquals(s1, s2);
+        CollectionsP.sortedSetEquals(s2, s1);
+        CollectionsP.sortedSetEquals(s2, s3);
+        CollectionsP.sortedSetEquals(s3, s2);
+        CollectionsP.sortedSetContainsAll(s1, s2);
+        CollectionsP.sortedSetContainsAll(s2, s1);
+        CollectionsP.sortedSetContainsAll(s2, s3);
+        CollectionsP.sortedSetContainsAll(s3, s2);
+      }
+      sortedTime += (System.nanoTime() - sortedStart);
+      long unsortedStart = System.nanoTime();
+      for (int k = 0; k < 10; k++) {
+        s1.equals(s2);
+        s2.equals(s1);
+        s2.equals(s3);
+        s3.equals(s2);
+        s1.containsAll(s2);
+        s2.containsAll(s1);
+        s2.containsAll(s3);
+        s3.containsAll(s2);
+      }
+      unsortedTime += (System.nanoTime() - unsortedStart);
+    }
+    System.out.printf("testSortedSetTime: size = %s, iterations = %s%n", size, iterations);
+    System.out.printf("  CollectionsP: time = %s%n", sortedTime);
+    System.out.printf("  JDK             : time = %s%n", unsortedTime);
+    System.out.printf("  ratio = %s%n", 1.0 * sortedTime / unsortedTime);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // ArrayList
+  //
+
+  /** Test makeArrayList(). */
+  // public static <T> ArrayList<T> makeArrayList(Enumeration<T> e)
+  @Test
+  void test_makeArrayList() {
+    // Tests go here.
+  }
+
+  /** Test listOf(). */
+  // public static <E> List<E> listOf(E e1, E e2)
+  @Test
+  void test_listOf() {
+    assertEquals(Arrays.asList("a", "b"), CollectionsP.listOf("a", "b"));
+  }
+
+  /** Test append(). */
+  // public static <T> List<T> append(Collection<T> list, T lastElt)
+  @Test
+  void test_append() {
+    assertEquals(Arrays.asList("a", "b", "c"), CollectionsP.append(Arrays.asList("a", "b"), "c"));
+  }
+
+  /** Test concatenate(). */
+  // public static <T> List<T> concatenate(Collection<T> list1, Collection<T> list2)
+  @Test
+  void test_concatenate() {
+    // Tests go here.
+  }
+
+  // public static <T> List<List<T>> createCombinations(
+
+  // public static ArrayList<ArrayList<Integer>> createCombinations(int arity, @NonNegative int
+  // start, int cnt)
+
+  /** Tests UtilP createCombinations routines. */
+  @Test
+  void test_createCombinations() {
+
+    // public static List createCombinations (int dims, int start, List objs)
+    Object a = new Object();
+    Object b = new Object();
+    Object c = new Object();
+    List<Object> aList = Arrays.<Object>asList(new Object[] {a});
+    List<Object> bList = Arrays.<Object>asList(new Object[] {b});
+    List<Object> cList = Arrays.<Object>asList(new Object[] {c});
+    List<Object> aa = Arrays.<Object>asList(new Object[] {a, a});
+    List<Object> bb = Arrays.<Object>asList(new Object[] {b, b});
+    List<Object> cc = Arrays.<Object>asList(new Object[] {c, c});
+    List<Object> ab = Arrays.<Object>asList(new Object[] {a, b});
+    List<Object> ac = Arrays.<Object>asList(new Object[] {a, c});
+    List<Object> bc = Arrays.<Object>asList(new Object[] {b, c});
+
+    List<Object> abc = Arrays.asList(a, b, c);
+    List<List<Object>> combo1 = CollectionsP.createCombinations(1, 0, abc);
+    assertEquals(3, combo1.size());
+    assertTrue(combo1.contains(aList));
+    assertTrue(combo1.contains(bList));
+    assertTrue(combo1.contains(cList));
+
+    List<List<Object>> combo2 = CollectionsP.createCombinations(2, 0, abc);
+    assertEquals(6, combo2.size());
+    assertTrue(combo2.contains(aa));
+    assertTrue(combo2.contains(ab));
+    assertTrue(combo2.contains(ac));
+    assertTrue(combo2.contains(bb));
+    assertTrue(combo2.contains(bc));
+    assertTrue(combo2.contains(cc));
+
+    // public static List createCombinations (int arity, int start, int cnt)
+    Integer i0 = 0;
+    Integer i1 = 1;
+    Integer i2 = 2;
+    Integer i10 = 10;
+    Integer i11 = 11;
+    Integer i12 = 12;
+
+    List<ArrayList<Integer>> combo3 = CollectionsP.createCombinations(1, 0, 2);
+    assertEquals(3, combo3.size());
+    assertTrue(combo3.contains(Arrays.asList(new Integer[] {i0})));
+    assertTrue(combo3.contains(Arrays.asList(new Integer[] {i1})));
+    assertTrue(combo3.contains(Arrays.asList(new Integer[] {i2})));
+
+    List<ArrayList<Integer>> combo4 = CollectionsP.createCombinations(2, 0, 2);
+    assertEquals(6, combo4.size());
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i0})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i1})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i0, i2})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i1, i1})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i1, i2})));
+    assertTrue(combo4.contains(Arrays.asList(new Integer[] {i2, i2})));
+
+    List<ArrayList<Integer>> combo5 = CollectionsP.createCombinations(2, 10, 12);
+    assertEquals(6, combo5.size());
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i10})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i11})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i10, i12})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i11, i11})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i11, i12})));
+    assertTrue(combo5.contains(Arrays.asList(new Integer[] {i12, i12})));
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Iterator
+  //
+
+  // public static <T> Iterable<T> iteratorToIterable(final Iterator<T> source)
+
+  // public static final class EnumerationIterator<T> implements Iterator<T>
+
+  // public static final class IteratorEnumeration<T> implements Enumeration<T>
+
+  // public static <T> Iterator<T> iteratorPlusOne(Iterator<T> itor, T lastElement)
+
+  // public static <T> Iterator<T> mergedIterator2(Iterator<T> itor1, Iterator<T> itor2)
+
+  // public static final class MergedIterator2<T> implements Iterator<T>
+
+  // public static <T> Iterator<T> mergedIterator(Iterable<Iterator<T>> itbleOfItors)
+
+  // public static <T> Iterator<T> mergedIterator(Iterator<Iterator<T>> itorOfItors)
+
+  // public static final class MergedIterator<T> implements Iterator<T>
+
+  /** Test mergedIterator(). */
+  @Test
+  void test_mergedIterator() {
+
+    // public static class EnumerationIterator implements Iterator
+    // public static class IteratorEnumeration implements Enumeration
+
+    assertEquals(iota0, toArrayList(iota0.iterator()));
+    assertEquals(iota0, toArrayList(new CollectionsP.IteratorEnumeration<>(iota0.iterator())));
+    assertEquals(iota10, toArrayList(iota10.iterator()));
+    assertEquals(iota10, toArrayList(new CollectionsP.IteratorEnumeration<>(iota10.iterator())));
+
+    // public static class MergedIterator2 implements Iterator {
+    assertEquals(
+        iota10Twice,
+        toArrayList(CollectionsP.mergedIterator2(iota10.iterator(), iota10.iterator())));
+    assertEquals(
+        iota10, toArrayList(CollectionsP.mergedIterator2(iota0.iterator(), iota10.iterator())));
+    assertEquals(
+        iota10, toArrayList(CollectionsP.mergedIterator2(iota10.iterator(), iota0.iterator())));
+
+    // public static class MergedIterator implements Iterator {
+    ArrayList<Iterator<Integer>> iota10IteratorThrice = new ArrayList<>();
+    iota10IteratorThrice.add(iota10.iterator());
+    iota10IteratorThrice.add(iota10.iterator());
+    iota10IteratorThrice.add(iota10.iterator());
+    assertEquals(
+        iota10Thrice, toArrayList(CollectionsP.mergedIterator(iota10IteratorThrice.iterator())));
+    ArrayList<Iterator<Integer>> iota10IteratorTwice1 = new ArrayList<>();
+    iota10IteratorTwice1.add(iota0.iterator());
+    iota10IteratorTwice1.add(iota10.iterator());
+    iota10IteratorTwice1.add(iota10.iterator());
+    ArrayList<Iterator<Integer>> iota10IteratorTwice2 = new ArrayList<>();
+    iota10IteratorTwice2.add(iota10.iterator());
+    iota10IteratorTwice2.add(iota0.iterator());
+    iota10IteratorTwice2.add(iota10.iterator());
+    ArrayList<Iterator<Integer>> iota10IteratorTwice3 = new ArrayList<>();
+    iota10IteratorTwice3.add(iota10.iterator());
+    iota10IteratorTwice3.add(iota10.iterator());
+    iota10IteratorTwice3.add(iota0.iterator());
+    assertEquals(
+        iota10Twice, toArrayList(CollectionsP.mergedIterator(iota10IteratorTwice1.iterator())));
+    assertEquals(
+        iota10Twice, toArrayList(CollectionsP.mergedIterator(iota10IteratorTwice2.iterator())));
+    assertEquals(
+        iota10Twice, toArrayList(CollectionsP.mergedIterator(iota10IteratorTwice3.iterator())));
+  }
+
+  // public static <T> Iterator<T> filteredIterator(Iterator<T> itor, Predicate<T> predicate)
+
+  // public static final class FilteredIterator<T> implements Iterator<T>
+
+  /** Test filteredIterator(). */
+  @Test
+  void test_filteredIterator() {
+
+    // public static final class FilteredIterator implements Iterator
+
+    ArrayList<Integer> iota10Odd = new ArrayList<>();
+    for (int i = 0; i < iota10.size(); i++) {
+      if (i % 2 != 0) {
+        iota10Odd.add(i);
+      }
+    }
+    assertEquals(
+        iota10Odd,
+        toArrayList(CollectionsP.filteredIterator(iota10.iterator(), new OddPredicate())));
+  }
+
+  /** Test removeFirstAndLastIterator(). */
+  // public static <T extends @Nullable Object> Iterator<T> removeFirstAndLastIterator(Iterator<T>
+  // itor)
+  // public static final class RemoveFirstAndLastIterator<T> implements Iterator<T>
+  @SuppressWarnings("deprecation") // to be made package-private
+  @Test
+  void test_removeFirstAndLastIterator() {
+
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> iota5middle = Arrays.asList(1, 2, 3);
+    CollectionsP.RemoveFirstAndLastIterator<Integer> rfali =
+        new CollectionsP.RemoveFirstAndLastIterator<>(iota5.iterator());
+    ArrayList<Integer> rfali_vector = toArrayList(rfali);
+    assertEquals(iota5middle, rfali_vector);
+    assertEquals(0, rfali.getFirst());
+    assertEquals(4, rfali.getLast());
+  }
+
+  /** Test randomElements(). */
+  // public static <T extends @Nullable Object> List<T> randomElements(Iterator<T> itor, int
+  // numElts)
+  // public static <T> List<T> randomElements(Iterator<T> itor, int numElts, Random random)
+  @SuppressWarnings("PMD.ReplaceJavaUtilCalendar")
+  @Test
+  void test_randomElements() {
+
+    // Tests CollectionsP.randomElements(...)
+
+    // Typically, no progress reports are printed, because the loop
+    // finishes in well under 1 minute.  Users will see progress reports
+    // when this class is slowed down by instrumentation.
+    Calendar nextNotification = Calendar.getInstance();
+    nextNotification.add(Calendar.MINUTE, 1);
+    DateFormat df = new SimpleDateFormat();
+
+    int itorSize = 10;
+    int numEltsLimit = 12;
+    int tries = shortRun ? 100 : 100_000;
+    double ratioLimit = .02;
+    Random r = new Random(20_020_311);
+    // "i++" instead of "i+=3" here works, but is slow
+    for (int i = 1; i < numEltsLimit; i += 3) {
+      int[] totals = new int[numEltsLimit];
+      for (int j = 0; j < tries; j++) {
+        if (j % 100 == 0) {
+          Calendar now = Calendar.getInstance();
+          if (now.after(nextNotification)) {
+            System.out.printf(
+                "%s: iteration (%d,%d) out of (%d,%d)%n",
+                df.format(nextNotification.getTime()), i, j, numEltsLimit, tries);
+            nextNotification.add(Calendar.MINUTE, 1);
+          }
+        }
+        @SuppressWarnings({
+          "index:argument"
+        }) // The IotaIterator only contains indexes for totals.length, and since `chosen`'s
+        // elements are selected randomly from the IotaIterator, all of its elements are
+        // @IndexFor
+        List<@IndexFor("totals") Integer> chosen =
+            CollectionsP.randomElements(new IotaIterator(itorSize), i, r);
+        for (int m = 0; m < chosen.size(); m++) {
+          int mInt = chosen.get(m);
+          for (int n = m + 1; n < chosen.size(); n++) {
+            int nInt = chosen.get(n);
+            if (mInt == nInt) {
+              throw new Error("Duplicate at " + m + "," + n);
+            }
+          }
+        }
+        for (Integer elt : chosen) {
+          totals[elt]++;
+        }
+      }
+      int iTruncated = Math.min(itorSize, i);
+      int grandTotal = tries * iTruncated;
+      assertEquals(grandTotal, ArraysP.sum(totals)); // "Totals = " + ArraysP.sum(totals))
+      // System.out.print("chosen:\t");
+      for (int k = 0; k < numEltsLimit; k++) {
+        int thisTotal = totals[k];
+        int expected = tries * iTruncated / itorSize;
+        double ratio = (double) thisTotal / (double) expected;
+        // System.out.print(((k<10) ? " " : "") + k + " " + thisTotal + "\t");
+        // System.out.print("\nExp=" + expected + "\tratio=" + ratio + "\t");
+        assertTrue(k >= itorSize || (ratio > ratioLimit && ratio < 1 / ratioLimit));
+      }
+      // System.out.println();
+    }
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // Map
+  //
+
+  // public static @Nullable Integer incrementMap(Map<K, Integer> m, K key)
+
+  // public static @Nullable Integer incrementMap(Map<K, Integer> m, K key, int count)
+
+  // public static sortedKeySet(Map<K, V> m)
+
+  // public static <K, V> Collection<@KeyFor("#1") K> sortedKeySet(Map<K, V> m, Comparator<K>
+  // comparator)
+
+  // public static int mapCapacity(int numElements)
+
+  // public static <T> int mapCapacity(T[] a)
+
+  // public static int mapCapacity(Collection<?> c)
+
+  // public static int mapCapacity(Map<?, ?> m)
+
+  // public static <T> int mapCapacity(T[] a)
+
+  // public static int mapCapacity(Collection<?> c)
+
+  // public static <K, V> Map<K, V> createLruCache(@Positive int size)
+
+  // public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(@PolyNull M orig)
+
+  // public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneValues(@PolyNull M orig)
+
+  //
+  // Map to string
+  //
+
+  // public static void mapToString(Appendable sb, Map<K, V> m, String linePrefix)
+
+  // public static void mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix)
+
+  // public static void mapMapToStringMultiLine(Appendable sb, String innerHeader, Map<K1, Map<K2,
+  // V2>> mapMap, String linePrefix)
+
+  // public static String mapToString(Map<K, V> m)
+
+  // public static String mapToStringMultiLine(Map<K, V> m)
+
+  // public static String mapToStringMultiLine(Map<K, V> m, String linePrefix)
+
+  // public static String mapToStringAndClassMultiLine(Map<K, V> m)
+
+  // public static String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix)
+
+  // //////////////////////////////////////////////////////////////////////
+  // Set
+  //
+
+  /** Test getFromSet(). */
+  // public static @Nullable Object getFromSet(Set<? extends @Nullable Object> set, Object key)
+  @Test
+  void test_getFromSet() {
+    Integer i2 = 2;
+    Integer i10 = 10;
+    Set<Integer> iota5 = new HashSet<>(Arrays.asList(0, 1, 2, 3, 4));
+    assertEquals(i2, CollectionsP.getFromSet(iota5, i2));
+    assertEquals(null, CollectionsP.getFromSet(iota5, i10));
+  }
+
+  /** Test adjoin(). */
+  // public static <T> boolean adjoin(Collection<T> c, T e)
+  @Test
+  void test_adjoin() {
+    Integer i2 = 2;
+    Integer i5 = 5;
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> iota6 = Arrays.asList(0, 1, 2, 3, 4, 5);
+    List<Integer> myList = new ArrayList<>(iota5);
+    assertFalse(CollectionsP.adjoin(myList, i2));
+    assertEquals(iota5, myList);
+    assertTrue(CollectionsP.adjoin(myList, i5));
+    assertEquals(iota6, myList);
+  }
+
+  /** Test adjoinAll(). */
+  // public static <T> boolean adjoinAll(Collection<T> c, Collection<? extends T> toAdd)
+  @Test
+  void test_adjoinAll() {
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
+    List<Integer> result = Arrays.asList(0, 1, 2, 3, 4, 8, 7, 6, 5);
+    List<Integer> myList = new ArrayList<>(iota5);
+    assertTrue(CollectionsP.adjoinAll(myList, countdown));
+    assertEquals(result, myList);
+  }
+
+  /** Test listUnion(). */
+  // public static <T> List<T> listUnion(Collection<T> c1, Collection<T> c2)
+  @Test
+  void test_listUnion() {
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
+    List<Integer> result = Arrays.asList(0, 1, 2, 3, 4, 8, 7, 6, 5);
+    List<Integer> myList = CollectionsP.listUnion(iota5, countdown);
+    assertEquals(result, myList);
+  }
+
+  /** Test listIntersection(). */
+  // public static <T> List<T> listIntersection(Collection<T> c1, Collection<T> c2)
+  @Test
+  void test_listIntersection() {
+    List<Integer> iota5 = Arrays.asList(0, 1, 2, 3, 4);
+    List<Integer> countdown = Arrays.asList(8, 7, 6, 5, 4, 3);
+    List<Integer> result = Arrays.asList(3, 4);
+    List<Integer> myList = CollectionsP.listIntersection(iota5, countdown);
+    assertEquals(result, myList);
+  }
+
+  // //////////////////////////////////////////////////////////////////////
+  // BitSet
+  //
+
+  /** Test intersectionCardinalityAtLeast(). */
+  @Test
+  void test_intersectionCardinalityAtLeast() {
+
+    // public static intersectionCardinalityAtLeast(BitSet a, BitSet b, int i)
+
+    Random r = new Random(20_031_008);
+    for (int i = 0; i < 100; i++) {
+      BitSet b1 = randomBitSet(r.nextInt(100), r);
+      BitSet b2 = randomBitSet(r.nextInt(100), r);
+      BitSet b3 = randomBitSet(r.nextInt(100), r);
+      BitSet intersection = (BitSet) b1.clone();
+      intersection.and(b2);
+      int card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assertEquals(card >= j, CollectionsP.intersectionCardinalityAtLeast(b1, b2, j));
+      }
+      intersection.and(b3);
+      card = intersection.cardinality();
+      for (int j = 0; j < 100; j++) {
+        assertEquals(card >= j, CollectionsP.intersectionCardinalityAtLeast(b1, b2, b3, j));
+      }
+    }
+  }
+
+  // public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, @NonNegative int i)
+
+  // public static boolean intersectionCardinalityAtLeast(BitSet a, BitSet b, BitSet c, @NonNegative
+  // int i)
+
+  // public static int intersectionCardinality(BitSet a, BitSet b)
+
+  // public static int intersectionCardinality(BitSet a, BitSet b, BitSet c)
+
+}

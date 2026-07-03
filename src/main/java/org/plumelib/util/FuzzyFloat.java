@@ -40,7 +40,7 @@ public class FuzzyFloat {
 
   /** Creates a FuzzyFloat with the default relativeRatio value of .0001. */
   public FuzzyFloat() {
-    setRelativeRatio(DEFAULT_RELATIVE_RATIO);
+    this(DEFAULT_RELATIVE_RATIO);
   }
 
   /**
@@ -50,6 +50,7 @@ public class FuzzyFloat {
    *
    * @param relativeRatio the relative diff to use; see {@link #setRelativeRatio}
    */
+  @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
   public FuzzyFloat(double relativeRatio) {
     setRelativeRatio(relativeRatio);
   }
@@ -127,7 +128,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 and d2 are non-equal
+   * @return true if d1 and d2 are non-equal
    * @see #eq
    */
   @Pure
@@ -141,7 +142,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &lt; d2
+   * @return true if d1 &lt; d2
    * @see #eq
    */
   @Pure
@@ -155,7 +156,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &le; d2
+   * @return true if d1 &le; d2
    * @see #eq
    */
   @Pure
@@ -169,7 +170,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &gt; d2
+   * @return true if d1 &gt; d2
    * @see #eq
    */
   @Pure
@@ -183,7 +184,7 @@ public class FuzzyFloat {
    *
    * @param d1 the first value to compare
    * @param d2 the second value to compare
-   * @return whether d1 &ge; d2
+   * @return true if d1 &ge; d2
    * @see #eq
    */
   @Pure
@@ -240,8 +241,8 @@ public class FuzzyFloat {
   }
 
   /**
-   * Determines whether or not a1 and a2 are set equivalent (contain only the same elements).
-   * Element comparison uses {@link #eq}.
+   * Returns true if a1 and a2 are set equivalent (contain only the same elements). Element
+   * comparison uses {@link #eq}.
    *
    * <p>Note that this implementation is optimized for cases where the elements are actually the
    * same, since it does a sort of both arrays before starting the comparisons.
@@ -264,8 +265,7 @@ public class FuzzyFloat {
     // look for elements of a2 in a1
     int start = 0;
     outer1:
-    for (int i = 0; i < a2.length; i++) {
-      double val = a2[i];
+    for (double val : a2) {
       for (int j = start; j < a1.length; j++) {
         if (eq(val, a1[j])) {
           start = j;
@@ -283,52 +283,21 @@ public class FuzzyFloat {
     // look for elements of a1 in a2
     start = 0;
     outer2:
-    for (int i = 0; i < a1.length; i++) {
-      double val = a1[i];
+    for (double val : a1) {
       for (int j = start; j < a2.length; j++) {
         if (eq(val, a2[j])) {
           start = j;
           continue outer2;
         }
         if (val < a2[j]) {
-          // System.out.println ("isElemMatch: " + val + " " + a2[j]);
           return false;
         }
       }
-      // System.out.println ("isElemMatch: " + i);
       return false;
     }
 
     return true;
   }
-
-  // Slightly more efficient method that will miss some matches
-  //     int i = 0;
-  //     int j = 0;
-  //     while (i < a1.length && j < a2.length) {
-  //       if (ne (a1[i], a2[j])) {
-  //         System.out.println ("isElemMatch: " + a1[i] + " " + a2[j]);
-  //         return false;
-  //       }
-  //       double val = a1[i];
-  //       i++;
-  //       while ((i < a1.length) && (eq (a1[i], val))) {
-  //         i++;
-  //       }
-  //       j++;
-  //       while ((j < a2.length) && (eq (a2[j], val))) {
-  //         j++;
-  //       }
-  //     }
-
-  //     // if there are any elements left, then they don't match.
-  //     if ((i != a1.length) || (j != a2.length)) {
-  //       System.out.println ("isElemMatch: " + i + " " + j);
-  //       return false;
-  //     }
-
-  //     return true;
-  //     }
 
   /** Lexically compares two double arrays. */
   public class DoubleArrayComparatorLexical implements Comparator<double[]>, Serializable {
@@ -362,7 +331,7 @@ public class FuzzyFloat {
   }
 
   /**
-   * Determines whether smaller is a subset of bigger. Element comparison uses {@link #eq}.
+   * Returns true if smaller is a subset of bigger. Element comparison uses {@link #eq}.
    *
    * <p>Note that this implementation is optimized for cases where the elements are actually the
    * same, since it does a sort of both arrays before starting the comparisons.
@@ -386,8 +355,7 @@ public class FuzzyFloat {
     // look for elements of smaller in bigger
     int start = 0;
     outer1:
-    for (int i = 0; i < smaller.length; i++) {
-      double val = smaller[i];
+    for (double val : smaller) {
       for (int j = start; j < bigger.length; j++) {
         if (eq(val, bigger[j])) {
           start = j;

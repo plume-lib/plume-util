@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /** Records all the immutable types in the JDK, and can be queried. */
-public class ImmutableTypes {
+public final class ImmutableTypes {
 
   /** Do not instantiate. */
   private ImmutableTypes() {

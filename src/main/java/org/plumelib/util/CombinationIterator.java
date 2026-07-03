@@ -54,7 +54,6 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
   public CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
     int size = collectionsOfCandidates.size();
     // Just like collectionsOfCandidates, but indexable.
-    @SuppressWarnings({"nullness:unneeded.suppression", "keyfor:argument"}) // temporary
     ArrayList<? extends Collection<T>> listOfCollectionsOfCanditates =
         new ArrayList<>(collectionsOfCandidates);
     listsOfCandidates = new ArrayList[size];
@@ -107,14 +106,13 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
       throw new NoSuchElementException();
     }
 
-    List<T> result = new ArrayList<T>(nextValue);
+    List<T> result = new ArrayList<>(nextValue);
     advanceNext();
     return result;
   }
 
   @Override
   public void remove(@GuardSatisfied CombinationIterator<T> this) {
-    throw new UnsupportedOperationException(
-        "Remove not implemented for randoop.reflection.SubstitutionEnumerator");
+    throw new UnsupportedOperationException("Remove not implemented for CombinationIterator");
   }
 }

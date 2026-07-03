@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /** Defines a static method {@link #dumpHeap} that dumps the heap to an .hprof file. */
 @SuppressWarnings("signedness") // lack of annotations on ManagementFactory and reflection
-public class DumpHeap {
+public final class DumpHeap {
 
   /** Do not instantiate. */
   private DumpHeap() {
@@ -21,6 +21,7 @@ public class DumpHeap {
    * The HotSpot Diagnostic MBean. Its type is Object, in case HotSpotDiagnosticMXBean is not
    * available at compile time.
    */
+  @SuppressWarnings("PMD.AvoidUsingVolatile")
   private static volatile @MonotonicNonNull Object hotspotMBean;
 
   /** The method com.sun.management.HotSpotDiagnosticMXBean#dumpHeap. */

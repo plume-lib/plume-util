@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 
 // TODO:  A better name would be LineNumberException.
 // And then it needn't really extend IOException.
@@ -18,6 +18,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * This class extends IOException by also reporting a file name and line number at which the
  * exception occurred. It requires use of a {@link LineNumberReader}.
  */
+@SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 public class FileIOException extends IOException {
   /** Unique identifier for serialization. If you add or remove fields, change this number. */
   static final long serialVersionUID = 20050923L;
@@ -44,7 +45,7 @@ public class FileIOException extends IOException {
   //
 
   // If cause is null, the super call throws a null pointer exception.
-  // This looks like a JDK bug.  -Plume 12/9/2008
+  // This looks like a JDK bug.  12/9/2008
   /**
    * Create a FileIOException.
    *
@@ -272,8 +273,7 @@ public class FileIOException extends IOException {
   // Utility and helper methods
   //
 
-  @SuppressWarnings("lock:override.sideeffect") // temporary until after CF 3.0.1
-  @SideEffectFree
+  @Pure
   @Override
   public String getMessage(@GuardSatisfied FileIOException this) {
     String result = super.getMessage();
@@ -286,7 +286,7 @@ public class FileIOException extends IOException {
     if (lineNumber != -1) {
       result += " at line " + lineNumber;
     }
-    return result;
+    return result.intern();
   }
 
   // There is no setter method because field lineNumber is final.

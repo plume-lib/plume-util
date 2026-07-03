@@ -28,6 +28,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * <p>Java builds in interning for Strings, but not for other objects. The methods in this class
  * extend interning to all Java objects.
  */
+@SuppressWarnings({
+  "identity", // use of Hasher for primitive wrappers
+  "PMD.UseDiamondOperator"
+})
 public final class Intern {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -74,24 +78,24 @@ public final class Intern {
     if (value == null) {
       // nothing to do
       return true;
-    } else if (value instanceof String) {
-      return value == ((String) value).intern();
-    } else if (value instanceof String[]) {
-      return value == intern((String[]) value);
-    } else if (value instanceof Integer) {
-      return value == intern((Integer) value);
-    } else if (value instanceof Long) {
-      return value == intern((Long) value);
-    } else if (value instanceof int[]) {
-      return value == intern((int[]) value);
-    } else if (value instanceof long[]) {
-      return value == intern((long[]) value);
-    } else if (value instanceof Double) {
-      return value == intern((Double) value);
-    } else if (value instanceof double[]) {
-      return value == intern((double[]) value);
-    } else if (value instanceof Object[]) {
-      return value == intern((Object[]) value);
+    } else if (value instanceof String s) {
+      return value == s.intern();
+    } else if (value instanceof String[] sa) {
+      return value == intern(sa);
+    } else if (value instanceof Integer i) {
+      return value == intern(i);
+    } else if (value instanceof Long l) {
+      return value == intern(l);
+    } else if (value instanceof int[] ia) {
+      return value == intern(ia);
+    } else if (value instanceof long[] la) {
+      return value == intern(la);
+    } else if (value instanceof Double d) {
+      return value == intern(d);
+    } else if (value instanceof double[] da) {
+      return value == intern(da);
+    } else if (value instanceof Object[] oa) {
+      return value == intern(oa);
     } else {
       // Nothing to do, because we don't intern other types.
       // System.out.println("What type? " + value.getClass().getName());
@@ -122,7 +126,7 @@ public final class Intern {
     public int hashCode(@UnknownSignedness Object o) {
       @SuppressWarnings("signedness:cast.unsafe") // Signedness doesn't matter for hashCode().
       Integer i = (@Signed Integer) o;
-      return i.intValue();
+      return i;
     }
   }
 
@@ -246,14 +250,17 @@ public final class Intern {
       return true;
     }
 
+    @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // PMD is broken: elt isn't control var
     @Override
     public int hashCode(@UnknownSignedness Object o) {
       double[] a = (double[]) o;
       // Not Arrays.hashCode(a), for consistency with equals method
       // immediately above.
       double running = 0;
-      for (int i = 0; i < a.length; i++) {
-        double elt = (Double.isNaN(a[i]) ? 0.0 : a[i]);
+      for (double elt : a) {
+        if (Double.isNaN(elt)) {
+          elt = 0.0;
+        }
         running = running * FACTOR + elt * DOUBLE_FACTOR;
       }
       // Could add "... % Integer.MAX_VALUE" here; is that good to do?
@@ -608,6 +615,7 @@ public final class Intern {
    * @param i the value to intern
    * @return an interned Integer with value i
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Integer internedInteger(int i) {
     return intern(Integer.valueOf(i));
   }
@@ -653,6 +661,7 @@ public final class Intern {
    * @param i the value to intern
    * @return an interned Integer with value i
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Long internedLong(long i) {
     return intern(Long.valueOf(i));
   }
@@ -750,7 +759,7 @@ public final class Intern {
       return internedDoubleNaN;
     }
     // Double.+0 == Double.-0,  but they compare true via equals()
-    if (a.doubleValue() == 0) { // catches both positive and negative zero
+    if (a == 0) { // catches both positive and negative zero
       return internedDoubleZero;
     }
     WeakReference<@Interned Double> lookup = internedDoubles.get(a);
@@ -771,6 +780,7 @@ public final class Intern {
    * @param d the value to intern
    * @return an interned Double with value d
    */
+  @SuppressWarnings("PMD.UnnecessaryBoxing")
   public static @Interned Double internedDouble(double d) {
     return intern(Double.valueOf(d));
   }
@@ -819,14 +829,15 @@ public final class Intern {
   }
 
   /**
-   * Returns true if each element is interned
+   * Returns true if each element is interned.
    *
    * @param a an array whose elements should already be intterned
    * @return true if each element is interned
    */
+  @SuppressWarnings("PMD.UseEqualsToCompareStrings")
   private static boolean eachElementInterned(@PolyNull @Interned String @PolyValue [] a) {
-    for (int k = 0; k < a.length; k++) {
-      if (a[k] != Intern.intern(a[k])) {
+    for (String elt : a) {
+      if (elt != intern(elt)) {
         throw new IllegalArgumentException();
       }
     }
@@ -922,25 +933,25 @@ public final class Intern {
   public static @Interned @PolyNull Object intern(@PolyNull Object a) {
     if (a == null) {
       return null;
-    } else if (a instanceof String) {
-      return intern((String) a);
-    } else if (a instanceof String[]) {
-      @Interned String[] asArray = (@Interned String[]) a;
+    } else if (a instanceof String s) {
+      return intern(s);
+    } else if (a instanceof String[] sa) {
+      @Interned String[] asArray = (@Interned String[]) sa;
       return intern(asArray);
-    } else if (a instanceof Integer) {
-      return intern((Integer) a);
-    } else if (a instanceof Long) {
-      return intern((Long) a);
-    } else if (a instanceof int[]) {
-      return intern((int[]) a);
-    } else if (a instanceof long[]) {
-      return intern((long[]) a);
-    } else if (a instanceof Double) {
-      return intern((Double) a);
-    } else if (a instanceof double[]) {
-      return intern((double[]) a);
-    } else if (a instanceof Object[]) {
-      @Interned Object[] asArray = (@Interned Object[]) a;
+    } else if (a instanceof Integer i) {
+      return intern(i);
+    } else if (a instanceof Long l) {
+      return intern(l);
+    } else if (a instanceof int[] ia) {
+      return intern(ia);
+    } else if (a instanceof long[] la) {
+      return intern(la);
+    } else if (a instanceof Double d) {
+      return intern(d);
+    } else if (a instanceof double[] da) {
+      return intern(da);
+    } else if (a instanceof Object[] oa) {
+      @Interned Object[] asArray = (@Interned Object[]) oa;
       return intern(asArray);
     } else {
       throw new IllegalArgumentException(
@@ -968,15 +979,15 @@ public final class Intern {
       int @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<int @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<int @Interned []> lookup = internedIntSubsequence.get(sai);
     int[] result1 = (lookup != null) ? lookup.get() : null;
     if (result1 != null) {
       return result1;
     } else {
-      int[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      int @Interned [] subseq = Intern.intern(subseqUninterned);
+      int[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
+      int @Interned [] subseq = intern(subseqUninterned);
       internedIntSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -997,15 +1008,15 @@ public final class Intern {
       long @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<long @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<long @Interned []> lookup = internedLongSubsequence.get(sai);
     long[] result1 = (lookup != null) ? lookup.get() : null;
     if (result1 != null) {
       return result1;
     } else {
-      long[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      long @Interned [] subseq = Intern.intern(subseqUninterned);
+      long[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
+      long @Interned [] subseq = intern(subseqUninterned);
       internedLongSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -1026,15 +1037,15 @@ public final class Intern {
       double @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<double @Interned []> sai = new Subsequence<>(seq, start, end);
     WeakReference<double @Interned []> lookup = internedDoubleSubsequence.get(sai);
     double[] result1 = (lookup != null) ? lookup.get() : null;
     if (result1 != null) {
       return result1;
     } else {
-      double[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      double @Interned [] subseq = Intern.intern(subseqUninterned);
+      double[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
+      double @Interned [] subseq = intern(subseqUninterned);
       internedDoubleSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
@@ -1055,7 +1066,7 @@ public final class Intern {
       @PolyNull @Interned Object @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<@PolyNull @Interned Object @Interned []> sai =
         new Subsequence<@PolyNull @Interned Object @Interned []>(seq, start, end);
     @SuppressWarnings("nullness") // same nullness as key
@@ -1065,12 +1076,14 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @PolyNull @Interned Object[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      @PolyNull @Interned Object @Interned [] subseq = Intern.intern(subseqUninterned);
-      @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
-      Object
-          ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
-          internedObjectSubsequence.put(sai, new WeakReference<>(subseq));
+      @PolyNull @Interned Object[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
+      @PolyNull @Interned Object @Interned [] subseq = intern(subseqUninterned);
+      @SuppressWarnings({
+        "nullness", // safe because map does no side effects
+        "UnusedVariable", // assignment so there is a place for the @SuppressWarnings annotation
+        "PMD.UnusedLocalVariable"
+      })
+      Object ignore = internedObjectSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -1090,7 +1103,7 @@ public final class Intern {
       @PolyNull @Interned String @Interned [] seq,
       @IndexFor("#1") @LessThan("#3") int start,
       @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int end) {
-    assert Intern.isInterned(seq);
+    assert isInterned(seq);
     Subsequence<@PolyNull @Interned String @Interned []> sai =
         new Subsequence<@PolyNull @Interned String @Interned []>(seq, start, end);
     @SuppressWarnings("nullness") // same nullness as key
@@ -1100,12 +1113,14 @@ public final class Intern {
     if (result1 != null) {
       return result1;
     } else {
-      @PolyNull @Interned String[] subseqUninterned = ArraysPlume.subarray(seq, start, end - start);
-      @PolyNull @Interned String @Interned [] subseq = Intern.intern(subseqUninterned);
-      @SuppressWarnings({"nullness", "UnusedVariable"}) // safe because map does no side effects
-      Object
-          ignore = // assignment just so there is a place to hang the @SuppressWarnings annotation
-          internedStringSubsequence.put(sai, new WeakReference<>(subseq));
+      @PolyNull @Interned String[] subseqUninterned = ArraysP.subarray(seq, start, end - start);
+      @PolyNull @Interned String @Interned [] subseq = intern(subseqUninterned);
+      @SuppressWarnings({
+        "nullness", // safe because map does no side effects
+        "UnusedVariable", // dummy assignment is a place for the @SuppressWarnings annotation
+        "PMD.UnusedLocalVariable"
+      })
+      Object ignore = internedStringSubsequence.put(sai, new WeakReference<>(subseq));
       return subseq;
     }
   }
@@ -1136,21 +1151,19 @@ public final class Intern {
      * @param end the end index
      */
     public Subsequence(T seq, @NonNegative int start, int end) {
-      assert Intern.isInterned(seq);
+      assert isInterned(seq);
       this.seq = seq;
       this.start = start;
       this.end = end;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "lock:instanceof.pattern.unsafe"}) // other is @GuardSatisfied
     @Pure
     @Override
     public boolean equals(
         @GuardSatisfied Subsequence<T> this, @GuardSatisfied @Nullable Object other) {
-      if (other instanceof Subsequence<?>) {
-        @SuppressWarnings("unchecked")
-        Subsequence<T> otherSai = (Subsequence<T>) other;
-        return equalsSubsequence(otherSai);
+      if (other instanceof Subsequence<?> otherSai) {
+        return equalsSubsequence((Subsequence<T>) otherSai);
       } else {
         return false;
       }
@@ -1178,7 +1191,7 @@ public final class Intern {
     @SideEffectFree
     @Override
     public String toString(@GuardSatisfied Subsequence<T> this) {
-      return "SAI(" + start + "," + end + ") from: " + ArraysPlume.toString(seq);
+      return "SAI(" + start + "," + end + ") from: " + ArraysP.toString(seq);
     }
   }
 

@@ -38,7 +38,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
    * @param b the second element of the pair
    * @deprecated use {@link #of}
    */
-  @Deprecated // 2023-05-20; to be made private
+  @Deprecated(since = "2023-05-20") // to make private
   public WeakIdentityPair(V1 a, V2 b) {
     if (a == null || b == null) {
       throw new IllegalArgumentException(
@@ -60,11 +60,11 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
    */
   public static <T1 extends @NonNull Object, T2 extends @NonNull Object>
       WeakIdentityPair<T1, T2> of(T1 a, T2 b) {
-    return new WeakIdentityPair<T1, T2>(a, b);
+    return new WeakIdentityPair<>(a, b);
   }
 
   /**
-   * Return the first element of the pair, or null if it has been garbage-collected.
+   * Returns the first element of the pair, or null if it has been garbage-collected.
    *
    * @return the first element of the pail, or null if it has been garbage-collected
    */
@@ -74,7 +74,7 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
   }
 
   /**
-   * Return the second element of the pair, or null if it has been garbage-collected.
+   * Returns the second element of the pair, or null if it has been garbage-collected.
    *
    * @return the second element of the pair, or null if it has been garbage-collected
    */
@@ -123,6 +123,6 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
   @Override
   @SideEffectFree
   public String toString(@GuardSatisfied WeakIdentityPair<V1, V2> this) {
-    return "WIPair(" + String.valueOf(a) + "," + String.valueOf(b) + ")";
+    return "WIPair(" + a + "," + b + ")";
   }
 }

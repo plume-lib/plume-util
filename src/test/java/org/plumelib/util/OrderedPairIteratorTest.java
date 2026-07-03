@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -8,10 +9,12 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
 /** Test the OrderedPairIterator class. */
-public final class OrderedPairIteratorTest {
+final class OrderedPairIteratorTest {
+
+  OrderedPairIteratorTest() {}
 
   @Test
-  public void testOrderedPairIterator() {
+  void testOrderedPairIterator() {
     final int NULL = -2222;
 
     ArrayList<Integer> ones = new ArrayList<>();
@@ -28,7 +31,7 @@ public final class OrderedPairIteratorTest {
     }
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(ones.iterator(), ones.iterator()),
+        new OrderedPairIterator<>(ones.iterator(), ones.iterator()),
         new int[][] {
           {1, 1}, {2, 2}, {3, 3}, {4, 4}, {5, 5}, {6, 6}, {7, 7}, {8, 8}, {9, 9}, {10, 10},
           {11, 11}, {12, 12}, {13, 13}, {14, 14}, {15, 15}, {16, 16}, {17, 17}, {18, 18}, {19, 19},
@@ -37,7 +40,7 @@ public final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(ones.iterator(), twos.iterator()),
+        new OrderedPairIterator<>(ones.iterator(), twos.iterator()),
         new int[][] {
           {1, NULL},
           {2, 2},
@@ -72,7 +75,7 @@ public final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(twos.iterator(), ones.iterator()),
+        new OrderedPairIterator<>(twos.iterator(), ones.iterator()),
         new int[][] {
           {NULL, 1},
           {2, 2},
@@ -107,7 +110,7 @@ public final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(ones.iterator(), threes.iterator()),
+        new OrderedPairIterator<>(ones.iterator(), threes.iterator()),
         new int[][] {
           {1, NULL},
           {2, NULL},
@@ -142,7 +145,7 @@ public final class OrderedPairIteratorTest {
         });
 
     compareOrderedPairIterator(
-        new OrderedPairIterator<Integer>(twos.iterator(), threes.iterator()),
+        new OrderedPairIterator<>(twos.iterator(), threes.iterator()),
         new int[][] {
           {2, NULL},
           {NULL, 3},
@@ -175,10 +178,11 @@ public final class OrderedPairIteratorTest {
    * @param ints an array of two-element arrays of integers
    * @throws AssertionError iff the iterator returns the same values as the argument array contains
    */
-  @SuppressWarnings(
-      "index:array.access.unsafe.high" // same length iterator and array, and while loop with ++ on
-  // index
-  )
+  @SuppressWarnings({
+    "index:array.access.unsafe.high", // same length iterator and array, and while loop with ++ on
+    // index
+    "PMD.UnconditionalIfStatement", // for debugging
+  })
   public static void compareOrderedPairIterator(
       OrderedPairIterator<Integer> opi, int[] @ArrayLen(2) [] ints) {
     int pairno = 0;
@@ -189,10 +193,10 @@ public final class OrderedPairIteratorTest {
             "Iterator: <%s,%s>, array: <%s,%s>%n",
             pair.first, pair.second, ints[pairno][0], ints[pairno][1]);
       }
-      assertTrue((pair.first == null) || (pair.first.intValue() == ints[pairno][0]));
-      assertTrue((pair.second == null) || (pair.second.intValue() == ints[pairno][1]));
+      assertTrue((pair.first == null) || (pair.first == ints[pairno][0]));
+      assertTrue((pair.second == null) || (pair.second == ints[pairno][1]));
       pairno++;
     }
-    assertTrue(pairno == ints.length);
+    assertEquals(ints.length, pairno);
   }
 }

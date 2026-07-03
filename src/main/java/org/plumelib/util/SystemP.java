@@ -2,22 +2,25 @@
 
 package org.plumelib.util;
 
+import java.io.File;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Locale;
+import java.util.regex.Pattern;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
-public final class SystemPlume {
+public final class SystemP {
 
   /** The Runtime instance for the current execution. */
   private static Runtime runtime = Runtime.getRuntime();
 
   /** This class is a collection of methods; it does not represent anything. */
-  private SystemPlume() {
+  private SystemP() {
     throw new Error("do not instantiate");
   }
 
@@ -26,7 +29,7 @@ public final class SystemPlume {
   //
 
   /**
-   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * Returns true if a system property has a string value that represents true: "true", "yes", or
    * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
    * "1", or "0".
    *
@@ -37,11 +40,11 @@ public final class SystemPlume {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // does not depend on object identity
   @Pure
   public static boolean getBooleanSystemProperty(String key, boolean defaultValue) {
-    return UtilPlume.getBooleanProperty(System.getProperties(), key, defaultValue);
+    return UtilP.getBooleanProperty(System.getProperties(), key, defaultValue);
   }
 
   /**
-   * Determines whether a system property has a string value that represents true: "true", "yes", or
+   * Returns true if a system property has a string value that represents true: "true", "yes", or
    * "1". Errs if the property is set to a value that is not one of "true", "false", "yes", "no",
    * "1", or "0".
    *
@@ -57,6 +60,7 @@ public final class SystemPlume {
   // Sleep
   //
 
+  // TODO: Add the nanosecond version.
   /**
    * Like Thread.sleep, but does not throw any checked exceptions, so it is easier for clients to
    * use. Causes the currently executing thread to sleep (temporarily cease execution) for the
@@ -108,6 +112,7 @@ public final class SystemPlume {
    * Perform garbage collection. Like System.gc, but waits to return until garbage collection has
    * completed.
    */
+  @SuppressWarnings("PMD.DoNotCallGarbageCollectionExplicitly")
   public static void gc() {
     long oldCollectionCount = getCollectionCount();
     System.gc();
@@ -267,7 +272,7 @@ public final class SystemPlume {
    * @return a GC usage message string, or null
    */
   public static @Nullable String gcUsageMessage(double cpuThreshold, int seconds) {
-    double gcPercentage = SystemPlume.gcPercentage(seconds);
+    double gcPercentage = gcPercentage(seconds);
     if (gcPercentage < cpuThreshold) {
       return null;
     } else {
@@ -282,5 +287,37 @@ public final class SystemPlume {
           "total memory = " + Runtime.getRuntime().totalMemory(),
           " free memory = " + Runtime.getRuntime().freeMemory());
     }
+  }
+
+  //
+  // Paths
+  //
+
+  /**
+   * Returns the absolute path of a program that is on the system PATH.
+   *
+   * @param programName the name of the program
+   * @return the absolute path of the program
+   */
+  public static @Nullable String pathToExecutable(String programName) {
+    String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+    if (osName.contains("win") && !programName.endsWith(".exe")) {
+      programName += ".exe";
+    }
+
+    String path = System.getenv("PATH");
+    if (path == null || path.isEmpty()) {
+      return null;
+    }
+
+    @SuppressWarnings("StringSplitter") // the behavior is desirable
+    String[] pathDirs = path.split(Pattern.quote(System.getProperty("path.separator")));
+    for (String dir : pathDirs) {
+      File file = new File(dir, programName);
+      if (file.isFile() && file.canExecute()) {
+        return file.getAbsolutePath();
+      }
+    }
+    return null; // Executable not found in PATH
   }
 }

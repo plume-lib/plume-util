@@ -7,7 +7,7 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  * the value of {@code System.identityHashCode()}, consider using this instead.
  *
  * <p>Using <a
- * href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/System.html#identityHashCode(java.lang.Object)">{@code
+ * href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/System.html#identityHashCode(java.lang.Object)">{@code
  * System.identityHashCode}</a> is <em>not</em> a unique identifier, because two values can have the
  * same identityHashCode if they are allocated into the same location in memory. Garbage collection
  * can move or reclaim the first value, permitting the second value to be allocated exactly where
@@ -33,6 +33,7 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  * <p>If you need a unique identifier for a class that you cannot edit (that is, you cannot make it
  * implement {@code UniqueId}), use {@link UniqueIdMap}.
  */
+@FunctionalInterface
 public interface UniqueId {
 
   /**

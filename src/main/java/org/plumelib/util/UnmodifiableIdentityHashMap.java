@@ -15,24 +15,28 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
- * A wrapper around an {@link IdentityHashMap} that makes it unmodifiable. All mutating operations
- * throw {@link UnsupportedOperationException}, and all other operations delegate to the underlying
- * map.
+ * Returns an unmodifiable view of an {@link IdentityHashMap}. All mutating operations throw {@link
+ * UnsupportedOperationException}, and all other operations delegate to the underlying map. It is
+ * possible that another alias to the underlying map asynchronously changes the contents of the
+ * underlying map.
  *
- * <p>This class extends {@link IdentityHashMap} only so it is assignable to variables / fields of
- * static type {@link IdentityHashMap}. All valid operations are delegated to the wrapped map, and
- * any inherited state from the superclass is unused.
+ * <p>This class extends {@link IdentityHashMap} only so it is assignable to variables/fields of
+ * static type {@link IdentityHashMap}. Any inherited state from the superclass is unused, because
+ * all valid operations are delegated to the wrapped map.
  *
  * @param <K> the type of keys of the map
  * @param <V> the type of values of the map
  */
 @SuppressWarnings("keyfor") // Keys for `this` are also keys for `this.map`
-public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
+public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
 
   /** The serial version UID. */
   private static final long serialVersionUID = -5147442142854693854L;
 
-  /** The wrapped map. */
+  /**
+   * The wrapped map. It may be modifiable, but it will not be modified via this {@code
+   * UnmodifiableIdentityHashMap}.
+   */
   private final IdentityHashMap<K, V> map;
 
   /**
@@ -127,6 +131,8 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
     return map.hashCode();
   }
 
+  // TODO: Implement `clone()`.
+
   @Override
   public Set<K> keySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
     return Collections.unmodifiableSet(map.keySet());
@@ -139,7 +145,7 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
 
   @Override
   public Set<Map.Entry<K, V>> entrySet(@GuardSatisfied UnmodifiableIdentityHashMap<K, V> this) {
-    return Collections.unmodifiableSet(map.entrySet());
+    return Collections.unmodifiableMap(map).entrySet();
   }
 
   // `action` has no side effects on the map, because it is only passed keys and values.
@@ -168,10 +174,7 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
     throw new UnsupportedOperationException();
   }
 
-  @SuppressWarnings({
-    "lock:unneeded.suppression", // see immediately below
-    "lock:override.param" // needed in Java 21, not needed in Java 8 or 11; not sure about Java 17
-  })
+  @SuppressWarnings({"lock:unneeded.suppression", "lock:override.param"})
   @Override
   public boolean remove(
       @GuardSatisfied @UnknownSignedness Object key,
@@ -196,20 +199,20 @@ public class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
   }
 
   @Override
-  public @PolyNull V computeIfPresent(
-      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public @Nullable V computeIfPresent(
+      K key, BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @PolyNull V compute(
-      K key, BiFunction<? super K, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public @Nullable V compute(
+      K key, BiFunction<? super K, ? super V, ? extends @Nullable V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public @PolyNull V merge(
-      K key, V value, BiFunction<? super V, ? super V, ? extends @PolyNull V> remappingFunction) {
+  public @Nullable V merge(
+      K key, V value, BiFunction<? super V, ? super V, ? extends @Nullable V> remappingFunction) {
     throw new UnsupportedOperationException();
   }
 }

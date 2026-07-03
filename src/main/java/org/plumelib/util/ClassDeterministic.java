@@ -13,7 +13,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Deterministic versions of {@code java.lang.Class} methods, which return arrays in sorted order.
  */
-public class ClassDeterministic {
+public final class ClassDeterministic {
 
   /** Do not call; this class is a collection of methods and does not represent anything. */
   private ClassDeterministic() {
@@ -74,9 +74,8 @@ public class ClassDeterministic {
    *
    * @param <T> the class's type parameter
    * @param c the Class whose enum constants to return
-   * @return the class's enum constants
+   * @return the class's enum constants, or null if the argument is not an enum class
    */
-  @SuppressWarnings("signedness") // ToStringComparator problem
   public static <@Interned T> T @Nullable [] getEnumConstants(Class<T> c) {
     @NonNull T[] result = c.getEnumConstants();
     if (result == null) {
@@ -176,7 +175,7 @@ public class ClassDeterministic {
   // }
 
   /** Compares Annotation objects by type name. */
-  static AnnotationComparator annotationComparator = new AnnotationComparator();
+  private static AnnotationComparator annotationComparator = new AnnotationComparator();
 
   /** Compares Annotation objects by type name. */
   private static class AnnotationComparator implements Comparator<Annotation> {
@@ -191,7 +190,7 @@ public class ClassDeterministic {
   }
 
   /** Compares Class objects by fully-qualified name. */
-  static ClassComparator classComparator = new ClassComparator();
+  private static ClassComparator classComparator = new ClassComparator();
 
   /** Compares Class objects by fully-qualified name. */
   private static class ClassComparator implements Comparator<Class<?>> {
@@ -209,7 +208,7 @@ public class ClassDeterministic {
    * Compares Method objects by signature: compares name, number of parameters, parameter type
    * names, declaring class, and return type (which is necessary to distinguish bridge methods).
    */
-  static MethodComparator methodComparator = new MethodComparator();
+  private static MethodComparator methodComparator = new MethodComparator();
 
   /**
    * Compares Method objects by signature: compares name, number of parameters, parameter type
@@ -262,7 +261,7 @@ public class ClassDeterministic {
    * Compares Constructor objects by signature: compares name, number of parameters, and parameter
    * type names.
    */
-  static ConstructorComparator constructorComparator = new ConstructorComparator();
+  private static ConstructorComparator constructorComparator = new ConstructorComparator();
 
   /**
    * Compares Constructor objects by signature: compares name, number of parameters, and parameter
@@ -299,7 +298,7 @@ public class ClassDeterministic {
   }
 
   /** Compares Field objects by name. */
-  static FieldComparator fieldComparator = new FieldComparator();
+  private static FieldComparator fieldComparator = new FieldComparator();
 
   /** Compares Field objects by name. */
   private static class FieldComparator implements Comparator<Field> {
@@ -318,7 +317,7 @@ public class ClassDeterministic {
   }
 
   /** Compares objects by the result of toString(). */
-  static ToStringComparator toStringComparator = new ToStringComparator();
+  private static ToStringComparator toStringComparator = new ToStringComparator();
 
   /** Compares objects by the result of toString(). */
   private static class ToStringComparator implements Comparator<Object> {

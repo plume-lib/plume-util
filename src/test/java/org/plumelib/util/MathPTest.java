@@ -12,10 +12,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.junit.jupiter.api.Test;
 
-public final class MathPlumeTest {
+/** Test the MathP class. */
+final class MathPTest {
+
+  MathPTest() {}
 
   // ///////////////////////////////////////////////////////////////////////////
-  // Utility functions
+  // Helper functions
   //
 
   private static void assertArraysEquals(int @Nullable [] a1, int @Nullable [] a2) {
@@ -25,7 +28,7 @@ public final class MathPlumeTest {
     }
     assertTrue(result);
     //      assert(Arrays.equals(a1, a2),
-    //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+    //         "Arrays differ: " + ArraysP.toString(a1) + ", " + ArraysP.toString(a2));
   }
 
   private static void assertArraysEquals(long @Nullable [] a1, long @Nullable [] a2) {
@@ -35,22 +38,22 @@ public final class MathPlumeTest {
     }
     assertTrue(result);
     //      assert(Arrays.equals(a1, a2),
-    //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+    //         "Arrays differ: " + ArraysP.toString(a1) + ", " + ArraysP.toString(a2));
   }
 
   // private static void assertArraysEquals(double[] a1, double[] a2) {
   //   boolean result = Arrays.equals(a1, a2);
   //   if (!result) {
   //     System.out.println(
-  //         "Arrays differ: " + ArraysPlume.toString(a1) + ", " + ArraysPlume.toString(a2));
+  //         "Arrays differ: " + ArraysP.toString(a1) + ", " + ArraysP.toString(a2));
   //   }
   //   assertTrue(result);
   // }
 
   private static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<>(nums.length);
-    for (int i = 0; i < nums.length; i++) {
-      asList.add(nums[i]);
+    for (int num : nums) {
+      asList.add(num);
     }
     return asList.iterator();
   }
@@ -62,15 +65,15 @@ public final class MathPlumeTest {
     }
     int[] a = new int[v.size()];
     for (int i = 0; i < a.length; i++) {
-      a[i] = v.get(i).intValue();
+      a[i] = v.get(i);
     }
     return a;
   }
 
   // Test the utility functions
   @Test
-  public void testTestUtilPlume() {
-    int[] a = new int[] {3, 4, 5};
+  void testTestUtilP() {
+    int[] a = {3, 4, 5};
     assertArraysEquals(intIteratorArray(intArrayIterator(a)), a);
   }
 
@@ -78,52 +81,68 @@ public final class MathPlumeTest {
   // The tests themselves
   //
 
+  //
+  // Function versions of Java operators
+  //
+
+  /** Test negate(). */
   @Test
-  public void test_negate() {
+  void test_negate() {
 
     // int negate(int a)
-    assertTrue(MathPlume.negate(3) == -3);
-    assertTrue(MathPlume.negate(-22) == 22);
-    assertTrue(MathPlume.negate(0) == 0);
+    assertEquals(-3, MathP.negate(3));
+    assertEquals(22, MathP.negate(-22));
+    assertEquals(0, MathP.negate(0));
   }
 
+  /** Test bitwiseComplement(). */
   @Test
-  public void test_bitwiseComplement() {
+  void test_bitwiseComplement() {
 
     // int bitwiseComplement(int a)
-    assertTrue(MathPlume.bitwiseComplement(3) == -4);
-    assertTrue(MathPlume.bitwiseComplement(-22) == 21);
-    assertTrue(MathPlume.bitwiseComplement(0) == -1);
+    assertEquals(-4, MathP.bitwiseComplement(3));
+    assertEquals(21, MathP.bitwiseComplement(-22));
+    assertEquals(-1, MathP.bitwiseComplement(0));
   }
 
+  //
+  // sign
+  //
+
+  /** Test sign(). */
   @Test
-  public void test_sign() {
+  void test_sign() {
 
     // int sign(int a)
-    assertTrue(MathPlume.sign(3) == 1);
-    assertTrue(MathPlume.sign(-22) == -1);
-    assertTrue(MathPlume.sign(0) == 0);
+    assertEquals(1, MathP.sign(3));
+    assertEquals(-1, MathP.sign(-22));
+    assertEquals(0, MathP.sign(0));
   }
 
   @Test
-  public void test_pow() {
+  void test_pow() {
 
     // int pow(int base, int expt)
     try {
-      assertTrue(MathPlume.pow(3, 3) == 27);
-      assertTrue(MathPlume.pow(-5, 5) == -3125);
-      assertTrue(MathPlume.pow(22, 0) == 1);
-      assertTrue(MathPlume.pow(4, 6) == 4096);
-      assertTrue(MathPlume.pow(1, 222222) == 1);
-      assertTrue(MathPlume.pow(-2, 25) == -33554432);
+      assertEquals(27, MathP.pow(3, 3));
+      assertEquals(-3125, MathP.pow(-5, 5));
+      assertEquals(1, MathP.pow(22, 0));
+      assertEquals(4096, MathP.pow(4, 6));
+      assertEquals(1, MathP.pow(1, 222_222));
+      assertEquals(-33_554_432, MathP.pow(-2, 25));
       // This is beyond the precision.  Maybe return a long instead of an int?
-      // assertTrue(MathPlume.pow(-3, 25) == ...);
+      // assertTrue(MathP.pow(-3, 25) == ...);
     } catch (Exception e) {
       e.printStackTrace();
       throw new Error(e);
     }
+  }
+
+  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
+  @Test
+  void test_pow_exception() {
     try {
-      MathPlume.pow(3, -3);
+      MathP.pow(3, -3);
       throw new Error("Didn't throw ArithmeticException");
     } catch (ArithmeticException e) {
       // This is the expected behavior, so do nothing.
@@ -131,86 +150,96 @@ public final class MathPlumeTest {
   }
 
   @Test
-  public void test_gcd() {
+  void test_gcd() {
 
     // int gcd(int a, int b)
-    assertTrue(MathPlume.gcd(2, 50) == 2);
-    assertTrue(MathPlume.gcd(50, 2) == 2);
-    assertTrue(MathPlume.gcd(12, 144) == 12);
-    assertTrue(MathPlume.gcd(144, 12) == 12);
-    assertTrue(MathPlume.gcd(96, 144) == 48);
-    assertTrue(MathPlume.gcd(144, 96) == 48);
-    assertTrue(MathPlume.gcd(10, 25) == 5);
-    assertTrue(MathPlume.gcd(25, 10) == 5);
-    assertTrue(MathPlume.gcd(17, 25) == 1);
-    assertTrue(MathPlume.gcd(25, 17) == 1);
-    assertTrue(MathPlume.gcd(0, 10) == 10);
-    assertTrue(MathPlume.gcd(10, 0) == 10);
-    assertTrue(MathPlume.gcd(25, -10) == 5);
-    assertTrue(MathPlume.gcd(-25, -10) == 5);
-    assertTrue(MathPlume.gcd(-25, 10) == 5);
-    assertTrue(MathPlume.gcd(1, 10) == 1);
-    assertTrue(MathPlume.gcd(10, 1) == 1);
-    assertTrue(MathPlume.gcd(1, 0) == 1);
-    assertTrue(MathPlume.gcd(0, 1) == 1);
+    assertEquals(2, MathP.gcd(2, 50));
+    assertEquals(2, MathP.gcd(50, 2));
+    assertEquals(12, MathP.gcd(12, 144));
+    assertEquals(12, MathP.gcd(144, 12));
+    assertEquals(48, MathP.gcd(96, 144));
+    assertEquals(48, MathP.gcd(144, 96));
+    assertEquals(5, MathP.gcd(10, 25));
+    assertEquals(5, MathP.gcd(25, 10));
+    assertEquals(1, MathP.gcd(17, 25));
+    assertEquals(1, MathP.gcd(25, 17));
+    assertEquals(10, MathP.gcd(0, 10));
+    assertEquals(10, MathP.gcd(10, 0));
+    assertEquals(5, MathP.gcd(25, -10));
+    assertEquals(5, MathP.gcd(-25, -10));
+    assertEquals(5, MathP.gcd(-25, 10));
+    assertEquals(1, MathP.gcd(1, 10));
+    assertEquals(1, MathP.gcd(10, 1));
+    assertEquals(1, MathP.gcd(1, 0));
+    assertEquals(1, MathP.gcd(0, 1));
 
     // int gcd(int[] a)
-    assertTrue(MathPlume.gcd(new int[] {2, 50, 17}) == 1);
-    assertTrue(MathPlume.gcd(new int[] {2, 50, 17, 234, 7}) == 1);
-    assertTrue(MathPlume.gcd(new int[] {2, 50}) == 2);
-    assertTrue(MathPlume.gcd(new int[] {12, 144}) == 12);
-    assertTrue(MathPlume.gcd(new int[] {96, 144}) == 48);
-    assertTrue(MathPlume.gcd(new int[] {10, 25}) == 5);
-    assertTrue(MathPlume.gcd(new int[] {100, 10, 25}) == 5);
-    assertTrue(MathPlume.gcd(new int[] {768, 324}) == 12);
-    assertTrue(MathPlume.gcd(new int[] {2400, 48, 36}) == 12);
-    assertTrue(MathPlume.gcd(new int[] {2400, 72, 36}) == 12);
+    assertEquals(1, MathP.gcd(new int[] {2, 50, 17}));
+    assertEquals(1, MathP.gcd(new int[] {2, 50, 17, 234, 7}));
+    assertEquals(2, MathP.gcd(new int[] {2, 50}));
+    assertEquals(12, MathP.gcd(new int[] {12, 144}));
+    assertEquals(48, MathP.gcd(new int[] {96, 144}));
+    assertEquals(5, MathP.gcd(new int[] {10, 25}));
+    assertEquals(5, MathP.gcd(new int[] {100, 10, 25}));
+    assertEquals(12, MathP.gcd(new int[] {768, 324}));
+    assertEquals(12, MathP.gcd(new int[] {2400, 48, 36}));
+    assertEquals(12, MathP.gcd(new int[] {2400, 72, 36}));
 
     // int gcdDifferences(int[] a)
     // Weak set of tests, derived directly from those of "int gcd(int[] a)".
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 2, 52}) == 2);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 12, 156}) == 12);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 96, 240}) == 48);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 10, 35}) == 5);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 100, 110, 135}) == 5);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 768, 1092}) == 12);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 2400, 2448, 2484}) == 12);
-    assertTrue(MathPlume.gcdDifferences(new int[] {0, 2400, 2472, 2508}) == 12);
-    assertTrue(MathPlume.gcdDifferences(new int[] {5, 5, 5, 5}) == 0);
+    assertEquals(2, MathP.gcdDifferences(new int[] {0, 2, 52}));
+    assertEquals(12, MathP.gcdDifferences(new int[] {0, 12, 156}));
+    assertEquals(48, MathP.gcdDifferences(new int[] {0, 96, 240}));
+    assertEquals(5, MathP.gcdDifferences(new int[] {0, 10, 35}));
+    assertEquals(5, MathP.gcdDifferences(new int[] {0, 100, 110, 135}));
+    assertEquals(12, MathP.gcdDifferences(new int[] {0, 768, 1092}));
+    assertEquals(12, MathP.gcdDifferences(new int[] {0, 2400, 2448, 2484}));
+    assertEquals(12, MathP.gcdDifferences(new int[] {0, 2400, 2472, 2508}));
+    assertEquals(0, MathP.gcdDifferences(new int[] {5, 5, 5, 5}));
   }
 
+  /** Test mul(). */
   @Test
-  public void test_mod() {
-
-    // int modNonnegative(int x, int y)
-    assertTrue(MathPlume.modNonnegative(33, 5) == 3);
-    assertTrue(MathPlume.modNonnegative(-33, 5) == 2);
-    assertTrue(MathPlume.modNonnegative(33, -5) == 3);
-    assertTrue(MathPlume.modNonnegative(-33, -5) == 2);
+  void test_mul() {
+    // Tests go here.
   }
+
+  /** Test mod(). */
+  @Test
+  void test_mod() {
+    // int modNonnegative(int x, int y)
+    assertEquals(3, MathP.modNonnegative(33, 5));
+    assertEquals(2, MathP.modNonnegative(-33, 5));
+    assertEquals(3, MathP.modNonnegative(33, -5));
+    assertEquals(2, MathP.modNonnegative(-33, -5));
+  }
+
+  //
+  // Non-Modulus
+  //
 
   static class TestMissingNumbersIteratorInt {
     void test(int[] orig, boolean addEnds, int[] goalMissing) {
       Iterator<Integer> orig_iterator = intArrayIterator(orig);
       Iterator<Integer> missing_iterator =
-          new MathPlume.MissingNumbersIteratorInt(orig_iterator, addEnds);
+          new MathP.MissingNumbersIteratorInt(orig_iterator, addEnds);
       int[] missing = intIteratorArray(missing_iterator);
       assertArraysEquals(missing, goalMissing);
     }
   }
 
   @Test
-  public void test_missingNumbers() {
+  void test_missingNumbers() {
 
     // int[] missingNumbers(int[] nums)
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 5, 6, 7, 8}), new int[] {});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 6, 7, 8}), new int[] {5});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 8}), new int[] {5, 6, 7});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 5, 6, 8}), new int[] {4, 7});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 6, 8}), new int[] {4, 5, 7});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 5, 5, 6, 7, 8}), new int[] {});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 4, 4, 6, 6, 7, 8}), new int[] {5});
-    assertArraysEquals(MathPlume.missingNumbers(new int[] {3, 3, 3}), new int[] {});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 4, 5, 6, 7, 8}), new int[] {});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 4, 6, 7, 8}), new int[] {5});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 4, 8}), new int[] {5, 6, 7});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 5, 6, 8}), new int[] {4, 7});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 6, 8}), new int[] {4, 5, 7});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 4, 5, 5, 6, 7, 8}), new int[] {});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 4, 4, 6, 6, 7, 8}), new int[] {5});
+    assertArraysEquals(MathP.missingNumbers(new int[] {3, 3, 3}), new int[] {});
 
     TestMissingNumbersIteratorInt tmni = new TestMissingNumbersIteratorInt();
     tmni.test(new int[] {3, 4, 5, 6, 7, 8}, false, new int[] {});
@@ -232,7 +261,7 @@ public final class MathPlumeTest {
 
   static class TestModulus {
     void check(int[] nums, int @Nullable [] goalRm) {
-      int[] rm = MathPlume.modulus(nums);
+      int[] rm = MathP.modulus(nums);
       if (!Arrays.equals(rm, goalRm)) {
         throw new Error(
             "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
@@ -242,13 +271,13 @@ public final class MathPlumeTest {
       }
       int goalR = rm[0];
       int m = rm[1];
-      for (int i = 0; i < nums.length; i++) {
-        int r = nums[i] % m;
+      for (int num : nums) {
+        int r = num % m;
         if (r < 0) {
           r += m;
         }
         if (r != goalR) {
-          throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
+          throw new Error("Expected " + num + " % " + m + " = " + goalR + ", got " + r);
         }
       }
     }
@@ -257,7 +286,7 @@ public final class MathPlumeTest {
       // There would be no point to this:  it's testing
       // intIteratorArray, not the iterator version!
       // return check(intIteratorArray(itor), goalRm);
-      assertArraysEquals(MathPlume.modulusInt(itor), goalRm);
+      assertArraysEquals(MathP.modulusInt(itor), goalRm);
     }
 
     void checkIterator(int[] nums, int @Nullable [] goalRm) {
@@ -267,7 +296,7 @@ public final class MathPlumeTest {
 
   static class TestModulusLong {
     void check(long[] nums, long @Nullable [] goalRm) {
-      long[] rm = MathPlume.modulusLong(Arrays.stream(nums).iterator());
+      long[] rm = MathP.modulusLong(Arrays.stream(nums).iterator());
       if (!Arrays.equals(rm, goalRm)) {
         throw new Error(
             "Expected (r,m)=" + Arrays.toString(goalRm) + ", saw (r,m)=" + Arrays.toString(rm));
@@ -277,13 +306,13 @@ public final class MathPlumeTest {
       }
       long goalR = rm[0];
       long m = rm[1];
-      for (int i = 0; i < nums.length; i++) {
-        long r = nums[i] % m;
+      for (long num : nums) {
+        long r = num % m;
         if (r < 0) {
           r += m;
         }
         if (r != goalR) {
-          throw new Error("Expected " + nums[i] + " % " + m + " = " + goalR + ", got " + r);
+          throw new Error("Expected " + num + " % " + m + " = " + goalR + ", got " + r);
         }
       }
     }
@@ -292,7 +321,7 @@ public final class MathPlumeTest {
       // There would be no point to this:  it's testing
       // longIteratorArray, not the iterator version!
       // return check(longIteratorArray(itor), goalRm);
-      assertArraysEquals(MathPlume.modulusLong(itor), goalRm);
+      assertArraysEquals(MathP.modulusLong(itor), goalRm);
     }
 
     void checkIterator(long[] nums, long @Nullable [] goalRm) {
@@ -300,15 +329,15 @@ public final class MathPlumeTest {
     }
 
     void checkStrict(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
-      long[] rm = MathPlume.modulusStrictLong(Arrays.stream(nums).iterator(), false);
+      long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), false);
       if (goalRm == null) {
         assertNull(rm);
       } else {
         assertArraysEquals(goalRm, rm);
-        long modulus = goalRm[1];
         if (nums.length == 0) {
           throw new Error("this can't happen, because goalRm is not null");
         }
+        long modulus = goalRm[1];
         long first = nums[0];
         for (int i = 0; i < nums.length; i++) {
           assertEquals(nums[i], first + i * modulus);
@@ -317,16 +346,16 @@ public final class MathPlumeTest {
     }
 
     void checkStrictNonStrictEnds(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
-      long[] rm = MathPlume.modulusStrictLong(Arrays.stream(nums).iterator(), true);
+      long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), true);
       if (goalRm == null) {
         assertNull(rm);
       } else {
         assertArraysEquals(goalRm, rm);
-        long remainder = goalRm[0];
-        long modulus = goalRm[1];
         if (nums.length < 3) {
           throw new Error("this can't happen, because goalRm is not null");
         }
+        long remainder = goalRm[0];
+        long modulus = goalRm[1];
         assertEquals(remainder, nums[0] % modulus);
         assertEquals(remainder, nums[nums.length - 1] % modulus);
         long first = nums[1];
@@ -341,7 +370,7 @@ public final class MathPlumeTest {
     void checkStrict(int[] nums, int @Nullable [] goalRm) {
       check(nums, goalRm, true);
       Iterator<Integer> itor = intArrayIterator(nums);
-      assertArraysEquals(MathPlume.nonmodulusStrictInt(itor), goalRm);
+      assertArraysEquals(MathP.nonmodulusStrictInt(itor), goalRm);
     }
 
     void checkNonstrict(int[] nums, int @Nullable [] goalRm) {
@@ -351,9 +380,9 @@ public final class MathPlumeTest {
     void check(int[] nums, int @Nullable [] goalRm, boolean strict) {
       int[] rm;
       if (strict) {
-        rm = MathPlume.nonmodulusStrict(nums);
+        rm = MathP.nonmodulusStrict(nums);
       } else {
-        rm = MathPlume.nonmodulusNonstrict(nums);
+        rm = MathP.nonmodulusNonstrict(nums);
       }
       if (!Arrays.equals(rm, goalRm)) {
         throw new Error(
@@ -364,20 +393,31 @@ public final class MathPlumeTest {
       }
       int goalR = rm[0];
       int m = rm[1];
-      for (int i = 0; i < nums.length; i++) {
-        int r = nums[i] % m;
+      for (int num : nums) {
+        int r = num % m;
         if (r < 0) {
           r += m;
         }
         if (r == goalR) {
-          throw new Error("Expected inequality, saw " + nums[i] + " % " + m + " = " + r);
+          throw new Error("Expected inequality, saw " + num + " % " + m + " = " + r);
         }
       }
     }
   }
 
+  //
+  // Modulus
+  //
+
+  /** Test modNonnegative(). */
   @Test
-  public void test_modulus() {
+  void test_modNonnegative() {
+    // Tests go here.
+  }
+
+  /** Test modulus(). */
+  @Test
+  void test_modulus() {
 
     // int[] modulus(int[] nums)
     // int[] modulus(Iterator itor)

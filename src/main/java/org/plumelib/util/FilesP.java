@@ -12,9 +12,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +23,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.Writer;
+import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,15 +39,17 @@ import java.util.zip.GZIPOutputStream;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.mustcall.qual.Owning;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.regex.qual.Regex;
 import org.checkerframework.common.value.qual.IntVal;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
-public final class FilesPlume {
+@SuppressWarnings("PMD.CloseResource") // false positives; use Resource Leak Checker instead
+public final class FilesP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private FilesPlume() {
+  private FilesP() {
     throw new Error("do not instantiate");
   }
 
@@ -75,8 +77,9 @@ public final class FilesPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static @Owning InputStream newFileInputStream(Path path) throws IOException {
-    FileInputStream fis = new FileInputStream(path.toFile());
+  @Owning
+  public static InputStream newFileInputStream(Path path) throws IOException {
+    InputStream fis = Files.newInputStream(path);
     InputStream in;
     if (path.toString().endsWith(".gz")) {
       try {
@@ -104,7 +107,8 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning InputStream newFileInputStream(File file) throws IOException {
+  @Owning
+  public static InputStream newFileInputStream(File file) throws IOException {
     return newFileInputStream(file.toPath());
   }
 
@@ -122,9 +126,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file is not found
    */
   @SideEffectFree
-  public static @Owning InputStreamReader newFileReader(String filename)
+  @Owning
+  public static InputStreamReader newFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return newFileReader(new File(filename), null);
+    return newFileReader(new File(filename), (Charset) null);
   }
 
   /**
@@ -141,9 +146,38 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning InputStreamReader newFileReader(Path path)
+  @Owning
+  public static InputStreamReader newFileReader(Path path)
       throws FileNotFoundException, IOException {
-    return newFileReader(path.toFile(), null);
+    return newFileReader(path.toFile(), (Charset) null);
+  }
+
+  /**
+   * Returns a Reader for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param charset the name of a Charset to use when reading the file, or null to use UTF-8
+   * @return an InputStreamReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+  })
+  @SideEffectFree
+  @Owning
+  public static InputStreamReader newFileReader(Path path, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    InputStream in = newFileInputStream(path.toFile());
+    if (charset == null) {
+      charset = UTF_8;
+    }
+    return new InputStreamReader(in, charset);
   }
 
   /**
@@ -159,10 +193,16 @@ public final class FilesPlume {
    * @return an InputStreamReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newFileReader(Path,Charset)}
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @Deprecated(since = "2026-03-05")
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "JdkObsolete", // this method is deprecated
+  })
   @SideEffectFree
-  public static @Owning InputStreamReader newFileReader(Path path, @Nullable String charsetName)
+  @Owning
+  public static InputStreamReader newFileReader(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     InputStream in = newFileInputStream(path.toFile());
     InputStreamReader fileReader;
@@ -188,9 +228,31 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning InputStreamReader newFileReader(File file)
+  @Owning
+  public static InputStreamReader newFileReader(File file)
       throws FileNotFoundException, IOException {
-    return newFileReader(file, null);
+    return newFileReader(file, (Charset) null);
+  }
+
+  /**
+   * Returns a Reader for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charset the name of a Charset to use when reading the file, or null to use UTF-8
+   * @return an InputStreamReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SideEffectFree
+  @Owning
+  public static InputStreamReader newFileReader(File file, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    return newFileReader(file.toPath(), charset);
   }
 
   /**
@@ -207,8 +269,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
    */
+  @Deprecated(since = "2026-03-05")
   @SideEffectFree
-  public static @Owning InputStreamReader newFileReader(File file, @Nullable String charsetName)
+  @Owning
+  public static InputStreamReader newFileReader(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     return newFileReader(file.toPath(), charsetName);
   }
@@ -231,9 +295,10 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning BufferedReader newBufferedFileReader(String filename)
+  @Owning
+  public static BufferedReader newBufferedFileReader(String filename)
       throws FileNotFoundException, IOException {
-    return newBufferedFileReader(filename, null);
+    return newBufferedFileReader(filename, (Charset) null);
   }
 
   /**
@@ -250,9 +315,31 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning BufferedReader newBufferedFileReader(File file)
+  @Owning
+  public static BufferedReader newBufferedFileReader(File file)
       throws FileNotFoundException, IOException {
-    return newBufferedFileReader(file, null);
+    return newBufferedFileReader(file, (Charset) null);
+  }
+
+  /**
+   * Returns a BufferedReader for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param filename the possibly-compressed file to read
+   * @param charset the character set to use when reading the file, or null to use UTF-8
+   * @return a BufferedReader for filename
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SideEffectFree
+  @Owning
+  public static BufferedReader newBufferedFileReader(String filename, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    return newBufferedFileReader(new File(filename), charset);
   }
 
   /**
@@ -268,11 +355,37 @@ public final class FilesPlume {
    * @return a BufferedReader for filename
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newBufferedFileReader(String,Charset)}
    */
+  @Deprecated(since = "2026-03-05")
   @SideEffectFree
-  public static @Owning BufferedReader newBufferedFileReader(
-      String filename, @Nullable String charsetName) throws FileNotFoundException, IOException {
+  @Owning
+  public static BufferedReader newBufferedFileReader(String filename, @Nullable String charsetName)
+      throws FileNotFoundException, IOException {
     return newBufferedFileReader(new File(filename), charsetName);
+  }
+
+  /**
+   * Returns a BufferedReader for the file, accounting for the possibility that the file is
+   * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charset the character set to use when reading the file, or null to use UTF-8
+   * @return a BufferedReader for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SideEffectFree
+  @Owning
+  public static BufferedReader newBufferedFileReader(File file, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    Reader fileReader = newFileReader(file, charset);
+    return new BufferedReader(fileReader);
   }
 
   /**
@@ -288,11 +401,14 @@ public final class FilesPlume {
    * @return a BufferedReader for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newBufferedFileReader(File,Charset)}
    */
+  @Deprecated(since = "2026-03-05")
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
-  public static @Owning BufferedReader newBufferedFileReader(
-      File file, @Nullable String charsetName) throws FileNotFoundException, IOException {
+  @Owning
+  public static BufferedReader newBufferedFileReader(File file, @Nullable String charsetName)
+      throws FileNotFoundException, IOException {
     Reader fileReader = newFileReader(file, charsetName);
     return new BufferedReader(fileReader);
   }
@@ -311,7 +427,8 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning LineNumberReader newLineNumberFileReader(String filename)
+  @Owning
+  public static LineNumberReader newLineNumberFileReader(String filename)
       throws FileNotFoundException, IOException {
     return newLineNumberFileReader(new File(filename));
   }
@@ -331,9 +448,10 @@ public final class FilesPlume {
    */
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
-  public static @Owning LineNumberReader newLineNumberFileReader(File file)
+  @Owning
+  public static LineNumberReader newLineNumberFileReader(File file)
       throws FileNotFoundException, IOException {
-    Reader fileReader = newFileReader(file, null);
+    Reader fileReader = newFileReader(file, (Charset) null);
     return new LineNumberReader(fileReader);
   }
 
@@ -354,7 +472,8 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning OutputStream newFileOutputStream(Path path) throws IOException {
+  @Owning
+  public static OutputStream newFileOutputStream(Path path) throws IOException {
     return newFileOutputStream(path, false);
   }
 
@@ -377,9 +496,9 @@ public final class FilesPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static @Owning OutputStream newFileOutputStream(Path path, boolean append)
-      throws IOException {
-    FileOutputStream fis = new FileOutputStream(path.toFile(), append);
+  @Owning
+  public static OutputStream newFileOutputStream(Path path, boolean append) throws IOException {
+    OutputStream fis = Files.newOutputStream(path, append ? APPEND_OPTIONS : EMPTY_OPTIONS);
     OutputStream in;
     if (path.toString().endsWith(".gz")) {
       try {
@@ -394,6 +513,12 @@ public final class FilesPlume {
     return in;
   }
 
+  /** An array of options that includes only APPEND. */
+  private static final StandardOpenOption[] APPEND_OPTIONS = {APPEND};
+
+  /** An empty array of options. */
+  private static final StandardOpenOption[] EMPTY_OPTIONS = new StandardOpenOption[0];
+
   /**
    * Returns an OutputStream for the file, accounting for the possibility that the file is
    * compressed. (A file whose name ends with ".gz" is treated as compressed.)
@@ -407,7 +532,8 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning OutputStream newFileOutputStream(File file) throws IOException {
+  @Owning
+  public static OutputStream newFileOutputStream(File file) throws IOException {
     return newFileOutputStream(file.toPath());
   }
 
@@ -425,9 +551,10 @@ public final class FilesPlume {
    * @throws FileNotFoundException if the file is not found
    */
   @SideEffectFree
-  public static @Owning OutputStreamWriter newFileWriter(String filename)
+  @Owning
+  public static OutputStreamWriter newFileWriter(String filename)
       throws FileNotFoundException, IOException {
-    return newFileWriter(new File(filename), null);
+    return newFileWriter(new File(filename), (Charset) null);
   }
 
   /**
@@ -444,9 +571,38 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning OutputStreamWriter newFileWriter(Path path)
+  @Owning
+  public static OutputStreamWriter newFileWriter(Path path)
       throws FileNotFoundException, IOException {
-    return newFileWriter(path.toFile(), null);
+    return newFileWriter(path.toFile(), (Charset) null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param path the possibly-compressed file to read
+   * @param charset the charset to use when reading the file, or null to use UTF-8
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+  })
+  @SideEffectFree
+  @Owning
+  public static OutputStreamWriter newFileWriter(Path path, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    OutputStream in = newFileOutputStream(path.toFile());
+    if (charset == null) {
+      charset = UTF_8;
+    }
+    return new OutputStreamWriter(in, charset);
   }
 
   /**
@@ -462,10 +618,16 @@ public final class FilesPlume {
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link newFileWriter(Path,Charset)}
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @Deprecated(since = "2026-03-05")
+  @SuppressWarnings({
+    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "JdkObsolete", // this method is deprecated
+  })
   @SideEffectFree
-  public static @Owning OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
+  @Owning
+  public static OutputStreamWriter newFileWriter(Path path, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     OutputStream in = newFileOutputStream(path.toFile());
     OutputStreamWriter fileWriter;
@@ -491,9 +653,31 @@ public final class FilesPlume {
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
-  public static @Owning OutputStreamWriter newFileWriter(File file)
+  @Owning
+  public static OutputStreamWriter newFileWriter(File file)
       throws FileNotFoundException, IOException {
-    return newFileWriter(file, null);
+    return newFileWriter(file, (Charset) null);
+  }
+
+  /**
+   * Returns a Writer for the file, accounting for the possibility that the file is compressed. (A
+   * file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>Warning: The "gzip" program writes and reads files containing concatenated gzip files. As of
+   * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
+   * files) after the first gzipped file.
+   *
+   * @param file the possibly-compressed file to read
+   * @param charset the charset to use when reading the file, or null to use UTF-8
+   * @return an OutputStreamWriter for file
+   * @throws FileNotFoundException if the file cannot be found
+   * @throws IOException if there is trouble reading the file
+   */
+  @SideEffectFree
+  @Owning
+  public static OutputStreamWriter newFileWriter(File file, @Nullable Charset charset)
+      throws FileNotFoundException, IOException {
+    return newFileWriter(file.toPath(), charset);
   }
 
   /**
@@ -509,9 +693,12 @@ public final class FilesPlume {
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble reading the file
+   * @deprecated use {@link #newFileWriter(File,Charset)}
    */
+  @Deprecated(since = "2026-03-05")
   @SideEffectFree
-  public static @Owning OutputStreamWriter newFileWriter(File file, @Nullable String charsetName)
+  @Owning
+  public static OutputStreamWriter newFileWriter(File file, @Nullable String charsetName)
       throws FileNotFoundException, IOException {
     return newFileWriter(file.toPath(), charsetName);
   }
@@ -533,7 +720,8 @@ public final class FilesPlume {
    * @throws IOException if there is trouble writing the file
    */
   @SideEffectFree
-  public static @Owning BufferedWriter newBufferedFileWriter(String filename) throws IOException {
+  @Owning
+  public static BufferedWriter newBufferedFileWriter(String filename) throws IOException {
     return newBufferedFileWriter(filename, false);
   }
 
@@ -557,7 +745,8 @@ public final class FilesPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static @Owning BufferedWriter newBufferedFileWriter(String filename, boolean append)
+  @Owning
+  public static BufferedWriter newBufferedFileWriter(String filename, boolean append)
       throws IOException {
     if (filename.endsWith(".gz")) {
       return new BufferedWriter(
@@ -586,8 +775,9 @@ public final class FilesPlume {
    */
   @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
   @SideEffectFree
-  public static @Owning BufferedOutputStream newBufferedFileOutputStream(
-      String filename, boolean append) throws IOException {
+  @Owning
+  public static BufferedOutputStream newBufferedFileOutputStream(String filename, boolean append)
+      throws IOException {
     OutputStream os = newFileOutputStream(new File(filename).toPath(), append);
     return new BufferedOutputStream(os);
   }
@@ -632,7 +822,7 @@ public final class FilesPlume {
     "allcheckers:purity.not.deterministic.object.creation" // create local state
   })
   @Pure
-  public static String inferLineSeparator(String filename) throws IOException {
+  public static @Regex String inferLineSeparator(String filename) throws IOException {
     return inferLineSeparator(new File(filename));
   }
 
@@ -649,7 +839,7 @@ public final class FilesPlume {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @Pure
-  public static String inferLineSeparator(File file) throws IOException {
+  public static @Regex String inferLineSeparator(File file) throws IOException {
     try (BufferedReader r = newBufferedFileReader(file)) {
       int unix = 0;
       int dos = 0;
@@ -728,7 +918,7 @@ public final class FilesPlume {
       }
       return false;
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -779,7 +969,11 @@ public final class FilesPlume {
    */
   public static Path createTempFile(String prefix, String suffix, FileAttribute<?>... attrs)
       throws IOException {
-    return createTempFile(Paths.get(System.getProperty("java.io.tmpdir")), prefix, suffix, attrs);
+    String tmpDir = System.getProperty("java.io.tmpdir");
+    if (tmpDir == null) {
+      throw new IOException("System property 'java.io.tmpdir' is not set");
+    }
+    return createTempFile(Paths.get(tmpDir), prefix, suffix, attrs);
   }
 
   /**
@@ -798,10 +992,11 @@ public final class FilesPlume {
       Path dir, String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
     Path createdDir = Files.createDirectories(dir, attrs);
     for (int i = 1; i < Integer.MAX_VALUE; i++) {
-      File candidate = new File(createdDir.toFile(), prefix + i + suffix);
-      if (!candidate.exists()) {
-        System.out.println("Created " + candidate);
-        return candidate.toPath();
+      Path candidate = createdDir.resolve(prefix + i + suffix);
+      try {
+        return Files.createFile(candidate, attrs);
+      } catch (FileAlreadyExistsException e) {
+        // Try next number
       }
     }
     throw new Error("every file exists");
@@ -833,8 +1028,16 @@ public final class FilesPlume {
    * @see java.io.File#createTempFile(String, String, File)
    */
   public static File createTempDir(String prefix, String suffix) throws IOException {
+    String tmpDirProperty = System.getProperty("java.io.tmpdir");
+    if (tmpDirProperty == null) {
+      throw new IOException("System property 'java.io.tmpdir' is not set");
+    }
+    String userName = System.getProperty("user.name");
+    if (userName == null) {
+      throw new IOException("System property 'user.name' is not set");
+    }
     String fs = File.separator;
-    String path = System.getProperty("java.io.tmpdir") + fs + System.getProperty("user.name") + fs;
+    String path = tmpDirProperty + fs + userName + fs;
     File pathFile = new File(path);
     if (!pathFile.isDirectory()) {
       if (!pathFile.mkdirs()) {
@@ -850,7 +1053,9 @@ public final class FilesPlume {
     }
     // Now that we have created our directory, we should get rid
     // of the intermediate TempFile we created.
-    tmpfile.delete();
+    if (!tmpfile.delete()) {
+      throw new IOException("Could not delete temporary file: " + tmpfile);
+    }
     return tmpDir;
   }
 
@@ -878,6 +1083,42 @@ public final class FilesPlume {
       }
     }
     return dir.delete();
+  }
+
+  /**
+   * Creates a new directory. Like {@link Files#createDirectory}, but does not throw any checked
+   * exceptions.
+   *
+   * @param dir the directory to create
+   * @param attrs an optional list of file attributes to set atomically when creating the directory
+   * @return the directory
+   */
+  public static Path createDirectory(Path dir, FileAttribute<?>... attrs) {
+    try {
+      return Files.createDirectory(dir, attrs);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+    }
+  }
+
+  /**
+   * Creates a directory by creating all nonexistent parent directories first. Unlike the
+   * createDirectory method, an exception is not thrown if the directory could not be created
+   * because it already exists. Like {@link Files#createDirectories}, but does not throw any checked
+   * exceptions.
+   *
+   * @param dir the directory to create
+   * @param attrs an optional list of file attributes to set atomically when creating the directory
+   * @return the directory
+   */
+  public static Path createDirectories(Path dir, FileAttribute<?>... attrs) {
+    try {
+      return Files.createDirectories(dir, attrs);
+    } catch (IOException e) {
+      throw new UncheckedIOException(
+          "Cannot create directory " + dir + " = " + dir.toAbsolutePath(), e);
+    }
   }
 
   //
@@ -912,20 +1153,21 @@ public final class FilesPlume {
       }
       prefix = wildcard.substring(0, astloc);
       suffix = wildcard.substring(astloc + 1);
-      if (wildcard.indexOf('*') != -1) {
+      if (suffix.indexOf('*') != -1) {
         throw new Error("Multiple asterisks in wildcard argument: " + wildcard);
       }
     }
 
     @Override
     public boolean accept(File dir, String name) {
-      // TODO: This is incorrect.  For example, the wildcard "ax*xb" would match the string "axb".
-      return name.startsWith(prefix) && name.endsWith(suffix);
+      return name.length() >= prefix.length() + suffix.length()
+          && name.startsWith(prefix)
+          && name.endsWith(suffix);
     }
   }
 
-  /** The user's home directory. */
-  static final String userHome = System.getProperty("user.home");
+  /** The user's home directory, or null if the system property is not set. */
+  static final @Nullable String userHome = System.getProperty("user.home");
 
   /**
    * Does tilde expansion on a file name (to the user's home directory).
@@ -937,7 +1179,7 @@ public final class FilesPlume {
   public static File expandFilename(File name) {
     String path = name.getPath();
     String newname = expandFilename(path);
-    @SuppressWarnings({"interning", "ReferenceEquality"})
+    @SuppressWarnings({"interning", "ReferenceEquality", "PMD.UseEqualsToCompareStrings"})
     boolean changed = newname != path;
     if (changed) {
       return new File(newname);
@@ -955,6 +1197,9 @@ public final class FilesPlume {
   @SideEffectFree
   public static String expandFilename(String name) {
     if (name.contains("~")) {
+      if (userHome == null) {
+        throw new Error("Cannot expand filename: system property 'user.home' is not set");
+      }
       return name.replace("~", userHome);
     } else {
       return name;
@@ -998,7 +1243,7 @@ public final class FilesPlume {
   /**
    * Reads an Object from a File. This is a wrapper around {@link ObjectInputStream#readObject}, but
    * it takes a {@link File} as an argument. Note that use of that method can lead to security
-   * vulnerabilities.
+   * vulnerabilities. Only run the method on trusted files.
    *
    * @param file the file from which to read
    * @return the object read from the file
@@ -1052,9 +1297,9 @@ public final class FilesPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link #readString}
    */
-  // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
-  // "org.plumelib.util.FilesPlume")
-  @Deprecated // 2023-03-02
+  // @InlineMe(replacement = "FilesP.fileContents(file)", imports =
+  // "org.plumelib.util.FilesP")
+  @Deprecated(since = "2023-03-02")
   @SideEffectFree
   public static String readFile(File file) {
     return fileContents(file);
@@ -1075,25 +1320,10 @@ public final class FilesPlume {
   })
   @SideEffectFree
   public static String readString(Path path) {
-    // In Java 11:
-    // try {
-    //   return Files.readString(path, UTF_8);
-    // } catch (IOException e) {
-    //   throw new Error(e);
-    // }
-
-    try (BufferedReader reader = newBufferedFileReader(path.toFile())) {
-      StringBuilder contents = new StringBuilder();
-      String line = reader.readLine();
-      while (line != null) {
-        contents.append(line);
-        // Note that this converts line terminators!
-        contents.append(lineSep);
-        line = reader.readLine();
-      }
-      return contents.toString();
-    } catch (Exception e) {
-      throw new Error("Unexpected error in readString(" + path + ")", e);
+    try {
+      return Files.readString(path, UTF_8);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1106,7 +1336,7 @@ public final class FilesPlume {
    */
   @SideEffectFree
   public static List<String> readLinesRetainingSeparators(Path path) {
-    return StringsPlume.splitLinesRetainSeparators(readString(path));
+    return StringsP.splitLinesRetainSeparators(readString(path));
   }
 
   /**
@@ -1122,7 +1352,7 @@ public final class FilesPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link #readString}
    */
-  @Deprecated // 2024-04-14
+  @Deprecated(since = "2024-04-14")
   @SideEffectFree
   public static String fileContents(File file) {
     return readString(file.toPath());
@@ -1139,7 +1369,7 @@ public final class FilesPlume {
    * @param contents the text to put in the file
    * @deprecated use {@link #writeString(File, String)}
    */
-  @Deprecated // 2024-04-16
+  @Deprecated(since = "2024-04-16")
   public static void writeFile(File file, String contents) {
     writeString(file.toPath(), contents);
   }
@@ -1170,20 +1400,10 @@ public final class FilesPlume {
    * @param contents the text to put in the file
    */
   public static void writeString(Path path, String contents) {
-    // In Java 11:
-    // try {
-    //   Files.writeString(path, contents, StandardCharsets.UTF_8);
-    // } catch (Exception e) {
-    //   throw new Error("Unexpected error in writeFile(" + path + ")", e);
-    // }
-
-    try (Writer writer = Files.newBufferedWriter(path, UTF_8)) {
-      writer.write(contents, 0, contents.length());
+    try {
+      Files.writeString(path, contents, UTF_8);
     } catch (Exception e) {
-      Error newError = new Error("Unexpected error in writeString(" + path + ")", e);
-      newError.printStackTrace(System.out);
-      newError.printStackTrace(System.err);
-      throw newError;
+      throw new Error("Unexpected error in writeFile(" + path + ")", e);
     }
   }
 
@@ -1210,7 +1430,7 @@ public final class FilesPlume {
       }
     } catch (IOException e) {
       e.printStackTrace();
-      throw new Error(e);
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1318,10 +1538,14 @@ public final class FilesPlume {
         nextByte = is.read();
         utf8Bytes[i] = (byte) nextByte;
       }
+      @SuppressWarnings(
+          "PMD.UnnecessaryFullyQualifiedName" // Cannot use just `StandardCharsets.UTF_8` because of
+      // Index Checker dependent types.
+      )
       int codePoint = new String(utf8Bytes, StandardCharsets.UTF_8).codePointAt(0);
       return codePoint;
     } catch (IOException e) {
-      throw new Error("input stream = " + is, e);
+      throw new UncheckedIOException("input stream = " + is, e);
     }
   }
 
@@ -1331,15 +1555,26 @@ public final class FilesPlume {
    * The only valid values are 1, 2 3 or 4. If the byte has an invalid bit pattern an
    * IllegalArgumentException is thrown.
    *
-   * @param b The first byte of a UTF-8 character.
-   * @return The number of bytes for this UTF-* character.
-   * @throws IllegalArgumentException if the bit pattern is invalid.
+   * @param b the first byte of a UTF-8 character
+   * @return the number of bytes for this UTF-* character
    */
-  private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) throws IllegalArgumentException {
-    if ((b >= 0)) return 1; // Pattern is 0xxxxxxx.
-    if ((b >= (byte) 0b11000000) && (b <= (byte) 0b11011111)) return 2; // Pattern is 110xxxxx.
-    if ((b >= (byte) 0b11100000) && (b <= (byte) 0b11101111)) return 3; // Pattern is 1110xxxx.
-    if ((b >= (byte) 0b11110000) && (b <= (byte) 0b11110111)) return 4; // Pattern is 11110xxx.
+  private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) {
+    if ((b >= 0)) {
+      // Pattern is 0xxxxxxx.
+      return 1;
+    }
+    if ((b >= (byte) 0b11000000) && (b <= (byte) 0b11011111)) {
+      // Pattern is 110xxxxx.
+      return 2;
+    }
+    if ((b >= (byte) 0b11100000) && (b <= (byte) 0b11101111)) {
+      // Pattern is 1110xxxx.
+      return 3;
+    }
+    if ((b >= (byte) 0b11110000) && (b <= (byte) 0b11110111)) {
+      // Pattern is 11110xxx.
+      return 4;
+    }
     throw new IllegalArgumentException(); // Invalid first byte for UTF-8 character.
   }
 }

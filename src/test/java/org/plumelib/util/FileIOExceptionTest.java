@@ -1,3 +1,5 @@
 package org.plumelib.util;
 
-public final class FileIOExceptionTest {}
+final class FileIOExceptionTest {
+  FileIOExceptionTest() {}
+}

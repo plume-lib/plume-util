@@ -1,6 +1,8 @@
 package org.plumelib.util;
 
-public final class SystemPlumeTest {
+final class SystemPTest {
+
+  SystemPTest() {}
 
   // No tests. :-(
 
