@@ -44,17 +44,15 @@ public class FileIOException extends IOException {
   // Without a message (with a Throwable instead)
   //
 
-  // If cause is null, the super call throws a null pointer exception.
-  // This looks like a JDK bug.  12/9/2008
   /**
    * Create a FileIOException.
    *
    * @param cause the exception that occurred
    */
   public FileIOException(@Nullable Throwable cause) {
-    // The "super(Throwable)" constructor exists in Java 6 and later.
-    // For backward compatibility, use the initCause method instead.
-    initCause(cause);
+    // If cause is null, the super call throws a null pointer exception.
+    // This looks like a JDK bug.  12/9/2008
+    super(cause);
     fileName = null;
     lineNumber = -1;
   }
