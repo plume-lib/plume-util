@@ -37,7 +37,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.common.value.qual.StaticallyExecutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
-import org.plumelib.reflection.ReflectionP;
+import org.plumelib.reflection.ReflectionPlume;
 
 /** Utilities for manipulating arrays. This complements {@link java.util.Arrays}. */
 @SuppressWarnings("interning") // to do later
@@ -1906,9 +1906,9 @@ public final class ArraysP {
      */
     @Nullable Class<? extends @Nullable Object> leastUpperBound() {
       if (theArray != null) {
-        return ReflectionP.leastUpperBound(theArray);
+        return ReflectionPlume.leastUpperBound(theArray);
       } else if (theList != null) {
-        return ReflectionP.leastUpperBound(theList);
+        return ReflectionPlume.leastUpperBound(theList);
       } else {
         throw new Error("both fields are null");
       }
@@ -2031,7 +2031,7 @@ public final class ArraysP {
       // from the elements in the arrays.  It might be a subtype of T, though, which is incorrect.
       @SuppressWarnings("unchecked")
       Class<T> resultType =
-          ReflectionP.leastUpperBound(
+          ReflectionPlume.leastUpperBound(
               (Class<T>) a.leastUpperBound(), (Class<T>) b.leastUpperBound());
 
       if (resultType == null) {
