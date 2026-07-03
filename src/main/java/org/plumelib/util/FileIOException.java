@@ -18,7 +18,6 @@ import org.checkerframework.dataflow.qual.Pure;
  * This class extends IOException by also reporting a file name and line number at which the
  * exception occurred. It requires use of a {@link LineNumberReader}.
  */
-@SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 public class FileIOException extends IOException {
   /** Unique identifier for serialization. If you add or remove fields, change this number. */
   static final long serialVersionUID = 20050923L;
