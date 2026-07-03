@@ -45,7 +45,7 @@ public class FileIOException extends IOException {
   //
 
   // If cause is null, the super call throws a null pointer exception.
-  // This looks like a JDK bug.  -Plume 12/9/2008
+  // This looks like a JDK bug.  12/9/2008
   /**
    * Create a FileIOException.
    *

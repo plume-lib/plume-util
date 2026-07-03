@@ -11,10 +11,10 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /** Graph utility methods. This class does not model a graph: all methods are static. */
-public final class GraphPlume {
+public final class GraphP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private GraphPlume() {
+  private GraphP() {
     throw new Error("do not instantiate");
   }
 

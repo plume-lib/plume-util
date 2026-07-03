@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
-/** Utility functions for Map. For collections, see {@link CollectionsPlume}. */
+/** Utility functions for Map. For collections, see {@link CollectionsP}. */
 public final class MapsP {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -164,7 +164,7 @@ public final class MapsP {
     if (orig == null) {
       return null;
     }
-    M result = UtilPlume.clone(orig);
+    M result = UtilP.clone(orig);
     result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
       K oldKey = mapEntry.getKey();
@@ -191,7 +191,7 @@ public final class MapsP {
     if (orig == null) {
       return null;
     }
-    M result = UtilPlume.clone(orig);
+    M result = UtilP.clone(orig);
     result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
       K oldKey = mapEntry.getKey();
@@ -271,12 +271,12 @@ public final class MapsP {
     if (orig == null) {
       return null;
     }
-    M result = UtilPlume.clone(orig);
+    M result = UtilP.clone(orig);
     result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
       K oldKey = mapEntry.getKey();
-      K newKey = cloneKeys ? UtilPlume.clone(oldKey) : oldKey;
-      result.put(newKey, UtilPlume.clone(mapEntry.getValue()));
+      K newKey = cloneKeys ? UtilP.clone(oldKey) : oldKey;
+      result.put(newKey, UtilP.clone(mapEntry.getValue()));
     }
     return result;
   }
@@ -496,9 +496,9 @@ public final class MapsP {
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(
           linePrefix
-              + StringsPlume.toStringAndClass(e.getKey())
+              + StringsP.toStringAndClass(e.getKey())
               + " => "
-              + StringsPlume.toStringAndClass(e.getValue()));
+              + StringsP.toStringAndClass(e.getValue()));
     }
     return result.toString();
   }

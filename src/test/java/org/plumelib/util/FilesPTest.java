@@ -8,9 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
-final class FilesPlumeTest {
+final class FilesPTest {
 
-  FilesPlumeTest() {}
+  FilesPTest() {}
 
   // public static BufferedReader bufferedFileReader(String filename)
   // public static LineNumberReader lineNumberFileReader(String filename)
@@ -32,7 +32,7 @@ final class FilesPlumeTest {
   void test_canCreateAndWrite() {
 
     try {
-      assertTrue(FilesPlume.canCreateAndWrite(new File("TestPlume.java")));
+      assertTrue(FilesP.canCreateAndWrite(new File("TestCanCreateAndWrite.java")));
 
       // This test fails if run by the superuser (who can overwrite
       // any file).
@@ -40,15 +40,15 @@ final class FilesPlumeTest {
         File readOnly = new File("temp");
         readOnly.createNewFile();
         readOnly.setReadOnly();
-        assertFalse(FilesPlume.canCreateAndWrite(readOnly));
+        assertFalse(FilesP.canCreateAndWrite(readOnly));
         readOnly.delete();
       }
 
-      assertTrue(FilesPlume.canCreateAndWrite(new File("temp")));
-      assertFalse(FilesPlume.canCreateAndWrite(new File("temp/temp")));
+      assertTrue(FilesP.canCreateAndWrite(new File("temp")));
+      assertFalse(FilesP.canCreateAndWrite(new File("temp/temp")));
     } catch (IOException e) {
       e.printStackTrace();
-      fail("failure while testing FilesPlume.canCreateAndWrite(): " + e.toString());
+      fail("failure while testing FilesP.canCreateAndWrite(): " + e.toString());
     }
   }
 
