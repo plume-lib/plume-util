@@ -46,10 +46,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
 @SuppressWarnings("PMD.CloseResource") // false positives; use Resource Leak Checker instead
-public final class FilesPlume {
+public final class FilesP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private FilesPlume() {
+  private FilesP() {
     throw new Error("do not instantiate");
   }
 
@@ -1297,8 +1297,8 @@ public final class FilesPlume {
    * @return the entire contents of the reader, as a string
    * @deprecated use {@link #readString}
    */
-  // @InlineMe(replacement = "FilesPlume.fileContents(file)", imports =
-  // "org.plumelib.util.FilesPlume")
+  // @InlineMe(replacement = "FilesP.fileContents(file)", imports =
+  // "org.plumelib.util.FilesP")
   @Deprecated(since = "2023-03-02")
   @SideEffectFree
   public static String readFile(File file) {
@@ -1336,7 +1336,7 @@ public final class FilesPlume {
    */
   @SideEffectFree
   public static List<String> readLinesRetainingSeparators(Path path) {
-    return StringsPlume.splitLinesRetainSeparators(readString(path));
+    return StringsP.splitLinesRetainSeparators(readString(path));
   }
 
   /**

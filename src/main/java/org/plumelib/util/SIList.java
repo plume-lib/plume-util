@@ -479,7 +479,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     @Override
     public Iterator<E> iterator() {
-      return CollectionsPlume.iteratorPlusOne(list.iterator(), lastElement);
+      return CollectionsP.iteratorPlusOne(list.iterator(), lastElement);
     }
 
     @Override
@@ -637,8 +637,8 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     @Override
     public Iterator<E> iterator() {
-      List<Iterator<E>> itors = CollectionsPlume.mapList(SIList::iterator, lists);
-      return CollectionsPlume.mergedIterator(itors.iterator());
+      List<Iterator<E>> itors = CollectionsP.mapList(SIList::iterator, lists);
+      return CollectionsP.mergedIterator(itors.iterator());
     }
   }
 

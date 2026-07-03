@@ -41,9 +41,9 @@ import org.plumelib.reflection.ReflectionPlume;
 
 /** Utilities for manipulating arrays. This complements {@link java.util.Arrays}. */
 @SuppressWarnings("interning") // to do later
-public final class ArraysPlume {
+public final class ArraysP {
   /** This class is a collection of methods; it does not represent anything. */
-  private ArraysPlume() {
+  private ArraysP() {
     throw new Error("do not instantiate");
   }
 
@@ -2421,7 +2421,7 @@ public final class ArraysPlume {
     StringJoiner sj = new StringJoiner(", ", "[", "]");
     for (Object elt : a) {
       if (quoted && elt instanceof String s) {
-        sj.add("\"" + StringsPlume.escapeJava(s) + "\"");
+        sj.add("\"" + StringsP.escapeJava(s) + "\"");
       } else {
         sj.add(Objects.toString(elt));
       }
@@ -2462,7 +2462,7 @@ public final class ArraysPlume {
     StringJoiner sj = new StringJoiner(", ", "[", "]");
     for (Object elt : a) {
       if (quoted && elt instanceof String s) {
-        sj.add("\"" + StringsPlume.escapeJava(s) + "\"");
+        sj.add("\"" + StringsP.escapeJava(s) + "\"");
       } else {
         sj.add(Objects.toString(elt));
       }
@@ -2621,8 +2621,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(boolean[] a) {
     return !hasDuplicates(a);
@@ -2672,8 +2672,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(byte[] a) {
     return !hasDuplicates(a);
@@ -2723,8 +2723,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(char[] a) {
     return !hasDuplicates(a);
@@ -2774,8 +2774,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(float[] a) {
     return !hasDuplicates(a);
@@ -2825,8 +2825,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(short[] a) {
     return !hasDuplicates(a);
@@ -2876,8 +2876,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(int[] a) {
     return !hasDuplicates(a);
@@ -2928,8 +2928,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(double[] a) {
     return !hasDuplicates(a);
@@ -2980,8 +2980,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(long[] a) {
     return !hasDuplicates(a);
@@ -3031,8 +3031,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(String[] a) {
     return !hasDuplicates(a);
@@ -3082,8 +3082,8 @@ public final class ArraysPlume {
    */
   @Deprecated(since = "2023-12-01")
   // @InlineMe(
-  //     replacement = "!ArraysPlume.hasDuplicates(a)",
-  //     imports = "org.plumelib.util.ArraysPlume")
+  //     replacement = "!ArraysP.hasDuplicates(a)",
+  //     imports = "org.plumelib.util.ArraysP")
   @Pure
   public static boolean noDuplicates(Object[] a) {
     return !hasDuplicates(a);
@@ -3110,7 +3110,7 @@ public final class ArraysPlume {
    * @param <T> the type of the elements
    * @param a a list
    * @return true iff a does not contain duplicate elements
-   * @deprecated use {@link CollectionsPlume#hasNoDuplicates}
+   * @deprecated use {@link CollectionsP#hasNoDuplicates}
    */
   @Deprecated(since = "2021-04-09")
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
@@ -3881,8 +3881,7 @@ public final class ArraysPlume {
   }
 
   /** Sorts arbitrary objects; used to determine equal. */
-  private static final StringsPlume.ObjectComparator objectComparator =
-      StringsPlume.ObjectComparator.it;
+  private static final StringsP.ObjectComparator objectComparator = StringsP.ObjectComparator.it;
 
   /**
    * Compare two arrays first by length (a shorter array is considered less), and if of equal length
@@ -4225,7 +4224,7 @@ public final class ArraysPlume {
    * which produces an array whose run-time type is {@code Object[]} even though its compile-time
    * type is {@code TO[]}. Import this method with
    *
-   * <pre>import static org.plumelib.util.ArraysPlume.mapArray;</pre>
+   * <pre>import static org.plumelib.util.ArraysP.mapArray;</pre>
    *
    * <p>To perform replacement in place, see {@link #replaceAll}.
    *
@@ -4270,7 +4269,7 @@ public final class ArraysPlume {
       return result;
     }
 
-    List<TO> resultList = CollectionsPlume.mapList(f, iterable);
+    List<TO> resultList = CollectionsP.mapList(f, iterable);
     int len = ((Collection<?>) iterable).size();
     @SuppressWarnings("unchecked") // reflection
     TO[] result = (TO[]) Array.newInstance(toClass, len);
@@ -4280,7 +4279,7 @@ public final class ArraysPlume {
     return result;
 
     // This does not work, because the underlying array has Object[] type at run time.
-    // return (TO[]) ((List<TO>) CollectionsPlume.mapList(f, a)).toArray();
+    // return (TO[]) ((List<TO>) CollectionsP.mapList(f, a)).toArray();
   }
 
   /**
@@ -4299,7 +4298,7 @@ public final class ArraysPlume {
    * which produces an array whose run-time type is {@code Object[]} even though its compile-time
    * type is {@code TO[]}. Import this method with
    *
-   * <pre>import static org.plumelib.util.ArraysPlume.mapArray;</pre>
+   * <pre>import static org.plumelib.util.ArraysP.mapArray;</pre>
    *
    * <p>To perform replacement in place, see {@link #replaceAll}.
    *
@@ -4324,7 +4323,7 @@ public final class ArraysPlume {
     return result;
 
     // This does not work, because the underlying array has Object[] type at run time.
-    // return (TO[]) ((List<TO>) CollectionsPlume.mapList(f, a)).toArray();
+    // return (TO[]) ((List<TO>) CollectionsP.mapList(f, a)).toArray();
   }
 
   /**

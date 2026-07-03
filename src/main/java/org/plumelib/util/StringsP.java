@@ -33,10 +33,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * joining; quoting and escaping; whitespace; comparisons; StringTokenizer; debugging variants of
  * toString; diagnostic output; miscellaneous.
  */
-public final class StringsPlume {
+public final class StringsP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private StringsPlume() {
+  private StringsP() {
     throw new Error("do not instantiate");
   }
 
@@ -1142,7 +1142,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<Object> tokens(String str, String delim, boolean returnDelims) {
-    return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim, returnDelims));
+    return CollectionsP.makeArrayList(new StringTokenizer(str, delim, returnDelims));
   }
 
   /**
@@ -1159,7 +1159,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<Object> tokens(String str, String delim) {
-    return CollectionsPlume.makeArrayList(new StringTokenizer(str, delim));
+    return CollectionsP.makeArrayList(new StringTokenizer(str, delim));
   }
 
   /**
@@ -1175,7 +1175,7 @@ public final class StringsPlume {
   })
   @SideEffectFree
   public static List<Object> tokens(String str) {
-    return CollectionsPlume.makeArrayList(new StringTokenizer(str));
+    return CollectionsP.makeArrayList(new StringTokenizer(str));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1398,7 +1398,7 @@ public final class StringsPlume {
    *
    * @param m a map
    * @return a string representation of the map
-   * @deprecated use {@link CollectionsPlume#mapToStringAndClassMultiLine}
+   * @deprecated use {@link CollectionsP#mapToStringAndClassMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
@@ -1421,7 +1421,7 @@ public final class StringsPlume {
    *
    * @param m a map
    * @return a string representation of the map
-   * @deprecated use {@link CollectionsPlume#mapToStringAndClassMultiLine}
+   * @deprecated use {@link CollectionsP#mapToStringAndClassMultiLine}
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
@@ -1706,9 +1706,9 @@ public final class StringsPlume {
    * <p>Example uses:
    *
    * <pre>{@code
-   * StringsPlume.nvPlural(0, "fox", "was")  =  "0 foxes were"
-   * StringsPlume.nvPlural(1, "fox", "was")  =  "1 fox was"
-   * StringsPlume.nvPlural(2, "fox", "was")  =  "2 foxes were"
+   * StringsP.nvPlural(0, "fox", "was")  =  "0 foxes were"
+   * StringsP.nvPlural(1, "fox", "was")  =  "1 fox was"
+   * StringsP.nvPlural(2, "fox", "was")  =  "2 foxes were"
    * }</pre>
    *
    * @param n count

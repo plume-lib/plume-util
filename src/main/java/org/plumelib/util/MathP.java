@@ -20,10 +20,10 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Mathematical utilities. */
-public final class MathPlume {
+public final class MathP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private MathPlume() {
+  private MathP() {
     throw new Error("do not instantiate");
   }
 
@@ -801,8 +801,8 @@ public final class MathPlume {
    * @deprecated use {@link #modNonnegative(int, int)}
    */
   @Deprecated(since = "2020-02-20")
-  // @InlineMe(replacement = "MathPlume.modNonnegative(x, y)", imports =
-  // "org.plumelib.util.MathPlume")
+  // @InlineMe(replacement = "MathP.modNonnegative(x, y)", imports =
+  // "org.plumelib.util.MathP")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound int modPositive(
@@ -1046,7 +1046,7 @@ public final class MathPlume {
    */
   @Deprecated(since = "2020-02-20")
   // @InlineMe(replacement = "modNonnegative(x, y)", imports =
-  // "org.plumelib.util.MathPlume")
+  // "org.plumelib.util.MathP")
   @Pure
   @StaticallyExecutable
   public static @NonNegative @LessThan("#2") @PolyUpperBound long modPositive(
@@ -1493,7 +1493,7 @@ public final class MathPlume {
     if (nums.length == 0) {
       return null;
     }
-    int range = ArraysPlume.elementRange(nums);
+    int range = ArraysP.elementRange(nums);
     if (range > 65_536) {
       return null;
     }
@@ -1513,8 +1513,8 @@ public final class MathPlume {
     // Must not use regular modulus:  that can produce errors, eg
     // nonmodulusStrict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
     // modulusStrict.
-    CollectionsPlume.RemoveFirstAndLastIterator<Integer> missingNums =
-        new CollectionsPlume.RemoveFirstAndLastIterator<>(missing);
+    CollectionsP.RemoveFirstAndLastIterator<Integer> missingNums =
+        new CollectionsP.RemoveFirstAndLastIterator<>(missing);
     int[] result = modulusStrictInt(missingNums, false);
     if (result == null) {
       return result;
@@ -1536,7 +1536,7 @@ public final class MathPlume {
    */
   @SuppressWarnings("deprecation") // to be made package-private
   private static boolean checkFirstAndLastNonmodulus(
-      int @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Integer> rfali) {
+      int @ArrayLen(2) [] rm, CollectionsP.RemoveFirstAndLastIterator<Integer> rfali) {
     int r = rm[0];
     int m = rm[1];
     int first = rfali.getFirst();
@@ -1568,7 +1568,7 @@ public final class MathPlume {
   //   if (nums.length == 0) {
   //     return null;
   //   }
-  //   int range = ArraysPlume.elementRange(nums);
+  //   int range = ArraysP.elementRange(nums);
   //   if (range > 65536) {
   //     return null;
   //   }
@@ -1592,10 +1592,10 @@ public final class MathPlume {
     if (nums.length < 4) {
       return null;
     }
-    int maxModulus = Math.min(nums.length / 2, ArraysPlume.elementRange(nums) / 2);
+    int maxModulus = Math.min(nums.length / 2, ArraysP.elementRange(nums) / 2);
 
     // System.out.println("nums.length=" + nums.length + ", range=" +
-    // ArraysPlume.elementRange(nums) + ", maxModulus=" + maxModulus);
+    // ArraysP.elementRange(nums) + ", maxModulus=" + maxModulus);
 
     // no real sense checking 2, as commonModulus would have found it, but
     // include it to make this function stand on its own
@@ -1619,7 +1619,7 @@ public final class MathPlume {
       }
       // System.out.println("For m=" + m + ", numNonmodulus=" + numNonmodulus);
       if (numNonmodulus == 1) {
-        return new int[] {ArraysPlume.indexOf(hasModulus, false), m};
+        return new int[] {ArraysP.indexOf(hasModulus, false), m};
       }
     }
     return null;
@@ -1833,7 +1833,7 @@ public final class MathPlume {
     if (nums.length == 0) {
       return null;
     }
-    long range = ArraysPlume.elementRange(nums);
+    long range = ArraysP.elementRange(nums);
     if (range > 65_536) {
       return null;
     }
@@ -1852,8 +1852,8 @@ public final class MathPlume {
     // Must not use regular modulus:  that can produce errors, eg
     // nonmodulusStrict({1,2,3,5,6,7,9,11}) => {0,2}.  Thus, use
     // modulusStrict.
-    CollectionsPlume.RemoveFirstAndLastIterator<Long> missingNums =
-        new CollectionsPlume.RemoveFirstAndLastIterator<>(missing);
+    CollectionsP.RemoveFirstAndLastIterator<Long> missingNums =
+        new CollectionsP.RemoveFirstAndLastIterator<>(missing);
     long[] result = modulusStrictLong(missingNums, false);
     if (result == null) {
       return result;
@@ -1876,7 +1876,7 @@ public final class MathPlume {
   @SuppressWarnings("deprecation") // to be made package-private
   @Pure
   private static boolean checkFirstAndLastNonmodulus(
-      long @ArrayLen(2) [] rm, CollectionsPlume.RemoveFirstAndLastIterator<Long> rfali) {
+      long @ArrayLen(2) [] rm, CollectionsP.RemoveFirstAndLastIterator<Long> rfali) {
     long r = rm[0];
     long m = rm[1];
     long first = rfali.getFirst();
@@ -1908,7 +1908,7 @@ public final class MathPlume {
   //   if (nums.length == 0) {
   //     return null;
   //   }
-  //   long range = ArraysPlume.elementRange(nums);
+  //   long range = ArraysP.elementRange(nums);
   //   if (range > 65536) {
   //     return null;
   //   }
@@ -1932,10 +1932,10 @@ public final class MathPlume {
     if (nums.length < 4) {
       return null;
     }
-    int maxModulus = (int) Math.min(nums.length / 2, ArraysPlume.elementRange(nums) / 2);
+    int maxModulus = (int) Math.min(nums.length / 2, ArraysP.elementRange(nums) / 2);
 
     // System.out.println("nums.length=" + nums.length + ", range=" +
-    // ArraysPlume.elementRange(nums) + ", maxModulus=" + maxModulus);
+    // ArraysP.elementRange(nums) + ", maxModulus=" + maxModulus);
 
     // no real sense checking 2, as commonModulus would have found it, but
     // include it to make this function stand on its own
@@ -1959,7 +1959,7 @@ public final class MathPlume {
       }
       // System.out.println("For m=" + m + ", numNonmodulus=" + numNonmodulus);
       if (numNonmodulus == 1) {
-        return new long[] {ArraysPlume.indexOf(hasModulus, false), m};
+        return new long[] {ArraysP.indexOf(hasModulus, false), m};
       }
     }
     return null;

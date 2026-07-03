@@ -16,7 +16,7 @@ junit-jupiter = "6.1.1"
 
 [libraries]
 
-checker-framework = "org.checkerframework:checker:4.2.1-SNAPSHOT"
+checker-framework = "org.checkerframework:checker:4.2.1"
 
 error-prone-core = "com.google.errorprone:error_prone_core:2.50.0"
 

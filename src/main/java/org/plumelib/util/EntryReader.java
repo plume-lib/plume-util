@@ -558,7 +558,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       CommentFormat commentFormat,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(FilesPlume.newFileReader(path), path.toString(), entryFormat, commentFormat, includeRegex);
+    this(FilesP.newFileReader(path), path.toString(), entryFormat, commentFormat, includeRegex);
   }
 
   /**
@@ -580,12 +580,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(
-        FilesPlume.newFileReader(path),
-        path.toString(),
-        entryFormat,
-        lineCommentRegex,
-        includeRegex);
+    this(FilesP.newFileReader(path), path.toString(), entryFormat, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -655,7 +650,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   @Deprecated(since = "2026-01-05")
   public EntryReader(Path path, String charsetName) throws IOException {
     this(
-        FilesPlume.newFileInputStream(path),
+        FilesP.newFileInputStream(path),
         charsetName,
         path.toString(),
         EntryFormat.DEFAULT,
@@ -681,7 +676,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       CommentFormat commentFormat,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(FilesPlume.newFileReader(file), file.toString(), entryFormat, commentFormat, includeRegex);
+    this(FilesP.newFileReader(file), file.toString(), entryFormat, commentFormat, includeRegex);
   }
 
   /**
@@ -703,12 +698,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex String lineCommentRegex,
       @Nullable @Regex(1) String includeRegex)
       throws IOException {
-    this(
-        FilesPlume.newFileReader(file),
-        file.toString(),
-        entryFormat,
-        lineCommentRegex,
-        includeRegex);
+    this(FilesP.newFileReader(file), file.toString(), entryFormat, lineCommentRegex, includeRegex);
   }
 
   /**
@@ -778,7 +768,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   @Deprecated(since = "2026-01-05")
   public EntryReader(File file, String charsetName) throws IOException {
     this(
-        FilesPlume.newFileInputStream(file),
+        FilesP.newFileInputStream(file),
         charsetName,
         file.toString(),
         EntryFormat.DEFAULT,
@@ -1124,7 +1114,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
               String.format(
                   "includeRegex (%s) does not capture group 1 in %s", includeRegex, line));
         }
-        File filename = new File(FilesPlume.expandFilename(filenameString));
+        File filename = new File(FilesP.expandFilename(filenameString));
         if (debug) {
           System.err.printf("Trying to include filename %s%n", filename);
         }
@@ -1515,7 +1505,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * @throws IOException if there is trouble reading the file
      */
     public FlnReader(String filename) throws IOException {
-      super(FilesPlume.newFileReader(filename));
+      super(FilesP.newFileReader(filename));
       this.filename = filename;
     }
   }

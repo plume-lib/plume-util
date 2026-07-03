@@ -10,10 +10,10 @@
  * <h3 id="Collections_and_iterators">Collections and iterators</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.ArraysPlume ArraysPlume}
+ *   <dt>{@link org.plumelib.util.ArraysP ArraysP}
  *   <dd>Utilities for manipulating arrays and collections. This complements java.util.Arrays and
  *       java.util.Collections.
- *   <dt>{@link org.plumelib.util.CollectionsPlume CollectionsPlume}
+ *   <dt>{@link org.plumelib.util.CollectionsP CollectionsP}
  *   <dd>Utilities for manipulating collections, iterators, lists, maps, and sets.
  *   <dt>{@link org.plumelib.util.CombinationIterator CombinationIterator}
  *   <dd>Given a set of collections, return all combinations that take one element from each
@@ -59,7 +59,7 @@
  *   <dt>{@link org.plumelib.util.FileIOException FileIOException}
  *   <dd>Extends IOException by also reporting a file name and line number at which the exception
  *       occurred.
- *   <dt>{@link org.plumelib.util.FilesPlume}
+ *   <dt>{@link org.plumelib.util.FilesP}
  *   <dd>Utility methods that create and manipulate files, directories, streams, readers, and
  *       writers.
  *   <dt>{@link org.plumelib.util.FileWriterWithName FileWriterWithName}
@@ -68,7 +68,7 @@
  *   <dt>{@link org.plumelib.util.RegexUtil RegexUtil}
  *   <dd>Utility methods for regular expressions, most notably for testing whether a string is a
  *       regular expression.
- *   <dt>{@link org.plumelib.util.StringsPlume}
+ *   <dt>{@link org.plumelib.util.StringsP}
  *   <dd>Utility methods that manipulate Strings: replacement; prefixing and indentation; splitting
  *       and joining; quoting and escaping; whitespace; comparisons; StringTokenizer; version
  *       numbers; debugging variants of toString; diagnostic output; miscellaneous.
@@ -86,7 +86,7 @@
  * <h3 id="Math">Math</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.MathPlume MathPlume}
+ *   <dt>{@link org.plumelib.util.MathP MathP}
  *   <dd>Mathematical utilities.
  *   <dt>{@link org.plumelib.util.FuzzyFloat FuzzyFloat}
  *   <dd>Routines for doing approximate ('fuzzy') floating point comparisons. Those are comparisons
@@ -137,14 +137,14 @@
  * <dl>
  *   <dt>{@link org.plumelib.util.DumpHeap DumpHeap}
  *   <dd>Dumps the heap into a {@code .hprof} file.
- *   <dt>{@link org.plumelib.util.SystemPlume SystemPlume}
+ *   <dt>{@link org.plumelib.util.SystemP SystemP}
  *   <dd>Utility methods relating to the JVM runtime system: sleep and garbage collection.
  * </dl>
  *
  * <h3 id="miscellaneous">Miscellaneous</h3>
  *
  * <dl>
- *   <dt>{@link org.plumelib.util.GraphPlume GraphPlume}
+ *   <dt>{@link org.plumelib.util.GraphP GraphP}
  *   <dd>Graph utility methods. This class does not model a graph: all methods are static.
  *   <dt>{@link org.plumelib.util.Intern Intern}
  *   <dd>Utilities for interning objects. Interning is also known as canonicalization or
@@ -159,7 +159,7 @@
  *       ways: cannot hold null, holds its elements with weak pointers, clients must use getter
  *       methods rather than accessing the fields, and its {@code equals()} method uses object
  *       equality to compare its elements.
- *   <dt>{@link org.plumelib.util.UtilPlume UtilPlume}
+ *   <dt>{@link org.plumelib.util.UtilP UtilP}
  *   <dd>Utility methods that do not belong elsewhere in the plume package: BitSet; File;
  *       directories; file names; reading and writing; hashing; ProcessBuilder; properties; Stream;
  *       Throwable.

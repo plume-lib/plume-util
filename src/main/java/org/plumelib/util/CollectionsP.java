@@ -44,10 +44,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
 @SuppressWarnings("PMD.ForLoopVariableCount")
-public final class CollectionsPlume {
+public final class CollectionsP {
 
   /** This class is a collection of methods; it does not represent anything. */
-  private CollectionsPlume() {
+  private CollectionsP() {
     throw new Error("do not instantiate");
   }
 
@@ -179,8 +179,8 @@ public final class CollectionsPlume {
    */
   @Deprecated(since = "2023-11-30")
   // @InlineMe(
-  //     replacement = "CollectionsPlume.hasNoDuplicates(a)",
-  //     imports = "org.plumelib.util.CollectionsPlume")
+  //     replacement = "CollectionsP.hasNoDuplicates(a)",
+  //     imports = "org.plumelib.util.CollectionsP")
   @Pure
   public static <T> boolean noDuplicates(Collection<T> a) {
     return hasNoDuplicates(a);
@@ -512,7 +512,7 @@ public final class CollectionsPlume {
    *
    * Import this method with
    *
-   * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
+   * <pre>import static org.plumelib.util.CollectionsP.mapList;</pre>
    *
    * This method is just like {@link #transform}, but with the arguments in the other order.
    *
@@ -617,7 +617,7 @@ public final class CollectionsPlume {
    *
    * <p>The point of this method is to make mapping operations more concise. Import it with
    *
-   * <pre>import static org.plumelib.util.CollectionsPlume.mapList;</pre>
+   * <pre>import static org.plumelib.util.CollectionsP.mapList;</pre>
    *
    * This method is just like {@link #transform}, but with the arguments in the other order.
    *
@@ -707,7 +707,7 @@ public final class CollectionsPlume {
    *
    * Import this method with
    *
-   * <pre>import static org.plumelib.util.CollectionsPlume.transform;</pre>
+   * <pre>import static org.plumelib.util.CollectionsP.transform;</pre>
    *
    * This method is just like {@link #mapList}, but with the arguments in the other order. To
    * perform replacement in place, see {@code List.replaceAll}.
@@ -744,10 +744,10 @@ public final class CollectionsPlume {
     if (orig == null) {
       return null;
     }
-    C result = UtilPlume.clone(orig);
+    C result = UtilP.clone(orig);
     result.clear();
     for (T elt : orig) {
-      result.add(UtilPlume.clone(elt));
+      result.add(UtilP.clone(elt));
     }
     return result;
   }
@@ -769,7 +769,7 @@ public final class CollectionsPlume {
     if (orig == null) {
       return null;
     }
-    C result = UtilPlume.clone(orig);
+    C result = UtilP.clone(orig);
     result.clear();
     for (T elt : orig) {
       result.add(DeepCopyable.deepCopyOrNull(elt));
@@ -795,8 +795,8 @@ public final class CollectionsPlume {
    */
   @Deprecated(since = "2023-11-30")
   // @InlineMe(
-  //     replacement = "CollectionsPlume.filter(coll, filter)",
-  //     imports = "org.plumelib.util.CollectionsPlume")
+  //     replacement = "CollectionsP.filter(coll, filter)",
+  //     imports = "org.plumelib.util.CollectionsP")
   public static <T> List<T> listFilter(Iterable<T> coll, Predicate<? super T> filter) {
     return filter(coll, filter);
   }
@@ -1612,7 +1612,7 @@ public final class CollectionsPlume {
    * two arguments.
    *
    * @param <T> the type of elements of the iterator
-   * @deprecated use {@link CollectionsPlume#mergedIterator2}
+   * @deprecated use {@link CollectionsP#mergedIterator2}
    */
   @Deprecated // make package-private
   public static final class MergedIterator2<T> implements Iterator<T> {
@@ -1627,7 +1627,7 @@ public final class CollectionsPlume {
      *
      * @param itor1 an Iterator
      * @param itor2 another Iterator
-     * @deprecated use {@link CollectionsPlume#mergedIterator2}
+     * @deprecated use {@link CollectionsP#mergedIterator2}
      */
     @Deprecated
     public MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
@@ -2141,7 +2141,7 @@ public final class CollectionsPlume {
     if (orig == null) {
       return null;
     }
-    M result = UtilPlume.clone(orig);
+    M result = UtilP.clone(orig);
     result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
       K oldKey = mapEntry.getKey();
@@ -2170,7 +2170,7 @@ public final class CollectionsPlume {
     if (orig == null) {
       return null;
     }
-    M result = UtilPlume.clone(orig);
+    M result = UtilP.clone(orig);
     result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
       K oldKey = mapEntry.getKey();
@@ -2256,12 +2256,12 @@ public final class CollectionsPlume {
     if (orig == null) {
       return null;
     }
-    M result = UtilPlume.clone(orig);
+    M result = UtilP.clone(orig);
     result.clear();
     for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
       K oldKey = mapEntry.getKey();
-      K newKey = cloneKeys ? UtilPlume.clone(oldKey) : oldKey;
-      result.put(newKey, UtilPlume.clone(mapEntry.getValue()));
+      K newKey = cloneKeys ? UtilP.clone(oldKey) : oldKey;
+      result.put(newKey, UtilP.clone(mapEntry.getValue()));
     }
     return result;
   }
@@ -2461,9 +2461,9 @@ public final class CollectionsPlume {
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(
           linePrefix
-              + StringsPlume.toStringAndClass(e.getKey())
+              + StringsP.toStringAndClass(e.getKey())
               + " => "
-              + StringsPlume.toStringAndClass(e.getValue()));
+              + StringsP.toStringAndClass(e.getValue()));
     }
     return result.toString();
   }
