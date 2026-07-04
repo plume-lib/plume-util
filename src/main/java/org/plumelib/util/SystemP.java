@@ -13,7 +13,10 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
-/** Utility methods relating to the JVM runtime system: sleep and garbage collection. */
+/**
+ * Utility methods relating to the JVM runtime system: system properties, sleep, garbage collection,
+ * and locating executables on the PATH.
+ */
 public final class SystemP {
 
   /** The Runtime instance for the current execution. */
@@ -294,10 +297,12 @@ public final class SystemP {
   //
 
   /**
-   * Returns the absolute path of a program that is on the system PATH.
+   * Returns the absolute path of a program that is on the system PATH, or null if the program is
+   * not found on the PATH. On Windows, if {@code programName} does not end with ".exe", then ".exe"
+   * is appended before searching.
    *
    * @param programName the name of the program
-   * @return the absolute path of the program
+   * @return the absolute path of the program, or null if it is not found on the PATH
    */
   public static @Nullable String pathToExecutable(String programName) {
     String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
