@@ -97,7 +97,7 @@ spotless {
     formatAnnotations()
   }
   // Run greclipse less, because of frequent "Failed to provision P2 dependencies".
-  if (JavaVersion.current() >= JavaVersion.VERSION_21) {
+  if (JavaVersion.current() >= JavaVersion.VERSION_25) {
     groovyGradle {
       target("**/*.gradle")
       greclipse()  // which formatter Spotless should use to format .gradle files.
