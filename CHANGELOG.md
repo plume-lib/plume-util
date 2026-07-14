@@ -10,6 +10,7 @@
 * Converted classes to records:
   * `CollectionsP.Replacement`
   * `EntryReader.Entry`
+* New class `UnionFind`; it supports obtaining sets and maintaining predicates.
 * New overloads of `UtilP.backticks()` that take a directory argument.
 * New method `SystemP.pathToExecutable()`.
 
