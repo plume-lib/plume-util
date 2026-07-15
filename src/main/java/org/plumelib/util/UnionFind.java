@@ -14,7 +14,8 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A union-find (disjoint-set) data structure.
+ * A union-find (disjoint-set) data structure. Elements must not be null. This class is not
+ * thread-safe.
  *
  * <p>The structure partitions its elements into disjoint sets. Each set has a distinguished
  * element, its <i>representative</i>. Two elements are in the same set if and only if they have the
@@ -46,11 +47,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *       and some {@code y} in {@code S2}.
  * </ul>
  *
- * <p>Query the lifted predicates through any member of the relevant set(s): see . Querying through
- * any member of a set gives the same answer as through any other member.
+ * <p>Querying through any member of a set gives the same answer as through any other member.
  *
- * <p>Both lifted predicates are existential ("there exists") properties, so they are monotonic: as
- * a set grows, the predicate can only change from false to true, never the reverse. Therefore
+ * <p>The lifted predicates are existential ("there exists") properties, so they are monotonic: as a
+ * set grows, the predicate can only change from false to true, never the reverse. Therefore
  * unioning preserves them:
  *
  * <ul>
@@ -64,10 +64,6 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  *
  * <p><b>Lazy evaluation and caching.</b> A lifted predicate's value for a set (or ordered pair of
  * sets) is computed on demand, cached, and incrementally maintained.
- *
- * <p>Elements must not be null.
- *
- * <p>This class is not thread-safe.
  *
  * @param <E> the type of the elements
  */
@@ -142,6 +138,9 @@ public class UnionFind<E extends Object> {
    * @return true if the element was added, false if it was already present
    */
   public boolean add(E e) {
+    if (e == null) {
+      throw new IllegalArgumentException("cannot add null to a UnionFind");
+    }
     if (parent.containsKey(e)) {
       return false;
     }
@@ -276,7 +275,8 @@ public class UnionFind<E extends Object> {
     List<E> loserMembers = members.get(loser);
     assert loserMembers != null : "@AssumeAssertion(nullness): loser was a representative";
     // The winner's members before the merge; that is, the elements of the winning set.
-    List<E> oldWinnerMembers = new ArrayList<>(membersOf(winner));
+    // It is not mutated by `maintainUnary()` or `maintainBinary()`.
+    List<E> oldWinnerMembers = membersOf(winner);
 
     maintainUnary(winner, loser, oldWinnerMembers, loserMembers);
     maintainBinary(winner, loser, oldWinnerMembers, loserMembers);
