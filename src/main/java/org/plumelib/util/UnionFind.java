@@ -257,6 +257,7 @@ public class UnionFind<E extends Object> {
         rank.put(winner, rankA + 1);
       }
     }
+    rank.remove(loser);
 
     transferMetadata(loser, winner);
 
@@ -281,7 +282,7 @@ public class UnionFind<E extends Object> {
     maintainUnary(winner, loser, oldWinnerMembers, loserMembers);
     maintainBinary(winner, loser, oldWinnerMembers, loserMembers);
 
-    membersOf(winner).addAll(loserMembers);
+    oldWinnerMembers.addAll(loserMembers);
     members.remove(loser);
   }
 
