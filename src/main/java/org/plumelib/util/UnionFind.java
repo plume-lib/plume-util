@@ -14,8 +14,9 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
- * A union-find (disjoint-set) data structure. Elements must not be null. This class is not
- * thread-safe.
+ * A union-find (disjoint-set) data structure. Elements must not be null. Elements are used as hash
+ * keys, so an element's {@code equals} and {@code hashCode} must not change while it is in the
+ * structure. This class is not thread-safe.
  *
  * <p>The structure partitions its elements into disjoint sets. Each set has a distinguished
  * element, its <i>representative</i>. Two elements are in the same set if and only if they have the
@@ -63,7 +64,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * </ul>
  *
  * <p><b>Lazy evaluation and caching.</b> A lifted predicate's value for a set (or ordered pair of
- * sets) is computed on demand, cached, and incrementally maintained.
+ * sets) is computed on demand, cached, and incrementally maintained. The binary-predicate cache can
+ * hold an entry per ordered pair of sets, so it may use space quadratic in the number of sets, and
+ * each {@link #union} scans the cached pairs to maintain them. Clients that query many cross-pairs
+ * among many small sets pay for this in time and space.
  *
  * @param <E> the type of the elements
  */
@@ -282,7 +286,16 @@ public class UnionFind<E extends Object> {
     maintainUnary(winner, loser, oldWinnerMembers, loserMembers);
     maintainBinary(winner, loser, oldWinnerMembers, loserMembers);
 
-    oldWinnerMembers.addAll(loserMembers);
+    // Combine the two member lists into one, which is stored under the winner (the representative of
+    // the merged set). Union by rank chooses the representative but does not bound the two sets'
+    // sizes, so append the smaller list to the larger one -- independent of which set won -- to keep
+    // total member-list maintenance to O(n log n).
+    if (oldWinnerMembers.size() >= loserMembers.size()) {
+      oldWinnerMembers.addAll(loserMembers);
+    } else {
+      loserMembers.addAll(oldWinnerMembers);
+      members.put(winner, loserMembers);
+    }
     members.remove(loser);
   }
 
