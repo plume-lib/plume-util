@@ -286,10 +286,10 @@ public class UnionFind<E extends Object> {
     maintainUnary(winner, loser, oldWinnerMembers, loserMembers);
     maintainBinary(winner, loser, oldWinnerMembers, loserMembers);
 
-    // Combine the two member lists into one, which is stored under the winner (the representative of
-    // the merged set). Union by rank chooses the representative but does not bound the two sets'
-    // sizes, so append the smaller list to the larger one -- independent of which set won -- to keep
-    // total member-list maintenance to O(n log n).
+    // Combine the two member lists into one, which is stored under the winner (the representative
+    // of the merged set). Union by rank chooses the representative but does not bound the two sets'
+    // sizes, so append the smaller list to the larger one -- independent of which set won -- to
+    // keep total member-list maintenance to O(n log n).
     if (oldWinnerMembers.size() >= loserMembers.size()) {
       oldWinnerMembers.addAll(loserMembers);
     } else {
