@@ -403,7 +403,8 @@ final class UnionFindTest {
     uf.union(1, 2); // {1, 2}; test(1,1) is never called, so the self-pair value stays uncomputed
     assertFalse(uf.test(1, 5)); // ({1,2}, {5}): (1,5),(2,5) fail; caches false
     uf.union(1, 5); // merged set is {1, 2, 5}
-    assertTrue(uf.test(1, 1)); // the pair (1, 2), inside the old winner members, satisfies successor
+    assertTrue(
+        uf.test(1, 1)); // the pair (1, 2), inside the old winner members, satisfies successor
   }
 
   @Test
