@@ -53,24 +53,23 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     * `./gradlew publishToMavenCentral`
     * In the clients' build.gradle: set version number and use:
 
-        ```gradle
-          repositories {
-            maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
-          }
-          configurations.all {
-            resolutionStrategy.cacheChangingModulesFor(0, "minutes")
-          }
-        ```
+       ```gradle
+       repositories {
+         maven {
+           url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+         }
+       }
+       ```
 
   * Approach 2:  to Maven Local
     * `./gradlew publishToMavenLocal`
     * In the clients' build.gradle: set version number and use:
 
-        ```gradle
-          repositories {
-            mavenLocal()
-          }
-        ```
+       ```gradle
+       repositories {
+         mavenLocal()
+       }
+       ```
 
 * Test the test snapshot release on some clients:
   * For the Checker Framework (don't skip running the tests):
@@ -79,7 +78,8 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     # This ensures that the correct JDK is being used
     usecf THE-BRANCH-THAT-USES-THE-SNAPSHOT
     cd $cf
-    checker/bin-devel/test-cftests-all.sh && checker/bin-devel/test-typecheck.sh && \
+    checker/bin-devel/test-cftests-all.sh && \
+    checker/bin-devel/test-typecheck.sh && \
     checker/bin-devel/test-plume-lib.sh
     ```
 

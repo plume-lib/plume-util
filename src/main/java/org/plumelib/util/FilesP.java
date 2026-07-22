@@ -45,7 +45,6 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility methods that create and manipulate files, directories, streams, readers, and writers. */
-@SuppressWarnings("PMD.CloseResource") // false positives; use Resource Leak Checker instead
 public final class FilesP {
 
   /** This class is a collection of methods; it does not represent anything. */
@@ -1115,7 +1114,7 @@ public final class FilesP {
     try {
       StringBuilder contents = new StringBuilder();
       int ch;
-      while ((ch = r.read()) != -1) {
+      while ((ch = r.read()) != -1) { // NOPMD
         contents.append((char) ch);
       }
       r.close();
@@ -1243,7 +1242,7 @@ public final class FilesP {
     List<String> outputLines = new ArrayList<>();
     try (BufferedReader rdr = new BufferedReader(new InputStreamReader(stream, UTF_8))) {
       String line;
-      while ((line = rdr.readLine()) != null) {
+      while ((line = rdr.readLine()) != null) { // NOPMD
         outputLines.add(line);
       }
     }
