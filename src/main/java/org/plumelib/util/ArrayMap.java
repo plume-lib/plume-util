@@ -76,7 +76,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     extends AbstractMap<K, V> implements Cloneable {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
-  // AbstractMap.SimpleEntry) instead of two arrays for lists and values.  That is a bad idea
+  // AbstractMap.SimpleEntry) instead of two arrays for keys and values.  That is a bad idea
   // because it both uses more memory and makes some operations more expensive.
 
   /** The keys. Null if capacity=0. */

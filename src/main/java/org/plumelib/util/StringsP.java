@@ -83,8 +83,8 @@ public final class StringsP {
    * @param target the string to do replacement in
    * @param oldStr the substring to replace
    * @param newStr the replacement
-   * @return the target with an occurrence of oldStr at the start replaced by newStr; returns the
-   *     target if it does not start with oldStr
+   * @return the target with an occurrence of oldStr at the end replaced by newStr; returns the
+   *     target if it does not end with oldStr
    */
   @SuppressWarnings("lowerbound:argument") // endsWith implies indexes fit
   @SideEffectFree

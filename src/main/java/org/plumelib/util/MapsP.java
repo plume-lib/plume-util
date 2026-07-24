@@ -202,10 +202,10 @@ public final class MapsP {
   }
 
   /**
-   * Creates a LRU cache.
+   * Creates an LRU cache.
    *
    * <p>You might want to consider using a {@code WeakHashMap} or {@code WeakIdentityHashMap}
-   * instead
+   * instead.
    *
    * @param <K> the type of keys
    * @param <V> the type of values

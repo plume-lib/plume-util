@@ -132,17 +132,17 @@ final class StringsPTest {
   void test_firstLineSeparator() {
     assertEquals(null, StringsP.firstLineSeparator("hello"));
     assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye"));
-    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revior"));
-    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));
-    assertEquals("\n", StringsP.firstLineSeparator("hello\n\rgoodbye\rau revior\r\nWindows"));
+    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revoir"));
+    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revoir\r\nWindows"));
+    assertEquals("\n", StringsP.firstLineSeparator("hello\n\rgoodbye\rau revoir\r\nWindows"));
 
     assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye"));
-    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revior"));
-    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revior\r\nWindows"));
+    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revoir"));
+    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revoir\r\nWindows"));
 
     assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye"));
-    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revior"));
-    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revior\rold MacOS"));
+    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revoir"));
+    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revoir\rold MacOS"));
   }
 
   /** Test splitLinesRetainSeparators(). */
@@ -662,7 +662,7 @@ final class StringsPTest {
   /** Test countFormatArguments(). */
   @Test
   void test_countFormatArguments() {
-    assertEquals(0, StringsP.countFormatArguments("No specifiier."));
+    assertEquals(0, StringsP.countFormatArguments("No specifier."));
     assertEquals(0, StringsP.countFormatArguments("This is 100%"));
     assertEquals(0, StringsP.countFormatArguments("This is 100%% excellent."));
     assertEquals(0, StringsP.countFormatArguments("Newline%n is not%na specifier."));

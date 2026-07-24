@@ -509,7 +509,7 @@ class ArrayMapTestApache {
     for (int i = -67; i < 68; i++) {
       map.put(i, "foobar");
     }
-    // Remove non equal object with same hashcode
+    // Remove non-equal object with same hashcode
     assertNull(map.remove(new MyKey()));
     assertEquals("foobar", map.get(0));
     map.remove(0);

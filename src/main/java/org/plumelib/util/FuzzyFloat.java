@@ -308,11 +308,11 @@ public class FuzzyFloat {
     public DoubleArrayComparatorLexical() {}
 
     /**
-     * Lexically compares o1 and o2 as double arrays.
+     * Lexically compares a1 and a2 as double arrays.
      *
      * @param a1 the first array to compare
      * @param a2 the second array to compare
-     * @return positive if o1 &gt; o2, 0 if o1 == o2, negative if o1 &lt; o2
+     * @return positive if a1 &gt; a2, 0 if a1 == a2, negative if a1 &lt; a2
      */
     @Pure
     @Override
