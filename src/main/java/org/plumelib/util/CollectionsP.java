@@ -865,8 +865,9 @@ public final class CollectionsP {
     /**
      * Creates a new Replacement.
      *
-     * @param start the first line to replace, inclusive; may be equal to {@code start}-1
-     * @param end the last line to replace, exclusive
+     * @param start the first line to replace, inclusive
+     * @param end the last line to replace, inclusive; may be {@code start}-1 to indicate an empty
+     *     range (an insertion)
      * @param elements the new (replacement) elements
      */
     public Replacement {

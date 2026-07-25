@@ -409,10 +409,16 @@ public final class FilesP {
     return in;
   }
 
-  /** An array of options that is equivalent to only APPEND. */
+  /**
+   * An array of options for appending to a file, creating it if it does not exist. CREATE is
+   * necessary because {@code Files.newOutputStream} implies CREATE only when no option is given.
+   */
   private static final StandardOpenOption[] APPEND_OPTIONS = {CREATE, APPEND};
 
-  /** An empty array of options. */
+  /**
+   * An empty array of options. {@code Files.newOutputStream} treats this as CREATE,
+   * TRUNCATE_EXISTING, and WRITE.
+   */
   private static final StandardOpenOption[] EMPTY_OPTIONS = new StandardOpenOption[0];
 
   /**
@@ -1281,7 +1287,7 @@ public final class FilesP {
     }
     try {
       is.mark(readLimit * 4); // each character is at most 4 bytes, usually much less
-      for (int bytesRead = 0; bytesRead < readLimit; bytesRead++) {
+      for (int codePointsRead = 0; codePointsRead < readLimit; codePointsRead++) {
         int nextCodePoint = readCodePoint(is);
         if (nextCodePoint == -1) {
           return true;
@@ -1305,8 +1311,15 @@ public final class FilesP {
   /**
    * Reads a Unicode code point from an input stream.
    *
+   * <p>If the stream ends in the middle of a multi-byte UTF-8 character, the truncated bytes are
+   * decoded, which yields the replacement character {@code U+FFFD}.
+   *
    * @param is an input stream
-   * @return the Unicode code point for the next character in the input stream
+   * @return the Unicode code point for the next character in the input stream, or -1 if the stream
+   *     is at end of file
+   * @throws IllegalArgumentException if the next byte is not a valid first byte of a UTF-8
+   *     character
+   * @throws UncheckedIOException if there is trouble reading the stream
    */
   public static int readCodePoint(InputStream is) {
     try {

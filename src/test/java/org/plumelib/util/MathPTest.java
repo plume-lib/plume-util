@@ -50,6 +50,24 @@ final class MathPTest {
   //   assertTrue(result);
   // }
 
+  /**
+   * Converts an array of longs to an array of ints. Throws an exception if some element is not
+   * representable as an int.
+   *
+   * @param a an array of longs, or null
+   * @return the same values as ints, or null if the argument is null
+   */
+  private static int @Nullable [] narrow(long @Nullable [] a) {
+    if (a == null) {
+      return null;
+    }
+    int[] result = new int[a.length];
+    for (int i = 0; i < a.length; i++) {
+      result[i] = Math.toIntExact(a[i]);
+    }
+    return result;
+  }
+
   private static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<>(nums.length);
     for (int num : nums) {
@@ -328,12 +346,39 @@ final class MathPTest {
       check(Arrays.stream(nums).iterator(), goalRm);
     }
 
+    /**
+     * Checks that {@code modulusStrict(int[], boolean)} agrees with {@code modulusStrict(long[],
+     * boolean)}. Does nothing if some element is not representable as an {@code int}.
+     *
+     * <p>This does not also compare {@code modulusStrictInt(Iterator, boolean)} with {@code
+     * modulusStrictLong(Iterator, boolean)}, because they currently disagree: only the latter has a
+     * fallback for the case that fewer than 3 elements are subject to the strict density
+     * requirement. For example, for {@code {3, 7, 11, 15}} with nonstrict ends, {@code
+     * modulusStrictLong} returns {@code {3, 4}} but {@code modulusStrictInt} returns null.
+     *
+     * @param nums the operands
+     * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
+     */
+    void checkStrictIntOverloads(long[] nums, boolean nonstrictEnds) {
+      int[] intNums = new int[nums.length];
+      for (int i = 0; i < nums.length; i++) {
+        if (nums[i] != (int) nums[i]) {
+          return;
+        }
+        intNums[i] = (int) nums[i];
+      }
+      assertArraysEquals(
+          narrow(MathP.modulusStrict(nums.clone(), nonstrictEnds)),
+          MathP.modulusStrict(intNums.clone(), nonstrictEnds));
+    }
+
     void checkStrict(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
       long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), false);
       // The array-based overload must agree with the iterator-based overload.  (In particular, a
       // constant array such as {5,5,5,5,5} must return null rather than dividing by a zero
       // modulus.)
       assertArraysEquals(rm, MathP.modulusStrict(nums.clone(), false));
+      checkStrictIntOverloads(nums, false);
       if (goalRm == null) {
         assertNull(rm);
       } else {
@@ -351,6 +396,7 @@ final class MathPTest {
 
     void checkStrictNonStrictEnds(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
       long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), true);
+      checkStrictIntOverloads(nums, true);
       if (goalRm == null) {
         assertNull(rm);
       } else {
@@ -481,6 +527,23 @@ final class MathPTest {
         new long[] {27, 3, 11, 19, 27, 203}, new long[] {3, 8});
     // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {27, 3, 11, 19, 27, -5}, new long[]
     // {3, 8});
+    // Regression tests: the remainder must be computed from an element that is subject to the
+    // strict density requirement, not from the (nonstrict) last endpoint.  The strict elements
+    // 7, 11, 15 are all 3 (mod 4), so an endpoint that is 1 (mod 4) must be rejected, even though
+    // both endpoints agree with each other.
+    testModulusLong.checkStrictNonStrictEnds(new long[] {1, 7, 11, 15, 5}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {1, 7, 11, 15, 19, 5}, null);
+    // The same values, with endpoints that do match the strict elements.
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15, 19, 23}, new long[] {3, 4});
+    // The same regression tests, for the int iterator overload.
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {1, 7, 11, 15, 5}), true));
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {1, 7, 11, 15, 19, 5}), true));
+    assertArraysEquals(
+        new int[] {3, 4},
+        MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11, 15, 19, 23}), true));
+
     testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11}, null);

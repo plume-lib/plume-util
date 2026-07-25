@@ -18,14 +18,14 @@ import org.checkerframework.dataflow.qual.Pure;
  * than the square of the fuzzy ratio.
  *
  * <p>Two NaN floats are not considered equal (consistent with the == operator).
+ *
+ * <p>This class is serializable so that its non-static inner class {@link
+ * DoubleArrayComparatorLexical}, which holds an implicit reference to the enclosing FuzzyFloat, can
+ * be serialized.
  */
 public class FuzzyFloat implements Serializable {
 
-  /**
-   * This class is serializable so that its non-static inner class {@link
-   * DoubleArrayComparatorLexical}, which holds an implicit reference to the enclosing FuzzyFloat,
-   * can be serialized.
-   */
+  /** serialVersionUID */
   static final long serialVersionUID = 20250723L;
 
   /** Default relative difference between two values such that this class considers them equal. */

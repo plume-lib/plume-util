@@ -246,7 +246,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({"unchecked"}) // generic array cast
   @EnsuresNonNull("values")
   private void grow() {
-    if (values == null) {
+    if (values == null || values.length == 0) {
       this.values = (E[]) new Object[4];
     } else {
       int newCapacity = 2 * values.length;
