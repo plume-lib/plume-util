@@ -71,7 +71,7 @@ Run these steps on any filesystem, except the `javadocWeb` step.
        }
        ```
 
-* Test the test snapshot release on some clients:
+* Test the snapshot release on some clients:
   * For the Checker Framework (don't skip running the tests):
 
     ```sh

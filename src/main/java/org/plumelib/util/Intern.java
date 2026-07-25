@@ -754,7 +754,7 @@ public final class Intern {
   @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static @Interned Double intern(Double a) {
-    // Double.NaN == Double.Nan  always evaluates to false.
+    // Double.NaN == Double.NaN  always evaluates to false.
     if (a.isNaN()) {
       return internedDoubleNaN;
     }
