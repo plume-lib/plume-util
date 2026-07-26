@@ -148,7 +148,7 @@ public final class FilesP {
   @SideEffectFree
   @Owning
   public static InputStreamReader newFileReader(Path path) throws IOException {
-    return newFileReader(path.toFile(), (Charset) null);
+    return newFileReader(path, (Charset) null);
   }
 
   /**
@@ -167,7 +167,7 @@ public final class FilesP {
   @Owning
   public static InputStreamReader newFileReader(Path path, @Nullable Charset charset)
       throws IOException {
-    InputStream in = newFileInputStream(path.toFile());
+    InputStream in = newFileInputStream(path);
     if (charset == null) {
       charset = UTF_8;
     }
@@ -394,7 +394,7 @@ public final class FilesP {
   @SideEffectFree
   @Owning
   public static OutputStreamWriter newFileWriter(Path path) throws IOException {
-    return newFileWriter(path.toFile(), (Charset) null);
+    return newFileWriter(path, (Charset) null);
   }
 
   /**
@@ -413,7 +413,7 @@ public final class FilesP {
   @Owning
   public static OutputStreamWriter newFileWriter(Path path, @Nullable Charset charset)
       throws IOException {
-    OutputStream in = newFileOutputStream(path.toFile());
+    OutputStream in = newFileOutputStream(path);
     if (charset == null) {
       charset = UTF_8;
     }
