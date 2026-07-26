@@ -1021,7 +1021,7 @@ public final class ArraysP {
   @Pure
   public static int indexOf(
       @PolyNull @PolySigned Object[] a, List<? extends @PolyNull @PolySigned Object> sub) {
-    int aIndexMax = a.length - sub.size() + 1;
+    int aIndexMax = a.length - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -3722,7 +3722,7 @@ public final class ArraysP {
   /**
    * Returns true if a contains null.
    *
-   * @param a an array
+   * @param a a list
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
@@ -3737,7 +3737,7 @@ public final class ArraysP {
   /**
    * Returns true if all elements of a are null.
    *
-   * @param a an array
+   * @param a a list
    * @return true iff all elements of a are null (unspecified result if a is zero-sized)
    */
   @Pure
@@ -4009,8 +4009,10 @@ public final class ArraysP {
       return result;
     }
 
+    // iterable is not a Collection here, so use the mapped list's size rather than casting
+    // iterable.
     List<TO> resultList = CollectionsP.mapList(f, iterable);
-    int len = ((Collection<?>) iterable).size();
+    int len = resultList.size();
     @SuppressWarnings("unchecked") // reflection
     TO[] result = (TO[]) Array.newInstance(toClass, len);
     for (int i = 0; i < result.length; i++) {

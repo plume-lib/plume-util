@@ -8,8 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -1130,6 +1132,55 @@ final class ArraysPTest {
         ArraysP.<Integer, String>mapArray(i -> i.toString(), iota, String.class);
     assertArrayEquals(iotaStringGoal, iotaStringActual);
     assertEquals(String.class, iotaStringActual.getClass().getComponentType());
+
+    // A List is a RandomAccess Collection.
+    List<Integer> iotaList = List.of(0, 1, 2, 3);
+    assertArrayEquals(
+        iotaStringGoal,
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), iotaList, String.class));
+
+    // A Collection that is not RandomAccess.
+    assertArrayEquals(
+        iotaStringGoal,
+        ArraysP.<Integer, String>mapArray(
+            i -> i.toString(), new ArrayDeque<>(iotaList), String.class));
+
+    // An Iterable that is not a Collection.
+    Iterable<Integer> iotaIterable = new NonCollectionIterable<>(iotaList);
+    assertArrayEquals(
+        iotaStringGoal,
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), iotaIterable, String.class));
+
+    // An empty Iterable that is not a Collection.
+    Iterable<Integer> emptyIterable = new NonCollectionIterable<>(List.of());
+    assertArrayEquals(
+        new String[0],
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), emptyIterable, String.class));
+  }
+
+  /**
+   * An Iterable that is not a Collection, for testing the code path that cannot obtain a size in
+   * advance.
+   *
+   * @param <T> the type of elements
+   */
+  private static class NonCollectionIterable<T> implements Iterable<T> {
+    /** The elements. */
+    private final List<T> elements;
+
+    /**
+     * Creates a NonCollectionIterable.
+     *
+     * @param elements the elements
+     */
+    NonCollectionIterable(List<T> elements) {
+      this.elements = elements;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+      return elements.iterator();
+    }
   }
 
   // //////////////////////////////////////////////////////////////////////
