@@ -201,7 +201,7 @@ final class StringsPTest {
   }
 
   /** Test escapeJava(). */
-  @SuppressWarnings({"UnicodeEscape", "PMD.SuspiciousOctalEscape"})
+  @SuppressWarnings({"UnicodeEscape"})
   @Test
   void test_escapeJava() {
 
