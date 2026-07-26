@@ -1,7 +1,7 @@
-buildscript {
-  if (JavaVersion.current() < JavaVersion.VERSION_17) {
-    throw new GradleException("Use Java 17 or later.")
-  }
+plugins {
+  // Downloads a JDK if the Java toolchain that the build requests is not
+  // installed locally.
+  id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 // Project name is read-only in build scripts, and defaults to directory name.

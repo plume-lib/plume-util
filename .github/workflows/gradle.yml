@@ -16,11 +16,14 @@ jobs:
         with:
           fetch-depth: 1
           show-progress: false
+      # Java 21 is always needed, because compilation always uses Java 21.
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
-          java-version: ${{ matrix.java }}
+          java-version: |
+            21
+            ${{ matrix.java }}
           check-latest: true
           cache: 'gradle'
       - name: java -version
@@ -28,4 +31,4 @@ jobs:
       - name: Warm up Gradle cache
         run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
       - name: ./gradlew build
-        run: ./gradlew build
+        run: ./gradlew build -PtestJavaVersion=${{ matrix.java }}

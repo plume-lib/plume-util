@@ -11,7 +11,9 @@ build
 .mtj.tmp/
 
 # Package Files #
-*.jar # Need to commit gradle-wrapper.jar file
+# ".gitignore" supports only whole-line comments, so the comment about
+# gradle-wrapper.jar cannot appear at the end of the "*.jar" line.
+*.jar
 *.war
 *.nar
 *.ear
