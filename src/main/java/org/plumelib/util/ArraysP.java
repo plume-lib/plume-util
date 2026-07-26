@@ -3707,7 +3707,7 @@ public final class ArraysP {
    * Returns true if all elements of a are null.
    *
    * @param a an array
-   * @return true iff all elements of a are null (unspecified result if a is zero-sized)
+   * @return true iff all elements of a are null (true if a is zero-sized)
    */
   @Pure
   public static boolean allNull(@PolyNull Object[] a) {
@@ -3738,7 +3738,7 @@ public final class ArraysP {
    * Returns true if all elements of a are null.
    *
    * @param a a list
-   * @return true iff all elements of a are null (unspecified result if a is zero-sized)
+   * @return true iff all elements of a are null (true if a is zero-sized)
    */
   @Pure
   public static boolean allNull(List<?> a) {

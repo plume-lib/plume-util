@@ -393,7 +393,7 @@ final class ArraysPTest {
   }
 
   @Test
-  void test_indexOf_array_list() {
+  void test_indexOf_subsequence() {
 
     // public static int indexOf(Object[] a, List<?> sub)
     // public static int indexOfEq(Object[] a, List<?> sub)
@@ -456,7 +456,9 @@ final class ArraysPTest {
     assertEquals(-1, ArraysP.indexOfEq(a, tooLong));
 
     // Elements equal to, but not identical to, the last two elements of a.  The equals-based
-    // methods find them; the ==-based methods do not.
+    // methods find them; the ==-based methods do not.  The round trip through a char array is a
+    // way to build an uninterned String that Error Prone accepts; Error Prone's StringConstructor
+    // check rejects the more obvious `new String(a.get(4))`.
     List<String> suffixCopy =
         Arrays.asList(
             String.valueOf(a.get(4).toCharArray()), String.valueOf(a.get(5).toCharArray()));
@@ -1309,9 +1311,8 @@ final class ArraysPTest {
    *
    * @param <T> the type of elements
    */
-  private static class RandomAccessIterable<T> implements Iterable<T>, RandomAccess {
-    /** The elements. */
-    private final List<T> elements;
+  private static class RandomAccessIterable<T> extends NonCollectionIterable<T>
+      implements RandomAccess {
 
     /**
      * Creates a RandomAccessIterable.
@@ -1319,12 +1320,7 @@ final class ArraysPTest {
      * @param elements the elements
      */
     RandomAccessIterable(List<T> elements) {
-      this.elements = elements;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-      return elements.iterator();
+      super(elements);
     }
   }
 
