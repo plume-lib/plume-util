@@ -94,7 +94,7 @@ tasks.withType(JavaCompile).configureEach {
 // Compilation always uses Java 21, but tests run under the version given by
 // `-PtestJavaVersion=NN` (default 21).  Continuous integration passes each
 // version of the build matrix.
-def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("21").get() as Integer
+def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("21").get()
 
 tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
@@ -106,8 +106,11 @@ tasks.withType(Test).configureEach {
     excludeEngines("junit-vintage")
   }
 
-  // Always re-run the tests, so that their output always appears.
+  // Always re-run the tests, so that their output always appears.  Both lines
+  // are needed:  "upToDateWhen" alone would still permit the build cache to
+  // supply the outputs of a previous run.
   outputs.upToDateWhen { false }
+  outputs.cacheIf { false }
 
   testLogging {
     showStandardStreams = true
@@ -328,5 +331,8 @@ tasks.register("tags", Exec) {
   }
   inputs.files(javaFiles)
   outputs.file(layout.projectDirectory.file("TAGS"))
-  commandLine(["etags"] + javaFiles.files.sort()*.absolutePath)
+  executable("etags")
+  // Compute the arguments when the task runs, not when it is configured, so
+  // that configuring the build does not scan the source tree.
+  argumentProviders.add({ javaFiles.files.sort()*.absolutePath } as CommandLineArgumentProvider)
 }

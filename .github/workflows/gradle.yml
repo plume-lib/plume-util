@@ -17,18 +17,24 @@ jobs:
           fetch-depth: 1
           show-progress: false
       # Java 21 is always needed, because compilation always uses Java 21.
+      # Java 21 is listed last, so that "setup-java" makes Java 21 the value of
+      # JAVA_HOME and therefore Gradle itself runs under Java 21.
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: |
-            21
             ${{ matrix.java }}
+            21
           check-latest: true
           cache: 'gradle'
       - name: java -version
         run: java -version
       - name: Warm up Gradle cache
         run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
+      # Gradle does not auto-detect the JDKs that "setup-java" installs, because
+      # they are in the tool cache rather than in a standard location.  Without
+      # "-Dorg.gradle.java.installations.fromEnv", Gradle would download a
+      # redundant copy of each JDK, into a directory that CI does not cache.
       - name: ./gradlew build
-        run: ./gradlew build -PtestJavaVersion=${{ matrix.java }}
+        run: ./gradlew build -PtestJavaVersion=${{ matrix.java }} -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_X64,JAVA_HOME_21_X64
