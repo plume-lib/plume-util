@@ -2,14 +2,15 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -103,38 +104,81 @@ final class ArrayMapAndSetTest {
         entriesResult);
   }
 
+  // These tests compare against the whole of repr(), rather than testing that repr() does not
+  // contain the removed element.  A containment test would pass vacuously if repr() were ever
+  // changed to print only the first `size` slots rather than the entire arrays.
+
   @Test
   void removeAndClearDoNotRetainReferences() {
-    // Use distinctive strings, because repr() also contains text such as "size=2 capacity=4".
+    ArrayMap<String, String> am = new ArrayMap<>();
+    am.put("keyA", "valA");
+    am.put("keyB", "valB");
+    am.put("keyC", "valC");
+    assertEquals("size=3 capacity=4 [keyA, keyB, keyC, null] [valA, valB, valC, null]", am.repr());
+
+    am.remove("keyB");
+    assertEquals(new HashSet<>(Set.of("keyA", "keyC")), new HashSet<>(am.keySet()));
+    // The vacated slot is cleared, so it retains neither the removed key nor the removed value.
+    assertEquals("size=2 capacity=4 [keyA, keyC, null, null] [valA, valC, null, null]", am.repr());
+
+    am.clear();
+    assertTrue(am.isEmpty());
+    assertEquals("size=0 capacity=4 [null, null, null, null] [null, null, null, null]", am.repr());
+
+    ArraySet<String> as = new ArraySet<>();
+    as.add("eltX");
+    as.add("eltY");
+    assertEquals("size=2 capacity=4 [eltX, eltY, null, null]", as.repr());
+
+    as.remove("eltY");
+    assertEquals("size=1 capacity=4 [eltX, null, null, null]", as.repr());
+
+    as.clear();
+    assertTrue(as.isEmpty());
+    assertEquals("size=0 capacity=4 [null, null, null, null]", as.repr());
+  }
+
+  @Test
+  void removeThroughViewsDoesNotRetainReferences() {
     ArrayMap<String, String> am = new ArrayMap<>();
     am.put("keyA", "valA");
     am.put("keyB", "valB");
     am.put("keyC", "valC");
 
-    assertTrue(am.repr().contains("keyB"));
-    assertTrue(am.repr().contains("valB"));
-    am.remove("keyB");
-    assertEquals(new HashSet<>(Set.of("keyA", "keyC")), new HashSet<>(am.keySet()));
-    // The vacated slot is cleared, so it retains neither the removed key nor the removed value.
-    assertFalse(am.repr().contains("keyB"));
-    assertFalse(am.repr().contains("valB"));
+    // Removal through the key set clears the vacated slot.
+    assertTrue(am.keySet().remove("keyA"));
+    assertEquals("size=2 capacity=4 [keyB, keyC, null, null] [valB, valC, null, null]", am.repr());
 
-    am.clear();
-    assertTrue(am.isEmpty());
-    assertFalse(am.repr().contains("keyA"));
-    assertFalse(am.repr().contains("valA"));
-    assertFalse(am.repr().contains("keyC"));
-    assertFalse(am.repr().contains("valC"));
+    // Removal through the entry set clears the vacated slot.
+    assertTrue(am.entrySet().remove(Map.entry("keyB", "valB")));
+    assertEquals("size=1 capacity=4 [keyC, null, null, null] [valC, null, null, null]", am.repr());
+
+    // Removal through a view's iterator clears the vacated slot.
+    Iterator<String> valueIterator = am.values().iterator();
+    valueIterator.next();
+    valueIterator.remove();
+    assertEquals("size=0 capacity=4 [null, null, null, null] [null, null, null, null]", am.repr());
 
     ArraySet<String> as = new ArraySet<>();
     as.add("eltX");
     as.add("eltY");
-    assertTrue(as.repr().contains("eltY"));
-    as.remove("eltY");
-    assertFalse(as.repr().contains("eltY"));
-    as.clear();
-    assertTrue(as.isEmpty());
-    assertFalse(as.repr().contains("eltX"));
+    Iterator<String> setIterator = as.iterator();
+    setIterator.next();
+    setIterator.remove();
+    assertEquals("size=1 capacity=4 [eltY, null, null, null]", as.repr());
+  }
+
+  @Test
+  void addToCollectionWithSpareCapacityDoesNotGrow() {
+    // Adding the first element to a collection that was allocated with spare capacity must not
+    // reallocate the representation.
+    ArraySet<String> as = new ArraySet<>(4);
+    as.add("x");
+    assertEquals("size=1 capacity=4 [x, null, null, null]", as.repr());
+
+    ArrayMap<String, String> am = new ArrayMap<>(4);
+    am.put("k", "v");
+    assertEquals("size=1 capacity=4 [k, null, null, null] [v, null, null, null]", am.repr());
   }
 
   @Test
@@ -154,5 +198,25 @@ final class ArrayMapAndSetTest {
     nonEmptyClone.add("b");
     assertEquals(new HashSet<>(Set.of("a")), new HashSet<>(nonEmpty));
     assertEquals(new HashSet<>(Set.of("a", "b")), new HashSet<>(nonEmptyClone));
+  }
+
+  @Test
+  void putToCloneOfEmptyMap() {
+    // As for ArraySet, clone() of an empty-but-allocated ArrayMap produces a zero-length
+    // representation.  ArrayMap.grow() tests the capacity against zero, whereas ArraySet.grow()
+    // tests the array length; both must handle a zero-length array rather than doubling zero.
+    ArrayMap<String, String> am = new ArrayMap<>(4);
+    ArrayMap<String, String> clone = am.clone();
+    assertNull(clone.put("x", "1"));
+    assertEquals(Map.of("x", "1"), clone);
+    assertTrue(am.isEmpty());
+
+    // Adding to a clone of a nonempty map does not disturb the original.
+    ArrayMap<String, String> nonEmpty = new ArrayMap<>();
+    nonEmpty.put("a", "1");
+    ArrayMap<String, String> nonEmptyClone = nonEmpty.clone();
+    nonEmptyClone.put("b", "2");
+    assertEquals(Map.of("a", "1"), nonEmpty);
+    assertEquals(Map.of("a", "1", "b", "2"), nonEmptyClone);
   }
 }

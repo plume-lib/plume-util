@@ -126,10 +126,10 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   }
 
   /**
-   * Constructs a new {@code ArraySet} with the same elements as the given collection. If the
-   * collection is null, constructs an empty set.
+   * Constructs a new {@code ArraySet} with the same elements as the given collection.
    *
-   * @param m the collection whose elements are to be placed in the new set, or null
+   * @param m the collection whose elements are to be placed in the new set
+   * @throws NullPointerException if the given collection is null
    */
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
@@ -139,11 +139,9 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public ArraySet(@Nullable Collection<? extends E> m) {
-    this(m == null ? 0 : m.size());
-    if (m != null) {
-      addAll(m);
-    }
+  public ArraySet(Collection<? extends E> m) {
+    this(m.size());
+    addAll(m);
   }
 
   // Factory (constructor) methods
