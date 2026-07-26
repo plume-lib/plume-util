@@ -4,15 +4,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -122,6 +125,47 @@ final class FilesPTest {
   }
 
   @Test
+  void test_newFileWriter_truncates(@TempDir Path tempDir) throws IOException {
+    Path file = tempDir.resolve("writer-truncate.txt");
+    Files.writeString(file, "a long line that will be overwritten\n", UTF_8);
+
+    try (Writer w = FilesP.newFileWriter(file)) {
+      w.write("short\n");
+    }
+    assertEquals("short\n", Files.readString(file, UTF_8));
+  }
+
+  @Test
+  void test_newBufferedFileWriter_gz(@TempDir Path tempDir) throws IOException {
+    // A ".gz" file goes through a different code path than an uncompressed file.
+    Path file = tempDir.resolve("compressed.txt.gz");
+    try (BufferedWriter bw = FilesP.newBufferedFileWriter(file.toString(), false)) {
+      bw.write("a long line that will be overwritten\n");
+    }
+    assertEquals("a long line that will be overwritten", readLine(file));
+
+    // Opening for writing (not appending) truncates the file, so the shorter contents are not
+    // followed by the tail of a longer previous gzip stream.
+    try (BufferedWriter bw = FilesP.newBufferedFileWriter(file.toString(), false)) {
+      bw.write("short\n");
+    }
+    assertEquals("short", readLine(file));
+  }
+
+  /**
+   * Returns the first line of the given possibly-compressed file.
+   *
+   * @param file the possibly-compressed file to read
+   * @return the first line of the file, or null if the file is empty
+   * @throws IOException if there is trouble reading the file
+   */
+  private static @Nullable String readLine(Path file) throws IOException {
+    try (BufferedReader br = FilesP.newBufferedFileReader(file.toString())) {
+      return br.readLine();
+    }
+  }
+
+  @Test
   void test_readCodePoint() throws IOException {
     // One-byte, two-byte, three-byte, and four-byte UTF-8 characters.
     String s = "aé€😀";
@@ -149,6 +193,29 @@ final class FilesPTest {
   }
 
   @Test
+  void test_readCodePoint_invalidFirstByte() throws IOException {
+    // 0x80 is a continuation byte, so it is not a valid first byte of a UTF-8 character.
+    try (InputStream is = new ByteArrayInputStream(new byte[] {(byte) 0x80})) {
+      assertThrows(IllegalArgumentException.class, () -> FilesP.readCodePoint(is));
+    }
+  }
+
+  @Test
+  void test_readCodePoint_invalidContinuationByte() throws IOException {
+    // 0xe2 is the first byte of the euro sign, which is 3 bytes in UTF-8.  Follow it by two bytes
+    // that are not continuation bytes.
+    byte[] bytes = {(byte) 0xe2, (byte) 'a', (byte) 'b'};
+    try (InputStream is = new ByteArrayInputStream(bytes)) {
+      // Reading stops at the first byte that is not a continuation byte, so decoding yields the
+      // replacement character.
+      assertEquals(0xfffd, FilesP.readCodePoint(is));
+      // The offending 'a' was consumed and cannot be pushed back, but 'b' was not consumed.
+      assertEquals('b', FilesP.readCodePoint(is));
+      assertEquals(-1, FilesP.readCodePoint(is));
+    }
+  }
+
+  @Test
   void test_isWhitespaceOnly() throws IOException {
     // A stream that does not support mark() yields null.
     try (InputStream is = new NonMarkableInputStream()) {
@@ -171,6 +238,11 @@ final class FilesPTest {
     try (InputStream is = new ByteArrayInputStream("  hello".getBytes(UTF_8))) {
       assertEquals(false, FilesP.isWhitespaceOnly(is, 10));
       assertEquals(' ', FilesP.readCodePoint(is));
+    }
+
+    // A stream that does not contain valid UTF-8 throws IllegalArgumentException.
+    try (InputStream is = new ByteArrayInputStream(new byte[] {(byte) 0x80})) {
+      assertThrows(IllegalArgumentException.class, () -> FilesP.isWhitespaceOnly(is, 10));
     }
   }
 

@@ -383,7 +383,8 @@ public final class FilesP {
    *
    * @param path the possibly-compressed file to write
    * @param append if true, then bytes will be written to the end of the file rather than the
-   *     beginning
+   *     beginning. Appending to an existing ".gz" file produces a file of concatenated gzip files,
+   *     of which Java reads only the first; see the warning above.
    * @return an OutputStream for file
    * @throws IOException if there is trouble writing the file
    */
@@ -580,7 +581,8 @@ public final class FilesP {
    *
    * @param filename the possibly-compressed file to write
    * @param append if true, the resulting BufferedWriter appends to the end of the file instead of
-   *     the beginning
+   *     the beginning. Appending to an existing ".gz" file produces a file of concatenated gzip
+   *     files, of which Java reads only the first; see the warning above.
    * @return a BufferedWriter for filename
    * @throws IOException if there is trouble writing the file
    */
@@ -616,7 +618,8 @@ public final class FilesP {
    *
    * @param filename the possibly-compressed file to write
    * @param append if true, the resulting BufferedOutputStream appends to the end of the file
-   *     instead of the beginning
+   *     instead of the beginning. Appending to an existing ".gz" file produces a file of
+   *     concatenated gzip files, of which Java reads only the first; see the warning above.
    * @return a BufferedOutputStream for filename
    * @throws IOException if there is trouble writing the file
    */
@@ -1280,13 +1283,17 @@ public final class FilesP {
    * @param readLimit how many code points to look ahead in the input stream
    * @return null if {@code !is.markSupported()}; otherwise, true if the first {@code readLimit}
    *     code points of the input stream consist only of whitespace
+   * @throws IllegalArgumentException if the input stream does not contain valid UTF-8
+   * @throws UncheckedIOException if there is trouble reading the input stream
    */
   public static @Nullable Boolean isWhitespaceOnly(InputStream is, @Positive int readLimit) {
     if (!is.markSupported()) {
       return null;
     }
     try {
-      is.mark(readLimit * 4); // each character is at most 4 bytes, usually much less
+      // Each code point is at most 4 bytes, usually much less.  Guard against overflow of the
+      // multiplication, which would pass a negative read limit to mark().
+      is.mark((int) Math.min((long) readLimit * 4, Integer.MAX_VALUE));
       for (int codePointsRead = 0; codePointsRead < readLimit; codePointsRead++) {
         int nextCodePoint = readCodePoint(is);
         if (nextCodePoint == -1) {
@@ -1314,6 +1321,11 @@ public final class FilesP {
    * <p>If the stream ends in the middle of a multi-byte UTF-8 character, the truncated bytes are
    * decoded, which yields the replacement character {@code U+FFFD}.
    *
+   * <p>If a byte within a multi-byte UTF-8 character is not a continuation byte, the bytes that
+   * were read are decoded, which yields the replacement character {@code U+FFFD}. The byte that is
+   * not a continuation byte has already been consumed and an InputStream does not support pushback,
+   * so the character that the offending byte starts is lost.
+   *
    * @param is an input stream
    * @return the Unicode code point for the next character in the input stream, or -1 if the stream
    *     is at end of file
@@ -1333,16 +1345,22 @@ public final class FilesP {
         return nextByte;
       }
       byte[] utf8Bytes = new byte[byteCount];
-      utf8Bytes[0] = (byte) nextByte;
-      int bytesRead = 1;
-      for (int i = 1; i < byteCount; i++) { // Get any subsequent bytes for this UTF-8 character.
+      utf8Bytes[0] = firstByte;
+      // Get any subsequent bytes for this UTF-8 character.
+      int bytesRead;
+      for (bytesRead = 1; bytesRead < byteCount; bytesRead++) {
         nextByte = is.read();
         if (nextByte == -1) {
           // The stream ended in the middle of a multi-byte character; decode what was read.
           break;
         }
-        utf8Bytes[i] = (byte) nextByte;
-        bytesRead++;
+        if ((nextByte & 0b11000000) != 0b10000000) {
+          // The byte is not a continuation byte, so the multi-byte character is malformed.  Decode
+          // what was read.  The offending byte has already been consumed and an InputStream does
+          // not support pushback, so the character that the offending byte starts is lost.
+          break;
+        }
+        utf8Bytes[bytesRead] = (byte) nextByte;
       }
       @SuppressWarnings({
         "PMD.UnnecessaryFullyQualifiedName", // Cannot use just `StandardCharsets.UTF_8` because of
@@ -1364,6 +1382,7 @@ public final class FilesP {
    *
    * @param b the first byte of a UTF-8 character
    * @return the number of bytes for this UTF-8 character
+   * @throws IllegalArgumentException if b is not a valid first byte of a UTF-8 character
    */
   private static @IntVal({1, 2, 3, 4}) int getByteCount(byte b) {
     if ((b >= 0)) {
@@ -1382,6 +1401,7 @@ public final class FilesP {
       // Pattern is 11110xxx.
       return 4;
     }
-    throw new IllegalArgumentException(); // Invalid first byte for UTF-8 character.
+    throw new IllegalArgumentException(
+        String.format("Invalid first byte for UTF-8 character: 0x%02x", b & 0xff));
   }
 }
