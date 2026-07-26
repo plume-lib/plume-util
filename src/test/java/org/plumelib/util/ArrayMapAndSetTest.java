@@ -92,6 +92,15 @@ final class ArrayMapAndSetTest {
     @Nullable String[] undersizedResult = am.keySet().toArray(undersized);
     assertNotSame(undersized, undersizedResult);
     assertArrayEquals(new String[] {"a", "b"}, undersizedResult);
+
+    // The entry set inherits toArray(T[]) from AbstractCollection, which null-terminates too.
+    @Nullable Object[] entries = new @Nullable Object[5];
+    Arrays.fill(entries, "junk");
+    @Nullable Object[] entriesResult = am.entrySet().toArray(entries);
+    assertSame(entries, entriesResult);
+    assertArrayEquals(
+        new @Nullable Object[] {Map.entry("a", "1"), Map.entry("b", "2"), null, "junk", "junk"},
+        entriesResult);
   }
 
   @Test

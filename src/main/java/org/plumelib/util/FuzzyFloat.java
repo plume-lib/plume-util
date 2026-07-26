@@ -26,7 +26,7 @@ import org.checkerframework.dataflow.qual.Pure;
 public class FuzzyFloat implements Serializable {
 
   /** Unique identifier for serialization. If you add or remove fields, change this number. */
-  static final long serialVersionUID = 20250723L;
+  private static final long serialVersionUID = 20250723L;
 
   /** Default relative difference between two values such that this class considers them equal. */
   static final double DEFAULT_RELATIVE_RATIO = .0001;

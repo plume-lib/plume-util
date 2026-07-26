@@ -401,6 +401,10 @@ final class MathPTest {
 
     void checkStrictNonStrictEnds(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
       long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), true);
+      // The array-based overload must agree with the iterator-based overload.  (In particular,
+      // when fewer than 3 elements are subject to the strict density requirement, both must take
+      // the same fallback rather than one of them returning null.)
+      assertArraysEquals(rm, MathP.modulusStrict(nums.clone(), true));
       checkStrictIntOverloads(nums, true);
       // A returned modulus is always positive.
       if (rm != null) {
@@ -556,12 +560,17 @@ final class MathPTest {
     assertArraysEquals(
         new int[] {3, 4},
         MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11, 15, 19, 23}), true));
-    // The int and long iterator overloads agree when fewer than 3 elements are subject to the
-    // strict density requirement.
+    // All four overloads agree when fewer than 3 elements are subject to the strict density
+    // requirement: each falls back to the non-strict computation rather than returning null.
+    // (Regression test: the array overloads used to return null here.)
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11}, new long[] {3, 4});
     assertArraysEquals(
         new int[] {3, 4}, MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11, 15}), true));
     assertArraysEquals(
         new int[] {3, 4}, MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11}), true));
+    assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 11, 15}, true));
+    assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 11}, true));
 
     testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
