@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -63,9 +64,10 @@ public final class FilesP {
 
   /**
    * An array of options for overwriting a file, creating the file if it does not exist.
-   * TRUNCATE_EXISTING is necessary because {@code Files.newOutputStream} implies TRUNCATE_EXISTING
-   * only when no option is given; without TRUNCATE_EXISTING, writing fewer bytes than the file
-   * previously contained leaves the tail of the previous contents in place.
+   * TRUNCATE_EXISTING is necessary because {@code Files.newOutputStream} and {@code
+   * Files.newBufferedWriter} imply TRUNCATE_EXISTING only when no option at all is given. Passing
+   * just CREATE does not truncate, so writing fewer bytes than the file previously contained would
+   * leave the tail of the previous contents in place.
    */
   private static final StandardOpenOption[] TRUNCATE_OPTIONS = {CREATE, TRUNCATE_EXISTING};
 
@@ -79,6 +81,8 @@ public final class FilesP {
    *
    * @param path the possibly-compressed file to read
    * @return an InputStream for file
+   * @throws NoSuchFileException if the file does not exist. Note that this is not {@code
+   *     FileNotFoundException}, which the {@code java.io} file constructors throw.
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
@@ -109,6 +113,8 @@ public final class FilesP {
    *
    * @param file the possibly-compressed file to read
    * @return an InputStream for file
+   * @throws NoSuchFileException if the file does not exist. Note that this is not {@code
+   *     FileNotFoundException}, which the {@code java.io} file constructors throw.
    * @throws IOException if there is trouble reading the file
    */
   @SideEffectFree
@@ -316,6 +322,11 @@ public final class FilesP {
    * Returns an OutputStream for the file, accounting for the possibility that the file is
    * compressed. (A file whose name ends with ".gz" is treated as compressed.)
    *
+   * <p>If the file name ends with ".gz" and {@code append} is true, the result writes a new gzip
+   * member rather than extending the gzip member that the file already contains. {@link
+   * #newFileInputStream(Path)} reads all the concatenated members, so the file reads back as the
+   * concatenation of everything that was written to it.
+   *
    * @param path the possibly-compressed file to write
    * @param append if true, then bytes will be written to the end of the file rather than the
    *     beginning
@@ -329,19 +340,19 @@ public final class FilesP {
   @SideEffectFree
   @Owning
   public static OutputStream newFileOutputStream(Path path, boolean append) throws IOException {
-    OutputStream fis = Files.newOutputStream(path, append ? APPEND_OPTIONS : TRUNCATE_OPTIONS);
-    OutputStream in;
+    OutputStream fos = Files.newOutputStream(path, append ? APPEND_OPTIONS : TRUNCATE_OPTIONS);
+    OutputStream out;
     if (path.toString().endsWith(".gz")) {
       try {
-        in = new GZIPOutputStream(fis);
+        out = new GZIPOutputStream(fos);
       } catch (IOException e) {
-        fis.close();
+        fos.close();
         throw new IOException("Problem while writing " + path, e);
       }
     } else {
-      in = fis;
+      out = fos;
     }
-    return in;
+    return out;
   }
 
   /**
@@ -461,6 +472,11 @@ public final class FilesP {
    * Returns a BufferedWriter for the file, accounting for the possibility that the file is
    * compressed. (A file whose name ends with ".gz" is treated as compressed.)
    *
+   * <p>If the file name ends with ".gz" and {@code append} is true, the result writes a new gzip
+   * member rather than extending the gzip member that the file already contains. {@link
+   * #newBufferedFileReader(String)} reads all the concatenated members, so the file reads back as
+   * the concatenation of everything that was written to it.
+   *
    * @param filename the possibly-compressed file to write
    * @param append if true, the resulting BufferedWriter appends to the end of the file instead of
    *     the beginning
@@ -488,6 +504,11 @@ public final class FilesP {
   /**
    * Returns a BufferedOutputStream for the file, accounting for the possibility that the file is
    * compressed. (A file whose name ends with ".gz" is treated as compressed.)
+   *
+   * <p>If the file name ends with ".gz" and {@code append} is true, the result writes a new gzip
+   * member rather than extending the gzip member that the file already contains. {@link
+   * #newFileInputStream(File)} reads all the concatenated members, so the file reads back as the
+   * concatenation of everything that was written to it.
    *
    * @param filename the possibly-compressed file to write
    * @param append if true, the resulting BufferedOutputStream appends to the end of the file
@@ -1153,7 +1174,8 @@ public final class FilesP {
    *
    * <p>This method resets the input stream to its original position before returning, even when
    * this method throws an exception. If the reset fails, the input stream is left positioned after
-   * the code points that this method examined.
+   * the bytes that this method consumed, which may be one byte beyond the code points that this
+   * method examined; see {@link #readCodePoint}.
    *
    * @param is an input stream
    * @param readLimit how many code points to look ahead in the input stream

@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -106,6 +107,18 @@ final class FilesPTest {
   }
 
   @Test
+  void test_newBufferedFileWriter_writeCreates(@TempDir Path tempDir) throws IOException {
+    // Opening a nonexistent file for writing (not appending) creates it.  This exercises the CREATE
+    // half of the options that are used when not appending.
+    Path file = tempDir.resolve("created-by-write.txt");
+    assertFalse(Files.exists(file));
+    try (BufferedWriter bw = FilesP.newBufferedFileWriter(file.toString(), false)) {
+      bw.write("hello\n");
+    }
+    assertEquals("hello\n", Files.readString(file, UTF_8));
+  }
+
+  @Test
   void test_newFileOutputStream_appendCreates(@TempDir Path tempDir) throws IOException {
     // Appending to a nonexistent file creates it, rather than throwing NoSuchFileException.
     Path file = tempDir.resolve("created-by-append-stream.txt");
@@ -126,6 +139,18 @@ final class FilesPTest {
       os.write("x\n".getBytes(UTF_8));
     }
     assertEquals("x\n", Files.readString(file, UTF_8));
+  }
+
+  @Test
+  void test_newFileOutputStream_gzAppendCreates(@TempDir Path tempDir) throws IOException {
+    // Appending to a nonexistent ".gz" file creates it.  A ".gz" file goes through a different code
+    // path than an uncompressed file, so it needs its own test.
+    Path file = tempDir.resolve("created-by-append.txt.gz");
+    assertFalse(Files.exists(file));
+    try (OutputStream os = FilesP.newFileOutputStream(file, true)) {
+      os.write("hello\n".getBytes(UTF_8));
+    }
+    assertEquals("hello", readLine(file));
   }
 
   @Test
@@ -332,6 +357,31 @@ final class FilesPTest {
   }
 
   @Test
+  void test_readCodePoint_invalidLaterContinuationByte() throws IOException {
+    // 0xf0 is the first byte of a 4-byte UTF-8 character.  Follow it by one valid continuation byte
+    // and then a byte that is not a continuation byte, so reading stops after 2 of the 4 bytes.
+    // This differs from test_readCodePoint_invalidContinuationByte, where reading stops after 1.
+    byte[] bytes = {(byte) 0xf0, (byte) 0x9f, (byte) 'a', (byte) 'b'};
+    try (InputStream is = new ByteArrayInputStream(bytes)) {
+      assertEquals(0xfffd, FilesP.readCodePoint(is));
+      // The offending 'a' was consumed and cannot be pushed back, but 'b' was not consumed.
+      assertEquals('b', FilesP.readCodePoint(is));
+      assertEquals(-1, FilesP.readCodePoint(is));
+    }
+  }
+
+  @Test
+  void test_isWhitespaceOnly_resetFails() throws IOException {
+    // When reset() fails, isWhitespaceOnly returns its result rather than propagating the
+    // IOException, and the stream is left positioned after the bytes that were consumed.
+    try (InputStream is = new ResetFailingInputStream("  x  ".getBytes(UTF_8))) {
+      assertEquals(false, FilesP.isWhitespaceOnly(is, 10));
+      // The two spaces and the "x" were consumed, so reading continues after them.
+      assertEquals(' ', FilesP.readCodePoint(is));
+    }
+  }
+
+  @Test
   void test_isWhitespaceOnly() throws IOException {
     // A stream that does not support mark() yields null.
     try (InputStream is = new NonMarkableInputStream()) {
@@ -400,6 +450,28 @@ final class FilesPTest {
     @Override
     public boolean markSupported() {
       return false;
+    }
+  }
+
+  /**
+   * An input stream that supports {@code mark()} but whose {@code reset()} always fails. It
+   * inherits {@code mark()} and {@code markSupported()} from the underlying {@code
+   * ByteArrayInputStream}, which supports both.
+   */
+  private static final class ResetFailingInputStream extends FilterInputStream {
+
+    /**
+     * Creates a ResetFailingInputStream.
+     *
+     * @param bytes the bytes that the input stream yields
+     */
+    ResetFailingInputStream(byte[] bytes) {
+      super(new ByteArrayInputStream(bytes));
+    }
+
+    @Override
+    public synchronized void reset() throws IOException {
+      throw new IOException("reset() always fails");
     }
   }
 }
