@@ -25,12 +25,9 @@ plugins {
 }
 
 repositories {
-  // Sibling plume-lib projects are often built locally, so read their snapshots
-  // from the local Maven repository.  Restricting this to snapshots prevents a
-  // stale locally-installed release from shadowing the one on Maven Central.
-  // A consequence is that a locally-installed *release* of a sibling project is
-  // ignored, silently, in favor of the release on Maven Central.  To build
-  // against a locally-installed release, temporarily remove "snapshotsOnly()".
+  // Restricting this to snapshots prevents a stale locally-installed
+  // release from shadowing the one on Maven Central.  To build against a
+  // locally-installed release, temporarily remove "snapshotsOnly()".
   mavenLocal {
     mavenContent {
       snapshotsOnly()
@@ -46,9 +43,6 @@ repositories {
 }
 
 dependencies {
-  // hashmap-util contributes classes (Hasher, WeakIdentityHashMap, ...) to the
-  // org.plumelib.util package.  They are used only internally, so this is
-  // "implementation" rather than "api".
   implementation(libs.hashmap.util)
   implementation(libs.reflection.util)
   // Including error_prone_annotations leads to javac warnings (not errors, but
@@ -158,8 +152,14 @@ spotless {
     googleJavaFormat()
     formatAnnotations()
   }
-  // .gradle files are not formatted:  greclipse provisions its formatter from
-  // eclipse.org, whose flakiness leads to "Failed to provision P2 dependencies".
+  // eclipse.org flakiness often leads to "Failed to provision P2 dependencies".
+  groovyGradle {
+    target("**/*.gradle")
+    greclipse()  // which formatter Spotless should use to format .gradle files.
+    leadingTabsToSpaces(2)
+    trimTrailingWhitespace()
+    // endWithNewline() // Don't want to end empty files with a newline
+  }
 }
 
 
@@ -208,24 +208,13 @@ checkerFramework {
 // Javadoc
 
 // Javadoc generates a CSS import of a font that is not distributed alongside
-// the documentation, so remove the import.  This uses plain file input/output
-// rather than "ant.replaceregexp", because the Ant builder is reachable only
-// through the "Project" object, which the configuration cache forbids a task
-// action from using.
-//
-// Only .css and .html files are examined, to avoid reading Javadoc's binary
-// output files.  The trailing "[ \t]*" does not include the line separator,
-// which matches what "ant.replaceregexp" did with "byline:true".
-//
-// Javadoc through Java 21 writes "resources/fonts/dejavu.css" in
-// "stylesheet.css", but Java 25 and later write "fonts/dejavu.css" in
-// "resource-files/stylesheet.css", so the "resources/" prefix is optional.
-// Matching both matters because a failure to match is silent.
+// the documentation, so remove the import.  Cannot use "ant.replaceregexp",
+// because the Ant builder is reachable only through the "Project" object, which
+// the configuration cache forbids a task action from using.
 //
 // This is a static method of a class rather than a method of the build script,
 // because the configuration cache nulls out a closure's owner when it serializes
-// the closure.  A task action that called a build script method would therefore
-// fail at execution time with "Could not find method removeDejaVuFontImport()".
+// the closure.
 class JavadocFonts {
   static void removeDejaVuFontImport(File javadocDir) {
     javadocDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
@@ -249,8 +238,6 @@ tasks.named("javadoc") {
   // Turn Javadoc warnings into errors.
   options.addStringOption("Xwerror", "-Xdoclint:all")
   options.addStringOption("private", "-quiet")
-  // Use "it.destinationDir" rather than "destinationDir", because the
-  // configuration cache nulls out a closure's delegate.
   doLast {
     JavadocFonts.removeDejaVuFontImport(it.destinationDir)
   }
@@ -367,11 +354,7 @@ tasks.register("tags", Exec) {
   inputs.files(javaFiles)
   outputs.file(layout.projectDirectory.file("TAGS"))
   executable("etags")
-  // Compute the arguments when the task runs, not when it is configured, so
-  // that configuring the build does not scan the source tree.  Pass relative
-  // file names, so that the TAGS table does not depend on the location of the
-  // clone and remains valid if the clone is moved.
-  def projectPath = layout.projectDirectory.asFile.toPath()
+  // Compute the arguments when the task runs, not when it is configured.
   argumentProviders.add({
     javaFiles.files.sort()*.toPath().collect { projectPath.relativize(it).toString() }
   } as CommandLineArgumentProvider)

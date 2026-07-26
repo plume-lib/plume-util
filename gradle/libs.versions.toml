@@ -23,9 +23,7 @@ error-prone-core = "com.google.errorprone:error_prone_core:2.50.0"
 hashmap-util = "org.plumelib:hashmap-util:2.0.0-SNAPSHOT"
 
 # Not used as a dependency; only its version is read, for the JaCoCo plugin's
-# `toolVersion`.  Pinning the version matters because the tests run under every
-# Java version of the continuous integration matrix, and the JaCoCo agent must
-# support the newest of those Java versions.
+# `toolVersion`.
 jacoco = "org.jacoco:org.jacoco.core:0.8.15"
 
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
@@ -34,7 +32,7 @@ junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher
 
 # Not used as a dependency; only its version is read, for the PMD plugin's
 # `toolVersion`.  This is a library rather than a `[versions]` entry so that
-# dependency-update tools recognize it and propose new versions of it.
+# dependency-update tools can propose new versions of it.
 pmd = "net.sourceforge.pmd:pmd-java:7.26.0"
 
 reflection-util = "org.plumelib:reflection-util:2.0.0-SNAPSHOT"
