@@ -855,7 +855,7 @@ public final class CollectionsP {
    * Represents a replacement of one range of a collection by another collection.
    *
    * @param <T> the type of collection elements
-   * @param start the first index to replace, inclusive
+   * @param start the first index to replace, inclusive; must be non-negative
    * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
    *     range (an insertion)
    * @param elements the new (replacement) elements
@@ -865,17 +865,19 @@ public final class CollectionsP {
     /**
      * Creates a new Replacement.
      *
-     * @param start the first index to replace, inclusive
+     * @param start the first index to replace, inclusive; must be non-negative
      * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
      *     range (an insertion)
      * @param elements the new (replacement) elements
      */
     public Replacement {
-      // Compute in `long` arithmetic, because `start - 1` overflows when `start` is
-      // Integer.MIN_VALUE.
-      if ((long) end < (long) start - 1) {
-        // Do not use `this` in the message: in a compact canonical constructor the record
-        // components are not yet assigned, so `this.toString()` would report 0, 0, null.
+      // Do not use `this` in the messages: in a compact canonical constructor the record
+      // components are not yet assigned, so `this.toString()` would report 0, 0, null.
+      if (start < 0) {
+        throw new Error("Negative start: " + start);
+      }
+      // Because `start` is non-negative, `start - 1` does not overflow.
+      if (end < start - 1) {
         throw new Error("Invalid <start,end> pair: <" + start + ", " + end + ">");
       }
     }
@@ -884,7 +886,7 @@ public final class CollectionsP {
      * Creates a new Replacement.
      *
      * @param <T> the type of elements of the list
-     * @param start the first index to replace, inclusive
+     * @param start the first index to replace, inclusive; must be non-negative
      * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
      *     range (an insertion)
      * @param elements the new (replacement) elements
