@@ -1,6 +1,10 @@
 plugins {
   // Downloads a JDK if the Java toolchain that the build requests is not
   // installed locally.
+  //
+  // Literal version number because a settings script cannot use the version
+  // catalog "gradle/libs.versions.toml".  Dependency-update tools do not
+  // propose new versions of this plugin, and it must be updated by hand.
   id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 

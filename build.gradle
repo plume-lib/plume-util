@@ -216,16 +216,23 @@ checkerFramework {
 // Only .css and .html files are examined, to avoid reading Javadoc's binary
 // output files.  The trailing "[ \t]*" does not include the line separator,
 // which matches what "ant.replaceregexp" did with "byline:true".
-def removeDejaVuFontImport(File javadocDir) {
-  javadocDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
-    if (!(file.name.endsWith(".css") || file.name.endsWith(".html"))) {
-      return
-    }
-    String contents = file.getText("UTF-8")
-    String newContents =
-        contents.replaceAll(/@import url\('resources\/fonts\/dejavu.css'\);[ \t]*/, "")
-    if (newContents != contents) {
-      file.setText(newContents, "UTF-8")
+//
+// This is a static method of a class rather than a method of the build script,
+// because the configuration cache nulls out a closure's owner when it serializes
+// the closure.  A task action that called a build script method would therefore
+// fail at execution time with "Could not find method removeDejaVuFontImport()".
+class JavadocFonts {
+  static void removeDejaVuFontImport(File javadocDir) {
+    javadocDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+      if (!(file.name.endsWith(".css") || file.name.endsWith(".html"))) {
+        return
+      }
+      String contents = file.getText("UTF-8")
+      String newContents =
+          contents.replaceAll(/@import url\('resources\/fonts\/dejavu.css'\);[ \t]*/, "")
+      if (newContents != contents) {
+        file.setText(newContents, "UTF-8")
+      }
     }
   }
 }
@@ -237,8 +244,10 @@ tasks.named("javadoc") {
   // Turn Javadoc warnings into errors.
   options.addStringOption("Xwerror", "-Xdoclint:all")
   options.addStringOption("private", "-quiet")
+  // Use "it.destinationDir" rather than "destinationDir", because the
+  // configuration cache nulls out a closure's delegate.
   doLast {
-    removeDejaVuFontImport(destinationDir)
+    JavadocFonts.removeDejaVuFontImport(it.destinationDir)
   }
 }
 tasks.named("check") {
@@ -250,7 +259,7 @@ def javadocWebUpload = tasks.register("javadocWebUpload", Javadoc) {
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   classpath = project.sourceSets.main.compileClasspath
   doLast {
-    removeDejaVuFontImport(destinationDir)
+    JavadocFonts.removeDejaVuFontImport(it.destinationDir)
   }
 }
 // Set permissions
