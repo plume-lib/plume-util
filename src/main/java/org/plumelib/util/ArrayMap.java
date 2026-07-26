@@ -470,7 +470,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @Override
   public void clear() {
     if (size != 0) {
-      // Clear the slots so they do not retain references.
+      // Clear the slots so they do not retain references.  A nonzero size implies that the arrays
+      // are non-null; the tests against null are for the benefit of the Nullness Checker.
       if (keys != null) {
         Arrays.fill(keys, 0, size, null);
       }

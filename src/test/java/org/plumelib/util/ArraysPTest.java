@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -1142,7 +1143,7 @@ final class ArraysPTest {
     assertArrayEquals(
         iotaStringGoal,
         ArraysP.<Integer, String>mapArray(
-            i -> i.toString(), new java.util.ArrayDeque<>(iotaList), String.class));
+            i -> i.toString(), new ArrayDeque<>(iotaList), String.class));
 
     // An Iterable that is not a Collection.
     Iterable<Integer> iotaIterable = new NonCollectionIterable<>(iotaList);

@@ -356,7 +356,8 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @Override
   public void clear() {
     if (size != 0) {
-      // Clear the slots so they do not retain references.
+      // Clear the slots so they do not retain references.  A nonzero size implies that the array
+      // is non-null; the test against null is for the benefit of the Nullness Checker.
       if (values != null) {
         Arrays.fill(values, 0, size, null);
       }

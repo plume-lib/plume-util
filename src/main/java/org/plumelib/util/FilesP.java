@@ -363,9 +363,9 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param path the possibly-compressed file to read
+   * @param path the possibly-compressed file to write
    * @return an OutputStream for file
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SideEffectFree
   @Owning
@@ -381,11 +381,11 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param path the possibly-compressed file to read
+   * @param path the possibly-compressed file to write
    * @param append if true, then bytes will be written to the end of the file rather than the
    *     beginning
    * @return an OutputStream for file
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
@@ -429,9 +429,9 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param file the possibly-compressed file to read
+   * @param file the possibly-compressed file to write
    * @return an OutputStream for file
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SideEffectFree
   @Owning
@@ -449,7 +449,7 @@ public final class FilesP {
    *
    * @param filename the possibly-compressed file to write
    * @return an OutputStreamWriter for filename
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    * @throws FileNotFoundException if the file is not found
    */
   @SideEffectFree
@@ -467,10 +467,10 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param path the possibly-compressed file to read
+   * @param path the possibly-compressed file to write
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SideEffectFree
   @Owning
@@ -487,11 +487,11 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param path the possibly-compressed file to read
+   * @param path the possibly-compressed file to write
    * @param charset the charset to use when reading the file, or null to use UTF-8
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
@@ -515,10 +515,10 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param file the possibly-compressed file to read
+   * @param file the possibly-compressed file to write
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SideEffectFree
   @Owning
@@ -535,11 +535,11 @@ public final class FilesP {
    * Java 1.4, Java reads just the first one: it silently discards all characters (including gzipped
    * files) after the first gzipped file.
    *
-   * @param file the possibly-compressed file to read
+   * @param file the possibly-compressed file to write
    * @param charset the charset to use when reading the file, or null to use UTF-8
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
-   * @throws IOException if there is trouble reading the file
+   * @throws IOException if there is trouble writing the file
    */
   @SideEffectFree
   @Owning
