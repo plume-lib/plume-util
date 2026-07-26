@@ -488,7 +488,7 @@ public final class FilesP {
    * files) after the first gzipped file.
    *
    * @param path the possibly-compressed file to write
-   * @param charset the charset to use when reading the file, or null to use UTF-8
+   * @param charset the charset to use when writing the file, or null to use UTF-8
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble writing the file
@@ -536,7 +536,7 @@ public final class FilesP {
    * files) after the first gzipped file.
    *
    * @param file the possibly-compressed file to write
-   * @param charset the charset to use when reading the file, or null to use UTF-8
+   * @param charset the charset to use when writing the file, or null to use UTF-8
    * @return an OutputStreamWriter for file
    * @throws FileNotFoundException if the file cannot be found
    * @throws IOException if there is trouble writing the file
