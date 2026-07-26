@@ -52,7 +52,9 @@ public final class StringsP {
    * target if it does not start with oldStr.
    *
    * <p>An alternative to this is to use regular expressions: {@code target.replaceFirst("^" +
-   * Pattern.quote(oldStr), newStr)}
+   * Pattern.quote(oldStr), Matcher.quoteReplacement(newStr))}. The call to {@code
+   * Matcher.quoteReplacement} is necessary because {@code replaceFirst} treats {@code $} and {@code
+   * \} in its second argument specially.
    *
    * @param target the string to do replacement in
    * @param oldStr the prefix to replace
@@ -78,10 +80,13 @@ public final class StringsP {
    * target if it does not end with oldStr.
    *
    * <p>An alternative to this is to use regular expressions: {@code
-   * target.replaceLast(Pattern.quote(oldStr) + "$", newStr)}
+   * target.replaceAll(Pattern.quote(oldStr) + "\\z", Matcher.quoteReplacement(newStr))}. The anchor
+   * is {@code \z} rather than {@code $} because {@code $} also matches before a line terminator at
+   * the end of the target. The call to {@code Matcher.quoteReplacement} is necessary because {@code
+   * replaceAll} treats {@code $} and {@code \} in its second argument specially.
    *
    * @param target the string to do replacement in
-   * @param oldStr the substring to replace
+   * @param oldStr the suffix to replace
    * @param newStr the replacement
    * @return the target with an occurrence of oldStr at the end replaced by newStr; returns the
    *     target if it does not end with oldStr
@@ -575,6 +580,12 @@ public final class StringsP {
    * <p>Compared to the `unescapeJava` method in Apache Commons Text StringEscapeUtils, this one
    * correctly handles non-printable ASCII characters.
    *
+   * <p>This method never throws an exception on malformed input. A Unicode escape is more liberal
+   * than the Java specification permits: it accepts fewer than 4 hexadecimal digits, and it yields
+   * the null character if no hexadecimal digit follows. An octal escape ends at the first character
+   * that is not an octal digit, or before the digit that would make the value exceed {@code 0xFF};
+   * this matches the Java specification.
+   *
    * @param orig string to quote
    * @return quoted version of orig
    */
@@ -642,10 +653,11 @@ public final class StringsP {
           int limit = Math.min(ii + 4, orig.length());
           while (ii < limit) {
             int thisDigit = Character.digit(orig.charAt(ii), 16);
-            if (thisDigit != -1) {
-              unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
-              ii++;
+            if (thisDigit == -1) {
+              break;
             }
+            unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
+            ii++;
           }
           sb.append(unicodeChar);
           postEsc = ii;
@@ -658,13 +670,15 @@ public final class StringsP {
           int iii = thisEsc + 1;
           while (iii < Math.min(thisEsc + 4, orig.length())) {
             int thisDigit = Character.digit(orig.charAt(iii), 8);
-            if (thisDigit != -1) {
-              int newValue = (octalChar * 8) + thisDigit;
-              if (newValue <= 0xFF) {
-                octalChar = (char) newValue;
-                iii++;
-              }
+            if (thisDigit == -1) {
+              break;
             }
+            int newValue = (octalChar * 8) + thisDigit;
+            if (newValue > 0xFF) {
+              break;
+            }
+            octalChar = (char) newValue;
+            iii++;
           }
           sb.append(octalChar);
           postEsc = iii;
@@ -1097,6 +1111,13 @@ public final class StringsP {
   /**
    * A comparator that compares version numbers. It must only be invoked on strings that are version
    * numbers.
+   *
+   * <p>This comparator is inconsistent with equals: it compares each component numerically, so it
+   * returns 0 for two unequal strings whose components have leading zeros, such as {@code "1.2"}
+   * and {@code "1.02"}.
+   *
+   * <p>A component may be arbitrarily large; it is not converted to an {@code int}, so a component
+   * larger than {@code Integer.MAX_VALUE} does not cause an exception.
    */
   public static class VersionNumberComparator implements Comparator<String> {
 
@@ -1112,20 +1133,60 @@ public final class StringsP {
       String[] components2 = s2.split("\\.", -1);
       int len = Math.min(components1.length, components2.length);
       for (int i = 0; i < len; i++) {
-        int int1 = Integer.parseInt(components1[i]);
-        int int2 = Integer.parseInt(components2[i]);
-        if (int1 < int2) {
-          return -1;
-        } else if (int1 > int2) {
-          return 1;
+        int comparison = compareDigitStrings(components1[i], components2[i]);
+        if (comparison != 0) {
+          return comparison;
         }
       }
-      if (components1.length < components2.length) {
-        return -1;
-      } else {
-        assert components2.length < components1.length;
-        return 1;
+      return Integer.compare(components1.length, components2.length);
+    }
+
+    /**
+     * Compares two strings of decimal digits numerically. The components of a version number may be
+     * arbitrarily large, so this does not convert them to {@code int} or {@code long}.
+     *
+     * @param s1 a nonempty string of decimal digits
+     * @param s2 a nonempty string of decimal digits
+     * @return a negative integer, zero, or a positive integer as s1 is numerically less than, equal
+     *     to, or greater than s2
+     * @throws NumberFormatException if either argument is not a nonempty string of decimal digits
+     */
+    private static int compareDigitStrings(String s1, String s2) {
+      int start1 = indexOfFirstSignificantDigit(s1);
+      int start2 = indexOfFirstSignificantDigit(s2);
+      // Ignoring leading zeros, the number with more digits is the larger one.
+      int comparison = Integer.compare(s1.length() - start1, s2.length() - start2);
+      if (comparison != 0) {
+        return comparison;
       }
+      // The two numbers have the same number of significant digits, so comparing them
+      // lexicographically compares them numerically.
+      return Integer.signum(s1.substring(start1).compareTo(s2.substring(start2)));
+    }
+
+    /**
+     * Returns the index in the given string of its first nonzero digit.
+     *
+     * @param s a nonempty string of decimal digits
+     * @return the index of the first nonzero digit in s, or s.length() if every digit of s is zero
+     * @throws NumberFormatException if s is not a nonempty string of decimal digits
+     */
+    private static @IndexOrHigh("#1") int indexOfFirstSignificantDigit(String s) {
+      if (s.isEmpty()) {
+        throw new NumberFormatException("Not a version number component: \"" + s + "\"");
+      }
+      for (int i = 0; i < s.length(); i++) {
+        char c = s.charAt(i);
+        if (c < '0' || c > '9') {
+          throw new NumberFormatException("Not a version number component: \"" + s + "\"");
+        }
+      }
+      for (int i = 0; i < s.length(); i++) {
+        if (s.charAt(i) != '0') {
+          return i;
+        }
+      }
+      return s.length();
     }
   }
 
