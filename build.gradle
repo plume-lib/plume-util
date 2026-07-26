@@ -217,6 +217,11 @@ checkerFramework {
 // output files.  The trailing "[ \t]*" does not include the line separator,
 // which matches what "ant.replaceregexp" did with "byline:true".
 //
+// Javadoc through Java 21 writes "resources/fonts/dejavu.css" in
+// "stylesheet.css", but Java 25 and later write "fonts/dejavu.css" in
+// "resource-files/stylesheet.css", so the "resources/" prefix is optional.
+// Matching both matters because a failure to match is silent.
+//
 // This is a static method of a class rather than a method of the build script,
 // because the configuration cache nulls out a closure's owner when it serializes
 // the closure.  A task action that called a build script method would therefore
@@ -229,7 +234,7 @@ class JavadocFonts {
       }
       String contents = file.getText("UTF-8")
       String newContents =
-          contents.replaceAll(/@import url\('resources\/fonts\/dejavu.css'\);[ \t]*/, "")
+          contents.replaceAll(/@import url\('(?:resources\/)?fonts\/dejavu\.css'\);[ \t]*/, "")
       if (newContents != contents) {
         file.setText(newContents, "UTF-8")
       }
