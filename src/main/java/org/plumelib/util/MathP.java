@@ -902,10 +902,14 @@ public final class MathP {
    *
    * @param nums array of operands
    * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
-   * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
-   *     null if no such exists or the array contains fewer than 3 elements
+   * @return an array of two integers (r,m), where m is positive, such that each number in NUMS is
+   *     equal to r (mod m); or null if no such exists or the array contains fewer than 3 elements
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
+  @SuppressWarnings({
+    "value:statically.executable.not.pure", // results are .equals() but not ==
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated", // side effect to local state
+  })
   @SideEffectFree
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] modulusStrict(int[] nums, boolean nonstrictEnds) {
@@ -924,11 +928,22 @@ public final class MathP {
       lastIndex--;
     }
     if (lastIndex - firstIndex < 2) {
+      // Fewer than 3 elements are subject to the strict density requirement, so that requirement
+      // is vacuous.  Delegate to `modulusStrictInt`, which handles this case, so that the array
+      // and iterator implementations cannot diverge.  (This branch is unreachable when
+      // `nonstrictEnds` is false, because then `lastIndex - firstIndex` is `nums.length - 1`.)
+      if (nonstrictEnds) {
+        return modulusStrictInt(Arrays.stream(nums).boxed().iterator(), true);
+      }
       return null;
     }
 
     int modulus = nums[firstIndex + 1] - nums[firstIndex];
-    if (modulus == 1) {
+    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
+    // constraint that every integer is 0 mod 1, which this method does not report.
+    // Integer.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it
+    // positive.
+    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Integer.MIN_VALUE) {
       return null;
     }
     for (int i = firstIndex + 2; i <= lastIndex; i++) {
@@ -936,6 +951,10 @@ public final class MathP {
         return null;
       }
     }
+
+    // Report a positive modulus, as `modulus(int[])` does.  Congruence modulo m and modulo -m are
+    // the same relation, so this does not change which inputs are accepted, nor the value of r.
+    modulus = Math.abs(modulus);
 
     int r = modNonnegative(nums[firstIndex], modulus);
     if (nonstrictEnds) {
@@ -957,8 +976,9 @@ public final class MathP {
    *
    * @param itor iterator of operands; modified by this method
    * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
-   * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
-   *     null if no such exists or the iterator contains fewer than 3 elements
+   * @return an array of two integers (r,m), where m is positive, such that each number in NUMS is
+   *     equal to r (mod m); or null if no such exists or the iterator contains fewer than 3
+   *     elements
    * @see #modulusStrict(int[], boolean)
    */
   public static int @Nullable @ArrayLen(2) [] modulusStrictInt(
@@ -982,7 +1002,11 @@ public final class MathP {
     }
     int next = itor.next();
     int modulus = next - prev;
-    if (modulus == 1) {
+    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
+    // constraint that every integer is 0 mod 1, which this method does not report.
+    // Integer.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it
+    // positive.
+    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Integer.MIN_VALUE) {
       return null;
     }
     int count = 2;
@@ -1000,10 +1024,31 @@ public final class MathP {
       count++;
     }
     if (count < 3) {
+      // Fewer than 3 elements are subject to the strict density requirement, so fall back to the
+      // non-strict computation over the 4 elements that were seen.  (`count` is at least 2, because
+      // it is initialized to 2 and is only incremented.)  This mirrors `modulusStrictLong`.
+      if (nonstrictEnds) {
+        int[] result =
+            modulusInt(
+                Arrays.stream(new Integer[] {firstNonstrict, prev - modulus, prev, next})
+                    .iterator());
+        // `modulusInt` can return a non-positive modulus when a difference overflows.  This
+        // method promises a positive modulus, so report failure rather than a bogus answer.
+        if (result != null && result[1] <= 0) {
+          return null;
+        }
+        return result;
+      }
       return null;
     }
 
-    int r = modNonnegative(next, modulus);
+    // Report a positive modulus, as `modulus(int[])` does.  Congruence modulo m and modulo -m are
+    // the same relation, so this does not change which inputs are accepted, nor the value of r.
+    modulus = Math.abs(modulus);
+
+    // Use `prev`, a strict element: when `nonstrictEnds`, the loop broke with `next` holding the
+    // (nonstrict) last endpoint, which is the element to check, not the one that defines r.
+    int r = modNonnegative(prev, modulus);
     if (nonstrictEnds) {
       if ((r != modNonnegative(firstNonstrict, modulus))
           || (r != modNonnegative(lastNonstrict, modulus))) {
@@ -1127,10 +1172,14 @@ public final class MathP {
    *
    * @param nums array of operands
    * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
-   * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
-   *     null if no such exists or the array contains fewer than 3 elements
+   * @return an array of two integers (r,m), where m is positive, such that each number in NUMS is
+   *     equal to r (mod m); or null if no such exists or the array contains fewer than 3 elements
    */
-  @SuppressWarnings("value:statically.executable.not.pure") // results are .equals() but not ==
+  @SuppressWarnings({
+    "value:statically.executable.not.pure", // results are .equals() but not ==
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "lock:method.guarantee.violated", // side effect to local state
+  })
   @SideEffectFree
   @StaticallyExecutable
   public static long @Nullable @ArrayLen(2) [] modulusStrict(long[] nums, boolean nonstrictEnds) {
@@ -1149,11 +1198,21 @@ public final class MathP {
       lastIndex--;
     }
     if (lastIndex - firstIndex < 2) {
+      // Fewer than 3 elements are subject to the strict density requirement, so that requirement
+      // is vacuous.  Delegate to `modulusStrictLong`, which handles this case, so that the array
+      // and iterator implementations cannot diverge.  (This branch is unreachable when
+      // `nonstrictEnds` is false, because then `lastIndex - firstIndex` is `nums.length - 1`.)
+      if (nonstrictEnds) {
+        return modulusStrictLong(Arrays.stream(nums).boxed().iterator(), true);
+      }
       return null;
     }
 
     long modulus = nums[firstIndex + 1] - nums[firstIndex];
-    if (modulus == 1) {
+    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
+    // constraint that every integer is 0 mod 1, which this method does not report.
+    // Long.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it positive.
+    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Long.MIN_VALUE) {
       return null;
     }
     for (int i = firstIndex + 2; i <= lastIndex; i++) {
@@ -1161,6 +1220,10 @@ public final class MathP {
         return null;
       }
     }
+
+    // Report a positive modulus, as `modulus(long[])` does.  Congruence modulo m and modulo -m are
+    // the same relation, so this does not change which inputs are accepted, nor the value of r.
+    modulus = Math.abs(modulus);
 
     long r = modNonnegative(nums[firstIndex], modulus);
     if (nonstrictEnds) {
@@ -1182,9 +1245,10 @@ public final class MathP {
    *
    * @param itor iterator of operands; modified by this method
    * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
-   * @return an array of two integers (r,m) such that each number in NUMS is equal to r (mod m), or
-   *     null if no such exists or the iterator contains fewer than 3 elements
-   * @see #modulusStrict(int[], boolean)
+   * @return an array of two integers (r,m), where m is positive, such that each number in NUMS is
+   *     equal to r (mod m); or null if no such exists or the iterator contains fewer than 3
+   *     elements
+   * @see #modulusStrict(long[], boolean)
    */
   public static long @Nullable @ArrayLen(2) [] modulusStrictLong(
       Iterator<Long> itor, boolean nonstrictEnds) {
@@ -1207,7 +1271,10 @@ public final class MathP {
     }
     long next = itor.next();
     long modulus = next - prev;
-    if (modulus == 1 || modulus == 0) {
+    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
+    // constraint that every integer is 0 mod 1, which this method does not report.
+    // Long.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it positive.
+    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Long.MIN_VALUE) {
       return null;
     }
     int count = 2;
@@ -1225,18 +1292,30 @@ public final class MathP {
       count++;
     }
     if (count < 3) {
+      // Fewer than 3 elements are subject to the strict density requirement, so fall back to the
+      // non-strict computation over the 4 elements that were seen.  (`count` is at least 2, because
+      // it is initialized to 2 and is only incremented.)  This mirrors `modulusStrictInt`.
       if (nonstrictEnds) {
-        if (count == 2) {
-          return modulusLong(
-              Arrays.stream(new Long[] {firstNonstrict, prev - modulus, prev, next}).iterator());
-        } else if (count == 1) {
-          return modulusLong(Arrays.stream(new Long[] {firstNonstrict, prev, next}).iterator());
+        long[] result =
+            modulusLong(
+                Arrays.stream(new Long[] {firstNonstrict, prev - modulus, prev, next}).iterator());
+        // `modulusLong` can return a non-positive modulus when a difference overflows.  This
+        // method promises a positive modulus, so report failure rather than a bogus answer.
+        if (result != null && result[1] <= 0) {
+          return null;
         }
+        return result;
       }
       return null;
     }
 
-    long r = modNonnegative(next, modulus);
+    // Report a positive modulus, as `modulus(long[])` does.  Congruence modulo m and modulo -m are
+    // the same relation, so this does not change which inputs are accepted, nor the value of r.
+    modulus = Math.abs(modulus);
+
+    // Use `prev`, a strict element: when `nonstrictEnds`, the loop broke with `next` holding the
+    // (nonstrict) last endpoint, which is the element to check, not the one that defines r.
+    long r = modNonnegative(prev, modulus);
     if (nonstrictEnds) {
       if ((r != modNonnegative(firstNonstrict, modulus))
           || (r != modNonnegative(lastNonstrict, modulus))) {

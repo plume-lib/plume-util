@@ -50,6 +50,24 @@ final class MathPTest {
   //   assertTrue(result);
   // }
 
+  /**
+   * Converts an array of longs to an array of ints. Throws an exception if some element is not
+   * representable as an int.
+   *
+   * @param a an array of longs, or null
+   * @return the same values as ints, or null if the argument is null
+   */
+  private static int @Nullable [] narrow(long @Nullable [] a) {
+    if (a == null) {
+      return null;
+    }
+    int[] result = new int[a.length];
+    for (int i = 0; i < a.length; i++) {
+      result[i] = Math.toIntExact(a[i]);
+    }
+    return result;
+  }
+
   private static Iterator<Integer> intArrayIterator(int[] nums) {
     List<Integer> asList = new ArrayList<>(nums.length);
     for (int num : nums) {
@@ -328,8 +346,40 @@ final class MathPTest {
       check(Arrays.stream(nums).iterator(), goalRm);
     }
 
+    /**
+     * Checks that the {@code int} overloads agree with the {@code long} overloads, both for arrays
+     * and for iterators. Does nothing if some element is not representable as an {@code int}.
+     *
+     * @param nums the operands
+     * @param nonstrictEnds true if endpoints are NOT subject to the strict density requirement
+     */
+    void checkStrictIntOverloads(long[] nums, boolean nonstrictEnds) {
+      int[] intNums = new int[nums.length];
+      for (int i = 0; i < nums.length; i++) {
+        if (nums[i] != (int) nums[i]) {
+          return;
+        }
+        intNums[i] = (int) nums[i];
+      }
+      assertArraysEquals(
+          narrow(MathP.modulusStrict(nums.clone(), nonstrictEnds)),
+          MathP.modulusStrict(intNums.clone(), nonstrictEnds));
+      assertArraysEquals(
+          narrow(MathP.modulusStrictLong(Arrays.stream(nums).iterator(), nonstrictEnds)),
+          MathP.modulusStrictInt(intArrayIterator(intNums), nonstrictEnds));
+    }
+
     void checkStrict(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
       long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), false);
+      // The array-based overload must agree with the iterator-based overload.  (In particular, a
+      // constant array such as {5,5,5,5,5} must return null rather than dividing by a zero
+      // modulus.)
+      assertArraysEquals(rm, MathP.modulusStrict(nums.clone(), false));
+      checkStrictIntOverloads(nums, false);
+      // A returned modulus is always positive.
+      if (rm != null) {
+        assertTrue(rm[1] > 0, "modulus should be positive: " + Arrays.toString(rm));
+      }
       if (goalRm == null) {
         assertNull(rm);
       } else {
@@ -339,14 +389,27 @@ final class MathPTest {
         }
         long modulus = goalRm[1];
         long first = nums[0];
+        // The elements may be in decreasing order, in which case the signed step is the negation
+        // of the (always positive) modulus.
+        long step = nums.length > 1 ? nums[1] - nums[0] : modulus;
+        assertEquals(modulus, Math.abs(step));
         for (int i = 0; i < nums.length; i++) {
-          assertEquals(nums[i], first + i * modulus);
+          assertEquals(nums[i], first + i * step);
         }
       }
     }
 
     void checkStrictNonStrictEnds(long[] nums, long @Nullable @ArrayLen(2) [] goalRm) {
       long[] rm = MathP.modulusStrictLong(Arrays.stream(nums).iterator(), true);
+      // The array-based overload must agree with the iterator-based overload.  (In particular,
+      // when fewer than 3 elements are subject to the strict density requirement, both must take
+      // the same fallback rather than one of them returning null.)
+      assertArraysEquals(rm, MathP.modulusStrict(nums.clone(), true));
+      checkStrictIntOverloads(nums, true);
+      // A returned modulus is always positive.
+      if (rm != null) {
+        assertTrue(rm[1] > 0, "modulus should be positive: " + Arrays.toString(rm));
+      }
       if (goalRm == null) {
         assertNull(rm);
       } else {
@@ -359,8 +422,12 @@ final class MathPTest {
         assertEquals(remainder, nums[0] % modulus);
         assertEquals(remainder, nums[nums.length - 1] % modulus);
         long first = nums[1];
+        // The elements may be in decreasing order, in which case the signed step is the negation
+        // of the (always positive) modulus.  With only one strict element, any step is consistent.
+        long step = nums.length >= 4 ? nums[2] - nums[1] : modulus;
+        assertEquals(modulus, Math.abs(step));
         for (int i = 1; i < nums.length - 1; i++) {
-          assertEquals(nums[i], first + (i - 1) * modulus);
+          assertEquals(nums[i], first + (i - 1) * step);
         }
       }
     }
@@ -477,8 +544,45 @@ final class MathPTest {
         new long[] {27, 3, 11, 19, 27, 203}, new long[] {3, 8});
     // TODO testModulusLong.checkStrictNonStrictEnds(new long[] {27, 3, 11, 19, 27, -5}, new long[]
     // {3, 8});
+    // Regression tests: the remainder must be computed from an element that is subject to the
+    // strict density requirement, not from the (nonstrict) last endpoint.  The strict elements
+    // 7, 11, 15 are all 3 (mod 4), so an endpoint that is 1 (mod 4) must be rejected, even though
+    // both endpoints agree with each other.
+    testModulusLong.checkStrictNonStrictEnds(new long[] {1, 7, 11, 15, 5}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {1, 7, 11, 15, 19, 5}, null);
+    // The same values, with endpoints that do match the strict elements.
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15, 19, 23}, new long[] {3, 4});
+    // The same regression tests, for the int iterator overload.
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {1, 7, 11, 15, 5}), true));
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {1, 7, 11, 15, 19, 5}), true));
+    assertArraysEquals(
+        new int[] {3, 4},
+        MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11, 15, 19, 23}), true));
+    // All four overloads agree when fewer than 3 elements are subject to the strict density
+    // requirement: each falls back to the non-strict computation rather than returning null.
+    // (Regression test: the array overloads used to return null here.)
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11, 15}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {3, 7, 11}, new long[] {3, 4});
+    assertArraysEquals(
+        new int[] {3, 4}, MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11, 15}), true));
+    assertArraysEquals(
+        new int[] {3, 4}, MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 11}), true));
+    assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 11, 15}, true));
+    assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 11}, true));
+
     testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
+    // A decreasing sequence yields a positive modulus, just as `modulus()` does.
+    testModulusLong.checkStrict(new long[] {15, 11, 7, 3}, new long[] {3, 4});
+    testModulusLong.checkStrictNonStrictEnds(new long[] {19, 15, 11, 7, 3}, new long[] {3, 4});
+    // A sequence whose difference is 1 or -1 is the trivial constraint "x = 0 (mod 1)", which is
+    // not reported.
+    testModulusLong.checkStrict(new long[] {3, 4, 5, 6}, null);
+    testModulusLong.checkStrict(new long[] {6, 5, 4, 3}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {2, 3, 4, 5, 6}, null);
+    testModulusLong.checkStrictNonStrictEnds(new long[] {7, 6, 5, 4, 3}, null);
     testModulusLong.checkStrictNonStrictEnds(new long[] {3, 11}, null);
     testModulusLong.checkStrictNonStrictEnds(new long[] {3}, null);
     testModulusLong.checkStrictNonStrictEnds(new long[] {2383, 4015, -81, 463, -689}, null);
