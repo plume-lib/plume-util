@@ -1,6 +1,7 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -35,25 +36,27 @@ final class SIListTest {
   }
 
   @Test
-  @SuppressWarnings("index:argument") // literal indices into a list of known (loop-built) size
   void subList() {
-    ArrayList<String> al = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
-      al.add("str" + i);
-    }
-    SIList<String> sl = SIList.from(al);
+    // Test `subList()` on each SIList implementation that can hold 10 elements.
 
-    // A sublist not starting at index 0.  (Regression test: this used to throw.)
-    SIList<String> sub = sl.subList(2, 5);
-    assertEquals(3, sub.size());
-    assertEquals("str2", sub.get(0));
-    assertEquals("str3", sub.get(1));
-    assertEquals("str4", sub.get(2));
+    // A SimpleArrayList.
+    checkSubLists(SIList.from(strings(0, 10)));
+    // A OneMoreElementList.
+    checkSubLists(SIList.from(strings(0, 9)).add("str9"));
+    // A ListOfLists.
+    checkSubLists(SIList.concat(List.of(SIList.from(strings(0, 4)), SIList.from(strings(4, 10)))));
+    // A SimpleSubList.
+    checkSubLists(checkSubList(SIList.from(strings(0, 12)), 1, 11));
 
-    // A sublist starting at index 0 still works.
-    SIList<String> subFromStart = sl.subList(0, 3);
-    assertEquals(3, subFromStart.size());
-    assertEquals("str0", subFromStart.get(0));
+    // The empty list and a 1-element list, which have their own implementations.
+    SIList<String> empty = SIList.empty();
+    checkSubList(empty, 0, 0);
+    checkBadSubList(empty, 0, 1);
+    SIList<String> singleton = SIList.singleton("str0");
+    checkSubList(singleton, 0, 0);
+    checkSubList(singleton, 1, 1);
+    checkSubList(singleton, 0, 1);
+    checkBadSubList(singleton, 0, 2);
   }
 
   @Test
@@ -142,5 +145,96 @@ final class SIListTest {
     SIList<String> sl = SIList.concat(lists);
 
     assertTrue(sl.isEmpty());
+  }
+
+  /**
+   * Checks {@code subList()} on the given 10-element list, on ranges that exercise the special
+   * cases of {@code SIList.subList()}.
+   *
+   * @param sl a list with 10 elements
+   */
+  private void checkSubLists(SIList<String> sl) {
+    assertEquals(10, sl.size());
+
+    // A sublist that does not start at index 0.  (Regression test: this used to throw.)
+    SIList<String> sub = checkSubList(sl, 2, 5);
+    // A sublist that starts at index 0.
+    checkSubList(sl, 0, 3);
+    // A sublist that extends to the end of the list.
+    checkSubList(sl, 7, 10);
+    // The entire list.
+    checkSubList(sl, 0, 10);
+    // An empty sublist and a 1-element sublist, which take special code paths.
+    checkSubList(sl, 4, 4);
+    checkSubList(sl, 4, 5);
+    // A sublist of a sublist.
+    checkSubList(sub, 1, 3);
+
+    // Invalid ranges are rejected.
+    checkBadSubList(sl, -1, 5);
+    checkBadSubList(sl, 5, 2);
+    checkBadSubList(sl, 0, 11);
+    // A range is checked against the sublist, not against the list that the sublist is a view of.
+    checkBadSubList(sub, 0, 4);
+  }
+
+  /**
+   * Checks that {@code sl.subList(fromIndex, toIndex)} is a view of the given range of {@code sl}:
+   * it has the expected size and the expected elements, both via {@code get()} and via iteration.
+   *
+   * @param sl a list
+   * @param fromIndex low endpoint (inclusive) of the sublist
+   * @param toIndex high endpoint (exclusive) of the sublist
+   * @return the sublist
+   */
+  @SuppressWarnings("index:argument") // the callers pass valid indices
+  private SIList<String> checkSubList(SIList<String> sl, int fromIndex, int toIndex) {
+    List<String> expected = new ArrayList<>();
+    for (int i = fromIndex; i < toIndex; i++) {
+      expected.add(sl.get(i));
+    }
+
+    SIList<String> sub = sl.subList(fromIndex, toIndex);
+    assertEquals(expected.size(), sub.size());
+    assertEquals(expected.isEmpty(), sub.isEmpty());
+    for (int i = 0; i < expected.size(); i++) {
+      assertEquals(expected.get(i), sub.get(i));
+    }
+
+    List<String> iterated = new ArrayList<>();
+    for (String s : sub) {
+      iterated.add(s);
+    }
+    assertEquals(expected, iterated);
+
+    return sub;
+  }
+
+  /**
+   * Checks that {@code sl.subList(fromIndex, toIndex)} throws an exception because the range is not
+   * valid for {@code sl}.
+   *
+   * @param sl a list
+   * @param fromIndex low endpoint (inclusive) of the sublist
+   * @param toIndex high endpoint (exclusive) of the sublist
+   */
+  @SuppressWarnings("index:argument") // the callers intentionally pass invalid indices
+  private void checkBadSubList(SIList<String> sl, int fromIndex, int toIndex) {
+    assertThrows(IllegalArgumentException.class, () -> sl.subList(fromIndex, toIndex));
+  }
+
+  /**
+   * Returns a list containing the strings "str{fromIndex}" through "str{toIndex-1}".
+   *
+   * @param fromIndex the first index, inclusive
+   * @param toIndex the last index, exclusive
+   * @return a list of strings
+   */
+  private static List<String> strings(int fromIndex, int toIndex) {
+    List<String> result = new ArrayList<>();
+    for (int i = fromIndex; i < toIndex; i++) {
+      result.add("str" + i);
+    }
+    return result;
   }
 }
