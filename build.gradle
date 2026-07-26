@@ -28,6 +28,9 @@ repositories {
   // Sibling plume-lib projects are often built locally, so read their snapshots
   // from the local Maven repository.  Restricting this to snapshots prevents a
   // stale locally-installed release from shadowing the one on Maven Central.
+  // A consequence is that a locally-installed *release* of a sibling project is
+  // ignored, silently, in favor of the release on Maven Central.  To build
+  // against a locally-installed release, temporarily remove "snapshotsOnly()".
   mavenLocal {
     mavenContent {
       snapshotsOnly()
@@ -82,7 +85,7 @@ tasks.withType(JavaCompile).configureEach {
     disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
     disable("DoNotCallSuggester") // Suggests use of an Error Prone annotation.
     disable("EffectivelyPrivate") // Loses information about the abstraction.
-    disable("ExtendsObject")  // Incorrect when using the Checker Framework.
+    disable("ExtendsObject") // Incorrect when using the Checker Framework.
     disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
     disable("ReferenceEquality") // Use Interning Checker instead.
   }
@@ -308,7 +311,7 @@ shadow {
 }
 
 mavenPublishing {
-  coordinates("org.plumelib", "${project.name}", "${project.version}")
+  coordinates("org.plumelib", project.name, project.version)
 
   pom {
     name = "Plume Util"

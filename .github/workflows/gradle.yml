@@ -19,6 +19,8 @@ jobs:
       # Java 21 is always needed, because compilation always uses Java 21.
       # Java 21 is listed last, so that "setup-java" makes Java 21 the value of
       # JAVA_HOME and therefore Gradle itself runs under Java 21.
+      # When "matrix.java" is 21, Java 21 is requested twice; the repetition is
+      # harmless, because "setup-java" installs Java 21 only once.
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -30,20 +32,21 @@ jobs:
           cache: 'gradle'
       - name: java -version
         run: java -version
-      # The system properties are the same as in the "./gradlew build" step
-      # below, because system properties given on the command line are part of
-      # the Gradle daemon's compatibility check.  If the two steps used
-      # different system properties, then the daemon that this step starts would
-      # be discarded and the "./gradlew build" step would start a second daemon.
+      # This step warms the Gradle cache and starts a Gradle daemon that the
+      # "./gradlew build" step reuses.  This step needs no arguments, because
+      # "spotlessCheck" does not resolve a Java toolchain.  The "./gradlew
+      # build" step passes Gradle properties ("-P") rather than system
+      # properties ("-D"); system properties given on the command line are part
+      # of the Gradle daemon's compatibility check, so a system property on only
+      # one of the two steps would make the "./gradlew build" step discard this
+      # step's daemon and start a second one.
       - name: Warm up Gradle cache
-        run: ./gradlew spotlessCheck -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_X64,JAVA_HOME_21_X64 > /dev/null 2>&1 || (sleep 60 && true)
+        run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
       # Gradle does not auto-detect the JDKs that "setup-java" installs, because
       # they are in the tool cache rather than in a standard location.  Without
-      # "-Dorg.gradle.java.installations.fromEnv", Gradle would download a
+      # "org.gradle.java.installations.fromEnv", Gradle would download a
       # redundant copy of each JDK, into a directory that CI does not cache.
-      # The "_X64" suffix is the architecture of the "ubuntu-latest" runner.  On
-      # an ARM runner, "setup-java" names the variables "JAVA_HOME_NN_ARM64"
-      # instead, and this command line would need to be updated to match; if the
-      # command line is not updated, Gradle silently downloads the JDKs again.
+      # "setup-java" names each variable after the architecture of the runner,
+      # which is what "runner.arch" yields:  "X64", "ARM64", etc.
       - name: ./gradlew build
-        run: ./gradlew build -PtestJavaVersion=${{ matrix.java }} -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_X64,JAVA_HOME_21_X64
+        run: ./gradlew build -PtestJavaVersion=${{ matrix.java }} -Porg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_${{ runner.arch }},JAVA_HOME_21_${{ runner.arch }}
