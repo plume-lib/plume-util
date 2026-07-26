@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -31,6 +32,28 @@ final class SIListTest {
     for (int i = 0; i < sl.size(); i++) {
       assertTrue(al.contains(sl.get(i)));
     }
+  }
+
+  @Test
+  @SuppressWarnings("index:argument") // literal indices into a list of known (loop-built) size
+  void subList() {
+    ArrayList<String> al = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      al.add("str" + i);
+    }
+    SIList<String> sl = SIList.from(al);
+
+    // A sublist not starting at index 0.  (Regression test: this used to throw.)
+    SIList<String> sub = sl.subList(2, 5);
+    assertEquals(3, sub.size());
+    assertEquals("str2", sub.get(0));
+    assertEquals("str3", sub.get(1));
+    assertEquals("str4", sub.get(2));
+
+    // A sublist starting at index 0 still works.
+    SIList<String> subFromStart = sl.subList(0, 3);
+    assertEquals(3, subFromStart.size());
+    assertEquals("str0", subFromStart.get(0));
   }
 
   @Test
