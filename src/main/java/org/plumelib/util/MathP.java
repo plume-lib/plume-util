@@ -891,7 +891,8 @@ public final class MathP {
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
-   * <p>This "Strict" version requires its input to be sorted, and no element may be missing.
+   * <p>This "Strict" version requires its input to be sorted, in either increasing or decreasing
+   * order, and no element may be missing. The returned modulus is positive either way.
    *
    * <p>This "Strict" version differs from the regular modulus by requiring that the argument be
    * dense: that is, every pair of numbers in the argument array is separated by exactly the
@@ -907,8 +908,8 @@ public final class MathP {
    */
   @SuppressWarnings({
     "value:statically.executable.not.pure", // results are .equals() but not ==
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated", // side effect to local state
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state (fresh iterator)
+    "lock:method.guarantee.violated", // side effect to local state (fresh iterator)
   })
   @SideEffectFree
   @StaticallyExecutable
@@ -1020,6 +1021,13 @@ public final class MathP {
       // Fewer than 3 elements are subject to the strict density requirement, so fall back to the
       // non-strict computation over the 4 elements that were seen.  (`count` is at least 2, because
       // it is initialized to 2 and is only incremented.)  This mirrors `modulusStrictLong`.
+      //
+      // `prev - modulus` reconstructs the element before `prev`.  When the input has 4 elements,
+      // that is the genuine second element.  When the input has only 3 elements, the loop above
+      // never ran, so `prev - modulus` is a value that does not appear in the input.  That is
+      // harmless: its difference from each other element is an integer combination of differences
+      // that are already present, so it does not change the gcd that `modulusInt` computes, and
+      // hence changes neither the returned modulus nor the returned remainder.
       if (nonstrictEnds) {
         int[] result =
             modulusInt(
@@ -1166,7 +1174,8 @@ public final class MathP {
    * largest possible modulus is used, and the trivial constraint that all integers are equal to 0
    * mod 1 is not returned (null is returned instead).
    *
-   * <p>This "Strict" version requires its input to be sorted, and no element may be missing.
+   * <p>This "Strict" version requires its input to be sorted, in either increasing or decreasing
+   * order, and no element may be missing. The returned modulus is positive either way.
    *
    * <p>This "Strict" version differs from the regular modulus by requiring that the argument be
    * dense: that is, every pair of numbers in the argument array is separated by exactly the
@@ -1182,8 +1191,8 @@ public final class MathP {
    */
   @SuppressWarnings({
     "value:statically.executable.not.pure", // results are .equals() but not ==
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated", // side effect to local state
+    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state (fresh iterator)
+    "lock:method.guarantee.violated", // side effect to local state (fresh iterator)
   })
   @SideEffectFree
   @StaticallyExecutable
@@ -1294,6 +1303,13 @@ public final class MathP {
       // Fewer than 3 elements are subject to the strict density requirement, so fall back to the
       // non-strict computation over the 4 elements that were seen.  (`count` is at least 2, because
       // it is initialized to 2 and is only incremented.)  This mirrors `modulusStrictInt`.
+      //
+      // `prev - modulus` reconstructs the element before `prev`.  When the input has 4 elements,
+      // that is the genuine second element.  When the input has only 3 elements, the loop above
+      // never ran, so `prev - modulus` is a value that does not appear in the input.  That is
+      // harmless: its difference from each other element is an integer combination of differences
+      // that are already present, so it does not change the gcd that `modulusLong` computes, and
+      // hence changes neither the returned modulus nor the returned remainder.
       if (nonstrictEnds) {
         long[] result =
             modulusLong(

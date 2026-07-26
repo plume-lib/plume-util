@@ -361,6 +361,10 @@ final class MathPTest {
         }
         intNums[i] = (int) nums[i];
       }
+      // The `narrow` calls below cannot throw.  Every element of `nums` is representable as an
+      // `int`, so the whole input spans less than 2^32.  Three elements separated by the modulus
+      // therefore force the modulus to be at most Integer.MAX_VALUE, and the remainder is smaller
+      // still.
       assertArraysEquals(
           narrow(MathP.modulusStrict(nums.clone(), nonstrictEnds)),
           MathP.modulusStrict(intNums.clone(), nonstrictEnds));
@@ -603,6 +607,42 @@ final class MathPTest {
         null, MathP.modulusStrictInt(intArrayIterator(new int[] {5, 5, 5, 5, 5}), true));
     assertArraysEquals(null, MathP.modulusStrict(new int[] {5, 5, 5, 5, 5}, false));
     assertArraysEquals(null, MathP.modulusStrict(new int[] {5, 5, 5, 5, 5}, true));
+
+    // Regression test for the guard against a modulus of Integer.MIN_VALUE, which `Math.abs`
+    // cannot make positive.  Every consecutive difference below is Integer.MIN_VALUE, because
+    // subtracting Integer.MIN_VALUE from 0 overflows back to Integer.MIN_VALUE.  Without the
+    // guard, `modNonnegative` would return a negative remainder.
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {0, Integer.MIN_VALUE, 0}), false));
+    assertArraysEquals(null, MathP.modulusStrict(new int[] {0, Integer.MIN_VALUE, 0}, false));
+    assertArraysEquals(
+        null,
+        MathP.modulusStrictInt(
+            intArrayIterator(new int[] {0, Integer.MIN_VALUE, 0, Integer.MIN_VALUE, 0}), true));
+    assertArraysEquals(
+        null, MathP.modulusStrict(new int[] {0, Integer.MIN_VALUE, 0, Integer.MIN_VALUE, 0}, true));
+    // The same regression test for Long.MIN_VALUE.  These use the helpers, which also check that
+    // the array and iterator overloads agree.  The Integer.MIN_VALUE cases above cannot use the
+    // helpers, because the same values as `long` do not overflow: the `long` overloads accept
+    // them and the `int` overloads do not.
+    testModulusLong.checkStrict(new long[] {0, Long.MIN_VALUE, 0}, null);
+    testModulusLong.checkStrictNonStrictEnds(
+        new long[] {0, Long.MIN_VALUE, 0, Long.MIN_VALUE, 0}, null);
+
+    // Regression test for the guard against a non-positive modulus returned by the non-strict
+    // fallback.  With 4 elements and nonstrict ends, only 2 elements are subject to the strict
+    // density requirement, so the fallback runs over all 4.  Every difference between 0 and
+    // MIN_VALUE overflows to MIN_VALUE, whose `Math.abs` is still MIN_VALUE, so the gcd that
+    // `modulus` computes is MIN_VALUE.  The fallback must report failure rather than pass that
+    // negative modulus along.
+    assertArraysEquals(
+        null,
+        MathP.modulusStrictInt(
+            intArrayIterator(new int[] {0, Integer.MIN_VALUE, 0, Integer.MIN_VALUE}), true));
+    assertArraysEquals(
+        null, MathP.modulusStrict(new int[] {0, Integer.MIN_VALUE, 0, Integer.MIN_VALUE}, true));
+    testModulusLong.checkStrictNonStrictEnds(
+        new long[] {0, Long.MIN_VALUE, 0, Long.MIN_VALUE}, null);
 
     testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
