@@ -94,11 +94,11 @@ tasks.withType(JavaCompile).configureEach {
 // Compilation always uses Java 21, but tests run under the version given by
 // `-PtestJavaVersion=NN` (default 21).  Continuous integration passes each
 // version of the build matrix.
-def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("21").get()
+def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("21")
 
 tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
-    languageVersion = JavaLanguageVersion.of(testJavaVersion)
+    languageVersion = testJavaVersion.map { JavaLanguageVersion.of(it) }
   }
 
   useJUnitPlatform {
@@ -117,6 +117,10 @@ tasks.withType(Test).configureEach {
     events("failed")
     exceptionFormat = "full"
   }
+}
+
+jacoco {
+  toolVersion = libs.jacoco.get().version
 }
 
 tasks.named("jacocoTestReport") {
@@ -201,11 +205,25 @@ checkerFramework {
 // Javadoc
 
 // Javadoc generates a CSS import of a font that is not distributed alongside
-// the documentation, so remove the import.
+// the documentation, so remove the import.  This uses plain file input/output
+// rather than "ant.replaceregexp", because the Ant builder is reachable only
+// through the "Project" object, which the configuration cache forbids a task
+// action from using.
+//
+// Only .css and .html files are examined, to avoid reading Javadoc's binary
+// output files.  The trailing "[ \t]*" does not include the line separator,
+// which matches what "ant.replaceregexp" did with "byline:true".
 def removeDejaVuFontImport(File javadocDir) {
-  ant.replaceregexp(match:"@import url\\('resources/fonts/dejavu.css'\\);\\s*", replace:"",
-  flags:"g", byline:true) {
-    fileset(dir: javadocDir)
+  javadocDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+    if (!(file.name.endsWith(".css") || file.name.endsWith(".html"))) {
+      return
+    }
+    String contents = file.getText("UTF-8")
+    String newContents =
+        contents.replaceAll(/@import url\('resources\/fonts\/dejavu.css'\);[ \t]*/, "")
+    if (newContents != contents) {
+      file.setText(newContents, "UTF-8")
+    }
   }
 }
 
@@ -333,6 +351,11 @@ tasks.register("tags", Exec) {
   outputs.file(layout.projectDirectory.file("TAGS"))
   executable("etags")
   // Compute the arguments when the task runs, not when it is configured, so
-  // that configuring the build does not scan the source tree.
-  argumentProviders.add({ javaFiles.files.sort()*.absolutePath } as CommandLineArgumentProvider)
+  // that configuring the build does not scan the source tree.  Pass relative
+  // file names, so that the TAGS table does not depend on the location of the
+  // clone and remains valid if the clone is moved.
+  def projectPath = layout.projectDirectory.asFile.toPath()
+  argumentProviders.add({
+    javaFiles.files.sort()*.toPath().collect { projectPath.relativize(it).toString() }
+  } as CommandLineArgumentProvider)
 }

@@ -30,11 +30,20 @@ jobs:
           cache: 'gradle'
       - name: java -version
         run: java -version
+      # The system properties are the same as in the "./gradlew build" step
+      # below, because system properties given on the command line are part of
+      # the Gradle daemon's compatibility check.  If the two steps used
+      # different system properties, then the daemon that this step starts would
+      # be discarded and the "./gradlew build" step would start a second daemon.
       - name: Warm up Gradle cache
-        run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
+        run: ./gradlew spotlessCheck -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_X64,JAVA_HOME_21_X64 > /dev/null 2>&1 || (sleep 60 && true)
       # Gradle does not auto-detect the JDKs that "setup-java" installs, because
       # they are in the tool cache rather than in a standard location.  Without
       # "-Dorg.gradle.java.installations.fromEnv", Gradle would download a
       # redundant copy of each JDK, into a directory that CI does not cache.
+      # The "_X64" suffix is the architecture of the "ubuntu-latest" runner.  On
+      # an ARM runner, "setup-java" names the variables "JAVA_HOME_NN_ARM64"
+      # instead, and this command line would need to be updated to match; if the
+      # command line is not updated, Gradle silently downloads the JDKs again.
       - name: ./gradlew build
         run: ./gradlew build -PtestJavaVersion=${{ matrix.java }} -Dorg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_X64,JAVA_HOME_21_X64
