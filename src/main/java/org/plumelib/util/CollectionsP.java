@@ -871,7 +871,9 @@ public final class CollectionsP {
      * @param elements the new (replacement) elements
      */
     public Replacement {
-      if (end < start - 1) {
+      // Compute in `long` arithmetic, because `start - 1` overflows when `start` is
+      // Integer.MIN_VALUE.
+      if ((long) end < (long) start - 1) {
         // Do not use `this` in the message: in a compact canonical constructor the record
         // components are not yet assigned, so `this.toString()` would report 0, 0, null.
         throw new Error("Invalid <start,end> pair: <" + start + ", " + end + ">");
