@@ -257,6 +257,11 @@ final class StringsPTest {
     assertEquals("?7", StringsP.unescapeJava("\0777")); // '?' = \077
     assertEquals("?7", StringsP.unescapeJava("\777")); // '?' = \077
 
+    // Malformed escapes must terminate, not loop forever.
+    assertEquals("\001x", StringsP.unescapeJava("\\1x")); // octal stops at non-octal digit
+    assertEquals(" 0", StringsP.unescapeJava("\\400")); // octal stops when value exceeds 0xFF
+    assertEquals("«XY", StringsP.unescapeJava("\\uABXY")); // Unicode stops at non-hex digit
+
     // public static String escapeNonASCII(String orig)
 
     assertEquals("foobar", StringsP.escapeNonASCII("foobar"));
@@ -444,6 +449,10 @@ final class StringsPTest {
     assertEquals(-1, vnc.compare("123.456", "123.456.789"));
     assertEquals(1, vnc.compare("123.456.789", "123"));
     assertEquals(1, vnc.compare("123.456.789", "123.456"));
+
+    // Equal numeric value but different string (leading zeros): must be 0 and antisymmetric.
+    assertEquals(0, vnc.compare("1.2", "1.02"));
+    assertEquals(0, vnc.compare("1.02", "1.2"));
   }
 
   // //////////////////////////////////////////////////////////////////////

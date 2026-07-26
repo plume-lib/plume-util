@@ -78,10 +78,10 @@ public final class StringsP {
    * target if it does not end with oldStr.
    *
    * <p>An alternative to this is to use regular expressions: {@code
-   * target.replaceLast(Pattern.quote(oldStr) + "$", newStr)}
+   * target.replaceAll(Pattern.quote(oldStr) + "$", newStr)}
    *
    * @param target the string to do replacement in
-   * @param oldStr the substring to replace
+   * @param oldStr the suffix to replace
    * @param newStr the replacement
    * @return the target with an occurrence of oldStr at the end replaced by newStr; returns the
    *     target if it does not end with oldStr
@@ -642,10 +642,11 @@ public final class StringsP {
           int limit = Math.min(ii + 4, orig.length());
           while (ii < limit) {
             int thisDigit = Character.digit(orig.charAt(ii), 16);
-            if (thisDigit != -1) {
-              unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
-              ii++;
+            if (thisDigit == -1) {
+              break;
             }
+            unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
+            ii++;
           }
           sb.append(unicodeChar);
           postEsc = ii;
@@ -658,13 +659,15 @@ public final class StringsP {
           int iii = thisEsc + 1;
           while (iii < Math.min(thisEsc + 4, orig.length())) {
             int thisDigit = Character.digit(orig.charAt(iii), 8);
-            if (thisDigit != -1) {
-              int newValue = (octalChar * 8) + thisDigit;
-              if (newValue <= 0xFF) {
-                octalChar = (char) newValue;
-                iii++;
-              }
+            if (thisDigit == -1) {
+              break;
             }
+            int newValue = (octalChar * 8) + thisDigit;
+            if (newValue > 0xFF) {
+              break;
+            }
+            octalChar = (char) newValue;
+            iii++;
           }
           sb.append(octalChar);
           postEsc = iii;
@@ -1120,12 +1123,7 @@ public final class StringsP {
           return 1;
         }
       }
-      if (components1.length < components2.length) {
-        return -1;
-      } else {
-        assert components2.length < components1.length;
-        return 1;
-      }
+      return Integer.compare(components1.length, components2.length);
     }
   }
 
