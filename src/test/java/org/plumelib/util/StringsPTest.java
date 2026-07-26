@@ -252,15 +252,19 @@ final class StringsPTest {
     assertEquals("ABC", StringsP.unescapeJava("A\\102C"));
     assertEquals("don't", StringsP.unescapeJava("don\\'t"));
 
-    assertEquals("(1", StringsP.unescapeJava("\0501"));
-    assertEquals("(1", StringsP.unescapeJava("\501"));
-    assertEquals("?7", StringsP.unescapeJava("\0777")); // '?' = \077
-    assertEquals("?7", StringsP.unescapeJava("\777")); // '?' = \077
+    assertEquals("(1", StringsP.unescapeJava("\\0501"));
+    assertEquals("(1", StringsP.unescapeJava("\\501"));
+    assertEquals("?7", StringsP.unescapeJava("\\0777")); // '?' = \077
+    assertEquals("?7", StringsP.unescapeJava("\\777")); // '?' = \077
 
     // Malformed escapes must terminate, not loop forever.
     assertEquals("\001x", StringsP.unescapeJava("\\1x")); // octal stops at non-octal digit
     assertEquals(" 0", StringsP.unescapeJava("\\400")); // octal stops when value exceeds 0xFF
-    assertEquals("«XY", StringsP.unescapeJava("\\uABXY")); // Unicode stops at non-hex digit
+    assertEquals("\u00abXY", StringsP.unescapeJava("\\uABXY")); // Unicode stops at non-hex digit
+    assertEquals("\u00ab!", StringsP.unescapeJava("\\uuuuAB!")); // ditto, after multiple 'u's
+    assertEquals("\u00ab", StringsP.unescapeJava("\\uAB")); // Unicode stops at end of string
+    assertEquals("\0", StringsP.unescapeJava("\\u")); // no hex digit yields the null character
+    assertEquals("\0ZZ", StringsP.unescapeJava("\\uZZ")); // ditto
 
     // public static String escapeNonASCII(String orig)
 
@@ -453,6 +457,22 @@ final class StringsPTest {
     // Equal numeric value but different string (leading zeros): must be 0 and antisymmetric.
     assertEquals(0, vnc.compare("1.2", "1.02"));
     assertEquals(0, vnc.compare("1.02", "1.2"));
+
+    // A component may exceed Integer.MAX_VALUE (2147483647) or Long.MAX_VALUE.
+    assertEquals(-1, vnc.compare("1.2147483647", "1.2147483648"));
+    assertEquals(1, vnc.compare("1.2147483648", "1.2147483647"));
+    assertEquals(0, vnc.compare("1.2147483648", "1.2147483648"));
+    assertEquals(-1, vnc.compare("1.9", "1.9223372036854775808"));
+    assertEquals(1, vnc.compare("1.9223372036854775808", "1.9"));
+    assertEquals(
+        -1, vnc.compare("1.99999999999999999999", "1.999999999999999999999")); // differing lengths
+    assertEquals(
+        0, vnc.compare("1.99999999999999999999", "1.099999999999999999999")); // leading zero
+    assertEquals(1, vnc.compare("1.0000000000000000000005", "1.4")); // leading zeros, then larger
+
+    // All-zero components compare equal regardless of how they are written.
+    assertEquals(0, vnc.compare("1.0", "1.000"));
+    assertEquals(-1, vnc.compare("1.0", "1.0000000000000000000001"));
   }
 
   // //////////////////////////////////////////////////////////////////////
