@@ -3982,9 +3982,8 @@ public final class ArraysP {
       TO[] mapArray(
           Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable, Class<TO> toClass) {
 
-    if (iterable instanceof RandomAccess) {
+    if (iterable instanceof List<FROM> list && list instanceof RandomAccess) {
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      List<FROM> list = (List<FROM>) iterable;
       int len = list.size();
       @SuppressWarnings("unchecked") // reflection
       TO[] result = (TO[]) Array.newInstance(toClass, len);
@@ -4009,12 +4008,14 @@ public final class ArraysP {
       return result;
     }
 
-    // iterable is not a Collection here, so use the mapped list's size rather than casting
-    // iterable.
+    // iterable is not a Collection here, so its size is not known in advance; map it to a list and
+    // use that list's size.
     List<TO> resultList = CollectionsP.mapList(f, iterable);
     int len = resultList.size();
     @SuppressWarnings("unchecked") // reflection
     TO[] result = (TO[]) Array.newInstance(toClass, len);
+    // Copy elementwise rather than calling resultList.toArray(result), whose annotated return type
+    // permits trailing nulls and so is not assignable to TO[].
     for (int i = 0; i < result.length; i++) {
       result[i] = resultList.get(i);
     }
