@@ -1002,13 +1002,6 @@ public final class MathP {
     }
     int next = itor.next();
     int modulus = next - prev;
-    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
-    // constraint that every integer is 0 mod 1, which this method does not report.
-    // Integer.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it
-    // positive.
-    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Integer.MIN_VALUE) {
-      return null;
-    }
     int count = 2;
     while (itor.hasNext()) {
       prev = next;
@@ -1039,6 +1032,18 @@ public final class MathP {
         }
         return result;
       }
+      return null;
+    }
+
+    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
+    // constraint that every integer is 0 mod 1, which this method does not report.
+    // Integer.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it
+    // positive.  This test comes after the `count < 3` fallback, which never uses `modulus` as a
+    // divisor: when the strict density requirement is vacuous, an inferred step of 0, 1, or -1
+    // must not veto the non-strict computation, which may still find a modulus.  For example,
+    // {3, 7, 7, 11} with nonstrict ends infers a step of 0 from the two strict elements, but the
+    // non-strict computation over all four elements yields (3, 4).
+    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Integer.MIN_VALUE) {
       return null;
     }
 
@@ -1271,12 +1276,6 @@ public final class MathP {
     }
     long next = itor.next();
     long modulus = next - prev;
-    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
-    // constraint that every integer is 0 mod 1, which this method does not report.
-    // Long.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it positive.
-    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Long.MIN_VALUE) {
-      return null;
-    }
     int count = 2;
     while (itor.hasNext()) {
       prev = next;
@@ -1306,6 +1305,18 @@ public final class MathP {
         }
         return result;
       }
+      return null;
+    }
+
+    // A modulus of 0 would cause a division by zero.  A modulus of 1 or -1 is the trivial
+    // constraint that every integer is 0 mod 1, which this method does not report.
+    // Long.MIN_VALUE has no positive counterpart, so `Math.abs` below could not make it positive.
+    // This test comes after the `count < 3` fallback, which never uses `modulus` as a divisor:
+    // when the strict density requirement is vacuous, an inferred step of 0, 1, or -1 must not
+    // veto the non-strict computation, which may still find a modulus.  For example,
+    // {3, 7, 7, 11} with nonstrict ends infers a step of 0 from the two strict elements, but the
+    // non-strict computation over all four elements yields (3, 4).
+    if (modulus == 0 || modulus == 1 || modulus == -1 || modulus == Long.MIN_VALUE) {
       return null;
     }
 
