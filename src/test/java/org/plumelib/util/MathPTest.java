@@ -572,6 +572,38 @@ final class MathPTest {
     assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 11, 15}, true));
     assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 11}, true));
 
+    // The fallback applies even when the step inferred from the two strict elements is 0, as in
+    // {3, 7, 7, 11}.  The strict density requirement is vacuous, so the non-strict computation
+    // over all four elements decides, exactly as `modulus` does.  (Regression test: the inferred
+    // step of 0 used to veto the fallback, so all four overloads returned null.)  This case uses
+    // explicit assertions rather than `checkStrictNonStrictEnds`, because that helper also
+    // asserts that consecutive strict elements are separated by the modulus, which is not true
+    // of this input.
+    assertArraysEquals(new int[] {3, 4}, MathP.modulus(new int[] {3, 7, 7, 11}));
+    assertArraysEquals(
+        new long[] {3, 4},
+        MathP.modulusStrictLong(Arrays.stream(new long[] {3, 7, 7, 11}).iterator(), true));
+    assertArraysEquals(new long[] {3, 4}, MathP.modulusStrict(new long[] {3, 7, 7, 11}, true));
+    assertArraysEquals(
+        new int[] {3, 4}, MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 7, 11}), true));
+    assertArraysEquals(new int[] {3, 4}, MathP.modulusStrict(new int[] {3, 7, 7, 11}, true));
+    // With strict ends, every element is subject to the density requirement, which 7, 7 violates.
+    assertArraysEquals(
+        null, MathP.modulusStrictLong(Arrays.stream(new long[] {3, 7, 7, 11}).iterator(), false));
+    assertArraysEquals(null, MathP.modulusStrict(new long[] {3, 7, 7, 11}, false));
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {3, 7, 7, 11}), false));
+    assertArraysEquals(null, MathP.modulusStrict(new int[] {3, 7, 7, 11}, false));
+
+    // Regression test for the guard against a zero modulus: a constant input yields a modulus of
+    // 0, which must be rejected rather than used as a divisor.
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {5, 5, 5, 5, 5}), false));
+    assertArraysEquals(
+        null, MathP.modulusStrictInt(intArrayIterator(new int[] {5, 5, 5, 5, 5}), true));
+    assertArraysEquals(null, MathP.modulusStrict(new int[] {5, 5, 5, 5, 5}, false));
+    assertArraysEquals(null, MathP.modulusStrict(new int[] {5, 5, 5, 5, 5}, true));
+
     testModulusLong.checkStrictNonStrictEnds(new long[] {11, 7, 3}, new long[] {3, 4});
     testModulusLong.checkStrictNonStrictEnds(new long[] {15, 7, 3}, new long[] {3, 4});
     // A decreasing sequence yields a positive modulus, just as `modulus()` does.
