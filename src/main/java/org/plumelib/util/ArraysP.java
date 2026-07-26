@@ -1021,7 +1021,7 @@ public final class ArraysP {
   @Pure
   public static int indexOf(
       @PolyNull @PolySigned Object[] a, List<? extends @PolyNull @PolySigned Object> sub) {
-    int aIndexMax = a.length - sub.size() + 1;
+    int aIndexMax = a.length - sub.size();
     for (int i = 0; i <= aIndexMax; i++) {
       if (isSubarray(a, sub, i)) {
         return i;
@@ -3707,7 +3707,7 @@ public final class ArraysP {
    * Returns true if all elements of a are null.
    *
    * @param a an array
-   * @return true iff all elements of a are null (unspecified result if a is zero-sized)
+   * @return true iff all elements of a are null (true if a is zero-sized)
    */
   @Pure
   public static boolean allNull(@PolyNull Object[] a) {
@@ -3722,7 +3722,7 @@ public final class ArraysP {
   /**
    * Returns true if a contains null.
    *
-   * @param a an array
+   * @param a a list
    * @return true iff some element of a is null (false if a is zero-sized)
    */
   @Pure
@@ -3737,8 +3737,8 @@ public final class ArraysP {
   /**
    * Returns true if all elements of a are null.
    *
-   * @param a an array
-   * @return true iff all elements of a are null (unspecified result if a is zero-sized)
+   * @param a a list
+   * @return true iff all elements of a are null (true if a is zero-sized)
    */
   @Pure
   public static boolean allNull(List<?> a) {
@@ -3982,9 +3982,8 @@ public final class ArraysP {
       TO[] mapArray(
           Function<? super FROM, ? extends TO> f, Iterable<FROM> iterable, Class<TO> toClass) {
 
-    if (iterable instanceof RandomAccess) {
+    if (iterable instanceof List<FROM> list && list instanceof RandomAccess) {
       // Per the Javadoc of RandomAccess, an indexed for loop is faster than a foreach loop.
-      List<FROM> list = (List<FROM>) iterable;
       int len = list.size();
       @SuppressWarnings("unchecked") // reflection
       TO[] result = (TO[]) Array.newInstance(toClass, len);
@@ -4009,10 +4008,14 @@ public final class ArraysP {
       return result;
     }
 
+    // iterable is not a Collection here, so its size is not known in advance; map it to a list and
+    // use that list's size.
     List<TO> resultList = CollectionsP.mapList(f, iterable);
-    int len = ((Collection<?>) iterable).size();
+    int len = resultList.size();
     @SuppressWarnings("unchecked") // reflection
     TO[] result = (TO[]) Array.newInstance(toClass, len);
+    // Copy elementwise rather than calling resultList.toArray(result), whose annotated return type
+    // permits trailing nulls and so is not assignable to TO[].
     for (int i = 0; i < result.length; i++) {
       result[i] = resultList.get(i);
     }
