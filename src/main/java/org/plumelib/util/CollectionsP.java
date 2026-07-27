@@ -855,8 +855,9 @@ public final class CollectionsP {
    * Represents a replacement of one range of a collection by another collection.
    *
    * @param <T> the type of collection elements
-   * @param start the first line to replace, inclusive; may be equal to {@code start}-1
-   * @param end the last line to replace, exclusive
+   * @param start the first index to replace, inclusive; must be non-negative
+   * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
+   *     range (an insertion)
    * @param elements the new (replacement) elements
    */
   public static record Replacement<T>(int start, int end, Collection<T> elements) {
@@ -864,13 +865,20 @@ public final class CollectionsP {
     /**
      * Creates a new Replacement.
      *
-     * @param start the first line to replace, inclusive; may be equal to {@code start}-1
-     * @param end the last line to replace, exclusive
+     * @param start the first index to replace, inclusive; must be non-negative
+     * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
+     *     range (an insertion)
      * @param elements the new (replacement) elements
      */
     public Replacement {
+      // Do not use `this` in the messages: in a compact canonical constructor the record
+      // components are not yet assigned, so `this.toString()` would report 0, 0, null.
+      if (start < 0) {
+        throw new Error("Negative start: " + start);
+      }
+      // Because `start` is non-negative, `start - 1` does not overflow.
       if (end < start - 1) {
-        throw new Error("Invalid <start,end> pair: " + this);
+        throw new Error("Invalid <start,end> pair: <" + start + ", " + end + ">");
       }
     }
 
@@ -878,8 +886,9 @@ public final class CollectionsP {
      * Creates a new Replacement.
      *
      * @param <T> the type of elements of the list
-     * @param start the first line to replace, inclusive
-     * @param end the last line to replace, exclusive
+     * @param start the first index to replace, inclusive; must be non-negative
+     * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
+     *     range (an insertion)
      * @param elements the new (replacement) elements
      * @return a new Replacement
      */
@@ -1070,7 +1079,7 @@ public final class CollectionsP {
   }
 
   /**
-   * Returns true if the two sets contain the same elements in the same order. This is faster than
+   * Returns true if the first set contains all the elements of the second set. This is faster than
    * regular {@code containsAll()}, for sets with the same ordering operator, especially for sets
    * that are not extremely small.
    *
@@ -1302,7 +1311,7 @@ public final class CollectionsP {
    *    {0}, {1}, {2}
    * </pre>
    *
-   * And createCombinations(2, 10, 2) returns a 6-element list of 2-element lists:
+   * And createCombinations(2, 10, 12) returns a 6-element list of 2-element lists:
    *
    * <pre>
    *    {10, 10}, {10, 11}, {10, 12}, {11, 11}, {11, 12}, {12, 12}
@@ -1976,7 +1985,7 @@ public final class CollectionsP {
    * @param <T> the type of the collection elements
    * @param c1 the first collection
    * @param c2 the second collection
-   * @return a duplicate-free list that is the union of the given collections
+   * @return a duplicate-free list that is the intersection of the given collections
    */
   public static <T> List<T> listIntersection(Collection<T> c1, Collection<T> c2) {
     // TODO: use a set if the collection sizes are big enough, to avoid quadratic time complexity.
