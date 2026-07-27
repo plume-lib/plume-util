@@ -32,6 +32,12 @@ jobs:
           cache: 'gradle'
       - name: java -version
         run: java -version
+      - name: Cache Spotless P2 artifacts
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository/dev/equo/p2-data
+          key: p2-data-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: p2-data-${{ runner.os }}-
       - name: Warm up Gradle cache
         run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
       # Gradle does not auto-detect the JDKs that "setup-java" installs, because

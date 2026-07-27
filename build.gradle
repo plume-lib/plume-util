@@ -25,6 +25,8 @@ plugins {
 }
 
 repositories {
+  // mavenLocal() comes first so that a locally-installed snapshot of a plume-lib dependency
+  // (see README-developers.md, "Making a snapshot release") takes precedence.
   // Restricting this to snapshots prevents a stale locally-installed
   // release from shadowing the one on Maven Central.  To build against a
   // locally-installed release, temporarily remove "snapshotsOnly()".
@@ -152,10 +154,16 @@ spotless {
     googleJavaFormat()
     formatAnnotations()
   }
-  // eclipse.org flakiness often leads to "Failed to provision P2 dependencies".
   groovyGradle {
     target("**/*.gradle")
-    greclipse()  // which formatter Spotless should use to format .gradle files.
+    // `greclipse()` specifies the formatter that Spotless uses for .gradle files.
+    // It provisions the Eclipse platform from eclipse.org, which is flaky.
+    // Configuring any mirror obliges every P2 repository to have one, so
+    // groovy.jfrog.io maps to itself.
+    greclipse().withP2Mirrors([
+      "https://download.eclipse.org/": "https://mirror.umd.edu/eclipse/",
+      "https://groovy.jfrog.io/": "https://groovy.jfrog.io/",
+    ])
     leadingTabsToSpaces(2)
     trimTrailingWhitespace()
     // endWithNewline() // Don't want to end empty files with a newline
@@ -347,6 +355,7 @@ mavenPublishing {
 
 /* Make Emacs TAGS table */
 tasks.register("tags", Exec) {
+  group = "Emacs"
   description = "Run etags to create an Emacs TAGS table"
   def javaFiles = fileTree("src") {
     include("**/*.java")
