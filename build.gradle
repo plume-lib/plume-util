@@ -5,7 +5,7 @@ plugins {
   alias(libs.plugins.com.gradleup.shadow)
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
-  // which is run by "check" (which is itself run by "build").
+  // which are run by "check" (which is itself run by "build").
   alias(libs.plugins.com.diffplug.spotless)
 
   // Error Prone linter
@@ -133,7 +133,7 @@ tasks.named("test") {
   finalizedBy(tasks.named("jacocoTestReport"))
 }
 // Configuration B: user must run `jacocoTestReport` explicitly.
-// tasks.named("jacocoTestReport") { dependsOn(tasks.named("test")) }
+// tasks.named("jacocoTestReport") { dependsOn("test") }
 
 
 // Code formatting
@@ -261,7 +261,7 @@ def javadocPrivate = tasks.register("javadocPrivate", Javadoc) {
   options.addBooleanOption("private", true)
 }
 tasks.named("check") {
-  dependsOn(tasks.named("javadoc"), javadocPrivate)
+  dependsOn("javadoc", javadocPrivate)
 }
 
 def javadocWebUpload = tasks.register("javadocWebUpload", Javadoc) {
@@ -296,7 +296,7 @@ dependencies {
   requireJavadoc(libs.require.javadoc)
 }
 def requireJavadoc = tasks.register("requireJavadoc", JavaExec) {
-  group = "Documentation"
+  group = "documentation"
   description = "Ensures that Javadoc documentation exists."
   inputs.files(sourceSets.main.allJava)
   mainClass = "org.plumelib.javadoc.RequireJavadoc"
@@ -373,8 +373,8 @@ mavenPublishing {
 
 /* Make Emacs TAGS table */
 tasks.register("tags", Exec) {
-  group = "Emacs"
   description = "Run etags to create an Emacs TAGS table"
+  group = "IDE"
   def javaFiles = fileTree("src") {
     include("**/*.java")
   }
