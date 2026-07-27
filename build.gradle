@@ -69,7 +69,6 @@ java {
 }
 
 tasks.withType(JavaCompile).configureEach {
-  // Set the language level and byte code to 17.
   options.release = 17
   options.forkOptions.jvmArgs += "-Xmx6g"
   options.compilerArgs << "-Werror"
@@ -90,9 +89,8 @@ tasks.withType(JavaCompile).configureEach {
 
 // Testing
 
-// Compilation always uses Java 21, but tests run under the version given by
-// `-PtestJavaVersion=NN` (default 21).  Continuous integration passes each
-// version of the build matrix.
+// Compilation always uses Java 21. Tests run under
+// the version given by `-PtestJavaVersion=NN` (default 21).
 def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("21")
 
 tasks.withType(Test).configureEach {
@@ -119,7 +117,7 @@ tasks.withType(Test).configureEach {
 }
 
 jacoco {
-  toolVersion = libs.jacoco.get().version
+  toolVersion = libs.versions.jacoco.get()
 }
 
 tasks.named("jacocoTestReport") {
@@ -174,7 +172,7 @@ spotless {
 // PMD linter
 
 pmd {
-  toolVersion = libs.pmd.get().version
+  toolVersion = libs.versions.pmd.get()
   ruleSets = []                 // Prevent the default errorprone.xml from being applied.
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
@@ -186,7 +184,7 @@ pmd {
 // Checker Framework pluggable type-checking
 
 checkerFramework {
-  version = libs.checker.framework.get().version
+  version = libs.versions.checker.framework.get()
   checkers = [
     // No need to run CalledMethodsChecker, because ResourceLeakChecker does so.
     // "org.checkerframework.checker.calledmethods.CalledMethodsChecker",
@@ -241,17 +239,29 @@ class JavadocFonts {
 
 tasks.withType(Javadoc).configureEach {
   options.noTimestamp = true
+  options.quiet()
 }
 tasks.named("javadoc") {
   // Turn Javadoc warnings into errors.
-  options.addStringOption("Xwerror", "-Xdoclint:all")
-  options.addStringOption("private", "-quiet")
+  options.addBooleanOption("Xdoclint:all", true)
+  options.addBooleanOption("Xwerror", true)
   doLast {
     JavadocFonts.removeDejaVuFontImport(it.destinationDir)
   }
 }
+
+// The `javadoc` task documents only the public API, because the gradle-maven-publish-plugin
+// packages this task's output into the published -javadoc.jar.  `javadocPrivate` below applies the
+// same doclint checks to private members, so nothing goes unchecked.
+def javadocPrivate = tasks.register("javadocPrivate", Javadoc) {
+  description = "Generate Javadoc for all members, including private ones."
+  source = sourceSets.main.allJava
+  classpath = sourceSets.main.compileClasspath
+  destinationDir = layout.buildDirectory.dir("docs/javadocPrivate").get().asFile
+  options.addBooleanOption("private", true)
+}
 tasks.named("check") {
-  dependsOn(tasks.named("javadoc"))
+  dependsOn(tasks.named("javadoc"), javadocPrivate)
 }
 
 def javadocWebUpload = tasks.register("javadocWebUpload", Javadoc) {
@@ -279,9 +289,9 @@ def javadocWeb = tasks.register("javadocWeb", DefaultTask) {
 }
 
 
-configurations {
-  requireJavadoc
-}
+// `resolvable` rather than the `configurations { requireJavadoc }` shorthand, which creates a
+// configuration that is both resolvable and consumable and that Gradle reports as legacy.
+configurations.resolvable("requireJavadoc")
 dependencies {
   requireJavadoc(libs.require.javadoc)
 }
@@ -306,7 +316,9 @@ def requireJavadoc = tasks.register("requireJavadoc", JavaExec) {
 tasks.named("check") {
   dependsOn(requireJavadoc)
 }
-javadocWeb.configure {
+// On javadocWebUpload rather than on javadocWeb, so that the check runs *before* the upload.  A
+// dependency of javadocWeb would be unordered with respect to javadocWebUpload.
+javadocWebUpload.configure {
   dependsOn(requireJavadoc)
 }
 
@@ -317,6 +329,12 @@ javadocWeb.configure {
 // so keep the `shadowRuntimeElements` variant out of the Gradle module metadata.
 shadow {
   addShadowVariantIntoJavaComponent = false
+}
+
+// Make the published archives byte-for-byte reproducible.
+tasks.withType(AbstractArchiveTask).configureEach {
+  preserveFileTimestamps = false
+  reproducibleFileOrder = true
 }
 
 mavenPublishing {
@@ -360,11 +378,14 @@ tasks.register("tags", Exec) {
   def javaFiles = fileTree("src") {
     include("**/*.java")
   }
+  // `projectPath` in a build script is Gradle's project path (such as ":"), not a file system
+  // path, so compute the project directory explicitly.
+  def projectDirPath = layout.projectDirectory.asFile.toPath()
   inputs.files(javaFiles)
   outputs.file(layout.projectDirectory.file("TAGS"))
   executable("etags")
   // Compute the arguments when the task runs, not when it is configured.
   argumentProviders.add({
-    javaFiles.files.sort()*.toPath().collect { projectPath.relativize(it).toString() }
+    javaFiles.files.sort()*.toPath().collect { projectDirPath.relativize(it).toString() }
   } as CommandLineArgumentProvider)
 }

@@ -16,11 +16,6 @@ jobs:
         with:
           fetch-depth: 1
           show-progress: false
-      # Java 21 is always needed, because compilation always uses Java 21.
-      # Java 21 is listed last, so that "setup-java" makes Java 21 the value of
-      # JAVA_HOME and therefore Gradle itself runs under Java 21.
-      # When "matrix.java" is 21, Java 21 is requested twice; the repetition is
-      # harmless, because "setup-java" installs Java 21 only once.
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:

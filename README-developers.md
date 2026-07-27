@@ -23,6 +23,9 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * Update `CHANGELOG.md`.
 * Update the version number in `README.md`, `gradle.properties`, and
   this file (possibly multiple times in each).
+* In `gradle/libs.versions.toml`, replace every “-SNAPSHOT” dependency
+  version by a released version.  A released artifact must not depend on a
+  snapshot, because the dependency versions appear in the published `.pom` file.
 * Save files and stage changes.
 * `./gradlew publishToMavenCentral`
 * Browse to <https://central.sonatype.com/publishing/deployments>, click "publish".

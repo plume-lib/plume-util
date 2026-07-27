@@ -1,3 +1,6 @@
+// Gradle 9 requires a JVM between 17 and 26 to run, so no explicit Java version check is needed
+// here; Gradle itself reports a clear error on an unsupported JVM.
+
 plugins {
   // Downloads a JDK if the Java toolchain that the build requests is not
   // installed locally.

@@ -12,28 +12,33 @@ org-checkerframework = { id = "org.checkerframework", version = "1.0.2" }
 
 [versions]
 
+checker-framework = "4.2.1"
+
+jacoco = "0.8.15"
+
 junit-jupiter = "6.1.2"
+
+pmd = "7.26.0"
 
 [libraries]
 
-checker-framework = "org.checkerframework:checker:4.2.1"
+# Not a dependency; declared so that the Checker Framework version is tracked like every other
+# version.  The org.checkerframework Gradle plugin adds the dependency, from `checkerFramework.version`.
+checker-framework = { module = "org.checkerframework:checker", version.ref = "checker-framework" }
 
 error-prone-core = "com.google.errorprone:error_prone_core:2.50.0"
 
 hashmap-util = "org.plumelib:hashmap-util:2.0.0-SNAPSHOT"
 
-# Not used as a dependency; only its version is read, for the JaCoCo plugin's
-# `toolVersion`.
-jacoco = "org.jacoco:org.jacoco.core:0.8.15"
+# Not a dependency; only its version is read, for the JaCoCo plugin's `toolVersion`.
+jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
 
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
 
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-jupiter" }
 
-# Not used as a dependency; only its version is read, for the PMD plugin's
-# `toolVersion`.  This is a library rather than a `[versions]` entry so that
-# dependency-update tools can propose new versions of it.
-pmd = "net.sourceforge.pmd:pmd-java:7.26.0"
+# Not a dependency; declared so that the PMD tool version is tracked like every other version.
+pmd-java = { module = "net.sourceforge.pmd:pmd-java", version.ref = "pmd" }
 
 reflection-util = "org.plumelib:reflection-util:2.0.0-SNAPSHOT"
 
