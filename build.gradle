@@ -173,7 +173,7 @@ spotless {
 
 pmd {
   toolVersion = libs.versions.pmd.get()
-  ruleSets = []                 // Prevent the default errorprone.xml from being applied.
+  ruleSets = [] // Prevent the default errorprone.xml from being applied.
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
   ignoreFailures = false
@@ -386,6 +386,8 @@ tasks.register("tags", Exec) {
   executable("etags")
   // Compute the arguments when the task runs, not when it is configured.
   argumentProviders.add({
-    javaFiles.files.sort()*.toPath().collect { projectDirPath.relativize(it).toString() }
+    javaFiles.files.sort()*.toPath().collect {
+      projectDirPath.relativize(it).toString()
+    }
   } as CommandLineArgumentProvider)
 }
