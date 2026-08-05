@@ -1,6 +1,6 @@
 # Plume-Util change log
 
-## 2.0.0 (????-??-??)
+## 2.0.0 (2026-08-05)
 
 * Requires Java 17 to run.
 * Renamed `*Plume` classes to `*P`, for brevity; for example:
