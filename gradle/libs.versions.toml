@@ -16,7 +16,7 @@ checker-framework = { module = "org.checkerframework:checker", version.ref = "ch
 
 error-prone-core = "com.google.errorprone:error_prone_core:2.50.0"
 
-hashmap-util = "org.plumelib:hashmap-util:2.0.0-SNAPSHOT"
+hashmap-util = "org.plumelib:hashmap-util:2.0.0"
 
 # Not a dependency; only its version is read, for the JaCoCo plugin's `toolVersion`.
 jacoco = { group = "org.jacoco", name = "org.jacoco.core", version.ref = "jacoco" }
@@ -28,9 +28,9 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 # Not a dependency; declared so that the PMD tool version is tracked like every other version.
 pmd-java = { module = "net.sourceforge.pmd:pmd-java", version.ref = "pmd" }
 
-reflection-util = "org.plumelib:reflection-util:2.0.0-SNAPSHOT"
+reflection-util = "org.plumelib:reflection-util:2.0.0"
 
-require-javadoc = "org.plumelib:require-javadoc:3.0.0-SNAPSHOT"
+require-javadoc = "org.plumelib:require-javadoc:3.0.0"
 
 [plugins]
 
