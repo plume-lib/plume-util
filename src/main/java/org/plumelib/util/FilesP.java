@@ -1040,7 +1040,6 @@ public final class FilesP {
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
   public static String readString(Path path) {
