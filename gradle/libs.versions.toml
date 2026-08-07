@@ -1,22 +1,50 @@
 [versions]
 
+checker-framework = "4.2.1"
+
+google-java-format = "1.28.0"
+
+# The Groovy-Eclipse formatter, which Spotless applies to .gradle files.  The version is an Eclipse
+# release, not a Groovy-Eclipse release.  Spotless permits version 4.36 on JVM 17+ and version 4.40
+# on JVM 21+.
+greclipse = "4.36"
+
+jacoco = "0.8.15"
+
 junit-jupiter = "6.1.2"
+
+pmd = "7.26.0"
 
 [libraries]
 
-checker-framework = "org.checkerframework:checker:4.2.2"
+# Some entries below are not dependencies.  Each such entry exists so that a dependency-update tool
+# such as Renovate proposes new versions of a tool whose version build.gradle reads, by itself, via
+# "libs.versions.*".  Each such entry is marked "Version only".
 
-error-prone-core = "com.google.errorprone:error_prone_core:2.50.0"
+# Version only:  the org.checkerframework Gradle plugin adds the dependency, from
+# `checkerFramework.version`.
+checker-framework = { module = "org.checkerframework:checker", version.ref = "checker-framework" }
 
-hashmap-util = "org.plumelib:hashmap-util:2.0.0"
+error-prone-core = { module = "com.google.errorprone:error_prone_core", version = "2.50.0" }
 
-junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
+# Version only:  Spotless resolves google-java-format itself.
+google-java-format = { module = "com.google.googlejavaformat:google-java-format", version.ref = "google-java-format" }
 
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+hashmap-util = { module = "org.plumelib:hashmap-util", version = "2.0.0" }
 
-reflection-util = "org.plumelib:reflection-util:2.0.0"
+# Version only:  for the JaCoCo plugin's `toolVersion`.
+jacoco = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 
-require-javadoc = "org.plumelib:require-javadoc:3.0.0"
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-jupiter" }
+
+# Version only:  for the PMD plugin's `toolVersion`.
+pmd-java = { module = "net.sourceforge.pmd:pmd-java", version.ref = "pmd" }
+
+reflection-util = { module = "org.plumelib:reflection-util", version = "2.0.0" }
+
+require-javadoc = { module = "org.plumelib:require-javadoc", version = "3.0.0" }
 
 [plugins]
 
