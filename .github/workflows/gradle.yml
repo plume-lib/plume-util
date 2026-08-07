@@ -3,6 +3,62 @@ name: Java CI with Gradle
 "on": [push, pull_request]
 
 jobs:
+
+  # Formatting does not depend on the Java version, so Spotless runs in this single job rather than
+  # in every job of the "build" matrix below.  Spotless's Groovy-Eclipse formatter downloads about
+  # 130MB from Eclipse P2 repositories, and that download fails often enough that performing it once
+  # per push rather than 4 times per push noticeably reduces "Failed to provision P2 dependencies"
+  # errors.
+  spotless:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          show-progress: false
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          check-latest: true
+          cache: 'gradle'
+      # The directory is the one that build.gradle passes to `greclipseConfig.cacheDirectory`.  It
+      # holds the P2 metadata and every downloaded bundle, so a cache hit means that the Spotless
+      # run below makes no network requests to the P2 repositories.
+      - name: Restore Spotless P2 cache
+        id: restore-spotless-p2
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.gradle/spotless-p2
+          key: spotless-p2-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: spotless-p2-${{ runner.os }}-
+      - name: ./gradlew spotlessCheck
+        run: |
+          set -o pipefail
+          for attempt in 1 2 3; do
+            if ./gradlew spotlessCheck --stacktrace 2>&1 | tee "$RUNNER_TEMP/spotless-output.txt"; then
+              exit 0
+            fi
+            if ! grep -q 'Failed to provision P2 dependencies' "$RUNNER_TEMP/spotless-output.txt"; then
+              # The failure is a formatting violation or some other real problem, not a failure to
+              # download the Groovy-Eclipse formatter.  Retrying would not help.
+              exit 1
+            fi
+            sleep $((30 * attempt))
+          done
+          exit 1
+      # Saving must happen even if the step above failed:  the download may have partly succeeded,
+      # and caching what it obtained makes the next run more likely to succeed.
+      - name: Save Spotless P2 cache
+        if: always() && steps.restore-spotless-p2.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.gradle/spotless-p2
+          key: spotless-p2-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+
   build:
 
     runs-on: ubuntu-latest
@@ -27,15 +83,8 @@ jobs:
           cache: 'gradle'
       - name: java -version
         run: java -version
-      - name: Cache Spotless P2 artifacts
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository/dev/equo/p2-data
-          key: p2-data-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
-          restore-keys: p2-data-${{ runner.os }}-
-      - name: Warm up Gradle cache
-        run: ./gradlew spotlessCheck > /dev/null 2>&1 || (sleep 60 && true)
       # Gradle does not auto-detect the JDKs that "setup-java" installs, because
       # they are in the tool cache rather than in a standard location.
+      # The "spotless" job above performs the formatting checks.
       - name: ./gradlew build
-        run: ./gradlew build -PtestJavaVersion=${{ matrix.java }} -Porg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_${{ runner.arch }},JAVA_HOME_21_${{ runner.arch }}
+        run: ./gradlew build -x spotlessCheck -PtestJavaVersion=${{ matrix.java }} -Porg.gradle.java.installations.fromEnv=JAVA_HOME_${{ matrix.java }}_${{ runner.arch }},JAVA_HOME_21_${{ runner.arch }}

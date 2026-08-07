@@ -141,15 +141,6 @@ tasks.named("jacocoTestReport") {
 // Code formatting
 
 spotless {
-  format("misc") {
-    // Define the files to apply `misc` to.  prek handles `.gitignore`.
-    target("**/*.md")
-
-    // Define the steps to apply to those files.
-    trimTrailingWhitespace()
-    leadingTabsToSpaces(2)
-    endWithNewline()
-  }
   java {
     googleJavaFormat(libs.versions.google.java.format.get())
     formatAnnotations()

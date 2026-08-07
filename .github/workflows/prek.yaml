@@ -11,4 +11,14 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
           cache: 'gradle'
+      # A hook in prek.toml runs Spotless's Groovy-Eclipse formatter when a .gradle file changes.
+      # Restoring the cache that the "spotless" job of gradle.yml saves lets that hook run without
+      # downloading from the Eclipse P2 repositories, which fails often.  This job never saves the
+      # cache, because most runs of this job do not populate it.
+      - name: Restore Spotless P2 cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.gradle/spotless-p2
+          key: spotless-p2-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: spotless-p2-${{ runner.os }}-
       - uses: j178/prek-action@v3.0.0
