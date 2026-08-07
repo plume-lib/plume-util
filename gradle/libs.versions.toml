@@ -6,7 +6,7 @@ google-java-format = "1.28.0"
 
 # The Groovy-Eclipse formatter, which Spotless applies to .gradle files.  The version is an Eclipse
 # release, not a Groovy-Eclipse release.  Spotless permits version 4.36 on JVM 17+ and version 4.40
-# on JVM 21+; the continuous integration job matrix includes JVM 17.
+# on JVM 21+.
 greclipse = "4.36"
 
 jacoco = "0.8.15"

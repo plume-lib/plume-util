@@ -279,13 +279,12 @@ tasks.named("javadoc", Javadoc) {
   strictJavadoc(it)
 }
 
-// The `javadoc` task documents only the public API, because the gradle-maven-publish-plugin
-// packages this task's output into the published -javadoc.jar.  `javadocPrivate` below applies the
-// same doclint checks to private members, so nothing goes unchecked.
+// The `javadoc` task documents only the public API.
+// `javadocPrivate` applies the same doclint checks to private members.
 def javadocPrivate = tasks.register("javadocPrivate", Javadoc) {
   description = "Generate Javadoc for all members, including private ones."
   source = sourceSets.main.allJava
-  classpath = sourceSets.main.compileClasspath
+  classpath = sourceSets.main.output + sourceSets.main.compileClasspath
   destinationDir = layout.buildDirectory.dir("docs/javadocPrivate").get().asFile
   options.addBooleanOption("private", true)
   strictJavadoc(it)
@@ -297,7 +296,7 @@ tasks.named("check") {
 def javadocWebUpload = tasks.register("javadocWebUpload", Javadoc) {
   description = "Write API documentation to the website directory."
   source = sourceSets.main.allJava
-  classpath = sourceSets.main.compileClasspath
+  classpath = sourceSets.main.output + sourceSets.main.compileClasspath
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
   strictJavadoc(it)
 }
