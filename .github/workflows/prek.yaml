@@ -20,13 +20,17 @@ jobs:
       # to "restore-keys" and accepts whatever the "spotless" job saved most recently, including a
       # partial entry.  That is deliberate:  it avoids repeating that job's version-derived key
       # here, where it would be a second copy to keep in step.  An entry for another formatter
-      # version costs nothing, because Solstice downloads whatever the restored directory lacks, and
-      # a partial entry can carry a stale lock file, which build.gradle's
-      # "deleteStaleSpotlessP2Lock" task deletes.
+      # version costs nothing, because Solstice downloads whatever the restored directory lacks.
       - name: Restore Spotless P2 cache
         uses: actions/cache/restore@v6
         with:
           path: ~/.gradle/spotless-p2
           key: spotless-p2-${{ runner.os }}-
           restore-keys: spotless-p2-${{ runner.os }}-
+      # A saved entry can contain a lock file that Solstice, which provisions the cache, did not
+      # remove.  Solstice never checks whether the process that a lock file names still exists, and
+      # on this runner it certainly does not, so a restored lock file would make the hook below wait
+      # for a timeout and then fail with "Failed to provision P2 dependencies".
+      - name: Delete any restored Spotless P2 lock file
+        run: rm -f ~/.gradle/spotless-p2/metadata/.lock
       - uses: j178/prek-action@v3.0.0

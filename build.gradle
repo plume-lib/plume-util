@@ -85,8 +85,9 @@ tasks.withType(JavaCompile).configureEach {
 
 // Compilation always uses Java 21, but the tests run under various Java versions.  The
 // `java.toolchain` setting above applies to Test tasks as well as to compilation, so without this
-// the tests would always run under Java 21.  By default the tests run under the JVM that Gradle
-// itself is running under, which is what the job matrix in .github/workflows/gradle.yml varies.
+// the tests would always run under Java 21.  The default is the JVM that Gradle itself is running
+// under.  The job matrix in .github/workflows/gradle.yml does not rely on that default:  it runs
+// Gradle under Java 21 in every job and selects the test JVM by passing `-PtestJavaVersion`.
 // Override with, for example:
 //   ./gradlew test -PtestJavaVersion=17
 def testJavaVersionProperty = project.findProperty("testJavaVersion")
@@ -145,110 +146,13 @@ tasks.named("jacocoTestReport") {
 // location stable: the default has moved between Spotless versions and is not documented as being
 // stable.  .github/workflows/gradle.yml caches this directory, because downloading its ~140 MB of
 // contents intermittently fails with "Failed to provision P2 dependencies".
+//
+// Solstice, which provisions the cache for Spotless, guards it with a lock file and never checks
+// whether the process that holds the lock still exists.  A build that is killed while provisioning
+// therefore leaves "metadata/.lock" behind in this directory, and every later build then waits for
+// a timeout and fails with "Failed to provision P2 dependencies".  Deleting that file is the
+// recovery.
 def spotlessP2CacheDir = new File(gradle.gradleUserHomeDir, "spotless-p2")
-
-// Solstice, which provisions that cache for Spotless, guards it with a lock file that holds the
-// owning process's PID.  A build that is killed while provisioning -- by control-C, or by a
-// continuous integration job that times out -- leaves the lock file behind.  Solstice never checks
-// whether the process that the lock file names still exists, so every later build waits for the
-// timeout and then fails with "Failed to provision P2 dependencies"; deleting the lock file by
-// hand is the only recovery.  A lock file can even reach a fresh machine, since the cache that
-// .github/workflows/gradle.yml saves includes whatever the job left in this directory.
-//
-// This is a static method of a class rather than a method of the build script, because the
-// configuration cache nulls out a closure's owner when it serializes the closure.
-class SpotlessP2 {
-
-  // How old a lock file that holds no PID must be before it is treated as abandoned rather than as
-  // one whose owner has not yet written its PID.
-  private static final long EMPTY_LOCK_FILE_GRACE_MILLIS = 60000
-
-  // How much later than the lock file's modification time a process may have started and still be
-  // taken for the process that wrote the lock file.  A file system that records modification times
-  // at 1-second granularity rounds them down, so the recorded time can precede the write by that
-  // much, making a genuine owner's start time appear to follow it.
-  private static final long START_TIME_TOLERANCE_MILLIS = 2000
-
-  static void deleteStaleLockFile(File cacheDirectory, Logger logger) {
-    File lockFile = new File(new File(cacheDirectory, "metadata"), ".lock")
-    if (!lockFile.isFile()) {
-      return
-    }
-    String lockFileContents
-    try {
-      lockFileContents = lockFile.getText("UTF-8")
-    } catch (IOException e) {
-      // The owner released the lock and deleted the file between the test above and this read,
-      // which is the common case rather than an exotic one:  a build and the "gradle-spotless-
-      // gradle" hook in prek.toml routinely run at the same time.  There is nothing stale to
-      // delete, and failing this task would fail a build that was about to succeed.
-      return
-    }
-    long pid
-    try {
-      pid = Long.parseLong(lockFileContents.trim())
-    } catch (NumberFormatException e) {
-      // Solstice creates the lock file and then writes its PID into it, so a lock file that holds
-      // no PID usually belongs to a live process that is between those two steps.  A process that
-      // is killed between them leaves the file empty forever, and Solstice parses the file outside
-      // the "try" block that handles a lock it cannot take, so every later build then dies with a
-      // NumberFormatException.  Wait out the race before assuming that this is the latter case.
-      if (System.currentTimeMillis() - lockFile.lastModified() > EMPTY_LOCK_FILE_GRACE_MILLIS
-          && lockFile.delete()) {
-        logger.lifecycle("Deleted abandoned Spotless P2 lock file that holds no PID: ${lockFile}")
-      }
-      return
-    }
-    if (!isStale(pid, lockFile.lastModified())) {
-      return
-    }
-    if (lockFile.delete()) {
-      logger.lifecycle("Deleted stale Spotless P2 lock file that names process ${pid}: ${lockFile}")
-    }
-  }
-
-  // Returns true if no live process wrote the lock file at the given time.
-  private static boolean isStale(long pid, long lockFileModifiedMillis) {
-    def process = ProcessHandle.of(pid)
-    if (!process.isPresent()) {
-      return true
-    }
-    // A live process can hold a PID that the operating system recycled, and on a continuous
-    // integration runner it usually does:  .github/workflows/prek.yaml restores a lock file that a
-    // different machine wrote, so the PID in it names a process of this machine only by
-    // coincidence.  A process that started after the lock file was written cannot be the process
-    // that wrote it.
-    def startInstant = process.get().info().startInstant()
-    if (!startInstant.isPresent()) {
-      // The platform does not report this process's start time, so the PID could still be the
-      // original owner's.  Erring in this direction merely fails to improve on Solstice, whereas
-      // deleting a live process's lock file would let two processes write the cache at once.
-      return false
-    }
-    return startInstant.get().toEpochMilli() > lockFileModifiedMillis + START_TIME_TOLERANCE_MILLIS
-  }
-}
-
-// A separate task rather than a "doFirst" action on the Spotless task itself:  Spotless provisions
-// the formatter while Gradle fingerprints that task's inputs, which happens before any of its
-// actions run, so a "doFirst" action would run too late to help.  A dependency runs to completion
-// before the fingerprinting does.
-//
-// The task declares no outputs, so it always runs.  That costs one "stat" of a file that usually
-// does not exist.
-def deleteStaleSpotlessP2Lock = tasks.register("deleteStaleSpotlessP2Lock") {
-  description = "Delete the Spotless P2 lock file if the process that holds it is gone."
-  def cacheDirectory = spotlessP2CacheDir
-  doLast {
-    SpotlessP2.deleteStaleLockFile(cacheDirectory, logger)
-  }
-}
-
-// "spotlessGroovyGradle" is the task that provisions and runs the formatter; "...Check" and
-// "...Apply" depend on it.  Matching by prefix covers all three, in case that ever changes.
-tasks.matching { it.name.startsWith("spotlessGroovyGradle") }.configureEach {
-  dependsOn(deleteStaleSpotlessP2Lock)
-}
 
 // Spotless formats only the languages that have a dedicated formatter here.  Whitespace hygiene for
 // every other file, such as Markdown and .gitignore, is prek's job:  its "trailing-whitespace",
@@ -405,6 +309,7 @@ tasks.named("javadoc", Javadoc) {
 // The `javadoc` task documents only the public API.
 // `javadocPrivate` applies the same doclint checks to private members.
 def javadocPrivate = tasks.register("javadocPrivate", Javadoc) {
+  group = "documentation"
   description = "Generate Javadoc for all members, including private ones."
   source = sourceSets.main.allJava
   classpath = sourceSets.main.output + sourceSets.main.compileClasspath
@@ -586,8 +491,9 @@ tasks.register("tags", Exec) {
 tasks.register("printCompileClasspaths") {
   group = "help"
   description = "Print the compile-time classpaths"
-  // Resolve the classpaths when the task is configured, not when it runs.  Reading `sourceSets`
-  // from a task action would capture the `Project` object, which the configuration cache forbids.
+  // Look up the classpaths when the task is configured, and resolve them (`asPath`) when it runs.
+  // Reading `sourceSets` from a task action would capture the `Project` object, which the
+  // configuration cache forbids.
   def mainClasspath = sourceSets.main.compileClasspath
   def testClasspath = sourceSets.test.compileClasspath
   doFirst {
