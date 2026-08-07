@@ -85,15 +85,18 @@ tasks.withType(JavaCompile).configureEach {
 
 // Compilation always uses Java 21, but the tests run under various Java versions.  The
 // `java.toolchain` setting above applies to Test tasks as well as to compilation, so without this
-// the tests would always run under Java 21.  The default is the JVM that Gradle itself is running
-// under.  The job matrix in .github/workflows/gradle.yml does not rely on that default:  it runs
-// Gradle under Java 21 in every job and selects the test JVM by passing `-PtestJavaVersion`.
+// the tests would always run under Java 21.  By default the tests run under the JVM that Gradle
+// itself is running under.  The job matrix in .github/workflows/gradle.yml does not rely on that
+// default:  it runs Gradle under Java 21 in every job and selects the test JVM by passing
+// `-PtestJavaVersion`.
 // Override with, for example:
 //   ./gradlew test -PtestJavaVersion=17
 def testJavaVersionProperty = project.findProperty("testJavaVersion")
 // Compare to null rather than writing `?:`, which would also treat the empty string as absent.
-// `./gradlew test -PtestJavaVersion` (no "=" and no value) supplies the empty string, and silently
-// testing under the default version is not what someone who wrote that on the command line meant.
+if (testJavaVersionProperty != null && testJavaVersionProperty.toString().isEmpty()) {
+  throw new GradleException("-PtestJavaVersion needs a value, as in `-PtestJavaVersion=25`."
+  + "  Omit the property entirely to test under the JVM that Gradle is running under.")
+}
 def testJavaVersion = JavaLanguageVersion.of(
     (testJavaVersionProperty != null
     ? testJavaVersionProperty
@@ -116,9 +119,11 @@ tasks.withType(Test).configureEach {
   outputs.cacheIf { false }
 
   testLogging {
+    // "passed" is what makes the forced re-run above worth its cost:  without it, a run in which
+    // every test passes prints nothing at all.
     // `showStandardStreams = true` would be a redundant way to say the same
     // thing as including the "standardOut" and "standardError" events here.
-    events("skipped", "failed", "standardOut", "standardError")
+    events("passed", "skipped", "failed", "standardOut", "standardError")
     exceptionFormat = "full"
   }
 
@@ -141,24 +146,13 @@ tasks.named("jacocoTestReport") {
 
 // Code formatting
 
-// The directory in which Spotless caches the Groovy-Eclipse formatter that it provisions from P2
-// repositories.  Naming the directory, rather than accepting Spotless's default, keeps the
-// location stable: the default has moved between Spotless versions and is not documented as being
-// stable.  .github/workflows/gradle.yml caches this directory, because downloading its ~140 MB of
-// contents intermittently fails with "Failed to provision P2 dependencies".
-//
-// Solstice, which provisions the cache for Spotless, guards it with a lock file and never checks
-// whether the process that holds the lock still exists.  A build that is killed while provisioning
-// therefore leaves "metadata/.lock" behind in this directory, and every later build then waits for
-// a timeout and fails with "Failed to provision P2 dependencies".  Deleting that file is the
-// recovery.
-def spotlessP2CacheDir = new File(gradle.gradleUserHomeDir, "spotless-p2")
+// Solstice, which provisions the Groovy-Eclipse formatter for Spotless, guards its cache with a
+// lock file and never checks whether the process that holds the lock still exists.  A build that is
+// killed while provisioning therefore leaves "metadata/.lock" behind in the cache directory, and
+// every later build then waits for a timeout and fails with "Failed to provision P2 dependencies".
+// Deleting that file is the recovery; the cache directory is "caches/p2-data" within the Gradle
+// user home directory.
 
-// Spotless formats only the languages that have a dedicated formatter here.  Whitespace hygiene for
-// every other file, such as Markdown and .gitignore, is prek's job:  its "trailing-whitespace",
-// "end-of-file-fixer", and "mixed-line-ending" hooks apply to all of them, and "markdownlint-cli2"
-// rejects a hard tab in a Markdown file.  .github/workflows/prek.yaml runs those hooks in
-// continuous integration, so a commit that bypassed the hooks is still checked.
 spotless {
   java {
     googleJavaFormat(libs.versions.google.java.format.get())
@@ -168,7 +162,6 @@ spotless {
     target("**/*.gradle")
 
     def greclipseConfig = greclipse(libs.versions.greclipse.get())
-    greclipseConfig.cacheDirectory(spotlessP2CacheDir)
     greclipseConfig.withP2Mirrors([
       "https://download.eclipse.org/": "https://mirror.umd.edu/eclipse/",
       // Not a no-op:  as soon as the mirror map is non-empty, Spotless rewrites every P2 repository
@@ -240,21 +233,6 @@ checkerFramework {
     "-AwarnRedundantAnnotations",
     "-AwarnUnneededSuppressions",
   ]
-}
-
-// The org.checkerframework plugin adds "-processor" and the extra javac arguments from a
-// JavaCompile task action rather than while configuring the task, which is also why the plugin is
-// not configuration-cache compatible; see gradle.properties.  Gradle fingerprints a task's inputs
-// before its actions run, so neither the list of checkers nor the extra arguments would otherwise
-// be part of the fingerprint, and the build cache that gradle.properties enables would answer a
-// compilation whose configuration above has changed with the output of a compilation that used the
-// previous configuration -- even after `./gradlew clean`, and on a continuous integration runner,
-// which restores the build cache along with the rest of ~/.gradle.  A newly added checker or javac
-// argument would silently never run.  The Checker Framework version needs no declaration here,
-// because it determines the annotation processor path, which Gradle does fingerprint.
-tasks.withType(JavaCompile).configureEach {
-  inputs.property("checkerFramework.checkers", checkerFramework.checkers)
-  inputs.property("checkerFramework.extraJavacArgs", checkerFramework.extraJavacArgs)
 }
 
 

@@ -30,6 +30,9 @@ jobs:
       # is upgraded, which would make the cache go cold far more often than the formatter actually
       # changes; the usual remedy for that, "restore-keys", makes the cache grow without bound,
       # because each save then writes back every formatter version that an earlier run downloaded.
+      #
+      # .github/workflows/prek.yaml repeats this computation in order to restore what this job
+      # saves, so the two must be kept in step.
       - name: Compute the Spotless P2 cache key
         id: spotless-p2-key
         run: |
@@ -48,75 +51,36 @@ jobs:
             exit 1
           fi
           echo "key=spotless-p2-${{ runner.os }}-greclipse-$greclipse-spotless-$spotless" >> "$GITHUB_OUTPUT"
-      # The directory is the one that build.gradle passes to `greclipseConfig.cacheDirectory`.  It
-      # holds the P2 metadata and every downloaded bundle, so a cache hit means that the Spotless
-      # run below makes no network requests to the P2 repositories.
+      # The directory is Spotless's default P2 cache directory.  It holds the P2 metadata and every
+      # downloaded bundle, so a cache hit means that the Spotless run below makes no network
+      # requests to the P2 repositories.
+      #
+      # That directory lies within "~/.gradle/caches", which "setup-java"'s `cache: 'gradle'` also
+      # saves.  This entry is still worth having:  the "setup-java" key is a hash of every Gradle
+      # file, so it goes cold whenever any of them changes, whereas the key above changes only when
+      # the formatter version does.
       - name: Restore Spotless P2 cache
         id: restore-spotless-p2
         uses: actions/cache/restore@v6
         with:
-          path: ~/.gradle/spotless-p2
+          path: ~/.gradle/caches/p2-data
           key: ${{ steps.spotless-p2-key.outputs.key }}
-          restore-keys: ${{ steps.spotless-p2-key.outputs.key }}-partial-
-      # Solstice, which provisions the cache, guards it with a lock file that it does not always
-      # remove when provisioning fails, so a saved entry can contain one.  Solstice never checks
-      # whether the process that a lock file names still exists, and on this runner it certainly
-      # does not, so a restored lock file would make the run below wait for a timeout and then fail
-      # with the very error that the cache exists to avoid.  Nothing else here holds the lock.
+      # Solstice, which provisions the cache for Spotless, guards it with a lock file, and never
+      # checks whether the process that the lock file names still exists.
+      # Nothing on this freshly created runner can hold the lock, so delete the file unconditionally.
       - name: Delete any restored Spotless P2 lock file
-        run: rm -f ~/.gradle/spotless-p2/metadata/.lock
+        run: rm -f ~/.gradle/caches/p2-data/metadata/.lock
       - name: ./gradlew spotlessCheck
-        id: spotless-check
-        run: |
-          set -o pipefail
-          for attempt in 1 2 3; do
-            if ./gradlew spotlessCheck --stacktrace 2>&1 | tee "$RUNNER_TEMP/spotless-output.txt"; then
-              exit 0
-            fi
-            if ! grep -q 'Failed to provision P2 dependencies' "$RUNNER_TEMP/spotless-output.txt"; then
-              # The failure is a formatting violation or some other real problem, not a failure to
-              # download the Groovy-Eclipse formatter.  Retrying would not help.
-              exit 1
-            fi
-            # Nothing follows the last attempt but the failure below, so do not delay it.
-            if [ "$attempt" -lt 3 ]; then
-              sleep $((30 * attempt))
-            fi
-          done
-          exit 1
-      # A cache that a successful run saves is complete, so later runs can use it without any
-      # network access.  Saving is skipped after an exact cache hit, because a cache entry that
+        run: ./gradlew spotlessCheck --stacktrace
+      # Only a successful run saves the cache, so every entry is complete and later runs can use it
+      # without any network access.  Saving is skipped after a cache hit, because a cache entry that
       # exists cannot be overwritten.
-      - name: Save the complete Spotless P2 cache
+      - name: Save the Spotless P2 cache
         if: success() && steps.restore-spotless-p2.outputs.cache-hit != 'true'
         uses: actions/cache/save@v6
         with:
-          path: ~/.gradle/spotless-p2
+          path: ~/.gradle/caches/p2-data
           key: ${{ steps.spotless-p2-key.outputs.key }}
-      # A failed download usually obtained part of the formatter, and caching that makes the next
-      # run more likely to succeed.  The key differs from the one above so that a partial cache can
-      # never masquerade as a complete one:  it is reachable only through "restore-keys", and the
-      # next successful run supersedes it.
-      #
-      # Nothing is saved if the restore found any entry, exact or partial, because then the cache
-      # already holds everything that this run started from.  Testing "cache-hit" alone would cover
-      # only the exact entry:  a run that restored a partial entry, downloaded a bit more, and
-      # failed again would write yet another ~140MB entry under a fresh key, and nothing ever
-      # deletes the earlier ones.  A branch that fails repeatedly would accumulate them.  Entries
-      # are evicted least-recently-used once a repository holds 10GB of them, so needless entries
-      # push out the Gradle caches that "setup-java" maintains.  The cost of this stricter
-      # condition is that a partial entry never grows; the next successful run supersedes it.
-      #
-      # The condition names the Spotless step rather than relying on "failure()" alone, which is
-      # true when any earlier step failed.  If "actions/checkout", "setup-java", or the key
-      # computation failed, then the key is empty and the directory below does not exist, and
-      # "actions/cache/save" would log a warning and save nothing of use.
-      - name: Save a partial Spotless P2 cache
-        if: failure() && steps.spotless-check.outcome == 'failure' && steps.restore-spotless-p2.outputs.cache-matched-key == ''
-        uses: actions/cache/save@v6
-        with:
-          path: ~/.gradle/spotless-p2
-          key: ${{ steps.spotless-p2-key.outputs.key }}-partial-${{ github.run_id }}-${{ github.run_attempt }}
 
   build:
 
@@ -143,7 +107,6 @@ jobs:
             21
           check-latest: true
           cache: 'gradle'
-      # `java -version` alone would print 21 in every job, because 21 is the default JAVA_HOME.
       - name: Show the Java versions
         run: |
           echo 'JVM that runs Gradle:'
