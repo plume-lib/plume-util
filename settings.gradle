@@ -1,13 +1,12 @@
-// Gradle 9 requires a JVM between 17 and 26 to run, so no explicit Java version check is needed
-// here; Gradle itself reports a clear error on an unsupported JVM.
+// No explicit check of the Gradle JVM's version is needed here.  Gradle 9 requires a JVM between
+// 17 and 26 to run, and reports a clear error on an unsupported JVM.
 
 plugins {
-  // Downloads a JDK if the Java toolchain that the build requests is not
-  // installed locally.
+  // Downloads a JDK if the Java toolchain that build.gradle requests is not installed locally.
   //
-  // Literal version number because a settings script cannot use the version
-  // catalog "gradle/libs.versions.toml".  Dependency-update tools do not
-  // propose new versions of this plugin, and it must be updated by hand.
+  // Literal version number because a settings script cannot use the version catalog
+  // "gradle/libs.versions.toml", which is not yet available while settings.gradle is evaluated.
+  // Dependency-update tools do not propose new versions of this plugin, so update it by hand.
   id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 

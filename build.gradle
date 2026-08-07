@@ -1,7 +1,8 @@
 plugins {
   id("java-library")
 
-  // To create a fat jar build/libs/...-all.jar, run: ./gradlew shadowJar
+  // Creates the fat jar build/libs/...-all.jar as part of "assemble".
+  // To create only that jar, run: ./gradlew shadowJar
   alias(libs.plugins.com.gradleup.shadow)
 
   // Code formatting; defines targets "spotlessApply" and "spotlessCheck"
@@ -14,22 +15,22 @@ plugins {
   // PMD linter
   id("pmd")
 
-  // code coverage
+  // Code coverage
   id("jacoco")
 
   // Checker Framework pluggable type-checking
   alias(libs.plugins.org.checkerframework)
 
-  // Publishing to Maven Central.
+  // Publishing to Maven Central
   alias(libs.plugins.com.vanniktech.maven.publish)
 }
 
 repositories {
-  // mavenLocal() comes first so that a locally-installed snapshot of a plume-lib dependency
-  // (see README-developers.md, "Making a snapshot release") takes precedence.
-  // Restricting this to snapshots prevents a stale locally-installed
-  // release from shadowing the one on Maven Central.  To build against a
-  // locally-installed release, temporarily remove "snapshotsOnly()".
+  // mavenLocal() comes first so that a locally-installed snapshot of a dependency takes
+  // precedence.  Restricting this to snapshots prevents a stale locally-installed non-snapshot
+  // release from shadowing the one on Maven Central.  One consequence is that a locally-installed
+  // *release* build of a dependency is ignored; to build against such a build, either temporarily
+  // remove "snapshotsOnly()" or install the build as a snapshot.
   mavenLocal {
     mavenContent {
       snapshotsOnly()
@@ -48,14 +49,12 @@ dependencies {
   implementation(libs.hashmap.util)
   implementation(libs.reflection.util)
   // Including error_prone_annotations leads to javac warnings (not errors, but
-  // annoying nonetheless) when a client of plume-util doesn't itself depend on
+  // annoying nonetheless) when a client of this library doesn't itself depend on
   // error_prone_annotations.  (Even if the dependency is "compileOnly".)
   // implementation("com.google.errorprone:error_prone_annotations")
 
   testImplementation(libs.junit.jupiter)
   testRuntimeOnly(libs.junit.platform.launcher)
-
-  errorprone(libs.error.prone.core)
 }
 
 
@@ -63,39 +62,45 @@ dependencies {
 
 java {
   toolchain {
-    // Always compile using Java 21.
+    // Always compile using Java 21.  The "test" task below overrides this for
+    // test execution, so that tests run under various Java versions.
     languageVersion = JavaLanguageVersion.of(21)
   }
 }
 
 tasks.withType(JavaCompile).configureEach {
   options.release = 17
-  options.forkOptions.jvmArgs += "-Xmx6g"
-  options.compilerArgs << "-Werror"
-  // "-processing" avoids javac warning "No processor claimed any of these annotations".
-  options.compilerArgs << "-Xlint:all,-processing,-this-escape"
 
-  // Error Prone linter
-  options.errorprone {
-    disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
-    disable("DoNotCallSuggester") // Suggests use of an Error Prone annotation.
-    disable("EffectivelyPrivate") // Loses information about the abstraction.
-    disable("ExtendsObject") // Incorrect when using the Checker Framework.
-    disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
-    disable("ReferenceEquality") // Use Interning Checker instead.
-  }
+  // Gradle compiles in a worker process whenever the toolchain above differs
+  // from the JVM that runs Gradle.  That worker does not inherit the
+  // `org.gradle.jvmargs` heap setting in gradle.properties, so set it here too.
+  options.forkOptions.jvmArgs += "-Xmx6g"
+  options.compilerArgs += "-Werror"
+  // "-processing" avoids javac warning "No processor claimed any of these annotations".
+  options.compilerArgs += "-Xlint:all,-processing,-this-escape"
 }
 
 
 // Testing
 
-// Compilation always uses Java 21. Tests run under
-// the version given by `-PtestJavaVersion=NN` (default 21).
-def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("21")
+// Compilation always uses Java 21, but the tests run under various Java versions.  The
+// `java.toolchain` setting above applies to Test tasks as well as to compilation, so without this
+// the tests would always run under Java 21.  By default the tests run under the JVM that Gradle
+// itself is running under, which is what the job matrix in .github/workflows/gradle.yml varies.
+// Override with, for example:
+//   ./gradlew test -PtestJavaVersion=17
+def testJavaVersionProperty = project.findProperty("testJavaVersion")
+// Compare to null rather than writing `?:`, which would also treat the empty string as absent.
+// `./gradlew test -PtestJavaVersion` (no "=" and no value) supplies the empty string, and silently
+// testing under the default version is not what someone who wrote that on the command line meant.
+def testJavaVersion = JavaLanguageVersion.of(
+    (testJavaVersionProperty != null
+    ? testJavaVersionProperty
+    : JavaVersion.current().majorVersion).toString())
 
 tasks.withType(Test).configureEach {
   javaLauncher = javaToolchains.launcherFor {
-    languageVersion = testJavaVersion.map { JavaLanguageVersion.of(it) }
+    languageVersion = testJavaVersion
   }
 
   useJUnitPlatform {
@@ -110,10 +115,14 @@ tasks.withType(Test).configureEach {
   outputs.cacheIf { false }
 
   testLogging {
-    showStandardStreams = true
-    events("failed")
+    // `showStandardStreams = true` would be a redundant way to say the same
+    // thing as including the "standardOut" and "standardError" events here.
+    events("skipped", "failed", "standardOut", "standardError")
     exceptionFormat = "full"
   }
+
+  // Generate the coverage report after the tests run.
+  finalizedBy(tasks.named("jacocoTestReport"))
 }
 
 jacoco {
@@ -127,44 +136,57 @@ tasks.named("jacocoTestReport") {
     html.required = true // Output is written to build/reports/jacoco/test/html/index.html
   }
 }
-// Two possible configurations:
-// Configuration A: report is always generated after tests run.
-tasks.named("test") {
-  finalizedBy(tasks.named("jacocoTestReport"))
-}
-// Configuration B: user must run `jacocoTestReport` explicitly.
-// tasks.named("jacocoTestReport") { dependsOn("test") }
 
 
 // Code formatting
 
 spotless {
-  format "misc", {
-    // define the files to apply `misc` to
-    target("*.md", ".gitignore")
+  format("misc") {
+    // Define the files to apply `misc` to.  prek handles `.gitignore`.
+    target("**/*.md")
 
-    // define the steps to apply to those files
+    // Define the steps to apply to those files.
     trimTrailingWhitespace()
     leadingTabsToSpaces(2)
     endWithNewline()
   }
   java {
-    googleJavaFormat()
+    googleJavaFormat(libs.versions.google.java.format.get())
     formatAnnotations()
   }
   groovyGradle {
     target("**/*.gradle")
-    // `greclipse()` specifies the formatter that Spotless uses for .gradle files.
-    // It provisions the Eclipse platform from eclipse.org, which is flaky.
-    // Configuring any mirror obliges every P2 repository to have one, so
-    // groovy.jfrog.io maps to itself.
-    greclipse().withP2Mirrors([
+
+    def greclipseConfig = greclipse(libs.versions.greclipse.get())
+    // Name the cache directory rather than accepting Spotless's default, which
+    // has moved between Spotless versions and which is not documented as being stable.
+    greclipseConfig.cacheDirectory(new File(gradle.gradleUserHomeDir, "spotless-p2"))
+    greclipseConfig.withP2Mirrors([
       "https://download.eclipse.org/": "https://mirror.umd.edu/eclipse/",
       "https://groovy.jfrog.io/": "https://groovy.jfrog.io/",
     ])
+
     leadingTabsToSpaces(2)
     trimTrailingWhitespace()
     // endWithNewline() // Don't want to end empty files with a newline
+  }
+}
+
+
+// Error Prone linter
+
+dependencies {
+  errorprone(libs.error.prone.core)
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.errorprone {
+    disable("AnnotateFormatMethod") // Error Prone doesn't know about Checker Framework @FormatMethod.
+    disable("DoNotCallSuggester") // Suggests use of an Error Prone annotation.
+    disable("EffectivelyPrivate") // Loses information about the abstraction.
+    disable("ExtendsObject") // Incorrect when using the Checker Framework.
+    disable("InlineMeSuggester") // Using `@InlineMe` requires clients to declare a dependency on error_prone_annotations.
+    disable("ReferenceEquality") // Use Interning Checker instead.
   }
 }
 
@@ -176,8 +198,6 @@ pmd {
   ruleSets = [] // Prevent the default errorprone.xml from being applied.
   ruleSetFiles = files("${rootDir}/.pmd-ruleset.xml")
   consoleOutput = true
-  ignoreFailures = false
-  incrementalAnalysis = true
 }
 
 
@@ -223,6 +243,9 @@ checkerFramework {
 // the closure.
 class JavadocFonts {
   static void removeDejaVuFontImport(File javadocDir) {
+    if (!javadocDir.isDirectory()) {
+      return
+    }
     javadocDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
       if (!(file.name.endsWith(".css") || file.name.endsWith(".html"))) {
         return
@@ -240,14 +263,20 @@ class JavadocFonts {
 tasks.withType(Javadoc).configureEach {
   options.noTimestamp = true
   options.quiet()
-}
-tasks.named("javadoc") {
-  // Turn Javadoc warnings into errors.
-  options.addBooleanOption("Xdoclint:all", true)
-  options.addBooleanOption("Xwerror", true)
   doLast {
     JavadocFonts.removeDejaVuFontImport(it.destinationDir)
   }
+}
+
+// Turns Javadoc warnings into errors.  This is applied to individual tasks rather than to every
+// Javadoc task, because a task that uses a custom doclet rejects the standard doclet's options.
+def strictJavadoc = { Javadoc javadocTask ->
+  javadocTask.options.addBooleanOption("Xdoclint:all", true)
+  javadocTask.options.addBooleanOption("Xwerror", true)
+}
+
+tasks.named("javadoc", Javadoc) {
+  strictJavadoc(it)
 }
 
 // The `javadoc` task documents only the public API, because the gradle-maven-publish-plugin
@@ -259,35 +288,68 @@ def javadocPrivate = tasks.register("javadocPrivate", Javadoc) {
   classpath = sourceSets.main.compileClasspath
   destinationDir = layout.buildDirectory.dir("docs/javadocPrivate").get().asFile
   options.addBooleanOption("private", true)
+  strictJavadoc(it)
 }
 tasks.named("check") {
   dependsOn("javadoc", javadocPrivate)
 }
 
 def javadocWebUpload = tasks.register("javadocWebUpload", Javadoc) {
+  description = "Write API documentation to the website directory."
   source = sourceSets.main.allJava
+  classpath = sourceSets.main.compileClasspath
   destinationDir = file("/cse/web/research/plumelib/${project.name}/api")
-  classpath = project.sourceSets.main.compileClasspath
-  doLast {
-    JavadocFonts.removeDejaVuFontImport(it.destinationDir)
-  }
+  strictJavadoc(it)
 }
 // Set permissions
 def javadocWebChgrp = tasks.register("javadocWebChgrp", Exec) {
-  commandLine("chgrp", "-R", "plse_www", "/cse/web/research/plumelib/${project.name}/api")
-  ignoreExitValue = true
+  description = "Set the Unix group of the website's API documentation."
   mustRunAfter(javadocWebUpload)
+  commandLine("chgrp", "-R", "plse_www", "/cse/web/research/plumelib/${project.name}/api")
+  // A file that another user owns cannot be chgrped, which is not worth failing the build over.
+  ignoreExitValue = true
+  doLast {
+    int exitValue = executionResult.get().exitValue
+    if (exitValue != 0) {
+      logger.warn("chgrp of the uploaded API documentation exited with status ${exitValue}.")
+    }
+  }
 }
 def javadocWebChmod = tasks.register("javadocWebChmod", Exec) {
-  commandLine("chmod", "-R", "g+w", "/cse/web/research/plumelib/${project.name}/api")
-  ignoreExitValue = true
+  description = "Set the Unix permissions of the website's API documentation."
   mustRunAfter(javadocWebUpload)
+  commandLine("chmod", "-R", "g+w", "/cse/web/research/plumelib/${project.name}/api")
+  // A file that another user owns cannot be chmoded, which is not worth failing the build over.
+  ignoreExitValue = true
+  doLast {
+    int exitValue = executionResult.get().exitValue
+    if (exitValue != 0) {
+      logger.warn("chmod of the uploaded API documentation exited with status ${exitValue}.")
+    }
+  }
 }
-def javadocWeb = tasks.register("javadocWeb", DefaultTask) {
+// The three tasks above are steps of "javadocWeb", so they have no group and thus do not appear in
+// the output of `./gradlew tasks`.
+tasks.register("javadocWeb", DefaultTask) {
+  group = "documentation"
   description = "Upload API documentation to website."
   dependsOn(javadocWebUpload, javadocWebChgrp, javadocWebChmod)
 }
 
+
+// RequireJavadoc calls javac internals, which the jdk.compiler module does not export.
+def javacInternalPackages = [
+  "file",
+  "parser",
+  "tree",
+  "util"
+]
+def addExportsArgs = javacInternalPackages.collect {
+  "--add-exports=jdk.compiler/com.sun.tools.javac.${it}=ALL-UNNAMED".toString()
+}
+def addOpensArgs = javacInternalPackages.collect {
+  "--add-opens=jdk.compiler/com.sun.tools.javac.${it}=ALL-UNNAMED".toString()
+}
 
 // `resolvable` rather than the `configurations { requireJavadoc }` shorthand, which creates a
 // configuration that is both resolvable and consumable and that Gradle reports as legacy.
@@ -295,23 +357,26 @@ configurations.resolvable("requireJavadoc")
 dependencies {
   requireJavadoc(libs.require.javadoc)
 }
+// RequireJavadoc produces no output of its own, so write a marker file.  Without a declared output,
+// the task could never be up to date and the declared inputs would have no effect.
+def requireJavadocMarker = layout.buildDirectory.file("requireJavadoc/requireJavadoc.txt")
 def requireJavadoc = tasks.register("requireJavadoc", JavaExec) {
   group = "documentation"
   description = "Ensures that Javadoc documentation exists."
   inputs.files(sourceSets.main.allJava)
+  outputs.file(requireJavadocMarker)
   mainClass = "org.plumelib.javadoc.RequireJavadoc"
   classpath = configurations.requireJavadoc
-  args(sourceSets.main.allJava.srcDirs.collect{it.getAbsolutePath()})
-  jvmArgs += [
-    "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-    "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-    "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-    "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-    "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-    "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-    "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-    "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-  ]
+  args(sourceSets.main.allJava.srcDirs.collect { it.absolutePath })
+  jvmArgs += addExportsArgs
+  jvmArgs += addOpensArgs
+  // Runs only if the tool found no problems, so that a failure does not leave behind a marker file
+  // that would mark this task up to date.
+  doLast {
+    File marker = requireJavadocMarker.get().asFile
+    marker.parentFile.mkdirs()
+    marker.text = ""
+  }
 }
 tasks.named("check") {
   dependsOn(requireJavadoc)
@@ -373,21 +438,40 @@ mavenPublishing {
 
 /* Make Emacs TAGS table */
 tasks.register("tags", Exec) {
-  description = "Run etags to create an Emacs TAGS table"
   group = "IDE"
-  def javaFiles = fileTree("src") {
+  description = "Run etags to create an Emacs TAGS table"
+  def sourceFiles = fileTree("src") {
     include("**/*.java")
+    include("**/*.sh")
   }
   // `projectPath` in a build script is Gradle's project path (such as ":"), not a file system
   // path, so compute the project directory explicitly.
   def projectDirPath = layout.projectDirectory.asFile.toPath()
-  inputs.files(javaFiles)
+  inputs.files(sourceFiles)
   outputs.file(layout.projectDirectory.file("TAGS"))
   executable("etags")
   // Compute the arguments when the task runs, not when it is configured.
   argumentProviders.add({
-    javaFiles.files.sort()*.toPath().collect {
+    sourceFiles.files.sort()*.toPath().collect {
       projectDirPath.relativize(it).toString()
     }
   } as CommandLineArgumentProvider)
+}
+
+
+// Debugging support
+
+tasks.register("printCompileClasspaths") {
+  group = "help"
+  description = "Print the compile-time classpaths"
+  // Resolve the classpaths when the task is configured, not when it runs.  Reading `sourceSets`
+  // from a task action would capture the `Project` object, which the configuration cache forbids.
+  def mainClasspath = sourceSets.main.compileClasspath
+  def testClasspath = sourceSets.test.compileClasspath
+  doFirst {
+    println("Compile classpath:")
+    println(mainClasspath.asPath)
+    println("Compile test classpath:")
+    println(testClasspath.asPath)
+  }
 }
