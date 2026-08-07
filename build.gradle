@@ -57,6 +57,19 @@ dependencies {
   testRuntimeOnly(libs.junit.platform.launcher)
 }
 
+// RequireJavadoc calls javac internals, which the jdk.compiler module does not export.
+def javacInternalPackages = [
+  "file",
+  "parser",
+  "tree",
+  "util"
+]
+def javacExportTargets = javacInternalPackages.collect {
+  "jdk.compiler/com.sun.tools.javac.${it}=ALL-UNNAMED".toString()
+}
+def addExportsArgs = javacExportTargets.collect { "--add-exports=${it}".toString() }
+def addOpensArgs = javacExportTargets.collect { "--add-opens=${it}".toString() }
+
 
 // Compilation
 
@@ -339,21 +352,6 @@ tasks.register("javadocWeb", DefaultTask) {
   group = "documentation"
   description = "Upload API documentation to website."
   dependsOn(javadocWebUpload, javadocWebChgrp, javadocWebChmod)
-}
-
-
-// RequireJavadoc calls javac internals, which the jdk.compiler module does not export.
-def javacInternalPackages = [
-  "file",
-  "parser",
-  "tree",
-  "util"
-]
-def addExportsArgs = javacInternalPackages.collect {
-  "--add-exports=jdk.compiler/com.sun.tools.javac.${it}=ALL-UNNAMED".toString()
-}
-def addOpensArgs = javacInternalPackages.collect {
-  "--add-opens=jdk.compiler/com.sun.tools.javac.${it}=ALL-UNNAMED".toString()
 }
 
 // `resolvable` rather than the `configurations { requireJavadoc }` shorthand, which creates a
