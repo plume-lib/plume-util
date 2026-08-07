@@ -163,14 +163,30 @@ class SpotlessP2 {
   // one whose owner has not yet written its PID.
   private static final long EMPTY_LOCK_FILE_GRACE_MILLIS = 60000
 
+  // How much later than the lock file's modification time a process may have started and still be
+  // taken for the process that wrote the lock file.  A file system that records modification times
+  // at 1-second granularity rounds them down, so the recorded time can precede the write by that
+  // much, making a genuine owner's start time appear to follow it.
+  private static final long START_TIME_TOLERANCE_MILLIS = 2000
+
   static void deleteStaleLockFile(File cacheDirectory, Logger logger) {
     File lockFile = new File(new File(cacheDirectory, "metadata"), ".lock")
     if (!lockFile.isFile()) {
       return
     }
+    String lockFileContents
+    try {
+      lockFileContents = lockFile.getText("UTF-8")
+    } catch (IOException e) {
+      // The owner released the lock and deleted the file between the test above and this read,
+      // which is the common case rather than an exotic one:  a build and the "gradle-spotless-
+      // gradle" hook in prek.toml routinely run at the same time.  There is nothing stale to
+      // delete, and failing this task would fail a build that was about to succeed.
+      return
+    }
     long pid
     try {
-      pid = Long.parseLong(lockFile.getText("UTF-8").trim())
+      pid = Long.parseLong(lockFileContents.trim())
     } catch (NumberFormatException e) {
       // Solstice creates the lock file and then writes its PID into it, so a lock file that holds
       // no PID usually belongs to a live process that is between those two steps.  A process that
@@ -183,16 +199,33 @@ class SpotlessP2 {
       }
       return
     }
-    // A PID that the operating system has recycled looks like the original owner, which leaves the
-    // lock file in place.  That is the behavior that this method is avoiding, but erring in this
-    // direction merely fails to improve on Solstice, whereas deleting a live process's lock file
-    // would let two processes write the cache at once.
-    if (ProcessHandle.of(pid).isPresent()) {
+    if (!isStale(pid, lockFile.lastModified())) {
       return
     }
     if (lockFile.delete()) {
-      logger.lifecycle("Deleted stale Spotless P2 lock file of dead process ${pid}: ${lockFile}")
+      logger.lifecycle("Deleted stale Spotless P2 lock file that names process ${pid}: ${lockFile}")
     }
+  }
+
+  // Returns true if no live process wrote the lock file at the given time.
+  private static boolean isStale(long pid, long lockFileModifiedMillis) {
+    def process = ProcessHandle.of(pid)
+    if (!process.isPresent()) {
+      return true
+    }
+    // A live process can hold a PID that the operating system recycled, and on a continuous
+    // integration runner it usually does:  .github/workflows/prek.yaml restores a lock file that a
+    // different machine wrote, so the PID in it names a process of this machine only by
+    // coincidence.  A process that started after the lock file was written cannot be the process
+    // that wrote it.
+    def startInstant = process.get().info().startInstant()
+    if (!startInstant.isPresent()) {
+      // The platform does not report this process's start time, so the PID could still be the
+      // original owner's.  Erring in this direction merely fails to improve on Solstice, whereas
+      // deleting a live process's lock file would let two processes write the cache at once.
+      return false
+    }
+    return startInstant.get().toEpochMilli() > lockFileModifiedMillis + START_TIME_TOLERANCE_MILLIS
   }
 }
 
@@ -217,6 +250,11 @@ tasks.matching { it.name.startsWith("spotlessGroovyGradle") }.configureEach {
   dependsOn(deleteStaleSpotlessP2Lock)
 }
 
+// Spotless formats only the languages that have a dedicated formatter here.  Whitespace hygiene for
+// every other file, such as Markdown and .gitignore, is prek's job:  its "trailing-whitespace",
+// "end-of-file-fixer", and "mixed-line-ending" hooks apply to all of them, and "markdownlint-cli2"
+// rejects a hard tab in a Markdown file.  .github/workflows/prek.yaml runs those hooks in
+// continuous integration, so a commit that bypassed the hooks is still checked.
 spotless {
   java {
     googleJavaFormat(libs.versions.google.java.format.get())
@@ -298,6 +336,21 @@ checkerFramework {
     "-AwarnRedundantAnnotations",
     "-AwarnUnneededSuppressions",
   ]
+}
+
+// The org.checkerframework plugin adds "-processor" and the extra javac arguments from a
+// JavaCompile task action rather than while configuring the task, which is also why the plugin is
+// not configuration-cache compatible; see gradle.properties.  Gradle fingerprints a task's inputs
+// before its actions run, so neither the list of checkers nor the extra arguments would otherwise
+// be part of the fingerprint, and the build cache that gradle.properties enables would answer a
+// compilation whose configuration above has changed with the output of a compilation that used the
+// previous configuration -- even after `./gradlew clean`, and on a continuous integration runner,
+// which restores the build cache along with the rest of ~/.gradle.  A newly added checker or javac
+// argument would silently never run.  The Checker Framework version needs no declaration here,
+// because it determines the annotation processor path, which Gradle does fingerprint.
+tasks.withType(JavaCompile).configureEach {
+  inputs.property("checkerFramework.checkers", checkerFramework.checkers)
+  inputs.property("checkerFramework.extraJavacArgs", checkerFramework.extraJavacArgs)
 }
 
 

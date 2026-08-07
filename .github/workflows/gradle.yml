@@ -52,6 +52,7 @@ jobs:
           key: ${{ steps.spotless-p2-key.outputs.key }}
           restore-keys: ${{ steps.spotless-p2-key.outputs.key }}-partial-
       - name: ./gradlew spotlessCheck
+        id: spotless-check
         run: |
           set -o pipefail
           for attempt in 1 2 3; do
@@ -63,7 +64,10 @@ jobs:
               # download the Groovy-Eclipse formatter.  Retrying would not help.
               exit 1
             fi
-            sleep $((30 * attempt))
+            # Nothing follows the last attempt but the failure below, so do not delay it.
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((30 * attempt))
+            fi
           done
           exit 1
       # A cache that a successful run saves is complete, so later runs can use it without any
@@ -85,8 +89,13 @@ jobs:
       # such failure would write another ~140MB entry that duplicates the complete one.  Entries are
       # evicted least-recently-used once a repository holds 10GB of them, so needless entries push
       # out the Gradle caches that "setup-java" maintains.
+      #
+      # The condition names the Spotless step rather than relying on "failure()" alone, which is
+      # true when any earlier step failed.  If "actions/checkout", "setup-java", or the key
+      # computation failed, then the directory below does not exist and the key is empty, so
+      # "actions/cache/save" would fail with a path validation error under a nonsense key.
       - name: Save a partial Spotless P2 cache
-        if: failure() && steps.restore-spotless-p2.outputs.cache-hit != 'true'
+        if: failure() && steps.spotless-check.outcome == 'failure' && steps.restore-spotless-p2.outputs.cache-hit != 'true'
         uses: actions/cache/save@v6
         with:
           path: ~/.gradle/spotless-p2
