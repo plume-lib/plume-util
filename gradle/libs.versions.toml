@@ -4,22 +4,20 @@ checker-framework = "4.2.1"
 
 google-java-format = "1.28.0"
 
-# The Groovy-Eclipse formatter, which Spotless applies to .gradle files.  The version is an Eclipse
-# release, not a Groovy-Eclipse release.  Spotless permits version 4.36 on JVM 17+ and version 4.40
-# on JVM 21+.
-greclipse = "4.36"
-
 jacoco = "0.8.15"
 
 junit-jupiter = "6.1.2"
+
+# The Kotlin formatter, which Spotless applies to .gradle.kts files.
+ktfmt = "0.64"
 
 pmd = "7.26.0"
 
 [libraries]
 
 # Some entries below are not dependencies.  Each such entry exists so that a dependency-update tool
-# such as Renovate proposes new versions of a tool whose version build.gradle reads, by itself, via
-# "libs.versions.*".  Each such entry is marked "Version only".
+# such as Renovate proposes new versions of a tool whose version build.gradle.kts reads, by itself,
+# via "libs.versions.*".  Each such entry is marked "Version only".
 
 # Version only:  the org.checkerframework Gradle plugin adds the dependency, from
 # `checkerFramework.version`.
@@ -38,6 +36,9 @@ jacoco = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
 
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-jupiter" }
+
+# Version only:  Spotless resolves ktfmt itself.
+ktfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
 
 # Version only:  for the PMD plugin's `toolVersion`.
 pmd-java = { module = "net.sourceforge.pmd:pmd-java", version.ref = "pmd" }
