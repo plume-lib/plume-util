@@ -19,6 +19,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * A set backed by an array. It uses object identity (==) for comparison. It permits null values and
@@ -134,6 +135,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return true if the method modified this set
    */
   @SuppressWarnings({"InvalidParam"}) // Error Prone stupidly warns about field `values`
+  @SideEffectsOnly("this")
   private boolean add(@GTENegativeOne int index, E value) {
     if (index != -1) {
       return false;
@@ -178,6 +180,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   /** Increases the capacity of the array, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
   @EnsuresNonNull("values")
+  @SideEffectsOnly("this")
   private void grow() {
     int capacity = capacity();
     if (capacity == 0) {
@@ -194,6 +197,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @param index the index of the element to remove
    * @return true if this set was modified
    */
+  @SideEffectsOnly("this")
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
       return false;

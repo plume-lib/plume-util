@@ -34,6 +34,7 @@ import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * A map backed by two arrays. It permits null keys and values, and its iterator has deterministic
@@ -251,6 +252,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     "keyfor:contracts.postcondition" // insertion in keys array suffices
   })
   @EnsuresKeyFor(value = "#2", map = "this")
+  @SideEffectsOnly("this")
   private void put(@GTENegativeOne int index, K key, V value) {
     if (index == -1) {
       // Add a new mapping.
@@ -296,6 +298,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   /** Increases the capacity of the arrays, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
+  @SideEffectsOnly("this")
   private void grow() {
     int capacity = capacity();
     if (capacity == 0) {
@@ -314,6 +317,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param index the index of the mapping to remove
    * @return true if this map was modified
    */
+  @SideEffectsOnly("this")
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
       return false;

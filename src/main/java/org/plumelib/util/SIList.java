@@ -17,6 +17,8 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.ArrayLen;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 // Implementation note:
 // Randoop's main generator ({@link randoop.generation.ForwardGenerator ForwardGenerator})
@@ -226,6 +228,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    *
    * @return the number of elements in this list
    */
+  @Pure
   public abstract @LengthOf("this") int size();
 
   /**
@@ -241,6 +244,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @param index a position in the list
    * @return the element at the index
    */
+  @SideEffectFree
   public abstract E get(@IndexFor("this") int index);
 
   /**
@@ -295,6 +299,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    */
   // Can't write this @EnsuresQualifier because the @IndexFor needs an argument of "this".
   // @EnsuresQualifier(expression="#1", qualifier=IndexFor.class)
+  @SideEffectFree
   /*package-private*/ final void checkIndex(int index) {
     if (index < 0 || index >= size()) {
       throw new IllegalArgumentException(

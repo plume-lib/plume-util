@@ -10,6 +10,7 @@ import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * Given a set of collections, yield each combination that takes one element from each collection.
@@ -86,6 +87,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
 
   /** Advance {@code #nextValue} to the next value, or to null if there are no more values. */
   @RequiresNonNull("nextValue")
+  @SideEffectsOnly("this")
   private void advanceNext(@GuardSatisfied CombinationIterator<T> this) {
     List<T> nnNextValue = nextValue;
     for (int i = combinationSize - 1; i >= 0; i--) {

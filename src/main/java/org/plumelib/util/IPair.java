@@ -33,6 +33,7 @@ public final class IPair<V1, V2> {
    * @param first the first element of the pair
    * @param second the second element of the pair
    */
+  @SideEffectFree
   private IPair(V1 first, V2 second) {
     this.first = first;
     this.second = second;
@@ -47,6 +48,7 @@ public final class IPair<V1, V2> {
    * @param second second argument
    * @return a pair of the values (first, second)
    */
+  @SideEffectFree
   public static <T1, T2> IPair<T1, T2> of(T1 first, T2 second) {
     return new IPair<>(first, second);
   }

@@ -3,6 +3,7 @@ package org.plumelib.util;
 import java.util.LinkedHashSet;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * A set that is more efficient than HashSet for 0 and 1 elements. Uses {@code Objects.equals} for
@@ -57,6 +58,7 @@ public final class MostlySingletonSet<T extends Object> extends AbstractMostlySi
   }
 
   /** Switch the representation of this from SINGLETON to ANY. */
+  @SideEffectsOnly("this")
   private void makeNonSingleton() {
     state = State.ANY;
     set = new LinkedHashSet<>();
