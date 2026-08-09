@@ -132,17 +132,17 @@ final class StringsPTest {
   void test_firstLineSeparator() {
     assertEquals(null, StringsP.firstLineSeparator("hello"));
     assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye"));
-    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revior"));
-    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revior\r\nWindows"));
-    assertEquals("\n", StringsP.firstLineSeparator("hello\n\rgoodbye\rau revior\r\nWindows"));
+    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revoir"));
+    assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revoir\r\nWindows"));
+    assertEquals("\n", StringsP.firstLineSeparator("hello\n\rgoodbye\rau revoir\r\nWindows"));
 
     assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye"));
-    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revior"));
-    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revior\r\nWindows"));
+    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revoir"));
+    assertEquals("\r", StringsP.firstLineSeparator("hello\rgoodbye\nau revoir\r\nWindows"));
 
     assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye"));
-    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revior"));
-    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revior\rold MacOS"));
+    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revoir"));
+    assertEquals("\r\n", StringsP.firstLineSeparator("hello\r\ngoodbye\nau revoir\rold MacOS"));
   }
 
   /** Test splitLinesRetainSeparators(). */
@@ -201,7 +201,7 @@ final class StringsPTest {
   }
 
   /** Test escapeJava(). */
-  @SuppressWarnings({"UnicodeEscape", "PMD.SuspiciousOctalEscape"})
+  @SuppressWarnings({"UnicodeEscape"})
   @Test
   void test_escapeJava() {
 
@@ -252,10 +252,19 @@ final class StringsPTest {
     assertEquals("ABC", StringsP.unescapeJava("A\\102C"));
     assertEquals("don't", StringsP.unescapeJava("don\\'t"));
 
-    assertEquals("(1", StringsP.unescapeJava("\0501"));
-    assertEquals("(1", StringsP.unescapeJava("\501"));
-    assertEquals("?7", StringsP.unescapeJava("\0777")); // '?' = \077
-    assertEquals("?7", StringsP.unescapeJava("\777")); // '?' = \077
+    assertEquals("(1", StringsP.unescapeJava("\\0501"));
+    assertEquals("(1", StringsP.unescapeJava("\\501"));
+    assertEquals("?7", StringsP.unescapeJava("\\0777")); // '?' = \077
+    assertEquals("?7", StringsP.unescapeJava("\\777")); // '?' = \077
+
+    // Malformed escapes must terminate, not loop forever.
+    assertEquals("\001x", StringsP.unescapeJava("\\1x")); // octal stops at non-octal digit
+    assertEquals(" 0", StringsP.unescapeJava("\\400")); // octal stops when value exceeds 0xFF
+    assertEquals("\u00abXY", StringsP.unescapeJava("\\uABXY")); // Unicode stops at non-hex digit
+    assertEquals("\u00ab!", StringsP.unescapeJava("\\uuuuAB!")); // ditto, after multiple 'u's
+    assertEquals("\u00ab", StringsP.unescapeJava("\\uAB")); // Unicode stops at end of string
+    assertEquals("\0", StringsP.unescapeJava("\\u")); // no hex digit yields the null character
+    assertEquals("\0ZZ", StringsP.unescapeJava("\\uZZ")); // ditto
 
     // public static String escapeNonASCII(String orig)
 
@@ -444,6 +453,26 @@ final class StringsPTest {
     assertEquals(-1, vnc.compare("123.456", "123.456.789"));
     assertEquals(1, vnc.compare("123.456.789", "123"));
     assertEquals(1, vnc.compare("123.456.789", "123.456"));
+
+    // Equal numeric value but different string (leading zeros): must be 0 and antisymmetric.
+    assertEquals(0, vnc.compare("1.2", "1.02"));
+    assertEquals(0, vnc.compare("1.02", "1.2"));
+
+    // A component may exceed Integer.MAX_VALUE (2147483647) or Long.MAX_VALUE.
+    assertEquals(-1, vnc.compare("1.2147483647", "1.2147483648"));
+    assertEquals(1, vnc.compare("1.2147483648", "1.2147483647"));
+    assertEquals(0, vnc.compare("1.2147483648", "1.2147483648"));
+    assertEquals(-1, vnc.compare("1.9", "1.9223372036854775808"));
+    assertEquals(1, vnc.compare("1.9223372036854775808", "1.9"));
+    assertEquals(
+        -1, vnc.compare("1.99999999999999999999", "1.999999999999999999999")); // differing lengths
+    assertEquals(
+        0, vnc.compare("1.99999999999999999999", "1.099999999999999999999")); // leading zero
+    assertEquals(1, vnc.compare("1.0000000000000000000005", "1.4")); // leading zeros, then larger
+
+    // All-zero components compare equal regardless of how they are written.
+    assertEquals(0, vnc.compare("1.0", "1.000"));
+    assertEquals(-1, vnc.compare("1.0", "1.0000000000000000000001"));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -662,7 +691,7 @@ final class StringsPTest {
   /** Test countFormatArguments(). */
   @Test
   void test_countFormatArguments() {
-    assertEquals(0, StringsP.countFormatArguments("No specifiier."));
+    assertEquals(0, StringsP.countFormatArguments("No specifier."));
     assertEquals(0, StringsP.countFormatArguments("This is 100%"));
     assertEquals(0, StringsP.countFormatArguments("This is 100%% excellent."));
     assertEquals(0, StringsP.countFormatArguments("Newline%n is not%na specifier."));

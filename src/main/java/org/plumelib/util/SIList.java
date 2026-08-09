@@ -51,26 +51,6 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * Create a SIList from a JDK Collection.
    *
    * @param <E2> the type of list elements
-   * @param list the elements of the new list
-   * @return the new list
-   * @deprecated use {@link #from(Collection)}
-   */
-  @Deprecated(since = "2025-08-30")
-  public static <E2> SIList<E2> fromList(Collection<E2> list) {
-    int size = list.size();
-    if (size == 0) {
-      return empty();
-    } else if (size == 1) {
-      return singleton(list.iterator().next());
-    } else {
-      return new SimpleArrayList<>(list);
-    }
-  }
-
-  /**
-   * Create a SIList from a JDK Collection.
-   *
-   * @param <E2> the type of list elements
    * @param c the elements of the new list
    * @return the new list
    */
@@ -254,6 +234,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @param fromIndex low endpoint (inclusive) of the subList
    * @param toIndex high endpoint (exclusive) of the subList
    * @return a view of part of this list
+   * @throws IllegalArgumentException if the range is not valid for this list
    */
   public SIList<E> subList(@IndexFor("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
     checkRange(fromIndex, toIndex);
@@ -296,6 +277,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * Throws an exception if the index is not valid for this.
    *
    * @param index an index into this
+   * @throws IllegalArgumentException if the index is not valid for this
    */
   // Can't write this @EnsuresQualifier because the @IndexFor needs an argument of "this".
   // @EnsuresQualifier(expression="#1", qualifier=IndexFor.class)
@@ -312,6 +294,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    *
    * @param fromIndex low endpoint (inclusive) of the range
    * @param toIndex high endpoint (exclusive) of the range
+   * @throws IllegalArgumentException if the range is not valid for this
    */
   /*package-private*/ final void checkRange(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex > toIndex || toIndex > size()) {
@@ -363,7 +346,10 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     @Override
     public SIList<E> getSublistContaining(int index) {
-      throw new IndexOutOfBoundsException("index " + index + " for empty list");
+      // No index is valid for an empty list, so this always throws IllegalArgumentException, as do
+      // the other index-checking methods of SIList.
+      checkIndex(index);
+      throw new Error("This can't happen.");
     }
 
     @Override
@@ -677,10 +663,11 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
      */
     SimpleSubList(
         SIList<E> delegate, @IndexFor("#1") int fromIndex, @IndexOrHigh("#1") int toIndex) {
+      // Validate against the delegate's size, not this sublist's own (smaller) size.
+      delegate.checkRange(fromIndex, toIndex);
       this.delegate = delegate;
       this.fromIndex = fromIndex;
       this.toIndex = toIndex;
-      checkRange(fromIndex, toIndex);
     }
 
     @Override

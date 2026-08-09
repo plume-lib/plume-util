@@ -130,7 +130,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    * Constructs a new {@code ArraySet} with the same elements as the given collection.
    *
    * @param m the collection whose elements are to be placed in the new set
-   * @throws NullPointerException if the given set is null
+   * @throws NullPointerException if the given collection is null
    */
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
@@ -140,11 +140,9 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public ArraySet(@Nullable Collection<? extends E> m) {
-    this(m == null ? 0 : m.size());
-    if (m != null) {
-      addAll(m);
-    }
+  public ArraySet(Collection<? extends E> m) {
+    this(m.size());
+    addAll(m);
   }
 
   // Factory (constructor) methods
@@ -235,7 +233,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     }
 
     // Add a new element.
-    if (values == null || size == 0 || size == values.length) {
+    if (values == null || size == values.length) {
       grow();
     }
     values[size] = value;
@@ -249,7 +247,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @EnsuresNonNull("values")
   @SideEffectsOnly("this")
   private void grow() {
-    if (values == null) {
+    if (values == null || values.length == 0) {
       this.values = (E[]) new Object[4];
     } else {
       int newCapacity = 2 * values.length;
@@ -277,6 +275,8 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     }
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
+    // Clear the now-unused slot so it does not retain a reference.
+    values[size] = null;
     sizeModificationCount++;
     return true;
   }
@@ -358,6 +358,11 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @Override
   public void clear() {
     if (size != 0) {
+      // Clear the slots so they do not retain references.  A nonzero size implies that the array
+      // is non-null; the test against null is for the benefit of the Nullness Checker.
+      if (values != null) {
+        Arrays.fill(values, 0, size, null);
+      }
       size = 0;
       sizeModificationCount++;
     }

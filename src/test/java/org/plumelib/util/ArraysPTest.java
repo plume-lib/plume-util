@@ -8,9 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.RandomAccess;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Signed;
@@ -386,6 +390,88 @@ final class ArraysPTest {
       assertEquals(-1, ArraysP.indexOf(postTheArray, origTheArray));
       assertEquals(-1, ArraysP.indexOf(origTheArray, postTheArray));
     }
+  }
+
+  @Test
+  void test_indexOf_subsequence() {
+
+    // public static int indexOf(Object[] a, List<?> sub)
+    // public static int indexOfEq(Object[] a, List<?> sub)
+    // public static int indexOf(List<T> a, T[] sub)
+    // public static int indexOfEq(List<T> a, T[] sub)
+    // public static int indexOf(List<T> a, List<T> sub)
+    // public static int indexOfEq(List<T> a, List<T> sub)
+
+    List<String> a = Arrays.asList("a", "b", "c", "d", "e", "f");
+    String[] aArray = a.toArray(new String[0]);
+
+    List<String> empty = List.of();
+    List<String> prefix = Arrays.asList(a.get(0), a.get(1));
+    List<String> middle = Arrays.asList(a.get(2), a.get(3));
+    // A match at the very end starts at index a.size() - suffix.size(), the largest index that
+    // the search loop must examine.
+    List<String> suffix = Arrays.asList(a.get(4), a.get(5));
+    List<String> absent = Arrays.asList(a.get(2), a.get(4));
+    List<String> pastEnd = Arrays.asList(a.get(5), "g");
+    // One element longer than a; the search loop must examine no index at all.
+    List<String> tooLong = Arrays.asList("a", "b", "c", "d", "e", "f", "g");
+
+    // indexOf(Object[] a, List<?> sub)
+    assertEquals(0, ArraysP.indexOf(aArray, empty));
+    assertEquals(0, ArraysP.indexOf(aArray, prefix));
+    assertEquals(2, ArraysP.indexOf(aArray, middle));
+    assertEquals(4, ArraysP.indexOf(aArray, suffix));
+    assertEquals(0, ArraysP.indexOf(aArray, a));
+    assertEquals(-1, ArraysP.indexOf(aArray, absent));
+    assertEquals(-1, ArraysP.indexOf(aArray, pastEnd));
+    assertEquals(-1, ArraysP.indexOf(aArray, tooLong));
+
+    // indexOfEq(Object[] a, List<?> sub)
+    assertEquals(0, ArraysP.indexOfEq(aArray, empty));
+    assertEquals(0, ArraysP.indexOfEq(aArray, prefix));
+    assertEquals(2, ArraysP.indexOfEq(aArray, middle));
+    assertEquals(4, ArraysP.indexOfEq(aArray, suffix));
+    assertEquals(-1, ArraysP.indexOfEq(aArray, absent));
+    assertEquals(-1, ArraysP.indexOfEq(aArray, pastEnd));
+    assertEquals(-1, ArraysP.indexOfEq(aArray, tooLong));
+
+    // indexOf(List<T> a, T[] sub) and indexOfEq(List<T> a, T[] sub)
+    assertEquals(0, ArraysP.indexOf(a, empty.toArray(new String[0])));
+    assertEquals(0, ArraysP.indexOf(a, prefix.toArray(new String[0])));
+    assertEquals(2, ArraysP.indexOf(a, middle.toArray(new String[0])));
+    assertEquals(4, ArraysP.indexOf(a, suffix.toArray(new String[0])));
+    assertEquals(-1, ArraysP.indexOf(a, absent.toArray(new String[0])));
+    assertEquals(-1, ArraysP.indexOf(a, tooLong.toArray(new String[0])));
+    assertEquals(4, ArraysP.indexOfEq(a, suffix.toArray(new String[0])));
+    assertEquals(-1, ArraysP.indexOfEq(a, tooLong.toArray(new String[0])));
+
+    // indexOf(List<T> a, List<T> sub) and indexOfEq(List<T> a, List<T> sub)
+    assertEquals(0, ArraysP.indexOf(a, empty));
+    assertEquals(0, ArraysP.indexOf(a, prefix));
+    assertEquals(2, ArraysP.indexOf(a, middle));
+    assertEquals(4, ArraysP.indexOf(a, suffix));
+    assertEquals(-1, ArraysP.indexOf(a, absent));
+    assertEquals(-1, ArraysP.indexOf(a, tooLong));
+    assertEquals(4, ArraysP.indexOfEq(a, suffix));
+    assertEquals(-1, ArraysP.indexOfEq(a, tooLong));
+
+    // Elements equal to, but not identical to, the last two elements of a.  The equals-based
+    // methods find them; the ==-based methods do not.  The round trip through a char array is a
+    // way to build an uninterned String that Error Prone accepts; Error Prone's StringConstructor
+    // check rejects the more obvious `new String(a.get(4))`.
+    List<String> suffixCopy =
+        Arrays.asList(
+            String.valueOf(a.get(4).toCharArray()), String.valueOf(a.get(5).toCharArray()));
+    assertEquals(4, ArraysP.indexOf(aArray, suffixCopy));
+    assertEquals(-1, ArraysP.indexOfEq(aArray, suffixCopy));
+    assertEquals(4, ArraysP.indexOf(a, suffixCopy));
+    assertEquals(-1, ArraysP.indexOfEq(a, suffixCopy));
+
+    // Searching an empty array or list.
+    assertEquals(0, ArraysP.indexOf(new String[0], empty));
+    assertEquals(-1, ArraysP.indexOf(new String[0], prefix));
+    assertEquals(0, ArraysP.indexOf(empty, empty));
+    assertEquals(-1, ArraysP.indexOf(empty, prefix));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1122,14 +1208,120 @@ final class ArraysPTest {
   Object[] defArrayObject = {"d", "e", "f"};
   Object[] emptyArrayObject = {};
 
+  @SuppressWarnings("JdkObsolete") // LinkedList is a List that is not RandomAccess
   @Test
   void test_mapArray() {
     Integer[] iota = {0, 1, 2, 3};
     String[] iotaStringGoal = {"0", "1", "2", "3"};
-    String[] iotaStringActual =
-        ArraysP.<Integer, String>mapArray(i -> i.toString(), iota, String.class);
-    assertArrayEquals(iotaStringGoal, iotaStringActual);
-    assertEquals(String.class, iotaStringActual.getClass().getComponentType());
+    String[] emptyStringGoal = {};
+    List<Integer> iotaList = List.of(0, 1, 2, 3);
+
+    // Each case below checks the component type as well as the contents, because producing an
+    // array whose run-time component type is TO[] rather than Object[] is the point of mapArray.
+
+    String[] fromArray = ArraysP.<Integer, String>mapArray(i -> i.toString(), iota, String.class);
+    assertArrayEquals(iotaStringGoal, fromArray);
+    assertEquals(String.class, fromArray.getClass().getComponentType());
+
+    // A List that is RandomAccess.
+    String[] fromRandomAccessList =
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), iotaList, String.class);
+    assertArrayEquals(iotaStringGoal, fromRandomAccessList);
+    assertEquals(String.class, fromRandomAccessList.getClass().getComponentType());
+
+    // An empty List that is RandomAccess.
+    String[] fromEmptyRandomAccessList =
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), List.<Integer>of(), String.class);
+    assertArrayEquals(emptyStringGoal, fromEmptyRandomAccessList);
+    assertEquals(String.class, fromEmptyRandomAccessList.getClass().getComponentType());
+
+    // A List that is not RandomAccess.
+    String[] fromNonRandomAccessList =
+        ArraysP.<Integer, String>mapArray(
+            i -> i.toString(), new LinkedList<>(iotaList), String.class);
+    assertArrayEquals(iotaStringGoal, fromNonRandomAccessList);
+    assertEquals(String.class, fromNonRandomAccessList.getClass().getComponentType());
+
+    // A Collection that is not a List.
+    String[] fromCollection =
+        ArraysP.<Integer, String>mapArray(
+            i -> i.toString(), new ArrayDeque<>(iotaList), String.class);
+    assertArrayEquals(iotaStringGoal, fromCollection);
+    assertEquals(String.class, fromCollection.getClass().getComponentType());
+
+    // An empty Collection that is not a List.
+    String[] fromEmptyCollection =
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), new ArrayDeque<>(), String.class);
+    assertArrayEquals(emptyStringGoal, fromEmptyCollection);
+    assertEquals(String.class, fromEmptyCollection.getClass().getComponentType());
+
+    // An Iterable that is not a Collection.
+    Iterable<Integer> iotaIterable = new NonCollectionIterable<>(iotaList);
+    String[] fromIterable =
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), iotaIterable, String.class);
+    assertArrayEquals(iotaStringGoal, fromIterable);
+    assertEquals(String.class, fromIterable.getClass().getComponentType());
+
+    // An empty Iterable that is not a Collection.
+    Iterable<Integer> emptyIterable = new NonCollectionIterable<>(List.of());
+    String[] fromEmptyIterable =
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), emptyIterable, String.class);
+    assertArrayEquals(emptyStringGoal, fromEmptyIterable);
+    assertEquals(String.class, fromEmptyIterable.getClass().getComponentType());
+
+    // An Iterable that implements RandomAccess but is not a List.  RandomAccess is only a marker
+    // interface, so this is legal, and mapArray must not assume that RandomAccess implies List.
+    Iterable<Integer> randomAccessIterable = new RandomAccessIterable<>(iotaList);
+    String[] fromRandomAccessIterable =
+        ArraysP.<Integer, String>mapArray(i -> i.toString(), randomAccessIterable, String.class);
+    assertArrayEquals(iotaStringGoal, fromRandomAccessIterable);
+    assertEquals(String.class, fromRandomAccessIterable.getClass().getComponentType());
+  }
+
+  /**
+   * An Iterable that is not a Collection, for testing the code path that cannot obtain a size in
+   * advance. Do not replace this by a lambda or by {@code list::iterator}: Error Prone's
+   * UnnecessaryMethodReference would rewrite that to the list itself, which is a Collection and so
+   * exercises a different code path.
+   *
+   * @param <T> the type of elements
+   */
+  private static class NonCollectionIterable<T> implements Iterable<T> {
+    /** The elements. */
+    private final List<T> elements;
+
+    /**
+     * Creates a NonCollectionIterable.
+     *
+     * @param elements the elements
+     */
+    NonCollectionIterable(List<T> elements) {
+      this.elements = elements;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+      return elements.iterator();
+    }
+  }
+
+  /**
+   * An Iterable that implements RandomAccess but is not a List. RandomAccess is a marker interface
+   * that does not extend List, so a client must not cast a RandomAccess to a List.
+   *
+   * @param <T> the type of elements
+   */
+  private static class RandomAccessIterable<T> extends NonCollectionIterable<T>
+      implements RandomAccess {
+
+    /**
+     * Creates a RandomAccessIterable.
+     *
+     * @param elements the elements
+     */
+    RandomAccessIterable(List<T> elements) {
+      super(elements);
+    }
   }
 
   // //////////////////////////////////////////////////////////////////////

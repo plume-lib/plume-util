@@ -23,21 +23,23 @@ Run these steps on any filesystem, except the `javadocWeb` step.
 * Update `CHANGELOG.md`.
 * Update the version number in `README.md`, `gradle.properties`, and
   this file (possibly multiple times in each).
+* In `gradle/libs.versions.toml`, replace every "-SNAPSHOT" dependency
+  version by a released version.  A released artifact must not depend on a
+  snapshot, because the dependency versions appear in the published `.pom` file.
 * Save files and stage changes.
 * `./gradlew publishToMavenCentral`
 * Browse to <https://central.sonatype.com/publishing/deployments>, click "publish".
 * Add a git tag and commit:
 
   ```sh
-  VER=1.14.0 && \
+  VER=2.0.0 && \
   git commit -m "Version $VER" && git push && \
   git tag -a v$VER -m "Version $VER" && git push && git push --tags
   ```
 
 * Make a GitHub release.
-  * Browse to <https://github.com/plume-lib/plume-util/releases>
-  * Click "draft a new release"
-  * Call it "plume-util 1.14.0"
+  * Browse to <https://github.com/plume-lib/plume-util/releases/new>
+  * Call it "plume-util 2.0.0"
   * Use the text from `CHANGELOG.md` as the description
   * Attach the .jar and -all.jar files from `build/libs/`
   * Click "publish release"
@@ -53,34 +55,34 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     * `./gradlew publishToMavenCentral`
     * In the clients' build.gradle: set version number and use:
 
-        ```gradle
-          repositories {
-            maven { url = uri("https://central.sonatype.com/repository/maven-snapshots/") }
-          }
-          configurations.all {
-            resolutionStrategy.cacheChangingModulesFor(0, "minutes")
-          }
-        ```
+       ```gradle
+       repositories {
+         maven {
+           url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+         }
+       }
+       ```
 
   * Approach 2:  to Maven Local
     * `./gradlew publishToMavenLocal`
     * In the clients' build.gradle: set version number and use:
 
-        ```gradle
-          repositories {
-            mavenLocal()
-          }
-        ```
+       ```gradle
+       repositories {
+         mavenLocal()
+       }
+       ```
 
-* Test the test snapshot release on some clients:
+* Test the snapshot release on some clients:
   * For the Checker Framework (don't skip running the tests):
 
     ```sh
     # This ensures that the correct JDK is being used
     usecf THE-BRANCH-THAT-USES-THE-SNAPSHOT
     cd $cf
-    checker/bin-devel/test-cftests-all.sh && checker/bin-devel/test-typecheck.sh && \
+    checker/bin-devel/test-cftests-all.sh && \
+    checker/bin-devel/test-typecheck.sh && \
     checker/bin-devel/test-plume-lib.sh
     ```
 
-* For Daikon: `make compile junit test`
+  * For Daikon: `make compile junit test`

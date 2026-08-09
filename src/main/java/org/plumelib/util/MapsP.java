@@ -41,7 +41,6 @@ public final class MapsP {
    * @param m map from K to Integer
    * @param key the key whose value will be incremented
    * @return the old value, before it was incremented; this might be null
-   * @throws Error if the key is in the Map but maps to a non-Integer
    */
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key) {
@@ -57,7 +56,6 @@ public final class MapsP {
    * @param key the key whose value will be incremented
    * @param count how much to increment the value by
    * @return the old value, before it was incremented; this might be null
-   * @throws Error if the key is in the Map but maps to a non-Integer
    */
   public static <K extends @NonNull Object> @Nullable Integer incrementMap(
       Map<K, Integer> m, K key, int count) {
@@ -202,10 +200,10 @@ public final class MapsP {
   }
 
   /**
-   * Creates a LRU cache.
+   * Creates an LRU cache.
    *
    * <p>You might want to consider using a {@code WeakHashMap} or {@code WeakIdentityHashMap}
-   * instead
+   * instead.
    *
    * @param <K> the type of keys
    * @param <V> the type of values
@@ -291,28 +289,6 @@ public final class MapsP {
    * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
    * including a final line separator (unless the map is empty).
    *
-   * <p>Each line has the form "{linePrefix}{key} =&gt; {value}"
-   *
-   * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param sb an Appendable (such as StringBuilder) to which to write a multi-line string
-   *     representation of m
-   * @param m map to be converted to a string
-   * @param linePrefix a prefix to put at the beginning of each line
-   * @deprecated use {@link #mapToStringMultiLine(Appendable, Map, String)}
-   */
-  @Deprecated(since = "2025-06-21")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
-    mapToStringMultiLine(sb, m, linePrefix);
-  }
-
-  /**
-   * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
-   * including a final line separator (unless the map is empty).
-   *
    * <p>Each line has the form "{linePrefix}{key} =&gt; {value}".
    *
    * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
@@ -381,25 +357,6 @@ public final class MapsP {
   }
 
   // Second, versions that return a String.
-
-  /**
-   * Returns a multi-line string representation of a map. Each key-value pair appears on its own
-   * line, with no indentation. The last line does not end with a line separator.
-   *
-   * <p>Each line has the form "{linePrefix}{key} =&gt; {value}".
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m map to be converted to a string
-   * @return a multi-line string representation of m
-   * @deprecated use {@link #mapToStringMultiLine(Map)}
-   */
-  @Deprecated(since = "2025-06-21")
-  @SideEffectFree
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToString(Map<K, V> m) {
-    return mapToStringMultiLine(m);
-  }
 
   /**
    * Returns a multi-line string representation of a map. Each key-value pair appears on its own

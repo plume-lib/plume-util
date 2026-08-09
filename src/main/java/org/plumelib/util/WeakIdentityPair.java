@@ -19,7 +19,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  * @param <V2> the type of the pair's second element
  */
 // TODO: as class is immutable, use @Covariant annotation.
-public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Object> {
+public final class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Object> {
 
   /** The first element of the pair. */
   private final WeakReference<V1> a;
@@ -36,10 +36,8 @@ public class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonNull Ob
    *
    * @param a the first element of the pair
    * @param b the second element of the pair
-   * @deprecated use {@link #of}
    */
-  @Deprecated(since = "2023-05-20") // to make private
-  public WeakIdentityPair(V1 a, V2 b) {
+  private WeakIdentityPair(V1 a, V2 b) {
     if (a == null || b == null) {
       throw new IllegalArgumentException(
           String.format("WeakIdentityPair cannot hold null: %s %s", a, b));

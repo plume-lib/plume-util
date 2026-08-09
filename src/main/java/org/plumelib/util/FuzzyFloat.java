@@ -14,11 +14,19 @@ import org.checkerframework.dataflow.qual.Pure;
  * <p>Floating-point numbers are compared for equality by dividing them by one another and comparing
  * the ratio. By default, they must be within 0.0001 (0.01%) to be considered equal.
  *
- * <p>Zero is never considered equal to a non-zero number, no matter how small its value.
+ * <p>Zero is considered equal to a non-zero number only if the non-zero number's magnitude is less
+ * than the square of the fuzzy ratio.
  *
  * <p>Two NaN floats are not considered equal (consistent with the == operator).
+ *
+ * <p>This class is serializable so that its non-static inner class {@link
+ * DoubleArrayComparatorLexical}, which holds an implicit reference to the enclosing FuzzyFloat, can
+ * be serialized.
  */
-public class FuzzyFloat {
+public class FuzzyFloat implements Serializable {
+
+  /** Unique identifier for serialization. If you add or remove fields, change this number. */
+  private static final long serialVersionUID = 20250723L;
 
   /** Default relative difference between two values such that this class considers them equal. */
   static final double DEFAULT_RELATIVE_RATIO = .0001;
@@ -308,11 +316,11 @@ public class FuzzyFloat {
     public DoubleArrayComparatorLexical() {}
 
     /**
-     * Lexically compares o1 and o2 as double arrays.
+     * Lexically compares a1 and a2 as double arrays.
      *
      * @param a1 the first array to compare
      * @param a2 the second array to compare
-     * @return positive if o1 &gt; o2, 0 if o1 == o2, negative if o1 &lt; o2
+     * @return positive if a1 &gt; a2, 0 if a1 == a2, negative if a1 &lt; a2
      */
     @Pure
     @Override

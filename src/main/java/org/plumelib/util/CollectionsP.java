@@ -2,8 +2,6 @@
 
 package org.plumelib.util;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -13,17 +11,14 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.StringJoiner;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -32,7 +27,6 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
-import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,7 +34,6 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
-import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
 @SuppressWarnings("PMD.ForLoopVariableCount")
@@ -50,9 +43,6 @@ public final class CollectionsP {
   private CollectionsP() {
     throw new Error("do not instantiate");
   }
-
-  /** The system-specific line separator string. */
-  private static final String lineSep = System.lineSeparator();
 
   // //////////////////////////////////////////////////////////////////////
   // Collections
@@ -167,42 +157,6 @@ public final class CollectionsP {
   }
 
   /**
-   * Returns true iff the argument does not contain duplicate elements, according to {@code
-   * equals()}.
-   *
-   * <p>The implementation uses O(n) time and O(n) space.
-   *
-   * @param <T> the type of the elements
-   * @param a a collection
-   * @return true iff {@code a} does not contain duplicate elements
-   * @deprecated use {@link #hasNoDuplicates}
-   */
-  @Deprecated(since = "2023-11-30")
-  // @InlineMe(
-  //     replacement = "CollectionsP.hasNoDuplicates(a)",
-  //     imports = "org.plumelib.util.CollectionsP")
-  @Pure
-  public static <T> boolean noDuplicates(Collection<T> a) {
-    return hasNoDuplicates(a);
-  }
-
-  /**
-   * Returns a new list containing the collection elements without duplicates (according to {@code
-   * equals()}), but retaining the original order. The argument is not modified.
-   *
-   * @param <T> type of elements of the list
-   * @param l a collection to remove duplicates from
-   * @return a copy of the list with duplicates removed
-   * @deprecated use {@link withoutDuplicates} or {@link withoutDuplicatesComparable}
-   */
-  @Deprecated(since = "2021-03-28")
-  public static <T> List<T> removeDuplicates(Collection<T> l) {
-    HashSet<T> hs = new LinkedHashSet<>(l);
-    List<T> result = new ArrayList<>(hs);
-    return result;
-  }
-
-  /**
    * Returns a list of the collection elements without duplicates (according to {@code equals()}),
    * but retaining the original order. May return its argument if its argument is a list and has no
    * duplicates, but is not guaranteed to do so. The argument is not modified.
@@ -299,21 +253,6 @@ public final class CollectionsP {
     List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);
     return result;
-  }
-
-  /**
-   * Returns the sorted version of the argument. Does not alter the argument. Simply calls {@code
-   * Collections.sort(List<T>, Comparator<? super T>)} on a copy.
-   *
-   * @param <T> type of elements of the list
-   * @param l a collection to sort; is not side-effected
-   * @param c a comparator used to sort the returned list
-   * @return a sorted version of the list
-   * @deprecated use {@link sorted}
-   */
-  @Deprecated(since = "2025-11-13")
-  public static <T> List<T> sortList(Collection<T> l, Comparator<@MustCallUnknown ? super T> c) {
-    return sorted(l, c);
   }
 
   /**
@@ -777,30 +716,6 @@ public final class CollectionsP {
     return result;
   }
 
-  /**
-   * Returns a new list containing only the elements for which the filter returns true. To modify
-   * the collection in place, use {@code Collection#removeIf} instead of this method.
-   *
-   * <p>Using streams gives an equivalent list but is less efficient and more verbose:
-   *
-   * <pre>{@code
-   * coll.stream().filter(filter).collect(Collectors.toList());
-   * }</pre>
-   *
-   * @param <T> the type of elements
-   * @param coll a collection
-   * @param filter a predicate
-   * @return a new list with the elements for which the filter returns true
-   * @deprecated use {@link #filter} instead
-   */
-  @Deprecated(since = "2023-11-30")
-  // @InlineMe(
-  //     replacement = "CollectionsP.filter(coll, filter)",
-  //     imports = "org.plumelib.util.CollectionsP")
-  public static <T> List<T> listFilter(Iterable<T> coll, Predicate<? super T> filter) {
-    return filter(coll, filter);
-  }
-
   // TODO: This should return a collection of the same type as the input.  Currently it always
   // returns a list.
   /**
@@ -940,8 +855,9 @@ public final class CollectionsP {
    * Represents a replacement of one range of a collection by another collection.
    *
    * @param <T> the type of collection elements
-   * @param start the first line to replace, inclusive; may be equal to {@code start}-1
-   * @param end the last line to replace, exclusive
+   * @param start the first index to replace, inclusive; must be non-negative
+   * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
+   *     range (an insertion)
    * @param elements the new (replacement) elements
    */
   public static record Replacement<T>(int start, int end, Collection<T> elements) {
@@ -949,13 +865,20 @@ public final class CollectionsP {
     /**
      * Creates a new Replacement.
      *
-     * @param start the first line to replace, inclusive; may be equal to {@code start}-1
-     * @param end the last line to replace, exclusive
+     * @param start the first index to replace, inclusive; must be non-negative
+     * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
+     *     range (an insertion)
      * @param elements the new (replacement) elements
      */
     public Replacement {
+      // Do not use `this` in the messages: in a compact canonical constructor the record
+      // components are not yet assigned, so `this.toString()` would report 0, 0, null.
+      if (start < 0) {
+        throw new Error("Negative start: " + start);
+      }
+      // Because `start` is non-negative, `start - 1` does not overflow.
       if (end < start - 1) {
-        throw new Error("Invalid <start,end> pair: " + this);
+        throw new Error("Invalid <start,end> pair: <" + start + ", " + end + ">");
       }
     }
 
@@ -963,8 +886,9 @@ public final class CollectionsP {
      * Creates a new Replacement.
      *
      * @param <T> the type of elements of the list
-     * @param start the first line to replace, inclusive
-     * @param end the last line to replace, exclusive
+     * @param start the first index to replace, inclusive; must be non-negative
+     * @param end the last index to replace, inclusive; may be {@code start}-1 to indicate an empty
+     *     range (an insertion)
      * @param elements the new (replacement) elements
      * @return a new Replacement
      */
@@ -1155,7 +1079,7 @@ public final class CollectionsP {
   }
 
   /**
-   * Returns true if the two sets contain the same elements in the same order. This is faster than
+   * Returns true if the first set contains all the elements of the second set. This is faster than
    * regular {@code containsAll()}, for sets with the same ordering operator, especially for sets
    * that are not extremely small.
    *
@@ -1387,7 +1311,7 @@ public final class CollectionsP {
    *    {0}, {1}, {2}
    * </pre>
    *
-   * And createCombinations(2, 10, 2) returns a 6-element list of 2-element lists:
+   * And createCombinations(2, 10, 12) returns a 6-element list of 2-element lists:
    *
    * <pre>
    *    {10, 10}, {10, 11}, {10, 12}, {11, 11}, {11, 12}, {12, 12}
@@ -1612,10 +1536,8 @@ public final class CollectionsP {
    * two arguments.
    *
    * @param <T> the type of elements of the iterator
-   * @deprecated use {@link CollectionsP#mergedIterator2}
    */
-  @Deprecated // make package-private
-  public static final class MergedIterator2<T> implements Iterator<T> {
+  private static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
     Iterator<T> itor1;
 
@@ -1627,10 +1549,8 @@ public final class CollectionsP {
      *
      * @param itor1 an Iterator
      * @param itor2 another Iterator
-     * @deprecated use {@link CollectionsP#mergedIterator2}
      */
-    @Deprecated
-    public MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
+    MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
       this.itor1 = itor1;
       this.itor2 = itor2;
     }
@@ -1686,10 +1606,8 @@ public final class CollectionsP {
    * of iterators.
    *
    * @param <T> the type of elements of the iterator
-   * @deprecated use {@link #mergedIterator(Iterable)} or {@link #mergedIterator(Iterator)}
    */
-  @Deprecated // make package-private
-  public static final class MergedIterator<T> implements Iterator<T> {
+  private static final class MergedIterator<T> implements Iterator<T> {
 
     /** The iterators that this object merges. */
     Iterator<Iterator<T>> itorOfItors;
@@ -1699,10 +1617,8 @@ public final class CollectionsP {
      *
      * @param itorOfItors an iterator whose elements are iterators; this MergedIterator will merge
      *     them all
-     * @deprecated use {@link mergedIterator(Iterator)}
      */
-    @Deprecated // make package-private
-    public MergedIterator(Iterator<Iterator<T>> itorOfItors) {
+    MergedIterator(Iterator<Iterator<T>> itorOfItors) {
       this.itorOfItors = itorOfItors;
     }
 
@@ -1749,10 +1665,8 @@ public final class CollectionsP {
    * An iterator that only returns elements that match the given predicate.
    *
    * @param <T> the type of elements of the iterator
-   * @deprecated use {@link #filteredIterator}
    */
-  @Deprecated // make package-private
-  public static final class FilteredIterator<T> implements Iterator<T> {
+  private static final class FilteredIterator<T> implements Iterator<T> {
     /** The iterator that this object is filtering. */
     Iterator<T> itor;
 
@@ -1764,10 +1678,8 @@ public final class CollectionsP {
      *
      * @param itor the Iterator to filter
      * @param predicate the predicate that determines which elements to retain
-     * @deprecated use {@link #filteredIterator}
      */
-    @Deprecated // make package-private
-    public FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
+    FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
       this.itor = itor;
       this.predicate = predicate;
     }
@@ -1834,9 +1746,7 @@ public final class CollectionsP {
    * removed. They can be accessed via the {@link #getFirst} and {@link #getLast} methods.
    *
    * @param <T> the type of elements of the iterator
-   * @deprecated use {@link #removeFirstAndLastIterator}
    */
-  @Deprecated // make package-private
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
     Iterator<T> itor;
@@ -1858,10 +1768,8 @@ public final class CollectionsP {
      * Create an iterator just like {@code itor}, except without its first and last elements.
      *
      * @param itor an iterator whose first and last elements to discard
-     * @deprecated use {@link #removeFirstAndLastIterator}
      */
-    @Deprecated // make package-private
-    public RemoveFirstAndLastIterator(Iterator<T> itor) {
+    RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
         first = itor.next();
@@ -1987,488 +1895,6 @@ public final class CollectionsP {
   }
 
   // //////////////////////////////////////////////////////////////////////
-  // Map
-  //
-
-  // In Python, inlining this gave a 10x speed improvement.
-  // Will the same be true for Java?
-  /**
-   * Increments the Integer which is indexed by key in the Map. Sets the value to 1 if not currently
-   * mapped.
-   *
-   * @param <K> type of keys in the map
-   * @param m map from K to Integer
-   * @param key the key whose value will be incremented
-   * @return the old value, before it was incremented; this might be null
-   * @throws Error if the key is in the Map but maps to a non-Integer
-   * @deprecated use {@link MapsP#incrementMap}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @NonNull Object> @Nullable Integer incrementMap(
-      Map<K, Integer> m, K key) {
-    return incrementMap(m, key, 1);
-  }
-
-  /**
-   * Increments the Integer which is indexed by key in the Map. Sets the value to {@code count} if
-   * not currently mapped.
-   *
-   * @param <K> type of keys in the map
-   * @param m map from K to Integer
-   * @param key the key whose value will be incremented
-   * @param count how much to increment the value by
-   * @return the old value, before it was incremented; this might be null
-   * @throws Error if the key is in the Map but maps to a non-Integer
-   * @deprecated use {@link MapsP#incrementMap}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @NonNull Object> @Nullable Integer incrementMap(
-      Map<K, Integer> m, K key, int count) {
-    Integer newTotal = m.getOrDefault(key, 0) + count;
-    return m.put(key, newTotal);
-  }
-
-  /**
-   * Returns a sorted version of m.keySet().
-   *
-   * @param <K> type of the map keys
-   * @param <V> type of the map values
-   * @param m a map whose keyset will be sorted
-   * @return a sorted version of m.keySet()
-   * @deprecated use {@link MapsP#sortedKeySet}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K extends Comparable<? super K>, V> Collection<@KeyFor("#1") K> sortedKeySet(
-      Map<K, V> m) {
-    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
-    Collections.sort(theKeys);
-    return theKeys;
-  }
-
-  /**
-   * Returns a sorted version of m.keySet().
-   *
-   * @param <K> type of the map keys
-   * @param <V> type of the map values
-   * @param m a map whose keyset will be sorted
-   * @param comparator the Comparator to use for sorting
-   * @return a sorted version of m.keySet()
-   * @deprecated use {@link MapsP#sortedKeySet}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K, V> Collection<@KeyFor("#1") K> sortedKeySet(
-      Map<K, V> m, Comparator<K> comparator) {
-    ArrayList<@KeyFor("#1") K> theKeys = new ArrayList<>(m.keySet());
-    Collections.sort(theKeys, comparator);
-    return theKeys;
-  }
-
-  /**
-   * Given an expected number of elements, returns the capacity that should be passed to a HashMap
-   * or HashSet constructor, so that the set or map will not resize.
-   *
-   * @param numElements the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   * @deprecated use {@link MapsP#mapCapacity}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static int mapCapacity(int numElements) {
-    // Equivalent to: (int) (numElements / 0.75) + 1
-    // where 0.75 is the default load factor used throughout the JDK.
-    return (numElements * 4 / 3) + 1;
-  }
-
-  /**
-   * Given an array, returns the capacity that should be passed to a HashMap or HashSet constructor,
-   * so that the set or map will not resize.
-   *
-   * @param <T> the type of elements of the array
-   * @param a an array whose length is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   * @deprecated use {@link MapsP#mapCapacity}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <T> int mapCapacity(T[] a) {
-    return mapCapacity(a.length);
-  }
-
-  /**
-   * Given a collection, returns the capacity that should be passed to a HashMap or HashSet
-   * constructor, so that the set or map will not resize.
-   *
-   * @param c a collection whose size is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   * @deprecated use {@link MapsP#mapCapacity}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static int mapCapacity(Collection<?> c) {
-    return mapCapacity(c.size());
-  }
-
-  /**
-   * Given a map, returns the capacity that should be passed to a HashMap or HashSet constructor, so
-   * that the set or map will not resize.
-   *
-   * @param m a map whose size is the maximum expected number of elements in the map or set
-   * @return the initial capacity to pass to a HashMap or HashSet constructor
-   * @deprecated use {@link MapsP#mapCapacity}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static int mapCapacity(Map<?, ?> m) {
-    return mapCapacity(m.size());
-  }
-
-  // The following two methods cannot share an implementation because their generic bounds differ.
-
-  /**
-   * Returns a copy of {@code orig}, where each key and value in the result is a deep copy
-   * (according to the {@code DeepCopyable} interface) of the corresponding element of {@code orig}.
-   *
-   * @param <K> the type of keys of the map
-   * @param <V> the type of values of the map
-   * @param <M> the type of the map
-   * @param orig a map
-   * @return a copy of {@code orig}, as described above
-   * @deprecated use {@link MapsP#deepCopy}
-   */
-  @SuppressWarnings("nullness") // generics problem with clone
-  @Deprecated(since = "2025-06-28")
-  public static <
-          K extends @Nullable DeepCopyable<K>,
-          V extends @Nullable DeepCopyable<V>,
-          M extends @Nullable Map<K, V>>
-      @PolyNull M deepCopy(@PolyNull M orig) {
-    if (orig == null) {
-      return null;
-    }
-    M result = UtilP.clone(orig);
-    result.clear();
-    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
-      K oldKey = mapEntry.getKey();
-      V oldValue = mapEntry.getValue();
-      result.put(DeepCopyable.deepCopyOrNull(oldKey), DeepCopyable.deepCopyOrNull(oldValue));
-    }
-    return result;
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each value of the result is a deep copy (according to the
-   * {@code DeepCopyable} interface) of the corresponding value of {@code orig}, but the keys are
-   * the same objects.
-   *
-   * @param <K> the type of keys of the map
-   * @param <V> the type of values of the map
-   * @param <M> the type of the map
-   * @param orig a map
-   * @return a copy of {@code orig}, as described above
-   * @deprecated use {@link MapsP#deepCopyValues}
-   */
-  @SuppressWarnings("nullness") // generics problem with clone
-  @Deprecated(since = "2025-06-28")
-  public static <K, V extends @Nullable DeepCopyable<V>, M extends @Nullable Map<K, V>>
-      @PolyNull M deepCopyValues(@PolyNull M orig) {
-    if (orig == null) {
-      return null;
-    }
-    M result = UtilP.clone(orig);
-    result.clear();
-    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
-      K oldKey = mapEntry.getKey();
-      V oldValue = mapEntry.getValue();
-      result.put(oldKey, DeepCopyable.deepCopyOrNull(oldValue));
-    }
-    return result;
-  }
-
-  /**
-   * Creates a LRU cache.
-   *
-   * <p>You might want to consider using a {@code WeakHashMap} or {@code WeakIdentityHashMap}
-   * instead.
-   *
-   * @param <K> the type of keys
-   * @param <V> the type of values
-   * @param size size of the cache
-   * @return a new cache with the provided size
-   * @deprecated use {@link MapsP#createLruCache}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K, V> Map<K, V> createLruCache(@Positive int size) {
-    return new LinkedHashMap<>(size, .75F, true) {
-
-      private static final long serialVersionUID = 5261489276168775084L;
-
-      @SuppressWarnings(
-          "lock:override.receiver") // cannot write receiver parameter within an anonymous class
-      @Override
-      protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
-        return size() > size;
-      }
-    };
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each key and value in the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <K> the type of keys of the map
-   * @param <V> the type of values of the map
-   * @param <M> the type of the map
-   * @param orig a map
-   * @return a copy of {@code orig}, as described above
-   * @deprecated use {@link MapsP#cloneElements}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(@PolyNull M orig) {
-    return cloneElements(orig, true);
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each value of the result is a clone of the corresponding
-   * value of {@code orig}, but the keys are the same objects.
-   *
-   * @param <K> the type of keys of the map
-   * @param <V> the type of values of the map
-   * @param <M> the type of the map
-   * @param orig a map
-   * @return a copy of {@code orig}, as described above
-   * @deprecated use {@link MapsP#cloneValues}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneValues(@PolyNull M orig) {
-    return cloneElements(orig, false);
-  }
-
-  /**
-   * Returns a copy of {@code orig}, where each key and value in the result is a clone of the
-   * corresponding element of {@code orig}.
-   *
-   * @param <K> the type of keys of the map
-   * @param <V> the type of values of the map
-   * @param <M> the type of the map
-   * @param orig a map
-   * @param cloneKeys if true, clone keys; otherwise, reuse them
-   * @return a copy of {@code orig}, as described above
-   */
-  @SuppressWarnings({"nullness", "signedness"}) // generics problem with clone
-  private static <K, V, M extends @Nullable Map<K, V>> @PolyNull M cloneElements(
-      @PolyNull M orig, boolean cloneKeys) {
-    if (orig == null) {
-      return null;
-    }
-    M result = UtilP.clone(orig);
-    result.clear();
-    for (Map.Entry<K, V> mapEntry : orig.entrySet()) {
-      K oldKey = mapEntry.getKey();
-      K newKey = cloneKeys ? UtilP.clone(oldKey) : oldKey;
-      result.put(newKey, UtilP.clone(mapEntry.getValue()));
-    }
-    return result;
-  }
-
-  //
-  // Map to string
-  //
-
-  // First, versions that append to an Appendable.
-
-  /**
-   * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
-   * including a final line separator (unless the map is empty).
-   *
-   * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param sb an Appendable (such as StringBuilder) to which to write a multi-line string
-   *     representation of m
-   * @param m map to be converted to a string
-   * @param linePrefix a prefix to put at the beginning of each line
-   * @deprecated use {@link MapsP#mapToString}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      void mapToString(Appendable sb, Map<K, V> m, String linePrefix) {
-    mapToStringMultiLine(sb, m, linePrefix);
-  }
-
-  /**
-   * Write a multi-line representation of the map into the given Appendable (e.g., a StringBuilder),
-   * including a final line separator (unless the map is empty).
-   *
-   * <p>This is less expensive than {@code sb.append(mapToStringMultiLine(m))}.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param sb an Appendable (such as StringBuilder) to which to write a multi-line string
-   *     representation of m
-   * @param m map to be converted to a string
-   * @param linePrefix a prefix to put at the beginning of each line
-   * @deprecated use {@link MapsP#mapToStringMultiLine}
-   */
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      void mapToStringMultiLine(Appendable sb, Map<K, V> m, String linePrefix) {
-    try {
-      for (Map.Entry<K, V> entry : m.entrySet()) {
-        sb.append(linePrefix);
-        sb.append(Objects.toString(entry.getKey()));
-        sb.append(" => ");
-        sb.append(Objects.toString(entry.getValue()));
-        sb.append(lineSep);
-      }
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  /**
-   * Write a multi-line representation of the map of maps into the given Appendable (e.g., a
-   * StringBuilder), including a final line separator (unless the map is empty).
-   *
-   * @param <K1> the type of the outer map keys
-   * @param <K2> the type of the inner map keys
-   * @param <V2> the type of the inner map values
-   * @param sb the destination for the string representation
-   * @param linePrefix a prefix to put at the beginning of each line
-   * @param innerHeader what to print before each key of the outer map (equivalently, before each
-   *     each inner map). If non-empty, it usually ends with a space to avoid abutting the outer map
-   *     key.
-   * @param mapMap what to print
-   */
-  static <K1 extends @Signed Object, K2 extends @Signed Object, V2 extends @Signed Object>
-      void mapMapToStringMultiLine(
-          Appendable sb, String innerHeader, Map<K1, Map<K2, V2>> mapMap, String linePrefix) {
-    try {
-      for (Map.Entry<K1, Map<K2, V2>> entry : mapMap.entrySet()) {
-        sb.append(linePrefix);
-        sb.append(innerHeader);
-        sb.append(Objects.toString(entry.getKey()));
-        sb.append(lineSep);
-        mapToStringMultiLine(sb, entry.getValue(), linePrefix + "  ");
-      }
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    }
-  }
-
-  // Second, versions that return a String.
-
-  /**
-   * Returns a multi-line string representation of a map.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m map to be converted to a string
-   * @return a multi-line string representation of m
-   * @deprecated use {@link MapsP#mapToString}
-   */
-  @Deprecated(since = "2025-06-28")
-  @SideEffectFree
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToString(Map<K, V> m) {
-    return mapToStringMultiLine(m);
-  }
-
-  /**
-   * Returns a multi-line string representation of a map. Each key-value pair appears on its own
-   * line, with no indentation. The last line does not end with a line separator.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m map to be converted to a string
-   * @return a multi-line string representation of the map
-   * @deprecated use {@link MapsP#mapToStringMultiLine}
-   */
-  @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
-  })
-  @SideEffectFree
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToStringMultiLine(Map<K, V> m) {
-    StringJoiner result = new StringJoiner(lineSep);
-    for (Map.Entry<K, V> e : m.entrySet()) {
-      result.add(e.getKey() + " => " + e.getValue());
-    }
-    return result.toString();
-  }
-
-  /**
-   * Returns a multi-line string representation of a map. Each key-value pair appears on its own
-   * line, with no indentation. The last line does not end with a line separator.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m map to be converted to a string
-   * @param linePrefix a prefix to put at the beginning of each line
-   * @return a multi-line string representation of the map
-   * @deprecated use {@link MapsP#mapToStringMultiLine}
-   */
-  @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
-  })
-  @SideEffectFree
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToStringMultiLine(Map<K, V> m, String linePrefix) {
-    StringJoiner result = new StringJoiner(lineSep);
-    for (Map.Entry<K, V> e : m.entrySet()) {
-      result.add(linePrefix + e.getKey() + " => " + e.getValue());
-    }
-    return result.toString();
-  }
-
-  /**
-   * Convert a map to a multi-line string representation, which includes the runtime class of keys
-   * and values. The last line does not end with a line separator.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m a map
-   * @return a string representation of the map
-   * @deprecated use {@link MapsP#mapToStringAndClassMultiLine}
-   */
-  @SideEffectFree
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToStringAndClassMultiLine(Map<K, V> m) {
-    return mapToStringAndClassMultiLine(m, "");
-  }
-
-  /**
-   * Convert a map to a multi-line string representation, which includes the runtime class of keys
-   * and values. The last line does not end with a line separator.
-   *
-   * @param <K> type of map keys
-   * @param <V> type of map values
-   * @param m a map
-   * @param linePrefix a prefix to put at the beginning of each line
-   * @return a string representation of the map
-   * @deprecated use {@link MapsP#mapToStringAndClassMultiLine}
-   */
-  @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
-  })
-  @SideEffectFree
-  @Deprecated(since = "2025-06-28")
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
-    StringJoiner result = new StringJoiner(lineSep);
-    for (Map.Entry<K, V> e : m.entrySet()) {
-      result.add(
-          linePrefix
-              + StringsP.toStringAndClass(e.getKey())
-              + " => "
-              + StringsP.toStringAndClass(e.getValue()));
-    }
-    return result.toString();
-  }
-
-  // //////////////////////////////////////////////////////////////////////
   // Set
   //
 
@@ -2559,7 +1985,7 @@ public final class CollectionsP {
    * @param <T> the type of the collection elements
    * @param c1 the first collection
    * @param c2 the second collection
-   * @return a duplicate-free list that is the union of the given collections
+   * @return a duplicate-free list that is the intersection of the given collections
    */
   public static <T> List<T> listIntersection(Collection<T> c1, Collection<T> c2) {
     // TODO: use a set if the collection sizes are big enough, to avoid quadratic time complexity.
