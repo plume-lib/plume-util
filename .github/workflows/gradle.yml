@@ -31,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        java: ['17', '21', '25', '26']
+        java: ['21', '25', '26']
 
     steps:
       - uses: actions/checkout@v7

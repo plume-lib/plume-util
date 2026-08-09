@@ -75,7 +75,7 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-  options.release = 17
+  options.release = 21
 
   // Gradle compiles in a worker process whenever the toolchain above differs
   // from the JVM that runs Gradle.  That worker does not inherit the
@@ -95,7 +95,7 @@ tasks.withType<JavaCompile>().configureEach {
 // default:  it runs Gradle under Java 21 in every job and selects the test JVM by passing
 // `-PtestJavaVersion`.
 // Override with, for example:
-//   ./gradlew test -PtestJavaVersion=17
+//   ./gradlew test -PtestJavaVersion=21
 val testJavaVersionProperty = project.findProperty("testJavaVersion")?.toString()
 
 // An empty value is a mistake rather than a request for the default, so reject it.

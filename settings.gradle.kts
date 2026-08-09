@@ -1,5 +1,12 @@
-// No explicit check of the Gradle JVM's version is needed here.  Gradle 9 requires a JVM between
-// 17 and 26 to run, and reports a clear error on an unsupported JVM.
+val minimumJavaVersion = JavaVersion.VERSION_21
+
+if (JavaVersion.current() < minimumJavaVersion) {
+  throw GradleException(
+    "This build requires Gradle to run under Java $minimumJavaVersion or later," +
+      " but Gradle is running under Java ${JavaVersion.current()}" +
+      " from ${System.getProperty("java.home")}."
+  )
+}
 
 plugins {
   // Downloads a JDK if the Java toolchain that build.gradle.kts requests is not installed locally.
