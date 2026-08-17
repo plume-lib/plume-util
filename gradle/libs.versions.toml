@@ -2,7 +2,7 @@
 
 checker-framework = "4.2.2"
 
-google-java-format = "1.28.0"
+google-java-format = "1.36.1"
 
 jacoco = "0.8.15"
 
