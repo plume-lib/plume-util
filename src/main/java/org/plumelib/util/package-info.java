@@ -1,6 +1,4 @@
 /**
- *
- *
  * <h2>Plume-lib Util: Utility libraries for Java</h2>
  *
  * <p>Note that <a
