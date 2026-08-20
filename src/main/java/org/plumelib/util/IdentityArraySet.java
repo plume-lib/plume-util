@@ -253,12 +253,14 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   // Modification Operations
 
   @Override
+  @SideEffectsOnly("this")
   public boolean add(E value) {
     int index = indexOf(value);
     return add(index, value);
   }
 
   @Override
+  @SideEffectsOnly("this")
   public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
     int index = indexOf(value);
     return removeIndex(index);
@@ -267,6 +269,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   // Bulk Operations
 
   @Override
+  @SideEffectsOnly("this")
   public boolean addAll(Collection<? extends E> c) {
     if (c.isEmpty()) {
       return false;
@@ -275,6 +278,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   @Override
+  @SideEffectsOnly("this")
   public boolean removeAll(Collection<?> c) {
     if (c.isEmpty()) {
       return false;
@@ -285,6 +289,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   // Inherit retainAll() from AbstractCollection.
 
   @Override
+  @SideEffectsOnly("this")
   public void clear() {
     if (size != 0) {
       size = 0;
@@ -330,6 +335,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
       return index < size();
     }
 
+    @SideEffectsOnly("this")
     @Override
     public final E next() {
       if (!hasNext()) {
