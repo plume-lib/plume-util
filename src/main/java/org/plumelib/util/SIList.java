@@ -528,7 +528,8 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     @Override
     public Iterator<E> iterator() {
-      return delegate.iterator();
+      // Use an unmodifiable view so that the client cannot call Iterator.remove().
+      return Collections.unmodifiableList(delegate).iterator();
     }
 
     @Override
