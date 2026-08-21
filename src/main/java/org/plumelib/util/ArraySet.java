@@ -25,6 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * A set backed by an array. It permits null values and its iterator has deterministic ordering.
@@ -225,6 +226,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    * @return true if the method modified this set
    */
   @SuppressWarnings({"InvalidParam"}) // Error Prone stupidly warns about field `values`
+  @SideEffectsOnly("this")
   private boolean add(@GTENegativeOne int index, E value) {
     if (index != -1) {
       return false;
@@ -243,6 +245,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   /** Increases the capacity of the array. */
   @SuppressWarnings({"unchecked"}) // generic array cast
   @EnsuresNonNull("values")
+  @SideEffectsOnly("this")
   private void grow() {
     if (values == null || values.length == 0) {
       this.values = (E[]) new Object[4];
@@ -258,6 +261,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    * @param index the index of the element to remove
    * @return true if this set was modified
    */
+  @SideEffectsOnly("this")
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
       return false;
