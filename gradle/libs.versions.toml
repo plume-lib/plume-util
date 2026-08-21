@@ -1,6 +1,6 @@
 [versions]
 
-checker-framework = "4.2.2"
+checker-framework = "4.2.3-SNAPSHOT"
 
 google-java-format = "1.36.1"
 
