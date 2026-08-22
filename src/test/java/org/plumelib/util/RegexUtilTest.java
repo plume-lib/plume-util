@@ -15,7 +15,7 @@ import org.checkerframework.checker.regex.qual.Regex;
 import org.junit.jupiter.api.Test;
 
 /** Test the RegexUtil class. */
-@SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation", "PMD.TooManyFields"})
+@SuppressWarnings({"PMD.UnnecessaryVarargsArrayCreation"})
 final class RegexUtilTest {
 
   RegexUtilTest() {}
