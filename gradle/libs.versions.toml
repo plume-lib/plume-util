@@ -54,6 +54,6 @@ com-gradleup-shadow = { id = "com.gradleup.shadow", version = "9.6.1" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
 
-net-ltgt-errorprone = { id = "net.ltgt.errorprone", version = "5.1.0" }
+net-ltgt-errorprone = { id = "net.ltgt.errorprone", version = "5.1.1" }
 
 org-checkerframework = { id = "org.checkerframework", version = "1.0.2" }
