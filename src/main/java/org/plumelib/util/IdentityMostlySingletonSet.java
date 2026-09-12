@@ -5,6 +5,7 @@ import java.util.IdentityHashMap;
 import org.checkerframework.checker.interning.qual.FindDistinct;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * An arbitrary-size set that is very efficient (more efficient than HashSet) for 0 and 1 elements.
@@ -58,6 +59,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
   }
 
   /** Switch the representation of this from SINGLETON to ANY. */
+  @SideEffectsOnly("this")
   private void makeNonSingleton(@GuardSatisfied IdentityMostlySingletonSet<T> this) {
     state = State.ANY;
     set = Collections.newSetFromMap(new IdentityHashMap<>(4));
