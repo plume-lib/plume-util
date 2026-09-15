@@ -524,12 +524,13 @@ final class ArraysPTest {
 
   /** Test concat(). */
   @Test
+  @SuppressWarnings("PMD.AssertStatementInTest")
   void test_concat() {
     Instant[] da1 = {Instant.now()};
     Instant[] da2 = {Instant.now()};
     Instant[] da3 = ArraysP.concat(da1, da2);
     assert da3.length == 2 : "@AssumeAssertion(index)";
-    assertEquals(da3.length, 2);
+    assertEquals(2, da3.length);
     assertSame(da1[0], da3[0]);
     assertSame(da2[0], da3[1]);
 

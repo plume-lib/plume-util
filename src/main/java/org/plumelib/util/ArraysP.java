@@ -44,7 +44,7 @@ import org.plumelib.reflection.ReflectionP;
 public final class ArraysP {
   /** This class is a collection of methods; it does not represent anything. */
   private ArraysP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -133,8 +133,7 @@ public final class ArraysP {
     Class<T[]> arrayType = (Class<T[]>) array.getClass();
     Class<T> elementType = (Class<T>) arrayType.getComponentType();
     assert elementType != null : "@AssumeAssertion(nullness) argument was an array type";
-    T[] result = (T[]) Array.newInstance(elementType, newLength);
-    return result;
+    return (T[]) Array.newInstance(elementType, newLength);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1785,10 +1784,10 @@ public final class ArraysP {
   private static class ListOrArray<T extends @Nullable Object> {
     // At most one field is non-null.  If both are null, this object represents the null value.
     /** The array that this object wraps, or null. */
-    T @Nullable [] theArray = null;
+    private T @Nullable [] theArray = null;
 
     /** The list that this object wraps, or null. */
-    @Nullable List<T> theList = null;
+    private @Nullable List<T> theList = null;
 
     /**
      * Creates a ListOrArray that wraps an array. For efficiency, the argument is stored directly,
@@ -1797,7 +1796,7 @@ public final class ArraysP {
      * @param theArray the delegate that will be wrapped
      */
     @SuppressWarnings("PMD.ArrayIsStoredDirectly")
-    ListOrArray(T @Nullable [] theArray) {
+    private ListOrArray(T @Nullable [] theArray) {
       this.theArray = theArray;
     }
 
@@ -1807,7 +1806,7 @@ public final class ArraysP {
      *
      * @param theList the delegate that will be wrapped
      */
-    ListOrArray(@Nullable List<T> theList) {
+    private ListOrArray(@Nullable List<T> theList) {
       this.theList = theList;
     }
 
@@ -1817,7 +1816,7 @@ public final class ArraysP {
      * @return true if this represents a null value
      */
     @Pure
-    boolean isNull() {
+    private boolean isNull() {
       return theArray == null && theList == null;
     }
 
@@ -1827,7 +1826,7 @@ public final class ArraysP {
      * @return the size of the collection this represents
      */
     @Pure
-    @NonNegative int size() {
+    private @NonNegative int size() {
       if (theArray != null) {
         return theArray.length;
       } else if (theList != null) {
@@ -1843,7 +1842,7 @@ public final class ArraysP {
      * @return true if this represents an empty collection
      */
     @Pure
-    boolean isEmpty() {
+    private boolean isEmpty() {
       if (theArray != null) {
         return theArray.length == 0;
       } else if (theList != null) {
@@ -1862,7 +1861,7 @@ public final class ArraysP {
      */
     @SuppressWarnings("PMD.MethodReturnsInternalArray")
     @SideEffectFree
-    T[] toArray() {
+    private T[] toArray() {
       if (theArray != null) {
         return theArray;
       } else if (theList != null) {
@@ -1882,7 +1881,7 @@ public final class ArraysP {
       "lowerbound:argument", // TODO: annotate for Index Checker
       "index:argument" // TODO: annotate for Index Checker
     })
-    void copyInto(T[] dest, int destPos) {
+    private void copyInto(T[] dest, int destPos) {
       if (theArray != null) {
         System.arraycopy(theArray, 0, dest, destPos, theArray.length);
       } else if (theList != null) {
@@ -1904,7 +1903,7 @@ public final class ArraysP {
      *
      * @return the least upper bound of the classes of the elements of this
      */
-    @Nullable Class<? extends @Nullable Object> leastUpperBound() {
+    private @Nullable Class<? extends @Nullable Object> leastUpperBound() {
       if (theArray != null) {
         return ReflectionP.leastUpperBound(theArray);
       } else if (theList != null) {
@@ -1931,7 +1930,7 @@ public final class ArraysP {
      * @return a verbose representation of this, for debugging
      */
     @SuppressWarnings("UnusedMethod")
-    public String toStringDebug() {
+    private String toStringDebug() {
       String theArrayString;
       if (theArray == null) {
         theArrayString = "null";
@@ -2841,7 +2840,7 @@ public final class ArraysP {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(String[] a) {
-    HashSet<String> hs = new HashSet<>();
+    Set<String> hs = new HashSet<>();
     for (String elt : a) {
       if (!hs.add(elt)) {
         return true;
@@ -2874,7 +2873,7 @@ public final class ArraysP {
   @SuppressWarnings({"allcheckers:purity", "lock"}) // side effect to local state (HashSet)
   @Pure
   public static boolean hasDuplicates(Object[] a) {
-    HashSet<Object> hs = new HashSet<>();
+    Set<Object> hs = new HashSet<>();
     for (Object elt : a) {
       if (!hs.add(elt)) {
         return true;
@@ -2969,7 +2968,8 @@ public final class ArraysP {
    */
   @SuppressWarnings({
     "allcheckers:purity",
-    "lock:method.guarantee.violated"
+    "lock:method.guarantee.violated",
+    "PMD.UnnecessaryCast" // bug in PMD: ignores type annotation on cast
   }) // side effect to local state
   @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
@@ -3164,7 +3164,7 @@ public final class ArraysP {
    */
   public static final class IntArrayComparatorLexical implements Comparator<int[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical IntArrayComparatorLexical. */
     public static final IntArrayComparatorLexical it = new IntArrayComparatorLexical();
@@ -3206,7 +3206,7 @@ public final class ArraysP {
    */
   public static final class LongArrayComparatorLexical implements Comparator<long[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical LongArrayComparatorLexical. */
     public static final LongArrayComparatorLexical it = new LongArrayComparatorLexical();
@@ -3249,7 +3249,7 @@ public final class ArraysP {
   public static final class DoubleArrayComparatorLexical
       implements Comparator<double[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical DoubleArrayComparatorLexical. */
     public static final DoubleArrayComparatorLexical it = new DoubleArrayComparatorLexical();
@@ -3293,7 +3293,7 @@ public final class ArraysP {
   public static final class StringArrayComparatorLexical
       implements Comparator<String[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical StringArrayComparatorLexical. */
     public static final StringArrayComparatorLexical it = new StringArrayComparatorLexical();
@@ -3356,7 +3356,7 @@ public final class ArraysP {
   public static final class ComparableArrayComparatorLexical<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** Create a new ComparableArrayComparatorLexical. */
     public ComparableArrayComparatorLexical() {}
@@ -3419,7 +3419,7 @@ public final class ArraysP {
   public static final class ObjectArrayComparatorLexical
       implements Comparator<Object[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical ObjectArrayComparatorLexical. */
     public static final ObjectArrayComparatorLexical it = new ObjectArrayComparatorLexical();
@@ -3471,7 +3471,7 @@ public final class ArraysP {
   public static final class IntArrayComparatorLengthFirst
       implements Comparator<int[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical IntArrayComparatorLengthFirst. */
     public static final IntArrayComparatorLengthFirst it = new IntArrayComparatorLengthFirst();
@@ -3520,7 +3520,7 @@ public final class ArraysP {
   public static final class LongArrayComparatorLengthFirst
       implements Comparator<long[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical LongArrayComparatorLengthFirst. */
     public static final LongArrayComparatorLengthFirst it = new LongArrayComparatorLengthFirst();
@@ -3571,7 +3571,7 @@ public final class ArraysP {
   public static final class ComparableArrayComparatorLengthFirst<T extends Comparable<T>>
       implements Comparator<T[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** Create a new ComparableArrayComparatorLengthFirst. */
     public ComparableArrayComparatorLengthFirst() {}
@@ -3639,7 +3639,7 @@ public final class ArraysP {
   public static final class ObjectArrayComparatorLengthFirst
       implements Comparator<Object[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** The canonical ObjectArrayComparatorLengthFirst. */
     public static final ObjectArrayComparatorLengthFirst it =
@@ -3856,7 +3856,7 @@ public final class ArraysP {
   static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20170418;
+    private static final long serialVersionUID = 20170418;
 
     /** Empty constructor. */
     Partitioning() {}

@@ -36,12 +36,11 @@ import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
-@SuppressWarnings("PMD.ForLoopVariableCount")
 public final class CollectionsP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private CollectionsP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // //////////////////////////////////////////////////////////////////////

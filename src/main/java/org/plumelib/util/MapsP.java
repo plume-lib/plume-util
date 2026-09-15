@@ -25,7 +25,7 @@ public final class MapsP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private MapsP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /** The system-specific line separator string. */

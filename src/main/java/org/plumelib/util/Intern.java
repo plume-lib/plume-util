@@ -36,7 +36,7 @@ public final class Intern {
 
   /** This class is a collection of methods; it does not represent anything. */
   private Intern() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // //////////////////////////////////////////////////////////////////////

@@ -414,8 +414,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
         throw new NoSuchElementException();
       }
       removed = false;
-      E result = values[index++];
-      return (E) result;
+      return values[index++];
     }
 
     /** Removes the previously-returned element. */
@@ -461,7 +460,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
       } catch (IndexOutOfBoundsException exc) {
         throw new ConcurrentModificationException(exc);
       }
-      action.accept((E) e);
+      action.accept(e);
     }
     if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
@@ -492,7 +491,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    * @return the internal representation, printed
    */
   @SideEffectFree
-  /* package-private */ String repr() {
+  /*package*/ String repr() {
     return String.format(
         "size=%d capacity=%s %s",
         size, (values == null ? 0 : values.length), Arrays.toString(values));

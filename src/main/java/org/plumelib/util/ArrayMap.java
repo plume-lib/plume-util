@@ -111,6 +111,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   })
   @SideEffectFree
   public ArrayMap(int initialCapacity) {
+    super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
     }
@@ -142,6 +143,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       K @SameLen("values") [] keys,
       V @SameLen("keys") [] values,
       @LTEqLengthOf({"keys", "values"}) int size) {
+    super();
     this.keys = keys;
     this.values = values;
     this.size = size;
@@ -504,28 +506,28 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Pure
     @Override
-    public final @NonNegative int size() {
+    public @NonNegative int size() {
       return ArrayMap.this.size();
     }
 
     @Override
-    public final void clear() {
+    public void clear() {
       ArrayMap.this.clear();
     }
 
     @Override
-    public final Iterator<@KeyFor("this") K> iterator() {
+    public Iterator<@KeyFor("this") K> iterator() {
       return new KeyIterator();
     }
 
     @Pure
     @Override
-    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       return containsKey(o);
     }
 
     @Override
-    public final boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       int index = indexOfKey(o);
       return removeIndex(index);
     }
@@ -565,7 +567,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
 
     @Override
-    public final void forEach(Consumer<? super K> action) {
+    public void forEach(Consumer<? super K> action) {
       if (keys == null) {
         return;
       }
@@ -597,27 +599,29 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   final class Values extends AbstractCollection<V> {
 
     /** Creates a new Values. */
-    public Values() {}
+    public Values() {
+      super();
+    }
 
     @Pure
     @Override
-    public final @NonNegative int size() {
+    public @NonNegative int size() {
       return ArrayMap.this.size();
     }
 
     @Override
-    public final void clear() {
+    public void clear() {
       ArrayMap.this.clear();
     }
 
     @Override
-    public final Iterator<V> iterator() {
+    public Iterator<V> iterator() {
       return new ValueIterator();
     }
 
     @Pure
     @Override
-    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       return containsValue(o);
     }
 
@@ -657,7 +661,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
 
     @Override
-    public final void forEach(Consumer<? super V> action) {
+    public void forEach(Consumer<? super V> action) {
       if (keys == null) {
         return;
       }
@@ -692,23 +696,23 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Pure
     @Override
-    public final @NonNegative int size() {
+    public @NonNegative int size() {
       return ArrayMap.this.size();
     }
 
     @Override
-    public final void clear() {
+    public void clear() {
       ArrayMap.this.clear();
     }
 
     @Override
-    public final Iterator<Map.Entry<@KeyFor("ArrayMap.this") K, V>> iterator() {
+    public Iterator<Map.Entry<@KeyFor("ArrayMap.this") K, V>> iterator() {
       return new EntryIterator();
     }
 
     @Pure
     @Override
-    public final boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       if (!(o instanceof Map.Entry)) {
         return false;
       }
@@ -719,7 +723,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
 
     @Override
-    public final boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       if (o instanceof Map.Entry) {
         Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
         Object key = e.getKey();
@@ -736,7 +740,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       "signature:argument", // TODO: investigate later
     })
     @Override
-    public final void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
+    public void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
       int oldSizeModificationCount = sizeModificationCount;
       for (int index = 0; index < size(); index++) {
         action.accept(new Entry(index));
@@ -783,7 +787,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
      */
     @Pure
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
       return index < size();
     }
 
@@ -792,7 +796,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     /** Removes the previously-returned element. */
     @Override
-    public final void remove() {
+    public void remove() {
       if (removed) {
         throw new IllegalStateException(
             "Called remove() on ArrayMapIterator without calling next() first.");
@@ -817,7 +821,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     KeyIterator() {}
 
     @Override
-    public final @KeyFor("ArrayMap.this") K next() {
+    public @KeyFor("ArrayMap.this") K next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -833,7 +837,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     ValueIterator() {}
 
     @Override
-    public final V next() {
+    public V next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -849,7 +853,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     EntryIterator() {}
 
     @Override
-    public final Map.Entry<K, V> next() {
+    public Map.Entry<K, V> next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }

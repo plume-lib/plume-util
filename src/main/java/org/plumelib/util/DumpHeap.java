@@ -14,7 +14,7 @@ public final class DumpHeap {
 
   /** Do not instantiate. */
   private DumpHeap() {
-    throw new Error("Do not instantiate");
+    throw new UnsupportedOperationException("Do not instantiate");
   }
 
   /**

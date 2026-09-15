@@ -122,7 +122,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
     private boolean hasNext = true;
 
     /** Creates a SingletonIterator. */
-    public SingletonIterator() {}
+    private SingletonIterator() {}
 
     @Override
     public boolean hasNext() {

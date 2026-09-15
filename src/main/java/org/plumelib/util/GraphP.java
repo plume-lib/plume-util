@@ -15,7 +15,7 @@ public final class GraphP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private GraphP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // Algorithms for computing dominators:

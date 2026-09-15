@@ -37,7 +37,7 @@ public final class StringsP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private StringsP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /** The system-specific line separator string. */

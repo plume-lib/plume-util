@@ -8,7 +8,7 @@ public final class ImmutableTypes {
 
   /** Do not instantiate. */
   private ImmutableTypes() {
-    throw new Error("Do not instantiate");
+    throw new UnsupportedOperationException("Do not instantiate");
   }
 
   /**

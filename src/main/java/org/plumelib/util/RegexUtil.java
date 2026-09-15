@@ -30,7 +30,7 @@ public final class RegexUtil {
 
   /** This class is a collection of methods; it does not represent anything. */
   private RegexUtil() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /**

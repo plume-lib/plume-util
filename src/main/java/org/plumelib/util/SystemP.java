@@ -24,7 +24,7 @@ public final class SystemP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private SystemP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   //
