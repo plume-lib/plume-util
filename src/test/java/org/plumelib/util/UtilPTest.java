@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -115,7 +116,7 @@ final class UtilPTest {
   /** Test backticks(). */
   @DisabledOnOs(OS.WINDOWS) // the commands below are Unix commands
   @Test
-  void test_backticks() {
+  void test_backticks() throws IOException {
     // public static String backticks(String... command)
     assertEquals("hello\n", UtilP.backticks("echo", "hello"));
     assertEquals("", UtilP.backticks("true"));
@@ -131,10 +132,12 @@ final class UtilPTest {
 
     // public static String backticks(File dir, String... command)
     File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-    assertEquals(tmpDir.getAbsolutePath() + "\n", UtilP.backticks(tmpDir, "pwd"));
+    // Use the canonical path because `pwd` resolves symbolic links.
+    String tmpDirPath = tmpDir.getCanonicalPath();
+    assertEquals(tmpDirPath + "\n", UtilP.backticks(tmpDir, "pwd"));
 
     // public static String backticks(File dir, List<String> command)
-    assertEquals(tmpDir.getAbsolutePath() + "\n", UtilP.backticks(tmpDir, List.of("pwd")));
+    assertEquals(tmpDirPath + "\n", UtilP.backticks(tmpDir, List.of("pwd")));
     // A null directory means the current directory.
     assertEquals(UtilP.backticks("pwd"), UtilP.backticks((@Nullable File) null, List.of("pwd")));
 
