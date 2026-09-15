@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -115,26 +117,14 @@ final class ArraysPTest {
     assertEquals(0, ArraysP.elementRange(new int[] {3}));
   }
 
-  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void test_minAndMaxException1() {
-    try {
-      ArraysP.minAndMax(new int[] {});
-      throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
-    } catch (ArrayIndexOutOfBoundsException e) {
-      // This is the expected behavior, so do nothing.
-    }
+    assertThrows(ArrayIndexOutOfBoundsException.class, () -> ArraysP.minAndMax(new int[] {}));
   }
 
-  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void test_minAndMaxException2() {
-    try {
-      ArraysP.minAndMax(new long[] {});
-      throw new Error("Didn't throw ArrayIndexOutOfBoundsException");
-    } catch (ArrayIndexOutOfBoundsException e) {
-      // This is the expected behavior, so do nothing.
-    }
+    assertThrows(ArrayIndexOutOfBoundsException.class, () -> ArraysP.minAndMax(new long[] {}));
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -479,28 +469,114 @@ final class ArraysPTest {
   // subarray extraction
   //
 
+  // The Index Checker cannot determine the length of the collections that are built inline
+  // below, so it cannot verify the index and length arguments.
+  @SuppressWarnings("index:argument")
   @Test
   void test_subarray() {
 
-    // public static int indexOf(boolean[] a, boolean[] sub)
-    // [I'm punting on this for now; deal with it later...]
+    // The second argument is the first included index and the third is a *length*, not an end
+    // index.
 
     // public static Object[] subarray(Object[] a, int startindex, int length)
-    // public static byte[] subarray(byte[] a, int startindex, int length)
-    // public static boolean[] subarray(boolean[] a, int startindex, int length)
-    // public static char[] subarray(char[] a, int startindex, int length)
-    // public static double[] subarray(double[] a, int startindex, int length)
-    // public static float[] subarray(float[] a, int startindex, int length)
-    // public static int[] subarray(int[] a, int startindex, int length)
-    // public static long[] subarray(long[] a, int startindex, int length)
-    // public static short[] subarray(short[] a, int startindex, int length)
+    Object[] objects = {"a", "b", "c", "d"};
+    assertArrayEquals(new Object[] {"b", "c"}, ArraysP.subarray(objects, 1, 2));
+    assertArrayEquals(new Object[] {}, ArraysP.subarray(objects, 1, 0));
+    assertArrayEquals(new Object[] {"a", "b", "c", "d"}, ArraysP.subarray(objects, 0, 4));
+    assertArrayEquals(new Object[] {}, ArraysP.subarray(objects, 4, 0));
+    // The result is a new array; modifying it does not affect the argument.
+    Object[] objectsSub = ArraysP.subarray(objects, 1, 2);
+    Arrays.fill(objectsSub, "zzz");
+    assertArrayEquals(new Object[] {"a", "b", "c", "d"}, objects);
+
+    // public static String[] subarray(String[] a, int startindex, int length)
+    String[] strings = {"a", "b", "c", "d"};
+    assertArrayEquals(new String[] {"b", "c"}, ArraysP.subarray(strings, 1, 2));
+    assertArrayEquals(new String[] {}, ArraysP.subarray(strings, 2, 0));
+
+    // public static <T> List<T> subarray(List<T> a, int startindex, int length)
+    List<String> list = Arrays.asList("a", "b", "c", "d");
+    assertEquals(Arrays.asList("b", "c"), ArraysP.subarray(list, 1, 2));
+    assertEquals(Arrays.asList(), ArraysP.subarray(list, 1, 0));
+    assertEquals(list, ArraysP.subarray(list, 0, 4));
+
+    // The primitive-array overloads.
+    assertArrayEquals(new byte[] {2, 3}, ArraysP.subarray(new byte[] {1, 2, 3, 4}, 1, 2));
+    assertArrayEquals(
+        new boolean[] {false, true},
+        ArraysP.subarray(new boolean[] {true, false, true, false}, 1, 2));
+    assertArrayEquals(new char[] {'b', 'c'}, ArraysP.subarray(new char[] {'a', 'b', 'c'}, 1, 2));
+    assertArrayEquals(
+        new double[] {2.0, 3.0}, ArraysP.subarray(new double[] {1.0, 2.0, 3.0}, 1, 2));
+    assertArrayEquals(new float[] {2f, 3f}, ArraysP.subarray(new float[] {1f, 2f, 3f}, 1, 2));
+    assertArrayEquals(new int[] {2, 3}, ArraysP.subarray(new int[] {1, 2, 3, 4}, 1, 2));
+    assertArrayEquals(new long[] {2, 3}, ArraysP.subarray(new long[] {1, 2, 3, 4}, 1, 2));
+    assertArrayEquals(new short[] {2, 3}, ArraysP.subarray(new short[] {1, 2, 3, 4}, 1, 2));
+  }
+
+  @Test
+  void test_isSubarray() {
 
     // public static boolean isSubarray(Object[] a, Object[] sub, int aOffset)
-    // public static boolean isSubarrayEq(Object[] a, Object[] sub, int aOffset)
+    Object[] a = {"a", "b", "c", "d"};
+    assertTrue(ArraysP.isSubarray(a, new Object[] {"a", "b"}, 0));
+    assertTrue(ArraysP.isSubarray(a, new Object[] {"b", "c"}, 1));
+    assertTrue(ArraysP.isSubarray(a, new Object[] {"d"}, 3));
+    assertFalse(ArraysP.isSubarray(a, new Object[] {"b", "c"}, 0));
+    assertFalse(ArraysP.isSubarray(a, new Object[] {"c", "d"}, 3));
+    // An empty subarray matches at any valid offset, and at the end of the array.
+    assertTrue(ArraysP.isSubarray(a, new Object[] {}, 0));
+    assertTrue(ArraysP.isSubarray(a, new Object[] {}, 4));
+    // An offset that is too large yields false rather than an exception.
+    assertFalse(ArraysP.isSubarray(a, new Object[] {"a"}, 4));
+    assertFalse(ArraysP.isSubarray(a, new Object[] {}, 5));
+
+    // isSubarray() compares with equals(), whereas isSubarrayEq() compares with ==.
+    Object[] equalNotIdentical = {newList("b"), newList("c")};
+    Object[] aWithLists = {"a", newList("b"), newList("c"), "d"};
+    assertTrue(ArraysP.isSubarray(aWithLists, equalNotIdentical, 1));
+    assertFalse(ArraysP.isSubarrayEq(aWithLists, equalNotIdentical, 1));
+    assertTrue(ArraysP.isSubarrayEq(aWithLists, new Object[] {aWithLists[1], aWithLists[2]}, 1));
+
     // public static boolean isSubarray(int[] a, int[] sub, int aOffset)
+    int[] ints = {1, 2, 3, 4};
+    assertTrue(ArraysP.isSubarray(ints, new int[] {2, 3}, 1));
+    assertFalse(ArraysP.isSubarray(ints, new int[] {2, 3}, 2));
+    assertTrue(ArraysP.isSubarray(ints, new int[] {}, 2));
+    assertFalse(ArraysP.isSubarray(ints, new int[] {4, 5}, 3));
+
+    // public static boolean isSubarray(double[] a, double[] sub, int aOffset)
+    assertTrue(ArraysP.isSubarray(new double[] {1.0, 2.0, 3.0}, new double[] {2.0, 3.0}, 1));
+    assertFalse(ArraysP.isSubarray(new double[] {1.0, 2.0, 3.0}, new double[] {2.0, 3.0}, 0));
+
     // public static boolean isSubarray(boolean[] a, boolean[] sub, int aOffset)
-    // (The subarray tests are missing; I hope that the indexOf(..., array)
-    // operations above test them sufficiently.)
+    boolean[] booleans = {true, false, true};
+    assertTrue(ArraysP.isSubarray(booleans, new boolean[] {false, true}, 1));
+    assertFalse(ArraysP.isSubarray(booleans, new boolean[] {false, true}, 0));
+
+    // public static <T> boolean isSubarray(Object[] a, List<T> sub, int aOffset)
+    List<Object> bc = new ArrayList<>(Arrays.asList("b", "c"));
+    assertTrue(ArraysP.isSubarray(a, bc, 1));
+    assertFalse(ArraysP.isSubarray(a, bc, 2));
+
+    // public static <T> boolean isSubarray(List<T> a, List<T> sub, int aOffset)
+    List<String> list = Arrays.asList("a", "b", "c", "d");
+    assertTrue(ArraysP.isSubarray(list, Arrays.asList("b", "c"), 1));
+    assertFalse(ArraysP.isSubarray(list, Arrays.asList("b", "c"), 2));
+    assertTrue(ArraysP.isSubarrayEq(list, Arrays.asList("b", "c"), 1));
+  }
+
+  /**
+   * Returns a new one-element list containing the given string. Two calls with the same argument
+   * return equal but non-identical lists.
+   *
+   * @param s the element of the returned list
+   * @return a new one-element list containing {@code s}
+   */
+  private static List<String> newList(String s) {
+    List<String> result = new ArrayList<>();
+    result.add(s);
+    return result;
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -601,13 +677,84 @@ final class ArraysPTest {
   /** Test isSortedDescending(). */
   @Test
   void test_isSortedDescending() {
-    // Tests go here.
+
+    // public static boolean isSortedDescending(int[] a)
+    assertTrue(ArraysP.isSortedDescending(new int[] {2, 1, 0}));
+    // Equal adjacent elements are permitted.
+    assertTrue(ArraysP.isSortedDescending(new int[] {3, 3, 2, 2, 1, 0}));
+    assertTrue(ArraysP.isSortedDescending(new int[] {}));
+    assertTrue(ArraysP.isSortedDescending(new int[] {0}));
+    assertTrue(ArraysP.isSortedDescending(new int[] {1, 0}));
+    assertFalse(ArraysP.isSortedDescending(new int[] {0, 1}));
+    assertFalse(ArraysP.isSortedDescending(new int[] {3, 2, 1, 2, 1, 0}));
+    assertTrue(ArraysP.isSortedDescending(new int[] {0, -1, -2}));
+    assertFalse(ArraysP.isSortedDescending(new int[] {-2, -1, 0}));
+
+    // public static boolean isSortedDescending(long[] a)
+    assertTrue(ArraysP.isSortedDescending(new long[] {2, 1, 0}));
+    assertTrue(ArraysP.isSortedDescending(new long[] {3, 3, 2, 2, 1, 0}));
+    assertTrue(ArraysP.isSortedDescending(new long[] {}));
+    assertTrue(ArraysP.isSortedDescending(new long[] {0}));
+    assertFalse(ArraysP.isSortedDescending(new long[] {0, 1}));
+    assertFalse(ArraysP.isSortedDescending(new long[] {3, 2, 1, 2, 1, 0}));
+    // Values that do not fit in an int.
+    assertTrue(ArraysP.isSortedDescending(new long[] {Long.MAX_VALUE, 0, Long.MIN_VALUE}));
+    assertFalse(ArraysP.isSortedDescending(new long[] {Long.MIN_VALUE, 0, Long.MAX_VALUE}));
   }
 
   /** Test hasDuplicates(). */
   @Test
   void test_hasDuplicates() {
-    // Tests go here.
+
+    // An empty array and a 1-element array never have duplicates.
+    assertFalse(ArraysP.hasDuplicates(new int[] {}));
+    assertFalse(ArraysP.hasDuplicates(new int[] {1}));
+
+    // public static boolean hasDuplicates(int[] a)
+    assertTrue(ArraysP.hasDuplicates(new int[] {1, 2, 1}));
+    assertFalse(ArraysP.hasDuplicates(new int[] {1, 2, 3}));
+    assertTrue(ArraysP.hasDuplicates(new int[] {-1, 2, -1}));
+
+    // public static boolean hasDuplicates(boolean[] a)
+    assertFalse(ArraysP.hasDuplicates(new boolean[] {true, false}));
+    assertTrue(ArraysP.hasDuplicates(new boolean[] {true, false, true}));
+
+    // public static boolean hasDuplicates(byte[] a)
+    assertFalse(ArraysP.hasDuplicates(new byte[] {1, 2, 3}));
+    assertTrue(ArraysP.hasDuplicates(new byte[] {1, 2, 2}));
+
+    // public static boolean hasDuplicates(char[] a)
+    assertFalse(ArraysP.hasDuplicates(new char[] {'a', 'b'}));
+    assertTrue(ArraysP.hasDuplicates(new char[] {'a', 'b', 'a'}));
+
+    // public static boolean hasDuplicates(short[] a)
+    assertFalse(ArraysP.hasDuplicates(new short[] {1, 2, 3}));
+    assertTrue(ArraysP.hasDuplicates(new short[] {1, 2, 2}));
+
+    // public static boolean hasDuplicates(long[] a)
+    assertFalse(ArraysP.hasDuplicates(new long[] {1, 2, 3}));
+    assertTrue(ArraysP.hasDuplicates(new long[] {1, 2, 1}));
+
+    // public static boolean hasDuplicates(float[] a)
+    assertFalse(ArraysP.hasDuplicates(new float[] {1f, 2f}));
+    assertTrue(ArraysP.hasDuplicates(new float[] {1f, 2f, 1f}));
+
+    // public static boolean hasDuplicates(double[] a)
+    assertFalse(ArraysP.hasDuplicates(new double[] {1.0, 2.0}));
+    assertTrue(ArraysP.hasDuplicates(new double[] {1.0, 2.0, 1.0}));
+
+    // public static boolean hasDuplicates(String[] a)
+    assertFalse(ArraysP.hasDuplicates(new String[] {"a", "b"}));
+    assertTrue(ArraysP.hasDuplicates(new String[] {"a", "b", "a"}));
+
+    // public static boolean hasDuplicates(Object[] a)
+    // Duplicates are determined by equals(), not by reference equality.
+    assertTrue(ArraysP.hasDuplicates(new Object[] {newList("a"), newList("a")}));
+    assertFalse(ArraysP.hasDuplicates(new Object[] {newList("a"), newList("b")}));
+
+    // hasNoDuplicates() is the negation of hasDuplicates().
+    assertFalse(ArraysP.hasNoDuplicates(new int[] {1, 2, 1}));
+    assertTrue(ArraysP.hasNoDuplicates(new int[] {1, 2, 3}));
   }
 
   @Test
@@ -685,7 +832,29 @@ final class ArraysPTest {
   /** Test fnIdentity(). */
   @Test
   void test_fnIdentity() {
-    // Tests go here.
+    assertArrayEquals(new int[] {}, ArraysP.fnIdentity(0));
+    assertArrayEquals(new int[] {0}, ArraysP.fnIdentity(1));
+    assertArrayEquals(new int[] {0, 1, 2, 3, 4}, ArraysP.fnIdentity(5));
+
+    // The result is the identity function: result[i] == i.
+    int[] identity = ArraysP.fnIdentity(100);
+    assertEquals(100, identity.length);
+    for (int i = 0; i < identity.length; i++) {
+      assertEquals(i, identity[i]);
+    }
+
+    // The result is a permutation, and is a total function.
+    assertTrue(ArraysP.fnIsPermutation(identity));
+    assertTrue(ArraysP.fnIsTotal(identity));
+    // The identity permutation is its own inverse.
+    assertArrayEquals(identity, ArraysP.fnInversePermutation(identity));
+
+    // Each call returns a fresh array.
+    int[] first = ArraysP.fnIdentity(3);
+    int[] second = ArraysP.fnIdentity(3);
+    assertNotSame(first, second);
+    Arrays.fill(first, 99);
+    assertArrayEquals(new int[] {0, 1, 2}, second);
   }
 
   @SuppressWarnings({

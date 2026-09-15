@@ -3,6 +3,7 @@ package org.plumelib.util;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -165,7 +166,30 @@ final class CollectionsPTest {
   // public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements)
   @Test
   void test_addAll() {
-    // Tests go here.
+    // The point of this method is that it accepts an Iterable that is not a Collection, which
+    // Collection.addAll() does not.
+    Iterable<@NonNegative Integer> iota3 = () -> new IotaIterator(3);
+    Iterable<@NonNegative Integer> iota0 = () -> new IotaIterator(0);
+    Collection<Integer> c = new ArrayList<>();
+    assertTrue(CollectionsP.addAll(c, iota3));
+    assertEquals(Arrays.asList(0, 1, 2), c);
+
+    // Adding no elements does not change the collection, and returns false.
+    assertFalse(CollectionsP.addAll(c, new ArrayList<>()));
+    assertEquals(Arrays.asList(0, 1, 2), c);
+    assertFalse(CollectionsP.addAll(c, iota0));
+    assertEquals(Arrays.asList(0, 1, 2), c);
+
+    // The collection's element type may be a supertype of the elements' type.
+    Collection<Object> objects = new ArrayList<>();
+    assertTrue(CollectionsP.addAll(objects, iota3));
+    assertEquals(Arrays.asList(0, 1, 2), objects);
+
+    // The return value is true if *any* element was added, even if others were not.
+    Set<Integer> set = new LinkedHashSet<>(Arrays.asList(0, 1));
+    assertTrue(CollectionsP.addAll(set, iota3));
+    assertEquals(new LinkedHashSet<>(Arrays.asList(0, 1, 2)), set);
+    assertFalse(CollectionsP.addAll(set, iota3));
   }
 
   @Test
@@ -233,13 +257,6 @@ final class CollectionsPTest {
 
   // public static <T> boolean noDuplicates(List<T> a)
 
-  /** Test removeDuplicates(). */
-  // public static <T> List<T> removeDuplicates(List<T> l)
-  @Test
-  void test_removeDuplicates() {
-    // Tests go here.
-  }
-
   /** Test withoutDuplicates(). */
   // public static <T> List<T> withoutDuplicates(List<T> values)
   @Test
@@ -258,10 +275,45 @@ final class CollectionsPTest {
   }
 
   /** Test withoutDuplicatesSorted(). */
-  @SuppressWarnings("ArrayEquals")
   @Test
   void test_withoutDuplicatesSorted() {
-    // Tests go here.
+    // The result is sorted and has no duplicates, whatever the argument's order.
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(l123));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(l123123));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(l12223));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(l1123));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(l1233));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(Arrays.asList(3, 2, 1)));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(Arrays.asList(3, 1, 2, 3, 1)));
+
+    // Unlike withoutDuplicates(), the result is sorted rather than in the original order.
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(Arrays.asList(2, 3, 1)));
+    assertEquals(Arrays.asList(2, 3, 1), CollectionsP.withoutDuplicates(Arrays.asList(2, 3, 1)));
+
+    // It accepts any Collection, not just a List.
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(new HashSet<>(l123123)));
+    assertEquals(l123, CollectionsP.withoutDuplicatesSorted(new TreeSet<>(l123123)));
+
+    // Degenerate cases.
+    assertEquals(Arrays.asList(), CollectionsP.withoutDuplicatesSorted(new ArrayList<Integer>()));
+    assertEquals(Arrays.asList(1), CollectionsP.withoutDuplicatesSorted(Arrays.asList(1)));
+    assertEquals(Arrays.asList(1), CollectionsP.withoutDuplicatesSorted(Arrays.asList(1, 1, 1)));
+
+    // The argument is not modified.
+    List<Integer> arg = new ArrayList<>(Arrays.asList(3, 1, 2, 1));
+    CollectionsP.withoutDuplicatesSorted(arg);
+    assertEquals(Arrays.asList(3, 1, 2, 1), arg);
+
+    // The method may return its argument when the argument is already sorted without
+    // duplicates, so a caller must not assume the result is a fresh list.  A caller *can* rely
+    // on the result not being the argument when the argument needs changing.
+    List<Integer> needsChange = new ArrayList<>(Arrays.asList(3, 1, 2));
+    assertNotSame(needsChange, CollectionsP.withoutDuplicatesSorted(needsChange));
+
+    // Strings, to show that the ordering is the elements' natural ordering.
+    assertEquals(
+        Arrays.asList("a", "b", "c"),
+        CollectionsP.withoutDuplicatesSorted(Arrays.asList("c", "a", "b", "a")));
   }
 
   // public static <T extends Comparable<T>> List<T> withoutDuplicatesSorted(List<T> values)
@@ -823,7 +875,21 @@ final class CollectionsPTest {
   // public static <T> ArrayList<T> makeArrayList(Enumeration<T> e)
   @Test
   void test_makeArrayList() {
-    // Tests go here.
+    assertEquals(
+        Arrays.asList("a", "b", "c"),
+        CollectionsP.makeArrayList(Collections.enumeration(Arrays.asList("a", "b", "c"))));
+
+    // An empty enumeration yields an empty, modifiable list.
+    ArrayList<String> empty =
+        CollectionsP.makeArrayList(Collections.enumeration(new ArrayList<>()));
+    assertEquals(Arrays.asList(), empty);
+    empty.add("a");
+    assertEquals(Arrays.asList("a"), empty);
+
+    // The enumeration is consumed: a second call on the same enumeration yields an empty list.
+    Enumeration<String> e = Collections.enumeration(Arrays.asList("a", "b"));
+    assertEquals(Arrays.asList("a", "b"), CollectionsP.makeArrayList(e));
+    assertEquals(Arrays.asList(), CollectionsP.makeArrayList(e));
   }
 
   /** Test listOf(). */
@@ -844,7 +910,41 @@ final class CollectionsPTest {
   // public static <T> List<T> concatenate(Collection<T> list1, Collection<T> list2)
   @Test
   void test_concatenate() {
-    // Tests go here.
+    assertEquals(
+        Arrays.asList("a", "b", "c", "d"),
+        CollectionsP.concatenate(Arrays.asList("a", "b"), Arrays.asList("c", "d")));
+
+    // Either argument may be empty.
+    assertEquals(
+        Arrays.asList("a", "b"),
+        CollectionsP.concatenate(Arrays.asList("a", "b"), Arrays.asList()));
+    assertEquals(
+        Arrays.asList("c", "d"),
+        CollectionsP.concatenate(Arrays.asList(), Arrays.asList("c", "d")));
+    assertEquals(Arrays.asList(), CollectionsP.concatenate(Arrays.asList(), Arrays.asList()));
+
+    // Duplicates are retained, in order.
+    assertEquals(
+        Arrays.asList("a", "b", "b", "a"),
+        CollectionsP.concatenate(Arrays.asList("a", "b"), Arrays.asList("b", "a")));
+
+    // The arguments may be any Collection, not just a List.  A Set argument contributes its
+    // elements in iteration order.
+    assertEquals(
+        Arrays.asList("a", "b", "c"),
+        CollectionsP.concatenate(
+            new LinkedHashSet<>(Arrays.asList("a", "b")), Collections.singletonList("c")));
+
+    // The result is a new list; neither argument is modified, and modifying the result does not
+    // affect them.
+    List<String> list1 = new ArrayList<>(Arrays.asList("a"));
+    List<String> list2 = new ArrayList<>(Arrays.asList("b"));
+    List<String> result = CollectionsP.concatenate(list1, list2);
+    assertNotSame(list1, result);
+    assertNotSame(list2, result);
+    result.add("c");
+    assertEquals(Arrays.asList("a"), list1);
+    assertEquals(Arrays.asList("b"), list2);
   }
 
   // public static <T> List<List<T>> createCombinations(
