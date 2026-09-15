@@ -28,13 +28,20 @@
       <exclude name="MethodArgumentCouldBeFinal"/>
       <exclude name="OnlyOneReturn"/>
       <exclude name="ShortClassName"/>
+      <exclude name="ShortMethodName"/> <!-- Forbids "of", and does not support a whitelist. -->
       <exclude name="ShortVariable"/>
       <exclude name="TooManyStaticImports"/>
+      <exclude name="UnnecessaryCast"/> <!-- Buggy: should not report if the cast has a type qualifier. -->
       <exclude name="UselessParentheses"/> <!-- Redundant parens can emphasize subexpressions in string concatenation. -->
     </rule>
     <rule ref="category/java/codestyle.xml/EmptyControlStatement">
         <properties>
             <property name="allowCommentedBlocks" value="true" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/TypeParameterNamingConventions">
+        <properties>
+            <property name="typeParameterNamePattern" value="[A-Z][0-9]?" />
         </properties>
     </rule>
 
