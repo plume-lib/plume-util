@@ -28,6 +28,7 @@ import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.regex.qual.Regex;
+import org.checkerframework.dataflow.qual.Pure;
 
 // TODO:
 // EntryReader has a public concept of "short entry", but I don't think that
@@ -419,7 +420,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     // Handles fenced code blocks.
-    if (entryFormat.supportsFences) {
+    if (entryFormat.supportsFences()) {
       if (line.stripLeading().startsWith("```")) {
         inFencedCodeBlock = !inFencedCodeBlock;
         return line;
@@ -431,8 +432,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     }
 
     // Handles comments (single-line and multi-line)
-    Pattern multilineCommentStart = commentFormat.multilineCommentStart;
-    Pattern lineCommentStart = commentFormat.lineCommentStart;
+    Pattern multilineCommentStart = commentFormat.multilineCommentStart();
+    Pattern lineCommentStart = commentFormat.lineCommentStart();
     int multilineCommentStartLine = -1;
     String multilineCommentStartFile = null;
 
@@ -505,7 +506,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       line = line.substring(msEnd);
 
       @SuppressWarnings("nullness") // if `multilineCommentStart` is non-null, so is `...End`
-      @NonNull Pattern multilineCommentEnd = commentFormat.multilineCommentEnd;
+      @NonNull Pattern multilineCommentEnd = commentFormat.multilineCommentEnd();
 
       while (true) {
         Matcher me = multilineCommentEnd.matcher(line);
@@ -648,8 +649,8 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   /**
    * Returns the next entry (paragraph) in the file. If no more entries are available, returns null.
    *
-   * <p>Entries are separated by one or two blank lines (two, if {@link EntryFormat#twoBlankLines}
-   * is true), unless the entry started with {@link EntryFormat#entryStartRegex}.
+   * <p>Entries are separated by one or two blank lines (two, if {@link EntryFormat#twoBlankLines()}
+   * is true), unless the entry started with {@link EntryFormat#entryStartRegex()}.
    *
    * @return the next entry (paragraph) in the file
    * @throws IOException if there is a problem reading the file
@@ -670,8 +671,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     long lineNumber = getLineNumber();
 
     // If first line matches entryStartRegex, this is a long entry.
-    final Pattern entryStartRegex = entryFormat.entryStartRegex;
-    final Pattern entryStopRegex = entryFormat.entryStopRegex;
+    final Pattern entryStartRegex = entryFormat.entryStartRegex();
+    @SuppressWarnings("nullness") // the constructor replaces null by NEVER_MATCHES
+    final @NonNull Pattern entryStopRegex = entryFormat.entryStopRegex();
     @Regex Matcher entryMatch;
     if (entryStartRegex == null) {
       entryMatch = null;
@@ -739,7 +741,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
             line = readLine();
             continue;
           }
-          if (!entryFormat.twoBlankLines) {
+          if (!entryFormat.twoBlankLines()) {
             break;
           } else if (blankLineFound != null) {
             break;
@@ -1042,16 +1044,40 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /** A regular expression that never matches. */
-  private static final Pattern NEVER_MATCHES = Pattern.compile("\\b\\B");
+  public static final Pattern NEVER_MATCHES = Pattern.compile("\\b\\B");
 
   /**
-   * This class informs {@link EntryReader} where an entry begins and ends.
+   * Informs {@link EntryReader} where an entry begins and ends.
    *
    * <p>When reading a file by lines (as {@link EntryReader#iterator} and {@link
    * EntryReader#readLine} do), the EntryFormat is irrelevant, with one exception. If {@link
-   * EntryFormat#supportsFences} is true, then comments are not stripped inside fenced code blocks.
+   * EntryFormat#supportsFences()} is true, then comments are not stripped inside fenced code
+   * blocks.
+   *
+   * @param entryStartRegex regular expression that starts a long entry. If null, there are no long
+   *     entries, only short entries. A short entry is terminated by one or two blank lines
+   *     (depending on {@code twoBlankLines}) or the end of the current file.
+   *     <p>If the first line of an entry matches this regexp, it is a long entry. It is terminated
+   *     by any of:
+   *     <ul>
+   *       <li>{@code entryStopRegex}
+   *       <li>another line that matches {@code entryStartRegex} (even not following a newline), or
+   *       <li>the end of the current file.
+   *     </ul>
+   *     <p>If the regular expression has a capturing group, the first capturing group is retained
+   *     in the output; otherwise, the whole match is removed.
+   * @param entryStopRegex regular expression that ends a long entry; see {@code entryStartRegex}.
+   *     If null is passed to the constructor, it is replaced by a regular expression that never
+   *     matches, so the accessor never returns null.
+   * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+   * @param supportsFences if true, then fenced code blocks are respected. The special "````" fence
+   *     is not supported.
    */
-  public static class EntryFormat {
+  public record EntryFormat(
+      @Nullable @Regex(1) Pattern entryStartRegex,
+      @Nullable Pattern entryStopRegex,
+      boolean twoBlankLines,
+      boolean supportsFences) {
 
     /**
      * An EntryFormat using a single blank line to separate entries, with no multi-line entries and
@@ -1082,45 +1108,26 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
         new EntryFormat((Pattern) null, (Pattern) null, true, true);
 
     /**
-     * Regular expression that starts a long entry. If null, there are no long entries, only short
-     * entries. A short entry is terminated by one or two blank lines (depending on {@link
-     * #twoBlankLines}) or the end of the current file.
-     *
-     * <p>If the first line of an entry matches this regexp, it is a long entry. It is terminated by
-     * any of:
-     *
-     * <ul>
-     *   <li>{@link #entryStopRegex}
-     *   <li>another line that matches {@code entryStartRegex} (even not following a newline), or
-     *   <li>the end of the current file.
-     * </ul>
-     *
-     * <p>If the regular expression has a capturing group, the first capturing group is retained in
-     * the output; otherwise, the whole match is removed.
+     * Creates an EntryFormat, replacing a null {@code entryStopRegex} by a regular expression that
+     * never matches.
      */
-    public final @Nullable @Regex(1) Pattern entryStartRegex;
-
-    /**
-     * See {@link #entryStartRegex}.
-     *
-     * @see #entryStartRegex
-     */
-    public final Pattern entryStopRegex;
-
-    /** If true, then entries are separated by two blank lines rather than one. */
-    public final boolean twoBlankLines;
-
-    /**
-     * If true, then fenced code blocks are respected. The special "````" fence is not supported.
-     */
-    public final boolean supportsFences;
+    public EntryFormat {
+      if (entryStartRegex == null && entryStopRegex != null) {
+        throw new IllegalArgumentException(
+            "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
+      }
+      if (entryStopRegex == null) {
+        entryStopRegex = NEVER_MATCHES;
+      }
+    }
 
     /**
      * Creates an EntryFormat.
      *
      * @param entryStartRegex regular expression that starts a long entry; see {@link
-     *     #entryStartRegex}
-     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
+     *     #entryStartRegex()}
+     * @param entryStopRegex regular expression that ends a long entry; see {@link
+     *     #entryStartRegex()}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
      * @param supportsFences if true, then fenced code blocks are respected
      */
@@ -1136,39 +1143,53 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           supportsFences);
     }
 
-    /**
-     * Creates an EntryFormat.
-     *
-     * @param entryStartRegex regular expression that starts a long entry; see {@link
-     *     #entryStartRegex}
-     * @param entryStopRegex regular expression that ends a long entry; see {@link #entryStartRegex}
-     * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
-     * @param supportsFences if true, then fenced code blocks are respected
-     */
-    public EntryFormat(
-        @Nullable @Regex(1) Pattern entryStartRegex,
-        @Nullable Pattern entryStopRegex,
-        boolean twoBlankLines,
-        boolean supportsFences) {
-      if (entryStartRegex == null && entryStopRegex != null) {
-        throw new IllegalArgumentException(
-            "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
+    // `Pattern` does not define `equals()`, so the record's generated `equals()` would compare
+    // patterns by reference.  These methods compare them by their regular expression and flags.
+
+    @Override
+    @Pure
+    @SuppressWarnings("lock:instanceof.pattern.unsafe") // o is @GuardSatisfied
+    public boolean equals(@GuardSatisfied EntryFormat this, @GuardSatisfied @Nullable Object o) {
+      if (this == o) {
+        return true;
       }
-      this.entryStartRegex = entryStartRegex;
-      this.entryStopRegex = entryStopRegex == null ? NEVER_MATCHES : entryStopRegex;
-      this.twoBlankLines = twoBlankLines;
-      this.supportsFences = supportsFences;
+      if (!(o instanceof EntryFormat other)) {
+        return false;
+      }
+      return twoBlankLines == other.twoBlankLines
+          && supportsFences == other.supportsFences
+          && patternEquals(entryStartRegex, other.entryStartRegex)
+          && patternEquals(entryStopRegex, other.entryStopRegex);
+    }
+
+    @Override
+    @Pure
+    public int hashCode(@GuardSatisfied EntryFormat this) {
+      return (((patternHashCode(entryStartRegex) * 31) + patternHashCode(entryStopRegex)) * 31
+                  + Boolean.hashCode(twoBlankLines))
+              * 31
+          + Boolean.hashCode(supportsFences);
     }
   }
 
   /**
-   * This class informs {@link EntryReader} where a comment begins and ends.
+   * Informs {@link EntryReader} where a comment begins and ends.
    *
    * <p>No quoting is supported. That is, {@code EntryReader} does not attempt to infer whether a
    * comment regex matches within (say) a string in the input text. To prevent a comment marker from
    * being matched, embed it in a fenced code block.
+   *
+   * @param lineCommentStart regular expression that matches the start of a single-line comment, or
+   *     null if there are no single-line comments
+   * @param multilineCommentStart regular expression that matches the start of a multi-line comment,
+   *     or null if there are no multi-line comments
+   * @param multilineCommentEnd regular expression that matches the end of a multi-line comment, or
+   *     null if there are no multi-line comments
    */
-  public static class CommentFormat {
+  public record CommentFormat(
+      @Nullable Pattern lineCommentStart,
+      @Nullable Pattern multilineCommentStart,
+      @Nullable Pattern multilineCommentEnd) {
 
     /** A CommentFormat that supports no comments. */
     public static final CommentFormat NONE = new CommentFormat(null);
@@ -1199,14 +1220,13 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /** A CommentFormat for TeX/LaTeX-style comments, only at the beginning of a line. */
     public static final CommentFormat TEX_AT_START_OF_LINE = new CommentFormat("^%");
 
-    /** Regular expression that matches the start of a single-line comment. */
-    private final @Nullable Pattern lineCommentStart;
-
-    /** Regular expression that matches the start of a multi-line comment. */
-    private final @Nullable Pattern multilineCommentStart;
-
-    /** Regular expression that matches the end of a multi-line comment. */
-    private final @Nullable Pattern multilineCommentEnd;
+    /** Creates a CommentFormat. */
+    public CommentFormat {
+      if ((multilineCommentStart == null) != (multilineCommentEnd == null)) {
+        throw new IllegalArgumentException(
+            "multilineCommentStart and multilineCommentEnd must both be null or both be non-null");
+      }
+    }
 
     /**
      * Creates a CommentFormat.
@@ -1235,25 +1255,61 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       this(lineCommentStart == null ? null : Pattern.compile(lineCommentStart), null, null);
     }
 
-    /**
-     * Creates a CommentFormat.
-     *
-     * @param lineCommentStart regular expression that matches a single-line comment
-     * @param multilineCommentStart regular expression that matches the start of a multi-line
-     *     comment
-     * @param multilineCommentEnd regular expression that matches the end of a multi-line comment
-     */
-    public CommentFormat(
-        @Nullable Pattern lineCommentStart,
-        @Nullable Pattern multilineCommentStart,
-        @Nullable Pattern multilineCommentEnd) {
-      if ((multilineCommentStart == null) != (multilineCommentEnd == null)) {
-        throw new IllegalArgumentException(
-            "multilineCommentStart and multilineCommentEnd must both be null or both be non-null");
+    // `Pattern` does not define `equals()`, so the record's generated `equals()` would compare
+    // patterns by reference.  These methods compare them by their regular expression and flags.
+
+    @Override
+    @Pure
+    @SuppressWarnings("lock:instanceof.pattern.unsafe") // o is @GuardSatisfied
+    public boolean equals(@GuardSatisfied CommentFormat this, @GuardSatisfied @Nullable Object o) {
+      if (this == o) {
+        return true;
       }
-      this.lineCommentStart = lineCommentStart;
-      this.multilineCommentStart = multilineCommentStart;
-      this.multilineCommentEnd = multilineCommentEnd;
+      if (!(o instanceof CommentFormat other)) {
+        return false;
+      }
+      return patternEquals(lineCommentStart, other.lineCommentStart)
+          && patternEquals(multilineCommentStart, other.multilineCommentStart)
+          && patternEquals(multilineCommentEnd, other.multilineCommentEnd);
     }
+
+    @Override
+    @Pure
+    public int hashCode(@GuardSatisfied CommentFormat this) {
+      return ((patternHashCode(lineCommentStart) * 31) + patternHashCode(multilineCommentStart))
+              * 31
+          + patternHashCode(multilineCommentEnd);
+    }
+  }
+
+  /**
+   * Returns true if the two patterns have the same regular expression and flags. {@code Pattern}
+   * does not define {@code equals()}, which would otherwise compare by reference.
+   *
+   * @param p1 a pattern, or null
+   * @param p2 a pattern, or null
+   * @return true if the two patterns are equivalent
+   */
+  @Pure
+  private static boolean patternEquals(@Nullable Pattern p1, @Nullable Pattern p2) {
+    if (p1 == p2) {
+      return true;
+    }
+    if (p1 == null || p2 == null) {
+      return false;
+    }
+    return p1.pattern().equals(p2.pattern()) && p1.flags() == p2.flags();
+  }
+
+  /**
+   * Returns a hash code for a pattern, based on its regular expression and flags. Consistent with
+   * {@link #patternEquals}.
+   *
+   * @param p a pattern, or null
+   * @return a hash code for the pattern
+   */
+  @Pure
+  private static int patternHashCode(@Nullable Pattern p) {
+    return p == null ? 0 : (p.pattern().hashCode() * 31) + p.flags();
   }
 }
