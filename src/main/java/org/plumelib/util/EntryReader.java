@@ -952,7 +952,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param lineNumber line number of first line of entry
    * @param shortEntry true if this is a short entry (blank-line-separated)
    */
-  public static record Entry(
+  public record Entry(
       String firstLine, String body, String filename, long lineNumber, boolean shortEntry) {
 
     /**

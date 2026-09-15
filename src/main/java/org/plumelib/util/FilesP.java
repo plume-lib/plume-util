@@ -731,6 +731,7 @@ public final class FilesP {
    * @return the path to the newly created file that did not exist before this method was invoked
    * @throws IOException if there is trouble creating the file
    */
+  @SuppressWarnings("PMD.EmptyCatchBlock")
   public static Path createTempFile(
       Path dir, String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
     Path createdDir = Files.createDirectories(dir, attrs);
@@ -1131,8 +1132,7 @@ public final class FilesP {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    String result = baos.toString(UTF_8);
-    return result;
+    return baos.toString(UTF_8);
   }
 
   /**
@@ -1184,6 +1184,7 @@ public final class FilesP {
    *     character; see {@link #readCodePoint}
    * @throws UncheckedIOException if there is trouble reading the input stream
    */
+  @SuppressWarnings("PMD.EmptyCatchBlock")
   public static @Nullable Boolean isWhitespaceOnly(InputStream is, @Positive int readLimit) {
     if (!is.markSupported()) {
       return null;

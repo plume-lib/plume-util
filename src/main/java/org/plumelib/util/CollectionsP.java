@@ -859,7 +859,7 @@ public final class CollectionsP {
    *     range (an insertion)
    * @param elements the new (replacement) elements
    */
-  public static record Replacement<T>(int start, int end, Collection<T> elements) {
+  public record Replacement<T>(int start, int end, Collection<T> elements) {
 
     /**
      * Creates a new Replacement.

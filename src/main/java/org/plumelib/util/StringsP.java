@@ -517,6 +517,9 @@ public final class StringsP {
    * Escape unprintable characters in the target, following the usual Java backslash conventions, so
    * that the result is sure to be printable ASCII. Returns a new string.
    *
+   * <p>This implementation is not particularly optimized: unlike {@link #escapeJava(String)}, it
+   * allocates a string per character rather than copying unescaped runs in bulk.
+   *
    * @param orig string to quote
    * @return quoted version of orig
    */
@@ -538,8 +541,6 @@ public final class StringsP {
   /**
    * Like escapeJava(), but quote more characters so that the result is sure to be printable ASCII.
    *
-   * <p>This implementation is not particularly optimized.
-   *
    * @param c character to quote
    * @return quoted version of c
    */
@@ -558,17 +559,20 @@ public final class StringsP {
     } else if (c >= ' ' && c <= '~') {
       return new String(new char[] {c});
     } else if (c < 256) {
-      String octal = Integer.toOctalString(c);
-      while (octal.length() < 3) {
-        octal = '0' + octal;
-      }
-      return "\\" + octal;
+      return new String(
+          new char[] {
+            '\\', (char) ('0' + (c >> 6)), (char) ('0' + ((c >> 3) & 7)), (char) ('0' + (c & 7))
+          });
     } else {
-      String hex = Integer.toHexString(c);
-      while (hex.length() < 4) {
-        hex = "0" + hex;
-      }
-      return "\\u" + hex;
+      return new String(
+          new char[] {
+            '\\',
+            'u',
+            Character.forDigit((c >> 12) & 0xf, 16),
+            Character.forDigit((c >> 8) & 0xf, 16),
+            Character.forDigit((c >> 4) & 0xf, 16),
+            Character.forDigit(c & 0xf, 16)
+          });
     }
   }
 
