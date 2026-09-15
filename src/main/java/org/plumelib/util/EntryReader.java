@@ -119,7 +119,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   private @Nullable String pushbackLine = null;
 
   /** Platform-specific line separator. */
-  private static final String lineSep = System.lineSeparator();
+  private static final String LINE_SEP = System.lineSeparator();
 
   /** True if currently inside a fenced code block (``` ... ```). */
   private boolean inFencedCodeBlock = false;
@@ -220,7 +220,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       @Nullable @Regex(1) String includeRegexString) {
     // We won't use superclass methods, but passing null as an argument
     // leads to a NullPointerException.
-    super(DummyReader.it);
+    super(DummyReader.IT);
     readers.addFirst(new FlnReader(reader, filename));
     this.entryFormat = entryFormat;
     this.commentFormat = commentFormat;
@@ -707,7 +707,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           && !endEntryMatch.find()
           && filename.equals(getFileName())) {
         body.append(line);
-        body.append(lineSep);
+        body.append(LINE_SEP);
         line = readLine();
         if (line == null) {
           break; // end of file serves as entry terminator
@@ -735,7 +735,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
           if (inFencedCodeBlock) {
             // Don't treat blank lines inside fenced code blocks as entry separators.
             body.append(line);
-            body.append(lineSep);
+            body.append(LINE_SEP);
             line = readLine();
             continue;
           }
@@ -754,12 +754,12 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
         if (blankLineFound != null) {
           body.append(blankLineFound);
-          body.append(lineSep);
+          body.append(LINE_SEP);
           blankLineFound = null;
         }
 
         body.append(line);
-        body.append(lineSep);
+        body.append(LINE_SEP);
         line = readLine();
       }
 
@@ -981,7 +981,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   private static final class DummyReader extends Reader {
 
     /** The canonical DummyReader. */
-    public static final DummyReader it = new DummyReader();
+    public static final DummyReader IT = new DummyReader();
 
     /** Create a new DummyReader. */
     private DummyReader() {
@@ -1042,7 +1042,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /** A regular expression that never matches. */
-  private static final Pattern neverMatches = Pattern.compile("\\b\\B");
+  private static final Pattern NEVER_MATCHES = Pattern.compile("\\b\\B");
 
   /**
    * This class informs {@link EntryReader} where an entry begins and ends.
@@ -1155,7 +1155,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
             "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
       }
       this.entryStartRegex = entryStartRegex;
-      this.entryStopRegex = entryStopRegex == null ? neverMatches : entryStopRegex;
+      this.entryStopRegex = entryStopRegex == null ? NEVER_MATCHES : entryStopRegex;
       this.twoBlankLines = twoBlankLines;
       this.supportsFences = supportsFences;
     }

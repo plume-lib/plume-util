@@ -21,10 +21,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class DeterministicObject {
 
   /** The number of objects created so far. */
-  private static final AtomicInteger counter = new AtomicInteger(0);
+  private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
   /** The unique ID for this object. */
-  private final int uid = counter.getAndIncrement();
+  private final int uid = COUNTER.getAndIncrement();
 
   /** Create a DeterministicObject. */
   public DeterministicObject() {}

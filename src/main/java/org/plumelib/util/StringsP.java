@@ -41,7 +41,7 @@ public final class StringsP {
   }
 
   /** The system-specific line separator string. */
-  private static final String lineSep = System.lineSeparator();
+  private static final String LINE_SEP = System.lineSeparator();
 
   // //////////////////////////////////////////////////////////////////////
   // Replacement
@@ -150,7 +150,7 @@ public final class StringsP {
     if (o == null) {
       return "null";
     }
-    return o.toString().replace(lineSep, lineSep + prefix);
+    return o.toString().replace(LINE_SEP, LINE_SEP + prefix);
   }
 
   /**
@@ -328,7 +328,7 @@ public final class StringsP {
   @SuppressWarnings("varargs")
   @SideEffectFree
   public static <T extends @MustCallUnknown Object> String joinLines(@Signed T... a) {
-    return join(lineSep, a);
+    return join(LINE_SEP, a);
   }
 
   /**
@@ -369,7 +369,7 @@ public final class StringsP {
   @SideEffectFree
   public static String joinLines(
       @MustCallUnknown Iterable<? extends @Signed @PolyNull @MustCallUnknown Object> v) {
-    return join(lineSep, v);
+    return join(LINE_SEP, v);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -430,11 +430,11 @@ public final class StringsP {
           sb.append("\\f");
           postEsc = i + 1;
         }
-        case '\n' -> { // '\n', not lineSep
+        case '\n' -> { // '\n', not LINE_SEP
           if (postEsc < i) {
             sb.append(orig.substring(postEsc, i));
           }
-          sb.append("\\n"); // not lineSep
+          sb.append("\\n"); // not LINE_SEP
           postEsc = i + 1;
         }
         case '\r' -> {
@@ -506,7 +506,7 @@ public final class StringsP {
       case '\\' -> "'\\\\'";
       case '\b' -> "'\\b'";
       case '\f' -> "'\\f'";
-      case '\n' -> "'\\n'"; // '\n', not lineSep
+      case '\n' -> "'\\n'"; // '\n', not LINE_SEP
       case '\r' -> "'\\r'";
       case '\t' -> "'\\t'";
       default -> "'" + c + "'";
@@ -549,8 +549,8 @@ public final class StringsP {
       return "\\\"";
     } else if (c == '\\') {
       return "\\\\";
-    } else if (c == '\n') { // not lineSep
-      return "\\n"; // not lineSep
+    } else if (c == '\n') { // not LINE_SEP
+      return "\\n"; // not LINE_SEP
     } else if (c == '\r') {
       return "\\r";
     } else if (c == '\t') {
@@ -618,7 +618,7 @@ public final class StringsP {
         }
         case 'n' -> {
           sb.append(orig.substring(postEsc, thisEsc));
-          sb.append('\n'); // not lineSep
+          sb.append('\n'); // not LINE_SEP
           postEsc = thisEsc + 2;
         }
         case 'r' -> {
@@ -982,9 +982,18 @@ public final class StringsP {
   public static final class ObjectComparator implements Comparator<@Nullable Object>, Serializable {
 
     /** The canonical ObjectComparator. */
-    public static final ObjectComparator it = new ObjectComparator();
+    public static final ObjectComparator IT = new ObjectComparator();
 
-    /** Create a new ObjectComparator. Clients should use {@link #it}. */
+    /**
+     * The canonical ObjectComparator.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final ObjectComparator it = IT;
+
+    /** Create a new ObjectComparator. Clients should use {@link #IT}. */
     private ObjectComparator() {}
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
@@ -1091,10 +1100,28 @@ public final class StringsP {
   //
 
   /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
-  public static final @Regex String versionNumberRegex = "\\d+(\\.\\d+)+";
+  public static final @Regex String VERSION_NUMBER_REGEX = "\\d+(\\.\\d+)+";
+
+  /**
+   * Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits.
+   *
+   * @deprecated use {@link #VERSION_NUMBER_REGEX}
+   */
+  @Deprecated(since = "2026-09-15")
+  @SuppressWarnings("PMD.FieldNamingConventions")
+  public static final @Regex String versionNumberRegex = VERSION_NUMBER_REGEX;
 
   /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
-  public static final Pattern versionNumberPattern = Pattern.compile("\\d+(\\.\\d+)+");
+  public static final Pattern VERSION_NUMBER_PATTERN = Pattern.compile("\\d+(\\.\\d+)+");
+
+  /**
+   * Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits.
+   *
+   * @deprecated use {@link #VERSION_NUMBER_PATTERN}
+   */
+  @Deprecated(since = "2026-09-15")
+  @SuppressWarnings("PMD.FieldNamingConventions")
+  public static final Pattern versionNumberPattern = VERSION_NUMBER_PATTERN;
 
   /**
    * Returns true if the given text is a version number. It has the form N.N or N.N.N, etc., where
@@ -1105,7 +1132,7 @@ public final class StringsP {
    */
   // "protected" to permit tests to access it.
   public static boolean isVersionNumber(String text) {
-    return versionNumberPattern.matcher(text).matches();
+    return VERSION_NUMBER_PATTERN.matcher(text).matches();
   }
 
   /**
@@ -1352,65 +1379,65 @@ public final class StringsP {
   //
 
   /** Exceptions to the usual English noun pluralization rules. */
-  private static final Map<String, String> nPluralExceptions = new HashMap<>();
+  private static final Map<String, String> N_PLURAL_EXCEPTIONS = new HashMap<>();
 
   static {
     // No change
-    nPluralExceptions.put("bison", "bison");
-    nPluralExceptions.put("buffalo", "buffalo");
-    nPluralExceptions.put("carp", "carp");
-    nPluralExceptions.put("chassis", "chassis");
-    nPluralExceptions.put("cod", "cod");
-    nPluralExceptions.put("deer", "deer");
-    nPluralExceptions.put("fish", "fish");
-    nPluralExceptions.put("kakapo", "kakapo");
-    nPluralExceptions.put("neat", "neat");
-    nPluralExceptions.put("pike", "pike");
-    nPluralExceptions.put("salmon", "salmon");
-    nPluralExceptions.put("series", "series");
-    nPluralExceptions.put("sheep", "sheep");
-    nPluralExceptions.put("shrimp", "shrimp");
-    nPluralExceptions.put("species", "species");
-    nPluralExceptions.put("squid", "squid");
-    nPluralExceptions.put("trout", "trout");
+    N_PLURAL_EXCEPTIONS.put("bison", "bison");
+    N_PLURAL_EXCEPTIONS.put("buffalo", "buffalo");
+    N_PLURAL_EXCEPTIONS.put("carp", "carp");
+    N_PLURAL_EXCEPTIONS.put("chassis", "chassis");
+    N_PLURAL_EXCEPTIONS.put("cod", "cod");
+    N_PLURAL_EXCEPTIONS.put("deer", "deer");
+    N_PLURAL_EXCEPTIONS.put("fish", "fish");
+    N_PLURAL_EXCEPTIONS.put("kakapo", "kakapo");
+    N_PLURAL_EXCEPTIONS.put("neat", "neat");
+    N_PLURAL_EXCEPTIONS.put("pike", "pike");
+    N_PLURAL_EXCEPTIONS.put("salmon", "salmon");
+    N_PLURAL_EXCEPTIONS.put("series", "series");
+    N_PLURAL_EXCEPTIONS.put("sheep", "sheep");
+    N_PLURAL_EXCEPTIONS.put("shrimp", "shrimp");
+    N_PLURAL_EXCEPTIONS.put("species", "species");
+    N_PLURAL_EXCEPTIONS.put("squid", "squid");
+    N_PLURAL_EXCEPTIONS.put("trout", "trout");
 
     // Native American tribe names
 
-    nPluralExceptions.put("Cherokee", "Cherokee");
-    nPluralExceptions.put("Cree", "Cree");
-    nPluralExceptions.put("Comanche", "Comanche");
-    nPluralExceptions.put("Delaware", "Delaware");
-    nPluralExceptions.put("Hopi", "Hopi");
-    nPluralExceptions.put("Iroquois", "Iroquois");
-    nPluralExceptions.put("Kiowa", "Kiowa");
-    nPluralExceptions.put("Navajo", "Navajo");
-    nPluralExceptions.put("Ojibwa", "Ojibwa");
-    nPluralExceptions.put("Sioux", "Sioux");
-    nPluralExceptions.put("Zuni", "Zuni");
+    N_PLURAL_EXCEPTIONS.put("Cherokee", "Cherokee");
+    N_PLURAL_EXCEPTIONS.put("Cree", "Cree");
+    N_PLURAL_EXCEPTIONS.put("Comanche", "Comanche");
+    N_PLURAL_EXCEPTIONS.put("Delaware", "Delaware");
+    N_PLURAL_EXCEPTIONS.put("Hopi", "Hopi");
+    N_PLURAL_EXCEPTIONS.put("Iroquois", "Iroquois");
+    N_PLURAL_EXCEPTIONS.put("Kiowa", "Kiowa");
+    N_PLURAL_EXCEPTIONS.put("Navajo", "Navajo");
+    N_PLURAL_EXCEPTIONS.put("Ojibwa", "Ojibwa");
+    N_PLURAL_EXCEPTIONS.put("Sioux", "Sioux");
+    N_PLURAL_EXCEPTIONS.put("Zuni", "Zuni");
 
     // Ending in "y"
-    nPluralExceptions.put("lay-by", "lay-bys");
-    nPluralExceptions.put("stand-by", "stand-bys");
+    N_PLURAL_EXCEPTIONS.put("lay-by", "lay-bys");
+    N_PLURAL_EXCEPTIONS.put("stand-by", "stand-bys");
 
     // Ending in "i"
-    nPluralExceptions.put("alkali", "alkalies");
+    N_PLURAL_EXCEPTIONS.put("alkali", "alkalies");
 
     // Plural ending in "en"
-    nPluralExceptions.put("ox", "oxen");
-    nPluralExceptions.put("child", "children");
+    N_PLURAL_EXCEPTIONS.put("ox", "oxen");
+    N_PLURAL_EXCEPTIONS.put("child", "children");
 
     // Apophonic plurals
-    nPluralExceptions.put("foot", "feet");
-    nPluralExceptions.put("goose", "geese");
-    nPluralExceptions.put("louse", "lice");
-    nPluralExceptions.put("dormouse", "dormice");
-    nPluralExceptions.put("man", "men");
-    nPluralExceptions.put("mouse", "mice");
-    nPluralExceptions.put("tooth", "teeth");
-    nPluralExceptions.put("woman", "women");
+    N_PLURAL_EXCEPTIONS.put("foot", "feet");
+    N_PLURAL_EXCEPTIONS.put("goose", "geese");
+    N_PLURAL_EXCEPTIONS.put("louse", "lice");
+    N_PLURAL_EXCEPTIONS.put("dormouse", "dormice");
+    N_PLURAL_EXCEPTIONS.put("man", "men");
+    N_PLURAL_EXCEPTIONS.put("mouse", "mice");
+    N_PLURAL_EXCEPTIONS.put("tooth", "teeth");
+    N_PLURAL_EXCEPTIONS.put("woman", "women");
 
     // Miscellaneous irregular plurals
-    nPluralExceptions.put("person", "people");
+    N_PLURAL_EXCEPTIONS.put("person", "people");
   }
 
   /**
@@ -1432,13 +1459,13 @@ public final class StringsP {
     if (n == 1) {
       return n + " " + noun;
     }
-    String irregular = nPluralExceptions.get(noun);
+    String irregular = N_PLURAL_EXCEPTIONS.get(noun);
     if (irregular != null) {
       return n + " " + irregular;
     }
 
     // TODO: handle more from https://en.wikipedia.org/wiki/English_plurals ,
-    // and organize `nPluralExceptions` and the code the same as it.
+    // and organize `N_PLURAL_EXCEPTIONS` and the code the same as it.
 
     char lastLetter = noun.charAt(noun.length() - 1);
     char penultimateLetter = (noun.length() == 1) ? '\u0000' : noun.charAt(noun.length() - 2);
@@ -1516,11 +1543,11 @@ public final class StringsP {
   }
 
   /** Exceptions to the usual English verb pluralization rules. */
-  private static final Map<String, String> vPluralExceptions = new HashMap<>();
+  private static final Map<String, String> V_PLURAL_EXCEPTIONS = new HashMap<>();
 
   static {
-    vPluralExceptions.put("is", "are");
-    vPluralExceptions.put("was", "were");
+    V_PLURAL_EXCEPTIONS.put("is", "are");
+    V_PLURAL_EXCEPTIONS.put("was", "were");
   }
 
   /**
@@ -1539,7 +1566,7 @@ public final class StringsP {
     if (n == 1) {
       return verb;
     }
-    return vPluralExceptions.getOrDefault(verb, verb);
+    return V_PLURAL_EXCEPTIONS.getOrDefault(verb, verb);
   }
 
   /**

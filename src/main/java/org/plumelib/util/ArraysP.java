@@ -1929,7 +1929,7 @@ public final class ArraysP {
      *
      * @return a verbose representation of this, for debugging
      */
-    @SuppressWarnings("UnusedMethod")
+    @SuppressWarnings({"UnusedMethod", "PMD.UnusedPrivateMethod"})
     private String toStringDebug() {
       String theArrayString;
       if (theArray == null) {
@@ -3167,9 +3167,18 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical IntArrayComparatorLexical. */
-    public static final IntArrayComparatorLexical it = new IntArrayComparatorLexical();
+    public static final IntArrayComparatorLexical IT = new IntArrayComparatorLexical();
 
-    /** Create a new IntArrayComparatorLexical. External clients should use {@link #it}. */
+    /**
+     * The canonical IntArrayComparatorLexical.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final IntArrayComparatorLexical it = IT;
+
+    /** Create a new IntArrayComparatorLexical. External clients should use {@link #IT}. */
     private IntArrayComparatorLexical() {}
 
     /**
@@ -3209,9 +3218,18 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical LongArrayComparatorLexical. */
-    public static final LongArrayComparatorLexical it = new LongArrayComparatorLexical();
+    public static final LongArrayComparatorLexical IT = new LongArrayComparatorLexical();
 
-    /** Create a new LongArrayComparatorLexical. External clients should use {@link #it}. */
+    /**
+     * The canonical LongArrayComparatorLexical.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final LongArrayComparatorLexical it = IT;
+
+    /** Create a new LongArrayComparatorLexical. External clients should use {@link #IT}. */
     private LongArrayComparatorLexical() {}
 
     /**
@@ -3252,9 +3270,18 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical DoubleArrayComparatorLexical. */
-    public static final DoubleArrayComparatorLexical it = new DoubleArrayComparatorLexical();
+    public static final DoubleArrayComparatorLexical IT = new DoubleArrayComparatorLexical();
 
-    /** Create a new DoubleArrayComparatorLexical. External clients should use {@link #it}. */
+    /**
+     * The canonical DoubleArrayComparatorLexical.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final DoubleArrayComparatorLexical it = IT;
+
+    /** Create a new DoubleArrayComparatorLexical. External clients should use {@link #IT}. */
     private DoubleArrayComparatorLexical() {}
 
     /**
@@ -3296,12 +3323,21 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical StringArrayComparatorLexical. */
-    public static final StringArrayComparatorLexical it = new StringArrayComparatorLexical();
+    public static final StringArrayComparatorLexical IT = new StringArrayComparatorLexical();
+
+    /**
+     * The canonical StringArrayComparatorLexical.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final StringArrayComparatorLexical it = IT;
 
     /**
      * Create a new StringArrayComparatorLexical.
      *
-     * <p>External clients should use {@link #it}.
+     * <p>External clients should use {@link #IT}.
      */
     private StringArrayComparatorLexical() {}
 
@@ -3422,12 +3458,21 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical ObjectArrayComparatorLexical. */
-    public static final ObjectArrayComparatorLexical it = new ObjectArrayComparatorLexical();
+    public static final ObjectArrayComparatorLexical IT = new ObjectArrayComparatorLexical();
+
+    /**
+     * The canonical ObjectArrayComparatorLexical.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final ObjectArrayComparatorLexical it = IT;
 
     /**
      * Create a new ObjectArrayComparatorLexical.
      *
-     * <p>External clients should use {@link #it}.
+     * <p>External clients should use {@link #IT}.
      */
     private ObjectArrayComparatorLexical() {}
 
@@ -3451,7 +3496,7 @@ public final class ArraysP {
       }
       int len = Math.min(a1.length, a2.length);
       for (int i = 0; i < len; i++) {
-        int tmp = objectComparator.compare(a1[i], a2[i]);
+        int tmp = OBJECT_COMPARATOR.compare(a1[i], a2[i]);
         if (tmp != 0) {
           return tmp;
         }
@@ -3474,12 +3519,21 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical IntArrayComparatorLengthFirst. */
-    public static final IntArrayComparatorLengthFirst it = new IntArrayComparatorLengthFirst();
+    public static final IntArrayComparatorLengthFirst IT = new IntArrayComparatorLengthFirst();
+
+    /**
+     * The canonical IntArrayComparatorLengthFirst.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final IntArrayComparatorLengthFirst it = IT;
 
     /**
      * Create a new IntArrayComparatorLengthFirst.
      *
-     * <p>External clients should use {@link #it}.
+     * <p>External clients should use {@link #IT}.
      */
     private IntArrayComparatorLengthFirst() {}
 
@@ -3523,12 +3577,21 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical LongArrayComparatorLengthFirst. */
-    public static final LongArrayComparatorLengthFirst it = new LongArrayComparatorLengthFirst();
+    public static final LongArrayComparatorLengthFirst IT = new LongArrayComparatorLengthFirst();
+
+    /**
+     * The canonical LongArrayComparatorLengthFirst.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final LongArrayComparatorLengthFirst it = IT;
 
     /**
      * Create a new LongArrayComparatorLengthFirst.
      *
-     * <p>External clients should use {@link #it}.
+     * <p>External clients should use {@link #IT}.
      */
     private LongArrayComparatorLengthFirst() {}
 
@@ -3622,7 +3685,7 @@ public final class ArraysP {
   }
 
   /** Sorts arbitrary objects; used to determine equal. */
-  private static final StringsP.ObjectComparator objectComparator = StringsP.ObjectComparator.it;
+  private static final StringsP.ObjectComparator OBJECT_COMPARATOR = StringsP.ObjectComparator.IT;
 
   /**
    * Compare two arrays first by length (a shorter array is considered less), and if of equal length
@@ -3642,13 +3705,22 @@ public final class ArraysP {
     private static final long serialVersionUID = 20150812L;
 
     /** The canonical ObjectArrayComparatorLengthFirst. */
-    public static final ObjectArrayComparatorLengthFirst it =
+    public static final ObjectArrayComparatorLengthFirst IT =
         new ObjectArrayComparatorLengthFirst();
+
+    /**
+     * The canonical ObjectArrayComparatorLengthFirst.
+     *
+     * @deprecated use {@link #IT}
+     */
+    @Deprecated(since = "2026-09-15")
+    @SuppressWarnings("PMD.FieldNamingConventions")
+    public static final ObjectArrayComparatorLengthFirst it = IT;
 
     /**
      * Create a new ObjectArrayComparatorLengthFirst.
      *
-     * <p>External clients should use {@link #it}.
+     * <p>External clients should use {@link #IT}.
      */
     private ObjectArrayComparatorLengthFirst() {}
 
@@ -3675,7 +3747,7 @@ public final class ArraysP {
         return a1.length - a2.length;
       }
       for (int i = 0; i < a1.length; i++) {
-        int tmp = objectComparator.compare(a1[i], a2[i]);
+        int tmp = OBJECT_COMPARATOR.compare(a1[i], a2[i]);
         if (tmp != 0) {
           return tmp;
         }

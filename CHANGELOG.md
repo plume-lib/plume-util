@@ -1,8 +1,10 @@
 # Plume-Util change log
 
-## 9.9.9 (2026-08-??)
+## 2.0.1 (2026-08-??)
 
 - Requires Java 21 to run.
+- Renamed final static fields to SCREAMING_CASE, such as `it`.
+  The old names remain but are deprecated.
 
 ## 2.0.0 (2026-08-05)
 

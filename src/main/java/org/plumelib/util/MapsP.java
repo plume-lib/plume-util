@@ -29,7 +29,7 @@ public final class MapsP {
   }
 
   /** The system-specific line separator string. */
-  private static final String lineSep = System.lineSeparator();
+  private static final String LINE_SEP = System.lineSeparator();
 
   // In Python, inlining this gave a 10x speed improvement.
   // Will the same be true for Java?
@@ -308,7 +308,7 @@ public final class MapsP {
         sb.append(Objects.toString(entry.getKey()));
         sb.append(" => ");
         sb.append(Objects.toString(entry.getValue()));
-        sb.append(lineSep);
+        sb.append(LINE_SEP);
       }
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -349,7 +349,7 @@ public final class MapsP {
         sb.append(linePrefix);
         sb.append(innerHeader);
         sb.append(Objects.toString(entry.getKey()));
-        sb.append(lineSep);
+        sb.append(LINE_SEP);
         mapToStringMultiLine(sb, entry.getValue(), linePrefix + "  ");
       }
     } catch (IOException e) {
@@ -377,7 +377,7 @@ public final class MapsP {
   @SideEffectFree
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringMultiLine(Map<K, V> m) {
-    StringJoiner result = new StringJoiner(lineSep);
+    StringJoiner result = new StringJoiner(LINE_SEP);
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(e.getKey() + " => " + e.getValue());
     }
@@ -403,7 +403,7 @@ public final class MapsP {
   @SideEffectFree
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringMultiLine(Map<K, V> m, String linePrefix) {
-    StringJoiner result = new StringJoiner(lineSep);
+    StringJoiner result = new StringJoiner(LINE_SEP);
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(linePrefix + e.getKey() + " => " + e.getValue());
     }
@@ -449,7 +449,7 @@ public final class MapsP {
   @SideEffectFree
   public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
-    StringJoiner result = new StringJoiner(lineSep);
+    StringJoiner result = new StringJoiner(LINE_SEP);
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(
           linePrefix

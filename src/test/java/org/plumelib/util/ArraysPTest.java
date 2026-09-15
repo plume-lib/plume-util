@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings({
   "PMD.PrimitiveWrapperInstantiation",
   "PMD.UnnecessaryBoxing",
+  "PMD.CommentRequired", // This is a test class.
 })
 final class ArraysPTest {
 
@@ -817,13 +818,14 @@ final class ArraysPTest {
   //
 
   @Test
+  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_IntArrayComparator() {
 
     // public static class IntArrayComparatorLexical implements Comparator
     // public static class IntArrayComparatorLengthFirst implements Comparator
 
-    Comparator<int[]> iacl = ArraysP.IntArrayComparatorLexical.it;
-    Comparator<int[]> iaclf = ArraysP.IntArrayComparatorLengthFirst.it;
+    Comparator<int[]> iacl = ArraysP.IntArrayComparatorLexical.IT;
+    Comparator<int[]> iaclf = ArraysP.IntArrayComparatorLengthFirst.IT;
 
     int[] a0 = {};
     int[] a1 = {};
@@ -887,13 +889,14 @@ final class ArraysPTest {
   }
 
   @Test
+  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_LongArrayComparator() {
 
     // public static class LongArrayComparatorLexical implements Comparator
     // public static class LongArrayComparatorLengthFirst implements Comparator
 
-    Comparator<long[]> lacl = ArraysP.LongArrayComparatorLexical.it;
-    Comparator<long[]> laclf = ArraysP.LongArrayComparatorLengthFirst.it;
+    Comparator<long[]> lacl = ArraysP.LongArrayComparatorLexical.IT;
+    Comparator<long[]> laclf = ArraysP.LongArrayComparatorLengthFirst.IT;
     long[] a0 = {};
     long[] a1 = {};
     long[] a2 = {0, 1, 2, 3};
@@ -956,11 +959,12 @@ final class ArraysPTest {
   }
 
   @Test
+  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_DoubleArrayComparatorLexical() {
 
     // public static class DoubleArrayComparatorLexical implements Comparator
 
-    Comparator<double[]> dacl = ArraysP.DoubleArrayComparatorLexical.it;
+    Comparator<double[]> dacl = ArraysP.DoubleArrayComparatorLexical.IT;
     double[] a0 = {};
     double[] a1 = {};
     double[] a2 = {0, 1, 2, 3};
@@ -1008,6 +1012,7 @@ final class ArraysPTest {
   }
 
   @Test
+  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_ComparableArrayComparator() {
 
     // public static class ObjectArrayComparatorLexical implements Comparator

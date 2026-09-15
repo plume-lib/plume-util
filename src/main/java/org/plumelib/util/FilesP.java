@@ -54,7 +54,7 @@ public final class FilesP {
   }
 
   /** The system-specific line separator string. */
-  private static final String lineSep = System.lineSeparator();
+  private static final String LINE_SEP = System.lineSeparator();
 
   /**
    * An array of options for appending to a file, creating the file if it does not exist. CREATE is
@@ -602,19 +602,19 @@ public final class FilesP {
           // This can happen only if the last line is not terminated.
         }
       }
-      if ((dos > mac && dos > unix) || (lineSep.equals("\r\n") && dos >= unix && dos >= mac)) {
+      if ((dos > mac && dos > unix) || (LINE_SEP.equals("\r\n") && dos >= unix && dos >= mac)) {
         return "\r\n";
       }
-      if ((mac > dos && mac > unix) || (lineSep.equals("\r") && mac >= dos && mac >= unix)) {
+      if ((mac > dos && mac > unix) || (LINE_SEP.equals("\r") && mac >= dos && mac >= unix)) {
         return "\r";
       }
-      if ((unix > dos && unix > mac) || (lineSep.equals("\n") && unix >= dos && unix >= mac)) {
+      if ((unix > dos && unix > mac) || (LINE_SEP.equals("\n") && unix >= dos && unix >= mac)) {
         return "\n";
       }
       // The two non-preferred line endings are tied and have more votes than
       // the preferred line ending.  Give up and return the line separator
       // for the system on which Java is currently running.
-      return lineSep;
+      return LINE_SEP;
     }
   }
 
@@ -910,7 +910,7 @@ public final class FilesP {
   }
 
   /** The user's home directory, or null if the system property is not set. */
-  private static final @Nullable String userHome = System.getProperty("user.home");
+  private static final @Nullable String USER_HOME = System.getProperty("user.home");
 
   /**
    * Does tilde expansion on a file name (to the user's home directory).
@@ -940,10 +940,10 @@ public final class FilesP {
   @SideEffectFree
   public static String expandFilename(String name) {
     if (name.contains("~")) {
-      if (userHome == null) {
+      if (USER_HOME == null) {
         throw new Error("Cannot expand filename: system property 'user.home' is not set");
       }
-      return name.replace("~", userHome);
+      return name.replace("~", USER_HOME);
     } else {
       return name;
     }

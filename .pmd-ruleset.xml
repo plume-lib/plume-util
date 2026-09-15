@@ -19,6 +19,11 @@
       <exclude name="SystemPrintln"/>
       <exclude name="UnitTestAssertionsShouldIncludeMessage"/>
     </rule>
+    <rule ref="category/java/bestpractices.xml/LooseCoupling">
+        <properties>
+            <property name="allowedTypes" value="org.plumelib.util.ArraysP.Partitioning" />
+        </properties>
+    </rule>
 
     <!-- 2. Code Style: Enforces specific coding styles and conventions -->
     <rule ref="category/java/codestyle.xml">
@@ -39,9 +44,19 @@
             <property name="allowCommentedBlocks" value="true" />
         </properties>
     </rule>
+    <rule ref="category/java/codestyle.xml/MethodNamingConventions">
+        <properties>
+            <property name="methodPattern" value="[a-z][a-zA-Z0-9]*" />
+            <property name="staticPattern" value="[a-z][a-zA-Z0-9]*" />
+            <property name="nativePattern" value="[a-z][a-zA-Z0-9]*" />
+            <property name="junit3TestPattern" value="test[A-Z0-9][a-zA-Z0-9]*" />
+            <property name="junit4TestPattern" value="(test_|[a-z])[a-zA-Z0-9]*" />
+            <property name="junitJupiterTestPattern" value="(test_|[a-z])[a-zA-Z0-9]*" />
+        </properties>
+    </rule>
     <rule ref="category/java/codestyle.xml/TypeParameterNamingConventions">
         <properties>
-            <property name="typeParameterNamePattern" value="[A-Z][0-9]?" />
+            <property name="typeParameterNamePattern" value="([A-Z][0-9]?|FROM|TO)" />
         </properties>
     </rule>
 
@@ -59,6 +74,7 @@
       <exclude name="LoosePackageCoupling"/> <!-- requires configuration -->
       <exclude name="NPathComplexity"/>
       <exclude name="NcssCount"/>
+      <exclude name="PublicMemberInNonPublicType"/> <!-- permits easier conversion to a public type -->
       <exclude name="SimplifyBooleanReturns"/> <!-- too-clever one-liners can be hard to understand -->
       <exclude name="TooManyFields"/>
       <exclude name="TooManyMethods"/>
