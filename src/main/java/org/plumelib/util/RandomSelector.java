@@ -76,7 +76,7 @@ public class RandomSelector<T> {
   private Random generator;
 
   /** The values chosen. */
-  private ArrayList<T> values = new ArrayList<>();
+  private final ArrayList<T> values = new ArrayList<>();
 
   /**
    * Creates a new RandomSelector.

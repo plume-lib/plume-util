@@ -31,7 +31,7 @@ public class UniqueIdMap<E> {
   private final AtomicLong nextUid = new AtomicLong(0);
 
   /** A mapping from objects to their IDs. */
-  private WeakIdentityHashMap<E, Long> map = new WeakIdentityHashMap<>();
+  private final WeakIdentityHashMap<E, Long> map = new WeakIdentityHashMap<>();
 
   /**
    * Returns the unique ID for the given object. If the object's ID has not been previously

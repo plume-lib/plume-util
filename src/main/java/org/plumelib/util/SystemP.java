@@ -161,18 +161,18 @@ public final class SystemP {
   }
 
   /** A triple of (timestamp, collection time, subsequent timestamp). */
-  private static class GcHistoryItem {
+  private static final class GcHistoryItem {
     /** When the collection happened. An epoch second. */
-    long timestamp;
+    private final long timestamp;
 
     /** The cumulative collection time in milliseconds. */
-    long collectionTime;
+    private final long collectionTime;
 
     /**
      * When the subsequent collection happened. It is 0 until after the subsequent collection
      * occurs. The purpose of this field is to avoid the need for a {@code peek2()} method on deque.
      */
-    long subsequentTimestamp = 0;
+    private long subsequentTimestamp = 0;
 
     /**
      * Creates a new GcHistoryItem.
@@ -180,7 +180,7 @@ public final class SystemP {
      * @param timestamp when the collection happened; an epoch second
      * @param collectionTime the collection time in milliseconds
      */
-    GcHistoryItem(long timestamp, long collectionTime) {
+    private GcHistoryItem(long timestamp, long collectionTime) {
       this.timestamp = timestamp;
       this.collectionTime = collectionTime;
     }

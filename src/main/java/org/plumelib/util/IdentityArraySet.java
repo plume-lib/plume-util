@@ -52,7 +52,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * The number of times this set's size has been modified by adding or removing an element. This
    * field is used to make view iterators fail-fast.
    */
-  transient int sizeModificationCount = 0;
+  private transient int sizeModificationCount = 0;
 
   // Constructors
 
@@ -70,6 +70,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   })
   @SideEffectFree
   public IdentityArraySet(int initialCapacity) {
+    super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
     }
@@ -100,6 +101,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   })
   @SideEffectFree
   private IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
+    super();
     this.values = values;
     this.size = size;
   }
@@ -297,19 +299,19 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   /** An iterator over the IdentityArraySet. */
-  private class ArraySetIterator implements Iterator<E> {
+  private final class ArraySetIterator implements Iterator<E> {
     /** The first unread index; the index of the next value to return. */
-    @NonNegative int index;
+    private @NonNegative int index;
 
     /** True if remove() has been called since the last call to next(). */
-    boolean removed;
+    private boolean removed;
 
     /** The modification count when the iterator is created, for fail-fast. */
-    int initialSizeModificationCount;
+    private int initialSizeModificationCount;
 
     /** Creates a new ArraySetIterator. */
     @SideEffectFree
-    ArraySetIterator() {
+    private ArraySetIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
       initialSizeModificationCount = sizeModificationCount;
@@ -322,12 +324,12 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
      */
     @Pure
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
       return index < size();
     }
 
     @Override
-    public final E next() {
+    public E next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -337,7 +339,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
     /** Removes the previously-returned element. */
     @Override
-    public final void remove() {
+    public void remove() {
       if (removed) {
         throw new IllegalStateException(
             "Called remove() on ArraySetIterator without calling next() first.");
@@ -403,7 +405,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return the internal representation, printed
    */
   @SideEffectFree
-  /* package-private */ String repr() {
+  protected String repr() {
     return String.format(
         "size=%d capacity=%s %s",
         size, (values == null ? 0 : values.length), Arrays.toString(values));

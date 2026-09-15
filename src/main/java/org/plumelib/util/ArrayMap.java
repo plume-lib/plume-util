@@ -95,7 +95,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * (changing the value associated with a key does not count as a change). This field is used to
    * make view iterators fail-fast.
    */
-  transient int sizeModificationCount = 0;
+  private transient int sizeModificationCount = 0;
 
   // Constructors
 
@@ -484,7 +484,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // Views
 
   /** A view of the keys. */
-  @MonotonicNonNull Set<@KeyFor("this") K> keySet = null;
+  private @MonotonicNonNull Set<@KeyFor("this") K> keySet = null;
 
   // Behavior is undefined if the map is changed while the sets are being iterated through, so these
   // implementations can assume there are no concurrent side effects.
@@ -499,10 +499,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Represents a view of the keys. */
-  final class KeySet extends AbstractSet<@KeyFor("this") K> {
+  private final class KeySet extends AbstractSet<@KeyFor("this") K> {
 
     /** Creates a new KeySet. */
-    public KeySet() {}
+    public KeySet() {
+      super();
+    }
 
     @Pure
     @Override
@@ -583,7 +585,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** The view of the values. */
-  @MonotonicNonNull Collection<V> valuesCollection = null;
+  private @MonotonicNonNull Collection<V> valuesCollection = null;
 
   @Pure
   @SuppressWarnings("allcheckers:purity")
@@ -596,7 +598,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Represents a view of the values. */
-  final class Values extends AbstractCollection<V> {
+  private final class Values extends AbstractCollection<V> {
 
     /** Creates a new Values. */
     public Values() {
@@ -676,7 +678,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** The view of the entries. */
-  @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
+  private @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
 
   @SuppressWarnings("allcheckers:purity")
   @Pure
@@ -689,10 +691,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Represents a view of the entries. */
-  final class EntrySet extends AbstractSet<Map.Entry<@KeyFor("this") K, V>> {
+  private final class EntrySet extends AbstractSet<Map.Entry<@KeyFor("this") K, V>> {
 
     /** Creates a new EntrySet. */
-    public EntrySet() {}
+    public EntrySet() {
+      super();
+    }
 
     @Pure
     @Override
@@ -762,19 +766,19 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SuppressWarnings(
       "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
   )
-  abstract class ArrayMapIterator<T> implements Iterator<T> {
+  private abstract class ArrayMapIterator<T> implements Iterator<T> {
     /** The first unread index; the index of the next value to return. */
-    @NonNegative int index;
+    protected @NonNegative int index;
 
     /** True if remove() has been called since the last call to next(). */
-    boolean removed;
+    protected boolean removed;
 
     /** The modification count when the iterator is created, for fail-fast. */
-    int initialSizeModificationCount;
+    private int initialSizeModificationCount;
 
     /** Creates a new ArrayMapIterator. */
     @SideEffectFree
-    ArrayMapIterator() {
+    private ArrayMapIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
       initialSizeModificationCount = sizeModificationCount;
@@ -815,10 +819,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** An iterator over the keys. */
-  final class KeyIterator extends ArrayMapIterator<@KeyFor("this") K> {
+  private final class KeyIterator extends ArrayMapIterator<@KeyFor("this") K> {
     /** Creates a new KeyIterator. */
     @SideEffectFree
-    KeyIterator() {}
+    private KeyIterator() {
+      super();
+    }
 
     @Override
     public @KeyFor("ArrayMap.this") K next() {
@@ -831,10 +837,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** An iterator over the values. */
-  final class ValueIterator extends ArrayMapIterator<V> {
+  private final class ValueIterator extends ArrayMapIterator<V> {
     /** Creates a new ValueIterator. */
     @SideEffectFree
-    ValueIterator() {}
+    private ValueIterator() {
+      super();
+    }
 
     @Override
     public V next() {
@@ -847,10 +855,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** An iterator over the entries. */
-  final class EntryIterator extends ArrayMapIterator<Map.Entry<K, V>> {
+  private final class EntryIterator extends ArrayMapIterator<Map.Entry<K, V>> {
     /** Creates a new EntryIterator. */
     @SideEffectFree
-    EntryIterator() {}
+    private EntryIterator() {
+      super();
+    }
 
     @Override
     public Map.Entry<K, V> next() {
@@ -877,9 +887,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // iteration over the entry set, and only if the backing map has not been modified except through
   // calling {@code setValue} on the map entry.
   /** An entrySet() entry. Tracks the containing list and the index. */
-  final class Entry implements Map.Entry<K, V> {
+  private final class Entry implements Map.Entry<K, V> {
     /** The index. */
-    @NonNegative int index;
+    private final @NonNegative int index;
 
     /**
      * Creates a new map entry.
@@ -1206,7 +1216,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @return the internal representation, printed
    */
   @SideEffectFree
-  /* package-private */ String repr() {
+  protected String repr() {
     return String.format(
         "size=%d capacity=%d %s %s",
         size, (keys == null ? 0 : keys.length), Arrays.toString(keys), Arrays.toString(values));

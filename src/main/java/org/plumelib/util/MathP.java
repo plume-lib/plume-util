@@ -1400,28 +1400,28 @@ public final class MathP {
    * is set, then the bracketing endpoints are also returned; otherwise, all returned values are
    * between the minimum and maximum of the original values.
    */
-  static final class MissingNumbersIteratorInt implements Iterator<Integer> {
+  /*package*/ static final class MissingNumbersIteratorInt implements Iterator<Integer> {
     // Exactly one of nums and numsItor is non-null.
     /** The numbers not to include in the iterator. */
-    int @MonotonicNonNull @MinLen(1) [] nums;
+    private int @MonotonicNonNull @MinLen(1) [] nums;
 
     /** The numbers not to include in the iterator. */
-    @MonotonicNonNull Iterator<Integer> numsItor;
+    private @MonotonicNonNull Iterator<Integer> numsItor;
 
     /** The current element of the numbers not to include in the iterator. */
-    int currentNonmissing;
+    private int currentNonmissing;
 
     /** The next element to be returned by the iterator. */
-    int currentMissing;
+    private int currentMissing;
 
     /** Used only if nums != null, in which case it is an index into nums. */
-    @IndexFor("nums") int currentIndex;
+    private @IndexFor("nums") int currentIndex;
 
     /**
      * If true, include the value just before the minimum excluded element and the value just after
      * the maximum excluded element.
      */
-    boolean addEnds;
+    private final boolean addEnds;
 
     /**
      * An iterator over all the numbers <b>not</b> in the argument array, but within its range.
@@ -1429,7 +1429,7 @@ public final class MathP {
      * @param nums a non-empty array
      * @param addEnds if true, include the bracketing endpoints
      */
-    MissingNumbersIteratorInt(int @MinLen(1) [] nums, boolean addEnds) {
+    private MissingNumbersIteratorInt(int @MinLen(1) [] nums, boolean addEnds) {
       this.addEnds = addEnds;
       { // avoid modifying parameter
         int[] numsCopy = new int[nums.length];
@@ -1453,7 +1453,7 @@ public final class MathP {
      * @param numsItor a non-empty iterator; it must return integers in sorted order
      * @param addEnds if true, include the bracketing endpoints
      */
-    MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
+    /*package*/ MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
       this.addEnds = addEnds;
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
@@ -1739,28 +1739,28 @@ public final class MathP {
    * is set, then the bracketing endpoints are also returned; otherwise, all returned values are
    * between the minimum and maximum of the original values.
    */
-  static final class MissingNumbersIteratorLong implements Iterator<Long> {
+  private static final class MissingNumbersIteratorLong implements Iterator<Long> {
     // Exactly one of nums and numsItor is non-null.
     /** The numbers not to include in the iterator. */
-    long @MonotonicNonNull @MinLen(1) [] nums;
+    private long @MonotonicNonNull @MinLen(1) [] nums;
 
     /** The numbers not to include in the iterator. */
-    @MonotonicNonNull Iterator<Long> numsItor;
+    private @MonotonicNonNull Iterator<Long> numsItor;
 
     /** The current element of the numbers not to include in the iterator. */
-    long currentNonmissing;
+    private long currentNonmissing;
 
     /** The next element to be returned by the iterator. */
-    long currentMissing;
+    private long currentMissing;
 
     /** Used only if nums != null, in which case it is an index into nums. */
-    @IndexFor("nums") int currentIndex;
+    private @IndexFor("nums") int currentIndex;
 
     /**
      * If true, include the value just before the minimum excluded element and the value just after
      * the maximum excluded element.
      */
-    boolean addEnds;
+    private final boolean addEnds;
 
     /**
      * An iterator over all the numbers <b>not</b> in its original argument array, but within its
@@ -1769,7 +1769,7 @@ public final class MathP {
      * @param nums a non-empty array
      * @param addEnds if true, include the bracketing endpoints
      */
-    MissingNumbersIteratorLong(long @MinLen(1) [] nums, boolean addEnds) {
+    private MissingNumbersIteratorLong(long @MinLen(1) [] nums, boolean addEnds) {
       this.addEnds = addEnds;
       { // avoid modifying parameter
         long[] numsCopy = new long[nums.length];
@@ -1793,7 +1793,7 @@ public final class MathP {
      * @param numsItor a non-empty array; must return longs in sorted order
      * @param addEnds if true, include the bracketing endpoints
      */
-    MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
+    private MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
       this.addEnds = addEnds;
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");

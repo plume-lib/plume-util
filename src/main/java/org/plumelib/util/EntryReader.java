@@ -116,7 +116,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   private final ArrayDeque<@MustCall({}) FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
-  @Nullable String pushbackLine = null;
+  private @Nullable String pushbackLine = null;
 
   /** Platform-specific line separator. */
   private static final String lineSep = System.lineSeparator();
@@ -917,7 +917,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   private static class FlnReader extends LineNumberReader {
     /** The file being read. */
-    public String filename;
+    public final String filename;
 
     /**
      * Create a FlnReader.
@@ -984,7 +984,9 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     public static final DummyReader it = new DummyReader();
 
     /** Create a new DummyReader. */
-    private DummyReader() {}
+    private DummyReader() {
+      super();
+    }
 
     @Override
     public void close(@GuardSatisfied DummyReader this) {

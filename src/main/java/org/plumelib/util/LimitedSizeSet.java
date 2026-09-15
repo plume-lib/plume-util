@@ -27,7 +27,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
  */
 public class LimitedSizeSet<T extends @Nullable Object> implements Serializable, Cloneable {
   /** Unique identifier for serialization. If you add or remove fields, change this number. */
-  static final long serialVersionUID = 20031021L;
+  private static final long serialVersionUID = 20031021L;
 
   // The size is not separately stored, because that would take extra space.
   /**

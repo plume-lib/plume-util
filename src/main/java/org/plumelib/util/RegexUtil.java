@@ -78,6 +78,7 @@ public final class RegexUtil {
      * @param pse the PatternSyntaxException to be wrapped
      */
     public CheckedPatternSyntaxException(PatternSyntaxException pse) {
+      super();
       this.pse = pse;
     }
 

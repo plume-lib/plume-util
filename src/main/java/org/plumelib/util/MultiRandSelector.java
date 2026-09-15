@@ -44,7 +44,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
   private Partitioner<T, T> eq;
 
   /** Maps from partition representatives to the RandomSelector to use on that partition. */
-  private HashMap<T, RandomSelector<T>> map = new HashMap<>();
+  private final HashMap<T, RandomSelector<T>> map = new HashMap<>();
 
   /**
    * Create a MultiRandSelector that chooses {@code numElts} elements from each bucket.

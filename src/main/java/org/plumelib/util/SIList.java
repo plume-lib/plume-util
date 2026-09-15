@@ -38,7 +38,7 @@ import org.checkerframework.common.value.qual.ArrayLen;
 public abstract class SIList<E> implements Iterable<E>, Serializable {
 
   /** Serial version UID. */
-  static final long serialVersionUID = 20250617;
+  private static final long serialVersionUID = 20250617;
 
   // **************** producers ****************
 
@@ -277,7 +277,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    */
   // Can't write this @EnsuresQualifier because the @IndexFor needs an argument of "this".
   // @EnsuresQualifier(expression="#1", qualifier=IndexFor.class)
-  /*package-private*/ final void checkIndex(int index) {
+  protected final void checkIndex(int index) {
     if (index < 0 || index >= size()) {
       throw new IllegalArgumentException(
           String.format("Bad index %d for list of length %d: %s", index, size(), this));
@@ -291,7 +291,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @param toIndex high endpoint (exclusive) of the range
    * @throws IllegalArgumentException if the range is not valid for this
    */
-  /*package-private*/ final void checkRange(int fromIndex, int toIndex) {
+  protected final void checkRange(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex > toIndex || toIndex > size()) {
       throw new IllegalArgumentException(
           String.format(
@@ -315,7 +315,9 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     /** Creates a new empty list. */
     @SuppressWarnings("value") // class annotation cannot be verified in constructor
-    private SimpleEmptyList() {}
+    private SimpleEmptyList() {
+      super();
+    }
 
     @Override
     public @LengthOf("this") int size() {
@@ -365,7 +367,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     /** The element of the list. */
     @SuppressWarnings("serial")
-    private E element;
+    private final E element;
 
     /**
      * Creates a singleton list.
@@ -373,7 +375,8 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
      * @param element the list's element
      */
     @SuppressWarnings("value") // class annotation cannot be verified in constructor
-    SingletonList(E element) {
+    private SingletonList(E element) {
+      super();
       this.element = element;
     }
 
@@ -436,6 +439,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
      */
     @SuppressWarnings("index") // constructor creates object of size @SameLen(this) by definition
     public OneMoreElementList(SIList<E> list, E extraElement) {
+      super();
       this.list = list;
       this.lastElement = extraElement;
       this.size = list.size() + 1;
@@ -502,6 +506,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
      */
     @SuppressWarnings("index") // constructor creates object of size @SameLen(this) by definition
     public SimpleArrayList(Collection<? extends E> c) {
+      super();
       delegate = new ArrayList<>(c);
     }
 
@@ -548,7 +553,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
     private final SIList<E> @SameLen("cumulativeSize") [] lists;
 
     /** The i-th value is the number of elements in the sublists up to the i-th one, inclusive. */
-    private int @SameLen("lists") [] cumulativeSize;
+    private final int @SameLen("lists") [] cumulativeSize;
 
     /** The size of this collection. */
     private @LengthOf("this") int size;
@@ -559,7 +564,8 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
      * @param lists the lists that will compose the newly-created ListOfLists
      */
     @SuppressWarnings("index") // constructor creates object of size @SameLen(this) by definition
-    ListOfLists(List<SIList<E>> lists) {
+    private ListOfLists(List<SIList<E>> lists) {
+      super();
       // TODO: have a variant that doesn't make a copy?
       @LengthOf({"lists", "this.lists"}) int numLists = lists.size();
       @SuppressWarnings({
@@ -656,8 +662,9 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
      * @param fromIndex the index in `delegate` of the first element in this list
      * @param toIndex the index in `delegate` of one past the last element in this list
      */
-    SimpleSubList(
+    private SimpleSubList(
         SIList<E> delegate, @IndexFor("#1") int fromIndex, @IndexOrHigh("#1") int toIndex) {
+      super();
       // Validate against the delegate's size, not this sublist's own (smaller) size.
       delegate.checkRange(fromIndex, toIndex);
       this.delegate = delegate;
@@ -699,7 +706,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
     private class SimpleSubListIterator implements Iterator<E> {
 
       /** The index of the next element to return. */
-      int index = fromIndex;
+      private int index = fromIndex;
 
       /** Creates a new SimpleSubListIterator. */
       public SimpleSubListIterator() {}

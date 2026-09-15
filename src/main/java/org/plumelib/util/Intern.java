@@ -409,7 +409,7 @@ public final class Intern {
    *
    * @return the number of interned integers
    */
-  static int numIntegers() {
+  /*package*/ static int numIntegers() {
     return internedIntegers.size();
   }
 
@@ -418,7 +418,7 @@ public final class Intern {
    *
    * @return the number of interned longs
    */
-  static int numLongs() {
+  /*package*/ static int numLongs() {
     return internedLongs.size();
   }
 
@@ -427,7 +427,7 @@ public final class Intern {
    *
    * @return the number of interned int arrays
    */
-  static int numIntArrays() {
+  /*package*/ static int numIntArrays() {
     return internedIntArrays.size();
   }
 
@@ -436,7 +436,7 @@ public final class Intern {
    *
    * @return the number of interned long arrays
    */
-  static int numLongArrays() {
+  /*package*/ static int numLongArrays() {
     return internedLongArrays.size();
   }
 
@@ -445,7 +445,7 @@ public final class Intern {
    *
    * @return the number of interned doubles
    */
-  static int numDoubles() {
+  /*package*/ static int numDoubles() {
     return internedDoubles.size();
   }
 
@@ -454,7 +454,7 @@ public final class Intern {
    *
    * @return the number of interned double arrays
    */
-  static int numDoubleArrays() {
+  /*package*/ static int numDoubleArrays() {
     return internedDoubleArrays.size();
   }
 
@@ -463,7 +463,7 @@ public final class Intern {
    *
    * @return the number of interned string arrays
    */
-  static int numStringArrays() {
+  /*package*/ static int numStringArrays() {
     return internedStringArrays.size();
   }
 
@@ -472,7 +472,7 @@ public final class Intern {
    *
    * @return the number of interned object arrays
    */
-  static int numObjectArrays() {
+  /*package*/ static int numObjectArrays() {
     return internedObjectArrays.size();
   }
 
@@ -481,7 +481,7 @@ public final class Intern {
    *
    * @return all the interned integers
    */
-  static Iterator<@Interned Integer> integers() {
+  /*package*/ static Iterator<@Interned Integer> integers() {
     return internedIntegers.keySet().iterator();
   }
 
@@ -490,7 +490,7 @@ public final class Intern {
    *
    * @return all the interned longs
    */
-  static Iterator<@Interned Long> longs() {
+  /*package*/ static Iterator<@Interned Long> longs() {
     return internedLongs.keySet().iterator();
   }
 
@@ -499,7 +499,7 @@ public final class Intern {
    *
    * @return all the interned int arrays
    */
-  static Iterator<int @Interned []> intArrays() {
+  /*package*/ static Iterator<int @Interned []> intArrays() {
     return internedIntArrays.keySet().iterator();
   }
 
@@ -508,7 +508,7 @@ public final class Intern {
    *
    * @return all the interned long arrays
    */
-  static Iterator<long @Interned []> longArrays() {
+  /*package*/ static Iterator<long @Interned []> longArrays() {
     return internedLongArrays.keySet().iterator();
   }
 
@@ -517,7 +517,7 @@ public final class Intern {
    *
    * @return all the interned doubles
    */
-  static Iterator<@Interned Double> doubles() {
+  /*package*/ static Iterator<@Interned Double> doubles() {
     return internedDoubles.keySet().iterator();
   }
 
@@ -526,7 +526,7 @@ public final class Intern {
    *
    * @return all the interned double arrays
    */
-  static Iterator<double @Interned []> doubleArrays() {
+  /*package*/ static Iterator<double @Interned []> doubleArrays() {
     return internedDoubleArrays.keySet().iterator();
   }
 
@@ -535,7 +535,7 @@ public final class Intern {
    *
    * @return all the interned string arrays
    */
-  static Iterator<@Nullable @Interned String @Interned []> stringArrays() {
+  /*package*/ static Iterator<@Nullable @Interned String @Interned []> stringArrays() {
     return internedStringArrays.keySet().iterator();
   }
 
@@ -544,7 +544,7 @@ public final class Intern {
    *
    * @return all the interned object arrays
    */
-  static Iterator<@Nullable @Interned Object @Interned []> objectArrays() {
+  /*package*/ static Iterator<@Nullable @Interned Object @Interned []> objectArrays() {
     return internedObjectArrays.keySet().iterator();
   }
 
@@ -1133,14 +1133,14 @@ public final class Intern {
    */
   private static final class Subsequence<T extends @Interned Object> {
     /** The full sequence. The Subsequence object represents part of this sequence. */
-    public T seq;
+    public final T seq;
 
     /** The start index, inclusive. */
-    public @NonNegative int start;
+    public final @NonNegative int start;
 
     // TODO: inclusive or exclusive?
     /** The end index. */
-    public int end;
+    public final int end;
 
     /**
      * Creates a subsequence view.

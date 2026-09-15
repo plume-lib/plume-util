@@ -878,10 +878,10 @@ public final class FilesP {
    */
   public static final class WildcardFilter implements FilenameFilter {
     /** The text before the wildcard. */
-    String prefix;
+    private final String prefix;
 
     /** The text after the wildcard. */
-    String suffix;
+    private final String suffix;
 
     /**
      * Create a filter that accepts files whose name matches the given wildcard.
@@ -910,7 +910,7 @@ public final class FilesP {
   }
 
   /** The user's home directory, or null if the system property is not set. */
-  static final @Nullable String userHome = System.getProperty("user.home");
+  private static final @Nullable String userHome = System.getProperty("user.home");
 
   /**
    * Does tilde expansion on a file name (to the user's home directory).

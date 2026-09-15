@@ -3853,20 +3853,23 @@ public final class ArraysP {
    *
    * @param <T> the type of the elements of the sets
    */
-  static class Partitioning<T extends @NonNull Object> extends ArrayList<ArrayList<T>> {
+  /*package*/ static final class Partitioning<T extends @NonNull Object>
+      extends ArrayList<ArrayList<T>> {
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
     private static final long serialVersionUID = 20170418;
 
     /** Empty constructor. */
-    Partitioning() {}
+    private Partitioning() {
+      super();
+    }
 
     /**
      * Copy constructor.
      *
      * @param other the Partitioning to make a copy of
      */
-    Partitioning(Partitioning<T> other) {
+    private Partitioning(Partitioning<T> other) {
       super(other);
     }
 
@@ -3876,7 +3879,7 @@ public final class ArraysP {
      *
      * @return all the elements in any part of the Partitioning
      */
-    List<T> partitionedSet() {
+    private List<T> partitionedSet() {
       ArrayList<T> result = new ArrayList<>();
       for (List<T> part : this) {
         result.addAll(part);
@@ -3890,7 +3893,7 @@ public final class ArraysP {
      * @param elts the elements that might be partitioned by this
      * @return true if this is a partitioning for {@code elts}
      */
-    boolean isPartitioningFor(List<T> elts) {
+    /*package*/ boolean isPartitioningFor(List<T> elts) {
       // Inefficient O(n^2) implementation.  We can do O(n log n) if desired.
       List<T> ps = partitionedSet();
       return ps.size() == elts.size() && ps.containsAll(elts);
@@ -3903,7 +3906,7 @@ public final class ArraysP {
      * @param elt the element to add
      * @return a new partitioning just like this one, but with elt added to the ith part
      */
-    Partitioning<T> addToPart(@NonNegative int i, T elt) {
+    private Partitioning<T> addToPart(@NonNegative int i, T elt) {
       Partitioning<T> result = new Partitioning<>(this);
       if (size() == i) {
         ArrayList<T> newPart = newArrayList(elt);

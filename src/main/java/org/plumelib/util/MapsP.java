@@ -340,7 +340,8 @@ public final class MapsP {
    *     inner map). If non-empty, it usually ends with a space to avoid abutting the outer map key.
    * @param mapMap what to print
    */
-  static <K1 extends @Signed Object, K2 extends @Signed Object, V2 extends @Signed Object>
+  /*package*/ static <
+          K1 extends @Signed Object, K2 extends @Signed Object, V2 extends @Signed Object>
       void mapMapToStringMultiLine(
           Appendable sb, String innerHeader, Map<K1, Map<K2, V2>> mapMap, String linePrefix) {
     try {

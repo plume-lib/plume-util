@@ -988,7 +988,7 @@ public final class StringsP {
     private ObjectComparator() {}
 
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20170420L;
+    private static final long serialVersionUID = 20170420L;
 
     /**
      * Compare two Objects based on their string representations. Null is considered less than any

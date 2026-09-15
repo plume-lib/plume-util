@@ -20,7 +20,7 @@ import org.checkerframework.dataflow.qual.Pure;
  */
 public class FileIOException extends IOException {
   /** Unique identifier for serialization. If you add or remove fields, change this number. */
-  static final long serialVersionUID = 20050923L;
+  private static final long serialVersionUID = 20050923L;
 
   /** The file being read when the IOException occurred. */
   public final @Nullable String fileName;
