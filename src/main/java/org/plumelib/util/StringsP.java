@@ -1125,6 +1125,7 @@ public final class StringsP {
     public VersionNumberComparator() {}
 
     @Override
+    @Pure
     public int compare(String s1, String s2) {
       if (s1.equals(s2)) {
         return 0;
@@ -1151,6 +1152,7 @@ public final class StringsP {
      *     to, or greater than s2
      * @throws NumberFormatException if either argument is not a nonempty string of decimal digits
      */
+    @Pure
     private static int compareDigitStrings(String s1, String s2) {
       int start1 = indexOfFirstSignificantDigit(s1);
       int start2 = indexOfFirstSignificantDigit(s2);

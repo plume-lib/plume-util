@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Signed;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * A comparator that orders values based on the lexicographic ordering of their toString().
@@ -24,6 +25,7 @@ public final class ToStringComparator implements Comparator<Object> {
   private ToStringComparator() {}
 
   @Override
+  @Pure
   public int compare(@MustCallUnknown Object o1, @MustCallUnknown Object o2) {
     return Objects.toString(o1).compareTo(Objects.toString(o2));
   }
