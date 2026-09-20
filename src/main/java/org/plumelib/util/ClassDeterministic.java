@@ -232,7 +232,9 @@ public final class ClassDeterministic {
       if (result != 0) {
         return result;
       }
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // pure up to equality
       Class<?>[] ptypes1 = m1.getParameterTypes();
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // pure up to equality
       Class<?>[] ptypes2 = m2.getParameterTypes();
       result = ptypes1.length - ptypes2.length;
       if (result != 0) {
@@ -285,7 +287,9 @@ public final class ClassDeterministic {
       if (result != 0) {
         return result;
       }
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
       Class<?>[] ptypes1 = c1.getParameterTypes();
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
       Class<?>[] ptypes2 = c2.getParameterTypes();
       result = ptypes1.length - ptypes2.length;
       if (result != 0) {
@@ -315,6 +319,7 @@ public final class ClassDeterministic {
 
     @Override
     @Pure
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
     public int compare(Field f1, Field f2) {
       int result = classComparator.compare(f1.getDeclaringClass(), f2.getDeclaringClass());
       if (result != 0) {
@@ -335,6 +340,7 @@ public final class ClassDeterministic {
 
     @Override
     @Pure
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
     public int compare(Object o1, Object o2) {
       return o1.toString().compareTo(o2.toString());
     }
