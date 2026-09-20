@@ -290,6 +290,7 @@
     <rule ref="category/java/errorprone.xml/UseCorrectExceptionLogging" />
     <rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings" />
     <rule ref="category/java/errorprone.xml/UseLocaleWithCaseConversions" />
+    <rule ref="category/java/errorprone.xml/UnusedReturnValue" />
 
     <!-- error prone rules that seem to be broken
     <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />      False positive in OptionsDoclet.
