@@ -817,7 +817,7 @@ final class CollectionsPTest {
 
   // Median of 5 runs with size=4: ratio = .90, meaning 10% speedup.
   // @Test
-  @SuppressWarnings("ReturnValueIgnored")
+  @SuppressWarnings({"ReturnValueIgnored", "PMD.UnusedReturnValue"}) // for timing, not for result
   void test_sortedSetTime() {
     int size = 4;
     int iterations = 100_000;
