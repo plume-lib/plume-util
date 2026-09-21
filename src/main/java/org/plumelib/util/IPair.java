@@ -134,7 +134,7 @@ public final class IPair<V1, V2> {
   private int hashCode = -1;
 
   @SuppressWarnings({
-    "allcheckers:purity.not.deterministic.not.sideeffectfree.assign.field", // caching
+    "allcheckers:purity.assign.field", // caching
     "signedness:override.receiver" // being fixed
   })
   @Pure

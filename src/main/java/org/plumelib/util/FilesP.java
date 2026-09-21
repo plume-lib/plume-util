@@ -86,7 +86,7 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -161,7 +161,7 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "allcheckers:purity.call", // needs JDK annotations
   })
   @SideEffectFree
   @Owning
@@ -261,7 +261,7 @@ public final class FilesP {
    * @return a BufferedReader for file
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings("allcheckers:purity.call") // needs JDK annotations
   @SideEffectFree
   @Owning
   public static BufferedReader newBufferedFileReader(File file, @Nullable Charset charset)
@@ -292,7 +292,7 @@ public final class FilesP {
    * @return a LineNumberReader for file
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings("allcheckers:purity.call") // needs JDK annotations
   @SideEffectFree
   @Owning
   public static LineNumberReader newLineNumberFileReader(File file) throws IOException {
@@ -334,7 +334,7 @@ public final class FilesP {
    * @throws IOException if there is trouble writing the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -407,7 +407,7 @@ public final class FilesP {
    * @throws IOException if there is trouble writing the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "allcheckers:purity.call", // needs JDK annotations
   })
   @SideEffectFree
   @Owning
@@ -485,7 +485,7 @@ public final class FilesP {
    */
   // Question:  should this be rewritten as a wrapper around newBufferedFileOutputStream?
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -516,7 +516,7 @@ public final class FilesP {
    * @return a BufferedOutputStream for filename
    * @throws IOException if there is trouble writing the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings("allcheckers:purity.call") // needs JDK annotations
   @SideEffectFree
   @Owning
   public static BufferedOutputStream newBufferedFileOutputStream(String filename, boolean append)
@@ -537,9 +537,7 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call",
-    "allcheckers:purity.not.deterministic.call",
-    "allcheckers:purity.not.deterministic.not.sideeffectfree.call",
+    "allcheckers:purity.call",
     "lock:method.guarantee.violated"
   }) // side effect to local state
   @Pure
@@ -561,8 +559,8 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "allcheckers:purity.not.deterministic.object.creation" // create local state
+    "allcheckers:purity.call", // side effect to local state
+    "allcheckers:purity.object.creation" // create local state
   })
   @Pure
   public static @Regex String inferLineSeparator(String filename) throws IOException {
@@ -577,8 +575,7 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.deterministic.call", // side effect to local state
-    "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @Pure
@@ -995,7 +992,7 @@ public final class FilesP {
    */
   @SuppressWarnings({
     "BanSerializableRead", // wrapper around dangerous API
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -1039,7 +1036,7 @@ public final class FilesP {
    * @return a String containing the content read from the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
   })
   @SideEffectFree
   public static String readString(Path path) {

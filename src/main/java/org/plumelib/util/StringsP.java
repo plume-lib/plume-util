@@ -224,7 +224,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "regex:return", // all matches of allLineSeparators are regexes
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -269,7 +269,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "index:argument", // m.end is @LTLengthOf("index")
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // needs JDK annotations
   })
   @SideEffectFree
@@ -303,7 +303,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "lock:method.guarantee.violated", // side effect to local state
-    "allcheckers:purity.not.sideeffectfree.call" // side effect to local state
+    "allcheckers:purity.call" // side effect to local state
   })
   @SafeVarargs
   @SideEffectFree
@@ -345,7 +345,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "lock:method.guarantee.violated", // side effect to local state
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
   })
   @SideEffectFree
   public static String join(
@@ -391,7 +391,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "lock:method.guarantee.violated", // side effect to local state
-    "allcheckers:purity.not.sideeffectfree.call" // side effect to local state
+    "allcheckers:purity.call" // side effect to local state
   })
   @SideEffectFree
   public static String escapeJava(String orig) {
@@ -522,7 +522,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "lock:method.guarantee.violated", // side effect to local state
-    "allcheckers:purity.not.sideeffectfree.call" // side effect to local state
+    "allcheckers:purity.call" // side effect to local state
   })
   @SideEffectFree
   public static String escapeNonASCII(String orig) {
@@ -591,7 +591,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "lock:method.guarantee.violated", // side effect to local state
-    "allcheckers:purity.not.sideeffectfree.call" // side effect to local state
+    "allcheckers:purity.call" // side effect to local state
   })
   @SideEffectFree
   public static String unescapeJava(String orig) {
@@ -798,7 +798,7 @@ public final class StringsP {
    * @return {@code s} truncated or padded to {@code length} characters
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -862,7 +862,7 @@ public final class StringsP {
    * @return {@code s} truncated or padded to {@code length} characters
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -936,7 +936,7 @@ public final class StringsP {
    */
   @SuppressWarnings({
     "lock:method.guarantee.violated", // side effect to local state
-    "allcheckers:purity.not.sideeffectfree.call"
+    "allcheckers:purity.call"
   }) // side effect to local state
   @SideEffectFree
   public static String rpad(double num, @NonNegative int length) {
@@ -1001,7 +1001,7 @@ public final class StringsP {
      *     {@code toString()} representation
      */
     @SuppressWarnings({
-      "allcheckers:purity.not.deterministic.call",
+      "allcheckers:purity.call",
       "lock"
     }) // toString is being used in a deterministic way
     @Pure
@@ -1045,7 +1045,7 @@ public final class StringsP {
    * @return vector of strings resulting from tokenization
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -1062,7 +1062,7 @@ public final class StringsP {
    * @return vector of strings resulting from tokenization
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -1078,7 +1078,7 @@ public final class StringsP {
    * @return vector of strings resulting from tokenization
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -1130,9 +1130,9 @@ public final class StringsP {
       if (s1.equals(s2)) {
         return 0;
       }
-      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
+      @SuppressWarnings("allcheckers:purity.call") // deterministic up to equality
       String[] components1 = s1.split("\\.", -1);
-      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
+      @SuppressWarnings("allcheckers:purity.call") // deterministic up to equality
       String[] components2 = s2.split("\\.", -1);
       int len = Math.min(components1.length, components2.length);
       for (int i = 0; i < len; i++) {
@@ -1165,7 +1165,7 @@ public final class StringsP {
       }
       // The two numbers have the same number of significant digits, so comparing them
       // lexicographically compares them numerically.
-      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
+      @SuppressWarnings("allcheckers:purity.call") // deterministic up to equality
       int result = s1.substring(start1).compareTo(s2.substring(start2));
       return result;
     }
@@ -1292,7 +1292,7 @@ public final class StringsP {
    * @return a string representation of each element and its class
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -1680,7 +1680,7 @@ public final class StringsP {
    * @return a conjunction or disjunction string
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // needs JDK annotations
   })
   @SideEffectFree
@@ -1801,9 +1801,7 @@ public final class StringsP {
    * @return the number of format specifiers in the string
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
-    "allcheckers:purity.not.deterministic.call", // deterministic up to equals, which is sufficient
+    "allcheckers:purity.call", // side effect to local state; deterministic up to equals
     "lock:method.guarantee.violated" // side effect to local state
   })
   @Pure

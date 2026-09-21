@@ -197,8 +197,7 @@ public class LimitedSizeLongSet implements Serializable, Cloneable {
     values = null;
   }
 
-  @SuppressWarnings(
-      "allcheckers:purity.not.sideeffectfree.assign.field") // side effect to local state (clone)
+  @SuppressWarnings("allcheckers:purity.assign.field") // side effect to local state (clone)
   @SideEffectFree
   @Override
   public LimitedSizeLongSet clone(@GuardSatisfied LimitedSizeLongSet this) {

@@ -157,7 +157,7 @@ public final class RegexUtil {
    */
   @SuppressWarnings({
     "regex", // RegexUtil
-    "allcheckers:purity.not.deterministic.catch" // catch block returns boolean
+    "allcheckers:purity.catch" // catch block returns boolean
   })
   @Pure
   // @EnsuresQualifierIf annotation is extraneous because this method is special-cased
@@ -181,7 +181,7 @@ public final class RegexUtil {
    */
   @SuppressWarnings({
     "regex",
-    "allcheckers:purity.not.deterministic.call",
+    "allcheckers:purity.call",
     "lock"
   }) // RegexUtil; temp value used in pure method is equal up to equals but not up to ==
   @Pure

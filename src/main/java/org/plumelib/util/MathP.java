@@ -908,7 +908,7 @@ public final class MathP {
    */
   @SuppressWarnings({
     "value:statically.executable.not.pure", // results are .equals() but not ==
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state (fresh iterator)
+    "allcheckers:purity.call", // side effect to local state (fresh iterator)
     "lock:method.guarantee.violated", // side effect to local state (fresh iterator)
   })
   @SideEffectFree
@@ -1191,7 +1191,7 @@ public final class MathP {
    */
   @SuppressWarnings({
     "value:statically.executable.not.pure", // results are .equals() but not ==
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state (fresh iterator)
+    "allcheckers:purity.call", // side effect to local state (fresh iterator)
     "lock:method.guarantee.violated", // side effect to local state (fresh iterator)
   })
   @SideEffectFree

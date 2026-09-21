@@ -344,7 +344,7 @@ public class UnionFind<E extends Object> {
    *
    * @return all the sets
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree") // side effect to local state
+  @SuppressWarnings("allcheckers:purity.call") // side effect to local state
   @SideEffectFree
   public Collection<List<E>> allSets() {
     List<List<E>> result = new ArrayList<>(members.size());
@@ -366,7 +366,7 @@ public class UnionFind<E extends Object> {
     return result;
   }
 
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree") // side effect to local state
+  @SuppressWarnings("allcheckers:purity.call") // side effect to local state
   @SideEffectFree
   @Override
   public String toString() {
