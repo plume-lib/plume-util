@@ -221,6 +221,7 @@ public final class ClassDeterministic {
     /** Create a new MethodComparator. */
     public MethodComparator() {}
 
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     public int compare(Method m1, Method m2) {
       int result;
@@ -274,6 +275,7 @@ public final class ClassDeterministic {
     /** Create a new ConstructorComparator. */
     public ConstructorComparator() {}
 
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     public int compare(Constructor<?> c1, Constructor<?> c2) {
       int result = classComparator.compare(c1.getDeclaringClass(), c2.getDeclaringClass());
@@ -327,6 +329,7 @@ public final class ClassDeterministic {
     /** Create a new ToStringComparator. */
     public ToStringComparator() {}
 
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     public int compare(Object o1, Object o2) {
       return o1.toString().compareTo(o2.toString());
