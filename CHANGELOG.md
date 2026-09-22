@@ -4,7 +4,7 @@
 
 - Tested under Java 27.
 - Requires Java 21 to run.
-- Renamed final static fields to SCREAMING_CASE, such as `it`.
+- Renamed final static fields to SCREAMING_CASE, such as `it` to `IT`.
   The old names remain but are deprecated.
 - Converted classes to records; their fields are now accessor methods:
   - `EntryReader.EntryFormat`
