@@ -3349,11 +3349,11 @@ public final class ArraysP {
      * @return a negative integer, zero, or a positive integer, depending on whether the first
      *     argument is less than, equal to, or greater than the second argument
      */
-    @Pure
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyNull(1) String[], @PolyNull(2) String[]), but the
     // @PolyNull qualifier does not yet take an argument.
+    @Pure
     @Override
     public int compare(@PolyNull String[] a1, @PolyNull String[] a2) {
       if (a1 == a2) {
@@ -3405,11 +3405,11 @@ public final class ArraysP {
      * @return a negative integer, zero, or a positive integer, depending on whether the first
      *     argument is less than, equal to, or greater than the second argument
      */
-    @Pure
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyNull(1) T[], @PolyNull(2) T[]), but the
     // @PolyNull qualifier does not yet take an argument.
+    @Pure
     @Override
     public int compare(@PolyNull T[] a1, @PolyNull T[] a2) {
       if (a1 == a2) {
@@ -3484,11 +3484,11 @@ public final class ArraysP {
      * @return a negative integer, zero, or a positive integer, depending on whether the first
      *     argument is less than, equal to, or greater than the second argument
      */
-    @Pure
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyNull(1) Object[], @PolyNull(2) Object[]), but the
     // @PolyNull qualifier does not yet take an argument.
+    @Pure
     @Override
     public int compare(@PolyNull Object[] a1, @PolyNull Object[] a2) {
       if (a1 == a2) {
@@ -3647,11 +3647,11 @@ public final class ArraysP {
      * @return a negative integer, zero, or a positive integer, depending on whether the first
      *     argument is less than, equal to, or greater than the second argument
      */
-    @Pure
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyNull(1) T[], @PolyNull(2) T[]), but the
     // @PolyNull qualifier does not yet take an argument.
+    @Pure
     @Override
     public int compare(@PolyNull T[] a1, @PolyNull T[] a2) {
       if (a1 == a2) {
@@ -3730,11 +3730,11 @@ public final class ArraysP {
      * @return a negative integer, zero, or a positive integer, depending on whether the first
      *     argument is less than, equal to, or greater than the second argument
      */
-    @Pure
     // The signature on this method is unnecessarily strict because it
     // requires that the component types be identical.  The signature should
     // be compare(@PolyNull(1) Object[], @PolyNull(2) Object[]), but the
     // @PolyNull qualifier does not yet take an argument.
+    @Pure
     @Override
     public int compare(@PolyNull Object[] a1, @PolyNull Object[] a2) {
       if (a1 == a2) {

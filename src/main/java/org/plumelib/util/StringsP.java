@@ -1156,11 +1156,14 @@ public final class StringsP {
     public VersionNumberComparator() {}
 
     @Override
+    @Pure
     public int compare(String s1, String s2) {
       if (s1.equals(s2)) {
         return 0;
       }
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
       String[] components1 = s1.split("\\.", -1);
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
       String[] components2 = s2.split("\\.", -1);
       int len = Math.min(components1.length, components2.length);
       for (int i = 0; i < len; i++) {
@@ -1182,6 +1185,7 @@ public final class StringsP {
      *     to, or greater than s2
      * @throws NumberFormatException if either argument is not a nonempty string of decimal digits
      */
+    @Pure
     private static int compareDigitStrings(String s1, String s2) {
       int start1 = indexOfFirstSignificantDigit(s1);
       int start2 = indexOfFirstSignificantDigit(s2);
@@ -1192,7 +1196,9 @@ public final class StringsP {
       }
       // The two numbers have the same number of significant digits, so comparing them
       // lexicographically compares them numerically.
-      return Integer.signum(s1.substring(start1).compareTo(s2.substring(start2)));
+      @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
+      int result = s1.substring(start1).compareTo(s2.substring(start2));
+      return result;
     }
 
     /**
@@ -1202,6 +1208,7 @@ public final class StringsP {
      * @return the index of the first nonzero digit in s, or s.length() if every digit of s is zero
      * @throws NumberFormatException if s is not a nonempty string of decimal digits
      */
+    @Pure
     private static @IndexOrHigh("#1") int indexOfFirstSignificantDigit(String s) {
       if (s.isEmpty()) {
         throw new NumberFormatException("Not a version number component: \"" + s + "\"");
