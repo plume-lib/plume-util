@@ -1,6 +1,7 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -259,16 +260,10 @@ final class InternTest {
     assertTrue(oaIntern == oaOtherIntern);
   }
 
-  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void testInternObjectException() {
     java.awt.Point pOrig = new java.awt.Point(1, 2);
-    try {
-      Intern.intern((Object) pOrig); // performed for side effect
-      throw new Error("Didn't throw IllegalArgumentException");
-    } catch (IllegalArgumentException e) {
-      // test succeeded
-    }
+    assertThrows(IllegalArgumentException.class, () -> Intern.intern((Object) pOrig));
   }
 
   /**
