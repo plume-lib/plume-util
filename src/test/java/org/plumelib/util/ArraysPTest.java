@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings({
   "PMD.PrimitiveWrapperInstantiation",
   "PMD.UnnecessaryBoxing",
-  "PMD.CommentRequired", // This is a test class.
+  // "PMD.CommentRequired", // This is a test class.
 })
 final class ArraysPTest {
 
@@ -601,7 +601,7 @@ final class ArraysPTest {
 
   /** Test concat(). */
   @Test
-  @SuppressWarnings("PMD.AssertStatementInTest")
+  // @SuppressWarnings("PMD.AssertStatementInTest")
   void test_concat() {
     Instant[] da1 = {Instant.now()};
     Instant[] da2 = {Instant.now()};
@@ -987,7 +987,7 @@ final class ArraysPTest {
   //
 
   @Test
-  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
+  // @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_IntArrayComparator() {
 
     // public static class IntArrayComparatorLexical implements Comparator
@@ -1058,7 +1058,7 @@ final class ArraysPTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
+  // @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_LongArrayComparator() {
 
     // public static class LongArrayComparatorLexical implements Comparator
@@ -1128,7 +1128,7 @@ final class ArraysPTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
+  // @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_DoubleArrayComparatorLexical() {
 
     // public static class DoubleArrayComparatorLexical implements Comparator
@@ -1181,7 +1181,7 @@ final class ArraysPTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
+  // @SuppressWarnings("PMD.VariableDeclarationUsageDistance")
   void test_ComparableArrayComparator() {
 
     // public static class ObjectArrayComparatorLexical implements Comparator
