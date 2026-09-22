@@ -675,8 +675,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     // If first line matches entryStartRegex, this is a long entry.
     final Pattern entryStartRegex = entryFormat.entryStartRegex();
-    @SuppressWarnings("nullness") // the constructor replaces null by NEVER_MATCHES
-    final @NonNull Pattern entryStopRegex = entryFormat.entryStopRegex();
+    final Pattern entryStopRegex = entryFormat.entryStopRegex();
     @Regex Matcher entryMatch;
     if (entryStartRegex == null) {
       entryMatch = null;
@@ -1047,7 +1046,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
   }
 
   /** A regular expression that never matches. */
-  public static final Pattern NEVER_MATCHES = Pattern.compile("\\b\\B");
+  private static final Pattern NEVER_MATCHES = Pattern.compile("\\b\\B");
 
   /**
    * Informs {@link EntryReader} where an entry begins and ends.
@@ -1078,7 +1077,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    */
   public record EntryFormat(
       @Nullable @Regex(1) Pattern entryStartRegex,
-      @Nullable Pattern entryStopRegex,
+      Pattern entryStopRegex,
       boolean twoBlankLines,
       boolean supportsFences) {
 
@@ -1113,15 +1112,27 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
     /**
      * Creates an EntryFormat, replacing a null {@code entryStopRegex} by a regular expression that
      * never matches.
+     *
+     * @param entryStartRegex regular expression that starts a long entry; see {@link
+     *     #entryStartRegex()}
+     * @param entryStopRegex regular expression that ends a long entry; see {@link
+     *     #entryStartRegex()}
+     * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
+     * @param supportsFences if true, then fenced code blocks are respected
      */
-    public EntryFormat {
+    public EntryFormat(
+        @Nullable @Regex(1) Pattern entryStartRegex,
+        @Nullable Pattern entryStopRegex,
+        boolean twoBlankLines,
+        boolean supportsFences) {
       if (entryStartRegex == null && entryStopRegex != null) {
         throw new IllegalArgumentException(
             "entryStartRegex is null but entryStopRegex = \"" + entryStopRegex + "\"");
       }
-      if (entryStopRegex == null) {
-        entryStopRegex = NEVER_MATCHES;
-      }
+      this.entryStartRegex = entryStartRegex;
+      this.entryStopRegex = (entryStopRegex == null) ? NEVER_MATCHES : entryStopRegex;
+      this.twoBlankLines = twoBlankLines;
+      this.supportsFences = supportsFences;
     }
 
     /**

@@ -277,7 +277,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    */
   // Can't write this @EnsuresQualifier because the @IndexFor needs an argument of "this".
   // @EnsuresQualifier(expression="#1", qualifier=IndexFor.class)
-  protected final void checkIndex(int index) {
+  /*package*/ final void checkIndex(int index) {
     if (index < 0 || index >= size()) {
       throw new IllegalArgumentException(
           String.format("Bad index %d for list of length %d: %s", index, size(), this));
@@ -291,7 +291,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
    * @param toIndex high endpoint (exclusive) of the range
    * @throws IllegalArgumentException if the range is not valid for this
    */
-  protected final void checkRange(int fromIndex, int toIndex) {
+  /*package*/ final void checkRange(int fromIndex, int toIndex) {
     if (fromIndex < 0 || fromIndex > toIndex || toIndex > size()) {
       throw new IllegalArgumentException(
           String.format(

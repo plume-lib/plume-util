@@ -1218,7 +1218,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @return the internal representation, printed
    */
   @SideEffectFree
-  protected String repr() {
+  /*package*/ String repr() {
     return String.format(
         "size=%d capacity=%d %s %s",
         size, (keys == null ? 0 : keys.length), Arrays.toString(keys), Arrays.toString(values));

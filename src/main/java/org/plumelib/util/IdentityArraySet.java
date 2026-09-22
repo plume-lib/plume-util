@@ -410,7 +410,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return the internal representation, printed
    */
   @SideEffectFree
-  protected String repr() {
+  /*package*/ String repr() {
     return String.format(
         "size=%d capacity=%s %s",
         size, (values == null ? 0 : values.length), Arrays.toString(values));
