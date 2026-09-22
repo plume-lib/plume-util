@@ -31,6 +31,7 @@ public class UniqueIdMap<E> {
   private final AtomicLong nextUid = new AtomicLong(0);
 
   /** A mapping from objects to their IDs. */
+  @SuppressWarnings("PMD.LooseCoupling") // be explicit; correctness requires WeakIdentityHashMap
   private final WeakIdentityHashMap<E, Long> map = new WeakIdentityHashMap<>();
 
   /**

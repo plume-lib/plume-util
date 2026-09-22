@@ -50,7 +50,11 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
    *
    * @param collectionsOfCandidates lists of candidate values for each position in generated lists
    */
-  @SuppressWarnings({"rawtypes", "unchecked"}) // for generic array creation
+  @SuppressWarnings({
+    "rawtypes",
+    "unchecked", // for generic array creation
+    "PMD.AvoidInstantiatingObjectsInLoops" // necessary to build result
+  })
   public CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
     int size = collectionsOfCandidates.size();
     // Just like collectionsOfCandidates, but indexable.

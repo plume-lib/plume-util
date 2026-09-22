@@ -47,6 +47,9 @@ public final class ArraysP {
     throw new UnsupportedOperationException("do not instantiate");
   }
 
+  /** Sorts arbitrary objects; used to determine equal. */
+  private static final StringsP.ObjectComparator OBJECT_COMPARATOR = StringsP.ObjectComparator.IT;
+
   // //////////////////////////////////////////////////////////////////////
   // Creation
   //
@@ -1795,7 +1798,6 @@ public final class ArraysP {
      *
      * @param theArray the delegate that will be wrapped
      */
-    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     private ListOrArray(T @Nullable [] theArray) {
       this.theArray = theArray;
     }
@@ -1859,7 +1861,6 @@ public final class ArraysP {
      *
      * @return an array with the same contents as this
      */
-    @SuppressWarnings("PMD.MethodReturnsInternalArray")
     @SideEffectFree
     private T[] toArray() {
       if (theArray != null) {
@@ -2969,7 +2970,6 @@ public final class ArraysP {
   @SuppressWarnings({
     "allcheckers:purity",
     "lock:method.guarantee.violated",
-    "PMD.UnnecessaryCast" // bug in PMD: ignores type annotation on cast
   }) // side effect to local state
   @SideEffectFree
   public static int[] fnInverse(int[] a, @NonNegative int arange) {
@@ -3684,9 +3684,6 @@ public final class ArraysP {
     }
   }
 
-  /** Sorts arbitrary objects; used to determine equal. */
-  private static final StringsP.ObjectComparator OBJECT_COMPARATOR = StringsP.ObjectComparator.IT;
-
   /**
    * Compare two arrays first by length (a shorter array is considered less), and if of equal length
    * compare lexically (element-by-element).
@@ -3895,26 +3892,26 @@ public final class ArraysP {
 
     // Put elt in an existing part in the partitioning.
     if (eltsSize > numEmptyParts) {
-      List<Partitioning<T>> resultSoFar_augmented = new ArrayList<>();
+      List<Partitioning<T>> resultSoFarAugmented = new ArrayList<>();
       for (int i = 0; i < numNonemptyParts; i++) {
         for (Partitioning<T> p : resultSoFar) {
-          resultSoFar_augmented.add(p.addToPart(i, elt));
+          resultSoFarAugmented.add(p.addToPart(i, elt));
         }
       }
       result.addAll(
           partitionIntoHelper(
-              eltsRemaining, resultSoFar_augmented, numEmptyParts, numNonemptyParts));
+              eltsRemaining, resultSoFarAugmented, numEmptyParts, numNonemptyParts));
     }
 
     // Put elt in a newly-created part in the partitioning.
     if (numEmptyParts > 0) {
-      List<Partitioning<T>> resultSoFar_augmented = new ArrayList<>();
+      List<Partitioning<T>> resultSoFarAugmented = new ArrayList<>();
       for (Partitioning<T> p : resultSoFar) {
-        resultSoFar_augmented.add(p.addToPart(numNonemptyParts, elt));
+        resultSoFarAugmented.add(p.addToPart(numNonemptyParts, elt));
       }
       result.addAll(
           partitionIntoHelper(
-              eltsRemaining, resultSoFar_augmented, numEmptyParts - 1, numNonemptyParts + 1));
+              eltsRemaining, resultSoFarAugmented, numEmptyParts - 1, numNonemptyParts + 1));
     }
 
     return result;
@@ -3925,6 +3922,7 @@ public final class ArraysP {
    *
    * @param <T> the type of the elements of the sets
    */
+  @SuppressWarnings("PMD.LooseCoupling") // TODO: document why ArrayList instead of List
   /*package*/ static final class Partitioning<T extends @NonNull Object>
       extends ArrayList<ArrayList<T>> {
 
@@ -3999,7 +3997,10 @@ public final class ArraysP {
    * @param elt the element to put in the ArrayList
    * @return a singleton ArrayList containing {@code elt}
    */
-  @SuppressWarnings("NonApiType")
+  @SuppressWarnings({
+    "NonApiType",
+    "PMD.LooseCoupling"
+  }) // TODO: document why ArrayList instead of List
   private static <T> ArrayList<T> newArrayList(T elt) {
     ArrayList<T> result = new ArrayList<>(1);
     result.add(elt);

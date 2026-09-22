@@ -717,9 +717,9 @@ public final class StringsP {
    */
   @SideEffectFree
   public static String removeWhitespaceAround(String arg, String delimiter) {
-    arg = removeWhitespaceBefore(arg, delimiter);
-    arg = removeWhitespaceAfter(arg, delimiter);
-    return arg;
+    String result = removeWhitespaceBefore(arg, delimiter);
+    result = removeWhitespaceAfter(result, delimiter);
+    return result;
   }
 
   /**

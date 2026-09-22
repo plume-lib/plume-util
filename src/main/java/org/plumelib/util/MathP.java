@@ -500,14 +500,11 @@ public final class MathP {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
 
-    int thisSquarePow = base;
     int result = 1;
-    while (expt > 0) {
+    for (int thisSquarePow = base; expt > 0; expt >>= 1, thisSquarePow *= thisSquarePow) {
       if ((expt & 1) != 0) {
         result *= thisSquarePow;
       }
-      expt >>= 1;
-      thisSquarePow *= thisSquarePow;
     }
     return result;
   }
@@ -527,14 +524,11 @@ public final class MathP {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
 
-    long thisSquarePow = base;
     long result = 1;
-    while (expt > 0) {
+    for (long thisSquarePow = base; expt > 0; expt >>= 1, thisSquarePow *= thisSquarePow) {
       if ((expt & 1) != 0) {
         result *= thisSquarePow;
       }
-      expt >>= 1;
-      thisSquarePow *= thisSquarePow;
     }
     return result;
   }
@@ -1653,7 +1647,10 @@ public final class MathP {
    */
   // This seems to give too many false positives (or maybe my probability
   // model was wrong); use nonmodulusStrict instead.
-  @SuppressWarnings("allcheckers:purity")
+  @SuppressWarnings({
+    "allcheckers:purity",
+    "PMD.AvoidInstantiatingObjectsInLoops" // can the algorithm avoid this cost?
+  })
   @Pure
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] nonmodulusNonstrict(int[] nums) {
@@ -1669,7 +1666,7 @@ public final class MathP {
     // include it to make this function stand on its own
     for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      boolean[] hasModulus = new boolean[m]; // initialized to false?
+      boolean[] hasModulus = new boolean[m]; // initialized to false
       int numNonmodulus = m;
       for (int elt : nums) {
         @IndexFor("hasModulus") int rem = modNonnegative(elt, m);
@@ -2009,7 +2006,7 @@ public final class MathP {
     // include it to make this function stand on its own
     for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      boolean[] hasModulus = new boolean[m]; // initialized to false?
+      boolean[] hasModulus = new boolean[m]; // initialized to false
       int numNonmodulus = m;
       for (long elt : nums) {
         @IndexFor("hasModulus") int rem = (int) modNonnegative(elt, m);

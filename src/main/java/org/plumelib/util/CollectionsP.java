@@ -122,7 +122,7 @@ public final class CollectionsP {
   @Pure
   public static <T> boolean hasDuplicates(Collection<T> a) {
     if (a instanceof List<T> alist && alist instanceof RandomAccess) {
-      HashSet<T> hs = new HashSet<>();
+      Set<T> hs = new HashSet<>();
       for (int i = 0; i < alist.size(); i++) { // NOPMD: a foreach loop here would be less efficient
         T elt = alist.get(i);
         if (!hs.add(elt)) {
@@ -130,7 +130,7 @@ public final class CollectionsP {
         }
       }
     } else {
-      HashSet<T> hs = new HashSet<>();
+      Set<T> hs = new HashSet<>();
       for (T elt : a) {
         if (!hs.add(elt)) {
           return true;
@@ -343,7 +343,7 @@ public final class CollectionsP {
   }
 
   /** All calls to deepEquals that are currently underway. */
-  private static HashSet<WeakIdentityPair<Object, Object>> deepEqualsUnderway = new HashSet<>();
+  private static Set<WeakIdentityPair<Object, Object>> deepEqualsUnderway = new HashSet<>();
 
   /**
    * Determines deep equality for the elements.
@@ -1157,7 +1157,7 @@ public final class CollectionsP {
    * @param e an enumeration to convert to an ArrayList
    * @return a vector containing the elements of the enumeration
    */
-  @SuppressWarnings({"JdkObsolete", "NonApiType"})
+  @SuppressWarnings({"JdkObsolete", "NonApiType", "PMD.LooseCoupling"}) // method name has ArrayList
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
@@ -1175,7 +1175,7 @@ public final class CollectionsP {
    * @return a List containing the specified elements
    */
   public static <E> List<E> listOf(E e1, E e2) {
-    ArrayList<E> result = new ArrayList<>(2);
+    List<E> result = new ArrayList<>(2);
     result.add(e1);
     result.add(e2);
     return Collections.unmodifiableList(result);
@@ -1267,6 +1267,7 @@ public final class CollectionsP {
    * @param objs list of elements to create combinations of
    * @return list of lists of length dims, each of which combines elements from objs
    */
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // necessary to build result
   public static <T> List<List<T>> createCombinations(
       @Positive int dims, @NonNegative int start, List<T> objs) {
 
@@ -1323,7 +1324,11 @@ public final class CollectionsP {
    * @param cnt maximum element value
    * @return list of lists of length arity, each of which combines integers from start to cnt
    */
-  @SuppressWarnings("NonApiType")
+  @SuppressWarnings({
+    "NonApiType",
+    "PMD.AvoidInstantiatingObjectsInLoops", // necessary to build result
+    "PMD.LooseCoupling", // TODO: document why ArrayList rather than List
+  })
   public static ArrayList<ArrayList<Integer>> createCombinations(
       int arity, @NonNegative int start, int cnt) {
 

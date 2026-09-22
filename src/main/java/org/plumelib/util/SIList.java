@@ -311,7 +311,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
     /** The unique empty list. */
     @SuppressWarnings("rawtypes")
-    public static SIList it = new SimpleEmptyList<>();
+    public static final SIList it = new SimpleEmptyList<>();
 
     /** Creates a new empty list. */
     @SuppressWarnings("value") // class annotation cannot be verified in constructor

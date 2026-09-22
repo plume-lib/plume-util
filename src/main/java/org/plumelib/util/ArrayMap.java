@@ -90,6 +90,15 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // An alternate representation would also store the hash code of each key, for quicker querying.
 
+  /** A view of the keys. */
+  private @MonotonicNonNull Set<@KeyFor("this") K> keySet = null;
+
+  /** The view of the values. */
+  private @MonotonicNonNull Collection<V> valuesCollection = null;
+
+  /** The view of the entries. */
+  private @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
+
   /**
    * The number of times this map's size has been modified by adding or removing an element
    * (changing the value associated with a key does not count as a change). This field is used to
@@ -483,9 +492,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // Views
 
-  /** A view of the keys. */
-  private @MonotonicNonNull Set<@KeyFor("this") K> keySet = null;
-
   // Behavior is undefined if the map is changed while the sets are being iterated through, so these
   // implementations can assume there are no concurrent side effects.
   @Pure
@@ -584,9 +590,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
   }
 
-  /** The view of the values. */
-  private @MonotonicNonNull Collection<V> valuesCollection = null;
-
   @Pure
   @SuppressWarnings("allcheckers:purity")
   @Override
@@ -677,9 +680,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
   }
 
-  /** The view of the entries. */
-  private @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
-
   @SuppressWarnings("allcheckers:purity")
   @Pure
   @Override
@@ -742,6 +742,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @SuppressWarnings({
       "interning:argument", // TODO: investigate later
       "signature:argument", // TODO: investigate later
+      "PMD.AvoidInstantiatingObjectsInLoops",
     })
     @Override
     public void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {

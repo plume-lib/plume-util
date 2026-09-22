@@ -114,7 +114,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   // @MustCall({}) because the RLC does not (yet) support verifying collections of resources.
   /** Stack of readers. Used to support include files. */
-  private final ArrayDeque<@MustCall({}) FlnReader> readers = new ArrayDeque<>();
+  private final Deque<@MustCall({}) FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
   private @Nullable String pushbackLine = null;
@@ -357,6 +357,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return the current line number
    */
   @Override
+  @SuppressWarnings("PMD.CloseResource") // not an owned resource
   public @NonNegative int getLineNumber(@GuardSatisfied EntryReader this) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {
@@ -371,6 +372,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param lineNumber new line number for the current file
    */
   @Override
+  @SuppressWarnings("PMD.CloseResource") // not an owned resource
   public void setLineNumber(@GuardSatisfied EntryReader this, @NonNegative int lineNumber) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {

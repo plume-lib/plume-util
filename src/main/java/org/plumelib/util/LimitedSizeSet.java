@@ -212,7 +212,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
       LimitedSizeSet<T> resultAsLss = (LimitedSizeSet<T>) super.clone();
       result = resultAsLss;
     } catch (CloneNotSupportedException e) {
-      throw new Error(); // can't happen
+      throw new Error(e); // can't happen
     }
     if (values != null) {
       result.values = values.clone();

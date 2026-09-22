@@ -94,6 +94,7 @@
       <exclude name="AvoidDuplicateLiterals"/>
       <exclude name="AvoidFieldNameMatchingMethodName"/>
       <exclude name="AvoidLiteralsInIfCondition"/>
+      <exclude name="CloseResource"/> <!-- The Resource Leak Checker is more precise. -->
       <exclude name="CompareObjectsWithEquals"/> <!-- use the Interning Checker instead -->
       <exclude name="DoNotTerminateVM"/> <!-- specific to J2EE -->
       <exclude name="NullAssignment"/>
@@ -107,6 +108,13 @@
             <property name="allowIncrementDecrement" value="true" />
         </properties>
     </rule>
+    <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop">
+        <properties>
+            <property name="checkBreakLoopTypes" value="for,do,while" />
+            <property name="checkContinueLoopTypes" value="for,do,while" />
+            <property name="checkReturnLoopTypes" value="" /> <!-- disable -->
+        </properties>
+    </rule>
 
     <!-- 6. Multithreading: Flags issues when dealing with multiple threads of execution -->
     <rule ref="category/java/multithreading.xml">
@@ -118,6 +126,7 @@
     <rule ref="category/java/performance.xml">
       <exclude name="ConsecutiveAppendsShouldReuse"/>
       <exclude name="RedundantFieldInitializer"/> <!-- explicit initializer is clearer -->
+      <exclude name="AvoidInstantiatingObjectsInLoops"/> <!-- maybe reinstate later -->
     </rule>
 
     <!-- 8. Security: Flags potential security flaws and vulnerabilities -->

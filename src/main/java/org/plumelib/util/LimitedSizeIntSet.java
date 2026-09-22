@@ -206,7 +206,7 @@ public class LimitedSizeIntSet implements Serializable, Cloneable {
     try {
       result = (LimitedSizeIntSet) super.clone();
     } catch (CloneNotSupportedException e) {
-      throw new Error(); // can't happen
+      throw new Error(e); // can't happen
     }
     if (values != null) {
       result.values = values.clone();

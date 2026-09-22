@@ -179,7 +179,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
           } else if (next1 != null && next2 == null) {
             comparison = 1;
           } else {
-            throw new RuntimeException("this can't happen " + next1 + " " + next2);
+            throw new RuntimeException("this can't happen " + next1 + " " + next2, npe);
           }
         }
         if (comparison < 0) {

@@ -87,7 +87,8 @@ public final class FilesP {
    */
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
+    "lock:method.guarantee.violated", // side effect to local state
+    "PMD.CloseResource", // the resource is returned
   })
   @SideEffectFree
   @Owning
@@ -168,10 +169,7 @@ public final class FilesP {
   public static InputStreamReader newFileReader(Path path, @Nullable Charset charset)
       throws IOException {
     InputStream in = newFileInputStream(path);
-    if (charset == null) {
-      charset = UTF_8;
-    }
-    return new InputStreamReader(in, charset);
+    return new InputStreamReader(in, charset == null ? UTF_8 : charset);
   }
 
   /**
@@ -414,10 +412,7 @@ public final class FilesP {
   public static OutputStreamWriter newFileWriter(Path path, @Nullable Charset charset)
       throws IOException {
     OutputStream in = newFileOutputStream(path);
-    if (charset == null) {
-      charset = UTF_8;
-    }
-    return new OutputStreamWriter(in, charset);
+    return new OutputStreamWriter(in, charset == null ? UTF_8 : charset);
   }
 
   /**

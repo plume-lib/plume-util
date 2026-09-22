@@ -76,7 +76,7 @@ public class RandomSelector<T> {
   private Random generator;
 
   /** The values chosen. */
-  private final ArrayList<T> values = new ArrayList<>();
+  private final List<T> values = new ArrayList<>();
 
   /**
    * Creates a new RandomSelector.
@@ -159,7 +159,7 @@ public class RandomSelector<T> {
    */
   public List<T> getValues() {
     // avoid concurrent mod errors and rep exposure
-    ArrayList<T> ret = new ArrayList<>();
+    List<T> ret = new ArrayList<>();
     ret.addAll(values);
     return ret;
   }
