@@ -1155,6 +1155,11 @@ public final class StringsP {
     /** Creates a new VersionNumberComparator. */
     public VersionNumberComparator() {}
 
+    @SuppressWarnings({
+      "allcheckers:purity.not.deterministic.call", // deterministic up to equals
+      "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // compareDigitStrings is pure
+      "allcheckers:method.guarantee.violated" // compareDigitStrings is pure
+    })
     @Override
     @Pure
     public int compare(String s1, String s2) {
