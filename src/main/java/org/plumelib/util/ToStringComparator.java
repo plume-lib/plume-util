@@ -27,7 +27,6 @@ public final class ToStringComparator implements Comparator<Object> {
   @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
   @Override
   @Pure
-  @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
   public int compare(@MustCallUnknown Object o1, @MustCallUnknown Object o2) {
     return Objects.toString(o1).compareTo(Objects.toString(o2));
   }

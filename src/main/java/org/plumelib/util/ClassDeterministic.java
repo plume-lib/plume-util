@@ -343,7 +343,6 @@ public final class ClassDeterministic {
     @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     @Pure
-    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
     public int compare(Object o1, Object o2) {
       return o1.toString().compareTo(o2.toString());
     }
