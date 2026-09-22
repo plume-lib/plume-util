@@ -31,7 +31,7 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 @SuppressWarnings({
   "identity", // use of Hasher for primitive wrappers
   "PMD.UseDiamondOperator",
-  "PMD.LooseCoupling", // explicit use of WeakHasherMap
+  // "PMD.LooseCoupling", // explicit use of WeakHasherMap
 })
 public final class Intern {
 

@@ -1649,7 +1649,7 @@ public final class MathP {
   // model was wrong); use nonmodulusStrict instead.
   @SuppressWarnings({
     "allcheckers:purity",
-    "PMD.AvoidInstantiatingObjectsInLoops" // can the algorithm avoid this cost?
+    // "PMD.AvoidInstantiatingObjectsInLoops" // can the algorithm avoid this cost?
   })
   @Pure
   @StaticallyExecutable

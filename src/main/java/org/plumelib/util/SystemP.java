@@ -115,7 +115,10 @@ public final class SystemP {
    * Perform garbage collection. Like System.gc, but waits to return until garbage collection has
    * completed.
    */
-  @SuppressWarnings({"PMD.DoNotCallGarbageCollectionExplicitly", "PMD.EmptyCatchBlock"})
+  @SuppressWarnings({
+    "PMD.DoNotCallGarbageCollectionExplicitly",
+    // "PMD.EmptyCatchBlock"
+  })
   public static void gc() {
     long oldCollectionCount = getCollectionCount();
     System.gc();

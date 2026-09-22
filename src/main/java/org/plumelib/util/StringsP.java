@@ -994,7 +994,7 @@ public final class StringsP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final ObjectComparator it = IT;
 
     /** Create a new ObjectComparator. Clients should use {@link #IT}. */
@@ -1112,7 +1112,7 @@ public final class StringsP {
    * @deprecated use {@link #VERSION_NUMBER_REGEX}
    */
   @Deprecated(since = "2026-09-15")
-  @SuppressWarnings("PMD.FieldNamingConventions")
+  // @SuppressWarnings("PMD.FieldNamingConventions")
   public static final @Regex String versionNumberRegex = VERSION_NUMBER_REGEX;
 
   /** Matches a version number, of the form N.N or N.N.N, etc., where each N consists of digits. */
@@ -1124,7 +1124,7 @@ public final class StringsP {
    * @deprecated use {@link #VERSION_NUMBER_PATTERN}
    */
   @Deprecated(since = "2026-09-15")
-  @SuppressWarnings("PMD.FieldNamingConventions")
+  // @SuppressWarnings("PMD.FieldNamingConventions")
   public static final Pattern versionNumberPattern = VERSION_NUMBER_PATTERN;
 
   /**

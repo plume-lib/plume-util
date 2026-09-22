@@ -268,7 +268,7 @@ public class FileIOException extends IOException {
     if (baseMessage == null) {
       baseMessage = this.getClass().getName();
     }
-    StringBuilder result = new StringBuilder();
+    StringBuilder result = new StringBuilder(32);
     result.append(baseMessage);
     if (fileName != null) {
       result.append(" in file ").append(fileName);

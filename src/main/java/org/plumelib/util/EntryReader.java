@@ -358,7 +358,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @return the current line number
    */
   @Override
-  @SuppressWarnings("PMD.CloseResource") // not an owned resource
+  // @SuppressWarnings("PMD.CloseResource") // not an owned resource
   public @NonNegative int getLineNumber(@GuardSatisfied EntryReader this) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {
@@ -373,7 +373,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param lineNumber new line number for the current file
    */
   @Override
-  @SuppressWarnings("PMD.CloseResource") // not an owned resource
+  // @SuppressWarnings("PMD.CloseResource") // not an owned resource
   public void setLineNumber(@GuardSatisfied EntryReader this, @NonNegative int lineNumber) {
     FlnReader ri = readers.peekFirst();
     if (ri == null) {

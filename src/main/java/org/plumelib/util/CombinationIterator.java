@@ -53,7 +53,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
   @SuppressWarnings({
     "rawtypes",
     "unchecked", // for generic array creation
-    "PMD.AvoidInstantiatingObjectsInLoops" // necessary to build result
+    // "PMD.AvoidInstantiatingObjectsInLoops" // necessary to build result
   })
   public CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
     int size = collectionsOfCandidates.size();

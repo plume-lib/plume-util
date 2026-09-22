@@ -10,7 +10,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @see MultiRandSelector
  */
 @FunctionalInterface
-@SuppressWarnings("PMD.TypeParameterNamingConventions")
+// @SuppressWarnings("PMD.TypeParameterNamingConventions")
 public interface Partitioner<ELEMENT extends @Nullable Object, CLASS extends @Nullable Object> {
 
   /**

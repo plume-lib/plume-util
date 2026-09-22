@@ -742,7 +742,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @SuppressWarnings({
       "interning:argument", // TODO: investigate later
       "signature:argument", // TODO: investigate later
-      "PMD.AvoidInstantiatingObjectsInLoops",
+      // "PMD.AvoidInstantiatingObjectsInLoops",
     })
     @Override
     public void forEach(Consumer<? super Map.Entry<@KeyFor("ArrayMap.this") K, V>> action) {
@@ -927,7 +927,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
      *
      * @return the ArrayMap associated with this entry
      */
-    @SuppressWarnings("PMD.LooseCoupling")
+    // @SuppressWarnings("PMD.LooseCoupling")
     @Pure
     private ArrayMap<K, V> theArrayMap() {
       return ArrayMap.this;

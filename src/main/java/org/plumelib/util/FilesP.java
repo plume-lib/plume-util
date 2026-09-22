@@ -88,7 +88,7 @@ public final class FilesP {
   @SuppressWarnings({
     "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
     "lock:method.guarantee.violated", // side effect to local state
-    "PMD.CloseResource", // the resource is returned
+    // "PMD.CloseResource", // the resource is returned
   })
   @SideEffectFree
   @Owning
@@ -726,7 +726,7 @@ public final class FilesP {
    * @return the path to the newly created file that did not exist before this method was invoked
    * @throws IOException if there is trouble creating the file
    */
-  @SuppressWarnings("PMD.EmptyCatchBlock")
+  // @SuppressWarnings("PMD.EmptyCatchBlock")
   public static Path createTempFile(
       Path dir, String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
     Path createdDir = Files.createDirectories(dir, attrs);
@@ -1179,7 +1179,7 @@ public final class FilesP {
    *     character; see {@link #readCodePoint}
    * @throws UncheckedIOException if there is trouble reading the input stream
    */
-  @SuppressWarnings("PMD.EmptyCatchBlock")
+  // @SuppressWarnings("PMD.EmptyCatchBlock")
   public static @Nullable Boolean isWhitespaceOnly(InputStream is, @Positive int readLimit) {
     if (!is.markSupported()) {
       return null;

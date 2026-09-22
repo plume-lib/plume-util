@@ -3175,7 +3175,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final IntArrayComparatorLexical it = IT;
 
     /** Create a new IntArrayComparatorLexical. External clients should use {@link #IT}. */
@@ -3226,7 +3226,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final LongArrayComparatorLexical it = IT;
 
     /** Create a new LongArrayComparatorLexical. External clients should use {@link #IT}. */
@@ -3278,7 +3278,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final DoubleArrayComparatorLexical it = IT;
 
     /** Create a new DoubleArrayComparatorLexical. External clients should use {@link #IT}. */
@@ -3331,7 +3331,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final StringArrayComparatorLexical it = IT;
 
     /**
@@ -3466,7 +3466,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final ObjectArrayComparatorLexical it = IT;
 
     /**
@@ -3527,7 +3527,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final IntArrayComparatorLengthFirst it = IT;
 
     /**
@@ -3585,7 +3585,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final LongArrayComparatorLengthFirst it = IT;
 
     /**
@@ -3711,7 +3711,7 @@ public final class ArraysP {
      * @deprecated use {@link #IT}
      */
     @Deprecated(since = "2026-09-15")
-    @SuppressWarnings("PMD.FieldNamingConventions")
+    // @SuppressWarnings("PMD.FieldNamingConventions")
     public static final ObjectArrayComparatorLengthFirst it = IT;
 
     /**
@@ -3922,7 +3922,7 @@ public final class ArraysP {
    *
    * @param <T> the type of the elements of the sets
    */
-  @SuppressWarnings("PMD.LooseCoupling") // TODO: document why ArrayList instead of List
+  // @SuppressWarnings("PMD.LooseCoupling") // TODO: document why ArrayList instead of List
   /*package*/ static final class Partitioning<T extends @NonNull Object>
       extends ArrayList<ArrayList<T>> {
 
@@ -3999,7 +3999,7 @@ public final class ArraysP {
    */
   @SuppressWarnings({
     "NonApiType",
-    "PMD.LooseCoupling"
+    // "PMD.LooseCoupling"
   }) // TODO: document why ArrayList instead of List
   private static <T> ArrayList<T> newArrayList(T elt) {
     ArrayList<T> result = new ArrayList<>(1);

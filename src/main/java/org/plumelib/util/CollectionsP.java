@@ -1069,7 +1069,9 @@ public final class CollectionsP {
       // Fall back to regular `equals`.
       return set1.equals(set2);
     }
-    for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor1.hasNext(); ) {
+    for (@SuppressWarnings("PMD.ForLoopVariableCount")
+        Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator();
+        itor1.hasNext(); ) {
       if (!Objects.equals(itor1.next(), itor2.next())) {
         return false;
       }
@@ -1104,7 +1106,9 @@ public final class CollectionsP {
     }
     if (comparator1 == null) {
       outerloopNaturalOrder:
-      for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor2.hasNext(); ) {
+      for (@SuppressWarnings("PMD.ForLoopVariableCount")
+          Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator();
+          itor2.hasNext(); ) {
         T elt2 = itor2.next();
         if (elt2 == null) {
           throw new IllegalArgumentException("null element in set 2: " + set2);
@@ -1129,7 +1133,9 @@ public final class CollectionsP {
       }
     } else {
       outerloopComparator:
-      for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor2.hasNext(); ) {
+      for (@SuppressWarnings("PMD.ForLoopVariableCount")
+          Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator();
+          itor2.hasNext(); ) {
         T elt2 = itor2.next();
         while (itor1.hasNext()) {
           T elt1 = itor1.next();
@@ -1157,7 +1163,11 @@ public final class CollectionsP {
    * @param e an enumeration to convert to an ArrayList
    * @return a vector containing the elements of the enumeration
    */
-  @SuppressWarnings({"JdkObsolete", "NonApiType", "PMD.LooseCoupling"}) // method name has ArrayList
+  @SuppressWarnings({
+    "JdkObsolete",
+    "NonApiType",
+    // "PMD.LooseCoupling"
+  }) // method is for ArrayList
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
@@ -1267,7 +1277,7 @@ public final class CollectionsP {
    * @param objs list of elements to create combinations of
    * @return list of lists of length dims, each of which combines elements from objs
    */
-  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // necessary to build result
+  // @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // necessary to build result
   public static <T> List<List<T>> createCombinations(
       @Positive int dims, @NonNegative int start, List<T> objs) {
 
@@ -1326,8 +1336,8 @@ public final class CollectionsP {
    */
   @SuppressWarnings({
     "NonApiType",
-    "PMD.AvoidInstantiatingObjectsInLoops", // necessary to build result
-    "PMD.LooseCoupling", // TODO: document why ArrayList rather than List
+    // "PMD.AvoidInstantiatingObjectsInLoops", // necessary to build result
+    // "PMD.LooseCoupling", // TODO: document why ArrayList rather than List
   })
   public static ArrayList<ArrayList<Integer>> createCombinations(
       int arity, @NonNegative int start, int cnt) {

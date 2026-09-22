@@ -27,7 +27,7 @@ public final class ToStringComparator implements Comparator<Object> {
    * @deprecated use {@link #INSTANCE}
    */
   @Deprecated(since = "2026-09-15")
-  @SuppressWarnings("PMD.FieldNamingConventions")
+  // @SuppressWarnings("PMD.FieldNamingConventions")
   public static final ToStringComparator instance = INSTANCE;
 
   /** Creates a ToStringComparator. */
