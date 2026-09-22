@@ -14,6 +14,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -799,7 +800,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
       if (readers.isEmpty()) {
         return null;
       }
-      FlnReader ri2 = readers.peekFirst();
+      FlnReader ri2 = readers.getFirst();
       line = ri2.readLine();
     }
     return line;

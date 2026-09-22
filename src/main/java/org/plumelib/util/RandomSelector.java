@@ -143,7 +143,6 @@ public class RandomSelector<T> {
       if (values.size() < numElts) {
         values.add(next);
       } else {
-        @SuppressWarnings("lowerbound:argument") // no list support
         int rem = generator.nextInt(values.size());
         // values should be MinLen(1), meaning that values.size() is positive.
         values.set(rem, next);
