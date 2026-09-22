@@ -120,7 +120,7 @@ public final class RegexUtil {
      * @return the full detail message
      */
     @Override
-    @Pure
+    @SideEffectFree
     public String getMessage(@GuardSatisfied CheckedPatternSyntaxException this) {
       return pse.getMessage();
     }

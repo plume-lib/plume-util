@@ -1,6 +1,7 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -443,36 +444,36 @@ final class StringsPTest {
     VersionNumberComparator vnc = new VersionNumberComparator();
 
     assertEquals(0, vnc.compare("123.456.789", "123.456.789"));
-    assertEquals(-1, vnc.compare("113.456.789", "123.456.789"));
-    assertEquals(-1, vnc.compare("123.416.789", "123.456.789"));
-    assertEquals(-1, vnc.compare("123.456.719", "123.456.789"));
-    assertEquals(-1, vnc.compare("123.456.789", "193.456.789"));
-    assertEquals(-1, vnc.compare("123.456.789", "123.496.789"));
-    assertEquals(-1, vnc.compare("123.456.789", "123.456.799"));
-    assertEquals(-1, vnc.compare("123", "123.456.789"));
-    assertEquals(-1, vnc.compare("123.456", "123.456.789"));
-    assertEquals(1, vnc.compare("123.456.789", "123"));
-    assertEquals(1, vnc.compare("123.456.789", "123.456"));
+    assertTrue(0 > vnc.compare("113.456.789", "123.456.789"));
+    assertTrue(0 > vnc.compare("123.416.789", "123.456.789"));
+    assertTrue(0 > vnc.compare("123.456.719", "123.456.789"));
+    assertTrue(0 > vnc.compare("123.456.789", "193.456.789"));
+    assertTrue(0 > vnc.compare("123.456.789", "123.496.789"));
+    assertTrue(0 > vnc.compare("123.456.789", "123.456.799"));
+    assertTrue(0 > vnc.compare("123", "123.456.789"));
+    assertTrue(0 > vnc.compare("123.456", "123.456.789"));
+    assertTrue(0 < vnc.compare("123.456.789", "123"));
+    assertTrue(0 < vnc.compare("123.456.789", "123.456"));
 
     // Equal numeric value but different string (leading zeros): must be 0 and antisymmetric.
     assertEquals(0, vnc.compare("1.2", "1.02"));
     assertEquals(0, vnc.compare("1.02", "1.2"));
 
     // A component may exceed Integer.MAX_VALUE (2147483647) or Long.MAX_VALUE.
-    assertEquals(-1, vnc.compare("1.2147483647", "1.2147483648"));
-    assertEquals(1, vnc.compare("1.2147483648", "1.2147483647"));
+    assertTrue(0 > vnc.compare("1.2147483647", "1.2147483648"));
+    assertTrue(0 < vnc.compare("1.2147483648", "1.2147483647"));
     assertEquals(0, vnc.compare("1.2147483648", "1.2147483648"));
-    assertEquals(-1, vnc.compare("1.9", "1.9223372036854775808"));
-    assertEquals(1, vnc.compare("1.9223372036854775808", "1.9"));
+    assertTrue(0 > vnc.compare("1.9", "1.9223372036854775808"));
+    assertTrue(0 < vnc.compare("1.9223372036854775808", "1.9"));
     assertEquals(
         -1, vnc.compare("1.99999999999999999999", "1.999999999999999999999")); // differing lengths
     assertEquals(
         0, vnc.compare("1.99999999999999999999", "1.099999999999999999999")); // leading zero
-    assertEquals(1, vnc.compare("1.0000000000000000000005", "1.4")); // leading zeros, then larger
+    assertTrue(0 < vnc.compare("1.0000000000000000000005", "1.4")); // leading zeros, then larger
 
     // All-zero components compare equal regardless of how they are written.
     assertEquals(0, vnc.compare("1.0", "1.000"));
-    assertEquals(-1, vnc.compare("1.0", "1.0000000000000000000001"));
+    assertTrue(0 > vnc.compare("1.0", "1.0000000000000000000001"));
   }
 
   // //////////////////////////////////////////////////////////////////////

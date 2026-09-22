@@ -205,6 +205,8 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     assertIndexInBounds(index, "removeIndex");
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
+    // Clear the now-unused slot so it does not retain a reference.
+    values[size] = null;
     sizeModificationCount++;
     return true;
   }
@@ -292,6 +294,9 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SideEffectsOnly("this")
   public void clear() {
     if (size != 0) {
+      // Clear the slots so they do not retain references.
+      assert values != null : "@AssumeAssertion(nullness): nonzero size => the array is non-null";
+      Arrays.fill(values, 0, size, null);
       size = 0;
       sizeModificationCount++;
     }
