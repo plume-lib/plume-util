@@ -18,7 +18,7 @@ final class ToStringComparatorTest {
 
   @Test
   void compareOrdersByPrintedRepresentation() {
-    ToStringComparator c = ToStringComparator.instance;
+    ToStringComparator c = ToStringComparator.INSTANCE;
     assertTrue(c.compare("abc", "abd") < 0);
     assertTrue(c.compare("abd", "abc") > 0);
     assertEquals(0, c.compare("abc", "abc"));
@@ -34,7 +34,7 @@ final class ToStringComparatorTest {
   @SuppressWarnings("nullness:argument") // this class handles null, as its Javadoc says
   @Test
   void compareHandlesNull() {
-    ToStringComparator c = ToStringComparator.instance;
+    ToStringComparator c = ToStringComparator.INSTANCE;
     assertEquals(0, c.compare(null, null));
     // null is ordered as if it were the string "null".
     assertTrue(c.compare("a", null) < 0);
@@ -46,7 +46,7 @@ final class ToStringComparatorTest {
 
   @Test
   void instanceIsASingleton() {
-    assertEquals(ToStringComparator.instance, ToStringComparator.instance);
+    assertEquals(ToStringComparator.INSTANCE, ToStringComparator.INSTANCE);
   }
 
   @Test
