@@ -626,6 +626,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @throws NoSuchElementException at end of file
    */
   @Override
+  @SuppressWarnings("allcheckers:purity.unknown.sideeffectsonly") // readLine can write System.err
   public String next(@GuardSatisfied EntryReader this) {
     try {
       String result = readLine();
