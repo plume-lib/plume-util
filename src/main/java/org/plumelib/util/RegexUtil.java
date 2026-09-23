@@ -30,7 +30,7 @@ public final class RegexUtil {
 
   /** This class is a collection of methods; it does not represent anything. */
   private RegexUtil() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /**
@@ -78,6 +78,7 @@ public final class RegexUtil {
      * @param pse the PatternSyntaxException to be wrapped
      */
     public CheckedPatternSyntaxException(PatternSyntaxException pse) {
+      super();
       this.pse = pse;
     }
 

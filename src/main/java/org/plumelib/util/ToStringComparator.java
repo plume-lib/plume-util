@@ -19,14 +19,23 @@ import org.checkerframework.dataflow.qual.Pure;
 // Comparator<@Nullable Object>".
 public final class ToStringComparator implements Comparator<Object> {
   /** The unique instance (this class is a singleton). */
-  public static final ToStringComparator instance = new ToStringComparator();
+  public static final ToStringComparator INSTANCE = new ToStringComparator();
+
+  /**
+   * The unique instance (this class is a singleton).
+   *
+   * @deprecated use {@link #INSTANCE}
+   */
+  @Deprecated(since = "2026-09-15")
+  // @SuppressWarnings("PMD.FieldNamingConventions")
+  public static final ToStringComparator instance = INSTANCE;
 
   /** Creates a ToStringComparator. */
   private ToStringComparator() {}
 
+  @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
   @Override
   @Pure
-  @SuppressWarnings("allcheckers:purity.call") // deterministic up to equality
   public int compare(@MustCallUnknown Object o1, @MustCallUnknown Object o2) {
     return Objects.toString(o1).compareTo(Objects.toString(o2));
   }
@@ -44,7 +53,7 @@ public final class ToStringComparator implements Comparator<Object> {
     for (T object : in) {
       result.add(object);
     }
-    result.sort(instance);
+    result.sort(INSTANCE);
     return result;
   }
 }

@@ -36,12 +36,11 @@ import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
-@SuppressWarnings("PMD.ForLoopVariableCount")
 public final class CollectionsP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private CollectionsP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -123,7 +122,7 @@ public final class CollectionsP {
   @Pure
   public static <T> boolean hasDuplicates(Collection<T> a) {
     if (a instanceof List<T> alist && alist instanceof RandomAccess) {
-      HashSet<T> hs = new HashSet<>();
+      Set<T> hs = new HashSet<>();
       for (int i = 0; i < alist.size(); i++) { // NOPMD: a foreach loop here would be less efficient
         T elt = alist.get(i);
         if (!hs.add(elt)) {
@@ -131,7 +130,7 @@ public final class CollectionsP {
         }
       }
     } else {
-      HashSet<T> hs = new HashSet<>();
+      Set<T> hs = new HashSet<>();
       for (T elt : a) {
         if (!hs.add(elt)) {
           return true;
@@ -344,7 +343,7 @@ public final class CollectionsP {
   }
 
   /** All calls to deepEquals that are currently underway. */
-  private static HashSet<WeakIdentityPair<Object, Object>> deepEqualsUnderway = new HashSet<>();
+  private static Set<WeakIdentityPair<Object, Object>> deepEqualsUnderway = new HashSet<>();
 
   /**
    * Determines deep equality for the elements.
@@ -860,7 +859,7 @@ public final class CollectionsP {
    *     range (an insertion)
    * @param elements the new (replacement) elements
    */
-  public static record Replacement<T>(int start, int end, Collection<T> elements) {
+  public record Replacement<T>(int start, int end, Collection<T> elements) {
 
     /**
      * Creates a new Replacement.
@@ -1070,7 +1069,9 @@ public final class CollectionsP {
       // Fall back to regular `equals`.
       return set1.equals(set2);
     }
-    for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor1.hasNext(); ) {
+    for (@SuppressWarnings("PMD.ForLoopVariableCount")
+        Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator();
+        itor1.hasNext(); ) {
       if (!Objects.equals(itor1.next(), itor2.next())) {
         return false;
       }
@@ -1105,7 +1106,9 @@ public final class CollectionsP {
     }
     if (comparator1 == null) {
       outerloopNaturalOrder:
-      for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor2.hasNext(); ) {
+      for (@SuppressWarnings("PMD.ForLoopVariableCount")
+          Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator();
+          itor2.hasNext(); ) {
         T elt2 = itor2.next();
         if (elt2 == null) {
           throw new IllegalArgumentException("null element in set 2: " + set2);
@@ -1130,7 +1133,9 @@ public final class CollectionsP {
       }
     } else {
       outerloopComparator:
-      for (Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator(); itor2.hasNext(); ) {
+      for (@SuppressWarnings("PMD.ForLoopVariableCount")
+          Iterator<T> itor1 = set1.iterator(), itor2 = set2.iterator();
+          itor2.hasNext(); ) {
         T elt2 = itor2.next();
         while (itor1.hasNext()) {
           T elt1 = itor1.next();
@@ -1158,7 +1163,11 @@ public final class CollectionsP {
    * @param e an enumeration to convert to an ArrayList
    * @return a vector containing the elements of the enumeration
    */
-  @SuppressWarnings({"JdkObsolete", "NonApiType"})
+  @SuppressWarnings({
+    "JdkObsolete",
+    "NonApiType",
+    // "PMD.LooseCoupling"
+  }) // method is for ArrayList
   public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
@@ -1176,7 +1185,7 @@ public final class CollectionsP {
    * @return a List containing the specified elements
    */
   public static <E> List<E> listOf(E e1, E e2) {
-    ArrayList<E> result = new ArrayList<>(2);
+    List<E> result = new ArrayList<>(2);
     result.add(e1);
     result.add(e2);
     return Collections.unmodifiableList(result);
@@ -1268,6 +1277,7 @@ public final class CollectionsP {
    * @param objs list of elements to create combinations of
    * @return list of lists of length dims, each of which combines elements from objs
    */
+  // @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // necessary to build result
   public static <T> List<List<T>> createCombinations(
       @Positive int dims, @NonNegative int start, List<T> objs) {
 
@@ -1324,7 +1334,11 @@ public final class CollectionsP {
    * @param cnt maximum element value
    * @return list of lists of length arity, each of which combines integers from start to cnt
    */
-  @SuppressWarnings("NonApiType")
+  @SuppressWarnings({
+    "NonApiType",
+    // "PMD.AvoidInstantiatingObjectsInLoops", // necessary to build result
+    // "PMD.LooseCoupling", // TODO: document why ArrayList rather than List
+  })
   public static ArrayList<ArrayList<Integer>> createCombinations(
       int arity, @NonNegative int start, int cnt) {
 
@@ -1374,7 +1388,7 @@ public final class CollectionsP {
     Objects.requireNonNull(source);
     return new Iterable<>() {
       /** True if this Iterable object has been used. */
-      private AtomicBoolean used = new AtomicBoolean();
+      private final AtomicBoolean used = new AtomicBoolean();
 
       @Override
       public Iterator<T> iterator() {
@@ -1396,7 +1410,7 @@ public final class CollectionsP {
    */
   public static final class EnumerationIterator<T> implements Iterator<T> {
     /** The enumeration that this object wraps. */
-    Enumeration<T> e;
+    private final Enumeration<T> e;
 
     /**
      * Create an Iterator that yields the elements of the given Enumeration.
@@ -1433,7 +1447,7 @@ public final class CollectionsP {
   @SuppressWarnings({"JdkObsolete", "PMD.ReplaceEnumerationWithIterator"})
   public static final class IteratorEnumeration<T> implements Enumeration<T> {
     /** The iterator that this object wraps. */
-    Iterator<T> itor;
+    private final Iterator<T> itor;
 
     /**
      * Create an Enumeration that contains the elements returned by the given Iterator.
@@ -1474,10 +1488,10 @@ public final class CollectionsP {
    */
   private static final class IteratorPlusOne<T> implements Iterator<T> {
     /** The iterator that this yields first. */
-    private Iterator<T> itor;
+    private final Iterator<T> itor;
 
     /** The last element that this returns. */
-    private T lastElement;
+    private final T lastElement;
 
     /**
      * True if this iterator has not yet yielded the lastElement element, and therefore is not done.
@@ -1539,10 +1553,10 @@ public final class CollectionsP {
    */
   private static final class MergedIterator2<T> implements Iterator<T> {
     /** The first of the two iterators that this object merges. */
-    Iterator<T> itor1;
+    private final Iterator<T> itor1;
 
     /** The second of the two iterators that this object merges. */
-    Iterator<T> itor2;
+    private final Iterator<T> itor2;
 
     /**
      * Create an iterator that returns the elements of {@code itor1} then those of {@code itor2}.
@@ -1550,7 +1564,7 @@ public final class CollectionsP {
      * @param itor1 an Iterator
      * @param itor2 another Iterator
      */
-    MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
+    private MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
       this.itor1 = itor1;
       this.itor2 = itor2;
     }
@@ -1610,7 +1624,7 @@ public final class CollectionsP {
   private static final class MergedIterator<T> implements Iterator<T> {
 
     /** The iterators that this object merges. */
-    Iterator<Iterator<T>> itorOfItors;
+    private final Iterator<Iterator<T>> itorOfItors;
 
     /**
      * Create an iterator that returns the elements of the given iterators, in turn.
@@ -1618,13 +1632,13 @@ public final class CollectionsP {
      * @param itorOfItors an iterator whose elements are iterators; this MergedIterator will merge
      *     them all
      */
-    MergedIterator(Iterator<Iterator<T>> itorOfItors) {
+    private MergedIterator(Iterator<Iterator<T>> itorOfItors) {
       this.itorOfItors = itorOfItors;
     }
 
     /** The current iterator (from {@link #itorOfItors}) that is being iterated over. */
     // Initialize to an empty iterator to prime the pump.
-    Iterator<T> current = new ArrayList<T>().iterator();
+    private Iterator<T> current = new ArrayList<T>().iterator();
 
     @SuppressWarnings({"allcheckers:purity", "lock:method.guarantee.violated"})
     @Override
@@ -1668,10 +1682,10 @@ public final class CollectionsP {
    */
   private static final class FilteredIterator<T> implements Iterator<T> {
     /** The iterator that this object is filtering. */
-    Iterator<T> itor;
+    private final Iterator<T> itor;
 
     /** The predicate that determines which elements to retain. */
-    Predicate<T> predicate;
+    private final Predicate<T> predicate;
 
     /**
      * Create an iterator that only returns elements of {@code itor} that match the given predicate.
@@ -1679,23 +1693,23 @@ public final class CollectionsP {
      * @param itor the Iterator to filter
      * @param predicate the predicate that determines which elements to retain
      */
-    FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
+    private FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
       this.itor = itor;
       this.predicate = predicate;
     }
 
     /** A marker object, distinct from any object that the iterator can return. */
     @SuppressWarnings("unchecked")
-    T invalidT = (T) new Object();
+    private final T invalidT = (T) new Object();
 
     /**
      * The next object that this iterator will yield, or {@link #invalidT} if {@link #currentValid}
      * is false.
      */
-    T current = invalidT;
+    private T current = invalidT;
 
     /** True iff {@link #current} is an object from the wrapped iterator. */
-    boolean currentValid = false;
+    private boolean currentValid = false;
 
     @SuppressWarnings({
       "allcheckers:purity",
@@ -1749,27 +1763,27 @@ public final class CollectionsP {
    */
   public static final class RemoveFirstAndLastIterator<T> implements Iterator<T> {
     /** The wrapped iterator. */
-    Iterator<T> itor;
+    private final Iterator<T> itor;
 
     /** A marker object, distinct from any object that the iterator can return. */
     @SuppressWarnings("unchecked")
-    T nothing = (T) new Object();
+    private final T nothing = (T) new Object();
 
     // I don't think this works, because the iterator might itself return null
     // @Nullable T nothing = (@Nullable T) null;
 
     /** The first object yielded by the wrapped iterator. */
-    T first = nothing;
+    private T first = nothing;
 
     /** The next object that this iterator will return. */
-    T current = nothing;
+    private T current = nothing;
 
     /**
      * Create an iterator just like {@code itor}, except without its first and last elements.
      *
      * @param itor an iterator whose first and last elements to discard
      */
-    RemoveFirstAndLastIterator(Iterator<T> itor) {
+    /*package*/ RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
         first = itor.next();
