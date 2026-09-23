@@ -15,7 +15,7 @@ public final class GraphP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private GraphP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // Algorithms for computing dominators:
@@ -54,6 +54,7 @@ public final class GraphP {
    * @param predecessors a graph, represented as a predecessor map
    * @return a map from each node to a list of its pre-dominators
    */
+  // @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops") // necessary to build result
   public static <T extends @NonNull Object> Map<T, List<T>> dominators(
       Map<T, List<@KeyFor("#1") T>> predecessors) {
 

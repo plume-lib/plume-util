@@ -117,12 +117,12 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
 
   /** An iterator over a set that is in the {@link State#SINGLETON} state. */
   @SuppressWarnings("lock:override.receiver") // cannot specify the receiver type
-  private class SingletonIterator implements Iterator<T> {
+  private final class SingletonIterator implements Iterator<T> {
     /** True if the iterator has a next element. */
     private boolean hasNext = true;
 
     /** Creates a SingletonIterator. */
-    public SingletonIterator() {}
+    private SingletonIterator() {}
 
     @Override
     public boolean hasNext() {

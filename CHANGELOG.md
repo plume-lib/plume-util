@@ -1,9 +1,14 @@
 # Plume-Util change log
 
-## 9.9.9 (2026-08-??)
+## 2.1.0 (2026-??-??)
 
 - Tested under Java 27.
 - Requires Java 21 to run.
+- Renamed final static fields to SCREAMING_CASE, such as `it` to `IT`.
+  The old names remain but are deprecated.
+- Converted classes to records; their fields are now accessor methods:
+  - `EntryReader.EntryFormat`
+  - `EntryReader.CommentFormat`
 
 ## 2.0.0 (2026-08-05)
 

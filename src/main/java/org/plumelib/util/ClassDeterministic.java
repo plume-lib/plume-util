@@ -18,7 +18,7 @@ public final class ClassDeterministic {
 
   /** Do not call; this class is a collection of methods and does not represent anything. */
   private ClassDeterministic() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /**

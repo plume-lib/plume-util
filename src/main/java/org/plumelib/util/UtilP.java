@@ -26,7 +26,7 @@ public final class UtilP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private UtilP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -155,8 +155,7 @@ public final class UtilP {
     // TimeLimitProcess p = new TimeLimitProcess(pb.start(), TIMEOUT_SEC * 1000);
     try {
       Process p = pb.start();
-      String output = FilesP.streamString(p.getInputStream());
-      return output;
+      return FilesP.streamString(p.getInputStream());
     } catch (IOException e) {
       return "IOException: " + e.getMessage();
     }
@@ -232,6 +231,7 @@ public final class UtilP {
    * @param value value to set the property to, if it is not already set
    * @return the previous value of the property
    */
+  // @SuppressWarnings("PMD.LinguisticNaming")
   public static @Nullable String setDefaultMaybe(Properties p, String key, String value) {
     String currentValue = p.getProperty(key);
     if (currentValue == null) {

@@ -41,22 +41,22 @@ public class OrderedPairIterator<T extends @Nullable Object>
     implements Iterator<IPair<@Nullable T, @Nullable T>> {
 
   /** The iterator for first elements of pairs. */
-  Iterator<T> itor1;
+  private Iterator<T> itor1;
 
   /** The iterator for second elements of pairs. */
-  Iterator<T> itor2;
+  private Iterator<T> itor2;
 
   /** The next element to be read by itor1. */
-  @Nullable T next1;
+  private @Nullable T next1;
 
   /** The next element to be read by itor2. */
-  @Nullable T next2;
+  private @Nullable T next2;
 
   /**
    * The comparator to be used to compare elements from the two iterators, to determine whether they
    * match. Null to use the natural comparison.
    */
-  @Nullable Comparator<? super T> comparator;
+  private @Nullable Comparator<? super T> comparator;
 
   /**
    * Creates an iterator that returns pairs, where each pair contains an element from each iterator
@@ -186,7 +186,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
           } else if (next1 != null && next2 == null) {
             comparison = 1;
           } else {
-            throw new RuntimeException("this can't happen " + next1 + " " + next2);
+            throw new RuntimeException("this can't happen " + next1 + " " + next2, npe);
           }
         }
         if (comparison < 0) {
