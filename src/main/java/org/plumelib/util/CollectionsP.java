@@ -41,7 +41,6 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
-import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
@@ -1811,7 +1810,8 @@ public final class CollectionsP {
      *
      * @param itor an iterator whose first and last elements to discard
      */
-    /*package*/ @Unshrinkable RemoveFirstAndLastIterator(Iterator<T> itor) {
+    /*package*/ @Unshrinkable
+    RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
         first = itor.next();

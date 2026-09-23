@@ -61,7 +61,8 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
     "unchecked", // for generic array creation
     // "PMD.AvoidInstantiatingObjectsInLoops" // necessary to build result
   })
-  public @Unshrinkable CombinationIterator(Collection<? extends Collection<T>> collectionsOfCandidates) {
+  public @Unshrinkable CombinationIterator(
+      Collection<? extends Collection<T>> collectionsOfCandidates) {
     int size = collectionsOfCandidates.size();
     // Just like collectionsOfCandidates, but indexable.
     ArrayList<? extends Collection<T>> listOfCollectionsOfCanditates =

@@ -34,7 +34,6 @@ import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.checkerframework.checker.modifiability.qual.Ungrowable;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.KeyFor;
-import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -98,15 +97,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
 
   // An alternate representation would also store the hash code of each key, for quicker querying.
-
-  /** A view of the keys. */
-  private @MonotonicNonNull @IteratorPolyMod @Ungrowable Set<@KeyFor("this") K> keySet = null;
-
-  /** The view of the values. */
-  private @MonotonicNonNull @IteratorPolyMod @Ungrowable Collection<V> valuesCollection = null;
-
-  /** The view of the entries. */
-  private @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
 
   /**
    * The number of times this map's size has been modified by adding or removing an element
@@ -533,9 +523,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return ArrayMap.this.size();
     }
 
-    @SuppressWarnings({"modifiability:method.invocation", // wrapper around outer this
+    @SuppressWarnings({
+      "modifiability:method.invocation", // wrapper around outer this
       "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
-      })
+    })
     @Override
     public void clear(@Shrinkable KeySet this) {
       ArrayMap.this.clear();
@@ -633,9 +624,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return ArrayMap.this.size();
     }
 
-    @SuppressWarnings({"modifiability:method.invocation", // wrapper around outer this
-    "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
-      })
+    @SuppressWarnings({
+      "modifiability:method.invocation", // wrapper around outer this
+      "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
+    })
     @Override
     public void clear(@Shrinkable Values this) {
       ArrayMap.this.clear();
@@ -712,7 +704,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Represents a view of the entries. */
-  private final class EntrySet extends AbstractSet<Map.@PolyModifiable Entry<@KeyFor("this") K, V>> {
+  private final class EntrySet
+      extends AbstractSet<Map.@PolyModifiable Entry<@KeyFor("this") K, V>> {
 
     /** Creates a new EntrySet. */
     public @IteratorPolyMod @Ungrowable @PolyShrinkable EntrySet(
@@ -726,9 +719,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return ArrayMap.this.size();
     }
 
-    @SuppressWarnings({"modifiability:method.invocation", // wrapper around outer this
-    "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
-      })
+    @SuppressWarnings({
+      "modifiability:method.invocation", // wrapper around outer this
+      "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
+    })
     @Override
     public void clear(@Shrinkable EntrySet this) {
       ArrayMap.this.clear();
@@ -751,9 +745,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return containsEntry(key, value);
     }
 
-    @SuppressWarnings({"modifiability:method.invocation", // wrapper around outer this
-    "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
-      })
+    @SuppressWarnings({
+      "modifiability:method.invocation", // wrapper around outer this
+      "allcheckers:purity.unknown.sideeffectsonly" // TEMPORARY: @SideEffectsOnly
+    })
     @Override
     public boolean remove(
         @Shrinkable EntrySet this, @GuardSatisfied @Nullable @UnknownSignedness Object o) {
@@ -795,7 +790,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param <T> the type of the iteration value
    */
   @SuppressWarnings(
-    "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
+      "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
   )
   private abstract class ArrayMapIterator<T> implements Iterator<T> {
     /** The first unread index; the index of the next value to return. */
