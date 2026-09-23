@@ -340,7 +340,7 @@ public final class ClassDeterministic {
     /** Create a new ToStringComparator. */
     public ToStringComparator() {}
 
-    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
+    @SuppressWarnings("allcheckers:purity.call") // deterministic up to equals
     @Override
     @Pure
     public int compare(Object o1, Object o2) {
