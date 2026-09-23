@@ -1029,7 +1029,7 @@ public final class CollectionsP {
     "allcheckers:purity.call",
     "lock:method.guarantee.violated",
     "modifiability:contracts.conditional.postcondition" // this function cannot guarantee that
-    // returning true means the colleciton is modifiable.
+    // returning true means the collection is modifiable.
   }) // String.substring
   @Pure
   @EnsuresQualifierIf(result = true, expression = "#1", qualifier = IteratorPolyMod.class)

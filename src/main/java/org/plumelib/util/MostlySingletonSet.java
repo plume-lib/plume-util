@@ -15,7 +15,7 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
  *
  * @param <T> the type of elements of the set
  */
-@SuppressWarnings({"ExtendsObject"})
+@SuppressWarnings("ExtendsObject")
 public final class MostlySingletonSet<T extends Object> extends AbstractMostlySingletonSet<T> {
 
   /** Create a MostlySingletonSet. */

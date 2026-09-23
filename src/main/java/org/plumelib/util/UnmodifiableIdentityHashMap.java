@@ -38,9 +38,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <K> the type of keys of the map
  * @param <V> the type of values of the map
  */
-@SuppressWarnings({
-  "keyfor", // keyfor: keys for `this` are also keys for `this.map`
-})
+@SuppressWarnings("keyfor") // keyfor: keys for `this` are also keys for `this.map`
 public final class UnmodifiableIdentityHashMap<K, V> extends IdentityHashMap<K, V> {
 
   /** The serial version UID. */
