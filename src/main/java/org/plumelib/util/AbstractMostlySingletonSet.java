@@ -105,7 +105,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   }
 
   @Override
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree")
+  @SuppressWarnings("allcheckers:purity.call")
   @SideEffectFree
   public Iterator<T> iterator() {
     return switch (state) {

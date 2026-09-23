@@ -90,8 +90,8 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({
     "unchecked", // generic array cast
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
-    "allcheckers:purity.not.sideeffectfree.call", // calls `super`
+    "allcheckers:purity.assign.field", // initializes `this`
+    "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
   public @Growable @Shrinkable ArraySet(int initialCapacity) {
@@ -121,8 +121,8 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
    */
   @SuppressWarnings({
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
-    "allcheckers:purity.not.sideeffectfree.call", // calls `super`
+    "allcheckers:purity.assign.field", // initializes `this`
+    "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
   private @Growable @Shrinkable ArraySet(

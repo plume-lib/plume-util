@@ -578,7 +578,7 @@ class ArrayMapTestApache {
       this.i = i;
     }
 
-    @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call")
+    @SuppressWarnings("allcheckers:purity.call")
     @Override
     protected Object clone(@GuardSatisfied MockClonable this) throws CloneNotSupportedException {
       return new MockClonable(i);
@@ -603,7 +603,7 @@ class ArrayMapTestApache {
   }
 
   private static class MockEntry implements Map.Entry {
-    @SuppressWarnings("allcheckers:purity.not.deterministic.object.creation")
+    @SuppressWarnings("allcheckers:purity.object.creation")
     @Override
     public Object getKey(@GuardSatisfied MockEntry this) {
       return new Integer(1);

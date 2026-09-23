@@ -566,7 +566,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       "nullness", // Nullness Checker special-cases toArray
       // `toArray(T[])` is inherited as @SideEffectFree, but its specification requires writing
       // into the caller-supplied array.
-      "allcheckers:purity.not.sideeffectfree.assign.array",
+      "allcheckers:purity.assign.array",
     })
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
@@ -660,7 +660,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       "nullness", // Nullness Checker special-cases toArray
       // `toArray(T[])` is inherited as @SideEffectFree, but its specification requires writing
       // into the caller-supplied array.
-      "allcheckers:purity.not.sideeffectfree.assign.array",
+      "allcheckers:purity.assign.array",
     })
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {

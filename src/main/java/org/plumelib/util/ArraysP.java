@@ -458,7 +458,7 @@ public final class ArraysP {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(int[])");
     }
     @SuppressWarnings({
-      "allcheckers:purity.not.deterministic.call",
+      "allcheckers:purity.call",
       "allcheckers:method.guarantee.violated"
     }) // pure up to .equals(), which is enough for arithmetic
     int[] minAndMax = minAndMax(a);
@@ -479,7 +479,7 @@ public final class ArraysP {
       throw new ArrayIndexOutOfBoundsException("Empty array passed to elementRange(long[])");
     }
     @SuppressWarnings({
-      "allcheckers:purity.not.deterministic.call",
+      "allcheckers:purity.call",
       "allcheckers:method.guarantee.violated"
     }) // pure up to .equals(), which is enough for arithmetic
     long[] minAndMax = minAndMax(a);
