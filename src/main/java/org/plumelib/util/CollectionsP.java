@@ -1004,7 +1004,7 @@ public final class CollectionsP {
    * @return true if the collection is modifiable
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.deterministic.call",
+    "allcheckers:purity.call",
     "lock:method.guarantee.violated"
   }) // String.substring
   @Pure
@@ -1814,7 +1814,7 @@ public final class CollectionsP {
      *
      * @return the first element of the iterator that was used to construct this
      */
-    @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // constructing an exception
+    @SuppressWarnings("allcheckers:purity.call") // constructing an exception
     @Pure
     public T getFirst() {
       @SuppressWarnings("interning") // check for equality to a special value

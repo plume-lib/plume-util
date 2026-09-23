@@ -33,7 +33,7 @@ public final class ToStringComparator implements Comparator<Object> {
   /** Creates a ToStringComparator. */
   private ToStringComparator() {}
 
-  @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
+  @SuppressWarnings("allcheckers:purity.call") // deterministic up to equals
   @Override
   @Pure
   public int compare(@MustCallUnknown Object o1, @MustCallUnknown Object o2) {

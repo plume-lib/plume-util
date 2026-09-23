@@ -260,7 +260,7 @@ public abstract class SIList<E> implements Iterable<E>, Serializable {
 
   @Override
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call",
+    "allcheckers:purity.call",
     "lock:method.guarantee.violated"
   }) // side effect to local state
   public String toString(@GuardSatisfied SIList<E> this) {

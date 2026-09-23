@@ -66,8 +66,8 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SuppressWarnings({
     "unchecked", // generic array cast
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
-    "allcheckers:purity.not.sideeffectfree.call" // calls `super`
+    "allcheckers:purity.assign.field", // initializes `this`
+    "allcheckers:purity.call" // calls `super`
   })
   @SideEffectFree
   public IdentityArraySet(int initialCapacity) {
@@ -97,8 +97,8 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    */
   @SuppressWarnings({
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
-    "allcheckers:purity.not.sideeffectfree.call" // calls `super`
+    "allcheckers:purity.assign.field", // initializes `this`
+    "allcheckers:purity.call" // calls `super`
   })
   @SideEffectFree
   private IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {

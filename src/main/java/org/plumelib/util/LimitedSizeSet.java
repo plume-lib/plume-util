@@ -201,8 +201,7 @@ public class LimitedSizeSet<T extends @Nullable Object> implements Serializable,
     values = null;
   }
 
-  @SuppressWarnings(
-      "allcheckers:purity.not.sideeffectfree.assign.field") // side effect to local state (clone)
+  @SuppressWarnings("allcheckers:purity.assign.field") // side effect to local state (clone)
   @SideEffectFree
   @Override
   public LimitedSizeSet<T> clone(@GuardSatisfied LimitedSizeSet<T> this) {
