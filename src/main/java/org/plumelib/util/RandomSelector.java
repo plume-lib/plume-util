@@ -77,7 +77,7 @@ public class RandomSelector<T> {
   private Random generator;
 
   /** The values chosen. */
-  private @Modifiable ArrayList<T> values = new ArrayList<>();
+  private final @Modifiable List<T> values = new ArrayList<>();
 
   /**
    * Creates a new RandomSelector.
@@ -144,7 +144,6 @@ public class RandomSelector<T> {
       if (values.size() < numElts) {
         values.add(next);
       } else {
-        @SuppressWarnings("lowerbound:argument") // no list support
         int rem = generator.nextInt(values.size());
         // values should be MinLen(1), meaning that values.size() is positive.
         values.set(rem, next);
@@ -160,7 +159,7 @@ public class RandomSelector<T> {
    */
   public List<T> getValues() {
     // avoid concurrent mod errors and rep exposure
-    ArrayList<T> ret = new ArrayList<>();
+    List<T> ret = new ArrayList<>();
     ret.addAll(values);
     return ret;
   }

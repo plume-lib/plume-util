@@ -26,7 +26,7 @@ public final class MathP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private MathP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   //
@@ -502,14 +502,11 @@ public final class MathP {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
 
-    int thisSquarePow = base;
     int result = 1;
-    while (expt > 0) {
+    for (int thisSquarePow = base; expt > 0; expt >>= 1, thisSquarePow *= thisSquarePow) {
       if ((expt & 1) != 0) {
         result *= thisSquarePow;
       }
-      expt >>= 1;
-      thisSquarePow *= thisSquarePow;
     }
     return result;
   }
@@ -529,14 +526,11 @@ public final class MathP {
       throw new ArithmeticException("Negative exponent passed to pow");
     }
 
-    long thisSquarePow = base;
     long result = 1;
-    while (expt > 0) {
+    for (long thisSquarePow = base; expt > 0; expt >>= 1, thisSquarePow *= thisSquarePow) {
       if ((expt & 1) != 0) {
         result *= thisSquarePow;
       }
-      expt >>= 1;
-      thisSquarePow *= thisSquarePow;
     }
     return result;
   }
@@ -1402,28 +1396,28 @@ public final class MathP {
    * is set, then the bracketing endpoints are also returned; otherwise, all returned values are
    * between the minimum and maximum of the original values.
    */
-  static final class MissingNumbersIteratorInt implements Iterator<Integer> {
+  /*package*/ static final class MissingNumbersIteratorInt implements Iterator<Integer> {
     // Exactly one of nums and numsItor is non-null.
     /** The numbers not to include in the iterator. */
-    int @MonotonicNonNull @MinLen(1) [] nums;
+    private int @MonotonicNonNull @MinLen(1) [] nums;
 
     /** The numbers not to include in the iterator. */
-    @MonotonicNonNull Iterator<Integer> numsItor;
+    private @MonotonicNonNull Iterator<Integer> numsItor;
 
     /** The current element of the numbers not to include in the iterator. */
-    int currentNonmissing;
+    private int currentNonmissing;
 
     /** The next element to be returned by the iterator. */
-    int currentMissing;
+    private int currentMissing;
 
     /** Used only if nums != null, in which case it is an index into nums. */
-    @IndexFor("nums") int currentIndex;
+    private @IndexFor("nums") int currentIndex;
 
     /**
      * If true, include the value just before the minimum excluded element and the value just after
      * the maximum excluded element.
      */
-    boolean addEnds;
+    private final boolean addEnds;
 
     /**
      * An iterator over all the numbers <b>not</b> in the argument array, but within its range.
@@ -1431,7 +1425,7 @@ public final class MathP {
      * @param nums a non-empty array
      * @param addEnds if true, include the bracketing endpoints
      */
-    @Unshrinkable MissingNumbersIteratorInt(int @MinLen(1) [] nums, boolean addEnds) {
+    private @Unshrinkable MissingNumbersIteratorInt(int @MinLen(1) [] nums, boolean addEnds) {
       this.addEnds = addEnds;
       { // avoid modifying parameter
         int[] numsCopy = new int[nums.length];
@@ -1455,7 +1449,7 @@ public final class MathP {
      * @param numsItor a non-empty iterator; it must return integers in sorted order
      * @param addEnds if true, include the bracketing endpoints
      */
-    @Unshrinkable MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
+    /*package*/ @Unshrinkable MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
       this.addEnds = addEnds;
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
@@ -1655,7 +1649,10 @@ public final class MathP {
    */
   // This seems to give too many false positives (or maybe my probability
   // model was wrong); use nonmodulusStrict instead.
-  @SuppressWarnings("allcheckers:purity")
+  @SuppressWarnings({
+    "allcheckers:purity",
+    // "PMD.AvoidInstantiatingObjectsInLoops" // can the algorithm avoid this cost?
+  })
   @Pure
   @StaticallyExecutable
   public static int @Nullable @ArrayLen(2) [] nonmodulusNonstrict(int[] nums) {
@@ -1671,7 +1668,7 @@ public final class MathP {
     // include it to make this function stand on its own
     for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      boolean[] hasModulus = new boolean[m]; // initialized to false?
+      boolean[] hasModulus = new boolean[m]; // initialized to false
       int numNonmodulus = m;
       for (int elt : nums) {
         @IndexFor("hasModulus") int rem = modNonnegative(elt, m);
@@ -1741,28 +1738,28 @@ public final class MathP {
    * is set, then the bracketing endpoints are also returned; otherwise, all returned values are
    * between the minimum and maximum of the original values.
    */
-  static final class MissingNumbersIteratorLong implements Iterator<Long> {
+  private static final class MissingNumbersIteratorLong implements Iterator<Long> {
     // Exactly one of nums and numsItor is non-null.
     /** The numbers not to include in the iterator. */
-    long @MonotonicNonNull @MinLen(1) [] nums;
+    private long @MonotonicNonNull @MinLen(1) [] nums;
 
     /** The numbers not to include in the iterator. */
-    @MonotonicNonNull Iterator<Long> numsItor;
+    private @MonotonicNonNull Iterator<Long> numsItor;
 
     /** The current element of the numbers not to include in the iterator. */
-    long currentNonmissing;
+    private long currentNonmissing;
 
     /** The next element to be returned by the iterator. */
-    long currentMissing;
+    private long currentMissing;
 
     /** Used only if nums != null, in which case it is an index into nums. */
-    @IndexFor("nums") int currentIndex;
+    private @IndexFor("nums") int currentIndex;
 
     /**
      * If true, include the value just before the minimum excluded element and the value just after
      * the maximum excluded element.
      */
-    boolean addEnds;
+    private final boolean addEnds;
 
     /**
      * An iterator over all the numbers <b>not</b> in its original argument array, but within its
@@ -1771,7 +1768,7 @@ public final class MathP {
      * @param nums a non-empty array
      * @param addEnds if true, include the bracketing endpoints
      */
-    @Unshrinkable MissingNumbersIteratorLong(long @MinLen(1) [] nums, boolean addEnds) {
+    private @Unshrinkable MissingNumbersIteratorLong(long @MinLen(1) [] nums, boolean addEnds) {
       this.addEnds = addEnds;
       { // avoid modifying parameter
         long[] numsCopy = new long[nums.length];
@@ -1795,7 +1792,7 @@ public final class MathP {
      * @param numsItor a non-empty array; must return longs in sorted order
      * @param addEnds if true, include the bracketing endpoints
      */
-    @Unshrinkable MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
+    private @Unshrinkable MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
       this.addEnds = addEnds;
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
@@ -2011,7 +2008,7 @@ public final class MathP {
     // include it to make this function stand on its own
     for (int m = 2; m <= maxModulus; m++) {
       // System.out.println("Trying m=" + m);
-      boolean[] hasModulus = new boolean[m]; // initialized to false?
+      boolean[] hasModulus = new boolean[m]; // initialized to false
       int numNonmodulus = m;
       for (long elt : nums) {
         @IndexFor("hasModulus") int rem = (int) modNonnegative(elt, m);

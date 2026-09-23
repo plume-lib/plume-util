@@ -18,7 +18,7 @@ public final class ClassDeterministic {
 
   /** Do not call; this class is a collection of methods and does not represent anything. */
   private ClassDeterministic() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /**
@@ -224,6 +224,7 @@ public final class ClassDeterministic {
     /** Create a new MethodComparator. */
     public MethodComparator() {}
 
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     @Pure
     public int compare(Method m1, Method m2) {
@@ -280,6 +281,7 @@ public final class ClassDeterministic {
     /** Create a new ConstructorComparator. */
     public ConstructorComparator() {}
 
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     @Pure
     public int compare(Constructor<?> c1, Constructor<?> c2) {
@@ -338,9 +340,9 @@ public final class ClassDeterministic {
     /** Create a new ToStringComparator. */
     public ToStringComparator() {}
 
+    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equals
     @Override
     @Pure
-    @SuppressWarnings("allcheckers:purity.not.deterministic.call") // deterministic up to equality
     public int compare(Object o1, Object o2) {
       return o1.toString().compareTo(o2.toString());
     }

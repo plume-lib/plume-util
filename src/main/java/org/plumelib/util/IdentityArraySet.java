@@ -22,6 +22,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
  * A set backed by an array. It uses object identity (==) for comparison. It permits null values and
@@ -55,7 +56,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * The number of times this set's size has been modified by adding or removing an element. This
    * field is used to make view iterators fail-fast.
    */
-  transient int sizeModificationCount = 0;
+  private transient int sizeModificationCount = 0;
 
   // Constructors
 
@@ -73,6 +74,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   })
   @SideEffectFree
   public @Growable IdentityArraySet(int initialCapacity) {
+    super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
     }
@@ -103,6 +105,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   })
   @SideEffectFree
   private @Growable IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
+    super();
     this.values = values;
     this.size = size;
   }
@@ -136,6 +139,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return true if the method modified this set
    */
   @SuppressWarnings({"InvalidParam"}) // Error Prone stupidly warns about field `values`
+  @SideEffectsOnly("this")
   private boolean add(@GTENegativeOne int index, E value) {
     if (index != -1) {
       return false;
@@ -180,6 +184,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   /** Increases the capacity of the array, if necessary. */
   @SuppressWarnings({"unchecked"}) // generic array cast
   @EnsuresNonNull("values")
+  @SideEffectsOnly("this")
   private void grow() {
     int capacity = capacity();
     if (capacity == 0) {
@@ -196,6 +201,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @param index the index of the element to remove
    * @return true if this set was modified
    */
+  @SideEffectsOnly("this")
   private boolean removeIndex(@GTENegativeOne int index) {
     if (index == -1) {
       return false;
@@ -253,12 +259,14 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   // Modification Operations
 
   @Override
+  @SideEffectsOnly("this")
   public boolean add(@Growable IdentityArraySet<E> this, E value) {
     int index = indexOf(value);
     return add(index, value);
   }
 
   @Override
+  @SideEffectsOnly("this")
   public boolean remove(
       @Shrinkable IdentityArraySet<E> this,
       @GuardSatisfied @Nullable @UnknownSignedness Object value) {
@@ -269,6 +277,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   // Bulk Operations
 
   @Override
+  @SideEffectsOnly("this")
   public boolean addAll(@Growable IdentityArraySet<E> this, Collection<? extends E> c) {
     if (c.isEmpty()) {
       return false;
@@ -277,6 +286,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   @Override
+  @SideEffectsOnly("this")
   public boolean removeAll(@Shrinkable @IteratorPolyMod IdentityArraySet<E> this, Collection<?> c) {
     if (c.isEmpty()) {
       return false;
@@ -287,6 +297,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   // Inherit retainAll() from AbstractCollection.
 
   @Override
+  @SideEffectsOnly("this")
   public void clear(@Shrinkable IdentityArraySet<E> this) {
     if (size != 0) {
       // Clear the slots so they do not retain references.
@@ -306,19 +317,19 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   /** An iterator over the IdentityArraySet. */
-  private class ArraySetIterator implements Iterator<E> {
+  private final class ArraySetIterator implements Iterator<E> {
     /** The first unread index; the index of the next value to return. */
-    @NonNegative int index;
+    private @NonNegative int index;
 
     /** True if remove() has been called since the last call to next(). */
-    boolean removed;
+    private boolean removed;
 
     /** The modification count when the iterator is created, for fail-fast. */
-    int initialSizeModificationCount;
+    private int initialSizeModificationCount;
 
     /** Creates a new ArraySetIterator. */
     @SideEffectFree
-    ArraySetIterator() {
+    private ArraySetIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
       initialSizeModificationCount = sizeModificationCount;
@@ -331,12 +342,13 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
      */
     @Pure
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
       return index < size();
     }
 
+    @SideEffectsOnly("this")
     @Override
-    public final E next() {
+    public E next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -346,7 +358,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
     /** Removes the previously-returned element. */
     @Override
-    public final void remove(@Shrinkable ArraySetIterator this) {
+    public void remove(@Shrinkable ArraySetIterator this) {
       if (removed) {
         throw new IllegalStateException(
             "Called remove() on ArraySetIterator without calling next() first.");
@@ -412,7 +424,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return the internal representation, printed
    */
   @SideEffectFree
-  /* package-private */ String repr() {
+  /*package*/ String repr() {
     return String.format(
         "size=%d capacity=%s %s",
         size, (values == null ? 0 : values.length), Arrays.toString(values));

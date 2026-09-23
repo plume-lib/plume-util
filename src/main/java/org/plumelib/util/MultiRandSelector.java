@@ -3,6 +3,8 @@ package org.plumelib.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -45,7 +47,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
   private Partitioner<T, T> eq;
 
   /** Maps from partition representatives to the RandomSelector to use on that partition. */
-  private @Modifiable HashMap<T, RandomSelector<T>> map = new HashMap<>();
+  private final @Modifiable Map<T, RandomSelector<T>> map = new HashMap<>();
 
   /**
    * Create a MultiRandSelector that chooses {@code numElts} elements from each bucket.
@@ -144,7 +146,7 @@ public class MultiRandSelector<T extends @Nullable Object> {
    * @return an iterator of all objects selected
    */
   public Iterator<T> valuesIter() {
-    ArrayList<T> ret = new ArrayList<>();
+    List<T> ret = new ArrayList<>();
     for (RandomSelector<T> rs : map.values()) {
       ret.addAll(rs.getValues());
     }
