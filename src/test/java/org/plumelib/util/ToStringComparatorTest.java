@@ -1,6 +1,7 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -45,8 +46,9 @@ final class ToStringComparatorTest {
   }
 
   @Test
+  @SuppressWarnings("deprecation") // tests the deprecated alias
   void instanceIsASingleton() {
-    assertEquals(ToStringComparator.INSTANCE, ToStringComparator.INSTANCE);
+    assertSame(ToStringComparator.INSTANCE, ToStringComparator.instance);
   }
 
   @Test

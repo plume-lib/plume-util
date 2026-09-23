@@ -1117,7 +1117,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * @param entryStartRegex regular expression that starts a long entry; see {@link
      *     #entryStartRegex()}
      * @param entryStopRegex regular expression that ends a long entry; see {@link
-     *     #entryStartRegex()}
+     *     #entryStopRegex()}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
      * @param supportsFences if true, then fenced code blocks are respected
      */
@@ -1142,7 +1142,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
      * @param entryStartRegex regular expression that starts a long entry; see {@link
      *     #entryStartRegex()}
      * @param entryStopRegex regular expression that ends a long entry; see {@link
-     *     #entryStartRegex()}
+     *     #entryStopRegex()}
      * @param twoBlankLines if true, then entries are separated by two blank lines rather than one
      * @param supportsFences if true, then fenced code blocks are respected
      */

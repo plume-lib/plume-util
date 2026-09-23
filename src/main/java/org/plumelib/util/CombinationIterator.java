@@ -90,10 +90,10 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
   }
 
   /** Advance {@code #nextValue} to the next value, or to null if there are no more values. */
-  @SuppressWarnings("nullness:dereference.of.nullable") // nextValue is non-null throughout the body
   @RequiresNonNull("nextValue")
   @SideEffectsOnly("this")
   private void advanceNext(@GuardSatisfied CombinationIterator<T> this) {
+    List<T> nextValue = this.nextValue;
     for (int i = combinationSize - 1; i >= 0; i--) {
       if (iterators[i].hasNext()) {
         nextValue.set(i, iterators[i].next());
@@ -103,7 +103,7 @@ public class CombinationIterator<T> implements Iterator<List<T>> {
         nextValue.set(i, iterators[i].next());
       }
     }
-    nextValue = null;
+    this.nextValue = null;
   }
 
   @Override
