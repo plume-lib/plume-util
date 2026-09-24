@@ -37,6 +37,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.lock.qual.GuardedBy;
+import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.PolyModifiable;
+import org.checkerframework.checker.modifiability.qual.PolyShrinkable;
+import org.checkerframework.checker.modifiability.qual.Replaceable;
+import org.checkerframework.checker.modifiability.qual.Ungrowable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.junit.jupiter.api.AfterEach;
@@ -64,8 +71,11 @@ import org.junit.jupiter.api.Test;
 })
 class ArrayMapTestApache {
   static class MockMap extends AbstractMap {
+    // The empty set has no element to remove, so none of its shrink operations throws.
+    @SuppressWarnings("modifiability:return")
     @Override
-    public Set entrySet(@GuardSatisfied MockMap this) {
+    public @IteratorPolyMod @PolyShrinkable @Ungrowable Set entrySet(
+        @PolyModifiable @GuardSatisfied MockMap this) {
       return Collections.EMPTY_SET;
     }
 
@@ -77,7 +87,8 @@ class ArrayMapTestApache {
 
   private static class MockMapNull extends AbstractMap {
     @Override
-    public Set entrySet(@GuardSatisfied MockMapNull this) {
+    public @IteratorPolyMod @PolyShrinkable @Ungrowable Set entrySet(
+        @PolyModifiable @GuardSatisfied MockMapNull this) {
       return null;
     }
 
@@ -117,7 +128,7 @@ class ArrayMapTestApache {
     }
   }
 
-  @Nullable ArrayMap hm;
+  @Nullable @Modifiable ArrayMap hm;
   static final int hmSize = 100;
   Object @Nullable [] objArray;
   Object @Nullable [] objArray2;
@@ -208,7 +219,7 @@ class ArrayMapTestApache {
     Collection values = map.values();
     assertEquals("value", values.iterator().next());
     assertEquals("key", keys.iterator().next());
-    AbstractMap map2 = (AbstractMap) map.clone();
+    @Modifiable AbstractMap map2 = (@Modifiable AbstractMap) map.clone();
     map2.put("key", "value2");
     Collection values2 = map2.values();
     assertTrue(values2 != values);
@@ -615,7 +626,7 @@ class ArrayMapTestApache {
     }
 
     @Override
-    public Object setValue(@GuardSatisfied MockEntry this, Object object) {
+    public Object setValue(@GuardSatisfied @Modifiable MockEntry this, Object object) {
       return null;
     }
   }
@@ -657,7 +668,7 @@ class ArrayMapTestApache {
       "lock", // ArrayMap is not yet annotated for the Lock Checker
     })
     @Override
-    public V put(@GuardSatisfied SubMap<K, V> this, K key, V value) {
+    public V put(@GuardSatisfied @Growable @Replaceable SubMap<K, V> this, K key, V value) {
       throw new UnsupportedOperationException();
     }
   }

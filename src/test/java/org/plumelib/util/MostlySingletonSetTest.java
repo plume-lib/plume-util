@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -62,7 +65,9 @@ final class MostlySingletonSetTest {
    *
    * @param s the set to test
    */
-  private static void assertUnsupportedOperationsThrow(AbstractMostlySingletonSet<String> s) {
+  @SuppressWarnings("modifiability:method.invocation") // testing that mutation throws
+  private static void assertUnsupportedOperationsThrow(
+      @IteratorPolyMod AbstractMostlySingletonSet<String> s) {
     List<String> arg = Collections.singletonList("a");
     assertThrows(UnsupportedOperationException.class, () -> s.toArray());
     assertThrows(UnsupportedOperationException.class, () -> s.toArray(new String[0]));
@@ -137,7 +142,9 @@ final class MostlySingletonSetTest {
   @Test
   void singletonIteratorRemoveEmptiesTheSet() {
     MostlySingletonSet<String> s = new MostlySingletonSet<>("a");
-    Iterator<String> itor = s.iterator();
+    // A MostlySingletonSet is @Unshrinkable, but its iterator supports remove().
+    @SuppressWarnings("modifiability:assignment")
+    @Modifiable Iterator<String> itor = s.iterator();
     assertEquals("a", itor.next());
     itor.remove();
     s.checkRep();
@@ -158,7 +165,7 @@ final class MostlySingletonSetTest {
 
   @Test
   void addGrowsThroughAllStates() {
-    MostlySingletonSet<String> s = new MostlySingletonSet<>();
+    @Growable MostlySingletonSet<String> s = new MostlySingletonSet<>();
 
     // EMPTY -> SINGLETON
     assertTrue(s.add("a"));
@@ -196,7 +203,7 @@ final class MostlySingletonSetTest {
 
   @Test
   void addAllReturnsWhetherTheSetChanged() {
-    MostlySingletonSet<String> s = new MostlySingletonSet<>();
+    @Growable @IteratorPolyMod MostlySingletonSet<String> s = new MostlySingletonSet<>();
     assertFalse(s.addAll(Collections.emptyList()));
     assertTrue(s.isEmpty());
 
@@ -213,9 +220,11 @@ final class MostlySingletonSetTest {
 
   @Test
   void iteratorRemoveInAnyState() {
-    MostlySingletonSet<String> s = new MostlySingletonSet<>();
+    @Growable @IteratorPolyMod MostlySingletonSet<String> s = new MostlySingletonSet<>();
     s.addAll(Arrays.asList("a", "b", "c"));
-    Iterator<String> itor = s.iterator();
+    // A MostlySingletonSet is @Unshrinkable, but its iterator supports remove().
+    @SuppressWarnings("modifiability:assignment")
+    @Modifiable Iterator<String> itor = s.iterator();
     assertEquals("a", itor.next());
     itor.remove();
     assertEquals(2, s.size());
@@ -233,7 +242,7 @@ final class MostlySingletonSetTest {
     List<String> a2 = newList("a");
     assertEquals(a1, a2);
 
-    MostlySingletonSet<List<String>> s = new MostlySingletonSet<>();
+    @Growable MostlySingletonSet<List<String>> s = new MostlySingletonSet<>();
     assertTrue(s.add(a1));
     // In the SINGLETON state, an equal element is a duplicate.
     assertTrue(s.contains(a2));
@@ -254,7 +263,7 @@ final class MostlySingletonSetTest {
     List<String> a2 = newList("a");
     assertEquals(a1, a2);
 
-    IdentityMostlySingletonSet<List<String>> s = new IdentityMostlySingletonSet<>();
+    @Growable IdentityMostlySingletonSet<List<String>> s = new IdentityMostlySingletonSet<>();
     assertTrue(s.add(a1));
     // In the SINGLETON state, only the identical element is a duplicate.
     assertTrue(s.contains(a1));
@@ -288,7 +297,7 @@ final class MostlySingletonSetTest {
     assertUnsupportedOperationsThrow(new IdentityMostlySingletonSet<>());
     assertUnsupportedOperationsThrow(new IdentityMostlySingletonSet<>("a"));
 
-    MostlySingletonSet<String> any = new MostlySingletonSet<>();
+    @Growable @IteratorPolyMod MostlySingletonSet<String> any = new MostlySingletonSet<>();
     any.addAll(Arrays.asList("a", "b"));
     assertUnsupportedOperationsThrow(any);
   }

@@ -18,6 +18,9 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
@@ -57,7 +60,7 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
  */
 @SuppressWarnings({
   "index", // TODO
-  "lock" // not yet annotated for the Lock Checker
+  "lock", // not yet annotated for the Lock Checker
 })
 public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends AbstractSet<E>
     implements Cloneable {
@@ -88,10 +91,10 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "unchecked", // generic array cast
     "samelen:assignment", // initialization
     "allcheckers:purity.assign.field", // initializes `this`
-    "allcheckers:purity.call" // calls `super`
+    "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  public ArraySet(int initialCapacity) {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet(int initialCapacity) {
     super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -105,7 +108,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
 
   /** Constructs an empty {@code ArraySet} with the default initial capacity. */
   @SideEffectFree
-  public ArraySet() {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet() {
     this(4);
   }
 
@@ -119,10 +122,11 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({
     "samelen:assignment", // initialization
     "allcheckers:purity.assign.field", // initializes `this`
-    "allcheckers:purity.call" // calls `super`
+    "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  private ArraySet(@Nullable E @Nullable [] values, @LTEqLengthOf({"values"}) int size) {
+  private @IteratorPolyMod @Growable @Shrinkable ArraySet(
+      @Nullable E @Nullable [] values, @LTEqLengthOf({"values"}) int size) {
     super();
     this.values = values;
     this.size = size;
@@ -137,12 +141,11 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
     "lock:method.guarantee.violated", // initializes `this`
-    "nullness:method.invocation", // inference failure;
-    // https://github.com/typetools/checker-framework/issues/979 ?
+    "nullness:method.invocation", // inference failure; https://tinyurl.com/cfissue/979 ?
     "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public ArraySet(Collection<? extends E> m) {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
   }
@@ -326,13 +329,14 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   // Modification Operations
 
   @Override
-  public boolean add(E value) {
+  public boolean add(@Growable ArraySet<E> this, E value) {
     int index = indexOf(value);
     return add(index, value);
   }
 
   @Override
-  public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean remove(
+      @Shrinkable ArraySet<E> this, @GuardSatisfied @Nullable @UnknownSignedness Object value) {
     int index = indexOf(value);
     return removeIndex(index);
   }
@@ -340,7 +344,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   // Bulk Operations
 
   @Override
-  public boolean addAll(Collection<? extends E> c) {
+  public boolean addAll(@Growable ArraySet<E> this, Collection<? extends E> c) {
     if (c.isEmpty()) {
       return false;
     }
@@ -348,7 +352,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   }
 
   @Override
-  public boolean removeAll(Collection<?> c) {
+  public boolean removeAll(@Shrinkable @IteratorPolyMod ArraySet<E> this, Collection<?> c) {
     if (c.isEmpty()) {
       return false;
     }
@@ -358,7 +362,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   // Inherit retainAll() from AbstractCollection.
 
   @Override
-  public void clear() {
+  public void clear(@Shrinkable ArraySet<E> this) {
     if (size != 0) {
       // Clear the slots so they do not retain references.  A nonzero size implies that the array
       // is non-null; the test against null is for the benefit of the Nullness Checker.
@@ -374,7 +378,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   // iterators
 
   @Override
-  public Iterator<E> iterator() {
+  public Iterator<E> iterator(ArraySet<E> this) {
     return new ArraySetIterator();
   }
 
@@ -425,7 +429,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
 
     /** Removes the previously-returned element. */
     @Override
-    public void remove() {
+    public void remove(@Shrinkable ArraySetIterator this) {
       if (removed) {
         throw new IllegalStateException(
             "Called remove() on ArraySetIterator without calling next() first.");
@@ -481,7 +485,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
-  public ArraySet<E> clone() {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet<E> clone() {
     if (values == null) {
       return new ArraySet<>(null, 0);
     } else {

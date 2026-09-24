@@ -26,6 +26,13 @@ import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.PreservesModifiability;
+import org.checkerframework.checker.modifiability.qual.Replaceable;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
+import org.checkerframework.checker.modifiability.qual.Unshrinkable;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -34,6 +41,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 /** Utility functions for Collections, including Iterators. For maps, see {@link MapsP}. */
 public final class CollectionsP {
@@ -61,7 +69,8 @@ public final class CollectionsP {
    * @param elements the elements to insert into c
    * @return true if the argument collection changed as a result of the call
    */
-  public static <T> boolean addAll(Collection<? super T> c, Iterable<? extends T> elements) {
+  public static <T> boolean addAll(
+      @Growable @IteratorPolyMod Collection<? super T> c, Iterable<? extends T> elements) {
     boolean added = false;
     for (T elt : elements) {
       added = c.add(elt) || added;
@@ -79,7 +88,9 @@ public final class CollectionsP {
    * @return true if the argument collection changed as a result of the call
    */
   public static <T> boolean addIf(
-      Collection<? super T> c, Iterable<? extends T> elements, Predicate<? super T> p) {
+      @Growable @IteratorPolyMod Collection<? super T> c,
+      Iterable<? extends T> elements,
+      Predicate<? super T> p) {
     boolean added = false;
     for (T elt : elements) {
       if (p.test(elt)) {
@@ -99,7 +110,9 @@ public final class CollectionsP {
    * @return true if the argument collection changed as a result of the call
    */
   public static <T> boolean addIfNot(
-      Collection<? super T> c, Iterable<? extends T> elements, Predicate<? super T> p) {
+      @Growable @IteratorPolyMod Collection<? super T> c,
+      Iterable<? extends T> elements,
+      Predicate<? super T> p) {
     boolean added = false;
     for (T elt : elements) {
       if (!p.test(elt)) {
@@ -167,6 +180,7 @@ public final class CollectionsP {
    * @param values a collection
    * @return the values, with duplicates removed
    */
+  @PreservesModifiability
   public static <T> List<T> withoutDuplicates(Collection<T> values) {
     Set<T> s = ArraySet.<T>newArraySetOrLinkedHashSet(values);
     if (values.size() == s.size() && values instanceof List<T> l) {
@@ -248,7 +262,8 @@ public final class CollectionsP {
    * @param c a comparator used to sort the returned list
    * @return a sorted version of the list
    */
-  public static <T> List<T> sorted(Collection<T> l, Comparator<@MustCallUnknown ? super T> c) {
+  public static <T> @Growable @Replaceable @IteratorPolyMod List<T> sorted(
+      Collection<T> l, Comparator<@MustCallUnknown ? super T> c) {
     List<T> result = new ArrayList<>(l);
     Collections.sort(result, c);
     return result;
@@ -343,7 +358,8 @@ public final class CollectionsP {
   }
 
   /** All calls to deepEquals that are currently underway. */
-  private static Set<WeakIdentityPair<Object, Object>> deepEqualsUnderway = new HashSet<>();
+  private static @Modifiable Set<WeakIdentityPair<Object, Object>> deepEqualsUnderway =
+      new HashSet<>();
 
   /**
    * Determines deep equality for the elements.
@@ -677,8 +693,10 @@ public final class CollectionsP {
     "signedness", // problem with clone()
     "nullness" // generics problem
   })
-  public static <T extends @Nullable Object, C extends @Nullable Collection<T>>
-      @PolyNull C cloneElements(@PolyNull C orig) {
+  public static <
+          T extends @Nullable Object,
+          C extends @Growable @Shrinkable @IteratorPolyMod @Nullable Collection<T>>
+      @Growable @Shrinkable @IteratorPolyMod @PolyNull C cloneElements(@PolyNull C orig) {
     if (orig == null) {
       return null;
     }
@@ -702,8 +720,10 @@ public final class CollectionsP {
    * @return a copy of {@code orig}, as described above
    */
   @SuppressWarnings("nullness:argument") // problem with clone()
-  public static <T extends @Nullable DeepCopyable<T>, C extends @Nullable Collection<T>>
-      @PolyNull C deepCopy(@PolyNull C orig) {
+  public static <
+          T extends @Nullable DeepCopyable<T>,
+          C extends @Growable @Shrinkable @IteratorPolyMod @Nullable Collection<T>>
+      @Growable @Shrinkable @IteratorPolyMod @PolyNull C deepCopy(@PolyNull C orig) {
     if (orig == null) {
       return null;
     }
@@ -732,7 +752,8 @@ public final class CollectionsP {
    * @param filter a predicate
    * @return a new list with the elements for which the filter returns true
    */
-  public static <T> List<T> filter(Iterable<T> coll, Predicate<? super T> filter) {
+  public static <T> @Modifiable @IteratorPolyMod List<T> filter(
+      Iterable<T> coll, Predicate<? super T> filter) {
     List<T> result = new ArrayList<>();
     for (T elt : coll) {
       if (filter.test(elt)) {
@@ -911,7 +932,8 @@ public final class CollectionsP {
    *     of the collection to the end
    * @return the transformed collection, as a new list (even if no changes were made)
    */
-  public static <T> List<T> replace(Iterable<T> c, Iterable<Replacement<T>> replacements) {
+  public static <T> @Modifiable List<T> replace(
+      Iterable<T> c, Iterable<Replacement<T>> replacements) {
     List<T> result = new ArrayList<>();
     Iterator<T> cItor = c.iterator();
     int cIndex = -1; // the index into c
@@ -1005,9 +1027,14 @@ public final class CollectionsP {
    */
   @SuppressWarnings({
     "allcheckers:purity.call",
-    "lock:method.guarantee.violated"
+    "lock:method.guarantee.violated",
+    "modifiability:contracts.conditional.postcondition" // this function cannot guarantee that
+    // returning true means the collection is modifiable.
   }) // String.substring
   @Pure
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = IteratorPolyMod.class)
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = Growable.class)
+  @EnsuresQualifierIf(result = true, expression = "#1", qualifier = Shrinkable.class)
   public static boolean isModifiable(Collection<?> c) {
     // This is a hack, but I don't know how else to implement it.
     // This implementation is error-prone because (per the documentation of `Class.getName()`)
@@ -1168,7 +1195,7 @@ public final class CollectionsP {
     "NonApiType",
     // "PMD.LooseCoupling"
   }) // method is for ArrayList
-  public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
+  public static <T> @Modifiable @IteratorPolyMod ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
       result.add(e.nextElement());
@@ -1216,7 +1243,8 @@ public final class CollectionsP {
    * @return a new list containing the contents of the given lists, in order
    */
   @SuppressWarnings("unchecked")
-  public static <T> List<T> concatenate(Collection<T> list1, Collection<T> list2) {
+  public static <T> @Modifiable @IteratorPolyMod List<T> concatenate(
+      Collection<T> list1, Collection<T> list2) {
     List<T> result = new ArrayList<>(list1.size() + list2.size());
     result.addAll(list1);
     result.addAll(list2);
@@ -1417,7 +1445,7 @@ public final class CollectionsP {
      *
      * @param e the Enumeration to make into an Iterator
      */
-    public EnumerationIterator(Enumeration<T> e) {
+    public @Unshrinkable EnumerationIterator(Enumeration<T> e) {
       this.e = e;
     }
 
@@ -1434,7 +1462,7 @@ public final class CollectionsP {
     }
 
     @Override
-    public void remove(@GuardSatisfied EnumerationIterator<T> this) {
+    public void remove(@Shrinkable @GuardSatisfied EnumerationIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1504,7 +1532,7 @@ public final class CollectionsP {
      * @param itor an Iterator
      * @param lastElement one element
      */
-    public IteratorPlusOne(Iterator<T> itor, T lastElement) {
+    public @Unshrinkable IteratorPlusOne(Iterator<T> itor, T lastElement) {
       this.itor = itor;
       this.lastElement = lastElement;
     }
@@ -1527,7 +1555,7 @@ public final class CollectionsP {
     }
 
     @Override
-    public void remove(@GuardSatisfied IteratorPlusOne<T> this) {
+    public void remove(@Shrinkable @GuardSatisfied IteratorPlusOne<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1564,7 +1592,7 @@ public final class CollectionsP {
      * @param itor1 an Iterator
      * @param itor2 another Iterator
      */
-    private MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
+    private @Unshrinkable MergedIterator2(Iterator<T> itor1, Iterator<T> itor2) {
       this.itor1 = itor1;
       this.itor2 = itor2;
     }
@@ -1586,7 +1614,7 @@ public final class CollectionsP {
     }
 
     @Override
-    public void remove(@GuardSatisfied MergedIterator2<T> this) {
+    public void remove(@Shrinkable @GuardSatisfied MergedIterator2<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1632,7 +1660,7 @@ public final class CollectionsP {
      * @param itorOfItors an iterator whose elements are iterators; this MergedIterator will merge
      *     them all
      */
-    private MergedIterator(Iterator<Iterator<T>> itorOfItors) {
+    private @Unshrinkable MergedIterator(Iterator<Iterator<T>> itorOfItors) {
       this.itorOfItors = itorOfItors;
     }
 
@@ -1658,7 +1686,7 @@ public final class CollectionsP {
     }
 
     @Override
-    public void remove(@GuardSatisfied MergedIterator<T> this) {
+    public void remove(@Shrinkable @GuardSatisfied MergedIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1693,7 +1721,7 @@ public final class CollectionsP {
      * @param itor the Iterator to filter
      * @param predicate the predicate that determines which elements to retain
      */
-    private FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
+    private @Unshrinkable FilteredIterator(Iterator<T> itor, Predicate<T> predicate) {
       this.itor = itor;
       this.predicate = predicate;
     }
@@ -1738,7 +1766,7 @@ public final class CollectionsP {
     }
 
     @Override
-    public void remove(@GuardSatisfied FilteredIterator<T> this) {
+    public void remove(@Shrinkable @GuardSatisfied FilteredIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1783,7 +1811,7 @@ public final class CollectionsP {
      *
      * @param itor an iterator whose first and last elements to discard
      */
-    /*package*/ RemoveFirstAndLastIterator(Iterator<T> itor) {
+    /*package*/ @Unshrinkable RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
         first = itor.next();
@@ -1844,7 +1872,7 @@ public final class CollectionsP {
     }
 
     @Override
-    public void remove(@GuardSatisfied RemoveFirstAndLastIterator<T> this) {
+    public void remove(@Shrinkable @GuardSatisfied RemoveFirstAndLastIterator<T> this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1942,7 +1970,7 @@ public final class CollectionsP {
    * @return true if the collection c changed (that is, if an element was added)
    */
   @SuppressWarnings("nullness:argument") // c might forbid null
-  public static <T> boolean adjoin(Collection<T> c, T e) {
+  public static <T> boolean adjoin(@Modifiable @IteratorPolyMod Collection<T> c, T e) {
     if (!c.contains(e)) {
       c.add(e);
       return true;
@@ -1962,7 +1990,8 @@ public final class CollectionsP {
    * @return true if the collection c changed (that is, if an element was added)
    */
   @SuppressWarnings("nullness:argument") // c might forbid null
-  public static <T> boolean adjoinAll(Collection<T> c, Collection<? extends T> toAdd) {
+  public static <T> boolean adjoinAll(
+      @Modifiable @IteratorPolyMod Collection<T> c, Collection<? extends T> toAdd) {
     boolean result = false;
     for (T e : toAdd) {
       if (!c.contains(e)) {

@@ -7,6 +7,10 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
+import org.checkerframework.checker.modifiability.qual.Unshrinkable;
 import org.checkerframework.checker.nullness.qual.KeyForBottom;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -18,6 +22,8 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 /**
  * Base class for arbitrary-size sets that is very efficient (more efficient than HashSet) for 0 and
  * 1 elements.
+ *
+ * <p>This class does not support {@code remove()}, but subclasses may.
  *
  * <p>Does not support storing {@code null}.
  *
@@ -45,14 +51,14 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   protected @Nullable T value;
 
   /** The wrapped set, non-null when the state is ANY. */
-  protected @Nullable Set<T> set;
+  protected @Modifiable @Nullable Set<T> set;
 
   /**
    * Creates an AbstractMostlySingletonSet.
    *
    * @param s the state
    */
-  protected AbstractMostlySingletonSet(State s) {
+  protected @Unshrinkable AbstractMostlySingletonSet(State s) {
     this.state = s;
     this.value = null;
   }
@@ -63,7 +69,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
    * @param s the state
    * @param v the value
    */
-  protected AbstractMostlySingletonSet(State s, T v) {
+  protected @Unshrinkable AbstractMostlySingletonSet(State s, T v) {
     this.state = s;
     this.value = v;
   }
@@ -140,7 +146,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
     }
 
     @Override
-    public void remove() {
+    public void remove(@Shrinkable SingletonIterator this) {
       state = State.EMPTY;
       value = null;
     }
@@ -163,7 +169,7 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
 
   @Override
   public boolean addAll(
-      @GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<? extends T> c) {
+      @Growable @GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<? extends T> c) {
     boolean res = false;
     for (T elem : c) {
       res |= add(elem);
@@ -183,7 +189,8 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
 
   @Override
   public boolean remove(
-      @GuardSatisfied AbstractMostlySingletonSet<T> this, @Nullable @UnknownSignedness Object o) {
+      @Shrinkable @GuardSatisfied AbstractMostlySingletonSet<T> this,
+      @Nullable @UnknownSignedness Object o) {
     throw new UnsupportedOperationException();
   }
 
@@ -194,17 +201,19 @@ public abstract class AbstractMostlySingletonSet<T extends @Signed Object> imple
   }
 
   @Override
-  public boolean retainAll(@GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
+  public boolean retainAll(
+      @Shrinkable @GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean removeAll(@GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
+  public boolean removeAll(
+      @Shrinkable @GuardSatisfied AbstractMostlySingletonSet<T> this, Collection<?> c) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void clear(@GuardSatisfied AbstractMostlySingletonSet<T> this) {
+  public void clear(@Shrinkable @GuardSatisfied AbstractMostlySingletonSet<T> this) {
     throw new UnsupportedOperationException();
   }
 }

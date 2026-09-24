@@ -3,6 +3,8 @@ package org.plumelib.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 
 /**
  * RandomSelector selects k elements uniformly at random from an arbitrary iterator, using O(k)
@@ -76,7 +78,7 @@ public class RandomSelector<T> {
   private Random generator;
 
   /** The values chosen. */
-  private final List<T> values = new ArrayList<>();
+  private final @IteratorPolyMod @Modifiable List<T> values = new ArrayList<>();
 
   /**
    * Creates a new RandomSelector.

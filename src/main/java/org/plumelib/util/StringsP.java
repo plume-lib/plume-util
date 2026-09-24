@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -244,7 +245,7 @@ public final class StringsP {
    * @return the split string
    */
   @SideEffectFree
-  public static List<String> splitLinesRetainSeparators(String input) {
+  public static @Modifiable List<String> splitLinesRetainSeparators(String input) {
     return splitRetainSeparators(input, allLineSeparators);
   }
 
@@ -256,7 +257,7 @@ public final class StringsP {
    * @return the split string
    */
   @SideEffectFree
-  public static List<String> splitRetainSeparators(String input, @Regex String regex) {
+  public static @Modifiable List<String> splitRetainSeparators(String input, @Regex String regex) {
     return splitRetainSeparators(input, Pattern.compile(regex));
   }
 
@@ -273,7 +274,7 @@ public final class StringsP {
     "lock:method.guarantee.violated" // needs JDK annotations
   })
   @SideEffectFree
-  public static List<String> splitRetainSeparators(String input, Pattern p) {
+  public static @Modifiable List<String> splitRetainSeparators(String input, Pattern p) {
     List<String> result = new ArrayList<>();
     Matcher m = p.matcher(input);
     int pos = 0;
@@ -1395,7 +1396,7 @@ public final class StringsP {
   //
 
   /** Exceptions to the usual English noun pluralization rules. */
-  private static final Map<String, String> N_PLURAL_EXCEPTIONS = new HashMap<>();
+  private static final @Modifiable Map<String, String> N_PLURAL_EXCEPTIONS = new HashMap<>();
 
   static {
     // No change
@@ -1559,7 +1560,7 @@ public final class StringsP {
   }
 
   /** Exceptions to the usual English verb pluralization rules. */
-  private static final Map<String, String> V_PLURAL_EXCEPTIONS = new HashMap<>();
+  private static final @Modifiable Map<String, String> V_PLURAL_EXCEPTIONS = new HashMap<>();
 
   static {
     V_PLURAL_EXCEPTIONS.put("is", "are");

@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 
 /** Records all the immutable types in the JDK, and can be queried. */
 public final class ImmutableTypes {
@@ -21,7 +22,7 @@ public final class ImmutableTypes {
   // It might be more efficient to use Class objects rather than Strings, but that would require
   // everything in the list to be loaded into the JDK at run time.
   // @SuppressWarnings("PMD.MutableStaticState") // clients are intended to mutate it
-  public static Set<String> immutableTypeNames = new HashSet<>();
+  public static @Modifiable Set<String> immutableTypeNames = new HashSet<>();
 
   // The set contains nothing in package javax.management, which is littered with comments like
   // "Instances of this class are immutable.  Subclasses may be mutable but this is not

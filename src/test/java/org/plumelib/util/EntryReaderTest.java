@@ -156,6 +156,7 @@ final class EntryReaderTest {
   }
 
   /** Test remove() is not supported. */
+  @SuppressWarnings("modifiability:methodref.receiver.bound") // testing that remove() throws
   @Test
   void testRemoveNotSupported() throws IOException {
     String content = "line1\n";

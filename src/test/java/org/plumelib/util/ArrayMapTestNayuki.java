@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
@@ -206,9 +207,9 @@ final class ArrayMapTestNayuki {
 
       // Do iterator removals and map entry modifications
       double deleteProb = rand.nextDouble();
-      for (Iterator<Map.Entry<String, Integer>> iter = map1.entrySet().iterator();
+      for (Iterator<Map.@Modifiable Entry<String, Integer>> iter = map1.entrySet().iterator();
           iter.hasNext(); ) {
-        Map.Entry<String, Integer> entry = iter.next();
+        Map.@Modifiable Entry<String, Integer> entry = iter.next();
         if (rand.nextDouble() < deleteProb) {
           // Note order of operations: must use the entry before modifying the iterator.
           map0.remove(entry.getKey());

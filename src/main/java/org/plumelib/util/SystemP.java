@@ -10,6 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
 
@@ -190,7 +191,7 @@ public final class SystemP {
   }
 
   /** The history of recent garbage collection runs. The queue is never empty. */
-  private static Deque<GcHistoryItem> gcHistory;
+  private static @Modifiable Deque<GcHistoryItem> gcHistory;
 
   static {
     gcHistory = new ArrayDeque<>();
