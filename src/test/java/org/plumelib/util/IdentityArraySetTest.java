@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.junit.jupiter.api.Test;
 
 /** Test the IdentityArraySet class. */
@@ -341,14 +342,14 @@ final class IdentityArraySetTest {
     // clone() of an empty-but-allocated IdentityArraySet produces a zero-length representation.
     // Growing it must allocate a nonempty array rather than doubling zero.
     @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(4);
-    IdentityArraySet<String> clone = s.clone();
+    @Modifiable IdentityArraySet<String> clone = s.clone();
     assertTrue(clone.add("x"));
     assertEquals(Collections.singletonList("x"), elements(clone));
     assertTrue(s.isEmpty());
 
     // clone() of a never-allocated IdentityArraySet also produces a usable set.
     IdentityArraySet<String> unallocated = new IdentityArraySet<>(0);
-    IdentityArraySet<String> unallocatedClone = unallocated.clone();
+    @Modifiable IdentityArraySet<String> unallocatedClone = unallocated.clone();
     assertTrue(unallocatedClone.add("y"));
     assertEquals(Collections.singletonList("y"), elements(unallocatedClone));
     assertTrue(unallocated.isEmpty());

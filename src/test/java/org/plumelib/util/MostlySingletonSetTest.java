@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -64,7 +65,7 @@ final class MostlySingletonSetTest {
    * @param s the set to test
    */
   private static void assertUnsupportedOperationsThrow(
-      @IteratorPolyMod AbstractMostlySingletonSet<String> s) {
+      @Modifiable @IteratorPolyMod AbstractMostlySingletonSet<String> s) {
     List<String> arg = Collections.singletonList("a");
     assertThrows(UnsupportedOperationException.class, () -> s.toArray());
     assertThrows(UnsupportedOperationException.class, () -> s.toArray(new String[0]));
@@ -139,7 +140,7 @@ final class MostlySingletonSetTest {
   @Test
   void singletonIteratorRemoveEmptiesTheSet() {
     MostlySingletonSet<String> s = new MostlySingletonSet<>("a");
-    Iterator<String> itor = s.iterator();
+    @Modifiable Iterator<String> itor = s.iterator();
     assertEquals("a", itor.next());
     itor.remove();
     s.checkRep();
@@ -160,7 +161,7 @@ final class MostlySingletonSetTest {
 
   @Test
   void addGrowsThroughAllStates() {
-    MostlySingletonSet<String> s = new MostlySingletonSet<>();
+    @Modifiable MostlySingletonSet<String> s = new MostlySingletonSet<>();
 
     // EMPTY -> SINGLETON
     assertTrue(s.add("a"));
@@ -198,7 +199,7 @@ final class MostlySingletonSetTest {
 
   @Test
   void addAllReturnsWhetherTheSetChanged() {
-    @IteratorPolyMod MostlySingletonSet<String> s = new MostlySingletonSet<>();
+    @Modifiable @IteratorPolyMod MostlySingletonSet<String> s = new MostlySingletonSet<>();
     assertFalse(s.addAll(Collections.emptyList()));
     assertTrue(s.isEmpty());
 
@@ -215,7 +216,7 @@ final class MostlySingletonSetTest {
 
   @Test
   void iteratorRemoveInAnyState() {
-    @IteratorPolyMod MostlySingletonSet<String> s = new MostlySingletonSet<>();
+    @Modifiable @IteratorPolyMod MostlySingletonSet<String> s = new MostlySingletonSet<>();
     s.addAll(Arrays.asList("a", "b", "c"));
     Iterator<String> itor = s.iterator();
     assertEquals("a", itor.next());
@@ -235,7 +236,7 @@ final class MostlySingletonSetTest {
     List<String> a2 = newList("a");
     assertEquals(a1, a2);
 
-    MostlySingletonSet<List<String>> s = new MostlySingletonSet<>();
+    @Modifiable MostlySingletonSet<List<String>> s = new MostlySingletonSet<>();
     assertTrue(s.add(a1));
     // In the SINGLETON state, an equal element is a duplicate.
     assertTrue(s.contains(a2));
@@ -256,7 +257,7 @@ final class MostlySingletonSetTest {
     List<String> a2 = newList("a");
     assertEquals(a1, a2);
 
-    IdentityMostlySingletonSet<List<String>> s = new IdentityMostlySingletonSet<>();
+    @Modifiable IdentityMostlySingletonSet<List<String>> s = new IdentityMostlySingletonSet<>();
     assertTrue(s.add(a1));
     // In the SINGLETON state, only the identical element is a duplicate.
     assertTrue(s.contains(a1));
@@ -284,13 +285,14 @@ final class MostlySingletonSetTest {
   //
 
   @Test
+  @SuppressWarnings({"iterator:cast.unsafe.constructor.invocation", "modifiability:argument"})
   void unsupportedOperations() {
-    assertUnsupportedOperationsThrow(new MostlySingletonSet<>());
-    assertUnsupportedOperationsThrow(new MostlySingletonSet<>("a"));
-    assertUnsupportedOperationsThrow(new IdentityMostlySingletonSet<>());
-    assertUnsupportedOperationsThrow(new IdentityMostlySingletonSet<>("a"));
+    assertUnsupportedOperationsThrow(new @IteratorPolyMod MostlySingletonSet<>());
+    assertUnsupportedOperationsThrow(new @IteratorPolyMod MostlySingletonSet<>("a"));
+    assertUnsupportedOperationsThrow(new @IteratorPolyMod IdentityMostlySingletonSet<>());
+    assertUnsupportedOperationsThrow(new @IteratorPolyMod IdentityMostlySingletonSet<>("a"));
 
-    @IteratorPolyMod MostlySingletonSet<String> any = new MostlySingletonSet<>();
+    @Modifiable @IteratorPolyMod MostlySingletonSet<String> any = new @IteratorPolyMod MostlySingletonSet<>();
     any.addAll(Arrays.asList("a", "b"));
     assertUnsupportedOperationsThrow(any);
   }

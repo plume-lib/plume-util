@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -162,7 +163,7 @@ final class ArrayMapAndSetTest {
     ArraySet<String> as = new ArraySet<>();
     as.add("eltX");
     as.add("eltY");
-    Iterator<String> setIterator = as.iterator();
+    @Modifiable Iterator<String> setIterator = as.iterator();
     setIterator.next();
     setIterator.remove();
     assertEquals("size=1 capacity=4 [eltY, null, null, null]", as.repr());
@@ -186,7 +187,7 @@ final class ArrayMapAndSetTest {
     // clone() of an empty-but-allocated ArraySet produces a zero-length representation.  Growing
     // it must allocate a nonempty array rather than doubling zero.
     ArraySet<String> as = new ArraySet<>(4);
-    ArraySet<String> clone = as.clone();
+    @Modifiable ArraySet<String> clone = as.clone();
     assertTrue(clone.add("x"));
     assertEquals(new HashSet<>(Set.of("x")), new HashSet<>(clone));
     assertTrue(as.isEmpty());
@@ -194,7 +195,7 @@ final class ArrayMapAndSetTest {
     // Adding to a clone of a nonempty set does not disturb the original.
     ArraySet<String> nonEmpty = new ArraySet<>();
     nonEmpty.add("a");
-    ArraySet<String> nonEmptyClone = nonEmpty.clone();
+    @Modifiable ArraySet<String> nonEmptyClone = nonEmpty.clone();
     nonEmptyClone.add("b");
     assertEquals(new HashSet<>(Set.of("a")), new HashSet<>(nonEmpty));
     assertEquals(new HashSet<>(Set.of("a", "b")), new HashSet<>(nonEmptyClone));
@@ -206,7 +207,7 @@ final class ArrayMapAndSetTest {
     // representation.  ArrayMap.grow() tests the capacity against zero, whereas ArraySet.grow()
     // tests the array length; both must handle a zero-length array rather than doubling zero.
     ArrayMap<String, String> am = new ArrayMap<>(4);
-    ArrayMap<String, String> clone = am.clone();
+    @Modifiable ArrayMap<String, String> clone = am.clone();
     assertNull(clone.put("x", "1"));
     assertEquals(Map.of("x", "1"), clone);
     assertTrue(am.isEmpty());
@@ -214,7 +215,7 @@ final class ArrayMapAndSetTest {
     // Adding to a clone of a nonempty map does not disturb the original.
     ArrayMap<String, String> nonEmpty = new ArrayMap<>();
     nonEmpty.put("a", "1");
-    ArrayMap<String, String> nonEmptyClone = nonEmpty.clone();
+    @Modifiable ArrayMap<String, String> nonEmptyClone = nonEmpty.clone();
     nonEmptyClone.put("b", "2");
     assertEquals(Map.of("a", "1"), nonEmpty);
     assertEquals(Map.of("a", "1", "b", "2"), nonEmptyClone);

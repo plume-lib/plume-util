@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.junit.jupiter.api.Test;
 
 /** Test the UniqueIdMap class. */
@@ -19,7 +20,7 @@ final class UniqueIdMapTest {
    * @param s the element of the returned list
    * @return a new one-element list containing {@code s}
    */
-  private static List<String> newList(String s) {
+  private static @Modifiable List<String> newList(String s) {
     List<String> result = new ArrayList<>();
     result.add(s);
     return result;
@@ -77,7 +78,7 @@ final class UniqueIdMapTest {
   @Test
   void idsAreUnaffectedByMutationOfTheKey() {
     UniqueIdMap<List<String>> m = new UniqueIdMap<>();
-    List<String> a = newList("a");
+    @Modifiable List<String> a = newList("a");
     long id = m.get(a);
     // The map is identity-based, so mutating the key (and thus its hash code) does not lose it.
     a.add("b");
