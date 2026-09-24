@@ -34,6 +34,7 @@ import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.checkerframework.checker.modifiability.qual.Ungrowable;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -97,6 +98,15 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
 
   // An alternate representation would also store the hash code of each key, for quicker querying.
+
+  /** A view of the keys. */
+  private @MonotonicNonNull @IteratorPolyMod @Ungrowable Set<@KeyFor("this") K> keySet = null;
+
+  /** The view of the values. */
+  private @MonotonicNonNull @IteratorPolyMod @Ungrowable Collection<V> valuesCollection = null;
+
+  /** The view of the entries. */
+  private @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
 
   /**
    * The number of times this map's size has been modified by adding or removing an element
@@ -499,11 +509,19 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // Behavior is undefined if the map is changed while the sets are being iterated through, so these
   // implementations can assume there are no concurrent side effects.
   @Pure
-  @SuppressWarnings("allcheckers:purity") // update cache
+  @SuppressWarnings({
+    "allcheckers:purity", // update cache
+    // The cache field cannot have a polymorphic type.  The cached view delegates every operation
+    // to this map, so it has this map's capabilities no matter which call created it.
+    "modifiability:return"
+  })
   @Override
   public @IteratorPolyMod @PolyShrinkable @Ungrowable Set<@KeyFor("this") K> keySet(
       @PolyShrinkable ArrayMap<K, V> this) {
-    return new KeySet();
+    if (keySet == null) {
+      keySet = new KeySet();
+    }
+    return keySet;
   }
 
   /** Represents a view of the keys. */
@@ -602,11 +620,19 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   @Pure
-  @SuppressWarnings("allcheckers:purity")
+  @SuppressWarnings({
+    "allcheckers:purity",
+    // The cache field cannot have a polymorphic type.  The cached view delegates every operation
+    // to this map, so it has this map's capabilities no matter which call created it.
+    "modifiability:return"
+  })
   @Override
   public @IteratorPolyMod @PolyShrinkable @Ungrowable Collection<V> values(
       @PolyShrinkable ArrayMap<K, V> this) {
-    return new Values();
+    if (valuesCollection == null) {
+      valuesCollection = new Values();
+    }
+    return valuesCollection;
   }
 
   /** Represents a view of the values. */
@@ -694,13 +720,22 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
   }
 
-  @SuppressWarnings("allcheckers:purity")
+  @SuppressWarnings({
+    "allcheckers:purity",
+    // The cache field cannot have a polymorphic type.  The cached view delegates every operation
+    // to this map, so it has this map's capabilities no matter which call created it.
+    "modifiability:assignment",
+    "modifiability:return"
+  })
   @Pure
   @Override
   public @IteratorPolyMod @PolyShrinkable @Ungrowable Set<
           Map.@PolyModifiable Entry<@KeyFor("this") K, V>>
       entrySet(@PolyModifiable ArrayMap<K, V> this) {
-    return new EntrySet();
+    if (entrySet == null) {
+      entrySet = new EntrySet();
+    }
+    return entrySet;
   }
 
   /** Represents a view of the entries. */
