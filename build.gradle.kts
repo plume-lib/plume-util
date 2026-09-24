@@ -152,6 +152,34 @@ spotless {
   java {
     googleJavaFormat(libs.versions.google.java.format.get())
     formatAnnotations()
+      .addTypeAnnotation("BottomGrowable")
+      .addTypeAnnotation("BottomReplaceable")
+      .addTypeAnnotation("BottomSeqGrowable")
+      .addTypeAnnotation("BottomShrinkable")
+      .addTypeAnnotation("Growable")
+      .addTypeAnnotation("IteratorPolyMod")
+      .addTypeAnnotation("MaybeGrowable")
+      .addTypeAnnotation("MaybeIteratorPolyMod")
+      .addTypeAnnotation("MaybeModifiable")
+      .addTypeAnnotation("MaybeReplaceable")
+      .addTypeAnnotation("MaybeSeqGrowable")
+      .addTypeAnnotation("MaybeShrinkable")
+      .addTypeAnnotation("Modifiable")
+      .addTypeAnnotation("PolyGrowable")
+      .addTypeAnnotation("PolyIteratorPolyMod")
+      .addTypeAnnotation("PolyModifiable")
+      .addTypeAnnotation("PolyReplaceable")
+      .addTypeAnnotation("PolySeqGrowable")
+      .addTypeAnnotation("PolyShrinkable")
+      .addTypeAnnotation("Replaceable")
+      .addTypeAnnotation("SeqGrowable")
+      .addTypeAnnotation("SeqUngrowable")
+      .addTypeAnnotation("Shrinkable")
+      .addTypeAnnotation("Ungrowable")
+      .addTypeAnnotation("Unmodifiable")
+      .addTypeAnnotation("UnmodifiableParam")
+      .addTypeAnnotation("Unreplaceable")
+      .addTypeAnnotation("Unshrinkable")
   }
   kotlinGradle {
     // The default target is every "*.gradle.kts" file.
@@ -206,6 +234,10 @@ checkerFramework {
   extraJavacArgs =
     listOf(
       "-Werror",
+      "-Xmaxerrs",
+      "10000",
+      "-Xmaxwarns",
+      "10000",
       // "-Aversion",
       // "-verbose",
       "-AcheckPurityAnnotations",

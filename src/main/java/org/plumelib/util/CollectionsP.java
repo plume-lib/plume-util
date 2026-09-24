@@ -1810,8 +1810,7 @@ public final class CollectionsP {
      *
      * @param itor an iterator whose first and last elements to discard
      */
-    /*package*/ @Unshrinkable
-    RemoveFirstAndLastIterator(Iterator<T> itor) {
+    /*package*/ @Unshrinkable RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
         first = itor.next();

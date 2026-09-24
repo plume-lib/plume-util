@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.lock.qual.GuardedBy;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.junit.jupiter.api.AfterEach;
@@ -117,7 +119,7 @@ class ArrayMapTestApache {
     }
   }
 
-  @Nullable ArrayMap hm;
+  @Nullable @Modifiable @IteratorPolyMod ArrayMap hm;
   static final int hmSize = 100;
   Object @Nullable [] objArray;
   Object @Nullable [] objArray2;
