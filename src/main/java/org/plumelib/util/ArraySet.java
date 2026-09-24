@@ -94,7 +94,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  public @Growable @Shrinkable ArraySet(int initialCapacity) {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet(int initialCapacity) {
     super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -108,7 +108,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
 
   /** Constructs an empty {@code ArraySet} with the default initial capacity. */
   @SideEffectFree
-  public @Growable @Shrinkable ArraySet() {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet() {
     this(4);
   }
 
@@ -125,7 +125,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  private @Growable @Shrinkable ArraySet(
+  private @IteratorPolyMod @Growable @Shrinkable ArraySet(
       @Nullable E @Nullable [] values, @LTEqLengthOf({"values"}) int size) {
     super();
     this.values = values;
@@ -145,7 +145,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
     "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public @Growable @Shrinkable ArraySet(Collection<? extends E> m) {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet(Collection<? extends E> m) {
     this(m.size());
     addAll(m);
   }
@@ -485,7 +485,7 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
-  public ArraySet<E> clone() {
+  public @IteratorPolyMod @Growable @Shrinkable ArraySet<E> clone() {
     if (values == null) {
       return new ArraySet<>(null, 0);
     } else {

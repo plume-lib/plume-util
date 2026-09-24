@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ final class UniqueIdMapTest {
    * @param s the element of the returned list
    * @return a new one-element list containing {@code s}
    */
-  private static @Modifiable List<String> newList(String s) {
+  private static @Modifiable @IteratorPolyMod List<String> newList(String s) {
     List<String> result = new ArrayList<>();
     result.add(s);
     return result;

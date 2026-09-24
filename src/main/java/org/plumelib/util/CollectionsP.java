@@ -1195,7 +1195,7 @@ public final class CollectionsP {
     "NonApiType",
     // "PMD.LooseCoupling"
   }) // method is for ArrayList
-  public static <T> ArrayList<T> makeArrayList(Enumeration<T> e) {
+  public static <T> @Modifiable @IteratorPolyMod ArrayList<T> makeArrayList(Enumeration<T> e) {
     ArrayList<T> result = new ArrayList<>();
     while (e.hasMoreElements()) {
       result.add(e.nextElement());
@@ -1243,7 +1243,8 @@ public final class CollectionsP {
    * @return a new list containing the contents of the given lists, in order
    */
   @SuppressWarnings("unchecked")
-  public static <T> List<T> concatenate(Collection<T> list1, Collection<T> list2) {
+  public static <T> @Modifiable @IteratorPolyMod List<T> concatenate(
+      Collection<T> list1, Collection<T> list2) {
     List<T> result = new ArrayList<>(list1.size() + list2.size());
     result.addAll(list1);
     result.addAll(list2);

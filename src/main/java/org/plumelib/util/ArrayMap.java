@@ -1249,7 +1249,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
-  public ArrayMap<K, V> clone() {
+  public @Modifiable ArrayMap<K, V> clone() {
     if (keys == null) {
       return new ArrayMap<>(null, null, 0);
     } else {

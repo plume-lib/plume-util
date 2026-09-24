@@ -73,7 +73,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  public @Growable IdentityArraySet(int initialCapacity) {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet(int initialCapacity) {
     super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -87,7 +87,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   /** Constructs an empty {@code IdentityArraySet} with the default initial capacity. */
   @SideEffectFree
-  public @Growable IdentityArraySet() {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet() {
     this(4);
   }
 
@@ -104,7 +104,8 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  private @Growable IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
+  private @IteratorPolyMod @Growable @Shrinkable IdentityArraySet(
+      E[] values, @LTEqLengthOf({"values"}) int size) {
     super();
     this.values = values;
     this.size = size;
@@ -123,7 +124,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public @Growable IdentityArraySet(Collection<? extends E> c) {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet(Collection<? extends E> c) {
     this(c.size());
     addAll(c);
   }
@@ -410,7 +411,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
   @SideEffectFree
   @Override
-  public IdentityArraySet<E> clone() {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet<E> clone() {
     if (values == null) {
       return new IdentityArraySet<>(null, 0);
     } else {

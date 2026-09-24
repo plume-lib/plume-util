@@ -5,6 +5,8 @@ import java.util.IdentityHashMap;
 import org.checkerframework.checker.interning.qual.FindDistinct;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Unshrinkable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
@@ -22,7 +24,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
     extends AbstractMostlySingletonSet<T> {
 
   /** Create an IdentityMostlySingletonSet. */
-  public IdentityMostlySingletonSet() {
+  public @IteratorPolyMod @Growable @Unshrinkable IdentityMostlySingletonSet() {
     super(State.EMPTY);
   }
 
@@ -31,7 +33,7 @@ public final class IdentityMostlySingletonSet<T extends Object>
    *
    * @param value the single element of the set
    */
-  public IdentityMostlySingletonSet(T value) {
+  public @IteratorPolyMod @Growable @Unshrinkable IdentityMostlySingletonSet(T value) {
     super(State.SINGLETON, value);
   }
 

@@ -40,6 +40,8 @@ import org.checkerframework.checker.lock.qual.GuardedBy;
 import org.checkerframework.checker.modifiability.qual.Growable;
 import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.PolyModifiable;
+import org.checkerframework.checker.modifiability.qual.PolyShrinkable;
 import org.checkerframework.checker.modifiability.qual.Replaceable;
 import org.checkerframework.checker.modifiability.qual.Ungrowable;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -69,8 +71,11 @@ import org.junit.jupiter.api.Test;
 })
 class ArrayMapTestApache {
   static class MockMap extends AbstractMap {
+    // The empty set has no element to remove, so none of its shrink operations throws.
+    @SuppressWarnings("modifiability:return")
     @Override
-    public @IteratorPolyMod Set entrySet(@GuardSatisfied MockMap this) {
+    public @IteratorPolyMod @PolyShrinkable @Ungrowable Set entrySet(
+        @PolyModifiable @GuardSatisfied MockMap this) {
       return Collections.EMPTY_SET;
     }
 
@@ -82,7 +87,8 @@ class ArrayMapTestApache {
 
   private static class MockMapNull extends AbstractMap {
     @Override
-    public @IteratorPolyMod @Ungrowable Set entrySet(@GuardSatisfied MockMapNull this) {
+    public @IteratorPolyMod @PolyShrinkable @Ungrowable Set entrySet(
+        @PolyModifiable @GuardSatisfied MockMapNull this) {
       return null;
     }
 
