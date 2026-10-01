@@ -30,6 +30,7 @@ import java.util.function.Predicate;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 import org.plumelib.util.CollectionsP.Replacement;
@@ -141,7 +142,7 @@ final class CollectionsPTest {
     }
 
     @Override
-    public void remove(@GuardSatisfied IotaIterator this) {
+    public void remove(@Shrinkable @GuardSatisfied IotaIterator this) {
       throw new UnsupportedOperationException();
     }
   }

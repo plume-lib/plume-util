@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -78,16 +79,16 @@ public class UnionFind<E extends Object> {
    * Maps each element to its parent in the union-find forest. An element is a representative (a
    * root) if and only if it maps to itself. Every element that has been added is a key.
    */
-  private final Map<E, E> parent = new HashMap<>();
+  private final @Modifiable Map<E, E> parent = new HashMap<>();
 
   /**
    * Maps each representative to the rank (an upper bound on the height) of its tree. Non-root
    * elements' ranks are not meaningful and are not consulted.
    */
-  private final Map<E, Integer> rank = new HashMap<>();
+  private final @Modifiable Map<E, Integer> rank = new HashMap<>();
 
   /** Maps each representative to the list of all elements in its set. */
-  private final Map<E, List<E>> members = new HashMap<>();
+  private final @Modifiable Map<E, @Modifiable List<E>> members = new HashMap<>();
 
   /** The client's unary predicate, or null if none was supplied. */
   private final @Nullable Predicate<? super E> unaryPredicate;
@@ -107,7 +108,7 @@ public class UnionFind<E extends Object> {
    * representative. A value of {@code Boolean.TRUE} or {@code Boolean.FALSE} is the cached value;
    * an absent key means the value has not been computed.
    */
-  private final Map<E, Boolean> unaryCache = new HashMap<>();
+  private final @Modifiable Map<E, Boolean> unaryCache = new HashMap<>();
 
   /**
    * Caches the value of the lifted binary predicate for each ordered pair of sets. The value for
@@ -115,7 +116,7 @@ public class UnionFind<E extends Object> {
    * {@code Boolean.TRUE} or {@code Boolean.FALSE} is the cached value; an absent inner or outer key
    * means the value has not been computed.
    */
-  private final Map<E, Map<E, Boolean>> binaryCache = new HashMap<>();
+  private final @Modifiable Map<E, @Modifiable Map<E, Boolean>> binaryCache = new HashMap<>();
 
   /** Creates a new, empty union-find structure with no predicates. */
   public UnionFind() {
@@ -330,7 +331,7 @@ public class UnionFind<E extends Object> {
    * @param root a representative
    * @return the list of members of {@code root}'s set
    */
-  private List<E> membersOf(E root) {
+  private @Modifiable List<E> membersOf(E root) {
     List<E> result = members.get(root);
     if (result == null) {
       throw new Error("not a representative: " + root);

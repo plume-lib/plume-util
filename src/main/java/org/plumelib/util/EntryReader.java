@@ -24,6 +24,9 @@ import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrLow;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
+import org.checkerframework.checker.modifiability.qual.Unshrinkable;
 import org.checkerframework.checker.mustcall.qual.MustCall;
 import org.checkerframework.checker.mustcall.qual.MustCallAlias;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -115,7 +118,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   // @MustCall({}) because the RLC does not (yet) support verifying collections of resources.
   /** Stack of readers. Used to support include files. */
-  private final Deque<@MustCall({}) FlnReader> readers = new ArrayDeque<>();
+  private final @Modifiable Deque<@MustCall({}) FlnReader> readers = new ArrayDeque<>();
 
   /** Line that is pushed back to be reread. */
   private @Nullable String pushbackLine = null;
@@ -145,7 +148,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name.
    * @throws UnsupportedEncodingException if the charset encoding is not supported
    */
-  public @MustCallAlias EntryReader(
+  public @MustCallAlias @Unshrinkable EntryReader(
       @MustCallAlias InputStream in,
       Charset charset,
       String filename,
@@ -173,7 +176,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param includeRegexString regular expression that matches include directives. The expression
    *     should define one group that contains the include file name.
    */
-  public @MustCallAlias EntryReader(
+  public @MustCallAlias @Unshrinkable EntryReader(
       @MustCallAlias InputStream in,
       String filename,
       EntryFormat entryFormat,
@@ -190,7 +193,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param in the InputStream
    * @param filename the file name
    */
-  public @MustCallAlias EntryReader(@MustCallAlias InputStream in, String filename) {
+  public @MustCallAlias @Unshrinkable EntryReader(@MustCallAlias InputStream in, String filename) {
     this(in, filename, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
@@ -199,7 +202,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param in the InputStream
    */
-  public @MustCallAlias EntryReader(@MustCallAlias InputStream in) {
+  public @MustCallAlias @Unshrinkable EntryReader(@MustCallAlias InputStream in) {
     this(in, "(InputStream)", EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
@@ -214,7 +217,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     should define one group that contains the include file name
    */
   @SuppressWarnings("builder") // storing into a collection
-  public @MustCallAlias EntryReader(
+  public @MustCallAlias @Unshrinkable EntryReader(
       @MustCallAlias Reader reader,
       String filename,
       EntryFormat entryFormat,
@@ -238,7 +241,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *
    * @param reader source from which to read entries
    */
-  public @MustCallAlias EntryReader(@MustCallAlias Reader reader) {
+  public @MustCallAlias @Unshrinkable EntryReader(@MustCallAlias Reader reader) {
     this(reader, reader.toString(), EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
@@ -254,7 +257,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    */
-  public EntryReader(
+  public @Unshrinkable EntryReader(
       Path path,
       EntryFormat entryFormat,
       CommentFormat commentFormat,
@@ -269,7 +272,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param path the file to read
    * @throws IOException if there is a problem reading the file
    */
-  public EntryReader(Path path) throws IOException {
+  public @Unshrinkable EntryReader(Path path) throws IOException {
     this(path, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
@@ -285,7 +288,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    */
-  public EntryReader(
+  public @Unshrinkable EntryReader(
       File file,
       EntryFormat entryFormat,
       CommentFormat commentFormat,
@@ -300,7 +303,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param file the file to read
    * @throws IOException if there is a problem reading the file
    */
-  public EntryReader(File file) throws IOException {
+  public @Unshrinkable EntryReader(File file) throws IOException {
     this(file, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
@@ -316,7 +319,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    *     define one group that contains the include file name.
    * @throws IOException if there is a problem reading the file
    */
-  public EntryReader(
+  public @Unshrinkable EntryReader(
       String filename,
       EntryFormat entryFormat,
       CommentFormat commentFormat,
@@ -331,7 +334,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
    * @param filename source from which to read entries
    * @throws IOException if there is a problem reading the file
    */
-  public EntryReader(String filename) throws IOException {
+  public @Unshrinkable EntryReader(String filename) throws IOException {
     this(filename, EntryFormat.DEFAULT, CommentFormat.NONE, null);
   }
 
@@ -646,7 +649,7 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
   /** remove() is not supported. */
   @Override
-  public void remove(@GuardSatisfied EntryReader this) {
+  public void remove(@Shrinkable @GuardSatisfied EntryReader this) {
     throw new UnsupportedOperationException("can't remove lines from file");
   }
 

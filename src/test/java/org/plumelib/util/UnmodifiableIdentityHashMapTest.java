@@ -17,6 +17,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.junit.jupiter.api.Test;
 
 /** Test the UnmodifiableIdentityHashMap class. */
@@ -53,7 +55,7 @@ final class UnmodifiableIdentityHashMapTest {
    * @param v2 the second value
    * @return a new IdentityHashMap containing the given mappings
    */
-  private static IdentityHashMap<String, String> newMap(
+  private static @Modifiable IdentityHashMap<String, String> newMap(
       String k1, String v1, String k2, String v2) {
     IdentityHashMap<String, String> result = new IdentityHashMap<>();
     result.put(k1, v1);
@@ -162,6 +164,7 @@ final class UnmodifiableIdentityHashMapTest {
   // Mutating operations
   //
 
+  @SuppressWarnings("modifiability:method.invocation") // testing that mutation throws
   @Test
   void mutatingOperationsThrow() {
     UnmodifiableIdentityHashMap<String, String> m =
@@ -195,6 +198,7 @@ final class UnmodifiableIdentityHashMapTest {
   // Views
   //
 
+  @SuppressWarnings("modifiability:method.invocation") // testing that mutation throws
   @Test
   void keySetIsUnmodifiable() {
     UnmodifiableIdentityHashMap<String, String> m =
@@ -210,6 +214,7 @@ final class UnmodifiableIdentityHashMapTest {
     assertThrows(UnsupportedOperationException.class, () -> itor.remove());
   }
 
+  @SuppressWarnings("modifiability:method.invocation") // testing that mutation throws
   @Test
   void valuesIsUnmodifiable() {
     UnmodifiableIdentityHashMap<String, String> m =
@@ -224,15 +229,16 @@ final class UnmodifiableIdentityHashMapTest {
     assertThrows(UnsupportedOperationException.class, () -> itor.remove());
   }
 
+  @SuppressWarnings("modifiability:method.invocation") // testing that mutation throws
   @Test
   void entrySetIsUnmodifiable() {
     UnmodifiableIdentityHashMap<String, String> m =
         UnmodifiableIdentityHashMap.wrap(newMap("a", "1", "b", "2"));
-    Set<Map.Entry<String, String>> entries = m.entrySet();
+    Set<Map.Entry<@KeyFor("m") String, String>> entries = m.entrySet();
     assertEquals(2, entries.size());
     assertThrows(UnsupportedOperationException.class, () -> entries.clear());
 
-    Iterator<Map.Entry<String, String>> itor = entries.iterator();
+    Iterator<Map.Entry<@KeyFor("m") String, String>> itor = entries.iterator();
     Map.Entry<String, String> entry = itor.next();
     // An entry's value cannot be set through the view.
     assertThrows(UnsupportedOperationException.class, () -> entry.setValue("9"));

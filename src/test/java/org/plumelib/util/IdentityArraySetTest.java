@@ -13,6 +13,9 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.junit.jupiter.api.Test;
 
 /** Test the IdentityArraySet class. */
@@ -122,7 +125,7 @@ final class IdentityArraySetTest {
     List<String> a2 = newList("a");
     assertEquals(a1, a2);
 
-    IdentityArraySet<List<String>> s = new IdentityArraySet<>();
+    @Modifiable IdentityArraySet<List<String>> s = new IdentityArraySet<>();
     assertTrue(s.add(a1));
     assertFalse(s.add(a1));
     assertTrue(s.contains(a1));
@@ -144,7 +147,7 @@ final class IdentityArraySetTest {
 
   @Test
   void containsAndRemoveOfAbsentElements() {
-    IdentityArraySet<String> s = new IdentityArraySet<>();
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>();
     // An empty set has a null representation, which contains() must handle.
     assertFalse(s.contains("a"));
     assertFalse(s.remove("a"));
@@ -162,7 +165,7 @@ final class IdentityArraySetTest {
 
   @Test
   void addAllAndRemoveAll() {
-    IdentityArraySet<String> s = new IdentityArraySet<>();
+    @Modifiable @IteratorPolyMod IdentityArraySet<String> s = new IdentityArraySet<>();
     assertFalse(s.addAll(Collections.emptyList()));
     assertTrue(s.isEmpty());
 
@@ -180,7 +183,7 @@ final class IdentityArraySetTest {
 
   @Test
   void retainAll() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
+    @Modifiable @IteratorPolyMod IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
     assertFalse(s.retainAll(Arrays.asList("a", "b", "c", "d")));
     assertEquals(3, s.size());
     assertTrue(s.retainAll(Arrays.asList("a", "c")));
@@ -189,7 +192,7 @@ final class IdentityArraySetTest {
 
   @Test
   void clearEmptiesTheSet() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
     s.clear();
     assertTrue(s.isEmpty());
     assertEquals(0, s.size());
@@ -207,7 +210,7 @@ final class IdentityArraySetTest {
 
   @Test
   void removeAndClearDoNotRetainReferences() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(4);
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(4);
     s.add("a");
     s.add("b");
     s.add("c");
@@ -230,9 +233,9 @@ final class IdentityArraySetTest {
 
   @Test
   void removeThroughIteratorDoesNotRetainReferences() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(4);
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(4);
     s.addAll(Arrays.asList("a", "b", "c"));
-    Iterator<String> itor = s.iterator();
+    @Shrinkable Iterator<String> itor = s.iterator();
     itor.next();
     itor.remove();
     assertEquals("size=2 capacity=4 [b, c, null, null]", s.repr());
@@ -244,7 +247,7 @@ final class IdentityArraySetTest {
 
   @Test
   void iteratorTraversesInInsertionOrder() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
     Iterator<String> itor = s.iterator();
     assertTrue(itor.hasNext());
     assertEquals("a", itor.next());
@@ -256,7 +259,7 @@ final class IdentityArraySetTest {
 
   @Test
   void iteratorRemove() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
     Iterator<String> itor = s.iterator();
     assertEquals("a", itor.next());
     itor.remove();
@@ -270,7 +273,7 @@ final class IdentityArraySetTest {
 
   @Test
   void iteratorRemoveWithoutNextThrows() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
     Iterator<String> itor = s.iterator();
     assertThrows(IllegalStateException.class, () -> itor.remove());
     itor.next();
@@ -281,7 +284,7 @@ final class IdentityArraySetTest {
 
   @Test
   void iteratorRemoveDetectsConcurrentModification() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
     Iterator<String> itor = s.iterator();
     itor.next();
     s.add("c");
@@ -290,7 +293,7 @@ final class IdentityArraySetTest {
 
   @Test
   void forEachVisitsAllElements() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b", "c"));
     List<String> visited = new ArrayList<>();
     s.forEach(visited::add);
     assertEquals(Arrays.asList("a", "b", "c"), visited);
@@ -303,14 +306,14 @@ final class IdentityArraySetTest {
 
   @Test
   void forEachDetectsConcurrentModification() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
     assertThrows(ConcurrentModificationException.class, () -> s.forEach(elt -> s.remove(elt)));
   }
 
   @SuppressWarnings("nullness:argument") // testing the behavior on a null argument
   @Test
   void forEachRejectsNullAction() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
     assertThrows(NullPointerException.class, () -> s.forEach(null));
   }
 
@@ -320,7 +323,7 @@ final class IdentityArraySetTest {
 
   @Test
   void cloneIsIndependentOfTheOriginal() {
-    IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(Arrays.asList("a", "b"));
     IdentityArraySet<String> clone = s.clone();
     assertNotSame(s, clone);
     assertEquals(Arrays.asList("a", "b"), elements(clone));
@@ -338,15 +341,15 @@ final class IdentityArraySetTest {
   void addToCloneOfEmptySet() {
     // clone() of an empty-but-allocated IdentityArraySet produces a zero-length representation.
     // Growing it must allocate a nonempty array rather than doubling zero.
-    IdentityArraySet<String> s = new IdentityArraySet<>(4);
-    IdentityArraySet<String> clone = s.clone();
+    @Modifiable IdentityArraySet<String> s = new IdentityArraySet<>(4);
+    @Modifiable IdentityArraySet<String> clone = s.clone();
     assertTrue(clone.add("x"));
     assertEquals(Collections.singletonList("x"), elements(clone));
     assertTrue(s.isEmpty());
 
     // clone() of a never-allocated IdentityArraySet also produces a usable set.
     IdentityArraySet<String> unallocated = new IdentityArraySet<>(0);
-    IdentityArraySet<String> unallocatedClone = unallocated.clone();
+    @Modifiable IdentityArraySet<String> unallocatedClone = unallocated.clone();
     assertTrue(unallocatedClone.add("y"));
     assertEquals(Collections.singletonList("y"), elements(unallocatedClone));
     assertTrue(unallocated.isEmpty());

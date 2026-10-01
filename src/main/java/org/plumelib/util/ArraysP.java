@@ -25,6 +25,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.interning.qual.PolyInterned;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
 import org.checkerframework.checker.mustcall.qual.PolyMustCall;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -3930,7 +3931,7 @@ public final class ArraysP {
     private static final long serialVersionUID = 20170418;
 
     /** Empty constructor. */
-    private Partitioning() {
+    private @Modifiable Partitioning() {
       super();
     }
 
@@ -3939,7 +3940,7 @@ public final class ArraysP {
      *
      * @param other the Partitioning to make a copy of
      */
-    private Partitioning(Partitioning<T> other) {
+    private @Modifiable Partitioning(Partitioning<T> other) {
       super(other);
     }
 

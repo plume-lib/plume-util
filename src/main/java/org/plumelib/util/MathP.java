@@ -10,6 +10,8 @@ import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.PolyUpperBound;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
+import org.checkerframework.checker.modifiability.qual.Unshrinkable;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.Unsigned;
@@ -1423,7 +1425,7 @@ public final class MathP {
      * @param nums a non-empty array
      * @param addEnds if true, include the bracketing endpoints
      */
-    private MissingNumbersIteratorInt(int @MinLen(1) [] nums, boolean addEnds) {
+    private @Unshrinkable MissingNumbersIteratorInt(int @MinLen(1) [] nums, boolean addEnds) {
       this.addEnds = addEnds;
       { // avoid modifying parameter
         int[] numsCopy = new int[nums.length];
@@ -1447,7 +1449,7 @@ public final class MathP {
      * @param numsItor a non-empty iterator; it must return integers in sorted order
      * @param addEnds if true, include the bracketing endpoints
      */
-    /*package*/ MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
+    /*package*/ @Unshrinkable MissingNumbersIteratorInt(Iterator<Integer> numsItor, boolean addEnds) {
       this.addEnds = addEnds;
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
@@ -1533,7 +1535,7 @@ public final class MathP {
     }
 
     @Override
-    public void remove(@GuardSatisfied MissingNumbersIteratorInt this) {
+    public void remove(@Shrinkable @GuardSatisfied MissingNumbersIteratorInt this) {
       throw new UnsupportedOperationException();
     }
   }
@@ -1766,7 +1768,7 @@ public final class MathP {
      * @param nums a non-empty array
      * @param addEnds if true, include the bracketing endpoints
      */
-    private MissingNumbersIteratorLong(long @MinLen(1) [] nums, boolean addEnds) {
+    private @Unshrinkable MissingNumbersIteratorLong(long @MinLen(1) [] nums, boolean addEnds) {
       this.addEnds = addEnds;
       { // avoid modifying parameter
         long[] numsCopy = new long[nums.length];
@@ -1790,7 +1792,7 @@ public final class MathP {
      * @param numsItor a non-empty array; must return longs in sorted order
      * @param addEnds if true, include the bracketing endpoints
      */
-    private MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
+    private @Unshrinkable MissingNumbersIteratorLong(Iterator<Long> numsItor, boolean addEnds) {
       this.addEnds = addEnds;
       if (!numsItor.hasNext()) {
         throw new Error("No elements in numsItor");
@@ -1876,7 +1878,7 @@ public final class MathP {
     }
 
     @Override
-    public void remove(@GuardSatisfied MissingNumbersIteratorLong this) {
+    public void remove(@Shrinkable @GuardSatisfied MissingNumbersIteratorLong this) {
       throw new UnsupportedOperationException();
     }
   }
