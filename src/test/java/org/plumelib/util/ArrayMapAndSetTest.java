@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
@@ -238,6 +239,58 @@ final class ArrayMapAndSetTest {
     @Modifiable ArrayMap<String, String> am = twoElementMap();
     assertEquals(new LinkedHashMap<>(am).entrySet().toString(), am.entrySet().toString());
     assertEquals("[a=1, b=2]", am.entrySet().toString());
+  }
+
+  @Test
+  void copiedEntriesSurviveRemoval() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    am.put("c", "3");
+    List<Map.Entry<String, String>> entries = new ArrayList<>(am.entrySet());
+    for (Map.Entry<String, String> e : entries) {
+      if (!e.getKey().equals("c")) {
+        am.remove(e.getKey());
+      }
+    }
+    assertEquals(Map.of("c", "3"), am);
+    assertEquals("a", entries.get(0).getKey());
+    assertEquals("1", entries.get(0).getValue());
+    assertEquals("c", entries.get(2).getKey());
+    assertEquals("3", entries.get(2).getValue());
+  }
+
+  @Test
+  void savedEntrySetValueAfterShift() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    Iterator<Map.@Modifiable Entry<String, String>> it = am.entrySet().iterator();
+    it.next();
+    Map.@Modifiable Entry<String, String> bEntry = it.next();
+    am.remove("a");
+    assertEquals("b", bEntry.getKey());
+    assertEquals("2", bEntry.setValue("two"));
+    assertEquals(Map.of("b", "two"), am);
+
+    // After its mapping is removed, an entry retains its last value and no longer affects the map.
+    am.remove("b");
+    assertEquals("two", bEntry.getValue());
+    assertEquals("two", bEntry.setValue("deux"));
+    assertEquals("deux", bEntry.getValue());
+    assertTrue(am.isEmpty());
+  }
+
+  @Test
+  void forEachStopsAfterStructuralModification() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    am.put("c", "3");
+    List<String> seen = new ArrayList<>();
+    assertThrows(
+        ConcurrentModificationException.class,
+        () ->
+            am.forEach(
+                (k, v) -> {
+                  seen.add(k);
+                  am.remove("c");
+                }));
+    assertEquals(List.of("a"), seen);
   }
 
   @SuppressWarnings("PMD.LambdaCanBeMethodReference") // the Lock Checker rejects `keyIt::next`
