@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
-import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.SameLen;
@@ -106,6 +105,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   private @MonotonicNonNull @IteratorPolyMod @Ungrowable Collection<V> valuesCollection = null;
 
   /** The view of the entries. */
+  // Unlike the other view fields, this has no modifiability annotations:  its element type would
+  // need @PolyModifiable, which is not permitted on a field.  entrySet() suppresses the resulting
+  // warnings.
   private @MonotonicNonNull Set<Map.Entry<@KeyFor("this") K, V>> entrySet = null;
 
   /**
@@ -149,25 +151,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /**
-   * Private constructor. Installs the given objects in this as its representation, without making
-   * defensive copies.
-   *
-   * @param keys the keys
-   * @param values the values
-   * @param size the number of used items in the arrays; may be less than their lengths
-   */
-  @SideEffectFree
-  private @Modifiable ArrayMap(
-      K @SameLen("values") [] keys,
-      V @SameLen("keys") [] values,
-      @LTEqLengthOf({"keys", "values"}) int size) {
-    super();
-    this.keys = keys;
-    this.values = values;
-    this.size = size;
-  }
-
-  /**
    * Constructs a new {@code ArrayMap} with the same mappings as the given {@code Map}.
    *
    * @param m the map whose mappings are to be placed in this map
@@ -194,7 +177,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @param <K> the type of the keys
    * @param <V> the type of the values
-   * @param capacity the expected maximum number of elements in the set
+   * @param capacity the expected maximum number of mappings in the map
    * @return a new ArrayMap or HashMap with the given capacity
    */
   public static <K, V> Map<K, V> newArrayMapOrHashMap(int capacity) {
@@ -206,13 +189,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /**
-   * Returns a new ArrayMap or HashMap with the given elements. Uses an ArrayMap if the capacity is
+   * Returns a new ArrayMap or HashMap with the given mappings. Uses an ArrayMap if the given map is
    * small, and a HashMap otherwise.
    *
    * @param <K> the type of the keys
    * @param <V> the type of the values
-   * @param m the elements to put in the returned set
-   * @return a new ArrayMap or HashMap with the given elements
+   * @param m the mappings to put in the returned map
+   * @return a new ArrayMap or HashMap with the given mappings
    */
   public static <K, V> Map<K, V> newArrayMapOrHashMap(Map<K, V> m) {
     if (m.size() <= 4) {
@@ -228,7 +211,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @param <K> the type of the keys
    * @param <V> the type of the values
-   * @param capacity the expected maximum number of elements in the set
+   * @param capacity the expected maximum number of mappings in the map
    * @return a new ArrayMap or LinkedHashMap with the given capacity
    */
   public static <K, V> Map<K, V> newArrayMapOrLinkedHashMap(int capacity) {
@@ -240,13 +223,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /**
-   * Returns a new ArrayMap or LinkedHashMap with the given elements. Uses an ArrayMap if the
-   * capacity is small, and a LinkedHashMap otherwise.
+   * Returns a new ArrayMap or LinkedHashMap with the given mappings. Uses an ArrayMap if the given
+   * map is small, and a LinkedHashMap otherwise.
    *
    * @param <K> the type of the keys
    * @param <V> the type of the values
-   * @param m the elements to put in the returned set
-   * @return a new ArrayMap or LinkedHashMap with the given elements
+   * @param m the mappings to put in the returned map
+   * @return a new ArrayMap or LinkedHashMap with the given mappings
    */
   public static <K, V> Map<K, V> newArrayMapOrLinkedHashMap(Map<K, V> m) {
     if (m.size() <= 4) {
@@ -315,16 +298,30 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
   }
 
-  /** Increases the capacity of the arrays, if necessary. */
-  @SuppressWarnings({"unchecked"}) // generic array cast
+  /** Increases the capacity of the arrays, if necessary, so that one more mapping fits. */
   @SideEffectsOnly("this")
   private void grow() {
+    ensureCapacity(size + 1);
+  }
+
+  /**
+   * Increases the capacity of the arrays, if necessary, so that they can hold at least the given
+   * number of mappings.
+   *
+   * @param minCapacity the minimum required capacity
+   */
+  @SuppressWarnings({"unchecked"}) // generic array cast
+  @SideEffectsOnly("this")
+  private void ensureCapacity(int minCapacity) {
     int capacity = capacity();
+    if (minCapacity <= capacity) {
+      return;
+    }
+    int newCapacity = Math.max(capacity == 0 ? 4 : 2 * capacity, minCapacity);
     if (capacity == 0) {
-      this.keys = (K[]) new Object[4];
-      this.values = (V[]) new Object[4];
-    } else if (size == capacity) {
-      int newCapacity = 2 * capacity;
+      this.keys = (K[]) new Object[newCapacity];
+      this.values = (V[]) new Object[newCapacity];
+    } else {
       keys = Arrays.copyOf(keys, newCapacity);
       values = Arrays.copyOf(values, newCapacity);
     }
@@ -395,7 +392,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    */
   @Pure
   private int indexOfValue(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
-    if (keys == null) {
+    if (values == null) {
       return -1;
     }
     for (int i = 0; i < size; i++) {
@@ -487,6 +484,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (m.isEmpty()) {
       return;
     }
+    // This may over-allocate if some keys of `m` are already in this map.
+    ensureCapacity(size + m.size());
     for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
@@ -506,8 +505,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // Views
 
-  // Behavior is undefined if the map is changed while the sets are being iterated through, so these
-  // implementations can assume there are no concurrent side effects.
+  // The view iterators and forEach methods are fail-fast:  they throw
+  // ConcurrentModificationException if the map's size is changed during iteration, other than
+  // through the iterator's own remove() method.
   @Pure
   @SuppressWarnings({
     "allcheckers:purity", // update cache
@@ -605,6 +605,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public void forEach(Consumer<? super K> action) {
+      Objects.requireNonNull(action);
       if (keys == null) {
         return;
       }
@@ -707,7 +708,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public void forEach(Consumer<? super V> action) {
-      if (keys == null) {
+      Objects.requireNonNull(action);
+      if (values == null) {
         return;
       }
       int oldSizeModificationCount = sizeModificationCount;
@@ -806,6 +808,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public void forEach(
         Consumer<? super Map.@PolyModifiable Entry<@KeyFor("ArrayMap.this") K, V>> action) {
+      Objects.requireNonNull(action);
       int oldSizeModificationCount = sizeModificationCount;
       for (int index = 0; index < size(); index++) {
         action.accept(new Entry(index));
@@ -859,6 +862,37 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public abstract T next();
 
+    /**
+     * Prepares to return the next element: checks for concurrent modification and for the existence
+     * of a next element.
+     *
+     * @throws ConcurrentModificationException if the map's size was changed other than through this
+     *     iterator
+     * @throws NoSuchElementException if there is no next element
+     */
+    @SideEffectsOnly("this")
+    protected void beforeNext() {
+      checkForComodification();
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
+      removed = false;
+    }
+
+    /**
+     * Throws ConcurrentModificationException if the map's size was changed other than through this
+     * iterator.
+     *
+     * @throws ConcurrentModificationException if the map's size was changed other than through this
+     *     iterator
+     */
+    @SideEffectFree
+    private void checkForComodification() {
+      if (initialSizeModificationCount != sizeModificationCount) {
+        throw new ConcurrentModificationException();
+      }
+    }
+
     /** Removes the previously-returned element. */
     @SuppressWarnings("modifiability:method.invocation") // wrapper around outer this
     @Override
@@ -867,9 +901,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
         throw new IllegalStateException(
             "Called remove() on ArrayMapIterator without calling next() first.");
       }
-      if (initialSizeModificationCount != sizeModificationCount) {
-        throw new ConcurrentModificationException();
-      }
+      checkForComodification();
       // Remove the previously returned element, so use index-1.
       @SuppressWarnings("lowerbound:assignment") // removed==false, so index>0.
       @NonNegative int newIndex = index - 1;
@@ -890,10 +922,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public @KeyFor("ArrayMap.this") K next() {
-      if (!hasNext()) {
-        throw new NoSuchElementException();
-      }
-      removed = false;
+      beforeNext();
       return keys[index++];
     }
   }
@@ -908,10 +937,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public V next() {
-      if (!hasNext()) {
-        throw new NoSuchElementException();
-      }
-      removed = false;
+      beforeNext();
       return values[index++];
     }
   }
@@ -926,10 +952,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public Map.@PolyModifiable Entry<K, V> next() {
-      if (!hasNext()) {
-        throw new NoSuchElementException();
-      }
-      removed = false;
+      beforeNext();
       return new Entry(index++);
     }
   }
@@ -938,7 +961,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   //  * That would make Entry objects a bit larger (more allocation would be necessary, though the
   //    same *number* of objects), and would take a tiny bit more computation to create.
   //  * That would make calling getKey and getValue slightly cheaper if they are called multiple
-  //    times (a local lookup instead of calling an ArrayList method).
+  //    times (a field read instead of an array access via the enclosing map).
   //  * That would provide less surprising results for some illegal client code.  Removing from the
   //    entrySet iterator and then calling any entry method (getKey, getValue, setValue) has
   //    undefined behavior, but clients might try to do it.  This could issue
@@ -948,7 +971,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // Per the specification of Map.Entry, a map entry is meaningful only during the execution of the
   // iteration over the entry set, and only if the backing map has not been modified except through
   // calling {@code setValue} on the map entry.
-  /** An entrySet() entry. Tracks the containing list and the index. */
+  /** An entrySet() entry. Tracks the containing map and the index. */
   private final class Entry implements Map.Entry<K, V> {
     /** The index. */
     private final @NonNegative int index;
@@ -981,9 +1004,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
     @Override
     public V setValue(@Replaceable Entry this, V value) {
-      // Do not increment sizeModificationCount.
+      V oldValue = values[index];
       values[index] = value;
-      return value;
+      // Do not increment sizeModificationCount.
+      return oldValue;
     }
 
     /**
@@ -997,7 +1021,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return ArrayMap.this;
     }
 
-    // Per the specification of Map.Entry, this does not compare the underlying list and index.
+    // Per the specification of Map.Entry, equality is determined by the key and value.  Comparing
+    // the underlying map and index is only a fast path.
     @Pure
     @Override
     public boolean equals(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
@@ -1032,6 +1057,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       V value = getValue();
       return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
     }
+
+    @SuppressWarnings("signedness:unsigned.concat") // true positive: might be an unsigned value
+    @SideEffectFree
+    @Override
+    public String toString(ArrayMap<K, V>.Entry this) {
+      return getKey() + "=" + getValue();
+    }
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -1065,15 +1097,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
     int oldSizeModificationCount = sizeModificationCount;
     for (int index = 0; index < size; index++) {
-      K k;
-      V v;
-      try {
-        k = keys[index];
-        v = values[index];
-      } catch (IndexOutOfBoundsException e) {
-        throw new ConcurrentModificationException(e);
-      }
-      action.accept(k, v);
+      action.accept(keys[index], values[index]);
     }
     if (oldSizeModificationCount != sizeModificationCount) {
       throw new ConcurrentModificationException();
@@ -1088,30 +1112,19 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return;
     }
     int oldSizeModificationCount = sizeModificationCount;
-    int size = size();
     for (int index = 0; index < size; index++) {
-      K k;
-      V v;
-      try {
-        k = keys[index];
-        v = values[index];
-      } catch (IndexOutOfBoundsException e) {
-        throw new ConcurrentModificationException(e);
+      V newValue = function.apply(keys[index], values[index]);
+      // Check before writing, so that a stale slot is never overwritten.
+      if (oldSizeModificationCount != sizeModificationCount) {
+        throw new ConcurrentModificationException();
       }
-      v = function.apply(k, v);
-
-      try {
-        values[index] = v;
-        // Do not increment sizeModificationCount.
-      } catch (IndexOutOfBoundsException e) {
-        throw new ConcurrentModificationException(e);
-      }
-    }
-    if (oldSizeModificationCount != sizeModificationCount) {
-      throw new ConcurrentModificationException();
+      values[index] = newValue;
+      // Do not increment sizeModificationCount.
     }
   }
 
+  // The receiver is not @Replaceable, even though a key mapped to null gets a new value.  The
+  // overridden method's receiver is only @Growable:  a key mapped to null is treated as absent.
   @Override
   public @Nullable V putIfAbsent(@Growable ArrayMap<K, V> this, K key, V value) {
     int index = indexOfKey(key);
@@ -1167,6 +1180,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     return currentValue;
   }
 
+  // The receiver is not @Replaceable; see the comment on putIfAbsent.
   @Override
   public @PolyNull V computeIfAbsent(
       @Growable ArrayMap<K, V> this,
@@ -1282,18 +1296,37 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @return a copy of this
    */
   @SuppressWarnings({
-    "unchecked",
-    "PMD.ProperCloneImplementation",
+    "allcheckers:purity.assign.field", // side effect to local state (clone)
     "modifiability:override.return" // the clone is modifiable even if the receiver is not
   })
   @SideEffectFree
   @Override
   public @Modifiable ArrayMap<K, V> clone() {
-    if (keys == null) {
-      return new ArrayMap<>(null, null, 0);
-    } else {
-      return new ArrayMap<>(Arrays.copyOf(keys, size), Arrays.copyOf(values, size), size);
+    @Modifiable ArrayMap<K, V> result;
+    try {
+      @SuppressWarnings({
+        "unchecked",
+        "growable:assignment", // super.clone() returns a fresh, modifiable object
+        "modifiability:assignment" // super.clone() returns a fresh, modifiable object
+      })
+      @Modifiable ArrayMap<K, V> resultAsArrayMap = (ArrayMap<K, V>) super.clone();
+      result = resultAsArrayMap;
+    } catch (CloneNotSupportedException e) {
+      throw new Error(e); // can't happen
     }
+    if (size == 0) {
+      result.keys = null;
+      result.values = null;
+    } else {
+      result.keys = Arrays.copyOf(keys, size);
+      result.values = Arrays.copyOf(values, size);
+    }
+    // The views are inner-class instances bound to this map, so the clone needs its own.
+    result.keySet = null;
+    result.valuesCollection = null;
+    result.entrySet = null;
+    result.sizeModificationCount = 0;
+    return result;
   }
 
   /**
