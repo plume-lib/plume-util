@@ -1281,7 +1281,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @return a copy of this
    */
-  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
+  @SuppressWarnings({
+    "unchecked",
+    "PMD.ProperCloneImplementation",
+    "growable:override.return", // the clone is modifiable even if the receiver is not
+    "modifiability:override.return" // the clone is modifiable even if the receiver is not
+  })
   @SideEffectFree
   @Override
   public @Modifiable ArrayMap<K, V> clone() {
