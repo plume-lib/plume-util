@@ -411,7 +411,6 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SuppressWarnings({
     "unchecked",
     "PMD.ProperCloneImplementation",
-    "growable:override.return", // the clone is modifiable even if the receiver is not
     "modifiability:override.return" // the clone is modifiable even if the receiver is not
   })
   @SideEffectFree

@@ -485,7 +485,6 @@ public class ArraySet<E extends @UnknownSignedness @Nullable Object> extends Abs
   @SuppressWarnings({
     "unchecked",
     "PMD.ProperCloneImplementation",
-    "growable:override.return", // the clone is modifiable even if the receiver is not
     "modifiability:override.return" // the clone is modifiable even if the receiver is not
   })
   @SideEffectFree

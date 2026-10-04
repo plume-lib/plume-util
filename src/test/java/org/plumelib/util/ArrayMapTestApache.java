@@ -591,8 +591,6 @@ class ArrayMapTestApache {
 
     @SuppressWarnings({
       "allcheckers:purity.call",
-      "growable:override.return", // the clone is modifiable even if the receiver is not
-      "iterator:override.return", // the clone is modifiable even if the receiver is not
       "modifiability:override.return" // the clone is modifiable even if the receiver is not
     })
     @Override
