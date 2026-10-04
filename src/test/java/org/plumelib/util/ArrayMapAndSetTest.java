@@ -5,9 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,7 +32,7 @@ final class ArrayMapAndSetTest {
    *
    * @return a new ArrayMap with two mappings
    */
-  private static ArrayMap<String, String> twoElementMap() {
+  private static @Modifiable ArrayMap<String, String> twoElementMap() {
     ArrayMap<String, String> result = new ArrayMap<>();
     result.put("a", "1");
     result.put("b", "2");
@@ -203,9 +207,8 @@ final class ArrayMapAndSetTest {
 
   @Test
   void putToCloneOfEmptyMap() {
-    // As for ArraySet, clone() of an empty-but-allocated ArrayMap produces a zero-length
-    // representation.  ArrayMap.grow() tests the capacity against zero, whereas ArraySet.grow()
-    // tests the array length; both must handle a zero-length array rather than doubling zero.
+    // clone() of an empty-but-allocated ArrayMap produces an unallocated representation, which
+    // ArrayMap.grow() must handle rather than doubling zero.
     ArrayMap<String, String> am = new ArrayMap<>(4);
     @Modifiable ArrayMap<String, String> clone = am.clone();
     assertNull(clone.put("x", "1"));
@@ -219,5 +222,113 @@ final class ArrayMapAndSetTest {
     nonEmptyClone.put("b", "2");
     assertEquals(Map.of("a", "1"), nonEmpty);
     assertEquals(Map.of("a", "1", "b", "2"), nonEmptyClone);
+  }
+
+  @Test
+  void entrySetValueReturnsOldValue() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    Map.@Modifiable Entry<String, String> entry = am.entrySet().iterator().next();
+    assertEquals("1", entry.setValue("one"));
+    assertEquals("one", entry.getValue());
+    assertEquals("one", am.get("a"));
+  }
+
+  @Test
+  void entryToString() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    assertEquals(new LinkedHashMap<>(am).entrySet().toString(), am.entrySet().toString());
+    assertEquals("[a=1, b=2]", am.entrySet().toString());
+  }
+
+  @SuppressWarnings("PMD.LambdaCanBeMethodReference") // the Lock Checker rejects `keyIt::next`
+  @Test
+  void viewIteratorsAreFailFast() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    Iterator<String> keyIt = am.keySet().iterator();
+    keyIt.next();
+    am.remove("b");
+    assertThrows(ConcurrentModificationException.class, () -> keyIt.next());
+
+    am = twoElementMap();
+    Iterator<String> valueIt = am.values().iterator();
+    am.put("c", "3");
+    assertThrows(ConcurrentModificationException.class, () -> valueIt.next());
+
+    am = twoElementMap();
+    Iterator<Map.Entry<String, String>> entryIt = am.entrySet().iterator();
+    am.clear();
+    assertThrows(ConcurrentModificationException.class, () -> entryIt.next());
+
+    // Changing a value does not invalidate an iterator.
+    am = twoElementMap();
+    Iterator<String> keyIt2 = am.keySet().iterator();
+    keyIt2.next();
+    am.put("a", "one");
+    assertEquals("b", keyIt2.next());
+  }
+
+  @Test
+  void replaceAllDetectsRemoval() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    am.put("c", "3");
+    assertThrows(
+        ConcurrentModificationException.class,
+        () ->
+            am.replaceAll(
+                (k, v) -> {
+                  am.remove("c");
+                  return v + v;
+                }));
+    // No stale slot was written.
+    assertEquals(Map.of("a", "1", "b", "2"), am);
+
+    @Modifiable ArrayMap<String, String> am2 = twoElementMap();
+    am2.replaceAll((k, v) -> k + v);
+    assertEquals(Map.of("a", "a1", "b", "b2"), am2);
+  }
+
+  @SuppressWarnings("nullness:argument") // tests the behavior on a null argument
+  @Test
+  void viewForEachRejectsNullAction() {
+    @Modifiable ArrayMap<String, String> am = new ArrayMap<>(0);
+    assertThrows(NullPointerException.class, () -> am.keySet().forEach(null));
+    assertThrows(NullPointerException.class, () -> am.values().forEach(null));
+    assertThrows(NullPointerException.class, () -> am.entrySet().forEach(null));
+  }
+
+  @Test
+  void cloneIsIndependent() {
+    @Modifiable ArrayMap<String, String> am = twoElementMap();
+    // Create the views, so that clone() must not share them.
+    Set<String> keySet = am.keySet();
+    Collection<String> values = am.values();
+    Set<?> entrySet = am.entrySet();
+    @Modifiable ArrayMap<String, String> clone = am.clone();
+    assertNotSame(keySet, clone.keySet());
+    assertNotSame(values, clone.values());
+    assertNotSame(entrySet, clone.entrySet());
+    clone.keySet().remove("a");
+    clone.values().clear();
+    assertEquals(Map.of("a", "1", "b", "2"), am);
+    assertTrue(clone.isEmpty());
+
+    // A cloned map with no mappings can be added to.
+    am.clear();
+    @Modifiable ArrayMap<String, String> emptyClone = am.clone();
+    emptyClone.put("x", "1");
+    assertEquals(Map.of("x", "1"), emptyClone);
+  }
+
+  @Test
+  void putAllLargeMap() {
+    @Modifiable ArrayMap<Integer, Integer> am = new ArrayMap<>(0);
+    am.put(0, 0);
+    Map<Integer, Integer> m = new LinkedHashMap<>();
+    for (int i = 0; i < 100; i++) {
+      m.put(i, i * i);
+    }
+    am.putAll(m);
+    assertEquals(m, am);
+    assertEquals(new ArrayList<>(m.keySet()), new ArrayList<>(am.keySet()));
   }
 }
