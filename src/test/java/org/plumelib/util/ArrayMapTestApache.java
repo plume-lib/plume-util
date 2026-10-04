@@ -589,7 +589,12 @@ class ArrayMapTestApache {
       this.i = i;
     }
 
-    @SuppressWarnings("allcheckers:purity.call")
+    @SuppressWarnings({
+      "allcheckers:purity.call",
+      "growable:override.return", // the clone is modifiable even if the receiver is not
+      "iterator:override.return", // the clone is modifiable even if the receiver is not
+      "modifiability:override.return" // the clone is modifiable even if the receiver is not
+    })
     @Override
     protected Object clone(@GuardSatisfied MockClonable this) throws CloneNotSupportedException {
       return new MockClonable(i);
