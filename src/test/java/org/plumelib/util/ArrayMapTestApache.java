@@ -219,7 +219,7 @@ class ArrayMapTestApache {
     Collection values = map.values();
     assertEquals("value", values.iterator().next());
     assertEquals("key", keys.iterator().next());
-    @Modifiable AbstractMap map2 = (@Modifiable AbstractMap) map.clone();
+    @Modifiable ArrayMap map2 = map.clone();
     map2.put("key", "value2");
     Collection values2 = map2.values();
     assertTrue(values2 != values);

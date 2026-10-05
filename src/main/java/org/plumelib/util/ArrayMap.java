@@ -1,7 +1,6 @@
 package org.plumelib.util;
 
 import java.util.AbstractCollection;
-import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,8 +43,10 @@ import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
 /**
- * A map backed by two arrays. It permits null keys and values, and its iterator has deterministic
- * ordering.
+ * A map backed by arrays of keys, values, and the keys' hash codes. It permits null keys and
+ * values, and its iterator has deterministic ordering.
+ *
+ * <p>As with {@code HashMap}, a key's hash code must not change while the key is in the map.
  *
  * <p>Compared to a HashMap or LinkedHashMap: For very small maps, this uses much less space, has
  * comparable performance, and (like a LinkedHashMap) is deterministic, with elements returned in
@@ -87,22 +88,26 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
   "nullness", // temporary; nullness is tricky because of null-padded arrays
 })
 public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSignedness Object>
-    extends AbstractMap<K, V> implements Cloneable {
+    implements Map<K, V>, Cloneable {
 
   // An alternate internal representation would be a list of Map.Entry objects (e.g.,
-  // AbstractMap.SimpleEntry) instead of two arrays for keys and values.  That is a bad idea
+  // AbstractMap.SimpleEntry) instead of parallel arrays for keys and values.  That is a bad idea
   // because it both uses more memory and makes some operations more expensive.
 
   /** The keys. Null if capacity=0. */
-  private @Nullable K @Nullable @SameLen("values") [] keys;
+  private @Nullable K @Nullable @SameLen({"values", "hashes"}) [] keys;
 
   /** The values. Null if capacity=0. */
-  private @Nullable V @Nullable @SameLen("keys") [] values;
+  private @Nullable V @Nullable @SameLen({"keys", "hashes"}) [] values;
+
+  /**
+   * The hash codes of the keys: {@code hashes[i] == Objects.hashCode(keys[i])}. Comparing hash
+   * codes before calling {@code equals} makes lookups faster. Null if capacity=0.
+   */
+  private int @Nullable @SameLen({"keys", "values"}) [] hashes;
 
   /** The number of used mappings in the representation of this. */
   private @NonNegative @LessThan("keys.length + 1") @IndexOrHigh({"keys", "values"}) int size = 0;
-
-  // An alternate representation would also store the hash code of each key, for quicker querying.
 
   /** A view of the keys. */
   private @MonotonicNonNull @IteratorPolyMod @Ungrowable Set<@KeyFor("this") K> keySet = null;
@@ -144,16 +149,21 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (initialCapacity == 0) {
       this.keys = null;
       this.values = null;
+      this.hashes = null;
     } else {
       this.keys = (K[]) new Object[initialCapacity];
       this.values = (V[]) new Object[initialCapacity];
+      this.hashes = new int[initialCapacity];
     }
   }
 
-  /** Constructs an empty {@code ArrayMap} with the default initial capacity. */
+  /**
+   * Constructs an empty {@code ArrayMap}. Storage is allocated when the first mapping is added, so
+   * a map that remains empty uses little memory.
+   */
   @SideEffectFree
   public @Modifiable ArrayMap() {
-    this(4);
+    this(0);
   }
 
   /**
@@ -253,6 +263,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * @param index the index of {@code key} in {@code keys}. If -1, add a new mapping. Otherwise,
    *     replace the mapping at {@code index}.
    * @param key the key
+   * @param hash the hash code of the key, {@code Objects.hashCode(key)}
    * @param value the value
    */
   @SuppressWarnings({
@@ -261,12 +272,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   })
   @EnsuresKeyFor(value = "#2", map = "this")
   @SideEffectsOnly("this")
-  private void put(@GTENegativeOne int index, K key, V value) {
+  private void put(@GTENegativeOne int index, K key, int hash, V value) {
     if (index == -1) {
       // Add a new mapping.
       grow();
       keys[size] = key;
       values[size] = value;
+      hashes[size] = hash;
       size++;
       sizeModificationCount++;
     } else {
@@ -327,9 +339,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (capacity == 0) {
       this.keys = (K[]) new Object[newCapacity];
       this.values = (V[]) new Object[newCapacity];
+      this.hashes = new int[newCapacity];
     } else {
       keys = Arrays.copyOf(keys, newCapacity);
       values = Arrays.copyOf(values, newCapacity);
+      hashes = Arrays.copyOf(hashes, newCapacity);
     }
   }
 
@@ -347,6 +361,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     assertIndexInBounds(index, "removeIndex");
     System.arraycopy(keys, index + 1, keys, index, size - index - 1);
     System.arraycopy(values, index + 1, values, index, size - index - 1);
+    System.arraycopy(hashes, index + 1, hashes, index, size - index - 1);
     size--;
     // Clear the now-unused slot so it does not retain references.
     keys[size] = null;
@@ -378,11 +393,24 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    */
   @Pure
   private int indexOfKey(@GuardSatisfied @Nullable @UnknownSignedness Object key) {
+    return indexOfKey(key, Objects.hashCode(key));
+  }
+
+  /**
+   * Returns the index of the given key, or -1 if it does not appear. Uses {@code Objects.equals}
+   * for comparison.
+   *
+   * @param key a key to find
+   * @param hash the hash code of the key, {@code Objects.hashCode(key)}
+   * @return the index of the given key, or -1 if it does not appear
+   */
+  @Pure
+  private int indexOfKey(@GuardSatisfied @Nullable @UnknownSignedness Object key, int hash) {
     if (keys == null) {
       return -1;
     }
     for (int i = 0; i < size; i++) {
-      if (Objects.equals(key, keys[i])) {
+      if (hashes[i] == hash && Objects.equals(key, keys[i])) {
         return i;
       }
     }
@@ -463,9 +491,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   @Override
   public @Nullable V put(@Growable @Replaceable ArrayMap<K, V> this, K key, V value) {
-    int index = indexOfKey(key);
+    int hash = Objects.hashCode(key);
+    int index = indexOfKey(key, hash);
     V currentValue = getOrNull(index);
-    put(index, key, value);
+    put(index, key, hash, value);
     return currentValue;
   }
 
@@ -1064,7 +1093,80 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   // //////////////////////////////////////////////////////////////////////
-  // Comparison and hashing:  equals and hashCode are inherited from AbstractMap.
+  // Comparison, hashing, and printing
+
+  // ArrayMap implements Map directly rather than extending AbstractMap, because AbstractMap
+  // declares fields that ArrayMap does not use, and those fields would enlarge every ArrayMap.
+
+  @SuppressWarnings("allcheckers:purity.catch") // the result is deterministic despite the catch
+  @Pure
+  @Override
+  public boolean equals(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof Map<?, ?> other)) {
+      return false;
+    }
+    if (other.size() != size) {
+      return false;
+    }
+    try {
+      for (int i = 0; i < size; i++) {
+        K key = keys[i];
+        V value = values[i];
+        if (value == null) {
+          if (!(other.get(key) == null && other.containsKey(key))) {
+            return false;
+          }
+        } else if (!value.equals(other.get(key))) {
+          return false;
+        }
+      }
+    } catch (ClassCastException | NullPointerException unused) {
+      // `other` does not permit some key of this map.
+      return false;
+    }
+    return true;
+  }
+
+  @Pure
+  @Override
+  public int hashCode() {
+    // Per the specification of Map.hashCode() and Map.Entry.hashCode().
+    int result = 0;
+    for (int i = 0; i < size; i++) {
+      result += hashes[i] ^ Objects.hashCode(values[i]);
+    }
+    return result;
+  }
+
+  @SuppressWarnings({
+    "allcheckers:purity.call", // side effect to local state (StringBuilder)
+    "interning:not.interned", // detecting a self-reference requires reference equality
+    "signedness:argument" // true positive: might be an unsigned value
+  })
+  @SideEffectFree
+  @Override
+  public String toString() {
+    if (size == 0) {
+      return "{}";
+    }
+    StringBuilder sb = new StringBuilder(16 * size);
+    sb.append('{');
+    for (int i = 0; i < size; i++) {
+      if (i != 0) {
+        sb.append(", ");
+      }
+      K key = keys[i];
+      V value = values[i];
+      sb.append(key == this ? "(this Map)" : key);
+      sb.append('=');
+      sb.append(value == this ? "(this Map)" : value);
+    }
+    sb.append('}');
+    return sb.toString();
+  }
 
   // Defaultable methods
 
@@ -1126,9 +1228,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   // overridden method's receiver is only @Growable:  a key mapped to null is treated as absent.
   @Override
   public @Nullable V putIfAbsent(@Growable ArrayMap<K, V> this, K key, V value) {
-    int index = indexOfKey(key);
+    int hash = Objects.hashCode(key);
+    int index = indexOfKey(key, hash);
     if (index == -1 || values[index] == null) {
-      put(index, key, value);
+      put(index, key, hash, value);
       return null;
     } else {
       return values[index];
@@ -1186,7 +1289,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       K key,
       Function<? super K, ? extends @PolyNull V> mappingFunction) {
     Objects.requireNonNull(mappingFunction);
-    int index = indexOfKey(key);
+    int hash = Objects.hashCode(key);
+    int index = indexOfKey(key, hash);
     if (index != -1) {
       V currentValue = values[index];
       if (currentValue != null) {
@@ -1200,7 +1304,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       throw new ConcurrentModificationException();
     }
     if (newValue != null) {
-      put(index, key, newValue);
+      put(index, key, hash, newValue);
     }
     return newValue;
   }
@@ -1245,7 +1349,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       K key,
       BiFunction<? super K, ? super @Nullable V, ? extends @PolyNull V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
-    int index = indexOfKey(key);
+    int hash = Objects.hashCode(key);
+    int index = indexOfKey(key, hash);
     V oldValue = getOrNull(index);
     int oldSizeModificationCount = sizeModificationCount;
     V newValue = remappingFunction.apply(key, oldValue);
@@ -1256,7 +1361,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       removeIndex(index);
       return null;
     } else {
-      put(index, key, newValue);
+      put(index, key, hash, newValue);
       return newValue;
     }
   }
@@ -1269,7 +1374,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       BiFunction<? super V, ? super V, ? extends @PolyNull V> remappingFunction) {
     Objects.requireNonNull(remappingFunction);
     Objects.requireNonNull(value);
-    int index = indexOfKey(key);
+    int hash = Objects.hashCode(key);
+    int index = indexOfKey(key, hash);
     V oldValue = getOrNull(index);
     int oldSizeModificationCount = sizeModificationCount;
     @PolyNull V newValue;
@@ -1284,7 +1390,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (newValue == null) {
       removeIndex(index);
     } else {
-      put(index, key, newValue);
+      put(index, key, hash, newValue);
     }
     return newValue;
   }
@@ -1316,9 +1422,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (size == 0) {
       result.keys = null;
       result.values = null;
+      result.hashes = null;
     } else {
       result.keys = Arrays.copyOf(keys, size);
       result.values = Arrays.copyOf(values, size);
+      result.hashes = Arrays.copyOf(hashes, size);
     }
     // The views are inner-class instances bound to this map, so the clone needs its own.
     result.keySet = null;
