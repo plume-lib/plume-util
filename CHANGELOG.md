@@ -9,6 +9,10 @@
 - Converted classes to records; their fields are now accessor methods:
   - `EntryReader.EntryFormat`
   - `EntryReader.CommentFormat`
+- `ArrayMap` no longer extends `AbstractMap`; it implements `Map` directly.
+  This makes every `ArrayMap` smaller.
+- `ArrayMap` caches its keys' hash codes, making lookups faster.
+- `new ArrayMap()` allocates no storage until the first mapping is added.
 
 ## 2.0.0 (2026-08-05)
 

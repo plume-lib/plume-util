@@ -146,6 +146,66 @@ tasks.named<JacocoReport>("jacocoTestReport") {
   }
 }
 
+// Benchmarks
+
+// The "jmh" source set contains JMH benchmarks and other performance measurements.  They are not
+// run by "build" or "check".
+val jmhSourceSet =
+  sourceSets.create("jmh") {
+    compileClasspath += sourceSets.main.get().output
+    runtimeClasspath += sourceSets.main.get().output
+  }
+
+configurations[jmhSourceSet.implementationConfigurationName].extendsFrom(
+  configurations.implementation.get()
+)
+
+configurations[jmhSourceSet.runtimeOnlyConfigurationName].extendsFrom(
+  configurations.runtimeOnly.get()
+)
+
+dependencies {
+  "jmhImplementation"(libs.jmh.core)
+  "jmhAnnotationProcessor"(libs.jmh.generator.annprocess)
+}
+
+// The benchmarks are not type-checked.  Disabling the Checker Framework for a task does not stop
+// the Checker Framework plugin from passing `extraJavacArgs` to javac, which then warns that no
+// annotation processor recognizes the "-A..." options.  So, also remove those arguments.
+tasks.named<JavaCompile>("compileJmhJava") {
+  (options as ExtensionAware).extensions.configure<
+    org.checkerframework.plugin.gradle.CheckerFrameworkCompileExtension
+  >(
+    "checkerFrameworkCompile"
+  ) {
+    enabled = false
+  }
+  // JMH generates code that Error Prone warns about.
+  options.errorprone.excludedPaths = ".*/build/generated/.*"
+  doFirst {
+    options.compilerArgumentProviders.removeIf {
+      it.javaClass.simpleName == "CheckerFrameworkCompilerArgumentProvider"
+    }
+  }
+}
+
+// Run all benchmarks with:  ./gradlew jmh
+// Pass JMH arguments with --args, as in:  ./gradlew jmh --args='ArrayMapBenchmark.getHit -prof gc'
+tasks.register<JavaExec>("jmh") {
+  group = "benchmark"
+  description = "Run the JMH benchmarks."
+  classpath = jmhSourceSet.runtimeClasspath
+  mainClass = "org.openjdk.jmh.Main"
+}
+
+tasks.register<JavaExec>("arrayMapFootprint") {
+  group = "benchmark"
+  description = "Measure the memory used by ArrayMap, HashMap, and LinkedHashMap."
+  classpath = jmhSourceSet.runtimeClasspath
+  mainClass = "org.plumelib.util.ArrayMapFootprint"
+  jvmArgs("-Xmx4g", "-XX:+UseSerialGC")
+}
+
 // Code formatting
 
 spotless {

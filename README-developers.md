@@ -86,3 +86,13 @@ Run these steps on any filesystem, except the `javadocWeb` step.
     ```
 
   * For Daikon: `make compile junit test`
+
+## Benchmarks
+
+Directory `src/jmh/java/` contains performance measurements.  They are not run
+by `./gradlew build`.
+
+* `./gradlew jmh` runs the JMH benchmarks.  To run a subset, pass JMH
+  arguments, as in `./gradlew jmh --args='ArrayMapBenchmark.getHit -p size=1,4'`.
+* `./gradlew arrayMapFootprint` measures the memory used by `ArrayMap`,
+  `HashMap`, and `LinkedHashMap`.
