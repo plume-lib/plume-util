@@ -56,6 +56,12 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
  * comparator. This isn't sorted but does have deterministic ordering. For large maps, this is
  * significantly less performant than other map implementations.
  *
+ * <p>This class is not thread-safe. Like {@code HashMap}, it is fail-fast: the iterators of its
+ * views, and its methods that take a function argument (such as {@code forEach}, {@code compute},
+ * and {@code replaceAll}), throw {@code ConcurrentModificationException} if the map's size is
+ * changed other than through the iterator's own {@code remove} method. Fail-fast behavior is a
+ * debugging aid, not a guarantee.
+ *
  * <p>A number of other ArrayMap implementations exist, including
  *
  * <ul>
@@ -115,7 +121,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    * (changing the value associated with a key does not count as a change). This field is used to
    * make view iterators fail-fast.
    */
-  private transient int sizeModificationCount = 0;
+  private int sizeModificationCount = 0;
 
   // Constructors
 
@@ -505,15 +511,12 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   // Views
 
-  // The view iterators and forEach methods are fail-fast:  they throw
-  // ConcurrentModificationException if the map's size is changed during iteration, other than
-  // through the iterator's own remove() method.
   @Pure
   @SuppressWarnings({
     "allcheckers:purity", // update cache
-    // The cache field cannot have a polymorphic type.  The cached view delegates every operation
-    // to this map, so it has this map's capabilities no matter which call created it.
-    "modifiability:return"
+    "modifiability:return" // The cache field cannot have a polymorphic type.  The cached view
+    // delegates every operation to this map, so it has this map's capabilities no matter which
+    // call created it.
   })
   @Override
   public @IteratorPolyMod @PolyShrinkable @Ungrowable Set<@KeyFor("this") K> keySet(
@@ -525,8 +528,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   /** Represents a view of the keys. */
-  // no suppression for "annotation.unverified" because this is handled by the suppression on
-  // ArrayMap.
   private final class KeySet extends AbstractSet<@KeyFor("this") K> {
 
     /** Creates a new KeySet. */
@@ -582,9 +583,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @SuppressWarnings({
       "unchecked", // generic array cast
       "nullness", // Nullness Checker special-cases toArray
-      // `toArray(T[])` is inherited as @SideEffectFree, but its specification requires writing
-      // into the caller-supplied array.
-      "allcheckers:purity.assign.array",
+      "allcheckers:purity.assign.array", // `toArray(T[])` is inherited as @SideEffectFree, but its
+      // specification requires writing into the caller-supplied array.
     })
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
@@ -610,7 +610,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
         return;
       }
       int oldSizeModificationCount = sizeModificationCount;
-      for (int i = 0; i < size; i++) {
+      for (int i = 0; i < size && oldSizeModificationCount == sizeModificationCount; i++) {
         K key = keys[i];
         action.accept(key);
       }
@@ -622,10 +622,10 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
 
   @Pure
   @SuppressWarnings({
-    "allcheckers:purity",
-    // The cache field cannot have a polymorphic type.  The cached view delegates every operation
-    // to this map, so it has this map's capabilities no matter which call created it.
-    "modifiability:return"
+    "allcheckers:purity", // update cache
+    "modifiability:return" // The cache field cannot have a polymorphic type.  The cached view
+    // delegates every operation to this map, so it has this map's capabilities no matter which
+    // call created it.
   })
   @Override
   public @IteratorPolyMod @PolyShrinkable @Ungrowable Collection<V> values(
@@ -685,9 +685,8 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @SuppressWarnings({
       "unchecked", // generic array cast
       "nullness", // Nullness Checker special-cases toArray
-      // `toArray(T[])` is inherited as @SideEffectFree, but its specification requires writing
-      // into the caller-supplied array.
-      "allcheckers:purity.assign.array",
+      "allcheckers:purity.assign.array", // `toArray(T[])` is inherited as @SideEffectFree, but its
+      // specification requires writing into the caller-supplied array.
     })
     @Override
     public <T> @Nullable T[] toArray(@PolyNull T[] a) {
@@ -713,7 +712,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
         return;
       }
       int oldSizeModificationCount = sizeModificationCount;
-      for (int i = 0; i < size; i++) {
+      for (int i = 0; i < size && oldSizeModificationCount == sizeModificationCount; i++) {
         action.accept(values[i]);
       }
       if (oldSizeModificationCount != sizeModificationCount) {
@@ -723,11 +722,11 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
   }
 
   @SuppressWarnings({
-    "allcheckers:purity",
-    // The cache field cannot have a polymorphic type.  The cached view delegates every operation
-    // to this map, so it has this map's capabilities no matter which call created it.
-    "modifiability:assignment",
-    "modifiability:return"
+    "allcheckers:purity", // update cache
+    "modifiability:assignment", // The cache field cannot have a polymorphic type.  The cached
+    // view delegates every operation to this map, so it has this map's capabilities no matter
+    // which call created it.
+    "modifiability:return" // see "modifiability:assignment" above
   })
   @Pure
   @Override
@@ -810,7 +809,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
         Consumer<? super Map.@PolyModifiable Entry<@KeyFor("ArrayMap.this") K, V>> action) {
       Objects.requireNonNull(action);
       int oldSizeModificationCount = sizeModificationCount;
-      for (int index = 0; index < size(); index++) {
+      for (int index = 0;
+          index < size() && oldSizeModificationCount == sizeModificationCount;
+          index++) {
         action.accept(new Entry(index));
       }
       if (oldSizeModificationCount != sizeModificationCount) {
@@ -827,9 +828,6 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @param <T> the type of the iteration value
    */
-  @SuppressWarnings(
-      "AbstractClassWithoutAbstractMethod" // next() is generic but this class need not be
-  )
   private abstract class ArrayMapIterator<T> implements Iterator<T> {
     /** The first unread index; the index of the next value to return. */
     protected @NonNegative int index;
@@ -957,88 +955,87 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     }
   }
 
-  // An alternate representation would be a triple of index, key, and value.
-  //  * That would make Entry objects a bit larger (more allocation would be necessary, though the
-  //    same *number* of objects), and would take a tiny bit more computation to create.
-  //  * That would make calling getKey and getValue slightly cheaper if they are called multiple
-  //    times (a field read instead of an array access via the enclosing map).
-  //  * That would provide less surprising results for some illegal client code.  Removing from the
-  //    entrySet iterator and then calling any entry method (getKey, getValue, setValue) has
-  //    undefined behavior, but clients might try to do it.  This could issue
-  //    ConcurrentModificationException in that case, by checking that the values in the array still
-  //    match those stored in the entry.
+  // An Entry remembers its key, so it remains meaningful if the map is structurally modified
+  // after the entry is created.  For example, a client may copy the entry set into a list (which
+  // calls entrySet().toArray()) and then remove some of the listed mappings from the map.  The
+  // index is a hint that makes the common case fast:  if the map has not been modified, the key is
+  // still at the index.  If the mapping has been removed from the map, getValue returns the value
+  // from when the entry was created or when setValue was last called on it, and setValue does not
+  // affect the map.
 
-  // Per the specification of Map.Entry, a map entry is meaningful only during the execution of the
-  // iteration over the entry set, and only if the backing map has not been modified except through
-  // calling {@code setValue} on the map entry.
-  /** An entrySet() entry. Tracks the containing map and the index. */
+  /** An entrySet() entry. Tracks the containing map, the key, and the key's probable index. */
   private final class Entry implements Map.Entry<K, V> {
-    /** The index. */
+    /** The key. */
+    private final K key;
+
+    /**
+     * The value when this entry was created or when {@link #setValue} was last called. Used only if
+     * {@link #key} has been removed from the map.
+     */
+    private V value;
+
+    /** The index at which {@link #key} probably appears in {@link #keys}. */
     private final @NonNegative int index;
 
     /**
-     * Creates a new map entry.
+     * Creates a new map entry for the mapping at the given index.
      *
-     * @param index the index
+     * @param index the index of the mapping
      */
-    @SuppressWarnings({
-      "allcheckers:purity", // initializes `this`
-    })
-    @Pure
+    @SideEffectFree
     public @PolyModifiable Entry(
         @PolyModifiable ArrayMap<K, V> ArrayMap.this, @NonNegative int index) {
       this.index = index;
+      this.key = keys[index];
+      this.value = values[index];
+    }
+
+    /**
+     * Returns the current index of this entry's key, or -1 if the key is no longer in the map.
+     *
+     * @return the current index of this entry's key, or -1 if the key is no longer in the map
+     */
+    @Pure
+    private int currentIndex() {
+      @SuppressWarnings({"interning:not.interned", "ReferenceEquality"}) // fast special case test
+      boolean atIndex = index < size && keys[index] == key;
+      if (atIndex) {
+        return index;
+      }
+      return indexOfKey(key);
     }
 
     @Pure
     @Override
     public K getKey() {
-      return keys[index];
+      return key;
     }
 
     @Pure
     @Override
     public V getValue() {
-      return values[index];
+      int i = currentIndex();
+      return i == -1 ? value : values[i];
     }
 
     @Override
-    public V setValue(@Replaceable Entry this, V value) {
-      V oldValue = values[index];
-      values[index] = value;
-      // Do not increment sizeModificationCount.
+    public V setValue(@Replaceable Entry this, V newValue) {
+      V oldValue = getValue();
+      int i = currentIndex();
+      if (i != -1) {
+        values[i] = newValue;
+        // Do not increment sizeModificationCount.
+      }
+      value = newValue;
       return oldValue;
     }
 
-    /**
-     * Returns the ArrayMap associated with this entry.
-     *
-     * @return the ArrayMap associated with this entry
-     */
-    // @SuppressWarnings("PMD.LooseCoupling")
-    @Pure
-    private ArrayMap<K, V> theArrayMap() {
-      return ArrayMap.this;
-    }
-
-    // Per the specification of Map.Entry, equality is determined by the key and value.  Comparing
-    // the underlying map and index is only a fast path.
+    // Per the specification of Map.Entry, equality is determined by the key and value.
     @Pure
     @Override
     public boolean equals(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
       if (this == o) {
         return true;
-      }
-      if (o instanceof ArrayMap.Entry) {
-        @SuppressWarnings("unchecked")
-        Entry otherEntry = (Entry) o;
-        @SuppressWarnings({"interning:not.interned", "ReferenceEquality"}) // fast special case test
-        boolean result =
-            this.index == otherEntry.index && this.theArrayMap() == otherEntry.theArrayMap();
-        if (result) {
-          return true;
-        }
-        // else fall through
       }
       if (o instanceof Map.Entry) {
         @SuppressWarnings("unchecked")
@@ -1053,9 +1050,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public int hashCode(ArrayMap<K, V>.Entry this) {
       // Per the specification of Map.Entry.hashCode().
-      K key = getKey();
-      V value = getValue();
-      return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
+      V currentValue = getValue();
+      return (key == null ? 0 : key.hashCode())
+          ^ (currentValue == null ? 0 : currentValue.hashCode());
     }
 
     @SuppressWarnings("signedness:unsigned.concat") // true positive: might be an unsigned value
@@ -1096,7 +1093,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
       return;
     }
     int oldSizeModificationCount = sizeModificationCount;
-    for (int index = 0; index < size; index++) {
+    for (int index = 0;
+        index < size && oldSizeModificationCount == sizeModificationCount;
+        index++) {
       action.accept(keys[index], values[index]);
     }
     if (oldSizeModificationCount != sizeModificationCount) {
@@ -1214,13 +1213,13 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     Objects.requireNonNull(remappingFunction);
     int index = indexOfKey(key);
     if (index == -1) {
-      @SuppressWarnings("nullness:assignment")
+      @SuppressWarnings("nullness:assignment") // computeIfPresent returns null if no mapping
       @PolyNull V result = null;
       return result;
     }
     V oldValue = values[index];
     if (oldValue == null) {
-      @SuppressWarnings("nullness:assignment")
+      @SuppressWarnings("nullness:assignment") // computeIfPresent returns null if no mapping
       @PolyNull V result = null;
       return result;
     }
