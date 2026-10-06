@@ -86,6 +86,7 @@ public final class IPair<V1, V2> {
    * @return a deep copy of {@code orig}
    */
   // This method is static so that the pair element types can be constrained to be DeepCopyable.
+  @SuppressWarnings("allcheckers:purity.functional.argument") // impure method; impure args are OK
   public static <T1 extends DeepCopyable<T1>, T2 extends DeepCopyable<T2>> IPair<T1, T2> deepCopy(
       IPair<T1, T2> orig) {
     return of(DeepCopyable.deepCopyOrNull(orig.first), DeepCopyable.deepCopyOrNull(orig.second));
@@ -101,6 +102,7 @@ public final class IPair<V1, V2> {
    * @param orig a pair
    * @return a copy of {@code orig}, where the first element is a deep copy
    */
+  @SuppressWarnings("allcheckers:purity.functional.argument") // impure method; impure args are OK
   public static <T1 extends DeepCopyable<T1>, T2> IPair<T1, T2> deepCopyFirst(IPair<T1, T2> orig) {
     return of(DeepCopyable.deepCopyOrNull(orig.first), orig.second);
   }
@@ -115,6 +117,7 @@ public final class IPair<V1, V2> {
    * @param orig a pair
    * @return a copy of {@code orig}, where the second element is a deep copy
    */
+  @SuppressWarnings("allcheckers:purity.functional.argument") // impure method; impure args are OK
   public static <T1, T2 extends DeepCopyable<T2>> IPair<T1, T2> deepCopySecond(IPair<T1, T2> orig) {
     return of(orig.first, DeepCopyable.deepCopyOrNull(orig.second));
   }
