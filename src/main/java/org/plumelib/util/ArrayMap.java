@@ -1398,10 +1398,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
    *
    * @return a copy of this
    */
-  @SuppressWarnings({
-    "allcheckers:purity.assign.field", // side effect to local state (clone)
-    "modifiability:override.return" // the clone is modifiable even if the receiver is not
-  })
+  @SuppressWarnings("allcheckers:purity.assign.field") // side effect to local state (clone)
   @SideEffectFree
   @Override
   public @Modifiable ArrayMap<K, V> clone() {
