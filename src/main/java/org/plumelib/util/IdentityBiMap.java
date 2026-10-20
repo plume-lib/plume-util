@@ -201,6 +201,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     K otherKey = backward.get(value);
     if (otherKey != null || backward.containsKey(value)) {
       if (!force) {
+        // Like Guava's BiMap, include the key and value: a more useful message is worth the risk
+        // that their toString() methods are slow or throw.
         throw new IllegalArgumentException(
             "value already present: " + value + " (mapped from " + otherKey + ")");
       }
@@ -328,6 +330,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
       K key = e.getKey();
       V newValue = function.apply(key, e.getValue());
       if (newBackward.containsKey(newValue)) {
+        // As in `put`, the message includes the keys and value despite calling their toString().
         throw new IllegalArgumentException(
             "duplicate value: "
                 + newValue
@@ -472,7 +475,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   }
 
   @Override
-  @SuppressWarnings("allcheckers:purity.call") // modifies only a local StringBuilder
+  @SuppressWarnings("allcheckers:purity.call") // assumes elements' toString() is pure
   public String toString() {
     StringBuilder sb = new StringBuilder("{");
     boolean first = true;
@@ -518,9 +521,6 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     /** The underlying iterator. */
     private final Iterator<Map.Entry<K, V>> itor = forward.entrySet().iterator();
 
-    /** True if {@link #lastKey} is valid, that is, if {@link #remove} may be called. */
-    private boolean canRemove = false;
-
     /** The key of the mapping most recently returned by the underlying iterator. */
     private @Nullable K lastKey = null;
 
@@ -548,21 +548,17 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
       Map.Entry<K, V> e = itor.next();
       K key = e.getKey();
       lastKey = key;
-      canRemove = true;
       return element(key, e.getValue());
     }
 
     @Override
     public void remove() {
-      if (!canRemove) {
-        throw new IllegalStateException();
-      }
-      // The value may have changed since `next()` returned, so look it up.
+      // The value may have changed since `next()` returned, so look it up.  If this call is
+      // illegal, `itor.remove()` throws IllegalStateException before `backward` is modified.
       V value = forward.get(lastKey);
       itor.remove();
       backward.remove(value);
-      canRemove = false;
-      lastKey = null;
+      lastKey = null; // permit garbage collection of the removed key
     }
   }
 
@@ -690,10 +686,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean remove(@Nullable Object o) {
-      if (!backward.containsKey(o)) {
+      K key = backward.get(o);
+      if (key == null && !backward.containsKey(o)) {
         return false;
       }
-      removePresentKey(backward.get(o));
+      removePresentKey(key);
       return true;
     }
 
@@ -727,10 +724,15 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean remove(@Nullable Object o) {
-      if (!(o instanceof Map.Entry<?, ?> e) || !contains(e)) {
+      if (!(o instanceof Map.Entry<?, ?> e)) {
         return false;
       }
-      removePresentKey(e.getKey());
+      // Call `getKey()` only once, in case `e` is not stable.
+      Object key = e.getKey();
+      if (!containsMapping(key, e.getValue())) {
+        return false;
+      }
+      removePresentKey(key);
       return true;
     }
 
