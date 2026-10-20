@@ -1,5 +1,6 @@
 package org.plumelib.util;
 
+import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -40,7 +41,10 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
   "modifiability", // not yet annotated for the Modifiability Checker
   "signedness", // not yet annotated for the Signedness Checker
 })
-public final class IdentityBiMap<K, V> implements Map<K, V> {
+public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
+
+  /** The serial version UID. */
+  private static final long serialVersionUID = 20261020L;
 
   /** The mapping from keys to values. */
   private final IdentityHashMap<K, V> forward;
@@ -431,6 +435,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     // Collections.unmodifiableMap(), around an IdentityBiMap or IdentityHashMap: then
     // `other.equals(this)` compares values by identity, but this method uses equals().  This
     // method cannot detect such wrappers.
+    // Do not replace the loop by `forward.equals(other)` when `other` is an IdentityHashMap:
+    // IdentityHashMap.equals() reads its argument's internal table directly, which is wrong for a
+    // subclass such as UnmodifiableIdentityHashMap that stores its mappings elsewhere.
     boolean identityValues = other instanceof IdentityHashMap<?, ?>;
     for (Map.Entry<?, ?> e : other.entrySet()) {
       Object key = e.getKey();
@@ -738,8 +745,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       "PMD.OverrideBothEqualsAndHashcode", // the inherited equals() uses contains(), which uses ==
     })
     public int hashCode() {
-      // Equal to the sum of the hash codes of the Entry objects, but faster.
-      return forward.entrySet().hashCode();
+      // Equal to the sum of the hash codes of the Entry objects, but computed without creating
+      // them.
+      return forward.hashCode();
     }
   }
 
@@ -783,11 +791,15 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
      * @param value the new value
      * @return the old value
      * @throws IllegalArgumentException if {@code value} is already associated with a different key
+     * @throws IllegalStateException if this entry's key is not in the map
      */
     @Override
+    @SuppressWarnings("nullness:return") // the key is in the map, so `put` returns its value
     public V setValue(V value) {
-      V oldValue = this.value;
-      put(key, value);
+      if (!forward.containsKey(key)) {
+        throw new IllegalStateException("mapping has been removed: " + key);
+      }
+      V oldValue = put(key, value);
       this.value = value;
       return oldValue;
     }

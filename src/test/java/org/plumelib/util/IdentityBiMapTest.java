@@ -8,6 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -719,6 +724,52 @@ final class IdentityBiMapTest {
     m2.put("c", "3");
     assertFalse(m1.containsKey("c"));
     assertFalse(m1.containsValue("3"));
+  }
+
+  @Test
+  void setValueAfterRemoval() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    m.put("b", "2");
+    Iterator<Map.Entry<String, String>> itor = m.entrySet().iterator();
+    Map.Entry<String, String> e = itor.next();
+    itor.remove();
+    assertThrows(IllegalStateException.class, () -> e.setValue("3"));
+    assertEquals(1, m.size());
+    assertFalse(m.containsKey(e.getKey()));
+    checkConsistent(m);
+  }
+
+  @Test
+  void setValueReturnsMapValue() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    Map.Entry<String, String> e = m.entrySet().iterator().next();
+    m.put("a", "2");
+    assertSame("2", e.setValue("3"));
+    assertSame("3", e.getValue());
+    assertSame("3", m.get("a"));
+    checkConsistent(m);
+  }
+
+  @Test
+  void serialization() throws IOException, ClassNotFoundException {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    m.put("b", "2");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    try (ObjectOutputStream out = new ObjectOutputStream(bytes)) {
+      out.writeObject(m);
+    }
+    IdentityBiMap<?, ?> copy;
+    try (ObjectInputStream in =
+        new ObjectInputStream(new ByteArrayInputStream(bytes.toByteArray()))) {
+      copy = (IdentityBiMap<?, ?>) in.readObject();
+    }
+    assertEquals(2, copy.size());
+    assertSame(copy, copy.inverse().inverse());
+    assertEquals(m.toString(), copy.toString());
+    checkConsistent(copy);
   }
 
   @Test
