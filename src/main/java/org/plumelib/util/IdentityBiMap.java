@@ -64,7 +64,13 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    */
   public IdentityBiMap(Map<? extends K, ? extends V> m) {
     this(new IdentityHashMap<>(m.size()), new IdentityHashMap<>(m.size()));
-    putAll(m);
+    if (m instanceof IdentityBiMap<? extends K, ? extends V> other) {
+      // `other` is already a bijection, so there is no need to check each mapping.
+      forward.putAll(other.forward);
+      backward.putAll(other.backward);
+    } else {
+      putAll(m);
+    }
   }
 
   /**
@@ -252,7 +258,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     if (!containsMapping(key, value)) {
       return false;
     }
-    remove(key);
+    removePresentKey(key);
     return true;
   }
 
@@ -406,6 +412,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   @SuppressWarnings({
     "IdentityHashMapUsage", // comparing to an arbitrary Map is intended
     "allcheckers:purity.call", // the result does not depend on iteration order
+    "allcheckers:purity.catch", // the result does not depend on which value's equals() throws
   })
   public boolean equals(@Nullable Object o) {
     if (o == this) {
@@ -428,10 +435,16 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     for (Map.Entry<?, ?> e : other.entrySet()) {
       Object key = e.getKey();
       Object value = e.getValue();
-      boolean matches =
-          (identityValues || value == null)
-              ? containsMapping(key, value)
-              : value.equals(forward.get(key));
+      boolean matches;
+      try {
+        matches =
+            (identityValues || value == null)
+                ? containsMapping(key, value)
+                : value.equals(forward.get(key));
+      } catch (ClassCastException | NullPointerException ex) {
+        // AbstractMap.equals() also returns false in this case.
+        return false;
+      }
       if (!matches) {
         return false;
       }
@@ -498,11 +511,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     /** The underlying iterator. */
     private final Iterator<Map.Entry<K, V>> itor = forward.entrySet().iterator();
 
-    /** True if {@link #lastValue} is valid, that is, if {@link #remove} may be called. */
+    /** True if {@link #lastKey} is valid, that is, if {@link #remove} may be called. */
     private boolean canRemove = false;
 
-    /** The value of the mapping most recently returned by the underlying iterator. */
-    private @Nullable V lastValue = null;
+    /** The key of the mapping most recently returned by the underlying iterator. */
+    private @Nullable K lastKey = null;
 
     /** Creates a new MappingIterator. */
     @SideEffectFree
@@ -526,10 +539,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     @Override
     public T next() {
       Map.Entry<K, V> e = itor.next();
-      V value = e.getValue();
-      lastValue = value;
+      K key = e.getKey();
+      lastKey = key;
       canRemove = true;
-      return element(e.getKey(), value);
+      return element(key, e.getValue());
     }
 
     @Override
@@ -537,10 +550,12 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       if (!canRemove) {
         throw new IllegalStateException();
       }
+      // The value may have changed since `next()` returned, so look it up.
+      V value = forward.get(lastKey);
       itor.remove();
-      backward.remove(lastValue);
+      backward.remove(value);
       canRemove = false;
-      lastValue = null;
+      lastKey = null;
     }
   }
 

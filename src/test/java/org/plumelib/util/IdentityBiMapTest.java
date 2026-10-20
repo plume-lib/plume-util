@@ -663,6 +663,65 @@ final class IdentityBiMapTest {
   }
 
   @Test
+  void iteratorRemoveAfterValueChange() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("k", "x");
+    Iterator<Map.Entry<String, String>> eitor = m.entrySet().iterator();
+    eitor.next().setValue("y");
+    eitor.remove();
+    assertTrue(m.isEmpty());
+    assertTrue(m.inverse().isEmpty());
+    m.put("z", "y");
+    checkConsistent(m);
+
+    Iterator<String> kitor = m.keySet().iterator();
+    String key = kitor.next();
+    m.put(key, "w");
+    kitor.remove();
+    assertTrue(m.isEmpty());
+    assertTrue(m.inverse().isEmpty());
+  }
+
+  /** A value whose equals() throws ClassCastException. */
+  private static final class ThrowingEquals {
+    /** Creates a new ThrowingEquals. */
+    ThrowingEquals() {}
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+      throw new ClassCastException();
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+  }
+
+  @Test
+  void equalsCatchesClassCastException() {
+    IdentityBiMap<String, Object> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    Map<String, Object> hm = new HashMap<>();
+    hm.put("a", new ThrowingEquals());
+    // assertNotEquals calls its first argument's equals().
+    assertNotEquals(m, hm);
+  }
+
+  @Test
+  void copyConstructorFromIdentityBiMap() {
+    IdentityBiMap<String, String> m1 = new IdentityBiMap<>();
+    m1.put("a", "1");
+    m1.put("b", "2");
+    IdentityBiMap<String, String> m2 = new IdentityBiMap<>(m1);
+    assertEquals(m1, m2);
+    checkConsistent(m2);
+    m2.put("c", "3");
+    assertFalse(m1.containsKey("c"));
+    assertFalse(m1.containsValue("3"));
+  }
+
+  @Test
   void entrySetHashCode() {
     IdentityBiMap<String, String> m = new IdentityBiMap<>();
     m.put("a", "1");
