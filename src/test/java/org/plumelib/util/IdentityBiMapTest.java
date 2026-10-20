@@ -769,7 +769,7 @@ final class IdentityBiMapTest {
     assertEquals(2, copy.size());
     assertSame(copy, copy.inverse().inverse());
     // The deserialized keys and values are new objects, so compare using equals().
-    assertEquals(new HashMap<Object, Object>(m), new HashMap<Object, Object>(copy));
+    assertEquals(new HashMap<>(m), new HashMap<>(copy));
     checkConsistent(copy);
   }
 
