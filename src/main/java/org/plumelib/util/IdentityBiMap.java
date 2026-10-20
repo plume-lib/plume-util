@@ -411,6 +411,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    * <p>Like {@link IdentityHashMap}, this class violates the general contract of {@link
    * Object#hashCode}: an {@code IdentityBiMap} and a map that is not an {@code IdentityBiMap} may
    * be equal but have different hash codes, because {@link #hashCode} uses identity hash codes.
+   * Also like {@link IdentityHashMap}, this method is not transitive: two {@code IdentityBiMap}s
+   * whose values are equal but not identical are unequal to each other, but each may be equal to
+   * the same {@link java.util.HashMap}.
    *
    * @param o the object to compare with this map
    * @return true if the given object is equal to this map
@@ -724,16 +727,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean remove(@Nullable Object o) {
-      if (!(o instanceof Map.Entry<?, ?> e)) {
-        return false;
-      }
-      // Call `getKey()` only once, in case `e` is not stable.
-      Object key = e.getKey();
-      if (!containsMapping(key, e.getValue())) {
-        return false;
-      }
-      removePresentKey(key);
-      return true;
+      return o instanceof Map.Entry<?, ?> e && IdentityBiMap.this.remove(e.getKey(), e.getValue());
     }
 
     @Override
