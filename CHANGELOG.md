@@ -15,6 +15,8 @@
   As with `HashMap`, a key's hash code must be consistent with `equals` and
   must not change while the key is in the map.
 - `new ArrayMap()` allocates no storage until the first mapping is added.
+- New class `IdentityBiMap`, a bidirectional map that compares keys and values
+  by identity.
 
 ## 2.0.0 (2026-08-05)
 
