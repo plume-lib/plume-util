@@ -9,8 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -600,43 +602,64 @@ final class IdentityBiMapTest {
     m.put("b", "2");
     Map.Entry<String, String> e = m.entrySet().iterator().next();
     String key = e.getKey();
-    Map.Entry<String, String> sameEntry = m.entrySet().iterator().next();
-    assertEquals(e, sameEntry);
+    String value = e.getValue();
+    Set<Map.Entry<String, String>> set = new HashSet<>();
+    set.add(e);
+    int hashCode = e.hashCode();
     m.remove(key);
+    // The entry still describes the mapping that the iterator returned.
     assertSame(key, e.getKey());
-    assertThrows(IllegalStateException.class, e::getValue);
-    assertThrows(IllegalStateException.class, () -> e.setValue("3"));
-    // A removed entry is equal only to itself, and its other methods do not throw.
-    assertEquals(e, e);
-    assertNotEquals(e, sameEntry);
-    assertEquals(System.identityHashCode(e), e.hashCode());
-    assertEquals(key + "=(removed)", e.toString());
-    assertFalse(m.entrySet().removeAll(List.of(e)));
+    assertSame(value, e.getValue());
+    assertEquals(hashCode, e.hashCode());
+    assertTrue(set.contains(e));
+    assertFalse(m.entrySet().contains(e));
+    assertFalse(m.entrySet().remove(e));
     assertEquals(1, m.size());
-
-    // Re-adding the key makes the entry reflect the new mapping.
-    m.put(key, "3");
-    assertSame("3", e.getValue());
-    assertEquals(e, new AbstractMap.SimpleEntry<>(key, "3"));
   }
 
   @Test
-  void removedEntryAsArgument() {
-    IdentityBiMap<String, String> m1 = new IdentityBiMap<>();
-    m1.put("a", "1");
-    IdentityBiMap<String, String> m2 = new IdentityBiMap<>();
-    m2.put("a", "1");
-    Map.Entry<String, String> live = m1.entrySet().iterator().next();
-    Map.Entry<String, String> removed = m2.entrySet().iterator().next();
-    assertEquals(live, removed);
-    m2.remove("a");
-    assertFalse(m1.entrySet().contains(removed));
-    assertFalse(m1.entrySet().remove(removed));
-    assertEquals(1, m1.size());
-    assertNotEquals(live, removed);
-    assertNotEquals(removed, live);
-    assertFalse(m1.entrySet().removeAll(List.of(removed)));
-    assertEquals(1, m1.size());
+  @SuppressWarnings("index:array.access.unsafe.high.constant") // the map has one mapping
+  void entrySetToArray() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    Object[] array = m.entrySet().toArray();
+    assertEquals(1, array.length);
+    assertEquals(new AbstractMap.SimpleEntry<>("a", "1"), array[0]);
+    // The elements compare by identity.  (assertNotEquals calls its first argument's equals().)
+    assertNotEquals(array[0], new AbstractMap.SimpleEntry<>(copy("a"), "1"));
+    List<Map.Entry<String, String>> list = new ArrayList<>(m.entrySet());
+    assertNotEquals(list.get(0), new AbstractMap.SimpleEntry<>("a", copy("1")));
+  }
+
+  @Test
+  void valuesIterateInKeyOrder() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    for (int i = 0; i < 50; i++) {
+      m.put("key" + i, "value" + i);
+    }
+    Iterator<String> keys = m.keySet().iterator();
+    Iterator<String> values = m.values().iterator();
+    for (Map.Entry<String, String> e : m.entrySet()) {
+      assertSame(e.getKey(), keys.next());
+      assertSame(e.getValue(), values.next());
+    }
+    assertFalse(keys.hasNext());
+    assertFalse(values.hasNext());
+  }
+
+  @Test
+  void valuesSetHashCodeAndIteratorRemove() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    m.put("b", "2");
+    assertEquals(m.inverse().keySet(), m.values());
+    assertEquals(m.inverse().keySet().hashCode(), m.values().hashCode());
+    Iterator<String> itor = m.values().iterator();
+    String value = itor.next();
+    itor.remove();
+    assertFalse(m.containsValue(value));
+    assertEquals(1, m.size());
+    checkConsistent(m);
   }
 
   @Test
@@ -650,20 +673,6 @@ final class IdentityBiMapTest {
     }
     assertEquals(sum, m.entrySet().hashCode());
     assertEquals(m.hashCode(), m.entrySet().hashCode());
-  }
-
-  @Test
-  @SuppressWarnings("index:array.access.unsafe.high.constant") // the map has one mapping
-  void entrySetToArrayIsSnapshot() {
-    IdentityBiMap<String, String> m = new IdentityBiMap<>();
-    m.put("a", "1");
-    @SuppressWarnings("unchecked") // the array contains entries
-    Map.Entry<String, String> e = (Map.Entry<String, String>) m.entrySet().toArray()[0];
-    Map.Entry<?, ?> e2 = m.entrySet().toArray(new Map.Entry<?, ?>[0])[0];
-    m.put("a", "2");
-    m.remove("a");
-    assertSame("1", e.getValue());
-    assertSame("1", e2.getValue());
   }
 
   @Test

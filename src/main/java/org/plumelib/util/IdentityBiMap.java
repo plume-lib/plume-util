@@ -10,7 +10,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.dataflow.qual.SideEffectsOnly;
@@ -27,7 +26,7 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
  *
  * <p>The views returned by {@link #keySet}, {@link #values}, and {@link #entrySet} are backed by
  * the map and support removal. They also use identity for comparisons. Their iterators are
- * fail-fast.
+ * fail-fast, and they iterate over the mappings in the same order.
  *
  * <p>This class is not synchronized.
  *
@@ -53,14 +52,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   private final IdentityBiMap<V, K> inverse;
 
   /** Creates a new, empty IdentityBiMap. */
-  @SuppressWarnings({
-    "nullness:argument", // `inverse` stores but does not use `this`, which is under initialization
-    "nullness:assignment", // `inverse` is initialized except for its reference to `this`
-  })
   public IdentityBiMap() {
-    this.forward = new IdentityHashMap<>();
-    this.backward = new IdentityHashMap<>();
-    this.inverse = new IdentityBiMap<>(/* forward= */ backward, /* backward= */ forward, this);
+    this(new IdentityHashMap<>(), new IdentityHashMap<>());
   }
 
   /**
@@ -70,8 +63,24 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    * @throws IllegalArgumentException if two keys of {@code m} map to the same value
    */
   public IdentityBiMap(Map<? extends K, ? extends V> m) {
-    this();
+    this(new IdentityHashMap<>(m.size()), new IdentityHashMap<>(m.size()));
     putAll(m);
+  }
+
+  /**
+   * Creates a new IdentityBiMap that uses the given maps, which must be empty.
+   *
+   * @param forward the mapping from keys to values
+   * @param backward the mapping from values to keys
+   */
+  @SuppressWarnings({
+    "nullness:argument", // `inverse` stores but does not use `this`, which is under initialization
+    "nullness:assignment", // `inverse` is initialized except for its reference to `this`
+  })
+  private IdentityBiMap(IdentityHashMap<K, V> forward, IdentityHashMap<V, K> backward) {
+    this.forward = forward;
+    this.backward = backward;
+    this.inverse = new IdentityBiMap<>(/* forward= */ backward, /* backward= */ forward, this);
   }
 
   /**
@@ -214,6 +223,17 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     if (!forward.containsKey(key)) {
       return null;
     }
+    return removePresentKey(key);
+  }
+
+  /**
+   * Removes the mapping for the given key, which must be in this map.
+   *
+   * @param key a key in this map
+   * @return the value that was associated with {@code key}
+   */
+  @SideEffectsOnly("this")
+  private @Nullable V removePresentKey(@Nullable Object key) {
     V value = forward.remove(key);
     backward.remove(value);
     return value;
@@ -284,7 +304,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    * Replaces each value with the result of applying the given function to its mapping. The new
    * values must be distinct, but they may permute the old values.
    *
-   * <p>If an exception is thrown, this map is unchanged.
+   * <p>If an exception is thrown, this map is unchanged, unless {@code function} modified this map.
    *
    * @param function the function that computes each new value
    * @throws IllegalArgumentException if the function produces the same value for two keys
@@ -339,20 +359,23 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   }
 
   /**
-   * Returns a view of the values of this map. The set uses object identity to compare elements.
-   * This is the same as {@code inverse().keySet()}.
+   * Returns a view of the values of this map. The set uses object identity to compare elements. It
+   * has the same elements as {@code inverse().keySet()}, but it iterates in the same order as
+   * {@link #keySet} and {@link #entrySet}.
    *
    * @return a view of the values of this map
    */
   @Override
   public Set<V> values() {
-    return inverse.keySet();
+    return new ValueSet();
   }
 
   /**
    * Returns a view of the mappings of this map. The set and its entries use object identity to
    * compare keys and values. {@link Map.Entry#setValue} throws {@link IllegalArgumentException} if
-   * the new value is already associated with a different key.
+   * the new value is already associated with a different key. As with any {@link Map.Entry}, the
+   * behavior of an entry is undefined if the map has been modified, other than through the entry's
+   * {@code setValue} method, since the iterator returned the entry.
    *
    * @return a view of the mappings of this map
    */
@@ -397,6 +420,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     // Compare directly rather than calling `other.equals(this)`, which would recurse forever if
     // `other.equals()` delegated back to this method.
     // IdentityHashMap.equals() compares values by identity; AbstractMap.equals() uses equals().
+    // The result is not symmetric if `other` is a wrapper, such as one returned by
+    // Collections.unmodifiableMap(), around an IdentityBiMap or IdentityHashMap: then
+    // `other.equals(this)` compares values by identity, but this method uses equals().  This
+    // method cannot detect such wrappers.
     boolean identityValues = other instanceof IdentityHashMap<?, ?>;
     for (Map.Entry<?, ?> e : other.entrySet()) {
       Object key = e.getKey();
@@ -469,26 +496,27 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   private abstract class MappingIterator<T> implements Iterator<T> {
 
     /** The underlying iterator. */
-    private final Iterator<K> itor = forward.keySet().iterator();
+    private final Iterator<Map.Entry<K, V>> itor = forward.entrySet().iterator();
 
-    /** True if {@link #lastKey} is valid, that is, if {@link #remove} may be called. */
+    /** True if {@link #lastValue} is valid, that is, if {@link #remove} may be called. */
     private boolean canRemove = false;
 
-    /** The key most recently returned by the underlying iterator. */
-    private @Nullable K lastKey = null;
+    /** The value of the mapping most recently returned by the underlying iterator. */
+    private @Nullable V lastValue = null;
 
     /** Creates a new MappingIterator. */
     @SideEffectFree
     MappingIterator() {}
 
     /**
-     * Returns the iterator element for the given key.
+     * Returns the iterator element for the given mapping.
      *
      * @param key a key in this map
-     * @return the iterator element for {@code key}
+     * @param value the value for {@code key}
+     * @return the iterator element for the mapping
      */
     @SideEffectFree
-    abstract T fromKey(K key);
+    abstract T element(K key, V value);
 
     @Override
     public boolean hasNext() {
@@ -497,10 +525,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     public T next() {
-      K key = itor.next();
-      lastKey = key;
+      Map.Entry<K, V> e = itor.next();
+      V value = e.getValue();
+      lastValue = value;
       canRemove = true;
-      return fromKey(key);
+      return element(e.getKey(), value);
     }
 
     @Override
@@ -508,11 +537,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       if (!canRemove) {
         throw new IllegalStateException();
       }
-      V value = forward.get(lastKey);
       itor.remove();
-      backward.remove(value);
+      backward.remove(lastValue);
       canRemove = false;
-      lastKey = null;
+      lastValue = null;
     }
   }
 
@@ -525,8 +553,22 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     @SideEffectFree
-    K fromKey(K key) {
+    K element(K key, V value) {
       return key;
+    }
+  }
+
+  /** An iterator over the values of this map. */
+  private final class ValueIterator extends MappingIterator<V> {
+
+    /** Creates a new ValueIterator. */
+    @SideEffectFree
+    ValueIterator() {}
+
+    @Override
+    @SideEffectFree
+    V element(K key, V value) {
+      return value;
     }
   }
 
@@ -539,23 +581,48 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     @SideEffectFree
-    Map.Entry<K, V> fromKey(K key) {
-      return new Entry(key);
+    Map.Entry<K, V> element(K key, V value) {
+      return new Entry(key, value);
     }
   }
 
-  /** The keys of an {@link IdentityBiMap}. */
-  private final class KeySet extends AbstractSet<K> {
+  /**
+   * A view of the keys, values, or entries of an {@link IdentityBiMap}.
+   *
+   * @param <E> the type of the elements of the view
+   */
+  private abstract class View<E> extends AbstractSet<E> {
 
-    /** Creates a new KeySet. */
+    /** Creates a new View. */
     @SuppressWarnings("allcheckers:purity.call") // calls `super`
     @SideEffectFree
-    KeySet() {}
+    View() {}
 
     @Override
     public @NonNegative int size() {
       return forward.size();
     }
+
+    @Override
+    public void clear() {
+      IdentityBiMap.this.clear();
+    }
+
+    // AbstractSet.removeAll() uses either this.remove() or c.contains(), depending on which
+    // collection is larger; the results differ when c does not compare by identity.
+    @Override
+    @SuppressWarnings("nullness:methodref.param") // as in AbstractCollection, may pass null to c
+    public boolean removeAll(Collection<?> c) {
+      return removeIf(c::contains);
+    }
+  }
+
+  /** The keys of an {@link IdentityBiMap}. */
+  private final class KeySet extends View<K> {
+
+    /** Creates a new KeySet. */
+    @SideEffectFree
+    KeySet() {}
 
     @Override
     public boolean contains(@Nullable Object o) {
@@ -567,26 +634,13 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       if (!forward.containsKey(o)) {
         return false;
       }
-      backward.remove(forward.remove(o));
+      removePresentKey(o);
       return true;
-    }
-
-    @Override
-    public void clear() {
-      IdentityBiMap.this.clear();
     }
 
     @Override
     public Iterator<K> iterator() {
       return new KeyIterator();
-    }
-
-    // AbstractSet.removeAll() uses either this.remove() or c.contains(), depending on which
-    // collection is larger; the results differ when c does not compare by identity.
-    @Override
-    @SuppressWarnings("nullness:methodref.param") // as in AbstractCollection, may pass null to c
-    public boolean removeAll(Collection<?> c) {
-      return removeIf(c::contains);
     }
 
     @Override
@@ -600,24 +654,53 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     }
   }
 
+  /** The values of an {@link IdentityBiMap}. */
+  private final class ValueSet extends View<V> {
+
+    /** Creates a new ValueSet. */
+    @SideEffectFree
+    ValueSet() {}
+
+    @Override
+    public boolean contains(@Nullable Object o) {
+      return backward.containsKey(o);
+    }
+
+    @Override
+    public boolean remove(@Nullable Object o) {
+      if (!backward.containsKey(o)) {
+        return false;
+      }
+      removePresentKey(backward.get(o));
+      return true;
+    }
+
+    @Override
+    public Iterator<V> iterator() {
+      return new ValueIterator();
+    }
+
+    @Override
+    @SuppressWarnings({
+      "allcheckers:purity.call", // the hash code does not depend on iteration order
+      "PMD.OverrideBothEqualsAndHashcode", // the inherited equals() uses contains(), which uses ==
+    })
+    public int hashCode() {
+      // Use identity hash codes, consistent with `contains`.
+      return backward.keySet().hashCode();
+    }
+  }
+
   /** The entries of an {@link IdentityBiMap}. */
-  private final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
+  private final class EntrySet extends View<Map.Entry<K, V>> {
 
     /** Creates a new EntrySet. */
-    @SuppressWarnings("allcheckers:purity.call") // calls `super`
     @SideEffectFree
     EntrySet() {}
 
     @Override
-    public @NonNegative int size() {
-      return forward.size();
-    }
-
-    @Override
     public boolean contains(@Nullable Object o) {
-      return o instanceof Map.Entry<?, ?> e
-          && !isRemovedEntry(e)
-          && containsMapping(e.getKey(), e.getValue());
+      return o instanceof Map.Entry<?, ?> e && containsMapping(e.getKey(), e.getValue());
     }
 
     @Override
@@ -625,13 +708,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       if (!(o instanceof Map.Entry<?, ?> e) || !contains(e)) {
         return false;
       }
-      backward.remove(forward.remove(e.getKey()));
+      removePresentKey(e.getKey());
       return true;
-    }
-
-    @Override
-    public void clear() {
-      IdentityBiMap.this.clear();
     }
 
     @Override
@@ -648,62 +726,30 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       // Equal to the sum of the hash codes of the Entry objects, but faster.
       return forward.entrySet().hashCode();
     }
-
-    // AbstractSet.removeAll() uses either this.remove() or c.contains(), depending on which
-    // collection is larger; the results differ when c does not compare by identity.
-    @Override
-    public boolean removeAll(Collection<?> c) {
-      return removeIf(c::contains);
-    }
-
-    // The elements of the result are snapshots, not views that change along with this map.
-    @Override
-    public Object[] toArray() {
-      return forward.entrySet().toArray();
-    }
-
-    // The elements of the result are snapshots, not views that change along with this map.
-    @SuppressWarnings("nullness") // Nullness Checker special-cases toArray
-    @Override
-    public <T> @Nullable T[] toArray(@PolyNull T[] a) {
-      return forward.entrySet().toArray(a);
-    }
   }
 
   /**
-   * Returns true if the given entry is an Entry of an {@link IdentityBiMap} whose key is not in
-   * that map. Calling {@code getValue()} on such an entry throws an exception.
-   *
-   * @param e an entry
-   * @return true if {@code e} is a removed Entry of an {@link IdentityBiMap}
-   */
-  @Pure
-  private static boolean isRemovedEntry(Map.Entry<?, ?> e) {
-    return e instanceof IdentityBiMap<?, ?>.Entry entry && !entry.isPresent();
-  }
-
-  /**
-   * A mapping in an {@link IdentityBiMap}. It is backed by the map: {@link #getValue} reads the map
-   * and {@link #setValue} writes the map. It uses object identity to compare keys and values.
-   *
-   * <p>While its key is absent from the map, {@link #getValue} and {@link #setValue} throw {@link
-   * IllegalStateException}, and the Entry is equal only to itself. An Entry is identified only by
-   * its key: if the key is added to the map again, the Entry again reflects the mapping for that
-   * key, and its hash code changes accordingly.
+   * A mapping in an {@link IdentityBiMap}. It records its key and value; {@link #setValue} also
+   * writes the map. It uses object identity to compare keys and values.
    */
   private final class Entry implements Map.Entry<K, V> {
 
     /** The key. */
     private final K key;
 
+    /** The value. */
+    private V value;
+
     /**
      * Creates a new Entry.
      *
      * @param key the key
+     * @param value the value
      */
     @SideEffectFree
-    Entry(K key) {
+    Entry(K key, V value) {
       this.key = key;
+      this.value = value;
     }
 
     @Override
@@ -711,76 +757,40 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       return key;
     }
 
-    /**
-     * Returns true if this entry's key is in the map.
-     *
-     * @return true if this entry's key is in the map
-     */
-    @Pure
-    boolean isPresent() {
-      return forward.containsKey(key);
-    }
-
-    /**
-     * Returns the value of this entry's mapping.
-     *
-     * @return the value of this entry's mapping
-     * @throws IllegalStateException if the mapping has been removed from the map
-     */
     @Override
-    @SuppressWarnings("nullness:return") // the key is in the map, so the result is a value
     public V getValue() {
-      V value = forward.get(key);
-      if (value == null && !forward.containsKey(key)) {
-        throw new IllegalStateException("mapping has been removed: " + key);
-      }
       return value;
     }
 
     /**
-     * Replaces the value of this entry's mapping.
+     * Replaces the value of this entry and of its mapping in the map.
      *
      * @param value the new value
      * @return the old value
      * @throws IllegalArgumentException if {@code value} is already associated with a different key
-     * @throws IllegalStateException if the mapping has been removed from the map
      */
     @Override
-    @SuppressWarnings("nullness:return") // the key is in the map, so the result is a value
     public V setValue(V value) {
-      if (!isPresent()) {
-        throw new IllegalStateException("mapping has been removed: " + key);
-      }
-      return put(key, value);
+      V oldValue = this.value;
+      put(key, value);
+      this.value = value;
+      return oldValue;
     }
 
     @Override
     public boolean equals(@Nullable Object o) {
-      if (!isPresent()) {
-        // Like a removed entry of an IdentityHashMap, a removed Entry is equal only to itself.
-        return this == o;
-      }
-      return o instanceof Map.Entry<?, ?> e
-          && !isRemovedEntry(e)
-          && key == e.getKey()
-          && containsMapping(key, e.getValue());
+      return o instanceof Map.Entry<?, ?> e && key == e.getKey() && value == e.getValue();
     }
 
     @Override
     public int hashCode() {
-      if (!isPresent()) {
-        return System.identityHashCode(this);
-      }
       // Consistent with IdentityHashMap's entries.
-      return System.identityHashCode(key) ^ System.identityHashCode(forward.get(key));
+      return System.identityHashCode(key) ^ System.identityHashCode(value);
     }
 
     @Override
     public String toString() {
-      if (!isPresent()) {
-        return key + "=(removed)";
-      }
-      return key + "=" + forward.get(key);
+      return key + "=" + value;
     }
   }
 }
