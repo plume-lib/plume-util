@@ -99,7 +99,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   }
 
   /**
-   * Returns the key that maps to the given value, or null if there is none.
+   * Returns the key that maps to the given value, or null if there is none. This is equivalent to,
+   * and more concise than, {@code inverse().get(value)}.
    *
    * @param value a value
    * @return the key that maps to {@code value}, or null if {@code value} is not in this map
@@ -173,16 +174,18 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    */
   @SideEffectsOnly("this")
   private @Nullable V put(K key, V value, boolean force) {
-    if (containsMapping(key, value)) {
+    V currentValue = forward.get(key);
+    boolean containsKey = currentValue != null || forward.containsKey(key);
+    if (containsKey && currentValue == value) {
       return value;
     }
-    boolean containsKey = forward.containsKey(key);
-    if (backward.containsKey(value)) {
+    K otherKey = backward.get(value);
+    if (otherKey != null || backward.containsKey(value)) {
       if (!force) {
         throw new IllegalArgumentException(
-            "value already present: " + value + " (mapped from " + backward.get(value) + ")");
+            "value already present: " + value + " (mapped from " + otherKey + ")");
       }
-      forward.remove(backward.get(value));
+      forward.remove(otherKey);
     }
     V oldValue = forward.put(key, value);
     if (containsKey) {
@@ -564,7 +567,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       if (!forward.containsKey(o)) {
         return false;
       }
-      IdentityBiMap.this.remove(o);
+      backward.remove(forward.remove(o));
       return true;
     }
 
@@ -612,7 +615,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean contains(@Nullable Object o) {
-      return o instanceof Map.Entry<?, ?> e && containsMapping(e.getKey(), e.getValue());
+      return o instanceof Map.Entry<?, ?> e
+          && !isRemovedEntry(e)
+          && containsMapping(e.getKey(), e.getValue());
     }
 
     @Override
@@ -620,7 +625,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
       if (!(o instanceof Map.Entry<?, ?> e) || !contains(e)) {
         return false;
       }
-      IdentityBiMap.this.remove(e.getKey());
+      backward.remove(forward.remove(e.getKey()));
       return true;
     }
 
@@ -666,6 +671,18 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   }
 
   /**
+   * Returns true if the given entry is an Entry of an {@link IdentityBiMap} whose key is not in
+   * that map. Calling {@code getValue()} on such an entry throws an exception.
+   *
+   * @param e an entry
+   * @return true if {@code e} is a removed Entry of an {@link IdentityBiMap}
+   */
+  @Pure
+  private static boolean isRemovedEntry(Map.Entry<?, ?> e) {
+    return e instanceof IdentityBiMap<?, ?>.Entry entry && !entry.isPresent();
+  }
+
+  /**
    * A mapping in an {@link IdentityBiMap}. It is backed by the map: {@link #getValue} reads the map
    * and {@link #setValue} writes the map. It uses object identity to compare keys and values.
    *
@@ -695,6 +712,16 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     }
 
     /**
+     * Returns true if this entry's key is in the map.
+     *
+     * @return true if this entry's key is in the map
+     */
+    @Pure
+    boolean isPresent() {
+      return forward.containsKey(key);
+    }
+
+    /**
      * Returns the value of this entry's mapping.
      *
      * @return the value of this entry's mapping
@@ -721,7 +748,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     @Override
     @SuppressWarnings("nullness:return") // the key is in the map, so the result is a value
     public V setValue(V value) {
-      if (!forward.containsKey(key)) {
+      if (!isPresent()) {
         throw new IllegalStateException("mapping has been removed: " + key);
       }
       return put(key, value);
@@ -729,18 +756,19 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean equals(@Nullable Object o) {
-      if (!forward.containsKey(key)) {
+      if (!isPresent()) {
         // Like a removed entry of an IdentityHashMap, a removed Entry is equal only to itself.
         return this == o;
       }
       return o instanceof Map.Entry<?, ?> e
+          && !isRemovedEntry(e)
           && key == e.getKey()
           && containsMapping(key, e.getValue());
     }
 
     @Override
     public int hashCode() {
-      if (!forward.containsKey(key)) {
+      if (!isPresent()) {
         return System.identityHashCode(this);
       }
       // Consistent with IdentityHashMap's entries.
@@ -749,7 +777,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     public String toString() {
-      if (!forward.containsKey(key)) {
+      if (!isPresent()) {
         return key + "=(removed)";
       }
       return key + "=" + forward.get(key);

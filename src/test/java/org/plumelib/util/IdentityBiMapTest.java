@@ -621,6 +621,25 @@ final class IdentityBiMapTest {
   }
 
   @Test
+  void removedEntryAsArgument() {
+    IdentityBiMap<String, String> m1 = new IdentityBiMap<>();
+    m1.put("a", "1");
+    IdentityBiMap<String, String> m2 = new IdentityBiMap<>();
+    m2.put("a", "1");
+    Map.Entry<String, String> live = m1.entrySet().iterator().next();
+    Map.Entry<String, String> removed = m2.entrySet().iterator().next();
+    assertEquals(live, removed);
+    m2.remove("a");
+    assertFalse(m1.entrySet().contains(removed));
+    assertFalse(m1.entrySet().remove(removed));
+    assertEquals(1, m1.size());
+    assertNotEquals(live, removed);
+    assertNotEquals(removed, live);
+    assertFalse(m1.entrySet().removeAll(List.of(removed)));
+    assertEquals(1, m1.size());
+  }
+
+  @Test
   void entrySetHashCode() {
     IdentityBiMap<String, String> m = new IdentityBiMap<>();
     m.put("a", "1");
