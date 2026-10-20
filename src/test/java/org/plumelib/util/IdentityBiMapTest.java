@@ -536,14 +536,52 @@ final class IdentityBiMapTest {
   }
 
   @Test
+  void equalsIsSymmetricWithHashMap() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    Map<String, String> hm = new HashMap<>();
+    hm.put(copy("a"), "1");
+    assertEquals(hm.equals(m), m.equals(hm));
+    assertNotEquals(m, hm);
+    hm.clear();
+    hm.put("a", copy("1"));
+    assertEquals(hm.equals(m), m.equals(hm));
+    assertEquals(m, hm);
+  }
+
+  @Test
   void entryAfterRemoval() {
     IdentityBiMap<String, String> m = new IdentityBiMap<>();
     m.put("a", "1");
+    m.put("b", "2");
     Map.Entry<String, String> e = m.entrySet().iterator().next();
-    m.remove("a");
-    assertSame("a", e.getKey());
+    String key = e.getKey();
+    Map.Entry<String, String> sameEntry = m.entrySet().iterator().next();
+    assertEquals(e, sameEntry);
+    m.remove(key);
+    assertSame(key, e.getKey());
     assertThrows(IllegalStateException.class, e::getValue);
-    assertThrows(IllegalStateException.class, () -> e.setValue("2"));
+    assertThrows(IllegalStateException.class, () -> e.setValue("3"));
+    // A removed entry is equal only to itself, and its other methods do not throw.
+    assertEquals(e, e);
+    assertNotEquals(e, sameEntry);
+    assertEquals(System.identityHashCode(e), e.hashCode());
+    assertEquals(key + "=(removed)", e.toString());
+    assertFalse(m.entrySet().removeAll(List.of(e)));
+    assertEquals(1, m.size());
+  }
+
+  @Test
+  void entrySetHashCode() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    m.put("b", null);
+    int sum = 0;
+    for (Map.Entry<String, String> e : m.entrySet()) {
+      sum += e.hashCode();
+    }
+    assertEquals(sum, m.entrySet().hashCode());
+    assertEquals(m.hashCode(), m.entrySet().hashCode());
   }
 
   @Test

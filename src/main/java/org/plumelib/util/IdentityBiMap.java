@@ -1,17 +1,16 @@
 package org.plumelib.util;
 
 import java.util.AbstractSet;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.dataflow.qual.SideEffectsOnly;
 
@@ -173,10 +172,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    */
   @SideEffectsOnly("this")
   private @Nullable V put(K key, V value, boolean force) {
-    boolean containsKey = forward.containsKey(key);
-    if (containsKey && forward.get(key) == value) {
+    if (containsMapping(key, value)) {
       return value;
     }
+    boolean containsKey = forward.containsKey(key);
     if (backward.containsKey(value)) {
       if (!force) {
         throw new IllegalArgumentException(
@@ -190,6 +189,20 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     }
     backward.put(value, key);
     return oldValue;
+  }
+
+  /**
+   * Returns true if this map maps the given key to the given value. Keys and values are compared by
+   * identity.
+   *
+   * @param key a key
+   * @param value a value
+   * @return true if this map maps {@code key} to {@code value}
+   */
+  @Pure
+  private boolean containsMapping(@Nullable Object key, @Nullable Object value) {
+    V actual = forward.get(key);
+    return actual == value && (actual != null || forward.containsKey(key));
   }
 
   @Override
@@ -212,7 +225,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    */
   @Override
   public boolean remove(@Nullable Object key, @Nullable Object value) {
-    if (!forward.containsKey(key) || forward.get(key) != value) {
+    if (!containsMapping(key, value)) {
       return false;
     }
     remove(key);
@@ -231,7 +244,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    */
   @Override
   public boolean replace(K key, V oldValue, V newValue) {
-    if (!forward.containsKey(key) || forward.get(key) != oldValue) {
+    if (!containsMapping(key, oldValue)) {
       return false;
     }
     put(key, newValue);
@@ -276,7 +289,6 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
     // Compute all the new values before changing either map, so that a failure leaves this map
     // unchanged and so that the new values may permute the old values.
-    List<V> newValues = new ArrayList<>(forward.size());
     IdentityHashMap<V, K> newBackward = new IdentityHashMap<>(forward.size());
     for (Map.Entry<K, V> e : forward.entrySet()) {
       K key = e.getKey();
@@ -291,13 +303,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
                 + key
                 + ")");
       }
-      newValues.add(newValue);
       newBackward.put(newValue, key);
     }
-    // Replacing values is not a structural modification, so the iteration order is unchanged.
-    Iterator<V> newValuesItor = newValues.iterator();
-    for (Map.Entry<K, V> e : forward.entrySet()) {
-      e.setValue(newValuesItor.next());
+    // Every key is already in `forward`, so these calls are not structural modifications.
+    for (Map.Entry<V, K> e : newBackward.entrySet()) {
+      forward.put(e.getValue(), e.getKey());
     }
     backward.clear();
     backward.putAll(newBackward);
@@ -344,10 +354,14 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
   /**
    * Compares the given object with this map for equality. If the given object is an {@code
-   * IdentityBiMap}, keys and values are compared by identity. Otherwise, the result is the same as
-   * that of {@code o.equals(this)}, as is required for symmetry. In particular, if the given object
-   * is an {@code IdentityHashMap} or another map that is not an {@code IdentityBiMap}, values are
+   * IdentityBiMap}, keys and values are compared by identity. If the given object is some other
+   * {@link Map}, the result is that of {@code o.equals(this)}, as is required for symmetry; for
+   * example, if {@code o} is a {@link java.util.HashMap} or an {@link IdentityHashMap}, values are
    * compared using {@code equals()}.
+   *
+   * <p>Like {@link IdentityHashMap}, this class violates the general contract of {@link
+   * Object#hashCode}: an {@code IdentityBiMap} and a map that is not an {@code IdentityBiMap} may
+   * be equal but have different hash codes, because {@link #hashCode} uses identity hash codes.
    *
    * @param o the object to compare with this map
    * @return true if the given object is equal to this map
@@ -361,14 +375,16 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     if (o instanceof IdentityBiMap<?, ?> other) {
       return forward.equals(other.forward);
     }
-    if (o instanceof IdentityHashMap<?, ?>) {
-      // IdentityHashMap.equals() compares values by identity only if its argument is an
-      // IdentityHashMap.  Delegate to it so that the result is symmetric.
-      return o.equals(this);
-    }
-    return forward.equals(o);
+    return o instanceof Map<?, ?> && o.equals(this);
   }
 
+  /**
+   * Returns the hash code of this map, which is computed from the identity hash codes of its keys
+   * and values. See {@link #equals} for how this violates the general contract of {@link
+   * Object#hashCode}.
+   *
+   * @return the hash code of this map
+   */
   @Override
   public int hashCode() {
     return forward.hashCode();
@@ -565,9 +581,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean contains(@Nullable Object o) {
-      return o instanceof Map.Entry<?, ?> e
-          && forward.containsKey(e.getKey())
-          && forward.get(e.getKey()) == e.getValue();
+      return o instanceof Map.Entry<?, ?> e && containsMapping(e.getKey(), e.getValue());
     }
 
     @Override
@@ -587,6 +601,16 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
       return new EntryIterator();
+    }
+
+    @Override
+    @SuppressWarnings({
+      "allcheckers:purity.call", // the hash code does not depend on iteration order
+      "PMD.OverrideBothEqualsAndHashcode", // the inherited equals() uses contains(), which uses ==
+    })
+    public int hashCode() {
+      // Equal to the sum of the hash codes of the Entry objects, but faster.
+      return forward.entrySet().hashCode();
     }
 
     // AbstractSet.removeAll() uses either this.remove() or c.contains(), depending on which
@@ -614,8 +638,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    * A mapping in an {@link IdentityBiMap}. It is backed by the map: {@link #getValue} reads the map
    * and {@link #setValue} writes the map. It uses object identity to compare keys and values.
    *
-   * <p>After its mapping is removed from the map, an Entry may not be used: most of its methods
-   * throw {@link IllegalStateException}.
+   * <p>After its mapping is removed from the map, {@link #getValue} and {@link #setValue} throw
+   * {@link IllegalStateException}, and the Entry is equal only to itself.
    */
   private final class Entry implements Map.Entry<K, V> {
 
@@ -644,11 +668,13 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
      * @throws IllegalStateException if the mapping has been removed from the map
      */
     @Override
+    @SuppressWarnings("nullness:return") // the key is in the map, so the result is a value
     public V getValue() {
-      if (!forward.containsKey(key)) {
+      V value = forward.get(key);
+      if (value == null && !forward.containsKey(key)) {
         throw new IllegalStateException("mapping has been removed: " + key);
       }
-      return forward.get(key);
+      return value;
     }
 
     /**
@@ -670,18 +696,30 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
     @Override
     public boolean equals(@Nullable Object o) {
-      return o instanceof Map.Entry<?, ?> e && key == e.getKey() && getValue() == e.getValue();
+      if (!forward.containsKey(key)) {
+        // Like a removed entry of an IdentityHashMap, a removed Entry is equal only to itself.
+        return this == o;
+      }
+      return o instanceof Map.Entry<?, ?> e
+          && key == e.getKey()
+          && containsMapping(key, e.getValue());
     }
 
     @Override
     public int hashCode() {
+      if (!forward.containsKey(key)) {
+        return System.identityHashCode(this);
+      }
       // Consistent with IdentityHashMap's entries.
-      return System.identityHashCode(key) ^ System.identityHashCode(getValue());
+      return System.identityHashCode(key) ^ System.identityHashCode(forward.get(key));
     }
 
     @Override
     public String toString() {
-      return key + "=" + getValue();
+      if (!forward.containsKey(key)) {
+        return key + "=(removed)";
+      }
+      return key + "=" + forward.get(key);
     }
   }
 }
