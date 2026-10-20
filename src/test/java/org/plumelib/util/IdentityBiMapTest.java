@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.jupiter.api.Test;
 
 /** Test the IdentityBiMap class. */
@@ -526,6 +527,7 @@ final class IdentityBiMapTest {
     IdentityHashMap<String, String> ihm = new IdentityHashMap<>();
     ihm.put(k, copy("v"));
     assertEquals(ihm.equals(m), m.equals(ihm));
+    assertNotEquals(m, ihm);
     ihm.put(k, "v");
     assertEquals(m, ihm);
     assertEquals(ihm, m);
@@ -550,6 +552,48 @@ final class IdentityBiMapTest {
   }
 
   @Test
+  void equalsWithNullValues() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", null);
+    Map<String, String> hm = new HashMap<>();
+    hm.put("a", null);
+    assertEquals(m, hm);
+    assertEquals(hm, m);
+    hm.clear();
+    hm.put("b", null);
+    assertNotEquals(m, hm);
+    assertNotEquals(hm, m);
+  }
+
+  /** A map whose equals() delegates to its argument's equals(). */
+  @SuppressWarnings("serial")
+  private static final class DelegatingEqualsMap extends HashMap<String, String> {
+    /** Creates a new DelegatingEqualsMap. */
+    DelegatingEqualsMap() {}
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+      return o instanceof Map<?, ?> && o != this && o.equals(this);
+    }
+
+    @Override
+    @SuppressWarnings("PMD.UselessOverridingMethod") // equals() is overridden
+    public int hashCode() {
+      return super.hashCode();
+    }
+  }
+
+  @Test
+  void equalsDoesNotRecurse() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    DelegatingEqualsMap dm = new DelegatingEqualsMap();
+    dm.put("a", "1");
+    assertEquals(m, dm);
+    assertEquals(dm, m);
+  }
+
+  @Test
   void entryAfterRemoval() {
     IdentityBiMap<String, String> m = new IdentityBiMap<>();
     m.put("a", "1");
@@ -569,6 +613,11 @@ final class IdentityBiMapTest {
     assertEquals(key + "=(removed)", e.toString());
     assertFalse(m.entrySet().removeAll(List.of(e)));
     assertEquals(1, m.size());
+
+    // Re-adding the key makes the entry reflect the new mapping.
+    m.put(key, "3");
+    assertSame("3", e.getValue());
+    assertEquals(e, new AbstractMap.SimpleEntry<>(key, "3"));
   }
 
   @Test
@@ -625,6 +674,17 @@ final class IdentityBiMapTest {
     m.putAll(m);
     assertEquals(2, m.size());
     checkConsistent(m);
+  }
+
+  @Test
+  void forEach() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    m.put("b", "2");
+    IdentityHashMap<String, String> seen = new IdentityHashMap<>();
+    m.forEach(seen::put);
+    assertEquals(seen, m);
+    assertThrows(ConcurrentModificationException.class, () -> m.forEach((k, v) -> m.remove(k)));
   }
 
   @Test

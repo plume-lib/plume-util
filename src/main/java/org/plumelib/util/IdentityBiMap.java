@@ -6,6 +6,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -314,6 +315,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
   }
 
   @Override
+  public void forEach(BiConsumer<? super K, ? super V> action) {
+    forward.forEach(action);
+  }
+
+  @Override
   public void clear() {
     forward.clear();
     backward.clear();
@@ -354,10 +360,14 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
 
   /**
    * Compares the given object with this map for equality. If the given object is an {@code
-   * IdentityBiMap}, keys and values are compared by identity. If the given object is some other
-   * {@link Map}, the result is that of {@code o.equals(this)}, as is required for symmetry; for
-   * example, if {@code o} is a {@link java.util.HashMap} or an {@link IdentityHashMap}, values are
-   * compared using {@code equals()}.
+   * IdentityBiMap} or an {@link IdentityHashMap}, keys and values are compared by identity. If the
+   * given object is some other {@link Map}, the comparison is the one that {@link
+   * java.util.AbstractMap#equals} performs when its receiver is {@code o} and its argument is this
+   * map: each value of {@code o} is compared using {@code equals()} to this map's value for the
+   * same key, where this map looks up keys by identity. Therefore, the result is the same as that
+   * of {@code o.equals(this)}, as is required for symmetry, when {@code o} is an {@link
+   * IdentityHashMap}, a {@link java.util.HashMap}, or another map that inherits {@code
+   * AbstractMap.equals}.
    *
    * <p>Like {@link IdentityHashMap}, this class violates the general contract of {@link
    * Object#hashCode}: an {@code IdentityBiMap} and a map that is not an {@code IdentityBiMap} may
@@ -367,7 +377,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    * @return true if the given object is equal to this map
    */
   @Override
-  @SuppressWarnings("IdentityHashMapUsage") // comparing to an arbitrary Map is intended
+  @SuppressWarnings({
+    "IdentityHashMapUsage", // comparing to an arbitrary Map is intended
+    "allcheckers:purity.call", // the result does not depend on iteration order
+  })
   public boolean equals(@Nullable Object o) {
     if (o == this) {
       return true;
@@ -375,7 +388,25 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
     if (o instanceof IdentityBiMap<?, ?> other) {
       return forward.equals(other.forward);
     }
-    return o instanceof Map<?, ?> && o.equals(this);
+    if (!(o instanceof Map<?, ?> other) || other.size() != size()) {
+      return false;
+    }
+    // Compare directly rather than calling `other.equals(this)`, which would recurse forever if
+    // `other.equals()` delegated back to this method.
+    // IdentityHashMap.equals() compares values by identity; AbstractMap.equals() uses equals().
+    boolean identityValues = other instanceof IdentityHashMap<?, ?>;
+    for (Map.Entry<?, ?> e : other.entrySet()) {
+      Object key = e.getKey();
+      Object value = e.getValue();
+      boolean matches =
+          (identityValues || value == null)
+              ? containsMapping(key, value)
+              : value.equals(forward.get(key));
+      if (!matches) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -638,8 +669,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V> {
    * A mapping in an {@link IdentityBiMap}. It is backed by the map: {@link #getValue} reads the map
    * and {@link #setValue} writes the map. It uses object identity to compare keys and values.
    *
-   * <p>After its mapping is removed from the map, {@link #getValue} and {@link #setValue} throw
-   * {@link IllegalStateException}, and the Entry is equal only to itself.
+   * <p>While its key is absent from the map, {@link #getValue} and {@link #setValue} throw {@link
+   * IllegalStateException}, and the Entry is equal only to itself. An Entry is identified only by
+   * its key: if the key is added to the map again, the Entry again reflects the mapping for that
+   * key, and its hash code changes accordingly.
    */
   private final class Entry implements Map.Entry<K, V> {
 
