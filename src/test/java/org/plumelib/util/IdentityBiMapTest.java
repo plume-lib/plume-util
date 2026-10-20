@@ -13,6 +13,7 @@ import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -427,6 +428,165 @@ final class IdentityBiMapTest {
     assertEquals(ihm.keySet().hashCode(), m.keySet().hashCode());
     assertEquals(ihm.entrySet(), m.entrySet());
     assertEquals(ihm.entrySet().hashCode(), m.entrySet().hashCode());
+  }
+
+  @Test
+  void removeKeyValue() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    assertFalse(m.remove("a", copy("1")));
+    assertFalse(m.remove(copy("a"), "1"));
+    assertFalse(m.remove("b", null));
+    assertEquals(1, m.size());
+    assertTrue(m.remove("a", "1"));
+    assertTrue(m.isEmpty());
+    assertTrue(m.inverse().isEmpty());
+
+    m.put("b", null);
+    assertTrue(m.remove("b", null));
+    assertTrue(m.isEmpty());
+  }
+
+  @Test
+  void replaceKeyOldValueNewValue() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    m.put("b", "2");
+    assertFalse(m.replace("a", copy("1"), "3"));
+    assertFalse(m.replace("c", null, "3"));
+    assertFalse(m.containsKey("c"));
+    assertSame("1", m.get("a"));
+    assertTrue(m.replace("a", "1", "3"));
+    assertSame("3", m.get("a"));
+    assertFalse(m.containsValue("1"));
+    assertThrows(IllegalArgumentException.class, () -> m.replace("a", "3", "2"));
+    assertSame("3", m.get("a"));
+    checkConsistent(m);
+  }
+
+  @Test
+  void removeAllUsesArgumentContains() {
+    // The result does not depend on the relative sizes of the map and the argument.
+    String a = copy("a");
+    IdentityBiMap<String, String> m1 = new IdentityBiMap<>();
+    m1.put(a, "1");
+    assertTrue(m1.keySet().removeAll(List.of("a", "b")));
+    assertTrue(m1.isEmpty());
+    IdentityBiMap<String, String> m2 = new IdentityBiMap<>();
+    m2.put(a, "1");
+    m2.put("c", "3");
+    m2.put("d", "4");
+    assertTrue(m2.keySet().removeAll(List.of("a")));
+    assertEquals(2, m2.size());
+    assertFalse(m2.containsKey(a));
+    checkConsistent(m2);
+
+    assertFalse(m2.values().removeAll(List.of("5")));
+    assertTrue(m2.values().removeAll(List.of("3", "5", "6")));
+    assertEquals(1, m2.size());
+    assertFalse(m2.containsKey("c"));
+    checkConsistent(m2);
+
+    assertTrue(m2.entrySet().removeAll(List.of(new AbstractMap.SimpleEntry<>("d", "4"))));
+    assertTrue(m2.isEmpty());
+    assertTrue(m2.inverse().isEmpty());
+  }
+
+  @Test
+  void replaceAllPermutation() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "x");
+    m.put("b", "y");
+    m.put("c", "z");
+    m.replaceAll((k, v) -> v == "x" ? "y" : v == "y" ? "x" : v);
+    assertSame("y", m.get("a"));
+    assertSame("x", m.get("b"));
+    assertSame("z", m.get("c"));
+    checkConsistent(m);
+  }
+
+  @Test
+  void replaceAllDuplicateLeavesMapUnchanged() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "x");
+    m.put("b", "y");
+    assertThrows(IllegalArgumentException.class, () -> m.replaceAll((k, v) -> "z"));
+    assertEquals(2, m.size());
+    assertSame("x", m.get("a"));
+    assertSame("y", m.get("b"));
+    checkConsistent(m);
+  }
+
+  @Test
+  @SuppressWarnings("IdentityHashMapUsage") // comparing with an IdentityHashMap is the point
+  void equalsIsSymmetricWithIdentityHashMap() {
+    String k = "k";
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put(k, "v");
+    IdentityHashMap<String, String> ihm = new IdentityHashMap<>();
+    ihm.put(k, copy("v"));
+    assertEquals(ihm.equals(m), m.equals(ihm));
+    ihm.put(k, "v");
+    assertEquals(m, ihm);
+    assertEquals(ihm, m);
+    ihm.put(copy(k), "v");
+    ihm.remove(k);
+    assertNotEquals(m, ihm);
+    assertNotEquals(ihm, m);
+  }
+
+  @Test
+  void entryAfterRemoval() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    Map.Entry<String, String> e = m.entrySet().iterator().next();
+    m.remove("a");
+    assertSame("a", e.getKey());
+    assertThrows(IllegalStateException.class, e::getValue);
+    assertThrows(IllegalStateException.class, () -> e.setValue("2"));
+  }
+
+  @Test
+  @SuppressWarnings("index:array.access.unsafe.high.constant") // the map has one mapping
+  void entrySetToArrayIsSnapshot() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "1");
+    @SuppressWarnings("unchecked") // the array contains entries
+    Map.Entry<String, String> e = (Map.Entry<String, String>) m.entrySet().toArray()[0];
+    Map.Entry<?, ?> e2 = m.entrySet().toArray(new Map.Entry<?, ?>[0])[0];
+    m.put("a", "2");
+    m.remove("a");
+    assertSame("1", e.getValue());
+    assertSame("1", e2.getValue());
+  }
+
+  @Test
+  void toStringSelfReference() {
+    IdentityBiMap<Object, Object> m = new IdentityBiMap<>();
+    m.put("self", m);
+    m.put(m.inverse(), "inverse");
+    String s = m.toString();
+    assertTrue(s.contains("self=(this Map)"), s);
+    assertTrue(s.contains("(this Map's inverse)=inverse"), s);
+    String inverseString = m.inverse().toString();
+    assertTrue(inverseString.contains("(this Map's inverse)=self"), inverseString);
+    assertTrue(inverseString.contains("inverse=(this Map)"), inverseString);
+  }
+
+  @Test
+  void putAllInverse() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "b");
+    m.putAll(m.inverse());
+    assertEquals(2, m.size());
+    assertSame("b", m.get("a"));
+    assertSame("a", m.get("b"));
+    checkConsistent(m);
+
+    // Putting a map's own mappings is a no-op.
+    m.putAll(m);
+    assertEquals(2, m.size());
+    checkConsistent(m);
   }
 
   @Test
