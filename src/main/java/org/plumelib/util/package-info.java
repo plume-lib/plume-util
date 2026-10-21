@@ -16,6 +16,9 @@
  *   <dt>{@link org.plumelib.util.CombinationIterator CombinationIterator}
  *   <dd>Given a set of collections, return all combinations that take one element from each
  *       collection.
+ *   <dt>{@link org.plumelib.util.IdentityBiMap IdentityBiMap}
+ *   <dd>A bidirectional map (a bijection) that compares keys and values by identity. Its inverse
+ *       view maps values to keys.
  *   <dt>{@link org.plumelib.util.LimitedSizeSet LimitedSizeSet}
  *   <dd>Stores up to some maximum number of unique values, at which point its rep is nulled, in
  *       order to save space.
