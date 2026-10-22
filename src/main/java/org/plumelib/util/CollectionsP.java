@@ -498,7 +498,6 @@ public final class CollectionsP {
    * @param iterable an iterable
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
-  @SuppressWarnings("nullness:type.arguments.not.inferred") // type depends on boolean `removeNull`
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
@@ -602,7 +601,6 @@ public final class CollectionsP {
    * @param a an array
    * @return a list of the results of applying {@code f} to the elements of {@code a}
    */
-  @SuppressWarnings("nullness:type.arguments.not.inferred") // type depends on boolean `removeNull`
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
@@ -1811,7 +1809,8 @@ public final class CollectionsP {
      *
      * @param itor an iterator whose first and last elements to discard
      */
-    /*package*/ @Unshrinkable RemoveFirstAndLastIterator(Iterator<T> itor) {
+    /*package*/
+    @Unshrinkable RemoveFirstAndLastIterator(Iterator<T> itor) {
       this.itor = itor;
       if (itor.hasNext()) {
         first = itor.next();
