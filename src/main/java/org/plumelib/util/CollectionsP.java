@@ -498,6 +498,7 @@ public final class CollectionsP {
    * @param iterable an iterable
    * @return a list of the results of applying {@code f} to the elements of {@code iterable}
    */
+  @SuppressWarnings("nullness:return") // type depends on boolean `removeNull`
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
@@ -601,6 +602,7 @@ public final class CollectionsP {
    * @param a an array
    * @return a list of the results of applying {@code f} to the elements of {@code a}
    */
+  @SuppressWarnings("nullness:return") // type depends on boolean `removeNull`
   public static <
           @KeyForBottom FROM extends @Nullable @UnknownKeyFor Object,
           @KeyForBottom TO extends @Nullable @UnknownKeyFor Object>
