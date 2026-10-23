@@ -26,11 +26,13 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
@@ -736,6 +738,38 @@ public final class FilesP {
       }
     }
     throw new Error("every file exists");
+  }
+
+  /**
+   * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
+   * move is atomic, and the result has the permissions of the original {@code target}.
+   *
+   * <p>A typical use is to write a new version of a file to a temporary file in the same directory
+   * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
+   * method. Then a failure while writing leaves the original file unchanged, and no reader sees a
+   * partially-written file. An atomic move is generally possible only within one file system.
+   *
+   * <p>If {@code target} is a symbolic link, the link itself is replaced. To replace the file that
+   * the link refers to instead, pass {@code target.toRealPath()}.
+   *
+   * @param source the file to move
+   * @param target the file to replace
+   * @throws IOException if there is trouble moving the file
+   */
+  public static void replaceFile(Path source, Path target) throws IOException {
+    if (Files.exists(target)) {
+      try {
+        Files.setPosixFilePermissions(source, Files.getPosixFilePermissions(target));
+      } catch (UnsupportedOperationException e) {
+        // The file system does not support POSIX permissions.
+      }
+    }
+    try {
+      Files.move(
+          source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+    } catch (AtomicMoveNotSupportedException e) {
+      Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
   }
 
   //

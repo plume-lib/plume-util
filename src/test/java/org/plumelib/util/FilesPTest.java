@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,9 +22,12 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -93,6 +97,41 @@ final class FilesPTest {
       bw.write("more\n");
     }
     assertEquals("short\nmore\n", Files.readString(file, UTF_8));
+  }
+
+  @Test
+  void test_replaceFile(@TempDir Path tempDir) throws IOException {
+    // Replacing a nonexistent file creates it.
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(source, "first\n", UTF_8);
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertEquals("first\n", Files.readString(target, UTF_8));
+
+    // Replacing an existing file overwrites it.
+    Files.writeString(source, "second\n", UTF_8);
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertEquals("second\n", Files.readString(target, UTF_8));
+  }
+
+  @Test
+  void test_replaceFile_permissions(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(source, "new\n", UTF_8);
+    Files.writeString(target, "old\n", UTF_8);
+    Set<PosixFilePermission> sourcePermissions = PosixFilePermissions.fromString("rw-------");
+    Set<PosixFilePermission> targetPermissions = PosixFilePermissions.fromString("rw-r-----");
+    Files.setPosixFilePermissions(source, sourcePermissions);
+    Files.setPosixFilePermissions(target, targetPermissions);
+
+    // The replaced file keeps its permissions.
+    FilesP.replaceFile(source, target);
+    assertEquals("new\n", Files.readString(target, UTF_8));
+    assertEquals(targetPermissions, Files.getPosixFilePermissions(target));
   }
 
   @Test
