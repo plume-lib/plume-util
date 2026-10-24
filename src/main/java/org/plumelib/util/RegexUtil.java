@@ -30,7 +30,7 @@ public final class RegexUtil {
 
   /** This class is a collection of methods; it does not represent anything. */
   private RegexUtil() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /**
@@ -78,6 +78,7 @@ public final class RegexUtil {
      * @param pse the PatternSyntaxException to be wrapped
      */
     public CheckedPatternSyntaxException(PatternSyntaxException pse) {
+      super();
       this.pse = pse;
     }
 
@@ -120,7 +121,7 @@ public final class RegexUtil {
      * @return the full detail message
      */
     @Override
-    @Pure
+    @SideEffectFree
     public String getMessage(@GuardSatisfied CheckedPatternSyntaxException this) {
       return pse.getMessage();
     }
@@ -157,7 +158,7 @@ public final class RegexUtil {
    */
   @SuppressWarnings({
     "regex", // RegexUtil
-    "allcheckers:purity.not.deterministic.catch" // catch block returns boolean
+    "allcheckers:purity.catch" // catch block returns boolean
   })
   @Pure
   // @EnsuresQualifierIf annotation is extraneous because this method is special-cased
@@ -181,7 +182,7 @@ public final class RegexUtil {
    */
   @SuppressWarnings({
     "regex",
-    "allcheckers:purity.not.deterministic.call",
+    "allcheckers:purity.call",
     "lock"
   }) // RegexUtil; temp value used in pure method is equal up to equals but not up to ==
   @Pure

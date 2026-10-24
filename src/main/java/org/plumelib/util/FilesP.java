@@ -50,11 +50,11 @@ public final class FilesP {
 
   /** This class is a collection of methods; it does not represent anything. */
   private FilesP() {
-    throw new Error("do not instantiate");
+    throw new UnsupportedOperationException("do not instantiate");
   }
 
   /** The system-specific line separator string. */
-  private static final String lineSep = System.lineSeparator();
+  private static final String LINE_SEP = System.lineSeparator();
 
   /**
    * An array of options for appending to a file, creating the file if it does not exist. CREATE is
@@ -86,8 +86,9 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "lock:method.guarantee.violated" // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
+    "lock:method.guarantee.violated", // side effect to local state
+    // "PMD.CloseResource", // the resource is returned
   })
   @SideEffectFree
   @Owning
@@ -161,17 +162,14 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "allcheckers:purity.call", // needs JDK annotations
   })
   @SideEffectFree
   @Owning
   public static InputStreamReader newFileReader(Path path, @Nullable Charset charset)
       throws IOException {
     InputStream in = newFileInputStream(path);
-    if (charset == null) {
-      charset = UTF_8;
-    }
-    return new InputStreamReader(in, charset);
+    return new InputStreamReader(in, charset == null ? UTF_8 : charset);
   }
 
   /**
@@ -261,7 +259,7 @@ public final class FilesP {
    * @return a BufferedReader for file
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings("allcheckers:purity.call") // needs JDK annotations
   @SideEffectFree
   @Owning
   public static BufferedReader newBufferedFileReader(File file, @Nullable Charset charset)
@@ -292,7 +290,7 @@ public final class FilesP {
    * @return a LineNumberReader for file
    * @throws IOException if there is trouble reading the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings("allcheckers:purity.call") // needs JDK annotations
   @SideEffectFree
   @Owning
   public static LineNumberReader newLineNumberFileReader(File file) throws IOException {
@@ -334,7 +332,7 @@ public final class FilesP {
    * @throws IOException if there is trouble writing the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -407,17 +405,14 @@ public final class FilesP {
    * @throws IOException if there is trouble writing the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // needs JDK annotations
+    "allcheckers:purity.call", // needs JDK annotations
   })
   @SideEffectFree
   @Owning
   public static OutputStreamWriter newFileWriter(Path path, @Nullable Charset charset)
       throws IOException {
     OutputStream in = newFileOutputStream(path);
-    if (charset == null) {
-      charset = UTF_8;
-    }
-    return new OutputStreamWriter(in, charset);
+    return new OutputStreamWriter(in, charset == null ? UTF_8 : charset);
   }
 
   /**
@@ -485,7 +480,7 @@ public final class FilesP {
    */
   // Question:  should this be rewritten as a wrapper around newBufferedFileOutputStream?
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -516,7 +511,7 @@ public final class FilesP {
    * @return a BufferedOutputStream for filename
    * @throws IOException if there is trouble writing the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // needs JDK annotations
+  @SuppressWarnings("allcheckers:purity.call") // needs JDK annotations
   @SideEffectFree
   @Owning
   public static BufferedOutputStream newBufferedFileOutputStream(String filename, boolean append)
@@ -537,9 +532,7 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call",
-    "allcheckers:purity.not.deterministic.call",
-    "allcheckers:purity.not.deterministic.not.sideeffectfree.call",
+    "allcheckers:purity.call",
     "lock:method.guarantee.violated"
   }) // side effect to local state
   @Pure
@@ -561,8 +554,8 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
-    "allcheckers:purity.not.deterministic.object.creation" // create local state
+    "allcheckers:purity.call", // side effect to local state
+    "allcheckers:purity.object.creation" // create local state
   })
   @Pure
   public static @Regex String inferLineSeparator(String filename) throws IOException {
@@ -577,8 +570,7 @@ public final class FilesP {
    * @throws IOException if there is trouble reading the file
    */
   @SuppressWarnings({
-    "allcheckers:purity.not.deterministic.call", // side effect to local state
-    "allcheckers:purity.not.deterministic.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @Pure
@@ -602,19 +594,19 @@ public final class FilesP {
           // This can happen only if the last line is not terminated.
         }
       }
-      if ((dos > mac && dos > unix) || (lineSep.equals("\r\n") && dos >= unix && dos >= mac)) {
+      if ((dos > mac && dos > unix) || (LINE_SEP.equals("\r\n") && dos >= unix && dos >= mac)) {
         return "\r\n";
       }
-      if ((mac > dos && mac > unix) || (lineSep.equals("\r") && mac >= dos && mac >= unix)) {
+      if ((mac > dos && mac > unix) || (LINE_SEP.equals("\r") && mac >= dos && mac >= unix)) {
         return "\r";
       }
-      if ((unix > dos && unix > mac) || (lineSep.equals("\n") && unix >= dos && unix >= mac)) {
+      if ((unix > dos && unix > mac) || (LINE_SEP.equals("\n") && unix >= dos && unix >= mac)) {
         return "\n";
       }
       // The two non-preferred line endings are tied and have more votes than
       // the preferred line ending.  Give up and return the line separator
       // for the system on which Java is currently running.
-      return lineSep;
+      return LINE_SEP;
     }
   }
 
@@ -731,6 +723,7 @@ public final class FilesP {
    * @return the path to the newly created file that did not exist before this method was invoked
    * @throws IOException if there is trouble creating the file
    */
+  // @SuppressWarnings("PMD.EmptyCatchBlock")
   public static Path createTempFile(
       Path dir, String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
     Path createdDir = Files.createDirectories(dir, attrs);
@@ -878,10 +871,10 @@ public final class FilesP {
    */
   public static final class WildcardFilter implements FilenameFilter {
     /** The text before the wildcard. */
-    String prefix;
+    private final String prefix;
 
     /** The text after the wildcard. */
-    String suffix;
+    private final String suffix;
 
     /**
      * Create a filter that accepts files whose name matches the given wildcard.
@@ -910,7 +903,7 @@ public final class FilesP {
   }
 
   /** The user's home directory, or null if the system property is not set. */
-  static final @Nullable String userHome = System.getProperty("user.home");
+  private static final @Nullable String USER_HOME = System.getProperty("user.home");
 
   /**
    * Does tilde expansion on a file name (to the user's home directory).
@@ -940,10 +933,10 @@ public final class FilesP {
   @SideEffectFree
   public static String expandFilename(String name) {
     if (name.contains("~")) {
-      if (userHome == null) {
+      if (USER_HOME == null) {
         throw new Error("Cannot expand filename: system property 'user.home' is not set");
       }
-      return name.replace("~", userHome);
+      return name.replace("~", USER_HOME);
     } else {
       return name;
     }
@@ -995,7 +988,7 @@ public final class FilesP {
    */
   @SuppressWarnings({
     "BanSerializableRead", // wrapper around dangerous API
-    "allcheckers:purity.not.sideeffectfree.call", // side effect to local state
+    "allcheckers:purity.call", // side effect to local state
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
@@ -1038,7 +1031,7 @@ public final class FilesP {
    * @param path the path to the file
    * @return a String containing the content read from the file
    */
-  @SuppressWarnings("allcheckers:purity.not.sideeffectfree.call") // side effect to local state
+  @SuppressWarnings("allcheckers:purity.call") // side effect to local state
   @SideEffectFree
   public static String readString(Path path) {
     try {
@@ -1129,8 +1122,7 @@ public final class FilesP {
   public static String streamString(InputStream is) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     streamCopy(is, baos);
-    String result = baos.toString(UTF_8);
-    return result;
+    return baos.toString(UTF_8);
   }
 
   /**
@@ -1182,6 +1174,7 @@ public final class FilesP {
    *     character; see {@link #readCodePoint}
    * @throws UncheckedIOException if there is trouble reading the input stream
    */
+  // @SuppressWarnings("PMD.EmptyCatchBlock")
   public static @Nullable Boolean isWhitespaceOnly(InputStream is, @Positive int readLimit) {
     if (!is.markSupported()) {
       return null;

@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
+import org.checkerframework.checker.modifiability.qual.Unshrinkable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.dataflow.qual.SideEffectsOnly;
@@ -41,22 +43,22 @@ public class OrderedPairIterator<T extends @Nullable Object>
     implements Iterator<IPair<@Nullable T, @Nullable T>> {
 
   /** The iterator for first elements of pairs. */
-  Iterator<T> itor1;
+  private Iterator<T> itor1;
 
   /** The iterator for second elements of pairs. */
-  Iterator<T> itor2;
+  private Iterator<T> itor2;
 
   /** The next element to be read by itor1. */
-  @Nullable T next1;
+  private @Nullable T next1;
 
   /** The next element to be read by itor2. */
-  @Nullable T next2;
+  private @Nullable T next2;
 
   /**
    * The comparator to be used to compare elements from the two iterators, to determine whether they
    * match. Null to use the natural comparison.
    */
-  @Nullable Comparator<? super T> comparator;
+  private @Nullable Comparator<? super T> comparator;
 
   /**
    * Creates an iterator that returns pairs, where each pair contains an element from each iterator
@@ -67,7 +69,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
    */
   // For this constructor, the arg type is actually Iterator<T extends
   // Comparable<T>>, but T is already bound above and can't be changed.
-  public OrderedPairIterator(Iterator<T> itor1, Iterator<T> itor2) {
+  public @Unshrinkable OrderedPairIterator(Iterator<T> itor1, Iterator<T> itor2) {
     this.itor1 = itor1;
     this.itor2 = itor2;
     setnext1();
@@ -82,7 +84,8 @@ public class OrderedPairIterator<T extends @Nullable Object>
    * @param itor2 iterator for second elements of pairs
    * @param comparator determines whether two elements are equal and should be paired together
    */
-  public OrderedPairIterator(Iterator<T> itor1, Iterator<T> itor2, Comparator<T> comparator) {
+  public @Unshrinkable OrderedPairIterator(
+      Iterator<T> itor1, Iterator<T> itor2, Comparator<T> comparator) {
     this(itor1, itor2);
     this.comparator = comparator;
   }
@@ -186,7 +189,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
           } else if (next1 != null && next2 == null) {
             comparison = 1;
           } else {
-            throw new RuntimeException("this can't happen " + next1 + " " + next2);
+            throw new RuntimeException("this can't happen " + next1 + " " + next2, npe);
           }
         }
         if (comparison < 0) {
@@ -201,7 +204,7 @@ public class OrderedPairIterator<T extends @Nullable Object>
   }
 
   @Override
-  public void remove(@GuardSatisfied OrderedPairIterator<T> this) {
+  public void remove(@Shrinkable @GuardSatisfied OrderedPairIterator<T> this) {
     throw new UnsupportedOperationException();
   }
 }

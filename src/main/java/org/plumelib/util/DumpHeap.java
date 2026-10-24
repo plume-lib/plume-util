@@ -14,8 +14,11 @@ public final class DumpHeap {
 
   /** Do not instantiate. */
   private DumpHeap() {
-    throw new Error("Do not instantiate");
+    throw new UnsupportedOperationException("Do not instantiate");
   }
+
+  /** The lock that guards {@link #hotspotMBean} and {@link #dumpHeapMethod}. */
+  private static final Object lock = new Object();
 
   /**
    * The HotSpot Diagnostic MBean. Its type is Object, in case HotSpotDiagnosticMXBean is not
@@ -34,17 +37,19 @@ public final class DumpHeap {
     "nullness:contracts.postcondition"
   }) // reflection
   @EnsuresNonNull({"hotspotMBean", "dumpHeapMethod"})
-  private static synchronized void initializeFields() {
-    try {
-      Class<?> mxbeanClass = Class.forName("com.sun.management.HotSpotDiagnosticMXBean");
-      hotspotMBean =
-          ManagementFactory.newPlatformMXBeanProxy(
-              ManagementFactory.getPlatformMBeanServer(),
-              "com.sun.management:type=HotSpotDiagnostic",
-              mxbeanClass);
-      dumpHeapMethod = mxbeanClass.getMethod("dumpHeap", String.class, boolean.class);
-    } catch (ClassNotFoundException | IOException | NoSuchMethodException e) {
-      throw new Error(e);
+  private static void initializeFields() {
+    synchronized (lock) {
+      try {
+        Class<?> mxbeanClass = Class.forName("com.sun.management.HotSpotDiagnosticMXBean");
+        hotspotMBean =
+            ManagementFactory.newPlatformMXBeanProxy(
+                ManagementFactory.getPlatformMBeanServer(),
+                "com.sun.management:type=HotSpotDiagnostic",
+                mxbeanClass);
+        dumpHeapMethod = mxbeanClass.getMethod("dumpHeap", String.class, boolean.class);
+      } catch (ClassNotFoundException | IOException | NoSuchMethodException e) {
+        throw new Error(e);
+      }
     }
   }
 

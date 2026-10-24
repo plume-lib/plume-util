@@ -29,13 +29,13 @@ public class FuzzyFloat implements Serializable {
   private static final long serialVersionUID = 20250723L;
 
   /** Default relative difference between two values such that this class considers them equal. */
-  static final double DEFAULT_RELATIVE_RATIO = .0001;
+  private static final double DEFAULT_RELATIVE_RATIO = .0001;
 
   /** Minimum ratio between two floats, such that this class considers them equal. */
-  double minRatio;
+  private double minRatio;
 
   /** Maximum ratio between two floats, such that this class considers them equal. */
-  double maxRatio;
+  private double maxRatio;
 
   /**
    * True if this class does approximate (fuzzy) arithmetic comparisons. If false, this class does
@@ -44,7 +44,7 @@ public class FuzzyFloat implements Serializable {
    * <p>ratio test turned off. This occurs exactly if the class is instantiated with the relative
    * difference 0.
    */
-  boolean exactComparisons = false;
+  private boolean exactComparisons = false;
 
   /** Creates a FuzzyFloat with the default relativeRatio value of .0001. */
   public FuzzyFloat() {
@@ -310,7 +310,7 @@ public class FuzzyFloat implements Serializable {
   /** Lexically compares two double arrays. */
   public class DoubleArrayComparatorLexical implements Comparator<double[]>, Serializable {
     /** Unique identifier for serialization. If you add or remove fields, change this number. */
-    static final long serialVersionUID = 20150812L;
+    private static final long serialVersionUID = 20150812L;
 
     /** Create a new DoubleArrayComparatorLexical. */
     public DoubleArrayComparatorLexical() {}

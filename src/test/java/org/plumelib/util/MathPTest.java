@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -156,15 +157,9 @@ final class MathPTest {
     }
   }
 
-  @SuppressWarnings("PMD.JUnitUseExpected") // wrong version of JUnit?
   @Test
   void test_pow_exception() {
-    try {
-      MathP.pow(3, -3);
-      throw new Error("Didn't throw ArithmeticException");
-    } catch (ArithmeticException e) {
-      // This is the expected behavior, so do nothing.
-    }
+    assertThrows(ArithmeticException.class, () -> MathP.pow(3, -3));
   }
 
   @Test
@@ -219,7 +214,31 @@ final class MathPTest {
   /** Test mul(). */
   @Test
   void test_mul() {
-    // Tests go here.
+
+    // public static int mul(int x, int y)
+    assertEquals(6, MathP.mul(2, 3));
+    assertEquals(-6, MathP.mul(-2, 3));
+    assertEquals(6, MathP.mul(-2, -3));
+    assertEquals(0, MathP.mul(0, 3));
+    assertEquals(0, MathP.mul(3, 0));
+    // mul() is plain multiplication: it wraps around on overflow rather than throwing.
+    assertEquals(Integer.MIN_VALUE, MathP.mul(Integer.MIN_VALUE, 1));
+    assertEquals(Integer.MIN_VALUE, MathP.mul(Integer.MAX_VALUE / 2 + 1, 2));
+
+    // public static long mul(long x, long y)
+    assertEquals(6L, MathP.mul(2L, 3L));
+    assertEquals(-6L, MathP.mul(-2L, 3L));
+    assertEquals(0L, MathP.mul(0L, 3L));
+    // A product that does not fit in an int.
+    assertEquals(4_294_967_296L, MathP.mul(65_536L, 65_536L));
+    assertEquals(Long.MIN_VALUE, MathP.mul(Long.MAX_VALUE / 2 + 1, 2L));
+
+    // public static double mul(double x, double y)
+    assertEquals(6.0, MathP.mul(2.0, 3.0));
+    assertEquals(-6.0, MathP.mul(-2.0, 3.0));
+    assertEquals(0.75, MathP.mul(1.5, 0.5));
+    assertEquals(Double.POSITIVE_INFINITY, MathP.mul(Double.MAX_VALUE, 2.0));
+    assertTrue(Double.isNaN(MathP.mul(Double.NaN, 1.0)));
   }
 
   /** Test mod(). */
@@ -483,7 +502,39 @@ final class MathPTest {
   /** Test modNonnegative(). */
   @Test
   void test_modNonnegative() {
-    // Tests go here.
+
+    // The result is always non-negative and less than abs(y), unlike the % operator, whose
+    // result has the sign of the dividend.
+    assertEquals(-3, -33 % 5);
+    assertEquals(2, MathP.modNonnegative(-33, 5));
+
+    // public static int modNonnegative(int x, int y)
+    assertEquals(0, MathP.modNonnegative(0, 5));
+    assertEquals(0, MathP.modNonnegative(10, 5));
+    assertEquals(1, MathP.modNonnegative(1, 5));
+    assertEquals(4, MathP.modNonnegative(-1, 5));
+    assertEquals(4, MathP.modNonnegative(-1, -5));
+    assertEquals(0, MathP.modNonnegative(-5, 5));
+    for (int x = -12; x <= 12; x++) {
+      for (int y : new int[] {1, 2, 3, 5, -1, -2, -3, -5}) {
+        int result = MathP.modNonnegative(x, y);
+        assertTrue(result >= 0, x + " % " + y + " = " + result);
+        assertTrue(result < Math.abs(y), x + " % " + y + " = " + result);
+        // The result is congruent to x modulo y.
+        assertEquals(0, (x - result) % y, x + " % " + y + " = " + result);
+      }
+    }
+
+    // public static long modNonnegative(long x, long y)
+    assertEquals(3L, MathP.modNonnegative(33L, 5L));
+    assertEquals(2L, MathP.modNonnegative(-33L, 5L));
+    assertEquals(3L, MathP.modNonnegative(33L, -5L));
+    assertEquals(2L, MathP.modNonnegative(-33L, -5L));
+    assertEquals(0L, MathP.modNonnegative(0L, 5L));
+    // Values that do not fit in an int.
+    assertEquals(0L, MathP.modNonnegative(4_294_967_296L, 65_536L));
+    assertEquals(1L, MathP.modNonnegative(4_294_967_297L, 65_536L));
+    assertEquals(65_535L, MathP.modNonnegative(-4_294_967_297L, 65_536L));
   }
 
   /** Test modulus(). */

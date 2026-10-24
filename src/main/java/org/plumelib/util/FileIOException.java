@@ -20,7 +20,7 @@ import org.checkerframework.dataflow.qual.Pure;
  */
 public class FileIOException extends IOException {
   /** Unique identifier for serialization. If you add or remove fields, change this number. */
-  static final long serialVersionUID = 20050923L;
+  private static final long serialVersionUID = 20050923L;
 
   /** The file being read when the IOException occurred. */
   public final @Nullable String fileName;
@@ -257,20 +257,26 @@ public class FileIOException extends IOException {
   // Utility and helper methods
   //
 
+  @SuppressWarnings({
+    "allcheckers:purity",
+    "lock:method.guarantee.violated"
+  }) // side effect to local StringBuilder `result`
   @Pure
   @Override
   public String getMessage(@GuardSatisfied FileIOException this) {
-    String result = super.getMessage();
-    if (result == null) {
-      result = this.getClass().getName();
+    String baseMessage = super.getMessage();
+    if (baseMessage == null) {
+      baseMessage = this.getClass().getName();
     }
+    StringBuilder result = new StringBuilder(32);
+    result.append(baseMessage);
     if (fileName != null) {
-      result += " in file " + fileName;
+      result.append(" in file ").append(fileName);
     }
     if (lineNumber != -1) {
-      result += " at line " + lineNumber;
+      result.append(" at line ").append(lineNumber);
     }
-    return result.intern();
+    return result.toString().intern();
   }
 
   // There is no setter method because field lineNumber is final.

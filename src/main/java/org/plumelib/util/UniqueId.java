@@ -41,7 +41,7 @@ public interface UniqueId {
    *
    * @return the unique ID of this object
    */
-  public long getUid(@UnknownInitialization(UniqueId.class) UniqueId this);
+  long getUid(@UnknownInitialization(UniqueId.class) UniqueId this);
 
   /**
    * Returns the simple name of the class and the unique ID of this object. This method is intended
@@ -49,7 +49,7 @@ public interface UniqueId {
    *
    * @return the simple name of the class and the unique ID of this object
    */
-  public default String getClassAndUid(@UnknownInitialization(UniqueId.class) UniqueId this) {
+  default String getClassAndUid(@UnknownInitialization(UniqueId.class) UniqueId this) {
     return this.getClass().getSimpleName() + "#" + getUid();
   }
 }

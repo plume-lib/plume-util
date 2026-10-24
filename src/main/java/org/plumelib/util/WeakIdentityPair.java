@@ -81,7 +81,7 @@ public final class WeakIdentityPair<V1 extends @NonNull Object, V2 extends @NonN
     return b.get();
   }
 
-  @SuppressWarnings({"interning", "allcheckers:purity.not.deterministic.call", "lock"})
+  @SuppressWarnings({"interning", "allcheckers:purity.call", "lock"})
   @Override
   // not @Deterministic: values can change by being garbage-collected
   @SideEffectFree

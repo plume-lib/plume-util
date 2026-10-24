@@ -14,6 +14,9 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.modifiability.qual.Growable;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
+import org.checkerframework.checker.modifiability.qual.Shrinkable;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -36,7 +39,7 @@ import org.checkerframework.dataflow.qual.SideEffectsOnly;
   "index", // TODO
   "keyfor", // https://tinyurl.com/cfissue/4558
   "lock", // not yet annotated for the Lock Checker
-  "nullness" // temporary; nullness is tricky because of null-padded arrays
+  "nullness", // temporary; nullness is tricky because of null-padded arrays
 })
 public class IdentityArraySet<E extends @UnknownSignedness Object> extends AbstractSet<E>
     implements Cloneable {
@@ -53,7 +56,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * The number of times this set's size has been modified by adding or removing an element. This
    * field is used to make view iterators fail-fast.
    */
-  transient int sizeModificationCount = 0;
+  private transient int sizeModificationCount = 0;
 
   // Constructors
 
@@ -66,11 +69,12 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SuppressWarnings({
     "unchecked", // generic array cast
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
-    "allcheckers:purity.not.sideeffectfree.call" // calls `super`
+    "allcheckers:purity.assign.field", // initializes `this`
+    "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  public IdentityArraySet(int initialCapacity) {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet(int initialCapacity) {
+    super();
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
     }
@@ -83,7 +87,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   /** Constructs an empty {@code IdentityArraySet} with the default initial capacity. */
   @SideEffectFree
-  public IdentityArraySet() {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet() {
     this(4);
   }
 
@@ -96,11 +100,13 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    */
   @SuppressWarnings({
     "samelen:assignment", // initialization
-    "allcheckers:purity.not.sideeffectfree.assign.field", // initializes `this`
-    "allcheckers:purity.not.sideeffectfree.call" // calls `super`
+    "allcheckers:purity.assign.field", // initializes `this`
+    "allcheckers:purity.call", // calls `super`
   })
   @SideEffectFree
-  private IdentityArraySet(E[] values, @LTEqLengthOf({"values"}) int size) {
+  private @IteratorPolyMod @Growable @Shrinkable IdentityArraySet(
+      E[] values, @LTEqLengthOf({"values"}) int size) {
+    super();
     this.values = values;
     this.size = size;
   }
@@ -114,12 +120,11 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   @SuppressWarnings({
     "allcheckers:purity", // initializes `this`
     "lock:method.guarantee.violated", // initializes `this`
-    "nullness:method.invocation", // inference failure;
-    // https://github.com/typetools/checker-framework/issues/979 ?
+    "nullness:method.invocation", // inference failure; https://tinyurl.com/cfissue/979 ?
     "PMD.ConstructorCallsOverridableMethod",
   })
   @SideEffectFree
-  public IdentityArraySet(Collection<? extends E> c) {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet(Collection<? extends E> c) {
     this(c.size());
     addAll(c);
   }
@@ -205,6 +210,8 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
     assertIndexInBounds(index, "removeIndex");
     System.arraycopy(values, index + 1, values, index, size - index - 1);
     size--;
+    // Clear the now-unused slot so it does not retain a reference.
+    values[size] = null;
     sizeModificationCount++;
     return true;
   }
@@ -254,14 +261,16 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   @Override
   @SideEffectsOnly("this")
-  public boolean add(E value) {
+  public boolean add(@Growable IdentityArraySet<E> this, E value) {
     int index = indexOf(value);
     return add(index, value);
   }
 
   @Override
   @SideEffectsOnly("this")
-  public boolean remove(@GuardSatisfied @Nullable @UnknownSignedness Object value) {
+  public boolean remove(
+      @Shrinkable IdentityArraySet<E> this,
+      @GuardSatisfied @Nullable @UnknownSignedness Object value) {
     int index = indexOf(value);
     return removeIndex(index);
   }
@@ -270,7 +279,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   @Override
   @SideEffectsOnly("this")
-  public boolean addAll(Collection<? extends E> c) {
+  public boolean addAll(@Growable IdentityArraySet<E> this, Collection<? extends E> c) {
     if (c.isEmpty()) {
       return false;
     }
@@ -279,7 +288,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   @Override
   @SideEffectsOnly("this")
-  public boolean removeAll(Collection<?> c) {
+  public boolean removeAll(@Shrinkable @IteratorPolyMod IdentityArraySet<E> this, Collection<?> c) {
     if (c.isEmpty()) {
       return false;
     }
@@ -290,8 +299,11 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
   @Override
   @SideEffectsOnly("this")
-  public void clear() {
+  public void clear(@Shrinkable IdentityArraySet<E> this) {
     if (size != 0) {
+      // Clear the slots so they do not retain references.
+      assert values != null : "@AssumeAssertion(nullness): nonzero size => the array is non-null";
+      Arrays.fill(values, 0, size, null);
       size = 0;
       sizeModificationCount++;
     }
@@ -306,19 +318,19 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
   }
 
   /** An iterator over the IdentityArraySet. */
-  private class ArraySetIterator implements Iterator<E> {
+  private final class ArraySetIterator implements Iterator<E> {
     /** The first unread index; the index of the next value to return. */
-    @NonNegative int index;
+    private @NonNegative int index;
 
     /** True if remove() has been called since the last call to next(). */
-    boolean removed;
+    private boolean removed;
 
     /** The modification count when the iterator is created, for fail-fast. */
-    int initialSizeModificationCount;
+    private int initialSizeModificationCount;
 
     /** Creates a new ArraySetIterator. */
     @SideEffectFree
-    ArraySetIterator() {
+    private ArraySetIterator() {
       index = 0;
       removed = true; // can't remove until next() has been called
       initialSizeModificationCount = sizeModificationCount;
@@ -331,13 +343,13 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
      */
     @Pure
     @Override
-    public final boolean hasNext() {
+    public boolean hasNext() {
       return index < size();
     }
 
     @SideEffectsOnly("this")
     @Override
-    public final E next() {
+    public E next() {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -347,7 +359,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
 
     /** Removes the previously-returned element. */
     @Override
-    public final void remove() {
+    public void remove(@Shrinkable ArraySetIterator this) {
       if (removed) {
         throw new IllegalStateException(
             "Called remove() on ArraySetIterator without calling next() first.");
@@ -396,10 +408,14 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    *
    * @return a copy of this
    */
-  @SuppressWarnings({"unchecked", "PMD.ProperCloneImplementation"})
+  @SuppressWarnings({
+    "unchecked",
+    "PMD.ProperCloneImplementation",
+    "modifiability:override.return" // the clone is modifiable even if the receiver is not
+  })
   @SideEffectFree
   @Override
-  public IdentityArraySet<E> clone() {
+  public @IteratorPolyMod @Growable @Shrinkable IdentityArraySet<E> clone() {
     if (values == null) {
       return new IdentityArraySet<>(null, 0);
     } else {
@@ -413,7 +429,7 @@ public class IdentityArraySet<E extends @UnknownSignedness Object> extends Abstr
    * @return the internal representation, printed
    */
   @SideEffectFree
-  /* package-private */ String repr() {
+  /*package*/ String repr() {
     return String.format(
         "size=%d capacity=%s %s",
         size, (values == null ? 0 : values.length), Arrays.toString(values));
