@@ -156,7 +156,10 @@ public final class MapsP {
    * @param orig a map
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings("nullness:argument")
+  @SuppressWarnings({
+    "nullness:argument", // problem with clone()
+    "allcheckers:purity.functional.argument" // impure method; impure args are OK
+  })
   public static <
           K extends @Nullable DeepCopyable<K>,
           V extends @Nullable DeepCopyable<V>,
@@ -186,7 +189,10 @@ public final class MapsP {
    * @param orig a map
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings("nullness") // generics problem with clone
+  @SuppressWarnings({
+    "nullness", // generics problem with clone
+    "allcheckers:purity.functional.argument" // impure method; impure args are OK
+  })
   public static <K, V extends @Nullable DeepCopyable<V>, M extends @Modifiable @Nullable Map<K, V>>
       @Modifiable @PolyNull M deepCopyValues(@PolyNull M orig) {
     if (orig == null) {
