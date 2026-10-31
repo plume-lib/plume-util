@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -130,8 +131,71 @@ final class FilesPTest {
 
     // The replaced file keeps its permissions.
     FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
     assertEquals("new\n", Files.readString(target, UTF_8));
     assertEquals(targetPermissions, Files.getPosixFilePermissions(target));
+  }
+
+  @Test
+  void test_replaceFile_symlinkSource(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path referent = tempDir.resolve("referent.txt");
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(referent, "referent\n", UTF_8);
+    Files.writeString(target, "old\n", UTF_8);
+    Set<PosixFilePermission> referentPermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(referent, referentPermissions);
+    Files.setPosixFilePermissions(target, PosixFilePermissions.fromString("rw-r--r--"));
+    Files.createSymbolicLink(source, referent);
+
+    // The link replaces the target, and the link's referent keeps its permissions.
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source, LinkOption.NOFOLLOW_LINKS));
+    assertTrue(Files.isSymbolicLink(target));
+    assertEquals(referent, Files.readSymbolicLink(target));
+    assertEquals(referentPermissions, Files.getPosixFilePermissions(referent));
+  }
+
+  @Test
+  void test_replaceFile_symlinkTarget(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path dir = Files.createDirectory(tempDir.resolve("dir"));
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target");
+    Files.writeString(source, "new\n", UTF_8);
+    Set<PosixFilePermission> sourcePermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(source, sourcePermissions);
+    Files.setPosixFilePermissions(dir, PosixFilePermissions.fromString("rwxr-xr-x"));
+    Files.createSymbolicLink(target, dir);
+
+    // The file replaces the link, and does not get the permissions of the link's referent.
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertFalse(Files.isSymbolicLink(target));
+    assertEquals("new\n", Files.readString(target, UTF_8));
+    assertEquals(sourcePermissions, Files.getPosixFilePermissions(target));
+  }
+
+  @Test
+  void test_replaceFile_directoryTarget(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path source = tempDir.resolve("source.txt");
+    Path target = Files.createDirectory(tempDir.resolve("target"));
+    Files.writeString(source, "new\n", UTF_8);
+    Set<PosixFilePermission> sourcePermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(source, sourcePermissions);
+    Files.setPosixFilePermissions(target, PosixFilePermissions.fromString("rwxr-xr-x"));
+
+    // Whether or not the directory is replaced, the file does not get the directory's permissions.
+    try {
+      FilesP.replaceFile(source, target);
+    } catch (IOException e) {
+      // Some file systems refuse to replace a directory by a file.
+    }
+    Path result = Files.exists(source) ? source : target;
+    assertEquals("new\n", Files.readString(result, UTF_8));
+    assertEquals(sourcePermissions, Files.getPosixFilePermissions(result));
   }
 
   @Test

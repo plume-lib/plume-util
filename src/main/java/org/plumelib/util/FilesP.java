@@ -29,12 +29,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -742,9 +745,14 @@ public final class FilesP {
 
   /**
    * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
-   * move is atomic. On a file system that supports POSIX permissions, the result has the POSIX
-   * permissions of the original {@code target}, unless {@code source} is a symbolic link. On other
-   * file systems, the result has the access controls of {@code source}.
+   * move is atomic.
+   *
+   * <p>On a file system that supports POSIX attributes, if the original {@code target} is a regular
+   * file and {@code source} is not a symbolic link, then the result has the owner, group, and POSIX
+   * permissions of the original {@code target}, to the extent that the caller is allowed to set
+   * them. Typically, only a superuser can change a file's owner, and a file's owner can change its
+   * group only to a group that the owner belongs to. Otherwise, the result has the owner, group,
+   * and access controls of {@code source}.
    *
    * <p>A typical use is to write a new version of a file to a temporary file in the same directory
    * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
@@ -761,13 +769,9 @@ public final class FilesP {
    * @throws IOException if there is trouble moving the file
    */
   public static void replaceFile(Path source, Path target) throws IOException {
-    // Setting the permissions of a symbolic link would set the permissions of its referent.
-    if (Files.exists(target) && !Files.isSymbolicLink(source)) {
-      try {
-        Files.setPosixFilePermissions(source, Files.getPosixFilePermissions(target));
-      } catch (UnsupportedOperationException e) {
-        // The file system does not support POSIX permissions.
-      }
+    // Setting the attributes of a symbolic link would set the attributes of its referent.
+    if (!Files.isSymbolicLink(source)) {
+      copyPosixAttributes(target, source);
     }
     try {
       Files.move(
@@ -775,6 +779,50 @@ public final class FilesP {
     } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException e) {
       // With ATOMIC_MOVE, some file systems refuse to replace an existing target.
       Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
+  }
+
+  /**
+   * Gives {@code to} the owner, group, and POSIX permissions of {@code from}, to the extent that
+   * the caller is allowed to set them. Does nothing if {@code from} is not a regular file (for
+   * example, if it does not exist or is a symbolic link) or if a file system does not support POSIX
+   * attributes. Never throws an {@code IOException}.
+   *
+   * @param from the file whose attributes to copy
+   * @param to the file whose attributes to set; is not a symbolic link
+   */
+  private static void copyPosixAttributes(Path from, Path to) {
+    PosixFileAttributes attrs;
+    try {
+      attrs = Files.readAttributes(from, PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+    } catch (IOException | UnsupportedOperationException e) {
+      // `from` does not exist, or its file system does not support POSIX attributes.
+      return;
+    }
+    if (!attrs.isRegularFile()) {
+      return;
+    }
+    PosixFileAttributeView view = Files.getFileAttributeView(to, PosixFileAttributeView.class);
+    if (view == null) {
+      // The file system of `to` does not support POSIX attributes.
+      return;
+    }
+    // Set the owner and group before the permissions, because changing the owner or group can clear
+    // the setuid and setgid bits.
+    try {
+      view.setOwner(attrs.owner());
+    } catch (IOException e) {
+      // Typically, only a superuser can change a file's owner.
+    }
+    try {
+      view.setGroup(attrs.group());
+    } catch (IOException e) {
+      // The caller does not belong to the group, or does not own `to`.
+    }
+    try {
+      view.setPermissions(attrs.permissions());
+    } catch (IOException e) {
+      // The caller does not own `to`, or the file system does not permit the change.
     }
   }
 
