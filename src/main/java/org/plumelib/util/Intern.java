@@ -76,32 +76,22 @@ public final class Intern {
   @SuppressWarnings({"interning"}) // interning implementation
   @Pure
   public static boolean isInterned(@Nullable Object value) {
-    if (value == null) {
+    return switch (value) {
       // nothing to do
-      return true;
-    } else if (value instanceof String s) {
-      return value == s.intern();
-    } else if (value instanceof String[] sa) {
-      return value == intern(sa);
-    } else if (value instanceof Integer i) {
-      return value == intern(i);
-    } else if (value instanceof Long l) {
-      return value == intern(l);
-    } else if (value instanceof int[] ia) {
-      return value == intern(ia);
-    } else if (value instanceof long[] la) {
-      return value == intern(la);
-    } else if (value instanceof Double d) {
-      return value == intern(d);
-    } else if (value instanceof double[] da) {
-      return value == intern(da);
-    } else if (value instanceof Object[] oa) {
-      return value == intern(oa);
-    } else {
+      case null -> true;
+      case String s -> value == s.intern();
+      case String[] sa -> value == intern(sa);
+      case Integer i -> value == intern(i);
+      case Long l -> value == intern(l);
+      case int[] ia -> value == intern(ia);
+      case long[] la -> value == intern(la);
+      case Double d -> value == intern(d);
+      case double[] da -> value == intern(da);
+      case Object[] oa -> value == intern(oa);
       // Nothing to do, because we don't intern other types.
       // System.out.println("What type? " + value.getClass().getName());
-      return true;
-    }
+      default -> true;
+    };
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -325,11 +315,14 @@ public final class Intern {
   private static WeakHasherMap<@Interned Long, WeakReference<@Interned Long>> internedLongs;
 
   /** All the interned Int arrays. */
-  private static WeakHasherMap<int @Interned [], WeakReference<int @Interned []>> internedIntArrays;
+  @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
+  private static WeakHasherMap<int @Interned [], WeakReference<int @Interned []>>
+      internedIntArrays = new WeakHasherMap<>(new IntArrayHasher());
 
   /** All the interned Long arrays. */
+  @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
   private static WeakHasherMap<long @Interned [], WeakReference<long @Interned []>>
-      internedLongArrays;
+      internedLongArrays = new WeakHasherMap<>(new LongArrayHasher());
 
   /** All the interned Doubles. */
   private static WeakHasherMap<@Interned Double, WeakReference<@Interned Double>> internedDoubles;
@@ -341,20 +334,26 @@ public final class Intern {
   private static @Interned Double internedDoubleZero;
 
   /** All the interned Double arrays. */
+  @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
   private static WeakHasherMap<double @Interned [], WeakReference<double @Interned []>>
-      internedDoubleArrays;
+      internedDoubleArrays = new WeakHasherMap<>(new DoubleArrayHasher());
 
   /** All the interned String arrays. */
+  @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
   private static WeakHasherMap<
           @Nullable @Interned String @Interned [],
           WeakReference<@Nullable @Interned String @Interned []>>
-      internedStringArrays;
+      internedStringArrays = new WeakHasherMap<>(new StringArrayHasher());
 
   /** All the interned Object arrays. */
+  @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
   private static WeakHasherMap<
           @Nullable @Interned Object @Interned [],
           WeakReference<@Nullable @Interned Object @Interned []>>
-      internedObjectArrays;
+      internedObjectArrays =
+          new WeakHasherMap<
+              @Nullable @Interned Object @Interned [],
+              WeakReference<@Nullable @Interned Object @Interned []>>(new ObjectArrayHasher());
 
   /** All the interned Int subsequences. */
   private static WeakHasherMap<Subsequence<int @Interned []>, WeakReference<int @Interned []>>
@@ -383,17 +382,9 @@ public final class Intern {
   static {
     internedIntegers = new WeakHasherMap<>(new IntegerHasher());
     internedLongs = new WeakHasherMap<>(new LongHasher());
-    internedIntArrays = new WeakHasherMap<>(new IntArrayHasher());
-    internedLongArrays = new WeakHasherMap<>(new LongArrayHasher());
     internedDoubles = new WeakHasherMap<>(new DoubleHasher());
     internedDoubleNaN = Double.NaN;
     internedDoubleZero = 0.0;
-    internedDoubleArrays = new WeakHasherMap<>(new DoubleArrayHasher());
-    internedStringArrays = new WeakHasherMap<>(new StringArrayHasher());
-    internedObjectArrays =
-        new WeakHasherMap<
-            @Nullable @Interned Object @Interned [],
-            WeakReference<@Nullable @Interned Object @Interned []>>(new ObjectArrayHasher());
     internedIntSubsequence = new WeakHasherMap<>(new SubsequenceHasher<int @Interned []>());
     internedLongSubsequence = new WeakHasherMap<>(new SubsequenceHasher<long @Interned []>());
     internedDoubleSubsequence = new WeakHasherMap<>(new SubsequenceHasher<double @Interned []>());
@@ -931,32 +922,27 @@ public final class Intern {
    */
   @Pure
   public static @Interned @PolyNull Object intern(@PolyNull Object a) {
-    if (a == null) {
-      return null;
-    } else if (a instanceof String s) {
-      return intern(s);
-    } else if (a instanceof String[] sa) {
-      @Interned String[] asArray = (@Interned String[]) sa;
-      return intern(asArray);
-    } else if (a instanceof Integer i) {
-      return intern(i);
-    } else if (a instanceof Long l) {
-      return intern(l);
-    } else if (a instanceof int[] ia) {
-      return intern(ia);
-    } else if (a instanceof long[] la) {
-      return intern(la);
-    } else if (a instanceof Double d) {
-      return intern(d);
-    } else if (a instanceof double[] da) {
-      return intern(da);
-    } else if (a instanceof Object[] oa) {
-      @Interned Object[] asArray = (@Interned Object[]) oa;
-      return intern(asArray);
-    } else {
-      throw new IllegalArgumentException(
-          "Arguments of type " + a.getClass() + " cannot be interned");
-    }
+    return switch (a) {
+      case null -> null;
+      case String s -> intern(s);
+      case String[] sa -> {
+        @Interned String[] asArray = (@Interned String[]) sa;
+        yield intern(asArray);
+      }
+      case Integer i -> intern(i);
+      case Long l -> intern(l);
+      case int[] ia -> intern(ia);
+      case long[] la -> intern(la);
+      case Double d -> intern(d);
+      case double[] da -> intern(da);
+      case Object[] oa -> {
+        @Interned Object[] asArray = (@Interned Object[]) oa;
+        yield intern(asArray);
+      }
+      default ->
+          throw new IllegalArgumentException(
+              "Arguments of type " + a.getClass() + " cannot be interned");
+    };
   }
 
   /**
