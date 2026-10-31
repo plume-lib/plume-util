@@ -1,6 +1,8 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -147,6 +149,35 @@ final class InternTest {
     l = Intern.internedLong("0x1234abcd");
     assertTrue(Intern.isInterned(l));
     assertEquals(0x1234abcd, l.intValue());
+  }
+
+  @Test
+  void testIsInternedHasNoSideEffect() {
+    int[] ia1 = new int[] {20_261_030, 1, 2};
+    assertFalse(Intern.isInterned(ia1));
+    int[] ia2 = new int[] {20_261_030, 1, 2};
+    assertSame(ia2, Intern.intern(ia2));
+    assertTrue(Intern.isInterned(ia2));
+    assertFalse(Intern.isInterned(ia1));
+
+    Integer i1 = Integer.valueOf(20_261_030);
+    assertFalse(Intern.isInterned(i1));
+    Integer i2 = Integer.valueOf(20_261_030);
+    assertSame(i2, Intern.intern(i2));
+    assertFalse(Intern.isInterned(i1));
+
+    Double d1 = Double.valueOf(2026.1030);
+    assertFalse(Intern.isInterned(d1));
+    Double d2 = Double.valueOf(2026.1030);
+    assertSame(d2, Intern.intern(d2));
+    assertTrue(Intern.isInterned(d2));
+    assertFalse(Intern.isInterned(d1));
+  }
+
+  @Test
+  void testIsInternedStringArrayWithNonInternedElement() {
+    String[] sa = new String[] {new String("isInternedStringArray")};
+    assertFalse(Intern.isInterned(sa));
   }
 
   // Tests the method "Object intern(Object)" in Intern.java

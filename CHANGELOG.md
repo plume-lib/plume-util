@@ -15,6 +15,8 @@
   As with `HashMap`, a key's hash code must be consistent with `equals` and
   must not change while the key is in the map.
 - `new ArrayMap()` allocates no storage until the first mapping is added.
+- `Intern.isInterned()` no longer interns its argument (except for a `String`),
+  so it returns false for a value that is equal to no interned value.
 
 ## 2.0.0 (2026-08-05)
 
