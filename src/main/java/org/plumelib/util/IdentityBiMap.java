@@ -56,6 +56,15 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   /** The inverse view of this map. Its {@code forward} is this map's {@code backward}. */
   private final IdentityBiMap<V, K> inverse;
 
+  /** The view returned by {@link #keySet}, or null if it has not yet been created. */
+  private transient @Nullable Set<K> keySetView = null;
+
+  /** The view returned by {@link #values}, or null if it has not yet been created. */
+  private transient @Nullable Set<V> valuesView = null;
+
+  /** The view returned by {@link #entrySet}, or null if it has not yet been created. */
+  private transient @Nullable Set<Map.Entry<K, V>> entrySetView = null;
+
   /** Creates a new, empty IdentityBiMap. */
   public IdentityBiMap() {
     this(new IdentityHashMap<>(), new IdentityHashMap<>());
@@ -74,7 +83,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
       forward.putAll(other.forward);
       backward.putAll(other.backward);
     } else {
-      putAll(m);
+      // `m` cannot read the data of this new map, so there is no need to copy `m`.
+      putEach(m);
     }
   }
 
@@ -240,6 +250,21 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   }
 
   /**
+   * Removes the mapping for the given key, if the key is in this map.
+   *
+   * @param key a key
+   * @return true if the mapping was removed
+   */
+  @SideEffectsOnly("this")
+  private boolean removeKeyIfPresent(@Nullable Object key) {
+    if (!forward.containsKey(key)) {
+      return false;
+    }
+    removePresentKey(key);
+    return true;
+  }
+
+  /**
    * Removes the mapping for the given key, which must be in this map.
    *
    * @param key a key in this map
@@ -291,7 +316,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   /**
    * Copies all of the mappings from the given map to this map.
    *
-   * <p>If an exception is thrown, some of the mappings may already have been added to this map.
+   * <p>If an exception is thrown, some of the mappings might already have been added to this map.
    *
    * @param m the mappings to store in this map
    * @throws IllegalArgumentException if a value of {@code m} is already associated with a different
@@ -299,15 +324,29 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    */
   @Override
   @SuppressWarnings({
-    "allcheckers:purity.unknown.sideeffectsonly", // allocates a copy of the inverse
-    "IdentityHashMapUsage", // the copy of the inverse compares by identity
+    "allcheckers:purity.unknown.sideeffectsonly", // allocates a copy of the argument
+    "IdentityHashMapUsage", // the copy of the argument compares by identity
   })
   public void putAll(Map<? extends K, ? extends V> m) {
-    if (m == inverse) {
-      // Iterating over the inverse while modifying this map would throw
-      // ConcurrentModificationException.
+    // If `m` reads this map's data, as `inverse` and a wrapper around `inverse` do, then iterating
+    // over `m` while modifying this map would throw ConcurrentModificationException.  An
+    // IdentityBiMap other than `inverse` does not read this map's data.  (`putAll(this)` makes
+    // no structural modification.)
+    if (!(m instanceof IdentityBiMap<?, ?>) || m == inverse) {
       m = new IdentityHashMap<>(m);
     }
+    putEach(m);
+  }
+
+  /**
+   * Puts each mapping of the given map into this map. The given map must not read this map's data.
+   *
+   * @param m the mappings to store in this map
+   * @throws IllegalArgumentException if a value of {@code m} is already associated with a different
+   *     key, or if two keys of {@code m} map to the same value
+   */
+  @SideEffectsOnly("this")
+  private void putEach(Map<? extends K, ? extends V> m) {
     for (Map.Entry<? extends K, ? extends V> e : m.entrySet()) {
       put(e.getKey(), e.getValue());
     }
@@ -315,7 +354,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
   /**
    * Replaces each value with the result of applying the given function to its mapping. The new
-   * values must be distinct, but they may permute the old values.
+   * values must be distinct, but they can be a permutation of the old values.
    *
    * <p>If an exception is thrown, this map is unchanged, unless {@code function} modified this map.
    *
@@ -327,7 +366,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
     // Compute all the new values before changing either map, so that a failure leaves this map
-    // unchanged and so that the new values may permute the old values.
+    // unchanged and so that the new values can be a permutation of the old values.
     IdentityHashMap<V, K> newBackward = new IdentityHashMap<>(forward.size());
     for (Map.Entry<K, V> e : forward.entrySet()) {
       K key = e.getKey();
@@ -377,8 +416,14 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    * @return a view of the keys of this map
    */
   @Override
+  @SuppressWarnings("allcheckers:purity.assign.field") // caches the view
   public Set<K> keySet() {
-    return new KeySet();
+    Set<K> result = keySetView;
+    if (result == null) {
+      result = new KeySet();
+      keySetView = result;
+    }
+    return result;
   }
 
   /**
@@ -389,8 +434,14 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    * @return a view of the values of this map
    */
   @Override
+  @SuppressWarnings("allcheckers:purity.assign.field") // caches the view
   public Set<V> values() {
-    return new ValueSet();
+    Set<V> result = valuesView;
+    if (result == null) {
+      result = new ValueSet();
+      valuesView = result;
+    }
+    return result;
   }
 
   /**
@@ -403,8 +454,14 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    * @return a view of the mappings of this map
    */
   @Override
+  @SuppressWarnings("allcheckers:purity.assign.field") // caches the view
   public Set<Map.Entry<K, V>> entrySet() {
-    return new EntrySet();
+    Set<Map.Entry<K, V>> result = entrySetView;
+    if (result == null) {
+      result = new EntrySet();
+      entrySetView = result;
+    }
+    return result;
   }
 
   /**
@@ -419,10 +476,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    * AbstractMap.equals}.
    *
    * <p>Like {@link IdentityHashMap}, this class violates the general contract of {@link
-   * Object#hashCode}: an {@code IdentityBiMap} and a map that is not an {@code IdentityBiMap} may
+   * Object#hashCode}: an {@code IdentityBiMap} and a map that is not an {@code IdentityBiMap} can
    * be equal but have different hash codes, because {@link #hashCode} uses identity hash codes.
    * Also like {@link IdentityHashMap}, this method is not transitive: two {@code IdentityBiMap}s
-   * whose values are equal but not identical are unequal to each other, but each may be equal to
+   * whose values are equal but not identical are unequal to each other, but each can be equal to
    * the same {@link java.util.HashMap}.
    *
    * @param o the object to compare with this map
@@ -566,7 +623,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public void remove() {
-      // The value may have changed since `next()` returned, so look it up.  If this call is
+      // The value might have changed since `next()` returned, so look it up.  If this call is
       // illegal, `itor.remove()` throws IllegalStateException before `backward` is modified.
       V value = forward.get(lastKey);
       itor.remove();
@@ -642,7 +699,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     // AbstractSet.removeAll() uses either this.remove() or c.contains(), depending on which
     // collection is larger; the results differ when c does not compare by identity.
     @Override
-    @SuppressWarnings("nullness:methodref.param") // as in AbstractCollection, may pass null to c
+    @SuppressWarnings("nullness:methodref.param") // as in AbstractCollection, might pass null to c
     public boolean removeAll(Collection<?> c) {
       return removeIf(c::contains);
     }
@@ -662,11 +719,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean remove(@Nullable Object o) {
-      if (!forward.containsKey(o)) {
-        return false;
-      }
-      removePresentKey(o);
-      return true;
+      return removeKeyIfPresent(o);
     }
 
     @Override
@@ -699,12 +752,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean remove(@Nullable Object o) {
-      K key = backward.get(o);
-      if (key == null && !backward.containsKey(o)) {
-        return false;
-      }
-      removePresentKey(key);
-      return true;
+      return inverse.removeKeyIfPresent(o);
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -841,6 +842,23 @@ final class IdentityBiMapTest {
     m.putAll(m);
     assertEquals(2, m.size());
     checkConsistent(m);
+
+    IdentityBiMap<String, String> m2 = new IdentityBiMap<>();
+    m2.put("a", "b");
+    m2.put("c", "d");
+    m2.putAll(Collections.unmodifiableMap(m2.inverse()));
+    assertEquals(4, m2.size());
+    assertSame("a", m2.get("b"));
+    assertSame("c", m2.get("d"));
+    checkConsistent(m2);
+  }
+
+  @Test
+  void viewsAreCached() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    assertSame(m.keySet(), m.keySet());
+    assertSame(m.values(), m.values());
+    assertSame(m.entrySet(), m.entrySet());
   }
 
   @Test
