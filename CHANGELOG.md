@@ -16,7 +16,7 @@
   must not change while the key is in the map.
 - `new ArrayMap()` allocates no storage until the first mapping is added.
 - New method `FilesP.replaceFile()` moves a file over another, atomically if
-  possible, keeping the replaced file's permissions.
+  possible, keeping the replaced file's POSIX permissions.
 
 ## 2.0.0 (2026-08-05)
 

@@ -742,12 +742,16 @@ public final class FilesP {
 
   /**
    * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
-   * move is atomic, and the result has the permissions of the original {@code target}.
+   * move is atomic. On a file system that supports POSIX permissions, the result has the POSIX
+   * permissions of the original {@code target}, unless {@code source} is a symbolic link. On other
+   * file systems, the result has the access controls of {@code source}.
    *
    * <p>A typical use is to write a new version of a file to a temporary file in the same directory
    * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
    * method. Then a failure while writing leaves the original file unchanged, and no reader sees a
-   * partially-written file. An atomic move is generally possible only within one file system.
+   * partially-written file. An atomic move is generally possible only within one file system. If
+   * the move is not atomic, a failure during the move can leave {@code target} absent or
+   * incomplete.
    *
    * <p>If {@code target} is a symbolic link, the link itself is replaced. To replace the file that
    * the link refers to instead, pass {@code target.toRealPath()}.
@@ -757,7 +761,8 @@ public final class FilesP {
    * @throws IOException if there is trouble moving the file
    */
   public static void replaceFile(Path source, Path target) throws IOException {
-    if (Files.exists(target)) {
+    // Setting the permissions of a symbolic link would set the permissions of its referent.
+    if (Files.exists(target) && !Files.isSymbolicLink(source)) {
       try {
         Files.setPosixFilePermissions(source, Files.getPosixFilePermissions(target));
       } catch (UnsupportedOperationException e) {
@@ -767,7 +772,8 @@ public final class FilesP {
     try {
       Files.move(
           source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-    } catch (AtomicMoveNotSupportedException e) {
+    } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException e) {
+      // With ATOMIC_MOVE, some file systems refuse to replace an existing target.
       Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
     }
   }
