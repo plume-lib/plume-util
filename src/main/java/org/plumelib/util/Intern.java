@@ -308,91 +308,79 @@ public final class Intern {
   // nothing of the interning types.
 
   /** All the interned Integers. */
-  private static WeakHasherMap<@Interned Integer, WeakReference<@Interned Integer>>
-      internedIntegers;
+  private static final WeakHasherMap<@Interned Integer, WeakReference<@Interned Integer>>
+      internedIntegers = new WeakHasherMap<>(new IntegerHasher());
 
   /** All the interned Longs. */
-  private static WeakHasherMap<@Interned Long, WeakReference<@Interned Long>> internedLongs;
+  private static final WeakHasherMap<@Interned Long, WeakReference<@Interned Long>> internedLongs =
+      new WeakHasherMap<>(new LongHasher());
 
   /** All the interned Int arrays. */
   @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
-  private static WeakHasherMap<int @Interned [], WeakReference<int @Interned []>>
+  private static final WeakHasherMap<int @Interned [], WeakReference<int @Interned []>>
       internedIntArrays = new WeakHasherMap<>(new IntArrayHasher());
 
   /** All the interned Long arrays. */
   @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
-  private static WeakHasherMap<long @Interned [], WeakReference<long @Interned []>>
+  private static final WeakHasherMap<long @Interned [], WeakReference<long @Interned []>>
       internedLongArrays = new WeakHasherMap<>(new LongArrayHasher());
 
   /** All the interned Doubles. */
-  private static WeakHasherMap<@Interned Double, WeakReference<@Interned Double>> internedDoubles;
+  private static final WeakHasherMap<@Interned Double, WeakReference<@Interned Double>>
+      internedDoubles = new WeakHasherMap<>(new DoubleHasher());
 
   /** The interned NaN. */
-  private static @Interned Double internedDoubleNaN;
+  private static final @Interned Double internedDoubleNaN = Double.NaN;
 
   /** The interned Double zero. */
-  private static @Interned Double internedDoubleZero;
+  private static final @Interned Double internedDoubleZero = 0.0;
 
   /** All the interned Double arrays. */
   @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
-  private static WeakHasherMap<double @Interned [], WeakReference<double @Interned []>>
+  private static final WeakHasherMap<double @Interned [], WeakReference<double @Interned []>>
       internedDoubleArrays = new WeakHasherMap<>(new DoubleArrayHasher());
 
   /** All the interned String arrays. */
   @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
-  private static WeakHasherMap<
+  private static final WeakHasherMap<
           @Nullable @Interned String @Interned [],
           WeakReference<@Nullable @Interned String @Interned []>>
       internedStringArrays = new WeakHasherMap<>(new StringArrayHasher());
 
   /** All the interned Object arrays. */
   @SuppressWarnings("UndefinedEquals") // WeakHasherMap compares keys using a Hasher, not equals()
-  private static WeakHasherMap<
+  private static final WeakHasherMap<
           @Nullable @Interned Object @Interned [],
           WeakReference<@Nullable @Interned Object @Interned []>>
-      internedObjectArrays =
-          new WeakHasherMap<
-              @Nullable @Interned Object @Interned [],
-              WeakReference<@Nullable @Interned Object @Interned []>>(new ObjectArrayHasher());
+      internedObjectArrays = new WeakHasherMap<>(new ObjectArrayHasher());
 
   /** All the interned Int subsequences. */
-  private static WeakHasherMap<Subsequence<int @Interned []>, WeakReference<int @Interned []>>
-      internedIntSubsequence;
+  private static final WeakHasherMap<Subsequence<int @Interned []>, WeakReference<int @Interned []>>
+      internedIntSubsequence = new WeakHasherMap<>(new SubsequenceHasher<int @Interned []>());
 
   /** All the interned Long subsequences. */
-  private static WeakHasherMap<Subsequence<long @Interned []>, WeakReference<long @Interned []>>
-      internedLongSubsequence;
+  private static final WeakHasherMap<
+          Subsequence<long @Interned []>, WeakReference<long @Interned []>>
+      internedLongSubsequence = new WeakHasherMap<>(new SubsequenceHasher<long @Interned []>());
 
   /** All the interned Double subsequences. */
-  private static WeakHasherMap<Subsequence<double @Interned []>, WeakReference<double @Interned []>>
-      internedDoubleSubsequence;
+  private static final WeakHasherMap<
+          Subsequence<double @Interned []>, WeakReference<double @Interned []>>
+      internedDoubleSubsequence = new WeakHasherMap<>(new SubsequenceHasher<double @Interned []>());
 
   /** All the interned Object subsequences. */
-  private static WeakHasherMap<
+  private static final WeakHasherMap<
           Subsequence<@Nullable @Interned Object @Interned []>,
           WeakReference<@Nullable @Interned Object @Interned []>>
-      internedObjectSubsequence;
+      internedObjectSubsequence =
+          new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned Object @Interned []>());
 
   /** All the interned String subsequences. */
-  private static WeakHasherMap<
+  private static final WeakHasherMap<
           Subsequence<@Nullable @Interned String @Interned []>,
           WeakReference<@Nullable @Interned String @Interned []>>
-      internedStringSubsequence;
-
-  static {
-    internedIntegers = new WeakHasherMap<>(new IntegerHasher());
-    internedLongs = new WeakHasherMap<>(new LongHasher());
-    internedDoubles = new WeakHasherMap<>(new DoubleHasher());
-    internedDoubleNaN = Double.NaN;
-    internedDoubleZero = 0.0;
-    internedIntSubsequence = new WeakHasherMap<>(new SubsequenceHasher<int @Interned []>());
-    internedLongSubsequence = new WeakHasherMap<>(new SubsequenceHasher<long @Interned []>());
-    internedDoubleSubsequence = new WeakHasherMap<>(new SubsequenceHasher<double @Interned []>());
-    internedObjectSubsequence =
-        new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned Object @Interned []>());
-    internedStringSubsequence =
-        new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned String @Interned []>());
-  }
+      internedStringSubsequence =
+          new WeakHasherMap<>(new SubsequenceHasher<@Nullable @Interned String @Interned []>());
 
   // For testing only
 

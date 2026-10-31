@@ -2341,12 +2341,13 @@ public final class ArraysP {
 
   /**
    * Returns a string representation of the contents of the specified array. The argument must be an
-   * array or null. This just dispatches one of the 9 overloaded versions of {@code
-   * java.util.Arrays.toString()}.
+   * array, a {@link List}, or null. For an array, this just dispatches one of the 9 overloaded
+   * versions of {@code java.util.Arrays.toString()}. For a list, this calls the list's {@code
+   * toString()} method.
    *
-   * @param a an array
-   * @return a string representation of the array
-   * @throws IllegalArgumentException if a is not an array
+   * @param a an array or list
+   * @return a string representation of the array or list
+   * @throws IllegalArgumentException if a is neither an array nor a list
    */
   @SideEffectFree
   public static String toString(@Nullable Object a) {
@@ -2361,11 +2362,10 @@ public final class ArraysP {
       case long[] la -> Arrays.toString(la);
       case short[] sa -> Arrays.toString(sa);
       case Object[] oa -> Arrays.toString(oa);
-      // Handles lists, but this is not a documented feature
       case List<?> l -> l.toString();
       default ->
           throw new IllegalArgumentException(
-              "Argument is not an array, but has class " + a.getClass().getName());
+              "Argument is neither an array nor a list, but has class " + a.getClass().getName());
     };
   }
 
