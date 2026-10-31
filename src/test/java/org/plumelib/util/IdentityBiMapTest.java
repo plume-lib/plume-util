@@ -526,6 +526,34 @@ final class IdentityBiMapTest {
   }
 
   @Test
+  void replaceAllDetectsModificationByFunction() {
+    IdentityBiMap<String, String> m = new IdentityBiMap<>();
+    m.put("a", "x");
+    assertThrows(
+        ConcurrentModificationException.class,
+        () ->
+            m.replaceAll(
+                (k, v) -> {
+                  m.put("b", "y");
+                  return "z";
+                }));
+    checkConsistent(m);
+
+    IdentityBiMap<String, String> m2 = new IdentityBiMap<>();
+    m2.put("a", "x");
+    assertThrows(
+        ConcurrentModificationException.class,
+        () ->
+            m2.replaceAll(
+                (k, v) -> {
+                  m2.remove("a");
+                  m2.put("b", "y");
+                  return "z";
+                }));
+    checkConsistent(m2);
+  }
+
+  @Test
   @SuppressWarnings("IdentityHashMapUsage") // comparing with an IdentityHashMap is the point
   void equalsIsSymmetricWithIdentityHashMap() {
     String k = "k";

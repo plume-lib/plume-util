@@ -3,6 +3,7 @@ package org.plumelib.util;
 import java.io.Serializable;
 import java.util.AbstractSet;
 import java.util.Collection;
+import java.util.ConcurrentModificationException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -320,6 +321,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    *
    * @param function the function that computes each new value
    * @throws IllegalArgumentException if the function produces the same value for two keys
+   * @throws ConcurrentModificationException if {@code function} modifies this map; detection is
+   *     guaranteed only for modifications that change the set of keys
    */
   @Override
   public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
@@ -341,6 +344,13 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
                 + ")");
       }
       newBackward.put(newValue, key);
+    }
+    // The iterator over `forward` does not detect a modification made by the last call to
+    // `function`.  The keys collected in `newBackward` are distinct, so this check succeeds iff
+    // they are exactly the keys of `forward`.  If so, the write phase leaves the maps consistent.
+    if (newBackward.size() != forward.size()
+        || !forward.keySet().containsAll(newBackward.values())) {
+      throw new ConcurrentModificationException();
     }
     // Every key is already in `forward`, so these calls are not structural modifications.
     for (Map.Entry<V, K> e : newBackward.entrySet()) {
