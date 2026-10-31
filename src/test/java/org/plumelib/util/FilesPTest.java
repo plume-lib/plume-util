@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -28,6 +30,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.Positive;
@@ -132,6 +135,28 @@ final class FilesPTest {
     // The replaced file keeps its permissions.
     FilesP.replaceFile(source, target);
     assertFalse(Files.exists(source));
+    assertEquals("new\n", Files.readString(target, UTF_8));
+    assertEquals(targetPermissions, Files.getPosixFilePermissions(target));
+  }
+
+  @Test
+  void test_replaceFile_permissionsFromNonPosixSource(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(target, "old\n", UTF_8);
+    Set<PosixFilePermission> targetPermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(target, targetPermissions);
+
+    // By default, a ZIP file system does not support POSIX attributes.
+    try (FileSystem zipFs =
+        FileSystems.newFileSystem(tempDir.resolve("archive.zip"), Map.of("create", "true"))) {
+      Path source = zipFs.getPath("source.txt");
+      Files.writeString(source, "new\n", UTF_8);
+
+      // The replaced file keeps its permissions.
+      FilesP.replaceFile(source, target);
+      assertFalse(Files.exists(source));
+    }
     assertEquals("new\n", Files.readString(target, UTF_8));
     assertEquals(targetPermissions, Files.getPosixFilePermissions(target));
   }

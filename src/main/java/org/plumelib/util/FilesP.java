@@ -747,14 +747,16 @@ public final class FilesP {
    * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
    * move is atomic.
    *
-   * <p>If the file systems of both {@code source} and {@code target} support POSIX attributes, the
-   * original {@code target} is a regular file, and {@code source} is not a symbolic link, then the
-   * result has the owner, group, and POSIX permissions of the original {@code target}, to the
-   * extent that the caller is allowed to set them. Typically, only a superuser can change a file's
-   * owner, and a file's owner can change its group only to a group that the owner belongs to. If
-   * any of these conditions does not hold, this method does not preserve the attributes of the
-   * original {@code target}. The result usually has the owner, group, and access controls of {@code
-   * source}, but a move between file systems might not preserve them.
+   * <p>If the file system of {@code target} supports POSIX attributes, the original {@code target}
+   * is a regular file, and {@code source} is not a symbolic link, then the result has the owner,
+   * group, and POSIX permissions of the original {@code target}, to the extent that the caller is
+   * allowed to set them. Typically, only a superuser can change a file's owner, and a file's owner
+   * can change its group only to a group that the owner belongs to. If the file system of {@code
+   * source} does not support POSIX attributes, this method sets them after the move, so until this
+   * method returns, {@code target} might have other attributes, such as default permissions. If any
+   * of these conditions does not hold, this method does not preserve the attributes of the original
+   * {@code target}. The result usually has the owner, group, and access controls of {@code source},
+   * but a move between file systems might not preserve them.
    *
    * <p>A typical use is to write a new version of a file to a temporary file in the same directory
    * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
@@ -773,9 +775,9 @@ public final class FilesP {
    */
   public static void replaceFile(Path source, Path target) throws IOException {
     // Setting the attributes of a symbolic link would set the attributes of its referent.
-    if (!Files.isSymbolicLink(source)) {
-      copyPosixAttributes(target, source);
-    }
+    PosixFileAttributes targetAttrs =
+        Files.isSymbolicLink(source) ? null : readRegularFilePosixAttributes(target);
+    boolean sourceAttrsSet = targetAttrs != null && setPosixAttributes(source, targetAttrs);
     try {
       Files.move(
           source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
@@ -783,32 +785,44 @@ public final class FilesP {
       // With ATOMIC_MOVE, some file systems refuse to replace an existing target.
       Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
     }
+    if (targetAttrs != null && !sourceAttrsSet) {
+      // The file system of `source` does not support POSIX attributes, but that of `target` does.
+      setPosixAttributes(target, targetAttrs);
+    }
   }
 
   /**
-   * Gives {@code to} the owner, group, and POSIX permissions of {@code from}, to the extent that
-   * the caller is allowed to set them. Does nothing if {@code from} is not a regular file (for
-   * example, if it does not exist or is a symbolic link) or if a file system does not support POSIX
-   * attributes. Never throws an {@code IOException}.
+   * Returns the POSIX attributes of the given file, or null if it is not a regular file (for
+   * example, if it does not exist or is a symbolic link) or if its file system does not support
+   * POSIX attributes.
    *
-   * @param from the file whose attributes to copy
-   * @param to the file whose attributes to set; is not a symbolic link
+   * @param file a file
+   * @return the POSIX attributes of {@code file}, or null
    */
-  private static void copyPosixAttributes(Path from, Path to) {
+  private static @Nullable PosixFileAttributes readRegularFilePosixAttributes(Path file) {
     PosixFileAttributes attrs;
     try {
-      attrs = Files.readAttributes(from, PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+      attrs = Files.readAttributes(file, PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
     } catch (IOException | UnsupportedOperationException e) {
-      // `from` does not exist, or its file system does not support POSIX attributes.
-      return;
+      // `file` does not exist, or its file system does not support POSIX attributes.
+      return null;
     }
-    if (!attrs.isRegularFile()) {
-      return;
-    }
-    PosixFileAttributeView view = Files.getFileAttributeView(to, PosixFileAttributeView.class);
+    return attrs.isRegularFile() ? attrs : null;
+  }
+
+  /**
+   * Gives {@code file} the owner, group, and POSIX permissions in {@code attrs}, to the extent that
+   * the caller is allowed to set them. Never throws an {@code IOException}.
+   *
+   * @param file the file whose attributes to set; is not a symbolic link
+   * @param attrs the attributes to give {@code file}
+   * @return false if the file system of {@code file} does not support POSIX attributes, true
+   *     otherwise (even if setting some attributes failed)
+   */
+  private static boolean setPosixAttributes(Path file, PosixFileAttributes attrs) {
+    PosixFileAttributeView view = Files.getFileAttributeView(file, PosixFileAttributeView.class);
     if (view == null) {
-      // The file system of `to` does not support POSIX attributes.
-      return;
+      return false;
     }
     // Set the owner and group before the permissions, because changing the owner or group can clear
     // the setuid and setgid bits.
@@ -820,13 +834,14 @@ public final class FilesP {
     try {
       view.setGroup(attrs.group());
     } catch (IOException e) {
-      // The caller does not belong to the group, or does not own `to`.
+      // The caller does not belong to the group, or does not own `file`.
     }
     try {
       view.setPermissions(attrs.permissions());
     } catch (IOException e) {
-      // The caller does not own `to`, or the file system does not permit the change.
+      // The caller does not own `file`, or the file system does not permit the change.
     }
+    return true;
   }
 
   //
