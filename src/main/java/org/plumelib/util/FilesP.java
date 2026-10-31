@@ -747,18 +747,21 @@ public final class FilesP {
    * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
    * move is atomic.
    *
-   * <p>On a file system that supports POSIX attributes, if the original {@code target} is a regular
-   * file and {@code source} is not a symbolic link, then the result has the owner, group, and POSIX
-   * permissions of the original {@code target}, to the extent that the caller is allowed to set
-   * them. Typically, only a superuser can change a file's owner, and a file's owner can change its
-   * group only to a group that the owner belongs to. Otherwise, the result has the owner, group,
-   * and access controls of {@code source}.
+   * <p>If the file systems of both {@code source} and {@code target} support POSIX attributes, the
+   * original {@code target} is a regular file, and {@code source} is not a symbolic link, then the
+   * result has the owner, group, and POSIX permissions of the original {@code target}, to the
+   * extent that the caller is allowed to set them. Typically, only a superuser can change a file's
+   * owner, and a file's owner can change its group only to a group that the owner belongs to. If
+   * any of these conditions does not hold, this method does not preserve the attributes of the
+   * original {@code target}. The result usually has the owner, group, and access controls of {@code
+   * source}, but a move between file systems might not preserve them.
    *
    * <p>A typical use is to write a new version of a file to a temporary file in the same directory
    * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
-   * method. Then a failure while writing leaves the original file unchanged, and no reader sees a
-   * partially-written file. An atomic move is generally possible only within one file system. If
-   * the move is not atomic, a failure during the move can leave {@code target} absent or
+   * method. Then a failure while writing leaves the original file unchanged, and, if the move is
+   * atomic, no reader sees a partially-written file. An atomic move is generally possible only
+   * within one file system. If the move is not atomic, a reader might see {@code target} absent or
+   * incomplete during the move, and a failure during the move can leave {@code target} absent or
    * incomplete.
    *
    * <p>If {@code target} is a symbolic link, the link itself is replaced. To replace the file that
