@@ -69,6 +69,12 @@ public final class Intern {
 
   /**
    * Returns true if the argument is interned (is canonical among all objects equal to itself).
+   * Unlike {@code intern}, this method does not add its argument to the intern tables, so it
+   * returns false for a value that is equal to no interned value.
+   *
+   * <p>The exception is a {@code String}: this method calls {@link String#intern()}, which adds the
+   * string to the JVM's string pool if no equal string is there. Therefore, this method returns
+   * true the first time it is called on a string.
    *
    * @param value the value to test for interning
    * @return true iff value is interned
@@ -80,18 +86,45 @@ public final class Intern {
       // nothing to do
       case null -> true;
       case String s -> value == s.intern();
-      case String[] sa -> value == intern(sa);
-      case Integer i -> value == intern(i);
-      case Long l -> value == intern(l);
-      case int[] ia -> value == intern(ia);
-      case long[] la -> value == intern(la);
-      case Double d -> value == intern(d);
-      case double[] da -> value == intern(da);
-      case Object[] oa -> value == intern(oa);
+      case String[] sa -> isCanonical(internedStringArrays, sa);
+      case Integer i -> isCanonical(internedIntegers, i);
+      case Long l -> isCanonical(internedLongs, l);
+      case int[] ia -> isCanonical(internedIntArrays, ia);
+      case long[] la -> isCanonical(internedLongArrays, la);
+      case Double d -> {
+        if (d.isNaN()) {
+          yield value == internedDoubleNaN;
+        } else if (d == 0) { // catches both positive and negative zero
+          yield value == internedDoubleZero;
+        } else {
+          yield isCanonical(internedDoubles, d);
+        }
+      }
+      case double[] da -> isCanonical(internedDoubleArrays, da);
+      case Object[] oa -> isCanonical(internedObjectArrays, oa);
       // Nothing to do, because we don't intern other types.
       // System.out.println("What type? " + value.getClass().getName());
       default -> true;
     };
+  }
+
+  /**
+   * Returns true if {@code value} is the canonical representative, in the given intern table, of
+   * the objects equal to it. Does not modify the table.
+   *
+   * @param <T> the type of the table's keys
+   * @param table an intern table
+   * @param value the value to look up
+   * @return true iff {@code value} is the canonical representative in {@code table}
+   */
+  @SuppressWarnings({
+    "interning", // interning implementation
+    "allcheckers:purity" // WeakReference.get() is nondeterministic only if the GC clears it
+  })
+  @Pure
+  private static <T> boolean isCanonical(WeakHasherMap<T, WeakReference<T>> table, Object value) {
+    WeakReference<T> lookup = table.get(value);
+    return lookup != null && lookup.get() == value;
   }
 
   // //////////////////////////////////////////////////////////////////////
