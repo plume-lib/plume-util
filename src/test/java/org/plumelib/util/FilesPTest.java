@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,10 +21,14 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -93,6 +98,104 @@ final class FilesPTest {
       bw.write("more\n");
     }
     assertEquals("short\nmore\n", Files.readString(file, UTF_8));
+  }
+
+  @Test
+  void test_replaceFile(@TempDir Path tempDir) throws IOException {
+    // Replacing a nonexistent file creates it.
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(source, "first\n", UTF_8);
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertEquals("first\n", Files.readString(target, UTF_8));
+
+    // Replacing an existing file overwrites it.
+    Files.writeString(source, "second\n", UTF_8);
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertEquals("second\n", Files.readString(target, UTF_8));
+  }
+
+  @Test
+  void test_replaceFile_permissions(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(source, "new\n", UTF_8);
+    Files.writeString(target, "old\n", UTF_8);
+    Set<PosixFilePermission> sourcePermissions = PosixFilePermissions.fromString("rw-------");
+    Set<PosixFilePermission> targetPermissions = PosixFilePermissions.fromString("rw-r-----");
+    Files.setPosixFilePermissions(source, sourcePermissions);
+    Files.setPosixFilePermissions(target, targetPermissions);
+
+    // The replaced file keeps its permissions.
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertEquals("new\n", Files.readString(target, UTF_8));
+    assertEquals(targetPermissions, Files.getPosixFilePermissions(target));
+  }
+
+  @Test
+  void test_replaceFile_symlinkSource(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path referent = tempDir.resolve("referent.txt");
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target.txt");
+    Files.writeString(referent, "referent\n", UTF_8);
+    Files.writeString(target, "old\n", UTF_8);
+    Set<PosixFilePermission> referentPermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(referent, referentPermissions);
+    Files.setPosixFilePermissions(target, PosixFilePermissions.fromString("rw-r--r--"));
+    Files.createSymbolicLink(source, referent);
+
+    // The link replaces the target, and the link's referent keeps its permissions.
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source, LinkOption.NOFOLLOW_LINKS));
+    assertTrue(Files.isSymbolicLink(target));
+    assertEquals(referent, Files.readSymbolicLink(target));
+    assertEquals(referentPermissions, Files.getPosixFilePermissions(referent));
+  }
+
+  @Test
+  void test_replaceFile_symlinkTarget(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path dir = Files.createDirectory(tempDir.resolve("dir"));
+    Path source = tempDir.resolve("source.txt");
+    Path target = tempDir.resolve("target");
+    Files.writeString(source, "new\n", UTF_8);
+    Set<PosixFilePermission> sourcePermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(source, sourcePermissions);
+    Files.setPosixFilePermissions(dir, PosixFilePermissions.fromString("rwxr-xr-x"));
+    Files.createSymbolicLink(target, dir);
+
+    // The file replaces the link, and does not get the permissions of the link's referent.
+    FilesP.replaceFile(source, target);
+    assertFalse(Files.exists(source));
+    assertFalse(Files.isSymbolicLink(target));
+    assertEquals("new\n", Files.readString(target, UTF_8));
+    assertEquals(sourcePermissions, Files.getPosixFilePermissions(target));
+  }
+
+  @Test
+  void test_replaceFile_directoryTarget(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path source = tempDir.resolve("source.txt");
+    Path target = Files.createDirectory(tempDir.resolve("target"));
+    Files.writeString(source, "new\n", UTF_8);
+    Set<PosixFilePermission> sourcePermissions = PosixFilePermissions.fromString("rw-------");
+    Files.setPosixFilePermissions(source, sourcePermissions);
+    Files.setPosixFilePermissions(target, PosixFilePermissions.fromString("rwxr-xr-x"));
+
+    // Whether or not the directory is replaced, the file does not get the directory's permissions.
+    try {
+      FilesP.replaceFile(source, target);
+    } catch (IOException e) {
+      // Some file systems refuse to replace a directory by a file.
+    }
+    Path result = Files.exists(source) ? source : target;
+    assertEquals("new\n", Files.readString(result, UTF_8));
+    assertEquals(sourcePermissions, Files.getPosixFilePermissions(result));
   }
 
   @Test
