@@ -2,9 +2,9 @@
 
 checker-framework = "4.3.1"
 
-google-java-format = "1.36.1"
+google-java-format = "2.0.0"
 
-jacoco = "0.8.15"
+jacoco = "0.8.16"
 
 jmh = "1.37"
 
@@ -12,7 +12,7 @@ junit-jupiter = "6.1.3"
 
 ktfmt = "0.64"
 
-pmd = "7.28.0"
+pmd = "7.29.0"
 
 [libraries]
 
@@ -24,7 +24,7 @@ pmd = "7.28.0"
 # `checkerFramework.version`.
 checker-framework = { module = "org.checkerframework:checker", version.ref = "checker-framework" }
 
-error-prone-core = { module = "com.google.errorprone:error_prone_core", version = "2.50.0" }
+error-prone-core = { module = "com.google.errorprone:error_prone_core", version = "2.51.0" }
 
 # Version only:  Spotless resolves google-java-format itself.
 google-java-format = { module = "com.google.googlejavaformat:google-java-format", version.ref = "google-java-format" }
@@ -60,6 +60,6 @@ com-gradleup-shadow = { id = "com.gradleup.shadow", version = "9.6.1" }
 
 com-vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.37.0" }
 
-net-ltgt-errorprone = { id = "net.ltgt.errorprone", version = "5.1.1" }
+net-ltgt-errorprone = { id = "net.ltgt.errorprone", version = "5.2.0" }
 
 org-checkerframework = { id = "org.checkerframework", version = "1.0.2" }

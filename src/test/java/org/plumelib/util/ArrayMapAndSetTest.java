@@ -285,11 +285,10 @@ final class ArrayMapAndSetTest {
     assertThrows(
         ConcurrentModificationException.class,
         () ->
-            am.forEach(
-                (k, v) -> {
-                  seen.add(k);
-                  am.remove("c");
-                }));
+            am.forEach((k, v) -> {
+              seen.add(k);
+              am.remove("c");
+            }));
     assertEquals(List.of("a"), seen);
   }
 
@@ -327,11 +326,10 @@ final class ArrayMapAndSetTest {
     assertThrows(
         ConcurrentModificationException.class,
         () ->
-            am.replaceAll(
-                (k, v) -> {
-                  am.remove("c");
-                  return v + v;
-                }));
+            am.replaceAll((k, v) -> {
+              am.remove("c");
+              return v + v;
+            }));
     // No stale slot was written.
     assertEquals(Map.of("a", "1", "b", "2"), am);
 

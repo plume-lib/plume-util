@@ -2322,72 +2322,51 @@ public final class ArraysP {
    */
   @Pure
   public static @NonNegative int length(Object a) {
-    if (a == null) {
-      throw new IllegalArgumentException("Argument is null");
-    } else if (a instanceof boolean[] ba) {
-      return ba.length;
-    } else if (a instanceof byte[] ba) {
-      return ba.length;
-    } else if (a instanceof char[] ca) {
-      return ca.length;
-    } else if (a instanceof double[] da) {
-      return da.length;
-    } else if (a instanceof float[] fa) {
-      return fa.length;
-    } else if (a instanceof int[] ia) {
-      return ia.length;
-    } else if (a instanceof long[] la) {
-      return la.length;
-    } else if (a instanceof short[] sa) {
-      return sa.length;
-    } else if (a instanceof Object[] oa) {
-      return oa.length;
-    } else {
-      throw new IllegalArgumentException(
-          "Argument is not an array, but has class " + a.getClass().getName());
-    }
+    return switch (a) {
+      case null -> throw new IllegalArgumentException("Argument is null");
+      case boolean[] ba -> ba.length;
+      case byte[] ba -> ba.length;
+      case char[] ca -> ca.length;
+      case double[] da -> da.length;
+      case float[] fa -> fa.length;
+      case int[] ia -> ia.length;
+      case long[] la -> la.length;
+      case short[] sa -> sa.length;
+      case Object[] oa -> oa.length;
+      default ->
+          throw new IllegalArgumentException(
+              "Argument is not an array, but has class " + a.getClass().getName());
+    };
   }
 
   /**
    * Returns a string representation of the contents of the specified array. The argument must be an
-   * array or null. This just dispatches one of the 9 overloaded versions of {@code
-   * java.util.Arrays.toString()}.
+   * array, a {@link List}, or null. For an array, this just dispatches one of the 9 overloaded
+   * versions of {@code java.util.Arrays.toString()}. For a list, this calls the list's {@code
+   * toString()} method.
    *
-   * @param a an array
-   * @return a string representation of the array
-   * @throws IllegalArgumentException if a is not an array
+   * @param a an array or list
+   * @return a string representation of the array or list
+   * @throws IllegalArgumentException if a is neither an array nor a list
    */
   @SideEffectFree
   public static String toString(@Nullable Object a) {
-    if (a == null) {
-      return "null";
-    }
-    if (a instanceof boolean[] ba) {
-      return Arrays.toString(ba);
-    } else if (a instanceof byte[] ba) {
-      return Arrays.toString(ba);
-    } else if (a instanceof char[] ca) {
-      return Arrays.toString(ca);
-    } else if (a instanceof double[] da) {
-      return Arrays.toString(da);
-    } else if (a instanceof float[] fa) {
-      return Arrays.toString(fa);
-    } else if (a instanceof int[] ia) {
-      return Arrays.toString(ia);
-    } else if (a instanceof long[] la) {
-      return Arrays.toString(la);
-    } else if (a instanceof short[] sa) {
-      return Arrays.toString(sa);
-    } else if (a instanceof Object[] oa) {
-      return Arrays.toString(oa);
-    } else
-    // Handles lists, but this is not a documented feature
-    if (a instanceof List<?> l) {
-      return l.toString();
-    } else {
-      throw new IllegalArgumentException(
-          "Argument is not an array, but has class " + a.getClass().getName());
-    }
+    return switch (a) {
+      case null -> "null";
+      case boolean[] ba -> Arrays.toString(ba);
+      case byte[] ba -> Arrays.toString(ba);
+      case char[] ca -> Arrays.toString(ca);
+      case double[] da -> Arrays.toString(da);
+      case float[] fa -> Arrays.toString(fa);
+      case int[] ia -> Arrays.toString(ia);
+      case long[] la -> Arrays.toString(la);
+      case short[] sa -> Arrays.toString(sa);
+      case Object[] oa -> Arrays.toString(oa);
+      case List<?> l -> l.toString();
+      default ->
+          throw new IllegalArgumentException(
+              "Argument is neither an array nor a list, but has class " + a.getClass().getName());
+    };
   }
 
   /**
