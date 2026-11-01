@@ -751,12 +751,12 @@ public final class FilesP {
    * is a regular file, and {@code source} is not a symbolic link, then the result has the owner,
    * group, and POSIX permissions of the original {@code target}, to the extent that the caller is
    * allowed to set them. Typically, only a superuser can change a file's owner, and a file's owner
-   * can change its group only to a group that the owner belongs to. If the file system of {@code
-   * source} does not support POSIX attributes, this method sets them after the move, so until this
-   * method returns, {@code target} might have other attributes, such as default permissions. If any
-   * of these conditions does not hold, this method does not preserve the attributes of the original
-   * {@code target}. The result usually has the owner, group, and access controls of {@code source},
-   * but a move between file systems might not preserve them.
+   * can change its group only to a group that the owner belongs to. If {@code source} and {@code
+   * target} are on different file systems, this method sets the attributes after the move, so until
+   * this method returns, {@code target} might have other attributes, such as default permissions.
+   * If any of these conditions does not hold, this method does not preserve the attributes of the
+   * original {@code target}. The result usually has the owner, group, and access controls of {@code
+   * source}, but a move between file systems might not preserve them.
    *
    * <p>A typical use is to write a new version of a file to a temporary file in the same directory
    * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
@@ -777,7 +777,13 @@ public final class FilesP {
     // Setting the attributes of a symbolic link would set the attributes of its referent.
     PosixFileAttributes targetAttrs =
         Files.isSymbolicLink(source) ? null : readRegularFilePosixAttributes(target);
-    boolean sourceAttrsSet = targetAttrs != null && setPosixAttributes(source, targetAttrs);
+    // A move within one file system preserves the attributes of `source`; a move between file
+    // systems might not.  Also, giving a file the owner or group of a file in another file system
+    // can throw ProviderMismatchException.
+    boolean sameFileSystem = source.getFileSystem().equals(target.getFileSystem());
+    if (targetAttrs != null && sameFileSystem) {
+      setPosixAttributes(source, targetAttrs);
+    }
     try {
       Files.move(
           source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
@@ -785,8 +791,7 @@ public final class FilesP {
       // With ATOMIC_MOVE, some file systems refuse to replace an existing target.
       Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
     }
-    if (targetAttrs != null && !sourceAttrsSet) {
-      // The file system of `source` does not support POSIX attributes, but that of `target` does.
+    if (targetAttrs != null && !sameFileSystem) {
       setPosixAttributes(target, targetAttrs);
     }
   }
@@ -814,15 +819,15 @@ public final class FilesP {
    * Gives {@code file} the owner, group, and POSIX permissions in {@code attrs}, to the extent that
    * the caller is allowed to set them. Never throws an {@code IOException}.
    *
-   * @param file the file whose attributes to set; is not a symbolic link
-   * @param attrs the attributes to give {@code file}
-   * @return false if the file system of {@code file} does not support POSIX attributes, true
-   *     otherwise (even if setting some attributes failed)
+   * @param file the file whose attributes to set; is not a symbolic link; is in a file system that
+   *     supports POSIX attributes
+   * @param attrs the attributes to give {@code file}; were read from a file in the same file system
+   *     as {@code file}
    */
-  private static boolean setPosixAttributes(Path file, PosixFileAttributes attrs) {
+  private static void setPosixAttributes(Path file, PosixFileAttributes attrs) {
     PosixFileAttributeView view = Files.getFileAttributeView(file, PosixFileAttributeView.class);
     if (view == null) {
-      return false;
+      throw new IllegalArgumentException("No POSIX attributes: " + file);
     }
     // Set the owner and group before the permissions, because changing the owner or group can clear
     // the setuid and setgid bits.
@@ -841,7 +846,6 @@ public final class FilesP {
     } catch (IOException e) {
       // The caller does not own `file`, or the file system does not permit the change.
     }
-    return true;
   }
 
   //

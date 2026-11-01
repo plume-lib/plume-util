@@ -162,6 +162,30 @@ final class FilesPTest {
   }
 
   @Test
+  void test_replaceFile_permissionsInOtherFileSystem(@TempDir Path tempDir) throws IOException {
+    assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
+    Path source = tempDir.resolve("source.txt");
+    Files.writeString(source, "new\n", UTF_8);
+    Files.setPosixFilePermissions(source, PosixFilePermissions.fromString("rw-------"));
+
+    try (FileSystem zipFs =
+        FileSystems.newFileSystem(
+            tempDir.resolve("archive.zip"),
+            Map.of("create", "true", "enablePosixFileAttributes", "true"))) {
+      Path target = zipFs.getPath("target.txt");
+      Files.writeString(target, "old\n", UTF_8);
+      Set<PosixFilePermission> targetPermissions = PosixFilePermissions.fromString("rw-r-----");
+      Files.setPosixFilePermissions(target, targetPermissions);
+
+      // The replaced file keeps its permissions.
+      FilesP.replaceFile(source, target);
+      assertFalse(Files.exists(source));
+      assertEquals("new\n", Files.readString(target, UTF_8));
+      assertEquals(targetPermissions, Files.getPosixFilePermissions(target));
+    }
+  }
+
+  @Test
   void test_replaceFile_symlinkSource(@TempDir Path tempDir) throws IOException {
     assumeTrue(tempDir.getFileSystem().supportedFileAttributeViews().contains("posix"));
     Path referent = tempDir.resolve("referent.txt");
