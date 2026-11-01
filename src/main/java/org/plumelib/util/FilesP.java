@@ -747,27 +747,28 @@ public final class FilesP {
    * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
    * move is atomic.
    *
-   * <p>If the file system of {@code target} supports POSIX attributes, the original {@code target}
-   * is a regular file, and {@code source} is not a symbolic link, then the result has the owner,
-   * group, and POSIX permissions of the original {@code target}, to the extent that the caller is
-   * allowed to set them. Typically, only a superuser can change a file's owner, and a file's owner
-   * can change its group only to a group that the owner belongs to. If {@code source} and {@code
-   * target} are on different file systems, this method sets the attributes after the move, so until
-   * this method returns, {@code target} might have other attributes, such as default permissions.
-   * If any of these conditions does not hold, this method does not preserve the attributes of the
-   * original {@code target}. The result usually has the owner, group, and access controls of {@code
-   * source}, but a move between file systems might not preserve them.
-   *
    * <p>A typical use is to write a new version of a file to a temporary file in the same directory
    * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
    * method. Then a failure while writing leaves the original file unchanged, and, if the move is
-   * atomic, no reader sees a partially-written file. An atomic move is generally possible only
-   * within one file system. If the move is not atomic, a reader might see {@code target} absent or
-   * incomplete during the move, and a failure during the move can leave {@code target} absent or
-   * incomplete.
+   * atomic, no reader sees a partially-written file.
+   *
+   * <p>If the move is not atomic (e.g., {@code source} and {@code target} are on different file
+   * systems), a reader might see {@code target} absent or incomplete during the move, and a failure
+   * during the move can leave {@code target} absent or incomplete.
    *
    * <p>If {@code target} is a symbolic link, the link itself is replaced. To replace the file that
    * the link refers to instead, pass {@code target.toRealPath()}.
+   *
+   * <p><b>Attributes of the result file</b>: If the file system of {@code target} supports POSIX
+   * attributes, the original {@code target} is a regular file, and {@code source} is not a symbolic
+   * link, then the result has the owner, group, and POSIX permissions of the original {@code
+   * target}, to the extent that the caller is allowed to set them. Typically, only a superuser can
+   * change a file's owner, and a file's owner can change its group only to a group that the owner
+   * belongs to. If any of these conditions does not hold, this method does not preserve the
+   * attributes of the original {@code target}. The result usually has the owner, group, and access
+   * controls of {@code source}, but a move between file systems might not preserve them. If the
+   * move is not atomic, this method sets the attributes after the move, so until this method
+   * returns, {@code target} might have other attributes, such as default permissions.
    *
    * @param source the file to move
    * @param target the file to replace
@@ -777,21 +778,26 @@ public final class FilesP {
     // Setting the attributes of a symbolic link would set the attributes of its referent.
     PosixFileAttributes targetAttrs =
         Files.isSymbolicLink(source) ? null : readRegularFilePosixAttributes(target);
-    // A move within one file system preserves the attributes of `source`; a move between file
-    // systems might not.  Also, giving a file the owner or group of a file in another file system
-    // can throw ProviderMismatchException.
+    // Giving a file the owner or group of a file in another file system can throw
+    // ProviderMismatchException.
     boolean sameFileSystem = source.getFileSystem().equals(target.getFileSystem());
     if (targetAttrs != null && sameFileSystem) {
       setPosixAttributes(source, targetAttrs);
     }
+    boolean atomic;
     try {
       Files.move(
           source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+      atomic = true;
     } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException e) {
       // With ATOMIC_MOVE, some file systems refuse to replace an existing target.
       Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+      atomic = false;
     }
-    if (targetAttrs != null && !sameFileSystem) {
+    // An atomic move preserves the attributes of `source`.  A non-atomic move might copy the file
+    // and give the copy other attributes; for example, if `source` is on a file store (such as
+    // VFAT) that ignores POSIX permissions, the copy gets the default permissions of `source`.
+    if (targetAttrs != null && !atomic) {
       setPosixAttributes(target, targetAttrs);
     }
   }
