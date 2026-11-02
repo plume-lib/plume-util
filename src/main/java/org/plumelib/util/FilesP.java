@@ -26,13 +26,18 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -736,6 +741,117 @@ public final class FilesP {
       }
     }
     throw new Error("every file exists");
+  }
+
+  /**
+   * Moves {@code source} to {@code target}, replacing {@code target} if it exists. If possible, the
+   * move is atomic.
+   *
+   * <p>A typical use is to write a new version of a file to a temporary file in the same directory
+   * (see {@link #createTempFile(Path, String, String, FileAttribute[])}), and then to call this
+   * method. Then a failure while writing leaves the original file unchanged, and, if the move is
+   * atomic, no reader sees a partially-written file.
+   *
+   * <p>If the move is not atomic (e.g., {@code source} and {@code target} are on different file
+   * systems), a reader might see {@code target} absent or incomplete during the move, and a failure
+   * during the move can leave {@code target} absent or incomplete.
+   *
+   * <p>If {@code target} is a symbolic link, the link itself is replaced. To replace the file that
+   * the link refers to instead, pass {@code target.toRealPath()}.
+   *
+   * <p><b>Attributes of the result file</b>: If the file system of {@code target} supports POSIX
+   * attributes, the original {@code target} is a regular file, and {@code source} is not a symbolic
+   * link, then the result has the owner, group, and POSIX permissions of the original {@code
+   * target}, to the extent that the caller is allowed to set them. Typically, only a superuser can
+   * change a file's owner, and a file's owner can change its group only to a group that the owner
+   * belongs to. If any of these conditions does not hold, this method does not preserve the
+   * attributes of the original {@code target}. The result usually has the owner, group, and access
+   * controls of {@code source}, but a move between file systems might not preserve them. If the
+   * move is not atomic, this method sets the attributes after the move, so until this method
+   * returns, {@code target} might have other attributes, such as default permissions.
+   *
+   * @param source the file to move
+   * @param target the file to replace
+   * @throws IOException if there is trouble moving the file
+   */
+  public static void replaceFile(Path source, Path target) throws IOException {
+    // Setting the attributes of a symbolic link would set the attributes of its referent.
+    PosixFileAttributes targetAttrs =
+        Files.isSymbolicLink(source) ? null : readRegularFilePosixAttributes(target);
+    // Giving a file the owner or group of a file in another file system can throw
+    // ProviderMismatchException.
+    boolean sameFileSystem = source.getFileSystem().equals(target.getFileSystem());
+    if (targetAttrs != null && sameFileSystem) {
+      setPosixAttributes(source, targetAttrs);
+    }
+    boolean atomic;
+    try {
+      Files.move(
+          source, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+      atomic = true;
+    } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException e) {
+      // With ATOMIC_MOVE, some file systems refuse to replace an existing target.
+      Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+      atomic = false;
+    }
+    // An atomic move preserves the attributes of `source`.  A non-atomic move might copy the file
+    // and give the copy other attributes; for example, if `source` is on a file store (such as
+    // VFAT) that ignores POSIX permissions, the copy gets the default permissions of `source`.
+    if (targetAttrs != null && !atomic) {
+      setPosixAttributes(target, targetAttrs);
+    }
+  }
+
+  /**
+   * Returns the POSIX attributes of the given file, or null if it is not a regular file (for
+   * example, if it does not exist or is a symbolic link) or if its file system does not support
+   * POSIX attributes.
+   *
+   * @param file a file
+   * @return the POSIX attributes of {@code file}, or null
+   */
+  private static @Nullable PosixFileAttributes readRegularFilePosixAttributes(Path file) {
+    PosixFileAttributes attrs;
+    try {
+      attrs = Files.readAttributes(file, PosixFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
+    } catch (IOException | UnsupportedOperationException e) {
+      // `file` does not exist, or its file system does not support POSIX attributes.
+      return null;
+    }
+    return attrs.isRegularFile() ? attrs : null;
+  }
+
+  /**
+   * Gives {@code file} the owner, group, and POSIX permissions in {@code attrs}, to the extent that
+   * the caller is allowed to set them. Never throws an {@code IOException}.
+   *
+   * @param file the file whose attributes to set; is not a symbolic link; is in a file system that
+   *     supports POSIX attributes
+   * @param attrs the attributes to give {@code file}; were read from a file in the same file system
+   *     as {@code file}
+   */
+  private static void setPosixAttributes(Path file, PosixFileAttributes attrs) {
+    PosixFileAttributeView view = Files.getFileAttributeView(file, PosixFileAttributeView.class);
+    if (view == null) {
+      throw new IllegalArgumentException("No POSIX attributes: " + file);
+    }
+    // Set the owner and group before the permissions, because changing the owner or group can clear
+    // the setuid and setgid bits.
+    try {
+      view.setOwner(attrs.owner());
+    } catch (IOException e) {
+      // Typically, only a superuser can change a file's owner.
+    }
+    try {
+      view.setGroup(attrs.group());
+    } catch (IOException e) {
+      // The caller does not belong to the group, or does not own `file`.
+    }
+    try {
+      view.setPermissions(attrs.permissions());
+    } catch (IOException e) {
+      // The caller does not own `file`, or the file system does not permit the change.
+    }
   }
 
   //
