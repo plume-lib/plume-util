@@ -153,9 +153,9 @@ final class InternTest {
 
   @Test
   void testIsInternedHasNoSideEffect() {
-    int[] ia1 = new int[] {20_261_030, 1, 2};
+    int[] ia1 = {20_261_030, 1, 2};
     assertFalse(Intern.isInterned(ia1));
-    int[] ia2 = new int[] {20_261_030, 1, 2};
+    int[] ia2 = {20_261_030, 1, 2};
     assertSame(ia2, Intern.intern(ia2));
     assertTrue(Intern.isInterned(ia2));
     assertFalse(Intern.isInterned(ia1));
@@ -176,7 +176,7 @@ final class InternTest {
 
   @Test
   void testIsInternedStringArrayWithNonInternedElement() {
-    String[] sa = new String[] {new String("isInternedStringArray")};
+    String[] sa = {new String("isInternedStringArray")};
     assertFalse(Intern.isInterned(sa));
   }
 

@@ -70,11 +70,14 @@ public final class Intern {
   /**
    * Returns true if the argument is interned (is canonical among all objects equal to itself).
    * Unlike {@code intern}, this method does not add its argument to the intern tables, so it
-   * returns false for a value that is equal to no interned value.
+   * returns false for a value that is equal to no interned value, if the value's type has an intern
+   * table (such as {@code Integer} or {@code int[]}). It returns true for a value of any other type
+   * except {@code String}.
    *
    * <p>The exception is a {@code String}: this method calls {@link String#intern()}, which adds the
-   * string to the JVM's string pool if no equal string is there. Therefore, this method returns
-   * true the first time it is called on a string.
+   * string to the JVM's string pool if no equal string is there. Therefore, the first time this
+   * method is called on a string, it returns true unless the string pool already contains a
+   * different, equal string.
    *
    * @param value the value to test for interning
    * @return true iff value is interned
