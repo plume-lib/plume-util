@@ -1264,7 +1264,7 @@ final class CollectionsPTest {
     Integer i10 = 10;
     Set<Integer> iota5 = new HashSet<>(Arrays.asList(0, 1, 2, 3, 4));
     assertEquals(i2, CollectionsP.getFromSet(iota5, i2));
-    assertEquals(null, CollectionsP.getFromSet(iota5, i10));
+    assertNull(CollectionsP.getFromSet(iota5, i10));
   }
 
   /** Test adjoin(). */

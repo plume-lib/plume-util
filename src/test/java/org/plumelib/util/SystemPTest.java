@@ -22,6 +22,8 @@ final class SystemPTest {
   }
 
   @Test
+  @SuppressWarnings(
+      "PMD.SimplifiableTestAssertion") // Nullness Checker rejects assertNotNull(@Nullable)
   void testPathToExecutableFound() {
     // "sh" is on the PATH of every Unix-like system; skip this check on Windows.
     assumeFalse(isWindows);

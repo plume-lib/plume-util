@@ -1,6 +1,7 @@
 package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ final class StringsPTest {
   /** Test firstLineSeparator(). */
   @Test
   void test_firstLineSeparator() {
-    assertEquals(null, StringsP.firstLineSeparator("hello"));
+    assertNull(StringsP.firstLineSeparator("hello"));
     assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye"));
     assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revoir"));
     assertEquals("\n", StringsP.firstLineSeparator("hello\ngoodbye\rau revoir\r\nWindows"));

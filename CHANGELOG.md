@@ -21,6 +21,9 @@
   Therefore, when assertions are enabled, `assert Intern.isInterned(x)` now
   fails if `x` was not returned by `Intern.intern()` (or by a method such as
   `Intern.internedInteger()`), even if no equal value has been interned.
+- New method `FilesP.replaceFile()` moves a file over another, atomically if
+  possible, keeping the replaced file's owner, group, and POSIX permissions
+  where possible.
 
 ## 2.0.0 (2026-08-05)
 
