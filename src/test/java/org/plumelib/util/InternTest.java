@@ -164,7 +164,22 @@ final class InternTest {
     assertFalse(Intern.isInterned(i1));
     Integer i2 = Integer.valueOf(20_261_030);
     assertSame(i2, Intern.intern(i2));
+    assertTrue(Intern.isInterned(i2));
     assertFalse(Intern.isInterned(i1));
+
+    Long l1 = Long.valueOf(20_261_101L);
+    assertFalse(Intern.isInterned(l1));
+    Long l2 = Long.valueOf(20_261_101L);
+    assertSame(l2, Intern.intern(l2));
+    assertTrue(Intern.isInterned(l2));
+    assertFalse(Intern.isInterned(l1));
+
+    long[] la1 = {20_261_101L, 1, 2};
+    assertFalse(Intern.isInterned(la1));
+    long[] la2 = {20_261_101L, 1, 2};
+    assertSame(la2, Intern.intern(la2));
+    assertTrue(Intern.isInterned(la2));
+    assertFalse(Intern.isInterned(la1));
 
     Double d1 = Double.valueOf(2026.1030);
     assertFalse(Intern.isInterned(d1));
@@ -172,6 +187,39 @@ final class InternTest {
     assertSame(d2, Intern.intern(d2));
     assertTrue(Intern.isInterned(d2));
     assertFalse(Intern.isInterned(d1));
+
+    double[] da1 = {2026.1101, 1, 2};
+    assertFalse(Intern.isInterned(da1));
+    double[] da2 = {2026.1101, 1, 2};
+    assertSame(da2, Intern.intern(da2));
+    assertTrue(Intern.isInterned(da2));
+    assertFalse(Intern.isInterned(da1));
+
+    @Interned String[] sa1 = {"isInternedHasNoSideEffect", "2026-11-01"};
+    assertFalse(Intern.isInterned(sa1));
+    @Interned String[] sa2 = {"isInternedHasNoSideEffect", "2026-11-01"};
+    assertSame(sa2, Intern.intern(sa2));
+    assertTrue(Intern.isInterned(sa2));
+    assertFalse(Intern.isInterned(sa1));
+
+    @Interned Object[] oa1 = {"isInternedHasNoSideEffect", Intern.internedInteger(20_261_101)};
+    assertFalse(Intern.isInterned(oa1));
+    @Interned Object[] oa2 = {"isInternedHasNoSideEffect", Intern.internedInteger(20_261_101)};
+    assertSame(oa2, Intern.intern(oa2));
+    assertTrue(Intern.isInterned(oa2));
+    assertFalse(Intern.isInterned(oa1));
+  }
+
+  @Test
+  void testIsInternedDoubleNaNAndZero() {
+    assertTrue(Intern.isInterned(Intern.internedDouble(Double.NaN)));
+    assertFalse(Intern.isInterned(Double.valueOf(Double.NaN)));
+
+    @Interned Double zero = Intern.internedDouble(0.0);
+    assertSame(zero, Intern.internedDouble(-0.0));
+    assertTrue(Intern.isInterned(zero));
+    assertFalse(Intern.isInterned(Double.valueOf(0.0)));
+    assertFalse(Intern.isInterned(Double.valueOf(-0.0)));
   }
 
   @Test

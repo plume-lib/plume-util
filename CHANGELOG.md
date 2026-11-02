@@ -18,6 +18,9 @@
 - `Intern.isInterned()` no longer interns its argument (except for a `String`),
   so it returns false for a value that is equal to no interned value, if the
   value's type has an intern table (such as `Integer` or `int[]`).
+  Therefore, when assertions are enabled, `assert Intern.isInterned(x)` now
+  fails if `x` was not returned by `Intern.intern()` (or by a method such as
+  `Intern.internedInteger()`), even if no equal value has been interned.
 
 ## 2.0.0 (2026-08-05)
 
