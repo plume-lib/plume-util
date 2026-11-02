@@ -69,6 +69,15 @@ public final class Intern {
 
   /**
    * Returns true if the argument is interned (is canonical among all objects equal to itself).
+   * Unlike {@code intern}, this method does not add its argument to the intern tables, so it
+   * returns false for a value that is equal to no interned value, if the value's type has an intern
+   * table (such as {@code Integer} or {@code int[]}). It returns true for a value of any other type
+   * except {@code String}.
+   *
+   * <p>The exception is a {@code String}: this method calls {@link String#intern()}, which adds the
+   * string to the JVM's string pool if no equal string is there. Therefore, the first time this
+   * method is called on a string, it returns true unless the string pool already contains a
+   * different, equal string.
    *
    * @param value the value to test for interning
    * @return true iff value is interned
@@ -80,18 +89,59 @@ public final class Intern {
       // nothing to do
       case null -> true;
       case String s -> value == s.intern();
-      case String[] sa -> value == intern(sa);
-      case Integer i -> value == intern(i);
-      case Long l -> value == intern(l);
-      case int[] ia -> value == intern(ia);
-      case long[] la -> value == intern(la);
-      case Double d -> value == intern(d);
-      case double[] da -> value == intern(da);
-      case Object[] oa -> value == intern(oa);
+      case String[] sa -> value == canonicalOrNull(internedStringArrays, sa);
+      case Integer i -> value == canonicalOrNull(internedIntegers, i);
+      case Long l -> value == canonicalOrNull(internedLongs, l);
+      case int[] ia -> value == canonicalOrNull(internedIntArrays, ia);
+      case long[] la -> value == canonicalOrNull(internedLongArrays, la);
+      case Double d -> value == canonicalOrNull(d);
+      case double[] da -> value == canonicalOrNull(internedDoubleArrays, da);
+      case Object[] oa -> value == canonicalOrNull(internedObjectArrays, oa);
       // Nothing to do, because we don't intern other types.
       // System.out.println("What type? " + value.getClass().getName());
       default -> true;
     };
+  }
+
+  /**
+   * Returns the canonical representative, in the given intern table, of the objects equal to the
+   * given value, or null if the table contains no object equal to the value. Does not modify the
+   * table.
+   *
+   * @param <T> the type of the table's keys
+   * @param table an intern table
+   * @param value a value to look up
+   * @return the canonical representative in {@code table} of the objects equal to {@code value}, or
+   *     null if there is none
+   */
+  @SuppressWarnings(
+      "allcheckers:purity") // WeakReference.get() is nondeterministic only if the GC clears it
+  @Pure
+  private static <T> @Nullable T canonicalOrNull(
+      WeakHasherMap<T, WeakReference<T>> table, Object value) {
+    WeakReference<T> lookup = table.get(value);
+    return (lookup != null) ? lookup.get() : null;
+  }
+
+  /**
+   * Returns the canonical representative of the Doubles equal to the given Double, or null if there
+   * is none yet. Does not modify the intern tables.
+   *
+   * @param d a Double to look up
+   * @return the canonical representative of the Doubles equal to {@code d}, or null if there is
+   *     none yet
+   */
+  @Pure
+  private static @Nullable @Interned Double canonicalOrNull(Double d) {
+    // Double.NaN == Double.NaN  always evaluates to false.
+    if (d.isNaN()) {
+      return internedDoubleNaN;
+    }
+    // Double.+0 == Double.-0,  but they compare true via equals()
+    if (d == 0) { // catches both positive and negative zero
+      return internedDoubleZero;
+    }
+    return canonicalOrNull(internedDoubles, d);
   }
 
   // //////////////////////////////////////////////////////////////////////
@@ -576,15 +626,12 @@ public final class Intern {
   @SuppressWarnings({"interning", "allcheckers:purity", "lock"}) // interning implementation
   @Pure
   public static @Interned Integer intern(Integer a) {
-    WeakReference<@Interned Integer> lookup = internedIntegers.get(a);
-    Integer result1 = (lookup != null) ? lookup.get() : null;
-    if (result1 != null) {
-      return result1;
-    } else {
-      @Interned Integer result = (@Interned Integer) a;
+    @Interned Integer result = canonicalOrNull(internedIntegers, a);
+    if (result == null) {
+      result = (@Interned Integer) a;
       internedIntegers.put(result, new WeakReference<>(result));
-      return result;
     }
+    return result;
   }
 
   // Not sure whether this convenience method is really worth it.
@@ -622,15 +669,12 @@ public final class Intern {
   @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static @Interned Long intern(Long a) {
-    WeakReference<@Interned Long> lookup = internedLongs.get(a);
-    Long result1 = (lookup != null) ? lookup.get() : null;
-    if (result1 != null) {
-      return result1;
-    } else {
-      @Interned Long result = (@Interned Long) a;
+    @Interned Long result = canonicalOrNull(internedLongs, a);
+    if (result == null) {
+      result = (@Interned Long) a;
       internedLongs.put(result, new WeakReference<>(result));
-      return result;
     }
+    return result;
   }
 
   // Not sure whether this convenience method is really worth it.
@@ -675,21 +719,19 @@ public final class Intern {
     // stack.fillInStackTrace();
     // stack.printStackTrace();
 
-    WeakReference<int @Interned []> lookup = internedIntArrays.get(a);
+    int @Interned [] canonical = canonicalOrNull(internedIntArrays, a);
     @SuppressWarnings({
       "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
-    int @PolyValue @SameLen("a") [] result1 = (lookup != null) ? lookup.get() : null;
-    if (result1 != null) {
-      return result1;
-    } else {
-      @Interned int[] result = (int @Interned @PolyValue []) a;
+    int @Interned @PolyValue @SameLen("a") [] result = canonical;
+    if (result == null) {
+      result = (int @Interned @PolyValue []) a;
       internedIntArrays.put(result, new WeakReference<>(result));
-      return result;
     }
+    return result;
   }
 
   /**
@@ -704,21 +746,19 @@ public final class Intern {
   public static long @Interned @PolyValue @SameLen("#1") [] intern(long @PolyValue [] a) {
     // System.out.printf("intern %s %s long[] %s%n", a.getClass(),
     //                   a, Arrays.toString (a));
-    WeakReference<long @Interned []> lookup = internedLongArrays.get(a);
+    long @Interned [] canonical = canonicalOrNull(internedLongArrays, a);
     @SuppressWarnings({
       "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
-    long @PolyValue @SameLen("a") [] result1 = (lookup != null) ? lookup.get() : null;
-    if (result1 != null) {
-      return result1;
-    } else {
-      @Interned long[] result = (long @Interned @PolyValue []) a;
+    long @Interned @PolyValue @SameLen("a") [] result = canonical;
+    if (result == null) {
+      result = (long @Interned @PolyValue []) a;
       internedLongArrays.put(result, new WeakReference<>(result));
-      return result;
     }
+    return result;
   }
 
   /**
@@ -733,23 +773,12 @@ public final class Intern {
   @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static @Interned Double intern(Double a) {
-    // Double.NaN == Double.NaN  always evaluates to false.
-    if (a.isNaN()) {
-      return internedDoubleNaN;
-    }
-    // Double.+0 == Double.-0,  but they compare true via equals()
-    if (a == 0) { // catches both positive and negative zero
-      return internedDoubleZero;
-    }
-    WeakReference<@Interned Double> lookup = internedDoubles.get(a);
-    Double result1 = (lookup != null) ? lookup.get() : null;
-    if (result1 != null) {
-      return result1;
-    } else {
-      @Interned Double result = (@Interned Double) a;
+    @Interned Double result = canonicalOrNull(a);
+    if (result == null) {
+      result = (@Interned Double) a;
       internedDoubles.put(result, new WeakReference<>(result));
-      return result;
     }
+    return result;
   }
 
   // Not sure whether this convenience method is really worth it.
@@ -790,21 +819,19 @@ public final class Intern {
   @SuppressWarnings({"interning", "allcheckers:purity", "lock"})
   @Pure
   public static double @Interned @PolyValue @SameLen("#1") [] intern(double @PolyValue [] a) {
-    WeakReference<double @Interned []> lookup = internedDoubleArrays.get(a);
+    double @Interned [] canonical = canonicalOrNull(internedDoubleArrays, a);
     @SuppressWarnings({
       "samelen:assignment", // for this map, get() can be annotated as
       // @SameLen("#1")
       "value" // for this map, get() can be annotated as @PolyAll (except not interning); also see
       // https://github.com/kelloggm/checker-framework/issues/177
     })
-    double @PolyValue @SameLen("a") [] result1 = (lookup != null) ? lookup.get() : null;
-    if (result1 != null) {
-      return result1;
-    } else {
-      @Interned double[] result = (double @Interned @PolyValue []) a;
+    double @Interned @PolyValue @SameLen("a") [] result = canonical;
+    if (result == null) {
+      result = (double @Interned @PolyValue []) a;
       internedDoubleArrays.put(result, new WeakReference<>(result));
-      return result;
     }
+    return result;
   }
 
   /**
@@ -847,8 +874,7 @@ public final class Intern {
     // Make sure each element is already interned
     assert eachElementInterned(a);
 
-    WeakReference<@Nullable @Interned String @Interned []> lookup = internedStringArrays.get(a);
-    @Nullable @Interned String @Interned [] result = (lookup != null) ? lookup.get() : null;
+    @Nullable @Interned String @Interned [] result = canonicalOrNull(internedStringArrays, a);
     if (result == null) {
       result = (@Nullable @Interned String @Interned []) a;
       internedStringArrays.put(result, new WeakReference<>(result));
@@ -882,8 +908,7 @@ public final class Intern {
   @Pure
   public static @PolyNull @Interned Object @Interned @PolyValue @SameLen("#1") [] intern(
       @PolyNull @Interned @PolyValue Object[] a) {
-    WeakReference<@Nullable @Interned Object @Interned []> lookup = internedObjectArrays.get(a);
-    @Nullable @Interned Object @Interned [] result = (lookup != null) ? lookup.get() : null;
+    @Nullable @Interned Object @Interned [] result = canonicalOrNull(internedObjectArrays, a);
     if (result == null) {
       result = (@Nullable @Interned Object @Interned []) a;
       internedObjectArrays.put(result, new WeakReference<>(result));
