@@ -45,7 +45,6 @@ final class DeepCopyableTest {
 
     @Override
     @Pure
-    @SuppressWarnings("lock:instanceof.pattern.unsafe") // other is @GuardSatisfied
     public boolean equals(@GuardSatisfied Box this, @GuardSatisfied @Nullable Object other) {
       return other instanceof Box otherBox && otherBox.value == this.value;
     }
