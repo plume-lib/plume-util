@@ -533,11 +533,10 @@ final class IdentityBiMapTest {
     assertThrows(
         ConcurrentModificationException.class,
         () ->
-            m.replaceAll(
-                (k, v) -> {
-                  m.put("b", "y");
-                  return "z";
-                }));
+            m.replaceAll((k, v) -> {
+              m.put("b", "y");
+              return "z";
+            }));
     checkConsistent(m);
 
     IdentityBiMap<String, String> m2 = new IdentityBiMap<>();
@@ -545,12 +544,11 @@ final class IdentityBiMapTest {
     assertThrows(
         ConcurrentModificationException.class,
         () ->
-            m2.replaceAll(
-                (k, v) -> {
-                  m2.remove("a");
-                  m2.put("b", "y");
-                  return "z";
-                }));
+            m2.replaceAll((k, v) -> {
+              m2.remove("a");
+              m2.put("b", "y");
+              return "z";
+            }));
     checkConsistent(m2);
   }
 
