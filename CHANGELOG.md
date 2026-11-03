@@ -15,6 +15,15 @@
   As with `HashMap`, a key's hash code must be consistent with `equals` and
   must not change while the key is in the map.
 - `new ArrayMap()` allocates no storage until the first mapping is added.
+- `Intern.isInterned()` no longer interns its argument (except for a `String`),
+  so it returns false for a value that is equal to no interned value, if the
+  value's type has an intern table (such as `Integer` or `int[]`).
+  Therefore, when assertions are enabled, `assert Intern.isInterned(x)` now
+  fails if `x` was not returned by `Intern.intern()` (or by a method such as
+  `Intern.internedInteger()`), even if no equal value has been interned.
+- New method `FilesP.replaceFile()` moves a file over another, atomically if
+  possible, keeping the replaced file's owner, group, and POSIX permissions
+  where possible.
 
 ## 2.0.0 (2026-08-05)
 

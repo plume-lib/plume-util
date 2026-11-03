@@ -719,7 +719,10 @@ public final class CollectionsP {
    * @param orig a collection
    * @return a copy of {@code orig}, as described above
    */
-  @SuppressWarnings("nullness:argument") // problem with clone()
+  @SuppressWarnings({
+    "nullness:argument", // problem with clone()
+    "allcheckers:purity.functional.argument" // impure method; impure args are OK
+  })
   public static <
           T extends @Nullable DeepCopyable<T>,
           C extends @Growable @Shrinkable @IteratorPolyMod @Nullable Collection<T>>
