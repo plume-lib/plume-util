@@ -1,6 +1,6 @@
 [versions]
 
-checker-framework = "4.3.1"
+checker-framework = "4.4.0"
 
 google-java-format = "2.0.0"
 
@@ -54,7 +54,7 @@ require-javadoc = { module = "org.plumelib:require-javadoc", version = "3.0.0" }
 
 [plugins]
 
-com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.10.4" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version = "8.11.0" }
 
 com-gradleup-shadow = { id = "com.gradleup.shadow", version = "9.6.1" }
 
