@@ -112,7 +112,6 @@ public final class MPair<V1, V2> {
 
   @Override
   @Pure
-  @SuppressWarnings("lock:instanceof.pattern.unsafe") // obj is @GuardSatisfied
   public boolean equals(@GuardSatisfied MPair<V1, V2> this, @GuardSatisfied @Nullable Object obj) {
     if (this == obj) {
       return true;
