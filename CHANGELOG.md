@@ -15,6 +15,8 @@
   As with `HashMap`, a key's hash code must be consistent with `equals` and
   must not change while the key is in the map.
 - `new ArrayMap()` allocates no storage until the first mapping is added.
+- New class `IdentityBiMap`, a bidirectional map that compares keys and values
+  by identity.
 - `Intern.isInterned()` no longer interns its argument (except for a `String`),
   so it returns false for a value that is equal to no interned value, if the
   value's type has an intern table (such as `Integer` or `int[]`).
