@@ -396,7 +396,7 @@ public final class StringsP {
   })
   @SideEffectFree
   public static String escapeJava(String orig) {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder result = new StringBuilder();
     // The previous escape character was seen right before this position.
     @IndexOrHigh("orig") int postEsc = 0;
     int origLen = orig.length();
@@ -405,51 +405,51 @@ public final class StringsP {
       switch (c) {
         case '\"' -> {
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\\"");
+          result.append("\\\"");
           postEsc = i + 1;
         }
         case '\\' -> {
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\\\");
+          result.append("\\\\");
           postEsc = i + 1;
         }
         case '\b' -> {
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\b");
+          result.append("\\b");
           postEsc = i + 1;
         }
         case '\f' -> {
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\f");
+          result.append("\\f");
           postEsc = i + 1;
         }
         case '\n' -> { // '\n', not LINE_SEP
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\n"); // not LINE_SEP
+          result.append("\\n"); // not LINE_SEP
           postEsc = i + 1;
         }
         case '\r' -> {
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\r");
+          result.append("\\r");
           postEsc = i + 1;
         }
         case '\t' -> {
           if (postEsc < i) {
-            sb.append(orig.substring(postEsc, i));
+            result.append(orig.substring(postEsc, i));
           }
-          sb.append("\\t");
+          result.append("\\t");
           postEsc = i + 1;
         }
 
@@ -458,28 +458,28 @@ public final class StringsP {
             // Nothing to do: i gets incremented
           } else if (c <= '\377') {
             if (postEsc < i) {
-              sb.append(orig.substring(postEsc, i));
+              result.append(orig.substring(postEsc, i));
             }
-            sb.append('\\');
+            result.append('\\');
             int cAsInt = (int) c;
-            sb.append(String.format("%03o", cAsInt));
+            result.append(String.format("%03o", cAsInt));
             postEsc = i + 1;
           } else {
             if (postEsc < i) {
-              sb.append(orig.substring(postEsc, i));
+              result.append(orig.substring(postEsc, i));
             }
-            sb.append("\\u");
-            sb.append(String.format("%04x", (int) c));
+            result.append("\\u");
+            result.append(String.format("%04x", (int) c));
             postEsc = i + 1;
           }
         }
       }
     }
-    if (sb.length() == 0) {
+    if (result.length() == 0) {
       return orig;
     }
-    sb.append(orig.substring(postEsc));
-    return sb.toString();
+    result.append(orig.substring(postEsc));
+    return result.toString();
   }
 
   /**
@@ -530,13 +530,13 @@ public final class StringsP {
   })
   @SideEffectFree
   public static String escapeNonASCII(String orig) {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder result = new StringBuilder();
     int origLen = orig.length();
     for (int i = 0; i < origLen; i++) {
       char c = orig.charAt(i);
-      sb.append(escapeNonASCII(c));
+      result.append(escapeNonASCII(c));
     }
-    return sb.toString();
+    return result.toString();
   }
 
   /**
@@ -600,53 +600,53 @@ public final class StringsP {
   })
   @SideEffectFree
   public static String unescapeJava(String orig) {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder result = new StringBuilder();
     // The previous escape character was seen just before this position.
     @LTEqLengthOf("orig") int postEsc = 0;
     int thisEsc = orig.indexOf('\\');
     while (thisEsc != -1) {
       if (thisEsc == orig.length() - 1) {
-        sb.append(orig.substring(postEsc, thisEsc + 1));
+        result.append(orig.substring(postEsc, thisEsc + 1));
         postEsc = thisEsc + 1;
         break;
       }
       switch (orig.charAt(thisEsc + 1)) {
         case 'b' -> {
-          sb.append(orig.substring(postEsc, thisEsc));
-          sb.append('\b');
+          result.append(orig.substring(postEsc, thisEsc));
+          result.append('\b');
           postEsc = thisEsc + 2;
         }
         case 'f' -> {
-          sb.append(orig.substring(postEsc, thisEsc));
-          sb.append('\f');
+          result.append(orig.substring(postEsc, thisEsc));
+          result.append('\f');
           postEsc = thisEsc + 2;
         }
         case 'n' -> {
-          sb.append(orig.substring(postEsc, thisEsc));
-          sb.append('\n'); // not LINE_SEP
+          result.append(orig.substring(postEsc, thisEsc));
+          result.append('\n'); // not LINE_SEP
           postEsc = thisEsc + 2;
         }
         case 'r' -> {
-          sb.append(orig.substring(postEsc, thisEsc));
-          sb.append('\r');
+          result.append(orig.substring(postEsc, thisEsc));
+          result.append('\r');
           postEsc = thisEsc + 2;
         }
         case 't' -> {
-          sb.append(orig.substring(postEsc, thisEsc));
-          sb.append('\t');
+          result.append(orig.substring(postEsc, thisEsc));
+          result.append('\t');
           postEsc = thisEsc + 2;
         }
         case '\\' -> {
           // This is not in the default case because the search would find
           // the quoted backslash.  Here we include the first backslash in
           // the output, but not the second.
-          sb.append(orig.substring(postEsc, thisEsc + 1));
+          result.append(orig.substring(postEsc, thisEsc + 1));
           postEsc = thisEsc + 2;
         }
 
         case 'u' -> {
           // Unescape Unicode characters.
-          sb.append(orig.substring(postEsc, thisEsc));
+          result.append(orig.substring(postEsc, thisEsc));
           char unicodeChar = 0;
           int ii = thisEsc + 2;
           // The specification permits one or more 'u' characters.
@@ -664,13 +664,13 @@ public final class StringsP {
             unicodeChar = (char) ((unicodeChar * 16) + thisDigit);
             ii++;
           }
-          sb.append(unicodeChar);
+          result.append(unicodeChar);
           postEsc = ii;
         }
 
         case '0', '1', '2', '3', '4', '5', '6', '7' -> {
           // Unescape octal characters.
-          sb.append(orig.substring(postEsc, thisEsc));
+          result.append(orig.substring(postEsc, thisEsc));
           char octalChar = 0;
           int iii = thisEsc + 1;
           while (iii < Math.min(thisEsc + 4, orig.length())) {
@@ -685,14 +685,14 @@ public final class StringsP {
             octalChar = (char) newValue;
             iii++;
           }
-          sb.append(octalChar);
+          result.append(octalChar);
           postEsc = iii;
         }
 
         default -> {
           // In the default case, retain the character following the backslash,
           // but discard the backslash itself.  "\*" is just a one-character string.
-          sb.append(orig.substring(postEsc, thisEsc));
+          result.append(orig.substring(postEsc, thisEsc));
           postEsc = thisEsc + 1;
         }
       }
@@ -701,8 +701,8 @@ public final class StringsP {
     if (postEsc == 0) {
       return orig;
     }
-    sb.append(orig.substring(postEsc));
-    return sb.toString();
+    result.append(orig.substring(postEsc));
+    return result.toString();
   }
 
   // //////////////////////////////////////////////////////////////////////

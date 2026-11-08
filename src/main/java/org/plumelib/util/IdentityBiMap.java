@@ -79,11 +79,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   public IdentityBiMap(Map<? extends K, ? extends V> m) {
     this(new IdentityHashMap<>(m.size()), new IdentityHashMap<>(m.size()));
     if (m instanceof IdentityBiMap<? extends K, ? extends V> other) {
-      // `other` is already a bijection, so there is no need to check each mapping.
       forward.putAll(other.forward);
       backward.putAll(other.backward);
     } else {
-      // `m` cannot read the data of this new map, so there is no need to copy `m`.
+      // `putEach` says "The given map must not read this map's data."  That is true of `m`.
+      // Contrast with `putAll`, which must make a copy.
       putEach(m);
     }
   }
@@ -120,12 +120,27 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
 
   /**
    * Returns the inverse view of this map, which maps each value to its key. The two maps are backed
-   * by the same data, so changes to either are reflected in the other.
+   * by the same data, so any change to one is reflected in the other.
    *
    * @return the inverse view of this map
    */
   public IdentityBiMap<V, K> inverse() {
     return inverse;
+  }
+
+  @Override
+  public @NonNegative int size() {
+    return forward.size();
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return forward.isEmpty();
+  }
+
+  @Override
+  public @Nullable V get(@Nullable Object key) {
+    return forward.get(key);
   }
 
   /**
@@ -140,16 +155,6 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   }
 
   @Override
-  public @NonNegative int size() {
-    return forward.size();
-  }
-
-  @Override
-  public boolean isEmpty() {
-    return forward.isEmpty();
-  }
-
-  @Override
   public boolean containsKey(@Nullable Object key) {
     return forward.containsKey(key);
   }
@@ -157,11 +162,6 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   @Override
   public boolean containsValue(@Nullable Object value) {
     return backward.containsKey(value);
-  }
-
-  @Override
-  public @Nullable V get(@Nullable Object key) {
-    return forward.get(key);
   }
 
   /**
@@ -216,8 +216,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
         // that their toString() methods are slow or throw.
         throw new IllegalArgumentException(
             "value already present: " + value + " (mapped from " + otherKey + ")");
+      } else {
+        forward.remove(otherKey);
       }
-      forward.remove(otherKey);
     }
     V oldValue = forward.put(key, value);
     if (containsKey) {
@@ -328,10 +329,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     "IdentityHashMapUsage", // the copy of the argument compares by identity
   })
   public void putAll(Map<? extends K, ? extends V> m) {
-    // If `m` reads this map's data, as `inverse` and a wrapper around `inverse` do, then iterating
-    // over `m` while modifying this map would throw ConcurrentModificationException.  An
-    // IdentityBiMap other than `inverse` does not read this map's data.  (`putAll(this)` makes
-    // no structural modification.)
+    // If `m` reads this map's data (for example, if `m` is `inverse` or a wrapper around
+    // `inverse`), then iterating over `m` while modifying this map would throw
+    // ConcurrentModificationException, so iterate over a copy instead.
     if (!(m instanceof IdentityBiMap<?, ?>) || m == inverse) {
       m = new IdentityHashMap<>(m);
     }
@@ -547,19 +547,19 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   @Override
   @SuppressWarnings("allcheckers:purity.call") // assumes elements' toString() is pure
   public String toString() {
-    StringBuilder sb = new StringBuilder("{");
+    StringBuilder result = new StringBuilder("{");
     boolean first = true;
     for (Map.Entry<K, V> e : forward.entrySet()) {
       if (!first) {
-        sb.append(", ");
+        result.append(", ");
       }
       first = false;
-      sb.append(toStringElement(e.getKey()));
-      sb.append('=');
-      sb.append(toStringElement(e.getValue()));
+      result.append(toStringElement(e.getKey()));
+      result.append('=');
+      result.append(toStringElement(e.getValue()));
     }
-    sb.append('}');
-    return sb.toString();
+    result.append('}');
+    return result.toString();
   }
 
   /**
@@ -584,6 +584,9 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
    * An iterator over the mappings of this map, whose {@code remove} method updates both {@link
    * #forward} and {@link #backward}.
    *
+   * <p>This is the common superclass of {@link KeyIterator}, {@link ValueIterator}, and {@link
+   * EntryIterator}.
+   *
    * @param <T> the type of the elements returned by the iterator
    */
   private abstract class MappingIterator<T> implements Iterator<T> {
@@ -591,8 +594,11 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     /** The underlying iterator. */
     private final Iterator<Map.Entry<K, V>> itor = forward.entrySet().iterator();
 
-    /** The key of the mapping most recently returned by the underlying iterator. */
-    private @Nullable K lastKey = null;
+    /**
+     * The key of the mapping most recently returned by the underlying iterator. It is used by
+     * {@link #remove}.
+     */
+    private @Nullable K previousKey = null;
 
     /** Creates a new MappingIterator. */
     @SideEffectFree
@@ -617,7 +623,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     public T next() {
       Map.Entry<K, V> e = itor.next();
       K key = e.getKey();
-      lastKey = key;
+      previousKey = key;
       return element(key, e.getValue());
     }
 
@@ -625,10 +631,10 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     public void remove() {
       // The value might have changed since `next()` returned, so look it up.  If this call is
       // illegal, `itor.remove()` throws IllegalStateException before `backward` is modified.
-      V value = forward.get(lastKey);
+      V value = forward.get(previousKey);
       itor.remove();
       backward.remove(value);
-      lastKey = null; // permit garbage collection of the removed key
+      previousKey = null; // permit garbage collection of the removed key
     }
   }
 
@@ -675,7 +681,8 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
   }
 
   /**
-   * A view of the keys, values, or entries of an {@link IdentityBiMap}.
+   * A view of the keys, values, or entries of an {@link IdentityBiMap}. The view supports removal
+   * but not addition.
    *
    * @param <E> the type of the elements of the view
    */
@@ -840,7 +847,7 @@ public final class IdentityBiMap<K, V> implements Map<K, V>, Serializable {
     }
 
     /**
-     * Replaces the value of this entry and of its mapping in the map.
+     * Replaces the value of this entry. Writes through to the map.
      *
      * @param value the new value
      * @return the old value
