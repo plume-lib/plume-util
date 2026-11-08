@@ -1152,20 +1152,20 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     if (size == 0) {
       return "{}";
     }
-    StringBuilder sb = new StringBuilder(16 * size);
-    sb.append('{');
+    StringBuilder result = new StringBuilder(16 * size);
+    result.append('{');
     for (int i = 0; i < size; i++) {
       if (i != 0) {
-        sb.append(", ");
+        result.append(", ");
       }
       K key = keys[i];
       V value = values[i];
-      sb.append(key == this ? "(this Map)" : key);
-      sb.append('=');
-      sb.append(value == this ? "(this Map)" : value);
+      result.append(key == this ? "(this Map)" : key);
+      result.append('=');
+      result.append(value == this ? "(this Map)" : value);
     }
-    sb.append('}');
-    return sb.toString();
+    result.append('}');
+    return result.toString();
   }
 
   // Defaultable methods
