@@ -26,6 +26,24 @@
 - New method `FilesP.replaceFile()` moves a file over another, atomically if
   possible, keeping the replaced file's owner, group, and POSIX permissions
   where possible.
+- `StringsP.toStringAndClass()`, `StringsP.listToStringAndClass()`,
+  `StringsP.listToString()`, and `MapsP.mapToStringAndClassMultiLine()` do not
+  throw when printing a value throws, unless the JVM is broken or out of
+  resources, as for `OutOfMemoryError`.  Formerly, they threw if a `toString()`
+  threw an `Error`, such as `StackOverflowError`, or if iterating over a list's
+  or map's elements threw.  Their message for a failure includes the thrown
+  throwable's `toString()`, which contains its class and message.
+- `StringsP.toStringAndClass()` changes:
+  - If a value's `toString()` calls `toStringAndClass()` on the same value,
+    directly or via other values, the inner call returns
+    "cyclic_reference [CLASS]".
+  - A map is printed between lines "{" and "} [CLASS]", so the result shows the
+    map's class, and an empty map is printed as "{} [CLASS]".
+  - With `shallow` true, an array of primitives is printed as its elements
+    rather than as an identity hash code such as `[I@1b6d3586`.
+- `MapsP.mapToStringAndClassMultiLine()` prints each key and value shallowly:
+  it prints a key or value that is a list, a map, or an array of objects using
+  its own `toString()`, rather than showing each element and its class.
 
 ## 2.0.0 (2026-08-05)
 
