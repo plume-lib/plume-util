@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.AbstractList;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -531,6 +533,15 @@ final class StringsPTest {
     }
   }
 
+  /** A map whose {@code entrySet()} throws, so iterating over its entries throws. */
+  static class EntrySetThrowsMap extends AbstractMap<Object, Object> {
+    @SideEffectFree
+    @Override
+    public Set<Map.Entry<Object, Object>> entrySet(@GuardSatisfied EntrySetThrowsMap this) {
+      throw new ConcurrentModificationException();
+    }
+  }
+
   /** Test toStringAndClass(). */
   @Test
   void test_toStringAndClass() {
@@ -552,6 +563,10 @@ final class StringsPTest {
         "exception_when_printing_elements [class org.plumelib.util.StringsPTest$GetThrowsList]:"
             + " java.util.ConcurrentModificationException",
         StringsP.toStringAndClass(new GetThrowsList()));
+    assertEquals(
+        "exception_when_printing_elements [class org.plumelib.util.StringsPTest$EntrySetThrowsMap]:"
+            + " java.util.ConcurrentModificationException",
+        StringsP.toStringAndClass(new EntrySetThrowsMap()));
     assertThrows(
         OutOfMemoryError.class,
         () -> StringsP.toStringAndClass(new ToStringThrowsOutOfMemoryError()));
