@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
@@ -552,7 +553,7 @@ final class StringsPTest {
     @SideEffectFree
     @Override
     public String toString(@GuardSatisfied ToStringRecurses this) {
-      return "ToStringRecurses(" + StringsP.toStringAndClass(this) + ")";
+      return "ToStringRecurses(\"" + StringsP.toStringAndClass(this) + "\")";
     }
   }
 
@@ -637,18 +638,47 @@ final class StringsPTest {
         OutOfMemoryError.class,
         () -> StringsP.toStringAndClass(Arrays.asList(new ToStringThrowsOutOfMemoryError())));
 
-    // The stack is nearly exhausted when the innermost call to toStringAndClass catches the
-    // StackOverflowError.
-    String recursive = StringsP.toStringAndClass(new ToStringRecurses());
-    assertTrue(recursive.startsWith("ToStringRecurses(ToStringRecurses("), recursive);
-    assertTrue(recursive.contains("exception_when_calling_toString"), recursive);
+    // A toString() that calls toStringAndClass on its receiver.
+    assertEquals(
+        "ToStringRecurses(\\\"cyclic_reference [class"
+            + " org.plumelib.util.StringsPTest$ToStringRecurses]\\\")"
+            + " [class org.plumelib.util.StringsPTest$ToStringRecurses]",
+        StringsP.toStringAndClass(new ToStringRecurses()));
+
+    String lineSep = System.lineSeparator();
+
+    assertEquals("{} [class java.util.HashMap]", StringsP.toStringAndClass(new HashMap<>()));
+    assertEquals(
+        "{"
+            + lineSep
+            + "  k [class java.lang.String] => [1, 2] [class [I]"
+            + lineSep
+            + "} [class java.util.TreeMap]",
+        StringsP.toStringAndClass(new TreeMap<>(Map.of("k", new int[] {1, 2}))));
+    assertEquals("[1, 2] [class [I]", StringsP.toStringAndClass(new int[] {1, 2}, true));
 
     // A map that contains itself directly.
     Map<String, Object> selfMap = new HashMap<>();
     selfMap.put("a", selfMap);
     assertEquals(
-        "a [class java.lang.String] => {a=(this Map)} [class java.util.HashMap]",
+        "{"
+            + lineSep
+            + "  a [class java.lang.String] => cyclic_reference [class java.util.HashMap]"
+            + lineSep
+            + "} [class java.util.HashMap]",
         StringsP.toStringAndClass(selfMap));
+
+    // A list and an array that contain themselves directly.
+    List<Object> selfList = new ArrayList<>();
+    selfList.add(selfList);
+    assertEquals(
+        "[cyclic_reference [class java.util.ArrayList]] [class java.util.ArrayList]",
+        StringsP.toStringAndClass(selfList));
+    Object[] selfArray = new Object[1];
+    selfArray[0] = selfArray;
+    assertEquals(
+        "[cyclic_reference [class [Ljava.lang.Object;]] [class [Ljava.lang.Object;]",
+        StringsP.toStringAndClass(selfArray));
 
     // Maps that contain each other.  Two entries in map1 would take exponential time if map keys
     // and values were printed non-shallowly.
@@ -658,11 +688,15 @@ final class StringsPTest {
     map1.put("b", map2);
     map2.put("c", map1);
     assertEquals(
-        "a [class java.lang.String] => exception_when_calling_toString [class java.util.HashMap]:"
-            + " java.lang.StackOverflowError"
-            + System.lineSeparator()
-            + "b [class java.lang.String] => exception_when_calling_toString [class"
-            + " java.util.HashMap]: java.lang.StackOverflowError",
+        "{"
+            + lineSep
+            + "  a [class java.lang.String] => exception_when_calling_toString [class"
+            + " java.util.HashMap]: java.lang.StackOverflowError"
+            + lineSep
+            + "  b [class java.lang.String] => exception_when_calling_toString [class"
+            + " java.util.HashMap]: java.lang.StackOverflowError"
+            + lineSep
+            + "} [class java.util.HashMap]",
         StringsP.toStringAndClass(map1));
 
     // Lists that contain each other.

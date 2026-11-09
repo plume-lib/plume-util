@@ -482,7 +482,7 @@ public final class MapsP {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  private static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+  static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
       String entriesToString(Map<K, V> m, String linePrefix) {
     StringJoiner result = new StringJoiner(LINE_SEP);
     for (Map.Entry<K, V> e : m.entrySet()) {

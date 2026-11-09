@@ -19,8 +19,10 @@ import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.modifiability.qual.IteratorPolyMod;
 import org.checkerframework.checker.modifiability.qual.Modifiable;
 import org.checkerframework.checker.mustcall.qual.MustCallUnknown;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.regex.qual.Regex;
@@ -1256,8 +1258,9 @@ public final class StringsP {
   //
 
   /**
-   * Returns a string representation of the value and its class. Shows elements of arrays, lists,
-   * and maps; to omit them, pass true to {@link #toStringAndClass(Object, boolean)}. Like that
+   * Returns a string representation of the value and its class. Shows each element of an array,
+   * list, or map along with the element's class; to use the {@code toString()} of a list, a map, or
+   * an array of objects instead, pass true to {@link #toStringAndClass(Object, boolean)}. Like that
    * method, this method does not throw even if printing the value throws, except that it rethrows a
    * {@link VirtualMachineError} other than {@link StackOverflowError}.
    *
@@ -1270,24 +1273,49 @@ public final class StringsP {
   }
 
   /**
+   * The values that calls to {@link #toStringAndClass(Object, boolean)} on the current thread are
+   * printing, outermost first.
+   */
+  private static final ThreadLocal<@Nullable @Modifiable @IteratorPolyMod List<Object>>
+      valuesBeingPrinted = ThreadLocal.withInitial(() -> new ArrayList<>());
+
+  /**
    * Returns a string representation of the value and its class. Intended for debugging.
    *
-   * <p>This method does not throw, even if printing the value throws, unless the JVM is broken or
-   * out of resources other than stack: it rethrows a {@link VirtualMachineError} other than {@link
-   * StackOverflowError}, such as {@link OutOfMemoryError}. If calling {@code toString()} on the
-   * value or on one of its elements throws, then the text for that value or element is
-   * "exception_when_calling_toString [CLASS]: THROWABLE", where THROWABLE is the result of {@code
-   * toString()} on the thrown throwable, as in "exception_when_calling_toString [class
+   * <p>An array of primitives is shown as its elements, as in "[1, 2] [class [I]". A list is shown
+   * as its elements, each with its class, as in "[a [class java.lang.String]] [class
+   * java.util.ArrayList]". A map is shown as a line "{", then one line per entry, indented by two
+   * spaces, such as "a [class java.lang.String] =&gt; 1 [class java.lang.Integer]", then a line
+   * such as "} [class java.util.HashMap]"; an empty map is shown as "{} [class java.util.HashMap]".
+   * An array of objects is shown like a list. Each element, key, and value is shown as if by {@code
+   * toStringAndClass(element, true)}.
+   *
+   * <p>If {@code toString()} on a value calls this method on the same value, directly or via other
+   * values, then the inner call returns "cyclic_reference [CLASS]".
+   *
+   * <p>This method does not throw when printing the value throws, unless the JVM is broken or out
+   * of resources other than stack: it rethrows a {@link VirtualMachineError} other than {@link
+   * StackOverflowError}, such as {@link OutOfMemoryError}. It can also throw {@code
+   * StackOverflowError} if it is called when the stack is nearly exhausted. If calling {@code
+   * toString()} on the value or on one of its elements throws, then the text for that value or
+   * element is "exception_when_calling_toString [CLASS]: THROWABLE", where THROWABLE is the result
+   * of {@code toString()} on the thrown throwable, as in "exception_when_calling_toString [class
    * java.util.ArrayList]: java.lang.StackOverflowError" for a list that contains itself indirectly.
    * If iterating over the elements of a list or map throws, as when iteration throws {@code
    * ConcurrentModificationException}, the result is "exception_when_printing_elements [CLASS]:
-   * THROWABLE". If the stack is too nearly exhausted to describe the failure, the text is just
-   * "exception_when_calling_toString" or "exception_when_printing_elements".
+   * THROWABLE". If the stack is too nearly exhausted to describe the failure, or if {@code
+   * toString()} on the thrown throwable throws, the text is just "exception_when_calling_toString"
+   * or "exception_when_printing_elements".
    *
    * @param v a value; may be null
-   * @param shallow true if the result omits elements of arrays, lists, and maps
+   * @param shallow true if the result uses the value's own {@code toString()}, rather than showing
+   *     each element and its class, for a list, a map, or an array of objects
    * @return the value's toString and its class
    */
+  @SuppressWarnings({
+    "allcheckers:purity", // side effect to valuesBeingPrinted, which is restored before returning
+    "lock:method.guarantee.violated" // side effect to valuesBeingPrinted
+  })
   @SideEffectFree
   public static String toStringAndClass(@Nullable Object v, boolean shallow) {
     if (v == null) {
@@ -1297,10 +1325,65 @@ public final class StringsP {
     if (vClass == Object.class) {
       return "a value of class " + vClass;
     }
+    if (vClass.isArray() && vClass.getComponentType().isPrimitive()) {
+      // An array of primitives cannot contain a cycle, and its toString() shows no elements.
+      return arrayToStringAndClass(v);
+    }
+    @SuppressWarnings("nullness:assignment") // withInitial() makes get() return non-null
+    @NonNull @Modifiable @IteratorPolyMod List<Object> beingPrinted = valuesBeingPrinted.get();
+    if (containsIdentical(beingPrinted, v)) {
+      return "cyclic_reference [" + vClass + "]";
+    }
+    int numBeingPrinted = beingPrinted.size();
+    beingPrinted.add(v);
+    try {
+      return toStringAndClassNoCycle(v, vClass, shallow);
+    } finally {
+      // Remove v, and also any value that a nested call did not remove because its finally block
+      // threw StackOverflowError.
+      while (beingPrinted.size() > numBeingPrinted) {
+        beingPrinted.remove(beingPrinted.size() - 1);
+      }
+    }
+  }
+
+  /**
+   * Returns true if the list contains the given value, compared by identity.
+   *
+   * @param lst a list
+   * @param v the value to search for
+   * @return true if the list contains the given value, compared by identity
+   */
+  @SuppressWarnings({
+    "interning:not.interned", // compares by identity
+    "ReferenceEquality" // compares by identity
+  })
+  @Pure
+  private static boolean containsIdentical(List<Object> lst, Object v) {
+    for (Object o : lst) {
+      if (o == v) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns a string representation of the value and its class, as described in {@link
+   * #toStringAndClass(Object, boolean)}, given that the value is not an array of primitives and is
+   * not already being printed.
+   *
+   * @param v a value
+   * @param vClass the class of the value
+   * @param shallow true if the result uses the value's own {@code toString()}, rather than showing
+   *     each element and its class, for a list, a map, or an array of objects
+   * @return the value's toString and its class
+   */
+  @SideEffectFree
+  private static String toStringAndClassNoCycle(Object v, Class<?> vClass, boolean shallow) {
     if (!shallow) {
-      // Printing an element calls this method, which does not throw.
+      // Printing an element calls toStringAndClass, which does not throw.
       if (vClass.isArray()) {
-        // Iterating over an array does not throw.
         return arrayToStringAndClass(v);
       }
       if (v instanceof List<?> l) {
@@ -1314,11 +1397,21 @@ public final class StringsP {
             "exception_when_printing_elements");
       }
       if (v instanceof Map<?, ?> m) {
-        @SuppressWarnings("keyfor:type.argument") // TODO
-        String result =
-            MapsP.mapToStringAndClassMultiLine(
-                (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
-        return result;
+        return printSafely(
+            () -> {
+              @SuppressWarnings("keyfor:type.argument") // TODO
+              String entries =
+                  MapsP.entriesToString(
+                      (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>)
+                          m,
+                      "  ");
+              return (entries.isEmpty() ? "{" : "{" + LINE_SEP + entries + LINE_SEP)
+                  + "} ["
+                  + vClass
+                  + "]";
+            },
+            vClass,
+            "exception_when_printing_elements");
       }
     }
     return printSafely(
@@ -1343,7 +1436,7 @@ public final class StringsP {
    * indirectly.
    *
    * @param printer a computation that returns a string representation of a value
-   * @param vClass the class of the value that the printer prints
+   * @param vClass the class of the value that the printer prints; used for diagnostics
    * @param failureLabel the text that starts the result if the printer throws, such as
    *     "exception_when_calling_toString"
    * @return the printer's result, or text describing the failure if the printer throws
@@ -1466,7 +1559,10 @@ public final class StringsP {
     }
 
     if (a instanceof Object[] oa) {
-      return listToString(Arrays.asList(oa)) + theClass;
+      return printSafely(
+          () -> elementsToString(Arrays.asList(oa)) + theClass,
+          a.getClass(),
+          "exception_when_printing_elements");
     }
 
     throw new IllegalArgumentException(
