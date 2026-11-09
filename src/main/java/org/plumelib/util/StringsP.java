@@ -1316,7 +1316,8 @@ public final class StringsP {
       }
     }
     try {
-      String formatted = escapeJava(v.toString());
+      // String.valueOf handles a toString() that returns null, in violation of its contract.
+      String formatted = escapeJava(String.valueOf(v.toString()));
       return String.format("%s [%s]", formatted, vClass);
     } catch (Throwable t) {
       rethrowIfVirtualMachineError(t);
@@ -1418,12 +1419,7 @@ public final class StringsP {
     }
 
     if (a instanceof Object[] oa) {
-      try {
-        return listToString(Arrays.asList(oa)) + theClass;
-      } catch (Throwable t) {
-        rethrowIfVirtualMachineError(t);
-        return "exception_when_printing_array" + theClass + ": " + t.getClass().getName();
-      }
+      return listToString(Arrays.asList(oa)) + theClass;
     }
 
     throw new IllegalArgumentException(

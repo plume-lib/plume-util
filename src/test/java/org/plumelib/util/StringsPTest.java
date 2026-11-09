@@ -519,6 +519,19 @@ final class StringsPTest {
     }
   }
 
+  /** A class whose {@code toString()} returns null. */
+  static class ToStringReturnsNull {
+    @SuppressWarnings({
+      "nullness:return", // violates toString()'s contract, for testing
+      "ToStringReturnsNull" // violates toString()'s contract, for testing
+    })
+    @SideEffectFree
+    @Override
+    public String toString(@GuardSatisfied ToStringReturnsNull this) {
+      return null;
+    }
+  }
+
   /** A list of size 1 whose {@code get()} throws, so iterating over it throws. */
   static class GetThrowsList extends AbstractList<Object> {
     @Pure
@@ -562,6 +575,9 @@ final class StringsPTest {
         "exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsError]:"
             + " java.lang.AssertionError",
         StringsP.toStringAndClass(new ToStringThrowsError()));
+    assertEquals(
+        "null [class org.plumelib.util.StringsPTest$ToStringReturnsNull]",
+        StringsP.toStringAndClass(new ToStringReturnsNull()));
     assertEquals(
         "[exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsError]:"
             + " java.lang.AssertionError] [class java.util.Arrays$ArrayList]",
