@@ -1255,8 +1255,9 @@ public final class StringsP {
   //
 
   /**
-   * Gives a string representation of the value and its class. Shows elements of collections; to
-   * omit them, pass false to {@link #toStringAndClass(Object, boolean)}.
+   * Gives a string representation of the value and its class. Shows elements of arrays, lists, and
+   * maps; to omit them, pass true to {@link #toStringAndClass(Object, boolean)}. Like that method,
+   * this method does not throw even if printing the value throws.
    *
    * @param v a value; may be null
    * @return the value's toString and its class
@@ -1269,12 +1270,15 @@ public final class StringsP {
   /**
    * Gives a string representation of the value and its class. Intended for debugging.
    *
-   * <p>This method never throws, even if printing the value throws. If {@code v.toString()} throws,
-   * the result is "exception_when_calling_toString [CLASS]: THROWABLE", as in
-   * "exception_when_calling_toString [class java.util.HashMap]: java.lang.StackOverflowError". If
-   * printing the elements of an array, list, or map throws, as when iteration throws {@code
-   * ConcurrentModificationException}, the result is "exception_when_printing_elements [CLASS]:
-   * THROWABLE".
+   * <p>This method does not throw, even if printing the value throws, unless the JVM is broken or
+   * out of resources other than stack: it rethrows a {@link VirtualMachineError} other than {@link
+   * StackOverflowError}, such as {@link OutOfMemoryError}. If calling {@code toString()} on the
+   * value or on one of its elements throws, then the text for that value or element is
+   * "exception_when_calling_toString [CLASS]: THROWABLE", as in "exception_when_calling_toString
+   * [class java.util.ArrayList]: java.lang.StackOverflowError" for a list that contains itself
+   * indirectly. If iterating over the elements of an array, list, or map throws, as when iteration
+   * throws {@code ConcurrentModificationException}, the result is "exception_when_printing_elements
+   * [CLASS]: THROWABLE".
    *
    * @param v a value; may be null
    * @param shallow if true, do not show elements of arrays, lists, and maps
@@ -1290,8 +1294,7 @@ public final class StringsP {
       return "a value of class " + vClass;
     }
     if (!shallow) {
-      // Printing an element calls this method, which does not throw.  But iterating can throw, as
-      // can a deep recursion through elements.
+      // Printing an element calls this method, which does not throw, but iterating can throw.
       try {
         if (vClass.isArray()) {
           return arrayToStringAndClass(v);
@@ -1307,6 +1310,7 @@ public final class StringsP {
           return result;
         }
       } catch (Throwable t) {
+        rethrowIfVirtualMachineError(t);
         return String.format(
             "exception_when_printing_elements [%s]: %s", vClass, t.getClass().getName());
       }
@@ -1315,10 +1319,27 @@ public final class StringsP {
       String formatted = escapeJava(v.toString());
       return String.format("%s [%s]", formatted, vClass);
     } catch (Throwable t) {
+      rethrowIfVirtualMachineError(t);
       // v.toString() can throw an Error, such as StackOverflowError for a collection that contains
       // itself indirectly.
       return String.format(
           "exception_when_calling_toString [%s]: %s", vClass, t.getClass().getName());
+    }
+  }
+
+  /**
+   * Throws the given throwable if it is a {@link VirtualMachineError} other than {@link
+   * StackOverflowError}, such as {@link OutOfMemoryError}. Such an error means that the JVM is
+   * broken or out of resources, so a caller should not catch it. A {@code StackOverflowError} is
+   * not rethrown, because {@code toString()} throws it for a collection that contains itself
+   * indirectly, and the stack has unwound by the time the error is caught.
+   *
+   * @param t a throwable
+   */
+  @SideEffectFree
+  private static void rethrowIfVirtualMachineError(Throwable t) {
+    if (t instanceof VirtualMachineError vme && !(t instanceof StackOverflowError)) {
+      throw vme;
     }
   }
 
@@ -1400,6 +1421,7 @@ public final class StringsP {
       try {
         return listToString(Arrays.asList(oa)) + theClass;
       } catch (Throwable t) {
+        rethrowIfVirtualMachineError(t);
         return "exception_when_printing_array" + theClass + ": " + t.getClass().getName();
       }
     }

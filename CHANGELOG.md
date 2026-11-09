@@ -26,10 +26,14 @@
 - New method `FilesP.replaceFile()` moves a file over another, atomically if
   possible, keeping the replaced file's owner, group, and POSIX permissions
   where possible.
-- `StringsP.toStringAndClass()` never throws.  Formerly, it threw if the
-  value's `toString()` threw an `Error`, such as `StackOverflowError`, or if
-  iterating over an array, list, or map's elements threw.  Its message for a
+- `StringsP.toStringAndClass()` does not throw, unless the JVM is broken or out
+  of resources other than stack, as for `OutOfMemoryError`.  Formerly, it threw
+  if the value's `toString()` threw an `Error`, such as `StackOverflowError`, or
+  if iterating over an array, list, or map's elements threw.  Its message for a
   failure names the thrown class.
+- `MapsP.mapToStringAndClassMultiLine()` prints each key and value shallowly:
+  it does not show the elements of a key or value that is an array, list, or
+  map.
 
 ## 2.0.0 (2026-08-05)
 

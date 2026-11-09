@@ -2,6 +2,7 @@ package org.plumelib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.AbstractList;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -505,6 +507,15 @@ final class StringsPTest {
     }
   }
 
+  /** A class whose {@code toString()} throws {@code OutOfMemoryError}. */
+  static class ToStringThrowsOutOfMemoryError {
+    @SideEffectFree
+    @Override
+    public String toString(@GuardSatisfied ToStringThrowsOutOfMemoryError this) {
+      throw new OutOfMemoryError();
+    }
+  }
+
   /** A list of size 1 whose {@code get()} throws, so iterating over it throws. */
   static class GetThrowsList extends AbstractList<Object> {
     @Pure
@@ -541,6 +552,44 @@ final class StringsPTest {
         "exception_when_printing_elements [class org.plumelib.util.StringsPTest$GetThrowsList]:"
             + " java.util.ConcurrentModificationException",
         StringsP.toStringAndClass(new GetThrowsList()));
+    assertThrows(
+        OutOfMemoryError.class,
+        () -> StringsP.toStringAndClass(new ToStringThrowsOutOfMemoryError()));
+    assertThrows(
+        OutOfMemoryError.class,
+        () -> StringsP.toStringAndClass(Arrays.asList(new ToStringThrowsOutOfMemoryError())));
+
+    // A map that contains itself directly.
+    Map<String, Object> selfMap = new HashMap<>();
+    selfMap.put("a", selfMap);
+    assertEquals(
+        "a [class java.lang.String] => {a=(this Map)} [class java.util.HashMap]",
+        StringsP.toStringAndClass(selfMap));
+
+    // Maps that contain each other.  Two entries in map1 would take exponential time if map keys
+    // and values were printed non-shallowly.
+    Map<String, Object> map1 = new HashMap<>();
+    Map<String, Object> map2 = new HashMap<>();
+    map1.put("a", map2);
+    map1.put("b", map2);
+    map2.put("c", map1);
+    assertEquals(
+        "a [class java.lang.String] => exception_when_calling_toString [class java.util.HashMap]:"
+            + " java.lang.StackOverflowError"
+            + System.lineSeparator()
+            + "b [class java.lang.String] => exception_when_calling_toString [class"
+            + " java.util.HashMap]: java.lang.StackOverflowError",
+        StringsP.toStringAndClass(map1));
+
+    // Lists that contain each other.
+    List<Object> list1 = new ArrayList<>();
+    List<Object> list2 = new ArrayList<>();
+    list1.add(list2);
+    list2.add(list1);
+    assertEquals(
+        "[exception_when_calling_toString [class java.util.ArrayList]:"
+            + " java.lang.StackOverflowError] [class java.util.ArrayList]",
+        StringsP.toStringAndClass(list1));
   }
 
   /** Test listToStringAndClass(). */

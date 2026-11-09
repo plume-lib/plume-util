@@ -464,9 +464,9 @@ public final class MapsP {
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(
           linePrefix
-              + StringsP.toStringAndClass(e.getKey())
+              + StringsP.toStringAndClass(e.getKey(), true)
               + " => "
-              + StringsP.toStringAndClass(e.getValue()));
+              + StringsP.toStringAndClass(e.getValue(), true));
     }
     return result.toString();
   }
