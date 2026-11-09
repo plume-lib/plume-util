@@ -26,6 +26,10 @@
 - New method `FilesP.replaceFile()` moves a file over another, atomically if
   possible, keeping the replaced file's owner, group, and POSIX permissions
   where possible.
+- `StringsP.toStringAndClass()` never throws.  Formerly, it threw if the
+  value's `toString()` threw an `Error`, such as `StackOverflowError`, or if
+  iterating over an array, list, or map's elements threw.  Its message for a
+  failure names the thrown class.
 
 ## 2.0.0 (2026-08-05)
 

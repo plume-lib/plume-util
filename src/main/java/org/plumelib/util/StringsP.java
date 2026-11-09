@@ -1269,8 +1269,15 @@ public final class StringsP {
   /**
    * Gives a string representation of the value and its class. Intended for debugging.
    *
+   * <p>This method never throws, even if printing the value throws. If {@code v.toString()} throws,
+   * the result is "exception_when_calling_toString [CLASS]: THROWABLE", as in
+   * "exception_when_calling_toString [class java.util.HashMap]: java.lang.StackOverflowError". If
+   * printing the elements of an array, list, or map throws, as when iteration throws {@code
+   * ConcurrentModificationException}, the result is "exception_when_printing_elements [CLASS]:
+   * THROWABLE".
+   *
    * @param v a value; may be null
-   * @param shallow if true, do not show elements of arrays and lists
+   * @param shallow if true, do not show elements of arrays, lists, and maps
    * @return the value's toString and its class
    */
   @SideEffectFree
@@ -1283,25 +1290,35 @@ public final class StringsP {
       return "a value of class " + vClass;
     }
     if (!shallow) {
-      if (vClass.isArray()) {
-        return arrayToStringAndClass(v);
-      }
-      if (v instanceof List<?> l) {
-        return listToStringAndClass((List<? extends @PolyNull @Signed Object>) l);
-      }
-      if (v instanceof Map<?, ?> m) {
-        @SuppressWarnings("keyfor:type.argument") // TODO
-        String result =
-            MapsP.mapToStringAndClassMultiLine(
-                (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
-        return result;
+      // Printing an element calls this method, which does not throw.  But iterating can throw, as
+      // can a deep recursion through elements.
+      try {
+        if (vClass.isArray()) {
+          return arrayToStringAndClass(v);
+        }
+        if (v instanceof List<?> l) {
+          return listToStringAndClass((List<? extends @PolyNull @Signed Object>) l);
+        }
+        if (v instanceof Map<?, ?> m) {
+          @SuppressWarnings("keyfor:type.argument") // TODO
+          String result =
+              MapsP.mapToStringAndClassMultiLine(
+                  (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
+          return result;
+        }
+      } catch (Throwable t) {
+        return String.format(
+            "exception_when_printing_elements [%s]: %s", vClass, t.getClass().getName());
       }
     }
     try {
       String formatted = escapeJava(v.toString());
       return String.format("%s [%s]", formatted, vClass);
-    } catch (Exception e) {
-      return String.format("exception_when_calling_toString [%s]", vClass);
+    } catch (Throwable t) {
+      // v.toString() can throw an Error, such as StackOverflowError for a collection that contains
+      // itself indirectly.
+      return String.format(
+          "exception_when_calling_toString [%s]: %s", vClass, t.getClass().getName());
     }
   }
 
@@ -1382,8 +1399,8 @@ public final class StringsP {
     if (a instanceof Object[] oa) {
       try {
         return listToString(Arrays.asList(oa)) + theClass;
-      } catch (Exception e) {
-        return "exception_when_printing_array" + theClass;
+      } catch (Throwable t) {
+        return "exception_when_printing_array" + theClass + ": " + t.getClass().getName();
       }
     }
 

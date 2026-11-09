@@ -4,15 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.lock.qual.GuardSatisfied;
 import org.checkerframework.common.value.qual.ArrayLen;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.junit.jupiter.api.Test;
 import org.plumelib.util.StringsP.VersionNumberComparator;
 
@@ -481,10 +487,60 @@ final class StringsPTest {
   // Debugging variants of toString
   //
 
+  /** A class whose {@code toString()} throws an exception. */
+  static class ToStringThrowsException {
+    @SideEffectFree
+    @Override
+    public String toString(@GuardSatisfied ToStringThrowsException this) {
+      throw new IllegalStateException();
+    }
+  }
+
+  /** A class whose {@code toString()} throws an error. */
+  static class ToStringThrowsError {
+    @SideEffectFree
+    @Override
+    public String toString(@GuardSatisfied ToStringThrowsError this) {
+      throw new AssertionError();
+    }
+  }
+
+  /** A list of size 1 whose {@code get()} throws, so iterating over it throws. */
+  static class GetThrowsList extends AbstractList<Object> {
+    @Pure
+    @Override
+    public Object get(@GuardSatisfied GetThrowsList this, int index) {
+      throw new ConcurrentModificationException();
+    }
+
+    @Pure
+    @Override
+    public @NonNegative int size(@GuardSatisfied GetThrowsList this) {
+      return 1;
+    }
+  }
+
   /** Test toStringAndClass(). */
   @Test
   void test_toStringAndClass() {
-    // Tests go here.
+    assertEquals("null", StringsP.toStringAndClass(null));
+    assertEquals("hello [class java.lang.String]", StringsP.toStringAndClass("hello"));
+    assertEquals(
+        "exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsException]:"
+            + " java.lang.IllegalStateException",
+        StringsP.toStringAndClass(new ToStringThrowsException()));
+    assertEquals(
+        "exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsError]:"
+            + " java.lang.AssertionError",
+        StringsP.toStringAndClass(new ToStringThrowsError()));
+    assertEquals(
+        "[exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsError]:"
+            + " java.lang.AssertionError] [class java.util.Arrays$ArrayList]",
+        StringsP.toStringAndClass(Arrays.asList(new ToStringThrowsError())));
+    assertEquals(
+        "exception_when_printing_elements [class org.plumelib.util.StringsPTest$GetThrowsList]:"
+            + " java.util.ConcurrentModificationException",
+        StringsP.toStringAndClass(new GetThrowsList()));
   }
 
   /** Test listToStringAndClass(). */
