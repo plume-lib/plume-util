@@ -497,7 +497,7 @@ final class StringsPTest {
     @SideEffectFree
     @Override
     public String toString(@GuardSatisfied ToStringThrowsException this) {
-      throw new IllegalStateException();
+      throw new IllegalStateException("field f is not initialized");
     }
   }
 
@@ -516,6 +516,43 @@ final class StringsPTest {
     @Override
     public String toString(@GuardSatisfied ToStringThrowsOutOfMemoryError this) {
       throw new OutOfMemoryError();
+    }
+  }
+
+  /** A throwable whose {@code getMessage()}, and therefore whose {@code toString()}, throws. */
+  static class GetMessageThrowsThrowable extends RuntimeException {
+    /** Unique identifier for serialization. */
+    private static final long serialVersionUID = 20261109L;
+
+    /** Creates a GetMessageThrowsThrowable. */
+    @SideEffectFree
+    GetMessageThrowsThrowable() {
+      super();
+    }
+
+    @Pure
+    @Override
+    public String getMessage(@GuardSatisfied GetMessageThrowsThrowable this) {
+      throw new IllegalStateException();
+    }
+  }
+
+  /** A class whose {@code toString()} throws a throwable whose {@code toString()} throws. */
+  static class ToStringThrowsBadThrowable {
+    @SideEffectFree
+    @Override
+    public String toString(@GuardSatisfied ToStringThrowsBadThrowable this) {
+      throw new GetMessageThrowsThrowable();
+    }
+  }
+
+  /** A class whose {@code toString()} calls {@code toStringAndClass()} on itself. */
+  static class ToStringRecurses {
+    @SuppressWarnings("lock:argument") // the test is single-threaded
+    @SideEffectFree
+    @Override
+    public String toString(@GuardSatisfied ToStringRecurses this) {
+      return "ToStringRecurses(" + StringsP.toStringAndClass(this) + ")";
     }
   }
 
@@ -569,8 +606,11 @@ final class StringsPTest {
     assertEquals("hello [class java.lang.String]", StringsP.toStringAndClass("hello"));
     assertEquals(
         "exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsException]:"
-            + " java.lang.IllegalStateException",
+            + " java.lang.IllegalStateException: field f is not initialized",
         StringsP.toStringAndClass(new ToStringThrowsException()));
+    assertEquals(
+        "exception_when_calling_toString",
+        StringsP.toStringAndClass(new ToStringThrowsBadThrowable()));
     assertEquals(
         "exception_when_calling_toString [class org.plumelib.util.StringsPTest$ToStringThrowsError]:"
             + " java.lang.AssertionError",
@@ -596,6 +636,12 @@ final class StringsPTest {
     assertThrows(
         OutOfMemoryError.class,
         () -> StringsP.toStringAndClass(Arrays.asList(new ToStringThrowsOutOfMemoryError())));
+
+    // The stack is nearly exhausted when the innermost call to toStringAndClass catches the
+    // StackOverflowError.
+    String recursive = StringsP.toStringAndClass(new ToStringRecurses());
+    assertTrue(recursive.startsWith("ToStringRecurses(ToStringRecurses("), recursive);
+    assertTrue(recursive.contains("exception_when_calling_toString"), recursive);
 
     // A map that contains itself directly.
     Map<String, Object> selfMap = new HashMap<>();
@@ -633,13 +679,25 @@ final class StringsPTest {
   /** Test listToStringAndClass(). */
   @Test
   void test_listToStringAndClass() {
-    // Tests go here.
+    assertEquals("null", StringsP.listToStringAndClass(null));
+    assertEquals(
+        "[a [class java.lang.String]] [class java.util.Arrays$ArrayList]",
+        StringsP.listToStringAndClass(Arrays.asList("a")));
+    assertEquals(
+        "exception_when_printing_elements [class org.plumelib.util.StringsPTest$GetThrowsList]:"
+            + " java.util.ConcurrentModificationException",
+        StringsP.listToStringAndClass(new GetThrowsList()));
   }
 
   /** Test listToString(). */
   @Test
   void test_listToString() {
-    // Tests go here.
+    assertEquals("null", StringsP.listToString(null));
+    assertEquals("[a [class java.lang.String]]", StringsP.listToString(Arrays.asList("a")));
+    assertEquals(
+        "exception_when_printing_elements [class org.plumelib.util.StringsPTest$GetThrowsList]:"
+            + " java.util.ConcurrentModificationException",
+        StringsP.listToString(new GetThrowsList()));
   }
 
   /** Test arrayToStringAndClass(). */

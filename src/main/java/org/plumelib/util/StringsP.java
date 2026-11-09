@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.StringTokenizer;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -1255,9 +1256,10 @@ public final class StringsP {
   //
 
   /**
-   * Gives a string representation of the value and its class. Shows elements of arrays, lists, and
-   * maps; to omit them, pass true to {@link #toStringAndClass(Object, boolean)}. Like that method,
-   * this method does not throw even if printing the value throws.
+   * Returns a string representation of the value and its class. Shows elements of arrays, lists,
+   * and maps; to omit them, pass true to {@link #toStringAndClass(Object, boolean)}. Like that
+   * method, this method does not throw even if printing the value throws, except that it rethrows a
+   * {@link VirtualMachineError} other than {@link StackOverflowError}.
    *
    * @param v a value; may be null
    * @return the value's toString and its class
@@ -1268,20 +1270,22 @@ public final class StringsP {
   }
 
   /**
-   * Gives a string representation of the value and its class. Intended for debugging.
+   * Returns a string representation of the value and its class. Intended for debugging.
    *
    * <p>This method does not throw, even if printing the value throws, unless the JVM is broken or
    * out of resources other than stack: it rethrows a {@link VirtualMachineError} other than {@link
    * StackOverflowError}, such as {@link OutOfMemoryError}. If calling {@code toString()} on the
    * value or on one of its elements throws, then the text for that value or element is
-   * "exception_when_calling_toString [CLASS]: THROWABLE", as in "exception_when_calling_toString
-   * [class java.util.ArrayList]: java.lang.StackOverflowError" for a list that contains itself
-   * indirectly. If iterating over the elements of an array, list, or map throws, as when iteration
-   * throws {@code ConcurrentModificationException}, the result is "exception_when_printing_elements
-   * [CLASS]: THROWABLE".
+   * "exception_when_calling_toString [CLASS]: THROWABLE", where THROWABLE is the result of {@code
+   * toString()} on the thrown throwable, as in "exception_when_calling_toString [class
+   * java.util.ArrayList]: java.lang.StackOverflowError" for a list that contains itself indirectly.
+   * If iterating over the elements of a list or map throws, as when iteration throws {@code
+   * ConcurrentModificationException}, the result is "exception_when_printing_elements [CLASS]:
+   * THROWABLE". If the stack is too nearly exhausted to describe the failure, the text is just
+   * "exception_when_calling_toString" or "exception_when_printing_elements".
    *
    * @param v a value; may be null
-   * @param shallow if true, do not show elements of arrays, lists, and maps
+   * @param shallow true if the result omits elements of arrays, lists, and maps
    * @return the value's toString and its class
    */
   @SideEffectFree
@@ -1294,58 +1298,89 @@ public final class StringsP {
       return "a value of class " + vClass;
     }
     if (!shallow) {
-      // Printing an element calls this method, which does not throw, but iterating can throw.
-      try {
-        if (vClass.isArray()) {
-          return arrayToStringAndClass(v);
-        }
-        if (v instanceof List<?> l) {
-          return listToStringAndClass((List<? extends @PolyNull @Signed Object>) l);
-        }
-        if (v instanceof Map<?, ?> m) {
-          @SuppressWarnings("keyfor:type.argument") // TODO
-          String result =
-              MapsP.mapToStringAndClassMultiLine(
-                  (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
-          return result;
-        }
-      } catch (Throwable t) {
-        rethrowIfVirtualMachineError(t);
-        return String.format(
-            "exception_when_printing_elements [%s]: %s", vClass, t.getClass().getName());
+      // Printing an element calls this method, which does not throw.
+      if (vClass.isArray()) {
+        // Iterating over an array does not throw.
+        return arrayToStringAndClass(v);
+      }
+      if (v instanceof List<?> l) {
+        return printSafely(
+            () ->
+                elementsToString((List<? extends @PolyNull @Signed Object>) l)
+                    + " ["
+                    + vClass
+                    + "]",
+            vClass,
+            "exception_when_printing_elements");
+      }
+      if (v instanceof Map<?, ?> m) {
+        @SuppressWarnings("keyfor:type.argument") // TODO
+        String result =
+            MapsP.mapToStringAndClassMultiLine(
+                (Map<? extends @PolyNull @Signed Object, ? extends @PolyNull @Signed Object>) m);
+        return result;
       }
     }
-    try {
-      // String.valueOf handles a toString() that returns null, in violation of its contract.
-      String formatted = escapeJava(String.valueOf(v.toString()));
-      return String.format("%s [%s]", formatted, vClass);
-    } catch (Throwable t) {
-      rethrowIfVirtualMachineError(t);
-      // v.toString() can throw an Error, such as StackOverflowError for a collection that contains
-      // itself indirectly.
-      return String.format(
-          "exception_when_calling_toString [%s]: %s", vClass, t.getClass().getName());
-    }
+    return printSafely(
+        // String.valueOf handles a toString() that returns null, in violation of its contract.
+        () -> String.format("%s [%s]", escapeJava(String.valueOf(v.toString())), vClass),
+        vClass,
+        "exception_when_calling_toString");
   }
 
   /**
-   * Throws the given throwable if it is a {@link VirtualMachineError} other than {@link
-   * StackOverflowError}, such as {@link OutOfMemoryError}. Such an error means that the JVM is
-   * broken or out of resources, so a caller should not catch it. A {@code StackOverflowError} is
-   * not rethrown, because {@code toString()} throws it for a collection that contains itself
-   * indirectly, and the stack has unwound by the time the error is caught.
+   * Returns the result of the given printer, or text describing the failure if the printer throws.
+   * The text is "FAILURELABEL [CLASS]: THROWABLE", where THROWABLE is the result of {@code
+   * toString()} on the thrown throwable, as in "exception_when_calling_toString [class
+   * java.util.ArrayList]: java.lang.StackOverflowError". If the stack is too nearly exhausted to
+   * compute that text, or if {@code toString()} on the throwable throws, the text is just
+   * FAILURELABEL.
    *
-   * @param t a throwable
+   * <p>This method does not throw, except that it rethrows a {@link VirtualMachineError} other than
+   * {@link StackOverflowError}, such as {@link OutOfMemoryError}. Such an error means that the JVM
+   * is broken or out of resources, so a caller should not catch it. A {@code StackOverflowError} is
+   * not rethrown, because {@code toString()} throws it for a collection that contains itself
+   * indirectly.
+   *
+   * @param printer a computation that returns a string representation of a value
+   * @param vClass the class of the value that the printer prints
+   * @param failureLabel the text that starts the result if the printer throws, such as
+   *     "exception_when_calling_toString"
+   * @return the printer's result, or text describing the failure if the printer throws
    */
+  @SuppressWarnings({
+    "allcheckers:purity.call", // the printer is side-effect-free
+    "lock:method.guarantee.violated" // the printer is side-effect-free
+  })
   @SideEffectFree
-  private static void rethrowIfVirtualMachineError(Throwable t) {
-    if (t instanceof VirtualMachineError vme && !(t instanceof StackOverflowError)) {
-      throw vme;
+  static String printSafely(Supplier<String> printer, Class<?> vClass, String failureLabel) {
+    // Outside the two try blocks, this method calls no method, because the stack might be nearly
+    // exhausted, and a method call could throw StackOverflowError.
+    Throwable thrown;
+    try {
+      return printer.get();
+    } catch (StackOverflowError e) {
+      thrown = e;
+    } catch (VirtualMachineError e) {
+      throw e;
+    } catch (Throwable e) {
+      thrown = e;
+    }
+    try {
+      return String.format("%s [%s]: %s", failureLabel, vClass, escapeJava(thrown.toString()));
+    } catch (StackOverflowError e) {
+      return failureLabel;
+    } catch (VirtualMachineError e) {
+      throw e;
+    } catch (Throwable e) {
+      return failureLabel;
     }
   }
 
   /**
-   * Gives a string representation of the value and its class. Intended for debugging.
+   * Returns a string representation of the list and its class. Intended for debugging. Like {@link
+   * #toStringAndClass(Object)}, this method does not throw even if printing the list throws, except
+   * that it rethrows a {@link VirtualMachineError} other than {@link StackOverflowError}.
    *
    * @param lst a value; may be null
    * @return the value's toString and its class
@@ -1353,18 +1388,33 @@ public final class StringsP {
   @SideEffectFree
   public static String listToStringAndClass(
       @Nullable List<? extends @Signed @PolyNull Object> lst) {
-    if (lst == null) {
-      return "null";
-    } else {
-      return listToString(lst) + " [" + lst.getClass() + "]";
-    }
+    return toStringAndClass(lst);
   }
 
   /**
-   * For use by toStringAndClass. Calls toStringAndClass on each element, but does not add the class
-   * of the list itself.
+   * Returns a string representation of each element of the list and its class, but not the class of
+   * the list itself. Like {@link #toStringAndClass(Object)}, this method does not throw even if
+   * printing the list throws, except that it rethrows a {@link VirtualMachineError} other than
+   * {@link StackOverflowError}.
    *
-   * @param lst the list to print
+   * @param lst a list; may be null
+   * @return a string representation of each element and its class
+   */
+  @SideEffectFree
+  public static String listToString(@Nullable List<? extends @Signed @PolyNull Object> lst) {
+    if (lst == null) {
+      return "null";
+    }
+    return printSafely(
+        () -> elementsToString(lst), lst.getClass(), "exception_when_printing_elements");
+  }
+
+  /**
+   * Returns a string representation of each element of the given list and its class, as in "[a
+   * [class java.lang.String], 1 [class java.lang.Integer]]". Throws if iterating over the list
+   * throws.
+   *
+   * @param lst a list
    * @return a string representation of each element and its class
    */
   @SuppressWarnings({
@@ -1372,10 +1422,7 @@ public final class StringsP {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static String listToString(@Nullable List<? extends @Signed @PolyNull Object> lst) {
-    if (lst == null) {
-      return "null";
-    }
+  private static String elementsToString(List<? extends @Signed @PolyNull Object> lst) {
     StringJoiner sj = new StringJoiner(", ", "[", "]");
     for (Object o : lst) {
       sj.add(toStringAndClass(o, true));
