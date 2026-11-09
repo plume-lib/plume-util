@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.lock.qual.GuardSatisfied;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.common.value.qual.ArrayLen;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -535,9 +536,15 @@ final class StringsPTest {
 
   /** A map whose {@code entrySet()} throws, so iterating over its entries throws. */
   static class EntrySetThrowsMap extends AbstractMap<Object, Object> {
+    @SuppressWarnings({
+      "iterator:override.return", // this method never returns
+      "growable:override.return", // this method never returns
+      "modifiability:override.return" // this method never returns
+    })
     @SideEffectFree
     @Override
-    public Set<Map.Entry<Object, Object>> entrySet(@GuardSatisfied EntrySetThrowsMap this) {
+    public Set<Map.Entry<@KeyFor("this") Object, Object>> entrySet(
+        @GuardSatisfied EntrySetThrowsMap this) {
       throw new ConcurrentModificationException();
     }
   }
