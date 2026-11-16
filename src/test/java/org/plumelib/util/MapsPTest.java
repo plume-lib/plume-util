@@ -103,6 +103,19 @@ final class MapsPTest {
             "x  swans a-swimming => 7",
             ""),
         sb2.toString());
+
+    assertEquals(
+        String.join(
+            lineSep,
+            "  calling birds [class java.lang.String] => 4 [class java.lang.Integer]",
+            "  drummers drumming [class java.lang.String] => 12 [class java.lang.Integer]"),
+        MapsP.mapToStringAndClassMultiLine(
+            new TreeMap<>(Map.of("calling birds", 4, "drummers drumming", 12)), "  "));
+    assertEquals(
+        "  exception_when_printing_elements"
+            + " [class org.plumelib.util.StringsPTest$EntrySetThrowsMap]:"
+            + " java.util.ConcurrentModificationException",
+        MapsP.mapToStringAndClassMultiLine(new StringsPTest.EntrySetThrowsMap(), "  "));
   }
 
   //

@@ -447,6 +447,30 @@ public final class MapsP {
    * [{value.getClass()}]", where the "{}" characters indicate interpolation and the "[]" characters
    * are literally present.
    *
+   * <p>Like {@link StringsP#toStringAndClass(Object)}, this method does not throw even if printing
+   * the map throws, except that it rethrows a {@link VirtualMachineError} other than {@link
+   * StackOverflowError}. If iterating over the map throws, the result is
+   * "{linePrefix}exception_when_printing_elements [{m.getClass()}]: {throwable}".
+   *
+   * @param <K> type of map keys
+   * @param <V> type of map values
+   * @param m a map
+   * @param linePrefix a prefix to put at the beginning of each line
+   * @return a string representation of the map
+   */
+  @SideEffectFree
+  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
+    return StringsP.printSafely(
+        () -> entriesToString(m, linePrefix),
+        m.getClass(),
+        linePrefix + "exception_when_printing_elements");
+  }
+
+  /**
+   * Returns a multi-line string representation of the map's entries, in the format described in
+   * {@link #mapToStringAndClassMultiLine(Map, String)}. Throws if iterating over the map throws.
+   *
    * @param <K> type of map keys
    * @param <V> type of map values
    * @param m a map
@@ -458,15 +482,15 @@ public final class MapsP {
     "lock:method.guarantee.violated" // side effect to local state
   })
   @SideEffectFree
-  public static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
-      String mapToStringAndClassMultiLine(Map<K, V> m, String linePrefix) {
+  static <K extends @Signed @Nullable Object, V extends @Signed @Nullable Object>
+      String entriesToString(Map<K, V> m, String linePrefix) {
     StringJoiner result = new StringJoiner(LINE_SEP);
     for (Map.Entry<K, V> e : m.entrySet()) {
       result.add(
           linePrefix
-              + StringsP.toStringAndClass(e.getKey())
+              + StringsP.toStringAndClass(e.getKey(), true)
               + " => "
-              + StringsP.toStringAndClass(e.getValue()));
+              + StringsP.toStringAndClass(e.getValue(), true));
     }
     return result.toString();
   }
