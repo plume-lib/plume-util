@@ -380,9 +380,17 @@ public final class Intern {
       internedDoubles = new WeakHasherMap<>(new DoubleHasher());
 
   /** The interned NaN. */
+  @SuppressWarnings({
+    "interning:assignment", // this field holds the canonical representative
+    "interning:unneeded.suppression" // Checker Framework 4.4.0 and earlier do not need the above
+  })
   private static final @Interned Double internedDoubleNaN = Double.NaN;
 
   /** The interned Double zero. */
+  @SuppressWarnings({
+    "interning:assignment", // this field holds the canonical representative
+    "interning:unneeded.suppression" // Checker Framework 4.4.0 and earlier do not need the above
+  })
   private static final @Interned Double internedDoubleZero = 0.0;
 
   /** All the interned Double arrays. */
