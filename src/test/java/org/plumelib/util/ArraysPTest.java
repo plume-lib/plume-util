@@ -174,7 +174,6 @@ final class ArraysPTest {
     }
 
     @Override
-    @SuppressWarnings("lock:instanceof.pattern.unsafe") // todo
     public boolean equals(@GuardSatisfied MyInteger this, @GuardSatisfied @Nullable Object o) {
       if (!(o instanceof MyInteger other)) {
         return false;
