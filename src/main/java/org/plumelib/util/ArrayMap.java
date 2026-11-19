@@ -801,10 +801,9 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Pure
     @Override
     public boolean contains(@GuardSatisfied @Nullable @UnknownSignedness Object o) {
-      if (!(o instanceof Map.Entry)) {
+      if (!(o instanceof Map.Entry<?, ?> e)) {
         return false;
       }
-      Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
       Object key = e.getKey();
       Object value = e.getValue();
       return containsEntry(key, value);
@@ -817,8 +816,7 @@ public class ArrayMap<K extends @UnknownSignedness Object, V extends @UnknownSig
     @Override
     public boolean remove(
         @Shrinkable EntrySet this, @GuardSatisfied @Nullable @UnknownSignedness Object o) {
-      if (o instanceof Map.Entry) {
-        Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
+      if (o instanceof Map.Entry<?, ?> e) {
         Object key = e.getKey();
         Object value = e.getValue();
         return ArrayMap.this.remove(key, value);

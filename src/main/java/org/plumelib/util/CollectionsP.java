@@ -425,9 +425,8 @@ public final class CollectionsP {
       return Arrays.deepEquals(oa1, oa2);
     }
 
-    if (o1 instanceof List<?> && o2 instanceof List<?>) {
-      List<? extends @Signed Object> l1 = (List<? extends @Signed Object>) o1;
-      List<? extends @Signed Object> l2 = (List<? extends @Signed Object>) o2;
+    if (o1 instanceof List<? extends @Signed Object> l1
+        && o2 instanceof List<? extends @Signed Object> l2) {
       int l1size = l1.size();
       if (l1size != l2.size()) {
         return false;
