@@ -532,11 +532,7 @@ public final class CollectionsP {
       for (int i = 0; i < size; i++) {
         TO eltResult = f.apply(list.get(i));
         if (!(removeNull && eltResult == null)) {
-          @SuppressWarnings({
-            "UnusedVariable",
-            "PMD.UnusedLocalVariable",
-            "keyfor:argument" // confusing generics error
-          })
+          @SuppressWarnings({"UnusedVariable", "PMD.UnusedLocalVariable"})
           boolean ignore = result.add(eltResult);
         }
       }
@@ -551,11 +547,7 @@ public final class CollectionsP {
     for (FROM elt : iterable) {
       TO eltResult = f.apply(elt);
       if (!(removeNull && eltResult == null)) {
-        @SuppressWarnings({
-          "UnusedVariable",
-          "PMD.UnusedLocalVariable",
-          "keyfor:argument" // confusing generics error
-        })
+        @SuppressWarnings({"UnusedVariable", "PMD.UnusedLocalVariable"})
         boolean ignore = result.add(eltResult);
       }
     }
@@ -634,11 +626,7 @@ public final class CollectionsP {
     for (int i = 0; i < size; i++) {
       TO eltResult = f.apply(a[i]);
       if (!(removeNull && eltResult == null)) {
-        @SuppressWarnings({
-          "UnusedVariable",
-          "PMD.UnusedLocalVariable",
-          "keyfor:argument" // confusing generics error
-        })
+        @SuppressWarnings({"UnusedVariable", "PMD.UnusedLocalVariable"})
         boolean ignore = result.add(eltResult);
       }
     }
