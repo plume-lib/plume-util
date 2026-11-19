@@ -66,6 +66,14 @@ val addOpensArgs = javacExportTargets.map { "--add-opens=$it" }
 
 // Compilation
 
+// True if the `errorProneFix` task was requested on the command line.  Then each compilation
+// rewrites its source files in place, applying Error Prone's suggested fixes.
+// Gradle matches task names case-insensitively, so also recognize, say, "errorpronefix".
+val errorProneFix =
+  gradle.startParameter.taskNames.any {
+    it.replaceFirst(Regex("^:"), "").equals("errorProneFix", ignoreCase = true)
+  }
+
 java {
   toolchain {
     // Always compile using Java 21.  The "test" task below overrides this for
@@ -81,7 +89,10 @@ tasks.withType<JavaCompile>().configureEach {
   // from the JVM that runs Gradle.  That worker does not inherit the
   // `org.gradle.jvmargs` heap setting in gradle.properties, so set it here too.
   options.forkOptions.jvmArgs = options.forkOptions.jvmArgs.orEmpty() + "-Xmx6g"
-  options.compilerArgs.add("-Werror")
+  // With -Werror, a warning stops javac before Error Prone applies its fixes.
+  if (!errorProneFix) {
+    options.compilerArgs.add("-Werror")
+  }
   // "-processing" avoids javac warning "No processor claimed any of these annotations".
   options.compilerArgs.add("-Xlint:all,-processing,-this-escape")
 }
@@ -259,7 +270,24 @@ tasks.withType<JavaCompile>().configureEach {
     disable("ExtendsObject") // Incorrect when using the Checker Framework.
     disable("InlineMeSuggester") // `@InlineMe` requires a dependency on error_prone_annotations.
     disable("ReferenceEquality") // Use Interning Checker instead.
+
+    if (errorProneFix) {
+      errorproneArgs.add("-XepPatchLocation:IN_PLACE")
+    }
   }
+  if (errorProneFix) {
+    // Always run Error Prone, even if the compiled classes are up to date or cached.
+    outputs.upToDateWhen { false }
+    outputs.cacheIf { false }
+  }
+}
+
+tasks.register("errorProneFix") {
+  group = "verification"
+  description = "Applies Error Prone's suggested fixes to the source files."
+  dependsOn(tasks.withType<JavaCompile>())
+  // Error Prone's fixes are not formatted.
+  finalizedBy("spotlessJavaApply")
 }
 
 // PMD linter
@@ -274,6 +302,11 @@ pmd {
 // Checker Framework pluggable type-checking
 
 checkerFramework {
+  // The `errorProneFix` task needs only Error Prone.  Also, a Checker Framework error would stop
+  // javac before Error Prone applies its fixes.
+  if (errorProneFix) {
+    skipCheckerFramework = true
+  }
   version = libs.versions.checker.framework.get()
   checkers =
     listOf(
