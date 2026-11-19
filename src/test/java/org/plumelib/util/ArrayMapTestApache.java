@@ -423,6 +423,7 @@ class ArrayMapTestApache {
     assertEquals("value", objmap.get(aKey));
   }
 
+  @SuppressWarnings("EqualsHashCode") // tests distinct keys with identical hash codes
   static class MyKey {
     public MyKey() {
       super();
