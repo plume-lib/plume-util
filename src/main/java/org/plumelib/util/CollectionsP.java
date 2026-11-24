@@ -535,7 +535,8 @@ public final class CollectionsP {
           @SuppressWarnings({
             "UnusedVariable",
             "PMD.UnusedLocalVariable",
-            "keyfor:argument" // confusing generics error
+            "keyfor:argument", // confusing generics error; unneeded in Checker Framework 4.4.1+
+            "nullness:unneeded.suppression" // for "keyfor:argument" in Checker Framework 4.4.1+
           })
           boolean ignore = result.add(eltResult);
         }
@@ -554,7 +555,8 @@ public final class CollectionsP {
         @SuppressWarnings({
           "UnusedVariable",
           "PMD.UnusedLocalVariable",
-          "keyfor:argument" // confusing generics error
+          "keyfor:argument", // confusing generics error; unneeded in Checker Framework 4.4.1+
+          "nullness:unneeded.suppression" // for "keyfor:argument" in Checker Framework 4.4.1+
         })
         boolean ignore = result.add(eltResult);
       }
@@ -637,7 +639,8 @@ public final class CollectionsP {
         @SuppressWarnings({
           "UnusedVariable",
           "PMD.UnusedLocalVariable",
-          "keyfor:argument" // confusing generics error
+          "keyfor:argument", // confusing generics error; unneeded in Checker Framework 4.4.1+
+          "nullness:unneeded.suppression" // for "keyfor:argument" in Checker Framework 4.4.1+
         })
         boolean ignore = result.add(eltResult);
       }
