@@ -1166,7 +1166,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     @Override
     @Pure
-    @SuppressWarnings("lock:instanceof.pattern.unsafe") // o is @GuardSatisfied
     public boolean equals(@GuardSatisfied EntryFormat this, @GuardSatisfied @Nullable Object o) {
       if (this == o) {
         return true;
@@ -1278,7 +1277,6 @@ public class EntryReader extends LineNumberReader implements Iterable<String>, I
 
     @Override
     @Pure
-    @SuppressWarnings("lock:instanceof.pattern.unsafe") // o is @GuardSatisfied
     public boolean equals(@GuardSatisfied CommentFormat this, @GuardSatisfied @Nullable Object o) {
       if (this == o) {
         return true;

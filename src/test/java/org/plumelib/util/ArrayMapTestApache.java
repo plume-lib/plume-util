@@ -571,7 +571,6 @@ class ArrayMapTestApache {
     }
 
     @Override
-    @SuppressWarnings("lock:instanceof.pattern.unsafe") // todo
     public boolean equals(@GuardSatisfied ReusableKey this, @GuardSatisfied Object o) {
       if (o == this) {
         return true;

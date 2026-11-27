@@ -1164,7 +1164,7 @@ public final class Intern {
       this.end = end;
     }
 
-    @SuppressWarnings({"unchecked", "lock:instanceof.pattern.unsafe"}) // other is @GuardSatisfied
+    @SuppressWarnings("unchecked")
     @Pure
     @Override
     public boolean equals(
